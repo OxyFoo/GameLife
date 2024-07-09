@@ -42,10 +42,21 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 24
     },
+    activityTitleContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     activityTitle: {
+        flex: 1,
         marginBottom: 12,
         fontSize: 22,
         textAlign: 'left'
+    },
+    activityTitleDate: {
+        flex: 1,
+        marginBottom: 12,
+        fontSize: 22,
+        textAlign: 'right'
     },
     activityItem: {
         padding: 16,

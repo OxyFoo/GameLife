@@ -6,6 +6,35 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
 
+    // Search bar
+    searchBar: {
+        position: 'absolute',
+        top: 30,
+        left: 24,
+        right: 24,
+        paddingHorizontal: 0,
+        marginBottom: 6
+    },
+    searchButton: {
+        width: 'auto',
+        paddingVertical: 12,
+        paddingHorizontal: 12
+    },
+    searchTextInput: {
+        paddingRight: 48
+    },
+    searchIconButton: {
+        position: 'absolute',
+        right: 0,
+        width: 'auto',
+        paddingVertical: 6,
+        paddingHorizontal: 6
+    },
+
+    // Title
+    titleParent: {
+        overflow: 'hidden'
+    },
     title: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -40,12 +69,6 @@ const styles = StyleSheet.create({
     categoryEmpty: {
         width: 44,
         height: 44
-    },
-
-    activitiesSearchBar: {
-        width: '100%',
-        paddingHorizontal: 0,
-        marginBottom: 6
     },
     activitiesFlatlist: {
         width: '100%',

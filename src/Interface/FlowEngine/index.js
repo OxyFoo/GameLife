@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
 import styles from './style';
 import FlowEnginePagesRender from './pagesRender';
@@ -31,7 +31,11 @@ const FlowEngine = React.forwardRef((_, ref) => {
     const refUserHeader = React.useRef(null);
 
     return (
-        <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior='height'>
+        <KeyboardAvoidingView
+            style={[styles.fullscreen, styles.background]}
+            behavior='padding'
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+        >
             <DynamicBackground opacity={0.15} />
             <FlowEnginePagesRender
                 ref={ref}

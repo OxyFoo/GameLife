@@ -13,7 +13,8 @@ const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(nu
 
 class Calendar extends BackCalendar {
     render() {
-        const { activities, selectedMonth, days } = this.state;
+        const lang = langManager.curr['calendar'];
+        const { activities, selectedDay, selectedMonth, days } = this.state;
 
         const summaryStyle = {
             marginTop: this.state.animSummaryY
@@ -24,7 +25,7 @@ class Calendar extends BackCalendar {
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
                     <Text style={styles.summaryTitle} color='secondary'>
-                        {langManager.curr['calendar']['summary-title']}
+                        {lang['summary-title']}
                     </Text>
 
                     <View style={styles.summaryHoursContent}>
@@ -41,9 +42,14 @@ class Calendar extends BackCalendar {
 
                 {/** Activities list */}
                 <View style={styles.activityList}>
-                    <Text style={styles.activityTitle} color='secondary'>
-                        {langManager.curr['calendar']['activities-title']}
-                    </Text>
+                    <View style={styles.activityTitleContent}>
+                        <Text style={styles.activityTitle} color='secondary'>
+                            {lang['activities-title']}
+                        </Text>
+                        <Text style={styles.activityTitleDate} color='secondary'>
+                            {`${selectedDay?.day} ${langManager.curr['dates']['month'][selectedDay?.month || 0]} ${selectedDay?.year}`}
+                        </Text>
+                    </View>
 
                     <FlatList
                         data={activities}

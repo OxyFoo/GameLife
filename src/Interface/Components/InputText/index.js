@@ -7,6 +7,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Text } from '../Text';
 import { Icon } from '../Icon';
+import { InputTextThin } from './Thin';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -25,6 +26,8 @@ const textTypes = {
 };
 
 class InputText extends InputTextBack {
+    static Thin = InputTextThin;
+
     render() {
         const {
             style,
@@ -42,16 +45,7 @@ class InputText extends InputTextBack {
             pointerEvents,
             ...props
         } = this.props;
-        const {
-            animTop,
-            animLeft,
-            animScale,
-            isFocused,
-            boxHeight,
-            borderWidth,
-            textWidth,
-            textHeight
-        } = this.state;
+        const { animTop, animLeft, animScale, isFocused, boxHeight, borderWidth, textWidth, textHeight } = this.state;
 
         const isActive = isFocused || forceActive;
 
@@ -109,10 +103,7 @@ class InputText extends InputTextBack {
                                 {
                                     translateY: animTop.interpolate({
                                         inputRange: [0, 1],
-                                        outputRange: [
-                                            -textHeight / 2,
-                                            boxHeight / 2 - textHeight / 2 - 2
-                                        ]
+                                        outputRange: [-textHeight / 2, boxHeight / 2 - textHeight / 2 - 2]
                                     })
                                 }
                             ]

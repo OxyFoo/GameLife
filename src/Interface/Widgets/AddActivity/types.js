@@ -40,14 +40,17 @@ const CategoryToItem = (category) => ({
  */
 const GetRecentSkills = (callback) => {
     const now = GetLocalTime();
-    return user.activities.Get()
-        .filter(activity => activity.startTime <= now)
-        .reverse()
-        .map(activity => dataManager.skills.GetByID(activity.skillID))
-        .filter(skill => skill !== null && skill.Enabled)
-        // Remove duplicate
-        .filter((skill, index, self) => self.findIndex(s => s.ID === skill.ID) === index)
-        .map(skill => SkillToItem(skill, callback));
+    return (
+        user.activities
+            .Get()
+            .filter((activity) => activity.startTime <= now)
+            .reverse()
+            .map((activity) => dataManager.skills.GetByID(activity.skillID))
+            .filter((skill) => skill !== null && skill.Enabled)
+            // Remove duplicate
+            .filter((skill, index, self) => self.findIndex((s) => s !== null && s.ID === skill?.ID) === index)
+            .map((skill) => SkillToItem(skill, callback))
+    );
 };
 
 export { SkillToItem, CategoryToItem, GetRecentSkills };

@@ -15,7 +15,7 @@ import { DynamicBackground } from 'Interface/Primitives';
 
 class BottomPanel extends BottomPanelBack {
     render() {
-        const { state, current, animOpacity } = this.state;
+        const { state, current, height, animOpacity } = this.state;
 
         const opened = state === 'opened';
         /** @type {StyleProp} */
@@ -30,6 +30,7 @@ class BottomPanel extends BottomPanelBack {
         };
         /** @type {StyleProp} */
         const stylePanel = {
+            minHeight: state === 'opened' ? height : undefined,
             opacity: animOpacity,
             transform: [{ translateY: Animated.add(this.state.animPosY, 48) }], // 48 = padding bottom to avoid animation glitch
             backgroundColor: themeManager.GetColor('ground1')

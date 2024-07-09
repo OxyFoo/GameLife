@@ -1,14 +1,17 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { Animated, View, FlatList } from 'react-native';
 
 import BackActivity from './back';
 import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { Text, IconCheckable, Input, Button, Icon } from 'Interface/Components';
+import { Text, IconCheckable, InputText, Button, Icon } from 'Interface/Components';
 import { ActivityPanel } from 'Interface/Widgets';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ *
  * @typedef {import('./types').ItemSkill} ItemSkill
  * @typedef {import('./types').ItemCategory} ItemCategory
  */
@@ -16,26 +19,64 @@ import { ActivityPanel } from 'Interface/Widgets';
 class AddActivity extends BackActivity {
     render() {
         const lang = langManager.curr['activity'];
-        const { skillSearch, skills, selectedCategory, topPanelOffset, inputText } = this.state;
+        const { searchEnabled, skillSearch, animSearch, skills, selectedCategory, inputText } = this.state;
+
+        /** @type {StyleProp} */
+        const animSearchTitle = {
+            transform: [
+                {
+                    translateY: Animated.multiply(animSearch, -100)
+                }
+            ]
+        };
+
+        /** @type {StyleProp} */
+        const animSearchTextInput = {
+            opacity: animSearch
+        };
 
         return (
             <View style={styles.parent}>
                 {/* Title & Search bar */}
-                <View style={styles.title}>
-                    <Icon icon='rounded-magnifer-outline' size={24} color='transparent' />
-                    <Text style={styles.primaryTitleText} color='primary'>
-                        {lang['title-activity']}
-                    </Text>
-                    <Icon icon='rounded-magnifer-outline' size={24} color='gradient' />
+                <View style={styles.titleParent}>
+                    <Animated.View style={[styles.title, animSearchTitle]}>
+                        <Icon icon='rounded-magnifer-outline' size={24} color='transparent' />
+                        <Text style={styles.primaryTitleText} color='primary'>
+                            {lang['title-activity']}
+                        </Text>
+                        <Button
+                            style={styles.searchButton}
+                            appearance='uniform'
+                            color='transparent'
+                            onPress={this.openSearch}
+                        >
+                            <Icon icon='rounded-magnifer-outline' size={24} color='gradient' />
+                        </Button>
+                    </Animated.View>
                 </View>
 
-                {/* <View style={styles.activitiesSearchBar}>
-                    <Input label={inputText} text={skillSearch} onChangeText={this.onSearchChange} />
-                </View> */}
+                <Animated.View
+                    style={[styles.searchBar, animSearchTextInput]}
+                    pointerEvents={searchEnabled ? 'auto' : 'none'}
+                >
+                    <InputText.Thin
+                        ref={this.refSearchInput}
+                        style={styles.searchTextInput}
+                        placeholder={inputText}
+                        value={skillSearch}
+                        onChangeText={this.onSearchChange}
+                    />
+                    <Button
+                        style={styles.searchIconButton}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={this.closeSearch}
+                    >
+                        <Icon icon='close' size={24} color='main1' />
+                    </Button>
+                </Animated.View>
 
                 {/* Categories */}
-                {/* <View ref={(ref) => (this.refTuto1 = ref)} onLayout={this.onLayoutCategories}>
-                </View> */}
                 <View style={styles.categoriesContainer}>{this.allCategoriesItems.map(this.renderCategory)}</View>
                 <Text style={styles.secondaryTitleText} color='light'>
                     {selectedCategory === null ? lang['title-category'] : this.categoriesNames[selectedCategory]}
@@ -43,7 +84,7 @@ class AddActivity extends BackActivity {
 
                 {/* Activities List */}
                 <FlatList
-                    ref={(ref) => (this.refActivities = ref)}
+                    ref={this.refActivities}
                     style={styles.activitiesFlatlist}
                     data={skills}
                     ListEmptyComponent={this.renderEmptyList}
@@ -52,7 +93,7 @@ class AddActivity extends BackActivity {
                 />
 
                 {/* Panel */}
-                {/* <ActivityPanel ref={(ref) => (this.refActivityPanel = ref)} topOffset={topPanelOffset} /> */}
+                {/* <ActivityPanel ref={(ref) => (this.refActivityPanel = ref)} topOffset={0} /> */}
             </View>
         );
     }
@@ -94,10 +135,14 @@ class AddActivity extends BackActivity {
         const { value, onPress } = item;
 
         return (
-            <Button style={styles.activityElement} appearance='outline' borderColor='secondary' fontColor='primary'>
-                <Text fontSize={16} onPress={onPress}>
-                    {value}
-                </Text>
+            <Button
+                style={styles.activityElement}
+                appearance='outline'
+                borderColor='secondary'
+                fontColor='primary'
+                onPress={onPress}
+            >
+                <Text fontSize={16}>{value}</Text>
             </Button>
         );
     };

@@ -1,21 +1,20 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { Animated } from 'react-native';
 
-import StartMission from './mission';
+//import StartMission from './mission';
 import { GetRecentSkills, CategoryToItem, SkillToItem } from './types';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import PageBase from 'Interface/FlowEngine/PageBase';
-import { Sleep } from 'Utils/Functions';
 import { FormatForSearch } from 'Utils/String';
+import { SpringAnimation } from 'Utils/Animations';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').FlatList} FlatList
  *
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('./types').ItemSkill} ItemSkill
@@ -23,10 +22,11 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('./types').ItemCategory} ItemCategory
  *
  * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  *
  * @typedef {Object} BackActivityPropsType
- * @property {Object} [args]
+ * @property {Object} args
  * @property {number | null} [args.categoryID]
  * @property {number | null} [args.skillID]
  * @property {number | null} [args.time]
@@ -45,29 +45,28 @@ const BackActivityProps = {
 
 class BackActivity extends React.Component {
     state = {
-        /** @type {number} */
-        topPanelOffset: 0,
-
         /** @type {Array<ItemSkill>} */
         skills: [],
 
         /** @type {number | null} */
         selectedCategory: null,
 
-        /** @type {string} Search input */
+        searchEnabled: false,
         skillSearch: '',
+        animSearch: new Animated.Value(0),
 
         /** @type {string} Header of input - Name of category */
         inputText: ''
     };
 
-    refTuto1 = null;
-
     /** @type {ActivityPanel | null} */
     refActivityPanel = null;
 
-    /** @type {FlatList | null} */
-    refActivities = null;
+    /** @type {React.RefObject<FlatList>} */
+    refActivities = React.createRef();
+
+    /** @type {React.RefObject<InputTextThin>} */
+    refSearchInput = React.createRef();
 
     categoriesNames = dataManager.skills.categories.map((category) => langManager.GetText(category.Name));
 
@@ -83,6 +82,7 @@ class BackActivity extends React.Component {
     /** @type {Array<ItemCategory | null>} All categories converted to ItemCategory used as source for the FlatList */
     allCategoriesItems = [];
 
+    /** @param {BackActivityPropsType} props */
     constructor(props) {
         super(props);
 
@@ -99,7 +99,7 @@ class BackActivity extends React.Component {
         this.state.inputText = langManager.curr['activity']['input-activity'];
 
         // Preselected skills
-        if (this.props.args.hasOwnProperty('skills')) {
+        if (this.props.args.hasOwnProperty('skills') && typeof this.props.args.skills !== 'undefined') {
             if (this.props.args.skills.length > 0) {
                 this.preselectedSkillsIDs = this.props.args.skills;
                 this.state.skills = this.allSkillsItems.filter((skill) => this.preselectedSkillsIDs.includes(skill.id));
@@ -112,7 +112,7 @@ class BackActivity extends React.Component {
         }
 
         // Select default category
-        if (this.props.args.hasOwnProperty('categoryID')) {
+        if (this.props.args.hasOwnProperty('categoryID') && typeof this.props.args.categoryID !== 'undefined') {
             const { categoryID } = this.props.args;
             this.state.selectedCategory = categoryID;
         }
@@ -125,13 +125,8 @@ class BackActivity extends React.Component {
     }
 
     async componentDidMount() {
-        // Wait for the layout to be calculated
-        while (this.state.topPanelOffset === 0) {
-            await Sleep(100);
-        }
-
         // Set default values to open the page with a skill selected
-        if (this.props.args.hasOwnProperty('skillID')) {
+        if (this.props.args.hasOwnProperty('skillID') && typeof this.props.args.skillID === 'number') {
             const { skillID } = this.props.args;
             const skill = dataManager.skills.GetByID(skillID);
             if (skill !== null) {
@@ -147,10 +142,10 @@ class BackActivity extends React.Component {
             }
         }
 
-        //const fromCalendar = user.interface.history.at(-1)[0] === 'calendar';
+        const fromCalendar = user.interface.GetCurrentPageName() === 'calendar';
 
         // Set default time (UTC) to add an activity
-        if (this.props.args.hasOwnProperty('time')) {
+        if (this.props.args.hasOwnProperty('time') && typeof this.props.args.time === 'number') {
             const { time } = this.props.args;
             const activities = user.activities.GetByTime(time).filter((activity) => activity.startTime > time);
 
@@ -166,8 +161,8 @@ class BackActivity extends React.Component {
         }
 
         // User from calendar
-        else if (false && user.tempSelectedTime !== null /* && fromCalendar*/) {
-            //this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
+        else if (user.tempSelectedTime !== null && fromCalendar) {
+            this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
         }
 
         // Default time (local) to add an activity
@@ -188,15 +183,9 @@ class BackActivity extends React.Component {
         }
     }
 
-    componentDidFocused = (args) => {
-        StartMission.call(this, args?.missionName);
-    };
-
-    /** @param {LayoutChangeEvent} event */
-    onLayoutCategories = (event) => {
-        const { y, height } = event.nativeEvent.layout;
-        this.setState({ topPanelOffset: y + height });
-    };
+    //componentDidFocused = (args) => {
+    //    StartMission.call(this, args?.missionName);
+    //};
 
     /**
      * @param {string} textSearch
@@ -230,7 +219,9 @@ class BackActivity extends React.Component {
         let inputText = langManager.curr['activity']['input-activity'];
         if (categoryID !== null) {
             const category = dataManager.skills.GetCategoryByID(categoryID);
-            inputText = langManager.GetText(category?.Name) || inputText;
+            if (category !== null) {
+                inputText = langManager.GetText(category.Name);
+            }
         }
 
         const newState = {
@@ -247,10 +238,23 @@ class BackActivity extends React.Component {
         return newState;
     };
 
+    openSearch = () => {
+        this.refSearchInput.current?.refInput.current?.focus();
+        this.setState({ searchEnabled: true });
+        SpringAnimation(this.state.animSearch, 1).start();
+    };
+
+    closeSearch = () => {
+        this.refSearchInput.current?.refInput.current?.blur();
+        this.setState({ searchEnabled: false, skillSearch: '' });
+        SpringAnimation(this.state.animSearch, 0).start();
+        this.refreshSkills('', this.state.selectedCategory);
+    };
+
     /** @param {string} text */
     onSearchChange = (text) => {
         this.refreshSkills(text, null);
-        this.refActivities.scrollToOffset({ offset: 0, animated: false });
+        this.refActivities.current?.scrollToOffset({ offset: 0, animated: false });
     };
 
     /**
@@ -259,7 +263,7 @@ class BackActivity extends React.Component {
      */
     selectCategory = (ID, checked) => {
         this.refreshSkills(this.state.skillSearch, checked ? ID : null);
-        this.refActivities.scrollToOffset({ offset: 0, animated: false });
+        this.refActivities.current?.scrollToOffset({ offset: 0, animated: false });
         this.refActivityPanel?.Close();
     };
 
@@ -267,7 +271,7 @@ class BackActivity extends React.Component {
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
-        StartMission.call(this, this.props.args?.missionName, true);
+        //StartMission.call(this, this.props.args?.missionName, true);
         this.refActivityPanel?.SelectSkill(skill);
     };
 }

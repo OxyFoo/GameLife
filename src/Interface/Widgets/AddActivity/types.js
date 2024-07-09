@@ -13,15 +13,15 @@ import { GetLocalTime } from 'Utils/Time';
  */
 
 /**
- * @param {Skill | EnrichedSkill | null} skill Null if no skill is selected
+ * @param {Skill | null} skill Null if no skill is selected
  * @param {(param: Skill) => void} callback
  * @returns {ItemSkill}
  */
-const SkillToItem = (skill = null, callback = (param) => {}) => ({
+const SkillToItem = (skill = null, callback = () => {}) => ({
     id: skill === null ? 0 : skill.ID,
     value: skill === null ? '' : langManager.GetText(skill.Name),
     categoryID: skill === null ? 0 : skill.CategoryID,
-    onPress: () => callback(skill)
+    onPress: () => skill !== null && callback(skill)
 });
 
 /**

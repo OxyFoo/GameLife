@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated } from 'react-native';
 
-import { GetRecentSkills, CategoryToItem, SkillToItem } from './types';
+import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
@@ -16,15 +16,13 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('react-native').FlatList} FlatList
  *
  * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('./types').ItemSkill} ItemSkill
- * @typedef {import('./types').EnrichedSkill} EnrichedSkill
- * @typedef {import('./types').ItemCategory} ItemCategory
+ * @typedef {import('../types').ItemSkill} ItemSkill
+ * @typedef {import('../types').ItemCategory} ItemCategory
  *
- * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  *
- * @typedef {Object} BackActivityPropsType
+ * @typedef {Object} BackActivityPage1PropsType
  * @property {Object} args
  * @property {number | null} [args.categoryID]
  * @property {number | null} [args.skillID]
@@ -32,8 +30,8 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @property {Array<number>} [args.skills]
  */
 
-/** @type {BackActivityPropsType} */
-const BackActivityProps = {
+/** @type {BackActivityPage1PropsType} */
+const BackActivityPage1Props = {
     args: {
         categoryID: undefined,
         skillID: undefined,
@@ -42,7 +40,7 @@ const BackActivityProps = {
     }
 };
 
-class BackActivity extends React.Component {
+class BackActivityPage1 extends React.Component {
     state = {
         /** @type {Array<ItemSkill>} */
         skills: [],
@@ -81,7 +79,7 @@ class BackActivity extends React.Component {
     /** @type {Array<ItemCategory | null>} All categories converted to ItemCategory used as source for the FlatList */
     allCategoriesItems = [];
 
-    /** @param {BackActivityPropsType} props */
+    /** @param {BackActivityPage1PropsType} props */
     constructor(props) {
         super(props);
 
@@ -271,7 +269,7 @@ class BackActivity extends React.Component {
     };
 }
 
-BackActivity.defaultProps = BackActivityProps;
-BackActivity.prototype.props = BackActivityProps;
+BackActivityPage1.defaultProps = BackActivityPage1Props;
+BackActivityPage1.prototype.props = BackActivityPage1Props;
 
-export default BackActivity;
+export default BackActivityPage1;

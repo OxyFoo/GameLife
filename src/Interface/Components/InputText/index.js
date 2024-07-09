@@ -38,6 +38,7 @@ class InputText extends InputTextBack {
             enabled,
             staticLabel,
             activeColor,
+            inactiveColor,
             forceActive,
             error,
             onParentLayout,
@@ -53,7 +54,7 @@ class InputText extends InputTextBack {
         const textColor = 'primary';
 
         /** @type {ThemeColor | ThemeText} */
-        let color = 'borderLight';
+        let color = inactiveColor;
         if (error) {
             color = 'danger';
         } else if (isActive) {
@@ -62,6 +63,7 @@ class InputText extends InputTextBack {
 
         const _icon = icon || (error ? 'danger' : null);
         const hexColor = themeManager.GetColor(color);
+        const labelY = this.props.multiline ? 28 : boxHeight / 2;
 
         /** @type {ViewStyle} */
         const containerStyle2 = {
@@ -103,7 +105,7 @@ class InputText extends InputTextBack {
                                 {
                                     translateY: animTop.interpolate({
                                         inputRange: [0, 1],
-                                        outputRange: [-textHeight / 2, boxHeight / 2 - textHeight / 2 - 2]
+                                        outputRange: [-textHeight / 2, labelY - textHeight / 2 - 2]
                                     })
                                 }
                             ]

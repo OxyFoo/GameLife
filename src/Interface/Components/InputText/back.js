@@ -27,6 +27,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {IconsName | null} icon Icon for the TextInput.
  * @property {boolean} staticLabel If true, the label is static.
  * @property {ThemeColor} activeColor Color used when the TextInput is active.
+ * @property {ThemeColor} inactiveColor Color used when the TextInput is inactive.
  * @property {TextContentType} type Type of content to handle.
  * @property {boolean} error If true, the TextInput has an error.
  * @property {boolean} enabled If true, the TextInput is enabled.
@@ -42,6 +43,7 @@ const InputTextProps = {
     icon: null,
     staticLabel: false,
     activeColor: 'main1',
+    inactiveColor: 'borderLight',
     type: 'default',
     error: false,
     enabled: true,

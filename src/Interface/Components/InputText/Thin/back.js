@@ -57,6 +57,8 @@ class InputTextThinBack extends React.Component {
     shouldComponentUpdate(nextProps, _nextState) {
         return (
             nextProps.style !== this.props.style ||
+            nextProps.placeholder !== this.props.placeholder ||
+            nextProps.placeholderTextColor !== this.props.placeholderTextColor ||
             nextProps.containerStyle !== this.props.containerStyle ||
             nextProps.value !== this.props.value ||
             nextProps.activeColor !== this.props.activeColor ||

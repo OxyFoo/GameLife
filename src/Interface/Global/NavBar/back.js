@@ -22,7 +22,7 @@ const NavBarProps = {
 
 class NavBarBack extends React.Component {
     state = {
-        height: 0,
+        height: 100, // Hide navbar before layout is done
         animation: new Animated.Value(0),
         animationAddActivity: new Animated.Value(0)
     };
@@ -63,22 +63,25 @@ class NavBarBack extends React.Component {
         this.setState({ height });
     };
 
+    onOpenBottomPanel = () => {
+        SpringAnimation(this.state.animationAddActivity, 1).start();
+    };
+
+    onCloseBottomPanel = () => {
+        SpringAnimation(this.state.animationAddActivity, 0).start();
+    };
+
     openHome = () => user.interface.ChangePage('home');
     openCalendar = () => user.interface.ChangePage('calendar');
     openAddActivity = () => {
         if (user.interface.bottomPanel.IsOpened()) {
             user.interface.bottomPanel.Close();
-            SpringAnimation(this.state.animationAddActivity, 0).start();
             return;
         }
         user.interface.bottomPanel.Open({
             content: <AddActivity />,
-            movable: false,
-            onClose: () => {
-                SpringAnimation(this.state.animationAddActivity, 0).start();
-            }
+            movable: false
         });
-        SpringAnimation(this.state.animationAddActivity, 1).start();
     };
     openMultiplayer = () => user.interface.ChangePage('multiplayer');
     openShop = () => user.interface.ChangePage('shop');

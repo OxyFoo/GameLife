@@ -57,8 +57,13 @@ class Calendar extends BackCalendar {
                         renderItem={(props) => <RenderActivity {...props} />}
                         ItemSeparatorComponent={() => <View style={styles.activitySeparator} />}
                         ListEmptyComponent={() => (
-                            <Button appearance='normal' icon='add'>
-                                [Ajouter une acit]
+                            <Button
+                                style={styles.activityEmptyButton}
+                                appearance='outline'
+                                icon='add'
+                                onPress={this.addActivity}
+                            >
+                                {lang['add-activity']}
                             </Button>
                         )}
                         onScroll={this.handleActivityScroll}

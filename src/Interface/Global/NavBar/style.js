@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     parent: {
         position: 'absolute',
-        top: '100%', // Defaut out of screen
         left: 0,
         right: 0,
+        bottom: 0,
         paddingTop: 6,
         paddingHorizontal: 24,
 
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
-        fontSize: 16
+        fontSize: 12
     },
 
     middleParentButton: {

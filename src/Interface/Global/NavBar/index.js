@@ -25,7 +25,10 @@ class NavBar extends BottomBarBack {
         const animStyle = {
             transform: [
                 {
-                    translateY: Animated.multiply(animation, -height)
+                    translateY: animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [height, 0]
+                    })
                 }
             ]
         };

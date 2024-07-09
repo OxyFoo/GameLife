@@ -32,7 +32,14 @@ class BottomPanel extends BottomPanelBack {
         const stylePanel = {
             minHeight: state === 'opened' ? height : undefined,
             opacity: animOpacity,
-            transform: [{ translateY: Animated.add(this.state.animPosY, 48) }], // 48 = padding bottom to avoid animation glitch
+            transform: [
+                {
+                    translateY: Animated.add(
+                        height + 48, // 48 = padding bottom to avoid animation space at the bottom
+                        this.state.animPosY
+                    )
+                }
+            ],
             backgroundColor: themeManager.GetColor('ground1')
         };
 

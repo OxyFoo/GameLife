@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Animated, Dimensions } from 'react-native';
 
+import user from 'Managers/UserManager';
+
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 import { MinMax, Sleep } from 'Utils/Functions';
 
@@ -90,6 +92,7 @@ class BottomPanelBack extends React.Component {
         if (this.opened || this.state.state !== 'closed') return;
         this.opened = true;
 
+        user.interface.navBar.onOpenBottomPanel();
         TimingAnimation(this.state.animOpacity, 1, 200).start();
         this.setState({ state: 'opening', current: params }, () => {
             this.opened = false;
@@ -116,6 +119,7 @@ class BottomPanelBack extends React.Component {
                 ]).start();
 
                 this.state.current?.onClose?.();
+                user.interface.navBar.onCloseBottomPanel();
 
                 setTimeout(() => {
                     // Reset state
@@ -177,8 +181,7 @@ class BottomPanelBack extends React.Component {
 
         if (this.state.state === 'opening') {
             this.setState({ height, state: 'opened' }, () => {
-                this.posY = height;
-                this.GotoY(this.posY);
+                this.GotoY(height);
             });
         }
     };

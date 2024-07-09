@@ -65,6 +65,11 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 8
     },
+    activityEmptyButton: {
+        width: 'auto',
+        marginTop: 12,
+        marginHorizontal: 24
+    },
     activitySeparator: {
         height: 12
     },

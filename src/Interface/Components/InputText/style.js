@@ -20,10 +20,10 @@ const styles = StyleSheet.create({
     input: {
         minHeight: 12,
         maxHeight: 256,
-        color: '#FFFFFF',
-        fontSize: 18,
         paddingVertical: 12,
-        paddingHorizontal: 12
+        paddingHorizontal: 12,
+        fontSize: 18,
+        verticalAlign: 'top'
     },
 
     error: {

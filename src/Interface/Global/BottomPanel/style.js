@@ -10,11 +10,11 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     panel: {
-        top: '100%',
-        maxHeight: '95%',
+        maxHeight: '100%',
         left: 0,
         right: 0,
-        paddingBottom: 48, // Padding to avoid animation glitch
+        bottom: 0,
+        paddingBottom: 48, // Padding to avoid animation space at the bottom
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16
     },

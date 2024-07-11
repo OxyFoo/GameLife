@@ -9,55 +9,41 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * 
- * @typedef {(name: string, index: number) => void} DigitCallback
+ *
+ * @typedef {Object} DigitPropsType
+ * @property {StyleViewProp} style
+ * @property {number} containerWidth
+ * @property {number} minDigitWidth
+ * @property {ThemeColor | ThemeText} color
+ * @property {boolean} lock If true, value can't be changed
+ * @property {number} value
+ * @property {number} minValue
+ * @property {number} maxValue
+ * @property {number} stepValue
+ * @property {number} velocity Multiplier of the animation speed
+ * @property {number} fontSize
+ * @property {ThemeColor | ThemeText} fadeColor
+ * @property {(index: number) => void} onChangeValue
  */
 
+/** @type {DigitPropsType} */
 const DigitProps = {
-    /** @type {StyleViewProp} */
-    containerStyle: {},
-
-    /** @type {number} */
+    style: {},
     containerWidth: 46,
-
-    /** @type {number} */
     minDigitWidth: 0,
-
-    /** @type {string} - The text to get in callback */
-    name: 'index',
-
-    /** @type {ThemeColor | ThemeText} */
     color: 'primary',
-
-    /** @type {boolean} If true, value can't be changed */
     lock: false,
-
-    /** @type {number} */
-    initValue: 0,
-
-    /** @type {number} */
+    value: 0,
     minValue: 0,
-
-    /** @type {number} */
     maxValue: 6,
-
-    /** @type {number} */
     stepValue: 1,
-
-    /** @type {number} Multiplier of the animation speed */
     velocity: 1,
-
-    /** @type {number} */
-    fontSize: undefined,
-
-    /** @type {ThemeColor | ThemeText} */
+    fontSize: 16,
     fadeColor: 'background',
-
-    /** @type {DigitCallback} */
-    callback: (name, index) => {}
+    onChangeValue: () => {}
 };
 
 /**
@@ -69,6 +55,10 @@ const DigitProps = {
  * PaddingLeft = (46 - 4 - 28) / 2 = 14 / 2 = 7
  */
 
+/**
+ * @TODO Disable parent vertical scroll when dragging
+ */
+
 class DigitBack extends React.Component {
     /** @type {number} Position of X scroll in pixels */
     scrollX = 0;
@@ -77,11 +67,13 @@ class DigitBack extends React.Component {
         paddingLeft: 0,
         digitWidth: 0,
         animLeft: new Animated.Value(0)
-    }
+    };
 
     componentDidMount() {
-        const { initValue, minValue, maxValue, stepValue } = this.props;
-        const newValue = MinMax(minValue, initValue, maxValue);
+        const { value, minValue, maxValue, stepValue } = this.props;
+
+        // Set initial value
+        const newValue = MinMax(minValue, value, maxValue);
         const interval = setInterval(() => {
             if (this.state.digitWidth > 0) {
                 this.SetDigitsIndex(newValue / stepValue);
@@ -90,21 +82,26 @@ class DigitBack extends React.Component {
         }, 200);
     }
 
-    /** @param {DigitProps} prevProps */
+    /** @param {DigitPropsType} prevProps */
     componentDidUpdate(prevProps) {
         const { digitWidth } = this.state;
-        const { name, minValue, maxValue, stepValue, callback } = this.props;
+        const { minValue, maxValue, stepValue, onChangeValue } = this.props;
 
         // If maxValue is decreased, we need to update the position of digits
         if (prevProps.maxValue > maxValue && maxValue / stepValue < this.scrollX / digitWidth) {
             this.SetDigitsIndex(maxValue / stepValue);
-            callback(name, maxValue / stepValue);
+            onChangeValue(maxValue / stepValue);
         }
 
         // If minValue is increased, we need to update the position of digits
         if (prevProps.minValue < minValue && minValue / stepValue > this.scrollX / digitWidth) {
             this.SetDigitsIndex(minValue / stepValue);
-            callback(name, minValue / stepValue);
+            onChangeValue(minValue / stepValue);
+        }
+
+        // If value is changed, we need to update the position of digits
+        if (prevProps.value !== this.props.value) {
+            this.SetDigitsIndex(this.props.value / stepValue);
         }
     }
 
@@ -121,49 +118,57 @@ class DigitBack extends React.Component {
             const paddingLeft = (containerWidth - containerBorders - digitWidth) / 2;
             this.setState({ digitWidth, paddingLeft });
         }
-    }
+    };
 
     /** @param {number} index Scroll position index */
     SetDigitsIndex = (index) => {
         const { digitWidth } = this.state;
-        this.SetDigitsPosX(index * digitWidth);
-    }
+        const { maxValue, stepValue } = this.props;
+
+        const _index = MinMax(0, index, maxValue / stepValue);
+        this.SetDigitsPosX(_index * digitWidth);
+    };
 
     /** @param {number} posX Scroll position in pixels */
     SetDigitsPosX = (posX) => {
         this.scrollX = posX;
         this.newPosX = posX;
         SpringAnimation(this.state.animLeft, this.scrollX).start();
-    }
+    };
+
+    firstX = 0;
+    newPosX = 0;
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
+        event.stopPropagation();
         this.firstX = event.nativeEvent.pageX;
-    }
+    };
+
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         event.stopPropagation();
-
         const posX = event.nativeEvent.pageX;
         const delta = (this.firstX - posX) / 2;
         this.newPosX = this.scrollX + delta * this.props.velocity;
         TimingAnimation(this.state.animLeft, this.newPosX, 0).start();
-    }
-    /** @param {GestureResponderEvent} event */
-    onTouchEnd = (event) => {
+    };
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
         if (this.props.lock) {
             this.SetDigitsPosX(this.scrollX);
             return;
         }
 
         const { digitWidth } = this.state;
-        const { name, stepValue, minValue, maxValue, callback } = this.props;
+        const { stepValue, minValue, maxValue, onChangeValue } = this.props;
 
         let min_index = -1;
         let min_delta = -1;
         for (let i = 0; i <= maxValue / stepValue; i++) {
             const delta = Math.abs(this.newPosX - i * digitWidth);
-            if (min_delta == -1 || delta < min_delta) {
+            if (min_delta === -1 || delta < min_delta) {
                 min_index = i;
                 min_delta = delta;
             }
@@ -171,8 +176,8 @@ class DigitBack extends React.Component {
 
         const newIndex = Math.max(min_index, minValue / stepValue);
         this.SetDigitsIndex(newIndex);
-        callback(name, newIndex);
-    }
+        onChangeValue(newIndex);
+    };
 }
 
 DigitBack.prototype.props = DigitProps;

@@ -65,6 +65,11 @@ class InputText extends InputTextBack {
         const hexColor = themeManager.GetColor(color);
         const labelY = this.props.multiline ? 28 : boxHeight / 2;
 
+        /** @type {TextInput['props']['style']} */
+        const colorStyle = {
+            color: themeManager.GetColor(textColor)
+        };
+
         /** @type {ViewStyle} */
         const containerStyle2 = {
             borderColor: hexColor,
@@ -123,7 +128,7 @@ class InputText extends InputTextBack {
                     {...props}
                     testID={'textInput'}
                     ref={this.refInput}
-                    style={[styles.input, style]}
+                    style={[styles.input, colorStyle, style]}
                     selectionColor={'white'}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}

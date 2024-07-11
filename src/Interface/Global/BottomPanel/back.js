@@ -38,7 +38,7 @@ class BottomPanelBack extends React.Component {
         /** @type {BottomPanelParamsType | null} */
         current: null,
 
-        height: 0,
+        height: Dimensions.get('window').height, // Default height to avoid glitch on mount
         animPosY: new Animated.Value(0),
         animOpacity: new Animated.Value(0)
     };

@@ -10,52 +10,65 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Data/Quotes').Quote} Quote
+ *
+ * @typedef {Object} BackDisplayPropsType
+ * @property {Object} args
+ * @property {IconsName} args.icon
+ * @property {number} [args.iconWidth]
+ * @property {string} args.text
+ * @property {string} args.button
+ * @property {string} [args.button2]
+ * @property {(() => void) | null} [args.action]
+ * @property {(() => void) | null} [args.action2]
+ * @property {Quote | null} [args.quote]
  */
 
+/** @type {BackDisplayPropsType} */
 const BackDisplayProps = {
     args: {
-        /** @type {IconsName} */
         icon: 'default',
-
-        /** @type {number} */
-        iconRatio: 0.8,
-
-        /** @type {string} */
+        iconWidth: 150,
         text: '',
-
-        /** @type {string} */
         button: '',
 
-        /** @type {string} */
+        // Optional
         button2: '',
-
-        /** @type {Quote | null | undefined} */
-        quote: null,
-
-        /** @type {() => void | undefined} */
-        action: () => {},
-
-        /** @type {() => void | undefined} */
-        action2: () => {}
+        action: null,
+        action2: null,
+        quote: undefined
     }
 };
 
 class BackDisplay extends PageBase {
     state = {
-        anim: new Animated.Value(.5)
-    }
+        anim: new Animated.Value(0)
+    };
 
     /** @param {BackDisplayProps} props */
     constructor(props) {
         super(props);
 
+        const { iconWidth, action, action2, quote } = { ...BackDisplayProps.args, ...props.args };
         this.quote = null;
-        this.callback = this.props.args.action ?? user.interface.BackHandle;
-        this.callback2 = this.props.args.action2 ?? user.interface.BackHandle;
+        this.iconWidth = iconWidth;
+        this.callback = () => {
+            if (action) {
+                action();
+            } else {
+                user.interface.BackHandle();
+            }
+        };
+        this.callback2 = () => {
+            if (action2) {
+                action2();
+            } else {
+                user.interface.BackHandle();
+            }
+        };
 
-        const quoteItem = this.props.args.quote;
+        const quoteItem = quote;
         const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
-        if (!!quoteItem) {
+        if (quoteItem) {
             this.quote = {
                 text: langManager.GetText(quoteItem.Quote),
                 author: quoteItem.Author || anonymousAuthors[Random(0, anonymousAuthors.length)]

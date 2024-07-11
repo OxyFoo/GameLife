@@ -20,7 +20,9 @@ class BackTest extends PageBase {
         checkbox1: false,
         checkbox2: true,
         switchText: 0,
-        combobox: { ID: -1, value: '' }
+        combobox: { ID: -1, value: '' },
+        digit1: 1,
+        digit2: 2
     };
 
     animLoop = new Animated.Value(0);

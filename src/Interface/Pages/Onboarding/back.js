@@ -32,8 +32,7 @@ class BackOnboarding extends PageBase {
             const lang = langManager.curr['app'];
             user.interface.ChangePage('display', {
                 args: {
-                    icon: 'error',
-                    iconRatio: 0.4,
+                    icon: 'close-filled',
                     text: lang['loading-error-message']['userdata-not-saved'],
                     button: lang['loading-error-button'],
                     action: RNExitApp.exitApp

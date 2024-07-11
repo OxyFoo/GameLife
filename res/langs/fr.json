@@ -295,8 +295,15 @@
     },
 
     "activity": {
-        "title-category": "Toutes les catégories",
         "title-activity": "Choisir mon activité",
+        "title-category": "Toutes les catégories",
+        "title-start-now": "Démarrer maintenant",
+        "title-add": "Ajouter",
+
+        "button-add": "Ajouter l'activité",
+        "button-start-now": "GO !",
+        "button-remove": "Supprimer l'activité",
+
         "title-click-me": "(tu peux cliquer !)",
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
@@ -307,22 +314,17 @@
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
-        "swiper-already": "Ajouter",
-        "swiper-now": "Commencer maintenant",
         "swiper-gpt": "ZapGPT",
-        "btn-start": "Commencer",
-        "btn-add": "Ajouter",
-        "btn-remove": "Supprimer",
         "add-commentary": "Ajouter un commentaire",
 
         "alert-remove-title": "Suppression ?",
-        "alert-remove-text": "Es-tu sûr(e) de vouloir supprimer cette activité ?",
+        "alert-remove-message": "Es-tu sûr(e) de vouloir supprimer cette activité ?",
         "alert-wrongtiming-title": "Impossible !",
-        "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre.",
+        "alert-wrongtiming-message": "L'activité sélectionnée commence ou termine durant une autre.",
         "alert-alreadyexist-title": "Erreur",
-        "alert-alreadyexist-text": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
+        "alert-alreadyexist-message": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
         "alert-tooearly-title": "Erreur",
-        "alert-tooearly-text": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
+        "alert-tooearly-message": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
 

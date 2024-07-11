@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, ScrollView } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
@@ -15,7 +15,8 @@ import {
     CheckBox,
     ProgressBar,
     SwitchText,
-    ComboBox
+    ComboBox,
+    Digit
 } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
 
@@ -42,6 +43,7 @@ class Test extends BackTest {
                 {this.renderIcons()}
                 {this.renderSwitches()}
                 {this.renderSwitchText()}
+                {this.renderDigit()}
                 {this.renderProgressBars()}
             </View>
         );
@@ -343,6 +345,21 @@ class Test extends BackTest {
                         this.setState({ switchText: value });
                     }}
                 />
+            </View>
+        );
+    };
+
+    renderDigit = () => {
+        const { digit1, digit2 } = this.state;
+        return (
+            <View>
+                {this.renderTitle('Digit')}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                    <Digit />
+                    <Digit value={digit1} maxValue={20} onChangeValue={(value) => this.setState({ digit1: value })} />
+                    <Digit value={digit2} maxValue={20} onChangeValue={(value) => this.setState({ digit2: value })} />
+                    <Digit value={digit2} maxValue={20} onChangeValue={(value) => this.setState({ digit2: value })} />
+                </View>
             </View>
         );
     };

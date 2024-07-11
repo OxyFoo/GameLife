@@ -2,6 +2,7 @@ export { ActivityTimeline } from './Components/ActivityTimeline';
 export { Button } from './Components/Button';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
+export { Digit } from './Components/Digit';
 export { Icon } from './Components/Icon';
 export { IconCheckable } from './Components/IconCheckable';
 export { InputText } from './Components/InputText';
@@ -21,7 +22,6 @@ import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
 import KPI from './OldComponents/KPI';
 import DayClock from './OldComponents/DayClock';
-import Digit from './OldComponents/Digit';
 import GLLoading from './OldComponents/GLLoading';
 import HeatMap from './OldComponents/HeatMap';
 import OldIcon from './OldComponents/Icon';
@@ -41,7 +41,6 @@ export {
     Character,
     KPI,
     DayClock,
-    Digit,
     GLLoading,
     HeatMap,
     KeyboardSpacerView,

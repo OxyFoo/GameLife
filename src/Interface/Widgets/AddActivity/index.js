@@ -16,10 +16,19 @@ import { AddActivityPage2 } from './Page2';
 
 class AddActivity extends BackActivity {
     render() {
+        const { selectedSkill } = this.state;
+
         return (
             <View style={styles.parent}>
-                {/* <AddActivityPage1 /> */}
-                <AddActivityPage2 />
+                {selectedSkill === null ? (
+                    <AddActivityPage1 selectActivity={this.selectSkill} />
+                ) : (
+                    <AddActivityPage2
+                        skillID={selectedSkill}
+                        onChangeDuration={this.onChangeDuration}
+                        unSelectSkill={this.unSelectSkill}
+                    />
+                )}
             </View>
         );
     }

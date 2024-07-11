@@ -23,6 +23,7 @@ class Button extends ButtonBack {
             style: styleProp,
             styleAnimation,
             styleContent,
+            styleBackground,
             enabled,
             onTouchStart,
             onTouchCancel,
@@ -184,7 +185,7 @@ class Button extends ButtonBack {
     };
 
     renderBackground = () => {
-        const { appearance, color, borderColor } = this.props;
+        const { appearance, color, borderColor, styleBackground } = this.props;
 
         if (appearance === 'normal') {
             return <Gradient style={styles.absolute} />;
@@ -193,6 +194,7 @@ class Button extends ButtonBack {
                 <View
                     style={[
                         styles.absolute,
+                        styleBackground,
                         appearance === 'uniform' && {
                             backgroundColor: themeManager.GetColor(color)
                         }
@@ -204,6 +206,7 @@ class Button extends ButtonBack {
                 <View
                     style={[
                         styles.backgroundViewUniform,
+                        styleBackground,
                         {
                             borderColor: themeManager.GetColor(borderColor)
                         }
@@ -212,7 +215,10 @@ class Button extends ButtonBack {
             );
         } else if (appearance === 'outline') {
             return (
-                <MaskedView style={styles.absolute} maskElement={<View style={styles.backgroundView} />}>
+                <MaskedView
+                    style={styles.absolute}
+                    maskElement={<View style={[styles.backgroundView, styleBackground]} />}
+                >
                     <Gradient style={styles.fill} />
                 </MaskedView>
             );
@@ -231,7 +237,10 @@ class Button extends ButtonBack {
                         ]}
                         blurAmount={20}
                     />
-                    <MaskedView style={styles.absolute} maskElement={<View style={styles.backgroundView} />}>
+                    <MaskedView
+                        style={styles.absolute}
+                        maskElement={<View style={[styles.backgroundView, styleBackground]} />}
+                    >
                         <Gradient style={styles.fill} />
                     </MaskedView>
                 </>

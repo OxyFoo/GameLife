@@ -20,6 +20,7 @@ import { Button } from 'react-native';
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
  * @property {StyleProp} styleContent
+ * @property {StyleProp} styleBackground
  * @property {number} throttleTime Time in ms to throttle the press event
  * @property {'normal' | 'outline' | 'outline-blur' | 'uniform'} appearance
  * @property {ThemeColor | ThemeText} color Background color of the button, only used in 'uniform' appearance
@@ -50,6 +51,7 @@ const ButtonProps = {
     style: {},
     styleAnimation: null,
     styleContent: {},
+    styleBackground: {},
     throttleTime: 250,
     appearance: 'normal',
     color: 'main1',

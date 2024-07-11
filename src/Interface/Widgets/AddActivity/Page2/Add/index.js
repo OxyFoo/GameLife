@@ -1,0 +1,151 @@
+import * as React from 'react';
+import { View } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+import BackActivityPage2Add from './back';
+import styles from './style';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
+
+import { Text, Button, Icon, InputText, Digit } from 'Interface/Components';
+import { GetDate } from 'Utils/Time';
+import { DateFormat } from 'Utils/Date';
+import { MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+
+class AddActivityPage2Add extends BackActivityPage2Add {
+    render() {
+        const lang = langManager.curr['activity'];
+        const langDatesNames = langManager.curr['dates']['names'];
+        const { selectedDateTime, selectedDuration, selectedHours, selectedMinutes, comment, DTPMode, DTPDate } =
+            this.state;
+
+        const styleBorderColor = {
+            borderColor: themeManager.GetColor('border')
+        };
+
+        const startDate = GetDate(selectedDateTime);
+        const textStartDate = DateFormat(startDate, 'DD/MM/YYYY');
+        const textStartTime = DateFormat(startDate, 'HH:mm');
+
+        const endDate = startDate;
+        endDate.setMinutes(startDate.getMinutes() + selectedDuration);
+        const textEndTime = DateFormat(startDate, 'HH:mm');
+        const maxDuration = Math.floor(MAX_TIME_MINUTES / 60);
+
+        return (
+            <>
+                {/* Add later or already done */}
+                <Text style={styles.title}>{lang['title-add']}</Text>
+
+                {/* Button: Select day */}
+                <View style={styles.plannerContent}>
+                    <Button
+                        style={styles.plannerButtonLeft}
+                        appearance='outline'
+                        fontColor='primary'
+                        borderColor='border'
+                        onPress={this.setDate}
+                    >
+                        <Text style={styles.plannerButtonText}>{textStartDate}</Text>
+                        <Icon icon='planner-outline' />
+                    </Button>
+
+                    <Button
+                        style={styles.plannerButtonRight}
+                        appearance='outline'
+                        fontColor='primary'
+                        borderColor='border'
+                        onPress={this.setStartTime}
+                    >
+                        <Text style={styles.plannerButtonText}>{textStartTime}</Text>
+                        <Icon icon='clock-outline' />
+                    </Button>
+                </View>
+
+                <View style={styles.starttime}>
+                    {/* Input: End time (by duration) */}
+                    <View style={[styles.stButtonLeft, styleBorderColor]}>
+                        <Icon icon='hourglass-outline' />
+                        <View style={styles.stLeftViewParent}>
+                            <View style={styles.stViewLeftParent2}>
+                                <View style={styles.stDigitView}>
+                                    <Digit
+                                        style={[styles.stDigit, styleBorderColor]}
+                                        fadeColor='backgroundGrey'
+                                        maxValue={maxDuration}
+                                        velocity={1.25}
+                                        value={selectedHours}
+                                        onChangeValue={this.setDurationHours}
+                                    />
+                                    <Text>{langDatesNames['hours-min']}</Text>
+                                </View>
+
+                                <View style={styles.stDigitView}>
+                                    <Digit
+                                        style={[styles.stDigit, styleBorderColor]}
+                                        fadeColor='backgroundGrey'
+                                        minValue={selectedDuration < 60 ? 5 : 0}
+                                        maxValue={selectedDuration >= maxDuration * 60 ? 0 : 59}
+                                        stepValue={5}
+                                        velocity={2}
+                                        value={selectedMinutes}
+                                        onChangeValue={this.setDurationMinutes}
+                                    />
+                                    <Text>{langDatesNames['minutes-min']}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* Input: End time (by time) */}
+                    <Button
+                        style={styles.stButtonRight}
+                        styleBackground={styles.stButtonRightBackground}
+                        appearance='outline'
+                        fontColor='primary'
+                        borderColor='border'
+                        onPress={this.setDurationByTime}
+                    >
+                        <Text style={styles.stButtonRightText}>{textEndTime}</Text>
+                        <Icon icon='clock-outline' />
+                    </Button>
+                </View>
+
+                {/* Input: Comment */}
+                <InputText
+                    style={styles.commentInputText}
+                    containerStyle={styles.commentInputTextContainer}
+                    label='[Commentaire]'
+                    inactiveColor='border'
+                    numberOfLines={4}
+                    value={comment}
+                    onChangeText={this.setCommentary}
+                    multiline
+                />
+
+                {/* Button: Add to planner */}
+                <Button
+                    style={styles.addActivityButton}
+                    fontColor='backgroundCard'
+                    borderColor='border'
+                    onPress={this.onAddActivity}
+                >
+                    {lang['button-add']}
+                </Button>
+
+                {/** Date/Time selection */}
+                <DateTimePickerModal
+                    date={DTPDate}
+                    mode={DTPMode || 'date'}
+                    onConfirm={this.onChangeDateTimePicker}
+                    onCancel={this.hideDTP}
+                    isVisible={DTPMode !== ''}
+                    minuteInterval={TIME_STEP_MINUTES}
+                    is24Hour={true}
+                />
+            </>
+        );
+    }
+}
+
+export { AddActivityPage2Add };

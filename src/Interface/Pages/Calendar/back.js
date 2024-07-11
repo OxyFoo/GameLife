@@ -79,9 +79,13 @@ class BackCalendar extends PageBase {
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            const { selectedDay } = this.state;
+            if (!selectedDay) return;
+
+            const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
             this.setState({
                 /** @type {ActivityDataType[]} */
-                activities: user.activities.Get().map((activity) => ({
+                activities: user.activities.GetByTime(GetLocalTime(selectedDate)).map((activity) => ({
                     skill: dataManager.skills.GetByID(activity.skillID),
                     activity,
                     onPress: this.onActivityPress.bind(this)

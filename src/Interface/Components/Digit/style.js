@@ -3,18 +3,17 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     containerStyle: {
         width: 46,
-        height: 32,
         paddingLeft: 7,
+        paddingVertical: 4,
         justifyContent: 'center',
 
-        borderColor: '#FFFFFF',
         borderWidth: 2,
+        borderRadius: 8,
+        borderColor: '#FFFFFF',
         overflow: 'hidden'
     },
     content: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center'
+        flexDirection: 'row'
     },
     digit: {
         marginHorizontal: 2,

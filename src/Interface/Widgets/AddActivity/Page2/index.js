@@ -4,7 +4,10 @@ import { ScrollView, View } from 'react-native';
 import BackActivityPage2 from './back';
 import styles from './style';
 
-import { Text, Button, Icon, InputText } from 'Interface/Components';
+import { Text, Button, Icon } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
+import { AddActivityPage2StartNow } from './StartNow';
+import { AddActivityPage2Add } from './Add';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -16,26 +19,38 @@ import { Text, Button, Icon, InputText } from 'Interface/Components';
 
 class AddActivityPage2 extends BackActivityPage2 {
     render() {
+        //const lang = langManager.curr['activity'];
+        const langXP = langManager.curr['level'];
+        const langStats = langManager.curr['statistics']['names'];
+        const { skillID, unSelectSkill } = this.props;
+
         return (
             <View style={styles.parent}>
-                <Button style={styles.headerButton} appearance='outline' fontColor='primary' borderColor='main1'>
-                    <Icon icon='graph' />
-                    <Text style={styles.headerButtonText}>[Bien être] - [Boxe]</Text>
+                <Button
+                    style={styles.headerButton}
+                    styleContent={styles.headerButtonContent}
+                    appearance='outline'
+                    fontColor='primary'
+                    borderColor='main1'
+                    onPress={unSelectSkill}
+                >
+                    <Icon icon='arrow-left' />
+                    <View style={styles.headerButtonActivity}>
+                        <Icon xml={this.xmlIcon} />
+                        <Text style={styles.headerButtonText}>{this.activityText}</Text>
+                    </View>
+                    <View />
                 </Button>
                 <View style={styles.headerStats}>
-                    <Text fontSize={14} color='main1'>{`+ 100 XP /`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [1] Social`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [2] Force`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [2] Endurance`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [2] Agilité`}</Text>
+                    <Text fontSize={14} color='main1'>{`+ [100] ${langXP['xp']} /`}</Text>
+                    <Text fontSize={14} color='main1'>{` + [1] ${langStats['soc']}`}</Text>
+                    <Text fontSize={14} color='main1'>{` + [2] ${langStats['for']}`}</Text>
+                    <Text fontSize={14} color='main1'>{` + [2] ${langStats['sta']}`}</Text>
+                    <Text fontSize={14} color='main1'>{` + [2] ${langStats['agi']}`}</Text>
                 </View>
 
                 <ScrollView>
-                    {/* Add now */}
-                    <Text style={styles.title}>[Maintenant]</Text>
-                    <Button style={styles.addNowButton} fontColor='backgroundCard' borderColor='border'>
-                        [Démarrer l'activité maintenant]
-                    </Button>
+                    <AddActivityPage2StartNow skillID={skillID} />
 
                     {/* Separator */}
                     <View style={styles.separator}>
@@ -44,53 +59,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                         <View style={styles.separatorBar} />
                     </View>
 
-                    {/* Add later or already done */}
-                    <Text style={styles.title}>[Ajouter]</Text>
-
-                    {/* Button: Select day */}
-                    <Button style={styles.plannerButton} appearance='outline' fontColor='primary' borderColor='border'>
-                        <Text style={styles.plannerButtonText}>[dd / mm / yyyy]</Text>
-                        <Icon icon='planner-outline' />
-                    </Button>
-
-                    <View style={styles.starttimeContent}>
-                        {/* Input: Start time */}
-                        <Button
-                            style={styles.starttimeButtonLeft}
-                            appearance='outline'
-                            fontColor='primary'
-                            borderColor='border'
-                        >
-                            <Text style={styles.starttimeButtonText}>[HH : MM]</Text>
-                            <Icon icon='clock-outline' />
-                        </Button>
-
-                        {/* Input: Duration */}
-                        <Button
-                            style={styles.starttimeButtonRight}
-                            appearance='outline'
-                            fontColor='primary'
-                            borderColor='border'
-                        >
-                            <Text style={styles.starttimeButtonText}>[HH h MM m]</Text>
-                            <Icon icon='clock-outline' />
-                        </Button>
-                    </View>
-
-                    {/* Input: Comment */}
-                    <InputText
-                        style={styles.commentInputText}
-                        containerStyle={styles.commentInputTextContainer}
-                        label='[Commentaire]'
-                        inactiveColor='border'
-                        numberOfLines={4}
-                        multiline
-                    />
-
-                    {/* Button: Add to planner */}
-                    <Button style={styles.addActivityButton} fontColor='backgroundCard' borderColor='border'>
-                        [Ajouter l'activité]
-                    </Button>
+                    <AddActivityPage2Add skillID={skillID} />
                 </ScrollView>
             </View>
         );

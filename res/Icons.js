@@ -50,6 +50,7 @@ const Icons = {
     'graph':                    require('./icons/graph').default,
     'home-outline':             require('./icons/home-outline').default,
     'home':                     require('./icons/home').default,
+    'hourglass-outline':        require('./icons/hourglass-outline').default,
     'house-outline':            require('./icons/house-outline').default,
     'house':                    require('./icons/house').default,
     'info-circle-outline':      require('./icons/info-circle-outline').default,

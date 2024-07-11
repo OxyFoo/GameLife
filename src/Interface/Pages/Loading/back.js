@@ -71,8 +71,7 @@ class BackLoading extends PageBase {
         const lang = langManager.curr['app'];
         this.fe.ChangePage('display', {
             args: {
-                icon: 'error',
-                iconRatio: 0.4,
+                icon: 'close-filled',
                 text: lang['loading-error-message'][message],
                 button: lang['loading-error-button'],
                 action: RNExitApp.exitApp

@@ -23,6 +23,12 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  *
  * @typedef {Object} BackActivityPage1PropsType
+ * @property {(skillID: number) => void} selectActivity
+ * @property {number | null} categoryID
+ * @property {number | null} skillID
+ * @property {number | null} time
+ * @property {Array<number>} skills
+ *
  * @property {Object} args
  * @property {number | null} [args.categoryID]
  * @property {number | null} [args.skillID]
@@ -32,6 +38,13 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
 
 /** @type {BackActivityPage1PropsType} */
 const BackActivityPage1Props = {
+    selectActivity: () => {},
+
+    categoryID: null,
+    skillID: null,
+    time: null,
+    skills: [],
+
     args: {
         categoryID: undefined,
         skillID: undefined,
@@ -265,7 +278,9 @@ class BackActivityPage1 extends React.Component {
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
-        this.refActivityPanel?.SelectSkill(skill);
+        const { selectActivity } = this.props;
+        selectActivity(skill.ID);
+        //this.refActivityPanel?.SelectSkill(skill);
     };
 }
 

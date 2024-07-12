@@ -1,8 +1,6 @@
 import React from 'react';
 
-import user from 'Managers/UserManager';
-
-import { GetLocalTime, GetTimeZone } from 'Utils/Time';
+import { StartActivityNow } from 'Utils/Activities';
 
 /**
  * @typedef {import('Data/Skills').Skill} Skill
@@ -26,13 +24,7 @@ class BackActivityPage2StartNow extends React.Component {
             return;
         }
 
-        user.activities.currentActivity.Set({
-            skillID,
-            startTime: GetLocalTime(),
-            timezone: GetTimeZone(),
-            friendsIDs: []
-        });
-        user.interface.ChangePage('activitytimer');
+        StartActivityNow(skillID);
     };
 }
 

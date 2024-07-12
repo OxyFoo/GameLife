@@ -36,10 +36,9 @@ const RenderActivity = React.memo(
 
         const activityText = langManager.GetText(skill.Name);
         const categoryText = langManager.GetText(category.Name);
-        const activityTime =
-            TimeToFormatString(activity.startTime) +
-            ' - ' +
-            TimeToFormatString(activity.startTime + activity.duration * 60);
+        const startTime = activity.startTime + activity.timezone * 3600;
+        const endTime = startTime + activity.duration * 60;
+        const activityTime = `${TimeToFormatString(startTime)} - ${TimeToFormatString(endTime)}`;
         const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
         const onPress = () => item.onPress(item);
         const borderColor = {

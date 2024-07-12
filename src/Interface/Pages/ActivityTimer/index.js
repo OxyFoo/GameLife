@@ -3,9 +3,9 @@ import { View, Animated, TouchableOpacity, Image } from 'react-native';
 
 import styles from './style';
 import BackActivityTimer from './back';
-import ActivityTimerTitle from './components/title';
-import ActivityTimerScore from './components/score';
-import ActivityTimerFriends from './components/friends';
+import ActivityTimerTitle from './Sections/title';
+import ActivityTimerScore from './Sections/score';
+import ActivityTimerFriends from './Sections/friends';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -28,33 +28,13 @@ class ActivityTimer extends BackActivityTimer {
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
 
-        const musicKeys =
-            /** @type {(keyof MusicLinks)[]} */
-            (Object.keys(user.settings.musicLinks));
+        /** @type {(keyof MusicLinks)[]} */ // @ts-ignore
+        const musicKeys = Object.keys(user.settings.musicLinks);
 
         return (
             <View style={styles.content}>
                 {/* Title */}
                 <ActivityTimerTitle currentActivity={currentActivity} />
-
-                {/* Buttons - Cancel / Done */}
-                <View style={styles.row}>
-                    <Button
-                        style={styles.button}
-                        color='background'
-                        onPress={this.onPressCancel}
-                    >
-                        {bt_cancel}
-                    </Button>
-
-                    <Button
-                        style={styles.button}
-                        color='main1'
-                        onPress={this.onPressComplete}
-                    >
-                        {bt_complete}
-                    </Button>
-                </View>
 
                 {/* Informations */}
                 <ActivityTimerScore currentActivity={currentActivity} />
@@ -62,12 +42,21 @@ class ActivityTimer extends BackActivityTimer {
                 {/* Friends ! */}
                 <ActivityTimerFriends currentActivity={currentActivity} />
 
+                {/* Buttons - Cancel / Done */}
+                <View>
+                    <Button style={styles.button} appearance='outline' onPress={this.onPressCancel}>
+                        {bt_cancel}
+                    </Button>
+
+                    <Button style={styles.button} onPress={this.onPressComplete}>
+                        {bt_complete}
+                    </Button>
+                </View>
+
                 {/* Zap'N'Music */}
                 <View>
                     <Text style={styles.musicTitle}>{lang['timer-music']}</Text>
-                    <View style={styles.imageMap}>
-                        {musicKeys.map(this.renderMusic)}
-                    </View>
+                    <View style={styles.imageMap}>{musicKeys.map(this.renderMusic)}</View>
                 </View>
             </View>
         );
@@ -75,30 +64,27 @@ class ActivityTimer extends BackActivityTimer {
 
     /**
      * @param {keyof MusicLinks} musicKey
-     * @param {number} index
+     * @param {number} _index
+     * @param {(keyof MusicLinks)[]} _array
+     * @returns {React.JSX.Element}
      */
-    renderMusic = (musicKey, index) => {
+    renderMusic = (musicKey, _index, _array) => {
         const animStyle = {
             opacity: this.animations[musicKey].interpolate({
                 inputRange: [0, 1],
                 outputRange: [1, 0]
             }),
-            transform: [
-                { translateY: Animated.multiply(128, this.animations[musicKey]) }
-            ]
+            transform: [{ translateY: Animated.multiply(128, this.animations[musicKey]) }]
         };
 
         return (
             <Animated.View key={'music-link-' + musicKey} style={animStyle}>
                 <TouchableOpacity onPress={() => this.openURL(musicKey)}>
-                    <Image
-                        style={styles.image}
-                        source={IMG_MUSIC[index]}
-                    />
+                    <Image style={styles.image} source={IMG_MUSIC[musicKey]} />
                 </TouchableOpacity>
             </Animated.View>
         );
-    }
+    };
 }
 
 export default ActivityTimer;

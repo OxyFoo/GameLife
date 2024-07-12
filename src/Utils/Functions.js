@@ -14,11 +14,11 @@ function TwoDigit(n) {
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
     const n = parseFloat(number + ('e+' + dec));
-    return + (Math.floor(n) + ('e-' + dec));
+    return +(Math.floor(n) + ('e-' + dec));
 }
 
 /**
- * @param {Array} arr
+ * @param {Array<number>} arr
  * @returns {number} Return sum of array
  * @example Sum([1, 2, 3]) => 6
  */
@@ -31,7 +31,7 @@ function Sum(arr) {
  * @returns {boolean} Return true if element is undefined
  */
 function IsUndefined(el) {
-    return typeof(el) === 'undefined';
+    return typeof el === 'undefined';
 }
 
 /**
@@ -41,9 +41,8 @@ function IsUndefined(el) {
  * @returns {number} Return value between min and max
  */
 function MinMax(min, value, max) {
-    let output = null;
-    if (typeof(value) === 'number') {
-        output = value;
+    let output = value;
+    if (typeof value === 'number') {
         if (output < min) output = min;
         else if (output > max) output = max;
     }
@@ -56,8 +55,8 @@ function MinMax(min, value, max) {
  * @returns {Array} Return sorted array
  */
 function SortByKey(array, key) {
-    const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
-    const compare = (a, b) => format(a[key]) < format(b[key]) ? -1 : 1;
+    const format = (value) => (typeof value === 'string' ? value.toLowerCase() : value);
+    const compare = (a, b) => (format(a[key]) < format(b[key]) ? -1 : 1);
     return array.sort(compare);
 }
 
@@ -69,16 +68,18 @@ function SortByKey(array, key) {
  * @returns {object | null} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
-    for (let i = 0; i < array.length; i++)
-        if (array[i][key] == value)
+    for (let i = 0; i < array.length; i++) {
+        if (array[i][key] == value) {
             return array[i];
+        }
+    }
     return null;
 }
 
 /**
  * Convert array of object to object
  * @param {Array} arr
- * @returns {object} 
+ * @returns {object}
  */
 const ArrayToDict = (arr) => arr.reduce((acc, curr) => Object.assign(acc, curr), {});
 
@@ -95,7 +96,7 @@ function Range(length, step = 1) {
 
 function Sleep(ms) {
     const T = Math.max(0, ms);
-    return new Promise(resolve => setTimeout(resolve, T));
+    return new Promise((resolve) => setTimeout(resolve, T));
 }
 
 /**
@@ -103,14 +104,11 @@ function Sleep(ms) {
  * @param {number} min
  * @param {number} max
  * @param {number} decimal Number of decimals to keep
- * @returns 
+ * @returns
  */
 function Random(min = 0, max = 1, decimal = 0) {
     const r = Math.random() * (max - min) + min;
     return Round(r, decimal);
 }
 
-export {
-    TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict,
-    IsUndefined, MinMax, Sleep, Random
-};
+export { TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict, IsUndefined, MinMax, Sleep, Random };

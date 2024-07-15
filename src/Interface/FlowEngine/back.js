@@ -179,6 +179,8 @@ class BackFlowEngine extends React.Component {
      */
     GetCurrentPageName = () => this.state.selectedPage;
 
+    GetCurrentPage = () => this.getMountedPage(this.state.selectedPage);
+
     /**
      * @description Check if page exist
      * @param {string} pageName
@@ -500,6 +502,7 @@ class BackFlowEngine extends React.Component {
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,
         GetPageName: this.GetPageName,
+        GetCurrentPage: this.GetCurrentPage,
         GetCurrentPageName: this.GetCurrentPageName,
         SetCustomBackHandler: this.SetCustomBackHandler,
         ResetCustomBackHandler: this.ResetCustomBackHandler

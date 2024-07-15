@@ -3,25 +3,20 @@ import React from 'react';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
+import { Activity } from 'Class/Activities';
+
 /**
- * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('../types').ItemSkill} ItemSkill
- * @typedef {import('../types').EnrichedSkill} EnrichedSkill
- * @typedef {import('../types').ItemCategory} ItemCategory
- *
- * @typedef {import('Interface/Components').InputText} InputText
- *
  * @typedef {Object} BackActivityPage2PropsType
- * @prop {number | null} skillID
- * @prop {(duration: number) => void} onChangeDuration Called when the duration is changed (in minutes)
- * @prop {() => void} unSelectSkill
+ * @prop {Activity} activity
+ * @prop {(newActivity: Activity) => Promise<void>} changeActivity
+ * @prop {() => void} unSelectActivity
  */
 
 /** @type {BackActivityPage2PropsType} */
 const BackActivityPage2Props = {
-    skillID: null,
-    onChangeDuration: () => {},
-    unSelectSkill: () => {}
+    activity: new Activity(),
+    changeActivity: async () => {},
+    unSelectActivity: () => {}
 };
 
 class BackActivityPage2 extends React.Component {
@@ -37,20 +32,15 @@ class BackActivityPage2 extends React.Component {
     constructor(props) {
         super(props);
 
-        if (props.skillID === null) {
-            props.unSelectSkill();
-            return;
-        }
-
-        const skill = dataManager.skills.GetByID(props.skillID);
+        const skill = dataManager.skills.GetByID(props.activity.skillID);
         if (skill === null) {
-            props.unSelectSkill();
+            props.unSelectActivity();
             return;
         }
 
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         if (category === null) {
-            props.unSelectSkill();
+            props.unSelectActivity();
             return;
         }
 

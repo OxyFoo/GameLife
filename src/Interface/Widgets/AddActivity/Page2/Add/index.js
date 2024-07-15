@@ -16,21 +16,21 @@ class AddActivityPage2Add extends BackActivityPage2Add {
     render() {
         const lang = langManager.curr['activity'];
         const langDatesNames = langManager.curr['dates']['names'];
-        const { selectedDateTime, selectedDuration, selectedHours, selectedMinutes, comment, DTPMode, DTPDate } =
-            this.state;
+        const { activity } = this.props;
+        const { selectedHours, selectedMinutes, DTPMode, DTPDate } = this.state;
 
-        const styleBorderColor = {
-            borderColor: themeManager.GetColor('border')
-        };
-
-        const startDate = GetDate(selectedDateTime);
+        const startDate = GetDate(activity.startTime - activity.timezone * 3600);
         const textStartDate = DateFormat(startDate, 'DD/MM/YYYY');
         const textStartTime = DateFormat(startDate, 'HH:mm');
 
         const endDate = startDate;
-        endDate.setMinutes(startDate.getMinutes() + selectedDuration);
+        endDate.setMinutes(startDate.getMinutes() + activity.duration);
         const textEndTime = DateFormat(startDate, 'HH:mm');
         const maxDuration = Math.floor(MAX_TIME_MINUTES / 60);
+
+        const styleBorderColor = {
+            borderColor: themeManager.GetColor('border')
+        };
 
         return (
             <>
@@ -84,8 +84,8 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                                     <Digit
                                         style={[styles.stDigit, styleBorderColor]}
                                         fadeColor='backgroundGrey'
-                                        minValue={selectedDuration < 60 ? 5 : 0}
-                                        maxValue={selectedDuration >= maxDuration * 60 ? 0 : 59}
+                                        minValue={activity.duration < 60 ? 5 : 0}
+                                        maxValue={activity.duration >= maxDuration * 60 ? 0 : 59}
                                         stepValue={5}
                                         velocity={2}
                                         value={selectedMinutes}
@@ -115,10 +115,10 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 <InputText
                     style={styles.commentInputText}
                     containerStyle={styles.commentInputTextContainer}
-                    label='[Commentaire]'
+                    label={lang['placeholder-comment']}
                     inactiveColor='border'
                     numberOfLines={4}
-                    value={comment}
+                    value={activity?.comment}
                     onChangeText={this.setCommentary}
                     multiline
                 />

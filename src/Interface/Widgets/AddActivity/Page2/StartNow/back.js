@@ -2,29 +2,27 @@ import React from 'react';
 
 import { StartActivityNow } from 'Utils/Activities';
 
+import { Activity } from 'Class/Activities';
+
 /**
- * @typedef {import('Data/Skills').Skill} Skill
- *
- * @typedef {import('Interface/Components').InputText} InputText
- *
  * @typedef {Object} BackActivityPage2StartNowPropsType
- * @prop {number | null} skillID
+ * @prop {Activity} activity
  */
 
 /** @type {BackActivityPage2StartNowPropsType} */
 const BackActivityPage2StartNowProps = {
-    skillID: null
+    activity: new Activity()
 };
 
 class BackActivityPage2StartNow extends React.Component {
     onAddActivityNow = () => {
-        const { skillID } = this.props;
+        const { activity } = this.props;
 
-        if (!skillID) {
+        if (activity.skillID === 0) {
             return;
         }
 
-        StartActivityNow(skillID);
+        StartActivityNow(activity.skillID);
     };
 }
 

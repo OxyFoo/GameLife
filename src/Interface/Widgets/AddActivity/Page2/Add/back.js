@@ -1,37 +1,34 @@
 import React from 'react';
 
-import { AddActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { Activity } from 'Class/Activities';
 import { MinMax } from 'Utils/Functions';
-import { GetDate, GetGlobalTime, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import { GetDate, GetGlobalTime, GetLocalTime } from 'Utils/Time';
+import { AddActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('Data/Skills').Skill} Skill
- *
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *
  * @typedef {Object} BackActivityPage2AddPropsType
- * @prop {number | null} skillID
+ * @prop {Activity} activity
+ * @prop {(newActivity: Activity) => Promise<void>} changeActivity
+ * @prop {() => void} unSelectActivity
  */
 
 /** @type {BackActivityPage2AddPropsType} */
 const BackActivityPage2AddProps = {
-    skillID: null
+    activity: new Activity(),
+    changeActivity: async () => {},
+    unSelectActivity: () => {}
 };
 
 class BackActivityPage2Add extends React.Component {
     state = {
-        /** @type {number} UTC unix timestamp in seconds */
-        selectedDateTime: 0,
-
         /** @type {number} Index of digits */
         selectedHours: 1,
+
         /** @type {number} Index of digits */
         selectedMinutes: 0,
-        /** @type {number} Total duration in minutes */
-        selectedDuration: 60,
-
-        comment: '',
 
         /** @type {'' | 'date' | 'time' | 'datetime'} */
         DTPMode: '',
@@ -46,78 +43,98 @@ class BackActivityPage2Add extends React.Component {
     constructor(props) {
         super(props);
 
-        const dateTime = RoundTimeTo(TIME_STEP_MINUTES, GetLocalTime(), 'near');
-        this.state.selectedDateTime = dateTime;
+        const { activity } = props;
+        this.state.selectedHours = Math.floor(activity.duration / 60);
+        this.state.selectedMinutes = activity.duration % 60;
     }
 
     onAddActivity = () => {
-        const { skillID } = this.props;
-        const { comment, selectedDateTime, selectedDuration } = this.state;
+        const { activity } = this.props;
 
-        if (!skillID) {
+        if (activity.skillID === 0) {
             return;
         }
 
-        AddActivity({
-            skillID,
-            comment,
-            addedType: 'normal',
-            startTime: selectedDateTime + GetTimeZone() * 3600,
-            duration: selectedDuration,
-            friends: [],
-            timezone: GetTimeZone(),
-            addedTime: 0
-        });
+        AddActivity(activity);
+        // TODO: Manage errors ?
     };
 
     setDate = () => {
-        const { selectedDateTime } = this.state;
-        this.showDTP('date', 'startTime', selectedDateTime);
+        const { activity } = this.props;
+        this.showDTP('date', 'startTime', activity.startTime - activity.timezone * 3600);
     };
     setStartTime = () => {
-        const { selectedDateTime } = this.state;
-        this.showDTP('time', 'startTime', selectedDateTime);
+        const { activity } = this.props;
+        this.showDTP('time', 'startTime', activity.startTime - activity.timezone * 3600);
     };
 
     /** @type {Digit['props']['onChangeValue']} */
     setDurationHours = (duration) => {
+        const { activity, changeActivity } = this.props;
         const { selectedMinutes } = this.state;
+
+        if (activity.skillID === 0) {
+            return;
+        }
 
         const hours = duration;
         const minutes = selectedMinutes;
         const total = hours * 60 + minutes;
 
-        this.setState({
-            selectedDuration: total,
-            selectedHours: duration
+        this.setState({ selectedHours: duration }, () => {
+            changeActivity({
+                ...activity,
+                duration: total
+            });
         });
     };
 
     /** @type {Digit['props']['onChangeValue']} */
     setDurationMinutes = (duration) => {
+        const { activity, changeActivity } = this.props;
         const { selectedHours } = this.state;
+
+        if (activity.skillID === 0) {
+            return;
+        }
 
         const minutes = duration * TIME_STEP_MINUTES;
         const total = selectedHours * 60 + minutes;
 
-        this.setState({
-            selectedDuration: total,
-            selectedMinutes: minutes
+        this.setState({ selectedMinutes: minutes }, () => {
+            changeActivity({
+                ...activity,
+                duration: total
+            });
         });
     };
 
     setDurationByTime = () => {
-        const { selectedDateTime, selectedDuration } = this.state;
-        const endDate = GetDate(selectedDateTime - GetTimeZone() * 3600);
-        endDate.setHours(endDate.getHours() + Math.floor(selectedDuration / 60));
-        endDate.setMinutes(endDate.getMinutes() + (selectedDuration % 60));
-        const endTime = GetGlobalTime(endDate);
+        const { activity } = this.props;
+
+        if (activity.skillID === 0) {
+            return;
+        }
+
+        const endDate = GetDate(activity.startTime - activity.timezone * 3600);
+        endDate.setHours(endDate.getHours() + Math.floor(activity.duration / 60));
+        endDate.setMinutes(endDate.getMinutes() + (activity.duration % 60));
+        const endTime = GetLocalTime(endDate);
         this.showDTP('time', 'endTime', endTime);
     };
 
     /** @type {InputText['props']['onChangeText']} */
     setCommentary = (text) => {
-        this.setState({ comment: text });
+        const { activity, changeActivity } = this.props;
+
+        if (activity.skillID === 0) {
+            return;
+        }
+
+        changeActivity({
+            ...activity,
+            comment: text
+        });
     };
 
     /**
@@ -131,21 +148,33 @@ class BackActivityPage2Add extends React.Component {
 
     /** @param {Date} date UTC date */
     onChangeDateTimePicker = (date) => {
-        const { DTPType, selectedDateTime } = this.state;
+        const { activity, changeActivity } = this.props;
+        const { DTPType } = this.state;
+
+        if (activity.skillID === 0) {
+            return;
+        }
 
         if (DTPType === 'startTime') {
             const pickedTime = GetGlobalTime(date);
-            this.setState({
-                selectedDateTime: pickedTime - GetTimeZone() * 3600,
-                DTPMode: '',
-                DTPDate: date
-            });
+            this.setState(
+                {
+                    DTPMode: '',
+                    DTPDate: date
+                },
+                () => {
+                    changeActivity({
+                        ...activity,
+                        startTime: pickedTime
+                    });
+                }
+            );
         } else if (DTPType === 'endTime') {
             const pickedHours = date.getHours();
             const pickedMinutes = date.getMinutes();
             const pickedTotalTime = pickedHours * 60 + pickedMinutes;
 
-            const currentDate = GetDate(selectedDateTime);
+            const currentDate = GetDate(activity.startTime - activity.timezone * 3600);
             const currentHours = currentDate.getHours();
             const currentMinutes = currentDate.getMinutes();
             const currentTotalTime = currentHours * 60 + currentMinutes;
@@ -158,11 +187,15 @@ class BackActivityPage2Add extends React.Component {
             const newHoursIndex = Math.floor(deltaMinutes / 60);
             const newMinutesIndex = Math.floor((deltaMinutes % 60) / TIME_STEP_MINUTES);
 
-            this.setState({
-                selectedDuration: deltaMinutes,
-                selectedHours: newHoursIndex,
-                selectedMinutes: newMinutesIndex * TIME_STEP_MINUTES,
-                DTPMode: ''
+            changeActivity({
+                ...activity,
+                duration: deltaMinutes
+            }).then(() => {
+                this.setState({
+                    selectedHours: newHoursIndex,
+                    selectedMinutes: newMinutesIndex * TIME_STEP_MINUTES,
+                    DTPMode: ''
+                });
             });
         }
     };

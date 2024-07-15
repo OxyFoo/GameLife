@@ -9,24 +9,28 @@ import { AddActivityPage2 } from './Page2';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- *
- * @typedef {import('./types').ItemSkill} ItemSkill
- * @typedef {import('./types').ItemCategory} ItemCategory
  */
 
 class AddActivity extends BackActivity {
     render() {
-        const { selectedSkill } = this.state;
+        const { categoryID, listSkillsIDs } = this.props;
+        const { newActivity } = this.state;
 
         return (
             <View style={styles.parent}>
-                {selectedSkill === null ? (
-                    <AddActivityPage1 selectActivity={this.selectSkill} />
+                {newActivity.skillID === 0 ? (
+                    <AddActivityPage1
+                        activity={newActivity}
+                        changeActivity={this.changeActivity}
+                        unSelectActivity={this.unSelectActivity}
+                        categoryID={categoryID}
+                        listSkillsIDs={listSkillsIDs}
+                    />
                 ) : (
                     <AddActivityPage2
-                        skillID={selectedSkill}
-                        onChangeDuration={this.onChangeDuration}
-                        unSelectSkill={this.unSelectSkill}
+                        activity={newActivity}
+                        changeActivity={this.changeActivity}
+                        unSelectActivity={this.unSelectActivity}
                     />
                 )}
             </View>

@@ -99,16 +99,20 @@ class AddActivityPage1 extends BackActivityPage1 {
      * @param {ItemCategory | null} value
      * @param {number} _index
      * @param {Array<ItemCategory | null>} _array
-     * @returns {JSX.Element}
+     * @returns {JSX.Element | null}
      */
     renderCategory = (value, _index, _array) => {
+        // If there are preselected skills, do not show categories
+        if (this.preselectedSkillsIDs.length > 0) {
+            return null;
+        }
+
         if (value === null) {
             return <View style={styles.categoryEmpty} />;
         }
 
         const { id, icon } = value;
         const checked = this.state.selectedCategory === id;
-        const pressable = this.preselectedSkillsIDs.length === 0;
 
         return (
             <IconCheckable
@@ -119,7 +123,6 @@ class AddActivityPage1 extends BackActivityPage1 {
                 size={24}
                 checked={checked}
                 onPress={this.selectCategory}
-                pressable={pressable}
             />
         );
     };

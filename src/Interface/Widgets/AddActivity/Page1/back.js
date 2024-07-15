@@ -3,14 +3,12 @@ import { Animated } from 'react-native';
 
 import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
 
-import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
+import { Activity } from 'Class/Activities';
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
-import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
-import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('react-native').FlatList} FlatList
@@ -23,34 +21,21 @@ import { MIN_TIME_MINUTES, MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  *
  * @typedef {Object} BackActivityPage1PropsType
- * @property {(skillID: number) => void} selectActivity
- * @property {number | null} categoryID
- * @property {number | null} skillID
- * @property {number | null} time
- * @property {Array<number>} skills
- *
- * @property {Object} args
- * @property {number | null} [args.categoryID]
- * @property {number | null} [args.skillID]
- * @property {number | null} [args.time]
- * @property {Array<number>} [args.skills]
+ * @prop {Activity} activity
+ * @prop {(newActivity: Activity) => Promise<void>} changeActivity
+ * @prop {() => void} unSelectActivity
+ * @prop {number | null} categoryID
+ * @prop {Array<number>} listSkillsIDs
  */
 
 /** @type {BackActivityPage1PropsType} */
 const BackActivityPage1Props = {
-    selectActivity: () => {},
+    activity: new Activity(),
+    changeActivity: async () => {},
+    unSelectActivity: () => {},
 
     categoryID: null,
-    skillID: null,
-    time: null,
-    skills: [],
-
-    args: {
-        categoryID: undefined,
-        skillID: undefined,
-        time: undefined,
-        skills: []
-    }
+    listSkillsIDs: []
 };
 
 class BackActivityPage1 extends React.Component {
@@ -69,9 +54,6 @@ class BackActivityPage1 extends React.Component {
         inputText: ''
     };
 
-    /** @type {ActivityPanel | null} */
-    refActivityPanel = null;
-
     /** @type {React.RefObject<FlatList>} */
     refActivities = React.createRef();
 
@@ -80,7 +62,7 @@ class BackActivityPage1 extends React.Component {
 
     categoriesNames = dataManager.skills.categories.map((category) => langManager.GetText(category.Name));
 
-    /** @type {Array<number>} Defined with props args 'skills' (disable categories) */
+    /** @type {Array<number>} Defined with props 'listSkillsIDs' (disable categories) */
     preselectedSkillsIDs = [];
 
     /** @type {Array<ItemSkill>} All skills converted to ItemSkill used as source for the FlatList */
@@ -109,11 +91,9 @@ class BackActivityPage1 extends React.Component {
         this.state.inputText = langManager.curr['activity']['input-activity'];
 
         // Preselected skills
-        if (this.props.args.hasOwnProperty('skills') && typeof this.props.args.skills !== 'undefined') {
-            if (this.props.args.skills.length > 0) {
-                this.preselectedSkillsIDs = this.props.args.skills;
-                this.state.skills = this.allSkillsItems.filter((skill) => this.preselectedSkillsIDs.includes(skill.id));
-            }
+        if (props.listSkillsIDs.length > 0) {
+            this.preselectedSkillsIDs = props.listSkillsIDs;
+            this.state.skills = this.allSkillsItems.filter((skill) => this.preselectedSkillsIDs.includes(skill.id));
         }
 
         // Set default to recent if there is more than 5 skills
@@ -122,9 +102,8 @@ class BackActivityPage1 extends React.Component {
         }
 
         // Select default category
-        if (this.props.args.hasOwnProperty('categoryID') && typeof this.props.args.categoryID !== 'undefined') {
-            const { categoryID } = this.props.args;
-            this.state.selectedCategory = categoryID;
+        if (props.categoryID !== null) {
+            this.state.selectedCategory = props.categoryID;
         }
 
         // Update state
@@ -132,65 +111,6 @@ class BackActivityPage1 extends React.Component {
             ...this.state,
             ...this.refreshSkills(this.state.skillSearch, this.state.selectedCategory, false)
         };
-    }
-
-    async componentDidMount() {
-        // Set default values to open the page with a skill selected
-        if (this.props.args.hasOwnProperty('skillID') && typeof this.props.args.skillID === 'number') {
-            const { skillID } = this.props.args;
-            const skill = dataManager.skills.GetByID(skillID);
-            if (skill !== null) {
-                this.refActivityPanel?.SelectSkill(skill);
-            }
-        }
-
-        // If default skills is defined and contains only one skill
-        if (this.preselectedSkillsIDs.length === 1) {
-            const skill = dataManager.skills.GetByID(this.preselectedSkillsIDs[0]);
-            if (skill !== null) {
-                this.refActivityPanel?.SelectSkill(skill);
-            }
-        }
-
-        const fromCalendar = user.interface.GetCurrentPageName() === 'calendar';
-
-        // Set default time (UTC) to add an activity
-        if (this.props.args.hasOwnProperty('time') && typeof this.props.args.time === 'number') {
-            const { time } = this.props.args;
-            const activities = user.activities.GetByTime(time).filter((activity) => activity.startTime > time);
-
-            let duration = 60;
-            if (activities.length > 0) {
-                const delta = activities[0].startTime - time;
-                if (delta <= MAX_TIME_MINUTES * 60) {
-                    duration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
-                    duration = Math.max(MIN_TIME_MINUTES, duration);
-                }
-            }
-            this.refActivityPanel?.SetChangeSchedule(time, duration);
-        }
-
-        // User from calendar
-        else if (user.tempSelectedTime !== null && fromCalendar) {
-            this.refActivityPanel?.SetChangeSchedule(user.tempSelectedTime, 60);
-        }
-
-        // Default time (local) to add an activity
-        else {
-            const time = GetLocalTime();
-            const activities = user.activities.GetByTime(time).filter((activity) => activity.startTime > time);
-
-            let duration = 60;
-            if (activities.length > 0) {
-                const delta = activities[0].startTime - time;
-                if (delta <= MAX_TIME_MINUTES * 60) {
-                    duration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
-                    duration = Math.max(MIN_TIME_MINUTES, duration);
-                }
-            }
-
-            this.refActivityPanel?.SetChangeSchedule(RoundTimeTo(TIME_STEP_MINUTES, time), duration);
-        }
     }
 
     /**
@@ -271,16 +191,17 @@ class BackActivityPage1 extends React.Component {
     selectCategory = (ID, checked) => {
         this.refreshSkills(this.state.skillSearch, checked ? ID : null);
         this.refActivities.current?.scrollToOffset({ offset: 0, animated: false });
-        this.refActivityPanel?.Close();
     };
 
     /**
      * @param {Skill} skill
      */
     selectSkill = (skill) => {
-        const { selectActivity } = this.props;
-        selectActivity(skill.ID);
-        //this.refActivityPanel?.SelectSkill(skill);
+        const { activity, changeActivity } = this.props;
+        changeActivity({
+            ...activity,
+            skillID: skill.ID
+        });
     };
 }
 

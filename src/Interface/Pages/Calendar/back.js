@@ -8,6 +8,7 @@ import dataManager from 'Managers/DataManager';
 
 import { GetLocalTime } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
+import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
@@ -105,6 +106,13 @@ class BackCalendar extends PageBase {
     summaryHeight = 0;
 
     refreshing = false;
+
+    addActivity = () => {
+        this.fe.bottomPanel.Open({
+            content: <AddActivity />,
+            movable: false
+        });
+    };
 
     /** @param {ActivityDataType} activity */
     onActivityPress(activity) {

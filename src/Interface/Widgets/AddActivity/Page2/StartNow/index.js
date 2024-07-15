@@ -9,11 +9,6 @@ import { Text, Button } from 'Interface/Components';
 class AddActivityPage2StartNow extends BackActivityPage2StartNow {
     render() {
         const lang = langManager.curr['activity'];
-        const { skillID } = this.props;
-
-        if (!skillID) {
-            return null;
-        }
 
         return (
             <>

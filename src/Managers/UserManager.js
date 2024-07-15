@@ -78,9 +78,6 @@ class UserManager {
     /** @type {boolean} */
     globalSaving = false;
 
-    /** @type {number | null} Calendar: select day => global UTC time */
-    tempSelectedTime = null;
-
     /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
 
@@ -97,7 +94,6 @@ class UserManager {
         const onboarding = this.settings.onboardingWatched;
         this.xp = 0;
         this.stats = this.experience.GetEmptyExperience();
-        this.tempSelectedTime = null;
         this.tempMailSent = null;
 
         this.achievements.Clear();

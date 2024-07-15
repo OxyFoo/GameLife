@@ -1,39 +1,44 @@
 import React from 'react';
 
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 
+import Calendar from 'Interface/Pages/Calendar';
+import { MinMax } from 'Utils/Functions';
+import { GetGlobalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+
 /**
- * @typedef {import('react-native').FlatList} FlatList
- *
- * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('./types').ItemSkill} ItemSkill
- * @typedef {import('./types').EnrichedSkill} EnrichedSkill
- * @typedef {import('./types').ItemCategory} ItemCategory
- *
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
- * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  *
  * @typedef {Object} BackActivityPropsType
- * @property {number | null} args.categoryID
- * @property {number | null} args.time
- * @property {Array<number>} args.preselectedSkillsIDs If only one skill is passed, it will be selected by default
+ * @property {number | null} time Start time of activity, If null current time will be used
+ * @property {number | null} categoryID Default category ID selected, If null no category will be selected (or recent with more than 5 activities)
+ * @property {number | null} openSkillID Default skill ID selected, If null no skill will be selected
+ * @property {Array<number>} listSkillsIDs If only one skill is passed, it will be opened by default
  */
 
 /** @type {BackActivityPropsType} */
 const BackActivityProps = {
-    categoryID: null,
     time: null,
-    preselectedSkillsIDs: []
+    categoryID: null,
+    openSkillID: null,
+    listSkillsIDs: []
 };
 
 class BackActivity extends React.Component {
     state = {
-        /** @type {number | null} */
-        selectedSkill: null,
-
-        /** @type {number} Duration of selected activity (in minutes) */
-        duration: 60
+        /** @type {Activity} */
+        newActivity: {
+            skillID: 0, // 0 means no skill selected
+            duration: 60,
+            startTime: RoundTimeTo(TIME_STEP_MINUTES, GetGlobalTime(), 'near'),
+            timezone: GetTimeZone(),
+            addedTime: 0, // Auto defined when activity is added
+            addedType: 'normal',
+            comment: '',
+            friends: []
+        }
     };
 
     /** @param {BackActivityPropsType} props */
@@ -41,26 +46,67 @@ class BackActivity extends React.Component {
         super(props);
 
         // If default skills is defined and contains only one skill
-        if (props.preselectedSkillsIDs.length === 1) {
-            const skill = dataManager.skills.GetByID(props.preselectedSkillsIDs[0]);
+        if (props.openSkillID !== null || props.listSkillsIDs.length === 1) {
+            const skillID = props.openSkillID !== null ? props.openSkillID : props.listSkillsIDs[0];
+            const skill = dataManager.skills.GetByID(skillID);
             if (skill !== null) {
-                this.state.selectedSkill = skill.ID;
+                this.state.newActivity.skillID = skill.ID;
             }
         }
+
+        // Set default time (UTC) to add an activity
+        let newTime = RoundTimeTo(TIME_STEP_MINUTES, GetGlobalTime(), 'near');
+        let newDuration = 60;
+
+        // Set date from props
+        if (props.time !== null) {
+            newTime = props.time;
+        }
+
+        // Set date from calendar
+        else if (user.interface.GetCurrentPageName() === 'calendar') {
+            const calendar = user.interface.GetCurrentPage()?.ref.current;
+            if (calendar !== undefined && calendar instanceof Calendar) {
+                if (calendar.state.selectedDay !== null) {
+                    const { day, month, year } = calendar.state.selectedDay;
+                    const dayDate = new Date();
+                    dayDate.setFullYear(year);
+                    dayDate.setMonth(month);
+                    dayDate.setDate(day);
+                    newTime = RoundTimeTo(TIME_STEP_MINUTES, GetGlobalTime(dayDate), 'near');
+                }
+            }
+        }
+
+        // Auto define duration
+        const activities = user.activities.GetByTime(newTime).filter((activity) => activity.startTime > newTime);
+        if (activities.length > 0) {
+            const delta = activities[0].startTime - newTime;
+            if (delta <= MAX_TIME_MINUTES * 60) {
+                newDuration = RoundTimeTo(TIME_STEP_MINUTES, delta) / 60;
+                newDuration = MinMax(MIN_TIME_MINUTES, newDuration, MAX_TIME_MINUTES);
+            }
+        }
+
+        this.state.newActivity.startTime = newTime;
+        this.state.newActivity.duration = newDuration;
     }
 
-    /** @param {number} skillID */
-    selectSkill = (skillID) => {
-        this.setState({ selectedSkill: skillID });
+    /**
+     * @param {Activity} activity
+     * @returns {Promise<void>}
+     */
+    changeActivity = (activity) => {
+        return new Promise((resolve) => {
+            this.setState({ newActivity: activity }, resolve);
+        });
     };
 
-    unSelectSkill = () => {
-        this.setState({ selectedSkill: null });
-    };
-
-    /** @param {number} duration */
-    onChangeDuration = (duration) => {
-        this.setState({ duration });
+    unSelectActivity = () => {
+        this.changeActivity({
+            ...this.state.newActivity,
+            skillID: 0
+        });
     };
 }
 

@@ -1,28 +1,25 @@
 import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 
-import BackActivityPage2 from './back';
 import styles from './style';
+import BackActivityPage2 from './back';
+import { AddActivityPage2Add } from './Add';
+import { AddActivityPage2StartNow } from './StartNow';
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
 import { Text, Button, Icon } from 'Interface/Components';
-import langManager from 'Managers/LangManager';
-import { AddActivityPage2StartNow } from './StartNow';
-import { AddActivityPage2Add } from './Add';
+import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- *
- * @typedef {import('../types').ItemSkill} ItemSkill
- * @typedef {import('../types').ItemCategory} ItemCategory
  */
 
 class AddActivityPage2 extends BackActivityPage2 {
     render() {
-        //const lang = langManager.curr['activity'];
-        const langXP = langManager.curr['level'];
-        const langStats = langManager.curr['statistics']['names'];
-        const { skillID, unSelectSkill } = this.props;
+        const { activity, changeActivity, unSelectActivity } = this.props;
 
         return (
             <View style={styles.parent}>
@@ -32,7 +29,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                     appearance='outline'
                     fontColor='primary'
                     borderColor='main1'
-                    onPress={unSelectSkill}
+                    onPress={unSelectActivity}
                 >
                     <Icon icon='arrow-left' />
                     <View style={styles.headerButtonActivity}>
@@ -41,16 +38,10 @@ class AddActivityPage2 extends BackActivityPage2 {
                     </View>
                     <View />
                 </Button>
-                <View style={styles.headerStats}>
-                    <Text fontSize={14} color='main1'>{`+ [100] ${langXP['xp']} /`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [1] ${langStats['soc']}`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [2] ${langStats['for']}`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [2] ${langStats['sta']}`}</Text>
-                    <Text fontSize={14} color='main1'>{` + [2] ${langStats['agi']}`}</Text>
-                </View>
+                <View style={styles.headerStats}>{this.renderStatsText()}</View>
 
                 <ScrollView>
-                    <AddActivityPage2StartNow skillID={skillID} />
+                    <AddActivityPage2StartNow activity={activity} />
 
                     {/* Separator */}
                     <View style={styles.separator}>
@@ -59,9 +50,37 @@ class AddActivityPage2 extends BackActivityPage2 {
                         <View style={styles.separatorBar} />
                     </View>
 
-                    <AddActivityPage2Add skillID={skillID} />
+                    <AddActivityPage2Add
+                        activity={activity}
+                        changeActivity={changeActivity}
+                        unSelectActivity={unSelectActivity}
+                    />
                 </ScrollView>
             </View>
+        );
+    }
+
+    renderStatsText() {
+        const langXP = langManager.curr['level'];
+        const langStats = langManager.curr['statistics']['names'];
+        const { activity } = this.props;
+
+        const skill = dataManager.skills.GetByID(activity.skillID);
+        if (skill === null) {
+            return null;
+        }
+
+        const XP = Round((skill.XP * activity.duration) / 60, 2);
+        const usefulStats = user.statsKey.filter((key) => skill.Stats[key] > 0);
+
+        return (
+            <>
+                <Text fontSize={14} color='main1'>{`+ ${XP} ${langXP['xp']} /`}</Text>
+                {usefulStats.map((stat) => {
+                    const statXP = Round((skill.Stats[stat] * activity.duration) / 60, 2);
+                    return <Text fontSize={14} color='main1'>{` + ${statXP} ${langStats[stat]}`}</Text>;
+                })}
+            </>
         );
     }
 }

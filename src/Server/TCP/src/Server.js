@@ -23,7 +23,7 @@ class Server {
         } else {
             this.server = createServer({
                 key: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/privkey.pem'),
-                cert: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/cert.pem')
+                cert: fs.readFileSync('/etc/letsencrypt/live/www.oxyfoo.com/fullchain.pem')
             });
         }
 

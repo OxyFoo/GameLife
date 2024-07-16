@@ -16,10 +16,10 @@ class AddActivityPage2Add extends BackActivityPage2Add {
     render() {
         const lang = langManager.curr['activity'];
         const langDatesNames = langManager.curr['dates']['names'];
-        const { activity } = this.props;
+        const { activity, editActivity } = this.props;
         const { selectedHours, selectedMinutes, DTPMode, DTPDate } = this.state;
 
-        const startDate = GetDate(activity.startTime - activity.timezone * 3600);
+        const startDate = GetDate(activity.startTime);
         const textStartDate = DateFormat(startDate, 'DD/MM/YYYY');
         const textStartTime = DateFormat(startDate, 'HH:mm');
 
@@ -35,7 +35,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
         return (
             <>
                 {/* Add later or already done */}
-                <Text style={styles.title}>{lang['title-add']}</Text>
+                <Text style={styles.title}>{editActivity === null ? lang['title-add'] : lang['title-edit']}</Text>
 
                 {/* Button: Select day */}
                 <View style={styles.plannerContent}>
@@ -130,7 +130,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                     borderColor='border'
                     onPress={this.onAddActivity}
                 >
-                    {lang['button-add']}
+                    {editActivity === null ? lang['button-add'] : lang['button-edit']}
                 </Button>
 
                 {/** Date/Time selection */}

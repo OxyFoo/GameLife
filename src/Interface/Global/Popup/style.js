@@ -19,8 +19,9 @@ const styles = StyleSheet.create({
     },
 
     container: {
-        maxWidth: '80%',
+        maxWidth: '90%',
         maxHeight: '80%',
+        paddingHorizontal: 16,
         borderRadius: 16,
         overflow: 'visible',
         backgroundColor: '#03052E'
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     },
     message: {
         paddingHorizontal: 8,
-        marginBottom: 24
+        marginBottom: 12
     },
     row: {
         width: '100%',

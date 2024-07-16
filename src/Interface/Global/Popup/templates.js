@@ -20,11 +20,7 @@ function PopupTemplate_OK({ data, close }) {
             <Text style={styles.title}>{data.title.toUpperCase()}</Text>
             <Text style={styles.message}>{data.message}</Text>
             <View style={styles.row}>
-                <Button
-                    style={[styles.button, styles.fillWidth]}
-                    onPress={() => close('ok')}
-                    color='main1'
-                >
+                <Button style={[styles.button, styles.fillWidth]} onPress={() => close('ok')} color='main1'>
                     {lang['btn-ok']}
                 </Button>
             </View>

@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Activity } from 'Class/Activities';
 import { MinMax } from 'Utils/Functions';
-import { GetDate, GetGlobalTime, GetLocalTime } from 'Utils/Time';
-import { AddActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { GetDate, GetLocalTime } from 'Utils/Time';
+import { AddActivity, EditActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
  * @typedef {import('Interface/Components').Digit} Digit
@@ -11,6 +11,7 @@ import { AddActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } fr
  *
  * @typedef {Object} BackActivityPage2AddPropsType
  * @prop {Activity} activity
+ * @prop {Activity | null} editActivity
  * @prop {(newActivity: Activity) => Promise<void>} changeActivity
  * @prop {() => void} unSelectActivity
  */
@@ -18,6 +19,7 @@ import { AddActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } fr
 /** @type {BackActivityPage2AddPropsType} */
 const BackActivityPage2AddProps = {
     activity: new Activity(),
+    editActivity: null,
     changeActivity: async () => {},
     unSelectActivity: () => {}
 };
@@ -49,23 +51,26 @@ class BackActivityPage2Add extends React.Component {
     }
 
     onAddActivity = () => {
-        const { activity } = this.props;
+        const { activity, editActivity } = this.props;
 
         if (activity.skillID === 0) {
             return;
         }
 
-        AddActivity(activity);
-        // TODO: Manage errors ?
+        if (editActivity === null) {
+            AddActivity(activity);
+        } else {
+            EditActivity(editActivity, activity);
+        }
     };
 
     setDate = () => {
         const { activity } = this.props;
-        this.showDTP('date', 'startTime', activity.startTime - activity.timezone * 3600);
+        this.showDTP('date', 'startTime', activity.startTime);
     };
     setStartTime = () => {
         const { activity } = this.props;
-        this.showDTP('time', 'startTime', activity.startTime - activity.timezone * 3600);
+        this.showDTP('time', 'startTime', activity.startTime);
     };
 
     /** @type {Digit['props']['onChangeValue']} */
@@ -116,7 +121,7 @@ class BackActivityPage2Add extends React.Component {
             return;
         }
 
-        const endDate = GetDate(activity.startTime - activity.timezone * 3600);
+        const endDate = GetDate(activity.startTime);
         endDate.setHours(endDate.getHours() + Math.floor(activity.duration / 60));
         endDate.setMinutes(endDate.getMinutes() + (activity.duration % 60));
         const endTime = GetLocalTime(endDate);
@@ -156,7 +161,7 @@ class BackActivityPage2Add extends React.Component {
         }
 
         if (DTPType === 'startTime') {
-            const pickedTime = GetGlobalTime(date);
+            const pickedTime = GetLocalTime(date);
             this.setState(
                 {
                     DTPMode: '',
@@ -174,7 +179,7 @@ class BackActivityPage2Add extends React.Component {
             const pickedMinutes = date.getMinutes();
             const pickedTotalTime = pickedHours * 60 + pickedMinutes;
 
-            const currentDate = GetDate(activity.startTime - activity.timezone * 3600);
+            const currentDate = GetDate(activity.startTime);
             const currentHours = currentDate.getHours();
             const currentMinutes = currentDate.getMinutes();
             const currentTotalTime = currentHours * 60 + currentMinutes;

@@ -11,6 +11,9 @@ import { Text, Button, Icon } from 'Interface/Components';
 import { TimeToFormatString } from 'Utils/Time';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('./back').DayDataType} DayDataType
  * @typedef {import('./back').ActivityDataType} ActivityDataType
@@ -41,6 +44,8 @@ const RenderActivity = React.memo(
         const activityTime = `${TimeToFormatString(startTime)} - ${TimeToFormatString(endTime)}`;
         const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
         const onPress = () => item.onPress(item);
+
+        /** @type {StyleProp} */
         const borderColor = {
             borderColor: category?.Color || themeManager.GetColor('border')
         };
@@ -78,7 +83,7 @@ const RenderActivity = React.memo(
 /** @type {React.MemoExoticComponent<ListRenderItemDayDataType>} */
 const RenderDay = React.memo(
     ({ item }) => {
-        const { day, month, year, selected, onPress } = item;
+        const { day, month, year, selected, containsActivity, onPress } = item;
         const date = new Date(year, month, day);
         const dayText = langManager.curr['dates']['days-min'][date.getDay()];
 
@@ -87,9 +92,14 @@ const RenderDay = React.memo(
         /** @type {ThemeColor} */
         const colorBackground = selected ? 'main1' : 'transparent';
 
+        /** @type {ViewStyle} */
+        const borderColor = {
+            borderColor: themeManager.GetColor('main1')
+        };
+
         return (
             <Button
-                style={styles.dayItem}
+                style={[styles.dayItem, borderColor, containsActivity && styles.dayItemActive]}
                 styleContent={styles.dayContent}
                 appearance='uniform'
                 color={colorBackground}

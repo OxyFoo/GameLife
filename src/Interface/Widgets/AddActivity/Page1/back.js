@@ -14,11 +14,9 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').FlatList} FlatList
  *
  * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('../types').ItemSkill} ItemSkill
  * @typedef {import('../types').ItemCategory} ItemCategory
- *
- * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
- * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
  *
  * @typedef {Object} BackActivityPage1PropsType
  * @prop {Activity} activity

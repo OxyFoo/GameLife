@@ -113,6 +113,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         borderRadius: 8
     },
+    dayItemActive: {
+        borderWidth: 1
+    },
     dayContent: {
         flexDirection: 'column',
         alignItems: 'center',

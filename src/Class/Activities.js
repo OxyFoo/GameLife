@@ -10,11 +10,13 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
- * 
+ *
  * @typedef {'normal' | 'start-now' | 'zap-gpt'} ActivityAddedType
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
- * @typedef {'added' | 'edited' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
- * 
+ * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
+ * @typedef {'edited' | 'needConfirmation' | 'notFree' | 'notExist' | 'tooEarly'} EditStatus
+ * @typedef {'removed' | 'notExist'} RemoveStatus
+ *
  * @typedef {Activity & { type: 'add' | 'rem' }} ActivityUnsaved
  */
 
@@ -47,6 +49,12 @@ class Activity {
     friends = [];
 }
 
+/** @type {Array<Activity>} */
+const EMPTY_ACTIVITIES = [];
+
+/** @type {CurrentActivity | null} */
+const INITIAL_ACTIVITY = null;
+
 class Activities {
     /** @param {UserManager} user */
     constructor(user) {
@@ -66,10 +74,10 @@ class Activities {
      * @description Contain all activities, updated when adding, editing or removing
      * @type {DynamicVar<Array<Activity>>}
      */
-    allActivities = new DynamicVar([]);
+    allActivities = new DynamicVar(EMPTY_ACTIVITIES);
 
     /** @type {DynamicVar<CurrentActivity | null>} */
-    currentActivity = new DynamicVar(null);
+    currentActivity = new DynamicVar(INITIAL_ACTIVITY);
 
     /** @type {{[name: string]: function}} */
     callbacks = {};
@@ -84,13 +92,13 @@ class Activities {
     Load(activities) {
         const contains = (key) => activities.hasOwnProperty(key);
         if (contains('activities')) this.activities = activities['activities'];
-        if (contains('unsaved'))    this.UNSAVED_activities = activities['unsaved'];
-        if (contains('deletions'))  this.UNSAVED_deletions = activities['deletions'];
-        if (contains('current'))    this.currentActivity.Set(activities['current']);
+        if (contains('unsaved')) this.UNSAVED_activities = activities['unsaved'];
+        if (contains('deletions')) this.UNSAVED_deletions = activities['deletions'];
+        if (contains('current')) this.currentActivity.Set(activities['current']);
         this.allActivities.Set(this.Get());
     }
     LoadOnline(activities) {
-        if (typeof(activities) !== 'object') return;
+        if (typeof activities !== 'object') return;
         this.activities = [];
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
@@ -98,20 +106,23 @@ class Activities {
             // Check if all keys are present
             const keys = Object.keys(activity);
             const keysActivity = Object.keys(new Activity());
-            if (!keys.every(key => keysActivity.includes(key))) {
+            if (!keys.every((key) => keysActivity.includes(key))) {
                 continue;
             }
 
-            this.Add({
-                skillID: activity['skillID'],
-                startTime: activity['startTime'],
-                duration: activity['duration'],
-                comment: activity['comment'],
-                timezone: activity['timezone'],
-                addedType: activity['addedType'],
-                addedTime: activity['addedTime'],
-                friends: activity['friends']
-            }, true);
+            this.Add(
+                {
+                    skillID: activity['skillID'],
+                    startTime: activity['startTime'],
+                    duration: activity['duration'],
+                    comment: activity['comment'],
+                    timezone: activity['timezone'],
+                    addedType: activity['addedType'],
+                    addedTime: activity['addedTime'],
+                    friends: activity['friends']
+                },
+                true
+            );
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
@@ -140,10 +151,7 @@ class Activities {
     Get() {
         const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
         if (id !== this.cache_get.id) {
-            const activities = [
-                ...this.activities,
-                ...this.UNSAVED_activities
-            ];
+            const activities = [...this.activities, ...this.UNSAVED_activities];
             this.cache_get.id = id;
             this.cache_get.activities = SortByKey(activities, 'startTime');
         }
@@ -156,12 +164,12 @@ class Activities {
      * @returns {Array<Activity>} List of activities
      */
     GetBySkillID(skillID) {
-        return this.Get().filter(activity => activity.skillID === skillID);
+        return this.Get().filter((activity) => activity.skillID === skillID);
     }
 
     IsUnsaved = () => {
         return this.UNSAVED_activities.length || this.UNSAVED_deletions.length;
-    }
+    };
     /** @returns {Array<ActivityUnsaved>} List of unsaved activities */
     GetUnsaved = () => {
         /** @type {Array<ActivityUnsaved>} */
@@ -195,7 +203,7 @@ class Activities {
             });
         }
         return unsaved;
-    }
+    };
     Purge = () => {
         this.activities.push(...this.UNSAVED_activities);
         this.UNSAVED_activities = [];
@@ -207,7 +215,7 @@ class Activities {
             }
         }
         this.UNSAVED_deletions = [];
-    }
+    };
 
     cache_get_useful = {
         id: '',
@@ -255,7 +263,7 @@ class Activities {
         this.cache_get_useful.activities = usefulActivities;
 
         return usefulActivities;
-    }
+    };
 
     /**
      * @param {number} [number=6]
@@ -263,17 +271,17 @@ class Activities {
      */
     GetLastSkills(number = 6) {
         const now = GetGlobalTime();
-        const usersActivities = this.user.activities.Get().filter(activity => activity.startTime <= now);
-        const usersActivitiesID = usersActivities.map(activity => activity.skillID);
+        const usersActivities = this.user.activities.Get().filter((activity) => activity.startTime <= now);
+        const usersActivitiesID = usersActivities.map((activity) => activity.skillID);
 
         /** @param {Skill} skill */
-        const filter = skill => usersActivitiesID.includes(skill.ID);
+        const filter = (skill) => usersActivitiesID.includes(skill.ID);
 
         /** @param {EnrichedSkill} a @param {EnrichedSkill} b */
-        const sortByXP = (a, b) => a.Experience.totalXP < b.Experience.totalXP ? 1 : -1;
+        const sortByXP = (a, b) => (a.Experience.totalXP < b.Experience.totalXP ? 1 : -1);
 
         /** @param {Skill} skill @returns {EnrichedSkill} */
-        const getInfos = skill => ({
+        const getInfos = (skill) => ({
             ...skill,
             FullName: langManager.GetText(skill.Name),
             LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
@@ -281,19 +289,14 @@ class Activities {
         });
 
         /** @type {EnrichedSkill[]} */
-        let enrichedSkills = dataManager.skills
-            .Get()
-            .filter(filter)
-            .map(getInfos)
-            .sort(sortByXP)
-            .slice(0, number);
+        let enrichedSkills = dataManager.skills.Get().filter(filter).map(getInfos).sort(sortByXP).slice(0, number);
 
         return enrichedSkills;
     }
 
     /** @returns {boolean} True if an activity was removed */
     RemoveDeletedSkillsActivities() {
-        let activities = [ ...this.activities, ...this.UNSAVED_activities ];
+        let activities = [...this.activities, ...this.UNSAVED_activities];
         let deletions = [];
         for (let a in activities) {
             let activity = activities[a];
@@ -324,49 +327,102 @@ class Activities {
             return { status: 'tooEarly', activity: null };
         }
 
-        // Check if not exist
+        // Check if not exists
         const indexActivity = this.getIndex(this.activities, newActivity);
         const indexUnsaved = this.getIndex(this.UNSAVED_activities, newActivity);
         const indexDeletion = this.getIndex(this.UNSAVED_deletions, newActivity);
 
+        // Activity already exists
+        if (indexActivity !== null || indexUnsaved !== null) {
+            return { status: 'alreadyExist', activity: null };
+        }
+
+        // Activity is not free
+        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration)) {
+            return { status: 'notFree', activity: null };
+        }
+
+        // Remove from deletions if exists
         if (indexDeletion !== null) {
             this.UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
-        // Activity not exist, add it
+        // Add activity
+        if (alreadySaved) {
+            this.activities.push(newActivity);
+        } else {
+            this.UNSAVED_activities.push(newActivity);
+            this.allActivities.Set(this.Get());
+        }
+
+        return { status: 'added', activity: newActivity };
+    }
+
+    /**
+     * Edit activity
+     * @param {Activity} activity
+     * @param {Activity} newActivity
+     * @param {boolean} [confirm=false] User confirm edit (important, can remove experience)
+     * @returns {{ status: EditStatus, activity: Activity | null }}
+     */
+    Edit(activity, newActivity, confirm = false) {
+        // Limit date (< 2020-01-01)
+        if (newActivity.startTime < 1577836800) {
+            return { status: 'tooEarly', activity: null };
+        }
+
+        const indexActivity = this.getIndex(this.activities, activity);
+        const indexUnsaved = this.getIndex(this.UNSAVED_activities, activity);
+        const indexDeletion = this.getIndex(this.UNSAVED_deletions, activity);
+
+        // Activity does not exist
         if (indexActivity === null && indexUnsaved === null) {
-            if (!this.TimeIsFree(newActivity.startTime, newActivity.duration)) {
-                return { status: 'notFree', activity: null };
-            }
-            if (alreadySaved) {
-                this.activities.push(newActivity);
-            } else {
-                this.UNSAVED_activities.push(newActivity);
-                this.allActivities.Set(this.Get());
-            }
-            return { status: 'added', activity: newActivity };
+            return { status: 'notExist', activity: null };
         }
 
-        // Activity exist, update it
-        else {
-            const activity = indexActivity !== null ? this.activities[indexActivity] : this.UNSAVED_activities[indexUnsaved];
-            if (activity.comment !== newActivity.comment) {
-                if (indexActivity !== null) this.activities.splice(indexActivity, 1);
-                if (indexUnsaved  !== null) this.UNSAVED_activities.splice(indexUnsaved, 1);
+        // Activity is not free
+        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, [activity])) {
+            return { status: 'notFree', activity: null };
+        }
 
-                this.UNSAVED_activities.push(newActivity);
-                this.allActivities.Set(this.Get());
-                return { status: 'edited', activity: newActivity };
+        // If edit is important and more than 48h after start time, add to deletions
+        const tempNewActivity = { ...newActivity };
+        if (
+            newActivity.skillID !== activity.skillID ||
+            newActivity.startTime !== activity.startTime ||
+            newActivity.duration !== activity.duration
+        ) {
+            tempNewActivity.addedTime = GetLocalTime();
+            tempNewActivity.timezone = GetTimeZone();
+            if (
+                !confirm &&
+                this.GetExperienceStatus(activity) === 'grant' &&
+                this.GetExperienceStatus(tempNewActivity) === 'beforeLimit'
+            ) {
+                return { status: 'needConfirmation', activity: null };
             }
         }
 
-        return { status: 'alreadyExist', activity: null };
+        if (indexDeletion !== null) {
+            this.UNSAVED_deletions.splice(indexDeletion, 1);
+        }
+        if (indexActivity !== null) {
+            this.activities.splice(indexActivity, 1);
+        }
+        if (indexUnsaved !== null) {
+            this.UNSAVED_activities.splice(indexUnsaved, 1);
+        }
+
+        this.UNSAVED_activities.push(tempNewActivity);
+        this.allActivities.Set(this.Get());
+
+        return { status: 'edited', activity: tempNewActivity };
     }
 
     /**
      * Remove activity
      * @param {Activity} activity
-     * @returns {'removed' | 'notExist'}
+     * @returns {RemoveStatus}
      */
     Remove(activity) {
         const indexActivity = this.getIndex(this.activities, activity);
@@ -431,7 +487,7 @@ class Activities {
     GetByTime(time = GetGlobalTime(), activities = this.Get()) {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
-        return activities.filter(activity => activity.startTime >= startTime && activity.startTime < endTime);
+        return activities.filter((activity) => activity.startTime >= startTime && activity.startTime < endTime);
     }
 
     /**
@@ -440,7 +496,7 @@ class Activities {
      */
     DoesGrantXP = (activity) => {
         return this.GetExperienceStatus(activity) === 'grant';
-    }
+    };
 
     /**
      * @param {Activity} activity
@@ -452,28 +508,41 @@ class Activities {
         const addedBeforeLimit = deltaHours > HOURS_BEFORE_LIMIT;
         const isPast = startTime <= GetLocalTime();
 
-        if (addedBeforeLimit)
+        if (addedBeforeLimit) {
             return 'beforeLimit';
-        if (!isPast)
+        }
+        if (!isPast) {
             return 'isNotPast';
+        }
         return 'grant';
     }
 
     /**
      * @param {number} time Time in seconds (unix timestamp, UTC)
      * @param {number} duration Duration in minutes
+     * @param {Array<Activity>} exceptActivities Activities to exclude from check
      * @returns {boolean} True if time is free
      */
-    TimeIsFree(time, duration) {
+    TimeIsFree(time, duration, exceptActivities = []) {
         let output = true;
         const startTime = time;
-        const endTime = time + duration*60;
+        const endTime = time + duration * 60;
 
         const activities = this.Get();
         for (let a = 0; a < activities.length; a++) {
             const activity = activities[a];
+
+            let except = false;
+            for (let exceptActivity of exceptActivities) {
+                if (this.areEquals(activity, exceptActivity)) {
+                    except = true;
+                    break;
+                }
+            }
+            if (except) continue;
+
             const compareStartTime = activity.startTime;
-            const compareEndTime = activity.startTime + activity.duration*60;
+            const compareEndTime = activity.startTime + activity.duration * 60;
 
             const startDuringActivity = startTime >= compareStartTime && startTime < compareEndTime;
             const endDuringActivity = endTime > compareStartTime && endTime <= compareEndTime;

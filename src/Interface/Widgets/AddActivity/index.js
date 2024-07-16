@@ -6,14 +6,9 @@ import BackActivity from './back';
 import { AddActivityPage1 } from './Page1';
 import { AddActivityPage2 } from './Page2';
 
-/**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- */
-
 class AddActivity extends BackActivity {
     render() {
-        const { categoryID, listSkillsIDs } = this.props;
+        const { categoryID, listSkillsIDs, editActivity } = this.props;
         const { newActivity } = this.state;
 
         return (
@@ -29,6 +24,7 @@ class AddActivity extends BackActivity {
                 ) : (
                     <AddActivityPage2
                         activity={newActivity}
+                        editActivity={editActivity}
                         changeActivity={this.changeActivity}
                         unSelectActivity={this.unSelectActivity}
                     />

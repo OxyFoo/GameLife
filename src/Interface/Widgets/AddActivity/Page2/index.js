@@ -12,14 +12,9 @@ import dataManager from 'Managers/DataManager';
 import { Text, Button, Icon } from 'Interface/Components';
 import { Round } from 'Utils/Functions';
 
-/**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- */
-
 class AddActivityPage2 extends BackActivityPage2 {
     render() {
-        const { activity, changeActivity, unSelectActivity } = this.props;
+        const { activity, editActivity, changeActivity, unSelectActivity } = this.props;
 
         return (
             <View style={styles.parent}>
@@ -41,17 +36,22 @@ class AddActivityPage2 extends BackActivityPage2 {
                 <View style={styles.headerStats}>{this.renderStatsText()}</View>
 
                 <ScrollView>
-                    <AddActivityPage2StartNow activity={activity} />
+                    {editActivity === null && (
+                        <>
+                            <AddActivityPage2StartNow activity={activity} />
 
-                    {/* Separator */}
-                    <View style={styles.separator}>
-                        <View style={styles.separatorBar} />
-                        <Text style={styles.separatorText}>OU</Text>
-                        <View style={styles.separatorBar} />
-                    </View>
+                            {/* Separator */}
+                            <View style={styles.separator}>
+                                <View style={styles.separatorBar} />
+                                <Text style={styles.separatorText}>OU</Text>
+                                <View style={styles.separatorBar} />
+                            </View>
+                        </>
+                    )}
 
                     <AddActivityPage2Add
                         activity={activity}
+                        editActivity={editActivity}
                         changeActivity={changeActivity}
                         unSelectActivity={unSelectActivity}
                     />
@@ -61,6 +61,7 @@ class AddActivityPage2 extends BackActivityPage2 {
     }
 
     renderStatsText() {
+        const lang = langManager.curr['activity'];
         const langXP = langManager.curr['level'];
         const langStats = langManager.curr['statistics']['names'];
         const { activity } = this.props;
@@ -68,6 +69,22 @@ class AddActivityPage2 extends BackActivityPage2 {
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {
             return null;
+        }
+
+        // XP not granted
+        const activityStatus = user.activities.GetExperienceStatus(activity);
+        if (activityStatus === 'beforeLimit') {
+            return (
+                <Text fontSize={14} color='main1'>
+                    {lang['title-no-experience']}
+                </Text>
+            );
+        } else if (activityStatus === 'isNotPast') {
+            return (
+                <Text fontSize={14} color='main1'>
+                    {lang['title-not-past']}
+                </Text>
+            );
         }
 
         const XP = Round((skill.XP * activity.duration) / 60, 2);

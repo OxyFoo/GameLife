@@ -96,7 +96,7 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
 function AddActivity(activity) {
     const lang = langManager.curr['activity'];
 
-    const { status, activity: newActivity } = user.activities.Add({
+    const { status } = user.activities.Add({
         skillID: activity.skillID,
         startTime: activity.startTime,
         duration: activity.duration,
@@ -107,7 +107,7 @@ function AddActivity(activity) {
         friends: activity.friends
     });
 
-    if (status === 'added' && newActivity !== null) {
+    if (status === 'added') {
         // Update notifications
         Notifications.Evening.RemoveToday();
 
@@ -145,9 +145,9 @@ function AddActivity(activity) {
             },
             storeInHistory: false
         });
+
         user.GlobalSave().then(() => user.RefreshStats(false));
-    } else if (status === 'edited') {
-        user.GlobalSave().then(() => user.RefreshStats(false));
+        return true;
     } else if (status === 'notFree') {
         const title = lang['alert-wrongtiming-title'];
         const message = lang['alert-wrongtiming-message'];
@@ -171,7 +171,60 @@ function AddActivity(activity) {
         });
     }
 
-    return status === 'added' || status === 'edited';
+    return false;
+}
+
+/**
+ * @param {Activity} oldActivity
+ * @param {Activity} newActivity
+ * @param {boolean} confirm
+ * @returns {boolean} True if activity was edited successfully
+ */
+function EditActivity(oldActivity, newActivity, confirm = false) {
+    const lang = langManager.curr['activity'];
+
+    const { status } = user.activities.Edit(oldActivity, newActivity, confirm);
+
+    if (status === 'edited') {
+        user.GlobalSave().then(() => user.RefreshStats(false));
+        user.interface.bottomPanel.Close();
+        return true;
+    } else if (status === 'needConfirmation') {
+        const title = lang['alert-needconfirmation-title'];
+        const message = lang['alert-needconfirmation-message'];
+        user.interface.popup.OpenT({
+            type: 'yesno',
+            data: { title, message },
+            callback: (button) => {
+                if (button === 'yes') {
+                    EditActivity(oldActivity, newActivity, true);
+                }
+            }
+        });
+    } else if (status === 'notFree') {
+        const title = lang['alert-wrongtiming-title'];
+        const message = lang['alert-wrongtiming-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
+    } else if (status === 'tooEarly') {
+        const title = lang['alert-alreadyexist-title'];
+        const message = lang['alert-alreadyexist-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
+    } else if (status === 'notExist') {
+        const title = lang['alert-error-title'];
+        const message = lang['alert-error-message'];
+        user.interface.popup.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
+    }
+
+    return false;
 }
 
 /**
@@ -206,5 +259,6 @@ export {
     StartActivityNow,
     AddActivityNow,
     AddActivity,
+    EditActivity,
     RemActivity
 };

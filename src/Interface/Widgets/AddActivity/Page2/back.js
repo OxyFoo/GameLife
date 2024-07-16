@@ -8,6 +8,7 @@ import { Activity } from 'Class/Activities';
 /**
  * @typedef {Object} BackActivityPage2PropsType
  * @prop {Activity} activity
+ * @prop {Activity | null} editActivity
  * @prop {(newActivity: Activity) => Promise<void>} changeActivity
  * @prop {() => void} unSelectActivity
  */
@@ -16,7 +17,8 @@ import { Activity } from 'Class/Activities';
 const BackActivityPage2Props = {
     activity: new Activity(),
     changeActivity: async () => {},
-    unSelectActivity: () => {}
+    unSelectActivity: () => {},
+    editActivity: null
 };
 
 class BackActivityPage2 extends React.Component {

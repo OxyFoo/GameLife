@@ -22,6 +22,7 @@ import { AddActivity } from 'Interface/Widgets';
  * @property {number} month
  * @property {number} year
  * @property {boolean} selected
+ * @property {boolean} containsActivity
  * @property {(day: DayDataType) => void} onPress
  *
  * @typedef {object} ActivityDataType
@@ -38,6 +39,13 @@ const INITIAL_DATE = new Date();
 INITIAL_DATE.setDate(INITIAL_DATE.getDate() - TOTAL_DAYS_COUNT / 2);
 
 class BackCalendar extends PageBase {
+    _timeBatchStart = GetLocalTime(INITIAL_DATE);
+    _timeBatchEnd = GetLocalTime(INITIAL_DATE) + TOTAL_DAYS_COUNT * 24 * 60 * 60;
+
+    activitiesInBatch = user.activities
+        .Get()
+        .filter((activity) => activity.startTime >= this._timeBatchStart && activity.startTime <= this._timeBatchEnd);
+
     state = {
         /** @type {ActivityDataType[]} */
         activities: [],
@@ -54,11 +62,13 @@ class BackCalendar extends PageBase {
             .map((_, index) => {
                 const date = new Date(INITIAL_DATE);
                 date.setDate(date.getDate() + index);
+                date.setHours(0, 0, 0, 0);
                 return {
                     day: date.getDate(),
                     month: date.getMonth(),
                     year: date.getFullYear(),
                     selected: false,
+                    containsActivity: this.activityIsInBatch(GetLocalTime(date)),
                     onPress: this.onDayPress.bind(this)
                 };
             }),
@@ -80,6 +90,8 @@ class BackCalendar extends PageBase {
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            this.refreshActivitiesInBatch();
+
             const { selectedDay } = this.state;
             if (!selectedDay) return;
 
@@ -102,6 +114,23 @@ class BackCalendar extends PageBase {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
+    refreshActivitiesInBatch() {
+        this.activitiesInBatch = user.activities
+            .Get()
+            .filter(
+                (activity) => activity.startTime >= this._timeBatchStart && activity.startTime <= this._timeBatchEnd
+            );
+    }
+
+    /** @param {number} startTime */
+    activityIsInBatch(startTime) {
+        return this.activitiesInBatch.some(
+            (activity) =>
+                activity.startTime + activity.timezone * 3600 >= startTime &&
+                activity.startTime + activity.timezone * 3600 < startTime + 24 * 60 * 60
+        );
+    }
+
     hideSummary = false;
     summaryHeight = 0;
 
@@ -114,9 +143,14 @@ class BackCalendar extends PageBase {
         });
     };
 
-    /** @param {ActivityDataType} activity */
-    onActivityPress(activity) {
-        console.log('Activity pressed:', activity);
+    /** @param {ActivityDataType} activityData */
+    onActivityPress(activityData) {
+        const { activity } = activityData;
+
+        this.fe.bottomPanel.Open({
+            content: <AddActivity editActivity={activity} />,
+            movable: false
+        });
     }
 
     /** @param {DayDataType} day */
@@ -186,7 +220,11 @@ class BackCalendar extends PageBase {
         const { days } = this.state;
         const firstDay = days[0];
 
-        /** @type {DayDataType[]} */
+        // Update the activities in batch
+        this._timeBatchStart -= BATCH_DAYS * 24 * 60 * 60;
+        this._timeBatchEnd -= BATCH_DAYS * 24 * 60 * 60;
+        this.refreshActivitiesInBatch();
+
         const newDays = Array(BATCH_DAYS)
             .fill(0)
             .map((_, index) => {
@@ -194,7 +232,8 @@ class BackCalendar extends PageBase {
                 const date = new Date(firstDay.year, firstDay.month, firstDay.day);
                 date.setDate(date.getDate() - index - 1);
 
-                return {
+                /** @type {DayDataType} */
+                const day = {
                     day: date.getDate(),
                     month: date.getMonth(),
                     year: date.getFullYear(),
@@ -202,8 +241,11 @@ class BackCalendar extends PageBase {
                         selectedDay?.year === date.getFullYear() &&
                         selectedDay?.month === date.getMonth() &&
                         selectedDay?.day === date.getDate(),
+                    containsActivity: this.activityIsInBatch(GetLocalTime(date)),
                     onPress: this.onDayPress.bind(this)
                 };
+
+                return day;
             })
             .reverse();
 
@@ -231,14 +273,20 @@ class BackCalendar extends PageBase {
         const { days } = this.state;
         const lastDay = days[days.length - 1];
 
-        /** @type {DayDataType[]} */
+        // Update the activities in batch
+        this._timeBatchStart += BATCH_DAYS * 24 * 60 * 60;
+        this._timeBatchEnd += BATCH_DAYS * 24 * 60 * 60;
+        this.refreshActivitiesInBatch();
+
         const newDays = Array(BATCH_DAYS)
             .fill(0)
             .map((_, index) => {
                 const { selectedDay } = this.state;
                 const date = new Date(lastDay.year, lastDay.month, lastDay.day);
                 date.setDate(date.getDate() + index + 1);
-                return {
+
+                /** @type {DayDataType} */
+                const day = {
                     day: date.getDate(),
                     month: date.getMonth(),
                     year: date.getFullYear(),
@@ -246,8 +294,11 @@ class BackCalendar extends PageBase {
                         selectedDay?.year === date.getFullYear() &&
                         selectedDay?.month === date.getMonth() &&
                         selectedDay?.day === date.getDate(),
+                    containsActivity: this.activityIsInBatch(GetLocalTime(date)),
                     onPress: this.onDayPress.bind(this)
                 };
+
+                return day;
             });
 
         this.setState(

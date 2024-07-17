@@ -14,13 +14,9 @@ import { GetDate, GetTimeZone } from 'Utils/Time';
  * @typedef {object} ActivityTimelineItem
  * @property {number} startTime
  * @property {number} duration
- * @property {number} skillLogoID
  * @property {string} color
  * @property {number} width
  * @property {number} marginLeft
- * @property {string} logo
- * @property {string} logoColor
- *
  *
  * @typedef {object} ActivityTimelinePropsType
  * @property {StyleProp} style
@@ -69,14 +65,11 @@ class ActivityTimelineBack extends React.Component {
             tempActivities.push({
                 startTime: startUtcTime,
                 duration: activity.duration,
-                skillLogoID: skill.LogoID,
                 color: category.Color,
 
                 // Defined later
                 width: 0,
-                marginLeft: 0,
-                logo: '',
-                logoColor: ''
+                marginLeft: 0
             });
         }
 
@@ -103,41 +96,10 @@ class ActivityTimelineBack extends React.Component {
             activity.marginLeft = marginLeftScreen - lastWidth;
             lastWidth = marginLeftScreen + activityWidth;
 
-            activity.logo = dataManager.skills.GetXmlByLogoID(activity.skillLogoID);
-            activity.logoColor = this.getComplementaryColor(activity.color);
-
             tempActivities.push(activity);
         }
 
         return tempActivities;
-    }
-
-    /**
-     * Returns the complementary color of the given hex color
-     * @param {string} hex
-     * @returns {string} hex color
-     */
-    getComplementaryColor(hex) {
-        // Remove the '#' if it's there
-        hex = hex.replace('#', '');
-
-        // Convert hex to RGB
-        let r = parseInt(hex.substring(0, 2), 16);
-        let g = parseInt(hex.substring(2, 4), 16);
-        let b = parseInt(hex.substring(4, 6), 16);
-
-        // Find the complementary colors by subtracting each RGB component from 255
-        r = 255 - r;
-        g = 255 - g;
-        b = 255 - b;
-
-        // Convert the RGB values back to hex
-        let rHex = r.toString(16).padStart(2, '0');
-        let gHex = g.toString(16).padStart(2, '0');
-        let bHex = b.toString(16).padStart(2, '0');
-
-        // Return the formatted hex color
-        return `#${rHex}${gHex}${bHex}`;
     }
 }
 

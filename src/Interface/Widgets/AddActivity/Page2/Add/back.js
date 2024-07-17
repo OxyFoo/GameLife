@@ -3,7 +3,14 @@ import React from 'react';
 import { Activity } from 'Class/Activities';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime } from 'Utils/Time';
-import { AddActivity, EditActivity, MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import {
+    AddActivity,
+    EditActivity,
+    MAX_TIME_MINUTES,
+    MIN_TIME_MINUTES,
+    RemoveActivity,
+    TIME_STEP_MINUTES
+} from 'Utils/Activities';
 
 /**
  * @typedef {import('Interface/Components').Digit} Digit
@@ -62,6 +69,16 @@ class BackActivityPage2Add extends React.Component {
         } else {
             EditActivity(editActivity, activity);
         }
+    };
+
+    onRemoveActivity = () => {
+        const { editActivity } = this.props;
+
+        if (editActivity === null) {
+            return;
+        }
+
+        RemoveActivity(editActivity);
     };
 
     setDate = () => {

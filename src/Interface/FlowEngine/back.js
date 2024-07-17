@@ -42,6 +42,13 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {PAGES[T]['prototype']['props']['args']} [args]
  * @property {boolean} [storeInHistory]
  * @property {Transitions} [transition]
+ * @property {() => void} [callback] Callback after page changed
+ */
+
+/**
+ * @typedef {Object} PageOptionsBack
+ * @property {Transitions} [transition]
+ * @property {() => void} [callback] Callback after page changed
  */
 
 /**
@@ -179,6 +186,18 @@ class BackFlowEngine extends React.Component {
      */
     GetCurrentPageName = () => this.state.selectedPage;
 
+    /**
+     * @description Get current page instance
+     * @template {PageNames} T
+     * @param {T} pageName
+     * @returns {InstanceType<PAGES[T]> | null}
+     * @public
+     */
+    GetPage = (pageName) => {
+        const page = this.getMountedPage(pageName);
+        return page?.ref.current || null;
+    };
+
     GetCurrentPage = () => this.getMountedPage(this.state.selectedPage);
 
     /**
@@ -219,11 +238,11 @@ class BackFlowEngine extends React.Component {
 
     /**
      * @description Handle back button
-     * @param {Transitions} [transition]
+     * @param {PageOptionsBack} [options]
      * @returns {boolean} True if back is handled
      * @public
      */
-    BackHandle = (transition = 'auto') => {
+    BackHandle = (options = {}) => {
         if (this.customBackHandle !== null) {
             if (!this.customBackHandle()) {
                 return true;
@@ -231,7 +250,7 @@ class BackFlowEngine extends React.Component {
             this.ResetCustomBackHandler();
         }
 
-        this.backPage(transition);
+        this.backPage(options);
         return true;
     };
 
@@ -243,7 +262,7 @@ class BackFlowEngine extends React.Component {
      * @returns {boolean} True if page changed
      * @public
      */
-    ChangePage = (nextpage, options = { args: {}, storeInHistory: true, transition: 'auto' }) => {
+    ChangePage = (nextpage, options = {}) => {
         const { selectedPage } = this.state;
 
         if (this.changing) {
@@ -255,7 +274,7 @@ class BackFlowEngine extends React.Component {
         }
 
         this.changing = true;
-        this.mountPage(nextpage, options);
+        this.mountPage(nextpage, options).then(options.callback);
         this.unmountPage(selectedPage);
         this.pageDidUpdate(nextpage);
         this.changing = false;
@@ -265,11 +284,11 @@ class BackFlowEngine extends React.Component {
 
     /**
      * Change page to previous page in history
-     * @param {Transitions} [transition]
+     * @param {PageOptionsBack} options
      * @returns {boolean} True if page changed
      * @private
      */
-    backPage = (transition = 'auto') => {
+    backPage = (options) => {
         const { selectedPage } = this.state;
 
         if (this.changing) {
@@ -287,7 +306,7 @@ class BackFlowEngine extends React.Component {
         }
 
         this.changing = true;
-        this.mountPage(pageName, { args, transition }, true);
+        this.mountPage(pageName, { args, transition: options.transition }, true).then(options.callback);
         this.unmountPage(selectedPage, true);
         this.pageDidUpdate(pageName);
         this.changing = false;
@@ -301,6 +320,7 @@ class BackFlowEngine extends React.Component {
      * @param {T} nextPage
      * @param {PageOptions<T>} options
      * @param {boolean} [isGoingBack]
+     * @returns {Promise<void>}
      * @private
      */
     mountPage = (nextPage, options, isGoingBack = false) => {
@@ -339,19 +359,22 @@ class BackFlowEngine extends React.Component {
             }
         }
 
-        this.setState(
-            {
-                selectedPage: nextPage,
-                currentTransition: transition,
-                mountedPages: [...mountedPages, newPage]
-            },
-            () => {
-                if (newPage !== null) {
-                    SpringAnimation(newPage.transitionStart, 1).start();
-                    SpringAnimation(newPage.transitionEnd, 0).start();
+        return new Promise((resolve) => {
+            this.setState(
+                {
+                    selectedPage: nextPage,
+                    currentTransition: transition,
+                    mountedPages: [...mountedPages, newPage]
+                },
+                () => {
+                    resolve();
+                    if (newPage !== null) {
+                        SpringAnimation(newPage.transitionStart, 1).start();
+                        SpringAnimation(newPage.transitionEnd, 0).start();
+                    }
                 }
-            }
-        );
+            );
+        });
     };
 
     /**
@@ -501,6 +524,7 @@ class BackFlowEngine extends React.Component {
         history: this.history,
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,
+        GetPage: this.GetPage,
         GetPageName: this.GetPageName,
         GetCurrentPage: this.GetCurrentPage,
         GetCurrentPageName: this.GetCurrentPageName,

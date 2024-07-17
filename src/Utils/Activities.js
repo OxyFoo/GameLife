@@ -4,7 +4,7 @@ import dataManager from 'Managers/DataManager';
 
 import Notifications from 'Utils/Notifications';
 import { MinMax } from 'Utils/Functions';
-import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
  * @typedef {import('Class/Activities').Activity} Activity
@@ -134,7 +134,24 @@ function AddActivity(activity) {
                 quote: dataManager.quotes.GetRandomQuote(),
                 button: lang['display-activity-button'],
                 //button2: lang['display-activity-button2'],
-                action: Back
+                action: async () => {
+                    await Back();
+
+                    // Move the calendar to the new day
+                    const calendar = user.interface.GetPage('calendar');
+                    if (calendar !== null) {
+                        const activityDate = GetDate(activity.startTime);
+                        const day = activityDate.getDate();
+                        const month = activityDate.getMonth();
+                        const year = activityDate.getFullYear();
+                        const newDay = calendar.state.days.find(
+                            (d) => d.day === day && d.month === month && d.year === year
+                        );
+                        if (newDay) {
+                            calendar.onDayPress(newDay);
+                        }
+                    }
+                }
                 //action2: () => {
                 //    // TODO: Back page & reopen the activity panel
                 //    user.interface.ChangePage('activity', {
@@ -183,9 +200,9 @@ function AddActivity(activity) {
 function EditActivity(oldActivity, newActivity, confirm = false) {
     const lang = langManager.curr['activity'];
 
-    const { status } = user.activities.Edit(oldActivity, newActivity, confirm);
+    const { status, activity } = user.activities.Edit(oldActivity, newActivity, confirm);
 
-    if (status === 'edited') {
+    if (status === 'edited' && activity !== null) {
         user.GlobalSave().then(() => user.RefreshStats(false));
         user.interface.bottomPanel.Close();
         return true;
@@ -228,28 +245,52 @@ function EditActivity(oldActivity, newActivity, confirm = false) {
 }
 
 /**
- * @param {() => void} callback
+ * @param {Activity} activity
  */
-function RemActivity(callback) {
-    const title = langManager.curr['activity']['alert-remove-title'];
-    const message = langManager.curr['activity']['alert-remove-message'];
+function RemoveActivity(activity) {
+    const lang = langManager.curr['activity'];
+
     user.interface.popup.OpenT({
         type: 'yesno',
-        data: { title, message },
+        data: {
+            title: lang['alert-remove-title'],
+            message: lang['alert-remove-message']
+        },
         callback: (button) => {
-            if (button === 'yes') {
-                callback();
+            if (button !== 'yes') {
+                return;
             }
+
+            const removedStatus = user.activities.Remove(activity);
+
+            if (removedStatus === 'removed') {
+                user.GlobalSave().then(() => user.RefreshStats(false));
+            } else if (removedStatus === 'notExist') {
+                user.interface.popup.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-error-not-exist-title'],
+                        message: lang['alert-error-not-exist-message']
+                    }
+                });
+            }
+            user.interface.bottomPanel.Close();
         }
     });
 }
 
+/**
+ * @returns {Promise<void>}
+ */
 function Back() {
-    if (user.interface.history.length > 1) {
-        user.interface.BackHandle();
-    } else {
-        user.interface.ChangePage('calendar');
-    }
+    return new Promise((resolve) => {
+        if (user.interface.history.length === 0 || user.interface.GetCurrentPageName() === 'activitytimer') {
+            user.interface.ChangePage('calendar', { callback: resolve });
+            return;
+        } else {
+            user.interface.BackHandle({ callback: resolve });
+        }
+    });
 }
 
 export {
@@ -260,5 +301,5 @@ export {
     AddActivityNow,
     AddActivity,
     EditActivity,
-    RemActivity
+    RemoveActivity
 };

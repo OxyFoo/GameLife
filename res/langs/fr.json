@@ -333,6 +333,8 @@
         "alert-tooearly-message": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
+        "alert-error-not-exist-title": "Erreur",
+        "alert-error-not-exist-message": "Il semblerait que cette activité n'existe pas, réessaye plus tard.",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
 

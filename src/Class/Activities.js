@@ -484,9 +484,15 @@ class Activities {
      * @param {Activity[]} activities
      * @returns {Activity[]} activities
      */
-    GetByTime(time = GetGlobalTime(), activities = this.Get()) {
+    GetByTime(time = GetGlobalTime(), activities = this.Get(), includeOvernightActivities = false) {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
         const endTime = startTime + 86400;
+
+        if (includeOvernightActivities) {
+            return activities.filter(
+                (activity) => activity.startTime + activity.duration * 60 >= startTime && activity.startTime < endTime
+            );
+        }
         return activities.filter((activity) => activity.startTime >= startTime && activity.startTime < endTime);
     }
 

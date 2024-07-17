@@ -124,14 +124,16 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 />
 
                 {/* Button: Add to planner */}
-                <Button
-                    style={styles.addActivityButton}
-                    fontColor='backgroundCard'
-                    borderColor='border'
-                    onPress={this.onAddActivity}
-                >
+                <Button style={styles.addActivityButton} onPress={this.onAddActivity}>
                     {editActivity === null ? lang['button-add'] : lang['button-edit']}
                 </Button>
+
+                {/* Button: Edit activity */}
+                {editActivity !== null && (
+                    <Button style={styles.addActivityButton} appearance='outline' onPress={this.onRemoveActivity}>
+                        {lang['button-remove']}
+                    </Button>
+                )}
 
                 {/** Date/Time selection */}
                 <DateTimePickerModal

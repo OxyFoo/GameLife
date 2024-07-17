@@ -6,9 +6,9 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { GetLocalTime } from 'Utils/Time';
-import { SpringAnimation } from 'Utils/Animations';
 import { AddActivity } from 'Interface/Widgets';
+import { SpringAnimation } from 'Utils/Animations';
+import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
@@ -68,7 +68,7 @@ class BackCalendar extends PageBase {
                     month: date.getMonth(),
                     year: date.getFullYear(),
                     selected: false,
-                    containsActivity: this.activityIsInBatch(GetLocalTime(date)),
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(date)),
                     onPress: this.onDayPress.bind(this)
                 };
             }),
@@ -89,7 +89,7 @@ class BackCalendar extends PageBase {
     dayListPosX = 0;
 
     componentDidMount() {
-        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+        this.activitiesListener = user.activities.allActivities.AddListener((activities) => {
             this.refreshActivitiesInBatch();
 
             const { selectedDay } = this.state;
@@ -98,16 +98,20 @@ class BackCalendar extends PageBase {
             const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
             this.setState({
                 /** @type {ActivityDataType[]} */
-                activities: user.activities.GetByTime(GetLocalTime(selectedDate)).map((activity) => ({
+                activities: user.activities.GetByTime(GetLocalTime(selectedDate), activities, true).map((activity) => ({
                     skill: dataManager.skills.GetByID(activity.skillID),
                     activity,
                     onPress: this.onActivityPress.bind(this)
+                })),
+                days: this.state.days.map((day) => ({
+                    ...day,
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(new Date(day.year, day.month, day.day)))
                 }))
             });
         });
 
         const { days } = this.state;
-        this.onDayPress(days[days.length / 2]);
+        this.onDayPress(days[days.length / 2], false);
     }
 
     componentWillUnmount() {
@@ -123,10 +127,11 @@ class BackCalendar extends PageBase {
     }
 
     /** @param {number} startTime */
-    activityIsInBatch(startTime) {
+    batchContainsActivity(startTime) {
         return this.activitiesInBatch.some(
             (activity) =>
-                activity.startTime + activity.timezone * 3600 >= startTime &&
+                (activity.startTime + activity.timezone * 3600 >= startTime ||
+                    activity.startTime + activity.timezone * 3600 + activity.duration * 60 >= startTime) &&
                 activity.startTime + activity.timezone * 3600 < startTime + 24 * 60 * 60
         );
     }
@@ -153,8 +158,10 @@ class BackCalendar extends PageBase {
         });
     }
 
-    /** @param {DayDataType} day */
-    onDayPress(day) {
+    /**
+     * @param {DayDataType} day
+     */
+    onDayPress(day, scrollToSelection = true) {
         // Update the selected day
         const { days } = this.state;
         let selectedDay = null;
@@ -169,13 +176,24 @@ class BackCalendar extends PageBase {
 
         // Update activities
         const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
-        const activities = user.activities.GetByTime(GetLocalTime(selectedDate)).map((activity) => ({
+        const activities = user.activities.GetByTime(GetLocalTime(selectedDate), undefined, true).map((activity) => ({
             skill: dataManager.skills.GetByID(activity.skillID),
             activity,
             onPress: this.onActivityPress.bind(this)
         }));
 
         this.setState({ days, selectedDay, activities });
+
+        // Scroll to the selected day
+        if (scrollToSelection) {
+            const { width: screen_width } = Dimensions.get('window');
+            const index = days.indexOf(selectedDay);
+            const newItemsWidth = index * ITEM_WIDTH - screen_width / 2 + ITEM_WIDTH / 2;
+            this.refDayList.current?.scrollToOffset({
+                offset: newItemsWidth,
+                animated: true
+            });
+        }
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -241,7 +259,7 @@ class BackCalendar extends PageBase {
                         selectedDay?.year === date.getFullYear() &&
                         selectedDay?.month === date.getMonth() &&
                         selectedDay?.day === date.getDate(),
-                    containsActivity: this.activityIsInBatch(GetLocalTime(date)),
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(date)),
                     onPress: this.onDayPress.bind(this)
                 };
 
@@ -294,7 +312,7 @@ class BackCalendar extends PageBase {
                         selectedDay?.year === date.getFullYear() &&
                         selectedDay?.month === date.getMonth() &&
                         selectedDay?.day === date.getDate(),
-                    containsActivity: this.activityIsInBatch(GetLocalTime(date)),
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(date)),
                     onPress: this.onDayPress.bind(this)
                 };
 

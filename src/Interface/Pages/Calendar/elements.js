@@ -8,7 +8,7 @@ import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button, Icon } from 'Interface/Components';
-import { TimeToFormatString } from 'Utils/Time';
+import { GetDate, GetTimeZone, TimeToFormatString } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -24,16 +24,16 @@ import { TimeToFormatString } from 'Utils/Time';
 /** @type {React.MemoExoticComponent<ListRenderItemActivityDataType>} */
 const RenderActivity = React.memo(
     ({ item }) => {
-        const { skill, activity } = item;
+        const { day, skill, activity } = item;
 
         if (!skill) {
-            user.interface.console.AddLog('warn', `Skill not found for activity ${activity.skillID}`);
+            user.interface.console?.AddLog('warn', `Skill not found for activity ${activity.skillID}`);
             return null;
         }
 
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         if (!category) {
-            user.interface.console.AddLog('warn', `Category not found for skill ${skill.ID}`);
+            user.interface.console?.AddLog('warn', `Category not found for skill ${skill.ID}`);
             return null;
         }
 
@@ -41,9 +41,23 @@ const RenderActivity = React.memo(
         const categoryText = langManager.GetText(category.Name);
         const startTime = activity.startTime + activity.timezone * 3600;
         const endTime = startTime + activity.duration * 60;
-        const activityTime = `${TimeToFormatString(startTime)} - ${TimeToFormatString(endTime)}`;
+        const startTimeString = TimeToFormatString(startTime);
+        const endTimeString = TimeToFormatString(endTime);
         const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
         const onPress = () => item.onPress(item);
+
+        let activityTime = `${startTimeString} - ${endTimeString}`;
+        const startDate = GetDate(startTime);
+        const endDate = GetDate(endTime);
+        if (startDate.getUTCDate() !== day.day && (startDate.getUTCHours() > 0 || startDate.getUTCMinutes() > 0)) {
+            activityTime = `< 00:00 - ${endTimeString}`;
+        } else if (endDate.getUTCDate() !== day.day && (endDate.getUTCHours() > 0 || endDate.getUTCMinutes() > 0)) {
+            activityTime = `${startTimeString} - 00:00 >`;
+        }
+
+        const currTZ = GetTimeZone();
+        const actiTZ = activity.timezone;
+        const timezoneText = currTZ !== actiTZ ? `UTC${currTZ < 0 ? actiTZ : '+' + actiTZ}` : null;
 
         /** @type {StyleProp} */
         const borderColor = {
@@ -52,7 +66,7 @@ const RenderActivity = React.memo(
 
         return (
             <Button
-                style={[borderColor, styles.activityItem]}
+                style={[borderColor, styles.activityItem, !!timezoneText && styles.activityItemSmallPadding]}
                 styleContent={styles.activityButtonContent}
                 appearance='uniform'
                 color='transparent'
@@ -70,8 +84,13 @@ const RenderActivity = React.memo(
                     </Text>
                     <Text style={styles.categoryName}>{categoryText}</Text>
                 </View>
-                <View style={styles.activityChild}>
+                <View style={styles.activityTimes}>
                     <Text style={styles.activityTime}>{activityTime}</Text>
+                    {timezoneText && (
+                        <Text style={styles.activityUTC} color='secondary'>
+                            {timezoneText}
+                        </Text>
+                    )}
                 </View>
             </Button>
         );

@@ -22,7 +22,7 @@ class App extends React.Component {
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
         // Open the test page
-        user.interface = this.ref.current;
+        user.interface = this.ref.current._public;
 
         if (TEST_PAGE) {
             this.ref.current?.ChangePage('test');

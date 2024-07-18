@@ -26,6 +26,7 @@ import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
  * @property {(day: DayDataType) => void} onPress
  *
  * @typedef {object} ActivityDataType
+ * @property {DayDataType} day
  * @property {Skill | null} skill
  * @property {Activity} activity
  * @property {(activity: ActivityDataType) => void} onPress
@@ -99,6 +100,7 @@ class BackCalendar extends PageBase {
             this.setState({
                 /** @type {ActivityDataType[]} */
                 activities: user.activities.GetByTime(GetLocalTime(selectedDate), activities, true).map((activity) => ({
+                    day: selectedDay,
                     skill: dataManager.skills.GetByID(activity.skillID),
                     activity,
                     onPress: this.onActivityPress.bind(this)
@@ -131,7 +133,7 @@ class BackCalendar extends PageBase {
         return this.activitiesInBatch.some(
             (activity) =>
                 (activity.startTime + activity.timezone * 3600 >= startTime ||
-                    activity.startTime + activity.timezone * 3600 + activity.duration * 60 >= startTime) &&
+                    activity.startTime + activity.timezone * 3600 + activity.duration * 60 > startTime) &&
                 activity.startTime + activity.timezone * 3600 < startTime + 24 * 60 * 60
         );
     }
@@ -142,7 +144,7 @@ class BackCalendar extends PageBase {
     refreshing = false;
 
     addActivity = () => {
-        this.fe.bottomPanel.Open({
+        this.fe.bottomPanel?.Open({
             content: <AddActivity />,
             movable: false
         });
@@ -152,7 +154,7 @@ class BackCalendar extends PageBase {
     onActivityPress(activityData) {
         const { activity } = activityData;
 
-        this.fe.bottomPanel.Open({
+        this.fe.bottomPanel?.Open({
             content: <AddActivity editActivity={activity} />,
             movable: false
         });
@@ -164,23 +166,31 @@ class BackCalendar extends PageBase {
     onDayPress(day, scrollToSelection = true) {
         // Update the selected day
         const { days } = this.state;
+
+        /** @type {DayDataType | null} */
         let selectedDay = null;
         for (const d in days) {
-            if (days[d].selected) days[d].selected = false;
-            else if (days[d] === day) {
+            if (days[d] === day) {
                 days[d].selected = true;
                 selectedDay = days[d];
+            } else if (days[d].selected) {
+                days[d].selected = false;
             }
         }
-        if (!selectedDay) return;
+        if (selectedDay === null) {
+            return;
+        }
 
         // Update activities
         const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
-        const activities = user.activities.GetByTime(GetLocalTime(selectedDate), undefined, true).map((activity) => ({
-            skill: dataManager.skills.GetByID(activity.skillID),
-            activity,
-            onPress: this.onActivityPress.bind(this)
-        }));
+        const activities = user.activities.GetByTime(GetLocalTime(selectedDate), undefined, true).map(
+            /** @type {ActivityDataType} */ (activity) => ({
+                day: selectedDay,
+                skill: dataManager.skills.GetByID(activity.skillID),
+                activity,
+                onPress: this.onActivityPress.bind(this)
+            })
+        );
 
         this.setState({ days, selectedDay, activities });
 

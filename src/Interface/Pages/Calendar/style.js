@@ -59,11 +59,14 @@ const styles = StyleSheet.create({
         textAlign: 'right'
     },
     activityItem: {
-        padding: 16,
+        paddingVertical: 16,
         paddingHorizontal: 16,
 
         borderWidth: 1.5,
         borderRadius: 8
+    },
+    activityItemSmallPadding: {
+        paddingVertical: 10
     },
     activityEmptyButton: {
         width: 'auto',
@@ -83,6 +86,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+    activityTimes: {
+        flexDirection: 'column',
+        alignItems: 'flex-end'
+    },
     activityName: {
         maxWidth: '50%',
         marginLeft: 12,
@@ -98,6 +105,9 @@ const styles = StyleSheet.create({
     },
     activityTime: {
         fontSize: 16
+    },
+    activityUTC: {
+        fontSize: 12
     },
 
     // Day list

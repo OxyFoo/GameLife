@@ -490,7 +490,7 @@ class Activities {
 
         if (includeOvernightActivities) {
             return activities.filter(
-                (activity) => activity.startTime + activity.duration * 60 >= startTime && activity.startTime < endTime
+                (activity) => activity.startTime + activity.duration * 60 > startTime && activity.startTime < endTime
             );
         }
         return activities.filter((activity) => activity.startTime >= startTime && activity.startTime < endTime);

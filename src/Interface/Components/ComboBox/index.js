@@ -64,12 +64,7 @@ class ComboBox extends ComboBoxBack {
                 {enabled && (
                     <View style={styles.chevron} pointerEvents='none'>
                         <Animated.View style={{ transform: [{ rotateX: angle }] }}>
-                            <Icon
-                                icon='chevron'
-                                color={selectionMode ? activeColor : 'border'}
-                                size={20}
-                                angle={-90}
-                            />
+                            <Icon icon='chevron' color={selectionMode ? activeColor : 'border'} size={20} angle={-90} />
                         </Animated.View>
                     </View>
                 )}
@@ -88,11 +83,7 @@ class ComboBox extends ComboBoxBack {
     };
 
     renderContent = () => {
-        const {
-            enableSearchBar: setSearchBar,
-            maxContentHeight: maxHeight,
-            activeColor
-        } = this.props;
+        const { enableSearchBar: setSearchBar, maxContentHeight: maxHeight, activeColor } = this.props;
         const { anim, data, selectionMode } = this.state;
         const { x, y, width, height } = this.state.parent;
 

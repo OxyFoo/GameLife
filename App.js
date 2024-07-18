@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppState, SafeAreaView, StyleSheet } from 'react-native';
+import { AppState } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
@@ -8,12 +8,13 @@ import { CheckDate } from './src/Utils/DateCheck';
 
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus
+ * @typedef {import('./src/Interface/FlowEngine/back').default} FlowEngineBack
  */
 
 const TEST_PAGE = false;
 
 class App extends React.Component {
-    /** @type {React.RefObject<FlowEngine>} */
+    /** @type {React.RefObject<FlowEngineBack>} */
     ref = React.createRef();
 
     componentDidMount() {
@@ -47,18 +48,8 @@ class App extends React.Component {
     }
 
     render() {
-        return (
-            <SafeAreaView style={styles.safeView}>
-                <FlowEngine ref={this.ref} />
-            </SafeAreaView>
-        );
+        return <FlowEngine ref={this.ref} />;
     }
 }
-
-const styles = StyleSheet.create({
-    safeView: {
-        backgroundColor: '#000000'
-    }
-});
 
 export default App;

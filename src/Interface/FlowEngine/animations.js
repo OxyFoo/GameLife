@@ -50,10 +50,7 @@ function GetAnimationPageOpen(page, transition) {
 function GetAnimationPageClose(page) {
     return [
         {
-            scale: Animated.add(
-                0.75,
-                Animated.multiply(0.25, Animated.subtract(1, page.transitionEnd))
-            )
+            scale: Animated.add(0.75, Animated.multiply(0.25, Animated.subtract(1, page.transitionEnd)))
         }
     ];
 }

@@ -1,6 +1,6 @@
 /**
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {{ name: string, value: string | number, time: number }} BenchResult
+ * @typedef {import('./back').BenchResult} BenchResult
  */
 
 import dataManager from 'Managers/DataManager';
@@ -18,34 +18,43 @@ async function Bench(activities) {
 
     // Test 1: Map
     timer = performance.now();
-    const mapResult = activities.map(activity => ({ id: activity.skillID, value: activity.startTime }));
+    const mapResult = activities.map((activity) => ({ id: activity.skillID, value: activity.startTime }));
     output.push({ name: 'Map', value: mapResult.length, time: performance.now() - timer });
 
     // Test 2: Map + Skills manager
     timer = performance.now();
-    const mapSkillsResult = activities.map(activity => {
+    const mapSkillsResult = activities.map((activity) => {
         const skill = dataManager.skills.GetByID(activity.skillID);
-        return ({ id: activity.skillID, value: langManager.GetText(skill.Name) })
+        if (!skill) return { id: activity.skillID, value: 'Unknown' };
+        return { id: activity.skillID, value: langManager.GetText(skill.Name) };
     });
     output.push({ name: 'Map + Skills', value: mapSkillsResult.length, time: performance.now() - timer });
 
     // Test 3: Map + Skills manager + Sort
     timer = performance.now();
-    const mapSkillsSortResult = activities.map(activity => {
-        const skill = dataManager.skills.GetByID(activity.skillID);
-        return ({ id: activity.skillID, value: langManager.GetText(skill.Name) })
-    }).sort((a, b) => a.value.localeCompare(b.value));
+    const mapSkillsSortResult = activities
+        .map((activity) => {
+            const skill = dataManager.skills.GetByID(activity.skillID);
+            if (!skill) return { id: activity.skillID, value: 'Unknown' };
+            return { id: activity.skillID, value: langManager.GetText(skill.Name) };
+        })
+        .sort((a, b) => a.value.localeCompare(b.value));
     output.push({ name: 'Map + Skills + Sort', value: mapSkillsSortResult.length, time: performance.now() - timer });
 
     // Test 4: Map + Skills manager + filter
     timer = performance.now();
     const mapSkillsFilterResult = activities
-        .filter(activity => activity.skillID !== 0)
-        .map(activity => {
+        .filter((activity) => activity.skillID !== 0)
+        .map((activity) => {
             const skill = dataManager.skills.GetByID(activity.skillID);
-            return ({ id: activity.skillID, value: langManager.GetText(skill.Name) })
+            if (!skill) return { id: activity.skillID, value: 'Unknown' };
+            return { id: activity.skillID, value: langManager.GetText(skill.Name) };
         });
-    output.push({ name: 'Map + Skills + filter', value: mapSkillsFilterResult.length, time: performance.now() - timer });
+    output.push({
+        name: 'Map + Skills + filter',
+        value: mapSkillsFilterResult.length,
+        time: performance.now() - timer
+    });
 
     // Test 5: For
     timer = performance.now();
@@ -62,6 +71,7 @@ async function Bench(activities) {
     for (let i = 0; i < activities.length; i++) {
         const activity = activities[i];
         const skill = dataManager.skills.GetByID(activity.skillID);
+        if (!skill) continue;
         forSkillsResult.push({ id: activity.skillID, value: langManager.GetText(skill.Name) });
     }
     output.push({ name: 'For + Skills', value: forSkillsResult.length, time: performance.now() - timer });
@@ -72,6 +82,7 @@ async function Bench(activities) {
     for (let i = 0; i < activities.length; i++) {
         const activity = activities[i];
         const skill = dataManager.skills.GetByID(activity.skillID);
+        if (!skill) continue;
         forSkillsSortResult.push({ id: activity.skillID, value: langManager.GetText(skill.Name) });
     }
     forSkillsSortResult.sort((a, b) => a.value.localeCompare(b.value));
@@ -84,9 +95,14 @@ async function Bench(activities) {
         const activity = activities[i];
         if (activity.skillID === 0) continue;
         const skill = dataManager.skills.GetByID(activity.skillID);
+        if (!skill) continue;
         forSkillsFilterResult.push({ id: activity.skillID, value: langManager.GetText(skill.Name) });
     }
-    output.push({ name: 'For + Skills + filter', value: forSkillsFilterResult.length, time: performance.now() - timer });
+    output.push({
+        name: 'For + Skills + filter',
+        value: forSkillsFilterResult.length,
+        time: performance.now() - timer
+    });
 
     // Test 9: For + Skills manager + filter + reduce
     timer = performance.now();
@@ -95,24 +111,29 @@ async function Bench(activities) {
         const activity = activities[i];
         if (activity.skillID === 0) continue;
         const skill = dataManager.skills.GetByID(activity.skillID);
+        if (!skill) continue;
         forSkillsFilterReduceResult.push({ id: activity.skillID, value: langManager.GetText(skill.Name) });
     }
     forSkillsFilterReduceResult.reduce((acc, val) => acc + val.value, '');
-    output.push({ name: 'For + Skills + filter + reduce', value: forSkillsFilterReduceResult.length, time: performance.now() - timer });
+    output.push({
+        name: 'For + Skills + filter + reduce',
+        value: forSkillsFilterReduceResult.length,
+        time: performance.now() - timer
+    });
 
     // Test 10: find
     timer = performance.now();
-    const findResult = activities.find(activity => activity.skillID === 1);
+    const findResult = activities.find((activity) => activity.skillID === 1);
     output.push({ name: 'Find', value: findResult ? 1 : 0, time: performance.now() - timer });
 
     // Test 11: findIndex
     timer = performance.now();
-    const findIndexResult = activities.findIndex(activity => activity.skillID === 1);
+    const findIndexResult = activities.findIndex((activity) => activity.skillID === 1);
     output.push({ name: 'FindIndex', value: findIndexResult, time: performance.now() - timer });
 
     // Test 12: filter
     timer = performance.now();
-    const filterResult = activities.filter(activity => activity.skillID === 1);
+    const filterResult = activities.filter((activity) => activity.skillID === 1);
     output.push({ name: 'Filter', value: filterResult.length, time: performance.now() - timer });
 
     // Test 13: reduce
@@ -127,12 +148,12 @@ async function Bench(activities) {
 
     // Test 15: some
     timer = performance.now();
-    const someResult = activities.some(activity => activity.skillID === 1);
+    const someResult = activities.some((activity) => activity.skillID === 1);
     output.push({ name: 'Some', value: someResult ? 1 : 0, time: performance.now() - timer });
 
     // Test 16: every
     timer = performance.now();
-    const everyResult = activities.every(activity => activity.skillID === 1);
+    const everyResult = activities.every((activity) => activity.skillID === 1);
     output.push({ name: 'Every', value: everyResult ? 1 : 0, time: performance.now() - timer });
 
     // Test 17: sort

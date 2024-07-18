@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
         width: 128,
 
         overflow: 'hidden',
-        zIndex: 1000,
-        elevation: 1000
+        zIndex: 1050,
+        elevation: 1050
     },
     overlayPanel: {
         marginBottom: 12,

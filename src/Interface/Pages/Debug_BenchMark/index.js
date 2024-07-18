@@ -18,10 +18,7 @@ class BenchMark extends BackBenchMark {
 
         return (
             <View>
-                <PageHeader
-                    style={styles.header}
-                    onBackPress={this.handleBackPress}
-                />
+                <PageHeader style={styles.header} onBackPress={this.handleBackPress} />
 
                 <View style={styles.content}>
                     <Text fontSize={24}>BenchMark</Text>
@@ -29,17 +26,11 @@ class BenchMark extends BackBenchMark {
                     <Text>{`Current activities: ${activitiesCount}`}</Text>
                     <Text>{`Activities extended for tests: ${activitiesLoaded.length}`}</Text>
 
-                    <Button
-                        color='main1'
-                        onPress={this.startBenchMark}
-                        loading={benchmarking}
-                    >
+                    <Button color='main1' onPress={this.startBenchMark} loading={benchmarking}>
                         Start
                     </Button>
 
-                    {benchmarking && (
-                        <Text>Running... It will freeze the app for a minute</Text>
-                    )}
+                    {benchmarking && <Text>Running... It will freeze the app for a minute</Text>}
                 </View>
 
                 {benchmarkResults.length > 0 && (
@@ -62,7 +53,7 @@ class BenchMark extends BackBenchMark {
 
                         <FlatList
                             data={benchmarkResults}
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(item, index) => `${item.name}-${index}`}
                             renderItem={this.renderItem}
                         />
                     </View>
@@ -79,7 +70,7 @@ class BenchMark extends BackBenchMark {
                 <Text>{`${item.time.toFixed(2)}ms`}</Text>
             </View>
         );
-    }
+    };
 }
 
 export default BenchMark;

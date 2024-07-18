@@ -43,17 +43,13 @@ class Console extends ConsoleBack {
         const translateY = {
             transform: [{ translateY: animation.interpolate(interY) }]
         };
-        const buttonDelete = {
+        const buttonFirstRow = {
             opacity: animation,
             transform: [{ translateY: Animated.multiply(-72, animationDeleteButtons) }]
         };
-        const buttonRefreshData = {
+        const buttonSecondRow = {
             opacity: animation,
             transform: [{ translateY: Animated.multiply(-116, animationDeleteButtons) }]
-        };
-        const buttonBenchMark = {
-            opacity: animation,
-            transform: [{ translateY: Animated.multiply(-160, animationDeleteButtons) }]
         };
 
         return (
@@ -79,44 +75,59 @@ class Console extends ConsoleBack {
                     Open console
                 </Button>
 
-                <Button
-                    style={styles.buttonAbsolute}
-                    styleAnimation={buttonBenchMark}
-                    fontSize={14}
-                    appearance='uniform'
-                    color='main1'
-                    fontColor='white'
-                    onPress={this.goToBenchMark}
+                <Animated.View
+                    style={[styles.buttonAbsoluteLeft, buttonFirstRow]}
                     pointerEvents={opened ? undefined : 'none'}
                 >
-                    BenchMark
-                </Button>
+                    <Button
+                        style={styles.buttonFeature}
+                        fontSize={14}
+                        appearance='uniform'
+                        color='main1'
+                        fontColor='white'
+                        onPress={this.deleteAll}
+                    >
+                        Remove all data
+                    </Button>
 
-                <Button
-                    style={styles.buttonAbsolute}
-                    styleAnimation={buttonRefreshData}
-                    fontSize={14}
-                    appearance='uniform'
-                    color='main1'
-                    fontColor='white'
-                    onPress={this.refreshInternalData}
-                    pointerEvents={opened ? undefined : 'none'}
-                >
-                    Refresh internal data
-                </Button>
+                    <Button
+                        style={styles.buttonFeature}
+                        fontSize={14}
+                        appearance='uniform'
+                        color='main1'
+                        fontColor='white'
+                        onPress={this.goToBenchMark}
+                    >
+                        BenchMark
+                    </Button>
+                </Animated.View>
 
-                <Button
-                    style={styles.buttonAbsolute}
-                    styleAnimation={buttonDelete}
-                    fontSize={14}
-                    appearance='uniform'
-                    color='main1'
-                    fontColor='white'
-                    onPress={this.deleteAll}
+                <Animated.View
+                    style={[styles.buttonAbsoluteLeft, buttonSecondRow]}
                     pointerEvents={opened ? undefined : 'none'}
                 >
-                    Remove all data
-                </Button>
+                    <Button
+                        style={styles.buttonFeature}
+                        fontSize={14}
+                        appearance='uniform'
+                        color='main1'
+                        fontColor='white'
+                        onPress={this.refreshInternalData}
+                    >
+                        Refresh internal data
+                    </Button>
+
+                    <Button
+                        style={styles.buttonFeature}
+                        fontSize={14}
+                        appearance='uniform'
+                        color='main1'
+                        fontColor='white'
+                        onPress={this.goToResponsive}
+                    >
+                        Responsive
+                    </Button>
+                </Animated.View>
 
                 <Button
                     style={styles.buttonClose}

@@ -166,7 +166,8 @@ class UserManager {
         this.stats = stats;
         this.xp = xpInfo.totalXP;
 
-        this.interface.forceUpdate();
+        // TODO: needed ?
+        //this.interface.forceUpdate();
     }
 
     /**

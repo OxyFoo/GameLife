@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     fullscreen: {
-        width: '100%',
         height: '100%',
         overflow: 'hidden'
     },
@@ -10,6 +9,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#03052E'
     },
 
+    safeView: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#000000'
+    },
     parent: {
         position: 'absolute',
         top: 0,

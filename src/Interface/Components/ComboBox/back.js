@@ -135,9 +135,7 @@ class ComboBoxBack extends React.Component {
     refreshSearch = (text = '') => {
         const textLowerCase = FormatForSearch(text);
         this.setState({
-            data: this.props.data.filter((item) =>
-                FormatForSearch(item.value).includes(textLowerCase)
-            ),
+            data: this.props.data.filter((item) => FormatForSearch(item.value).includes(textLowerCase)),
             search: text
         });
     };

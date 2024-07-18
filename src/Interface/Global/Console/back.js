@@ -239,6 +239,11 @@ class ConsoleBack extends React.Component {
         user.interface.ChangePage('benchmark');
     };
 
+    goToResponsive = () => {
+        this.close();
+        user.interface.ChangePage('responsive');
+    };
+
     refreshInternalData = async () => {
         this.toggleDeleteButtons();
 

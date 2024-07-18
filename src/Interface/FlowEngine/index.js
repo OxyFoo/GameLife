@@ -1,55 +1,78 @@
 import * as React from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { Animated, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 
 import styles from './style';
-import FlowEnginePagesRender from './pagesRender';
+import BackFlowEngine from './back';
+import SafeAreaWithResponsive from './SafeAreaWithResponsive';
+import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
 
+import PAGES from 'Interface/Pages';
 import { DynamicBackground } from 'Interface/Primitives';
-import { NavBar, Console, NotificationsInApp, Popup, UserHeader, BottomPanel } from 'Interface/Global';
+import { BottomPanel, Console, NavBar, NotificationsInApp, Popup, UserHeader } from 'Interface/Global';
 
-/**
- * @typedef {import('./back').PageNames} PageNames
- */
+class FlowEnginePagesRender extends BackFlowEngine {
+    render() {
+        return (
+            <SafeAreaWithResponsive>
+                <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior={'padding'}>
+                    <DynamicBackground opacity={0.15} />
+                    {this.renderPages()}
+                    <UserHeader ref={this.userHeader} />
+                    <BottomPanel ref={this.bottomPanel} />
+                    <NavBar ref={this.navBar} />
+                    <NotificationsInApp ref={this.notificationsInApp} />
+                    <Popup ref={this.popup} />
+                    <Console ref={this.console} />
+                </KeyboardAvoidingView>
+            </SafeAreaWithResponsive>
+        );
+    }
 
-const FlowEngine = React.forwardRef((_, ref) => {
-    /** @type {React.MutableRefObject<Popup | null>} */
-    const refPopup = React.useRef(null);
+    renderPages() {
+        return this.availablePages.map((pageName) => {
+            const { selectedPage, currentTransition } = this.state;
 
-    /** @type {React.MutableRefObject<BottomPanel | null>} */
-    const refBottomPanel = React.useRef(null);
+            const page = this.getMountedPage(pageName);
 
-    /** @type {React.MutableRefObject<Console | null>} */
-    const refConsole = React.useRef(null);
+            // Page not found or not mounted and not keep mounted
+            if (page === null) {
+                return null;
+            }
 
-    /** @type {React.MutableRefObject<NotificationsInApp | null>} */
-    const refNotificationsInApp = React.useRef(null);
+            const Page = PAGES[pageName];
+            return (
+                <Animated.View
+                    key={'page-' + pageName}
+                    style={[
+                        styles.parent,
+                        Page.feShowUserHeader && { top: this.userHeader.current?.state.height },
+                        Page.feShowNavBar && { bottom: this.navBar.current?.state.height },
+                        {
+                            opacity: Animated.subtract(1, page.transitionEnd),
+                            transform: [
+                                ...GetAnimationPageOpen(page, currentTransition),
+                                ...GetAnimationPageClose(page)
+                            ]
+                        }
+                    ]}
+                    pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
+                >
+                    {Page.feScrollEnabled ? (
+                        <ScrollView
+                            style={styles.fullscreen}
+                            contentContainerStyle={styles.scrollviewContainer}
+                            children={<Page ref={page.ref} args={page.args} flowEngine={this._public} />}
+                        />
+                    ) : (
+                        <View
+                            style={styles.fullscreen}
+                            children={<Page ref={page.ref} args={page.args} flowEngine={this._public} />}
+                        />
+                    )}
+                </Animated.View>
+            );
+        });
+    }
+}
 
-    /** @type {React.MutableRefObject<NavBar | null>} */
-    const refBottomBar = React.useRef(null);
-
-    /** @type {React.MutableRefObject<UserHeader | null>} */
-    const refUserHeader = React.useRef(null);
-
-    return (
-        <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior={'padding'}>
-            <DynamicBackground opacity={0.15} />
-            <FlowEnginePagesRender
-                ref={ref}
-                popup={refPopup}
-                bottomPanel={refBottomPanel}
-                console={refConsole}
-                userHeader={refUserHeader}
-                navBar={refBottomBar}
-                notificationsInApp={refNotificationsInApp}
-            />
-            <UserHeader ref={refUserHeader} />
-            <BottomPanel ref={refBottomPanel} />
-            <NavBar ref={refBottomBar} />
-            <NotificationsInApp ref={refNotificationsInApp} />
-            <Popup ref={refPopup} />
-            <Console ref={refConsole} />
-        </KeyboardAvoidingView>
-    );
-});
-
-export default FlowEngine;
+export default FlowEnginePagesRender;

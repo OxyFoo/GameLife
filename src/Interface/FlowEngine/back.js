@@ -4,6 +4,7 @@ import { Animated, BackHandler } from 'react-native';
 import PageBase from './PageBase';
 import PAGES from 'Interface/Pages';
 
+import DynamicVar from 'Utils/DynamicVar';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
@@ -55,47 +56,24 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {BackFlowEngine['_public']} FlowEnginePublicClass
  */
 
-/**
- * @typedef {Object} BackFlowEnginePropsType
- * @property {React.RefObject<BackFlowEngine['popup']>} popup
- * @property {React.RefObject<BackFlowEngine['bottomPanel']>} bottomPanel
- * @property {React.RefObject<BackFlowEngine['console']>} console
- * @property {React.RefObject<BackFlowEngine['userHeader']>} userHeader
- * @property {React.RefObject<BackFlowEngine['navBar']>} navBar
- * @property {React.RefObject<BackFlowEngine['notificationsInApp']>} notificationsInApp
- */
-
-/**
- * All props are React.RefObject wich will be binded to the instance
- * @type {BackFlowEnginePropsType}
- */
-const BackFlowEngineProps = {
-    popup: React.createRef(),
-    bottomPanel: React.createRef(),
-    console: React.createRef(),
-    userHeader: React.createRef(),
-    navBar: React.createRef(),
-    notificationsInApp: React.createRef()
-};
-
 class BackFlowEngine extends React.Component {
-    /** @type {Popup | null} */
-    popup = null;
+    /** @type {React.RefObject<Popup>} */
+    popup = React.createRef();
 
-    /** @type {Console | null} */
-    console = null;
+    /** @type {React.RefObject<Console>} */
+    console = React.createRef();
 
-    /** @type {BottomPanel | null} */
-    bottomPanel = null;
+    /** @type {React.RefObject<BottomPanel>} */
+    bottomPanel = React.createRef();
 
-    /** @type {UserHeader | null} */
-    userHeader = null;
+    /** @type {React.RefObject<UserHeader>} */
+    userHeader = React.createRef();
 
-    /** @type {NavBar | null} */
-    navBar = null;
+    /** @type {React.RefObject<NavBar>} */
+    navBar = React.createRef();
 
-    /** @type {NotificationsInApp | null} */
-    notificationsInApp = null;
+    /** @type {React.RefObject<NotificationsInApp>} */
+    notificationsInApp = React.createRef();
 
     state = {
         /** @type {PageNames | null} */
@@ -107,6 +85,12 @@ class BackFlowEngine extends React.Component {
         /** @type {Array<PageMemory<PageNames>>} */
         mountedPages: []
     };
+
+    responsive = new DynamicVar({
+        scale: 1,
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    });
 
     /**
      * @type {Array<PageNames>}
@@ -148,6 +132,13 @@ class BackFlowEngine extends React.Component {
     }
 
     componentDidMount() {
+        this._public.popup = this.popup.current;
+        this._public.console = this.console.current;
+        this._public.bottomPanel = this.bottomPanel.current;
+        this._public.userHeader = this.userHeader.current;
+        this._public.navBar = this.navBar.current;
+        this._public.notificationsInApp = this.notificationsInApp.current;
+
         BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
     }
 
@@ -156,26 +147,11 @@ class BackFlowEngine extends React.Component {
     }
 
     /**
-     * @param {BackFlowEnginePropsType} nextProps
+     * @param {any} _nextProps
      * @param {this['state']} nextState
      * @returns {boolean}
      */
-    shouldComponentUpdate(nextProps, nextState) {
-        /** @type {Array<keyof BackFlowEnginePropsType>} */ // @ts-ignore
-        const toCheck = Object.keys(BackFlowEngineProps);
-        let changed = false;
-        for (const key of toCheck) {
-            const ref = nextProps[key];
-            if (this[key] === null && ref !== null && ref.current && ref?.current !== this[key]) {
-                // @ts-ignore
-                this[key] = ref.current;
-                changed = true;
-            }
-        }
-        if (changed) {
-            return true;
-        }
-
+    shouldComponentUpdate(_nextProps, nextState) {
         return this.state.selectedPage !== nextState.selectedPage || this.state.mountedPages !== nextState.mountedPages;
     }
 
@@ -409,24 +385,24 @@ class BackFlowEngine extends React.Component {
     pageDidUpdate = (pageName) => {
         // Update user header visibility
         const showUserHeader = PAGES[pageName].feShowUserHeader;
-        if (showUserHeader && this.userHeader?.show === false) {
-            this.userHeader?.Show();
-            this.userHeader?.refBellButton.current?.StartOpenCountAnimation(3000, 250);
-        } else if (!showUserHeader && this.userHeader?.show === true) {
-            this.userHeader?.Hide();
+        if (showUserHeader && this.userHeader.current?.show === false) {
+            this.userHeader.current?.Show();
+            this.userHeader.current?.refBellButton.current?.StartOpenCountAnimation(3000, 250);
+        } else if (!showUserHeader && this.userHeader.current?.show === true) {
+            this.userHeader.current?.Hide();
         }
 
         // Update nav bar visibility
         const showNavBar = PAGES[pageName].feShowNavBar;
-        if (showNavBar && this.navBar?.show === false) {
-            this.navBar?.Show();
-        } else if (!showNavBar && this.navBar?.show === true) {
-            this.navBar?.Hide();
+        if (showNavBar && this.navBar.current?.show === false) {
+            this.navBar.current?.Show();
+        } else if (!showNavBar && this.navBar.current?.show === true) {
+            this.navBar.current?.Hide();
         }
 
         // Update bottom panel visibility
-        if (this.bottomPanel?.IsOpened()) {
-            this.bottomPanel?.Close();
+        if (this.bottomPanel.current?.IsOpened()) {
+            this.bottomPanel.current?.Close();
         }
     };
 
@@ -503,25 +479,26 @@ class BackFlowEngine extends React.Component {
     };
 
     _public = {
-        /** @type {Popup} */ // @ts-ignore
-        popup: this.popup,
+        /** @type {Popup | null} */
+        popup: null,
 
-        /** @type {Console} */ // @ts-ignore
-        console: this.console,
+        /** @type {Console | null} */
+        console: null,
 
-        /** @type {BottomPanel} */ // @ts-ignore
-        bottomPanel: this.bottomPanel,
+        /** @type {BottomPanel | null} */
+        bottomPanel: null,
 
-        /** @type {UserHeader} */ // @ts-ignore
-        userHeader: this.userHeader,
+        /** @type {UserHeader | null} */
+        userHeader: null,
 
-        /** @type {NavBar} */ // @ts-ignore
-        navBar: this.navBar,
+        /** @type {NavBar | null} */
+        navBar: null,
 
-        /** @type {NotificationsInApp} */ // @ts-ignore
-        notificationsInApp: this.notificationsInApp,
+        /** @type {NotificationsInApp | null} */
+        notificationsInApp: null,
 
         history: this.history,
+        responsive: this.responsive,
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,
         GetPage: this.GetPage,
@@ -532,8 +509,5 @@ class BackFlowEngine extends React.Component {
         ResetCustomBackHandler: this.ResetCustomBackHandler
     };
 }
-
-BackFlowEngine.defaultProps = BackFlowEngineProps;
-BackFlowEngine.prototype.props = BackFlowEngineProps;
 
 export default BackFlowEngine;

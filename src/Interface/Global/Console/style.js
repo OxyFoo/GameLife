@@ -24,13 +24,33 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         borderRadius: 8
     },
-    buttonAbsolute: {
-        position: 'absolute',
-        bottom: 0,
-        width: '40%',
+    buttonFeature: {
+        flex: 1,
+        width: 'auto',
+        marginHorizontal: 6,
         paddingVertical: 8,
         paddingHorizontal: 0,
         borderRadius: 8
+    },
+    buttonAbsoluteLeft: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        marginHorizontal: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    buttonAbsoluteRight: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        marginHorizontal: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     buttonClose: {
         position: 'absolute',

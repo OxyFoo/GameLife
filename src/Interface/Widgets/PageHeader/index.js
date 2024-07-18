@@ -24,16 +24,16 @@ const PageHeaderProps = {
 
 class PageHeader extends React.Component {
     render() {
-        const { onBackPress, onHelpPress} = this.props;
+        const { onBackPress, onHelpPress } = this.props;
         const T_back = langManager.curr['modal']['back'];
 
         return (
             <View style={[styles.header, this.props.style]}>
-                <TouchableOpacity style={styles.headerLeft} activeOpacity={.5} onPress={onBackPress}>
-                    <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={30} />
+                <TouchableOpacity style={styles.headerLeft} activeOpacity={0.5} onPress={onBackPress}>
+                    <Icon style={styles.headerLeftArrow} icon='arrow-left' size={30} />
                     <Text fontSize={16}>{T_back}</Text>
                 </TouchableOpacity>
-                {!!onHelpPress && <Icon onPress={onHelpPress} icon='info' size={30} />}
+                {!!onHelpPress && <Icon onPress={onHelpPress} icon='info-circle-outline' size={30} />}
             </View>
         );
     }

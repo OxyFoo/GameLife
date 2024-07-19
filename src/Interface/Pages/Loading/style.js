@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     contentTest: {
         width: '100%',
         height: '100%',
+        paddingHorizontal: 24,
 
         display: 'flex',
         alignItems: 'center',
@@ -35,7 +36,6 @@ const styles = StyleSheet.create({
     },
     buttonTest: {
         width: '60%',
-        height: 60,
         marginTop: 24
     }
 });

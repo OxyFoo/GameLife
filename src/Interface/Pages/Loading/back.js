@@ -19,7 +19,10 @@ import { SpringAnimation } from 'Utils/Animations';
 class BackLoading extends PageBase {
     state = {
         icon: 0,
+
+        showTestMessage: false,
         animTestButton: new Animated.Value(1),
+
         displayedSentence: this.getRandomSentence()
     };
 
@@ -58,7 +61,7 @@ class BackLoading extends PageBase {
     onToucheEnd = (event) => {
         // Check if the user is offline and if he has scrolled up to open the console
         if (event.nativeEvent.pageY - this.startY < -200 && !user.server.online) {
-            user.interface.console.Enable();
+            user.interface.console?.Enable();
         }
     };
 
@@ -86,12 +89,12 @@ class BackLoading extends PageBase {
 
     nextPage = async () => {
         // If test release, go to test page
-        const { icon } = this.state;
+        const { showTestMessage } = this.state;
         const isTestMode = Config.ENV === 'test' && !__DEV__;
 
         // Loading finished & test mode (release) => go to "test message"
-        if (isTestMode && icon === 3) {
-            this.setState({ icon: icon + 1 });
+        if (isTestMode && !showTestMessage) {
+            this.setState({ showTestMessage: true });
             setTimeout(
                 () => {
                     SpringAnimation(this.state.animTestButton, 0).start();

@@ -8,20 +8,19 @@ const LOGOS = [
     require(LOGO_DIR + 'loading_0.png'),
     require(LOGO_DIR + 'loading_1.png'),
     require(LOGO_DIR + 'loading_2.png'),
-    require(LOGO_DIR + 'loading_3.png'),
     require(LOGO_DIR + 'loading_3.png')
 ];
 
-class GLLoading extends React.Component {
+class IconLoading extends React.Component {
     state = {
         state: 0,
         animOpacity: [
             new Animated.Value(1), // Bar 0
             new Animated.Value(0), // Bar 1
             new Animated.Value(0), // Bar 2
-            new Animated.Value(0)  // Bar 3
+            new Animated.Value(0) // Bar 3
         ]
-    }
+    };
 
     componentDidUpdate() {
         const state = this.props.state || 0;
@@ -38,20 +37,32 @@ class GLLoading extends React.Component {
     }
 
     render() {
-        const containerStyle = [ styles.content, this.props.style ];
+        const containerStyle = [styles.content, this.props.style];
 
         return (
             <View style={containerStyle}>
                 <Animated.Image style={[styles.image, { opacity: this.state.animOpacity[0] }]} source={LOGOS[0]} />
-                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[1] }]} source={LOGOS[1]} />
-                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[2] }]} source={LOGOS[2]} />
-                <Animated.Image style={[styles.image, { position: 'absolute', opacity: this.state.animOpacity[3] }]} source={LOGOS[3]} />
+                <Animated.Image
+                    style={[styles.image, styles.absolute, { opacity: this.state.animOpacity[1] }]}
+                    source={LOGOS[1]}
+                />
+                <Animated.Image
+                    style={[styles.image, styles.absolute, { opacity: this.state.animOpacity[2] }]}
+                    source={LOGOS[2]}
+                />
+                <Animated.Image
+                    style={[styles.image, styles.absolute, { opacity: this.state.animOpacity[3] }]}
+                    source={LOGOS[3]}
+                />
             </View>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
+    absolute: {
+        position: 'absolute'
+    },
     content: {
         display: 'flex',
         alignItems: 'center'
@@ -64,4 +75,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default GLLoading;
+export default IconLoading;

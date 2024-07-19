@@ -4,24 +4,27 @@ import Config from 'react-native-config';
 
 import styles from './style';
 import BackLoading from './back';
+import IconLoading from './IconLoading';
 import langManager from 'Managers/LangManager';
 
-import { GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
+import { Button, Text, Icon, Zap } from 'Interface/Components';
 
 class Loading extends BackLoading {
     render() {
-        if (this.state.icon === 4) {
+        const { icon, showTestMessage, displayedSentence } = this.state;
+
+        if (showTestMessage) {
             return this.renderTestCautionMessage();
         }
 
         return (
             <View>
                 <View style={styles.content} onTouchStart={this.onToucheStart} onTouchEnd={this.onToucheEnd}>
-                    <GLLoading state={this.state.icon} />
+                    <IconLoading state={icon} />
                 </View>
                 <View style={styles.textContainer}>
                     {this.renderVersionText()}
-                    <Text>{this.state.displayedSentence}</Text>
+                    <Text>{displayedSentence}</Text>
                 </View>
             </View>
         );

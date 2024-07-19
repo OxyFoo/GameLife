@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View, FlatList } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import BackActivityPage1 from './back';
 import styles from './style';
@@ -13,6 +13,7 @@ import { Text, IconCheckable, InputText, Button, Icon } from 'Interface/Componen
  *
  * @typedef {import('../types').ItemSkill} ItemSkill
  * @typedef {import('../types').ItemCategory} ItemCategory
+ * @typedef {import('react-native').ListRenderItem<ItemSkill>} ListRenderItemItemSkill
  */
 
 class AddActivityPage1 extends BackActivityPage1 {
@@ -83,13 +84,26 @@ class AddActivityPage1 extends BackActivityPage1 {
                 </Text>
 
                 {/* Activities List */}
-                <FlatList
+                <Animated.FlatList
                     ref={this.refActivities}
                     style={styles.activitiesFlatlist}
+                    onLayout={this.onLayoutFlatlist}
                     data={skills}
-                    ListEmptyComponent={this.renderEmptyList}
                     renderItem={this.renderSkill}
                     keyExtractor={(item) => 'act-skill-' + item.id}
+                    ListEmptyComponent={this.renderEmptyList}
+                    onScroll={Animated.event(
+                        [
+                            {
+                                nativeEvent: {
+                                    contentOffset: {
+                                        y: this.state.animScroll
+                                    }
+                                }
+                            }
+                        ],
+                        { useNativeDriver: true }
+                    )}
                 />
             </View>
         );
@@ -127,16 +141,59 @@ class AddActivityPage1 extends BackActivityPage1 {
         );
     };
 
-    /**
-     * @param {{ item: ItemSkill }} param0
-     * @returns {JSX.Element}
-     */
-    renderSkill = ({ item }) => {
+    /** @type {ListRenderItemItemSkill} */
+    renderSkill = ({ item, index }) => {
         const { value, onPress } = item;
+        const { flatlistHeight, buttonHeight } = this.state;
+        const topItemPosY = buttonHeight * index;
+        const topNextItemPosY = buttonHeight * (index + 1);
 
         return (
             <Button
+                onLayout={this.onLayoutActivity}
                 style={styles.activityElement}
+                styleAnimation={
+                    buttonHeight === 0 || flatlistHeight === 0
+                        ? {}
+                        : {
+                              opacity: this.state.animScroll.interpolate({
+                                  inputRange: [
+                                      topItemPosY - flatlistHeight,
+                                      topItemPosY - flatlistHeight + buttonHeight,
+                                      topItemPosY,
+                                      topNextItemPosY
+                                  ],
+                                  outputRange: [0, 1, 1, 0],
+                                  extrapolate: 'clamp'
+                              }),
+                              transform: [
+                                  {
+                                      translateY: this.state.animScroll.interpolate({
+                                          inputRange: [
+                                              topItemPosY - flatlistHeight,
+                                              topItemPosY - flatlistHeight + buttonHeight,
+                                              topItemPosY,
+                                              topNextItemPosY
+                                          ],
+                                          outputRange: [20, 0, 0, -20],
+                                          extrapolate: 'clamp'
+                                      })
+                                  },
+                                  {
+                                      scale: this.state.animScroll.interpolate({
+                                          inputRange: [
+                                              topItemPosY - flatlistHeight,
+                                              topItemPosY - flatlistHeight + buttonHeight,
+                                              topItemPosY,
+                                              topNextItemPosY
+                                          ],
+                                          outputRange: [0.9, 1, 1, 0.9],
+                                          extrapolate: 'clamp'
+                                      })
+                                  }
+                              ]
+                          }
+                }
                 appearance='outline'
                 borderColor='secondary'
                 fontColor='primary'

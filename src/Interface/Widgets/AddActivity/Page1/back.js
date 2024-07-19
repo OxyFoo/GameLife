@@ -3,6 +3,7 @@ import { Animated } from 'react-native';
 
 import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
 
+import styles from './style';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
@@ -12,6 +13,7 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').FlatList} FlatList
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
@@ -47,6 +49,10 @@ class BackActivityPage1 extends React.Component {
         searchEnabled: false,
         skillSearch: '',
         animSearch: new Animated.Value(0),
+
+        flatlistHeight: 0,
+        buttonHeight: 0,
+        animScroll: new Animated.Value(0),
 
         /** @type {string} Header of input - Name of category */
         inputText: ''
@@ -160,6 +166,22 @@ class BackActivityPage1 extends React.Component {
         }
 
         return newState;
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutFlatlist = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ flatlistHeight: height });
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutActivity = (event) => {
+        const { height } = event.nativeEvent.layout;
+        const margin = styles.activityElement.marginVertical * 2;
+
+        if (height + margin !== this.state.buttonHeight) {
+            this.setState({ buttonHeight: height + margin });
+        }
     };
 
     openSearch = () => {

@@ -22,7 +22,6 @@ import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
 import KPI from './OldComponents/KPI';
 import DayClock from './OldComponents/DayClock';
-import GLLoading from './OldComponents/GLLoading';
 import HeatMap from './OldComponents/HeatMap';
 import OldIcon from './OldComponents/Icon';
 import KeyboardSpacerView from './OldComponents/KeyboardSpacerView';
@@ -41,7 +40,6 @@ export {
     Character,
     KPI,
     DayClock,
-    GLLoading,
     HeatMap,
     KeyboardSpacerView,
     LineChartSvg,

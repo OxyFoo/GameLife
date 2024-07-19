@@ -35,6 +35,7 @@ class Text extends React.Component {
     /** @param {TextProps & TextPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
         return (
+            this.props.style !== nextProps.style ||
             this.props.children !== nextProps.children ||
             this.props.color !== nextProps.color ||
             this.props.fontSize !== nextProps.fontSize

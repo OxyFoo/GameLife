@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Animated, View, FlatList, Dimensions } from 'react-native';
 
-import { RenderActivity, RenderDay } from './elements';
-import BackCalendar, { TOTAL_DAYS_COUNT } from './back';
 import styles, { getItemLayout } from './style';
+import BackCalendar, { TOTAL_DAYS_COUNT } from './back';
+import { RenderActivity, RenderDay } from './elements';
+import { CardHeader, CardSeparator, CardFooter } from './AddButtons';
 import langManager from 'Managers/LangManager';
 
 import { ActivityTimeline, Button, Text } from 'Interface/Components';
@@ -55,7 +56,9 @@ class Calendar extends BackCalendar {
                         data={activities}
                         keyExtractor={(activity) => `${activity.activity.startTime}`}
                         renderItem={(props) => <RenderActivity {...props} />}
-                        ItemSeparatorComponent={() => <View style={styles.activitySeparator} />}
+                        ListHeaderComponent={CardHeader.bind(this)}
+                        ListFooterComponent={CardFooter.bind(this)}
+                        ItemSeparatorComponent={CardSeparator.bind(this)}
                         ListEmptyComponent={() => (
                             <Button
                                 style={styles.activityEmptyButton}

@@ -73,9 +73,6 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginHorizontal: 24
     },
-    activitySeparator: {
-        height: 12
-    },
     activityButtonContent: {
         flexDirection: 'row',
         flexWrap: 'nowrap',

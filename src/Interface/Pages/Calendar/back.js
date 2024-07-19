@@ -160,6 +160,14 @@ class BackCalendar extends PageBase {
         });
     }
 
+    /** @param {number} startTime */
+    onAddActivityFromTime(startTime) {
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity time={startTime} />,
+            movable: false
+        });
+    }
+
     /**
      * @param {DayDataType} day
      */

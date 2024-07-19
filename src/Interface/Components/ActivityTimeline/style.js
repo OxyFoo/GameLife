@@ -13,6 +13,16 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    adjacentLeft: {
+        borderLeftWidth: 0,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0
+    },
+    adjacentRight: {
+        borderRightWidth: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0
     }
 });
 

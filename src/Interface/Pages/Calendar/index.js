@@ -37,7 +37,7 @@ class Calendar extends BackCalendar {
                         </Text>
                     </View>
 
-                    <ActivityTimeline activities={activities.map((i) => i.activity)} />
+                    <ActivityTimeline activities={activities.map((i) => i.activity)} day={selectedDay?.day} />
                 </Animated.View>
 
                 {/** Activities list */}

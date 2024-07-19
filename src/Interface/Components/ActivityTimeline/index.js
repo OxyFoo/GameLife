@@ -12,7 +12,7 @@ import ActivityTimelineBack from './back';
 class ActivityTimeline extends ActivityTimelineBack {
     render() {
         return (
-            <View style={[styles.parent, this.props.style]}>
+            <View style={[styles.parent, this.props.style]} onLayout={this.onLayout}>
                 <FlatList
                     data={this.state.activities}
                     renderItem={this.renderActivity}
@@ -35,7 +35,9 @@ class ActivityTimeline extends ActivityTimelineBack {
                         marginLeft: item.marginLeft,
                         width: item.width,
                         borderColor: item.color
-                    }
+                    },
+                    item.hasPreviousAdjacentActivity && styles.adjacentLeft,
+                    item.hasNextAdjacentActivity && styles.adjacentRight
                 ]}
             />
         );

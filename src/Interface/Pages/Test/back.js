@@ -84,7 +84,7 @@ class BackTest extends PageBase {
 
     openPopup = (count = 1) => {
         for (let i = 0; i < count; i++) {
-            this.fe.popup.OpenT({
+            this.fe.popup?.OpenT({
                 type: 'acceptornot',
                 data: {
                     title: 'Test' + i.toString(),
@@ -92,7 +92,7 @@ class BackTest extends PageBase {
                 },
                 callback: (closeReason) => {
                     if (closeReason === 'accept' && i === count - 1) {
-                        this.fe.console.Enable();
+                        this.fe.console?.Enable();
                     }
                 },
                 cancelable: i % 2 === 0

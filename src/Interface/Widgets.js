@@ -6,7 +6,6 @@ export { TodoAdvancedList } from './Widgets/TodoAdvancedList';
 
 import ActivityPanel from './Widgets/ActivityPanel';
 import AchievementsGroup from './Widgets/AchievementsGroup';
-import ActivityCard from './Widgets/ActivityCard';
 import ActivityExperience from './Widgets/ActivityExperience';
 import ActivitySchedule from './Widgets/ActivitySchedule';
 import BlockMonth from './Widgets/BlockMonth';
@@ -30,7 +29,6 @@ import ZapGPT from './Widgets/ZapGPT';
 export {
     ActivityPanel,
     AchievementsGroup,
-    ActivityCard,
     ActivityExperience,
     ActivitySchedule,
     BlockMonth,

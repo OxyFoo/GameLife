@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, ScrollView } from 'react-native';
+import { View, Animated } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';

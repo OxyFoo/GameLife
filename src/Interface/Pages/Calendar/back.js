@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Dimensions } from 'react-native';
+import { Animated } from 'react-native';
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 import user from 'Managers/UserManager';
@@ -88,6 +88,7 @@ class BackCalendar extends PageBase {
     /** @type {React.RefObject<FlatListDay>} */
     refDayList = React.createRef();
     dayListPosX = 0;
+    dayListWidth = 0;
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener((activities) => {
@@ -204,9 +205,8 @@ class BackCalendar extends PageBase {
 
         // Scroll to the selected day
         if (scrollToSelection) {
-            const { width: screen_width } = Dimensions.get('window');
             const index = days.indexOf(selectedDay);
-            const newItemsWidth = index * ITEM_WIDTH - screen_width / 2 + ITEM_WIDTH / 2;
+            const newItemsWidth = index * ITEM_WIDTH - this.dayListWidth / 2 + ITEM_WIDTH / 2;
             this.refDayList.current?.scrollToOffset({
                 offset: newItemsWidth,
                 animated: true
@@ -217,6 +217,11 @@ class BackCalendar extends PageBase {
     /** @param {LayoutChangeEvent} event */
     onLayoutSummary = (event) => {
         this.summaryHeight = event.nativeEvent.layout.height;
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutDayList = (event) => {
+        this.dayListWidth = event.nativeEvent.layout.width;
     };
 
     /** @type {FlatListDay['props']['onScroll']} */
@@ -238,8 +243,7 @@ class BackCalendar extends PageBase {
 
         // Define the current month
         const { days } = this.state;
-        const { width: screen_width } = Dimensions.get('window');
-        const index = this.dayListPosX / ITEM_WIDTH + screen_width / ITEM_WIDTH / 2;
+        const index = this.dayListPosX / ITEM_WIDTH + this.dayListWidth / ITEM_WIDTH / 2;
         const { month, year } = days[Math.floor(index)];
         const monthText = langManager.curr['dates']['month'][month];
         const yearText = year === new Date().getFullYear() ? '' : ` ${year}`;

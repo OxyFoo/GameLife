@@ -27,8 +27,8 @@ const SafeAreaWithResponsive = ({ children }) => {
             style={[
                 styles.safeView,
                 {
-                    paddingHorizontal: responsive?.paddingHorizontal,
-                    paddingVertical: responsive?.paddingVertical
+                    paddingVertical: responsive?.paddingVertical,
+                    paddingHorizontal: responsive?.paddingHorizontal
                 },
                 typeof responsive?.scale === 'number' && {
                     width: `${100 / responsive?.scale}%`,

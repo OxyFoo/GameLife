@@ -4,21 +4,15 @@ import themeManager from 'Managers/ThemeManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetGlobalTime } from 'Utils/Time';
-import Notifications from 'Utils/Notifications';
 
 /**
  * @typedef {import('Types/TCP').ConnectionState} ConnectionState
+ * @typedef {import('Managers/LangManager').LangKey} LangKey
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
 class BackSettings extends PageBase {
-    /** @type {ComboBoxItem[]} */
-    availableLangs = langManager.GetLangsKeys().map(lang => ({
-        key: lang,
-        value: langManager.GetAllLangs()[lang]['name']
-    }));
-
     state = {
         /** @type {ComboBoxItem} */
         cbSelectedLang: {
@@ -26,17 +20,25 @@ class BackSettings extends PageBase {
             value: langManager.curr['name']
         },
 
-        switchMorningNotifs: user.settings.morningNotifications,
-        switchEveningNotifs: user.settings.eveningNotifications,
         waitingConsentPopup: false,
         sendingMail: false,
         devicesLoading: false,
 
         /** @param {ConnectionState} state */
         serverTCPState: user.tcp.state.Get()
-    }
+    };
 
+    /** @type {ComboBoxItem[]} */
+    availableLangs = langManager.GetLangsKeys().map((lang) => ({
+        key: lang,
+        value: langManager.GetAllLangs()[lang]['name']
+    }));
+
+    /** @type {NodeJS.Timeout | null} */
     intervalConsentChecking = null;
+
+    /** @type {Symbol | null} */
+    listenerTCP = null;
 
     componentDidMount() {
         if (user.consent.loading) {
@@ -44,7 +46,9 @@ class BackSettings extends PageBase {
             this.intervalConsentChecking = setInterval(() => {
                 if (!user.consent.loading) {
                     this.setState({ waitingConsentPopup: false });
-                    clearInterval(this.intervalConsentChecking);
+                    if (this.intervalConsentChecking !== null) {
+                        clearInterval(this.intervalConsentChecking);
+                    }
                 }
             }, 100);
         }
@@ -61,146 +65,169 @@ class BackSettings extends PageBase {
     /** @param {ConnectionState} state */
     onTCPStateChange = (state) => {
         this.setState({ serverTCPState: state });
-    }
+    };
 
     onBack = () => user.interface.BackHandle();
-    openAbout = () => user.interface.ChangePage('about', undefined, true);
-    openReport = () => user.interface.ChangePage('report', undefined, true);
+    openAbout = () => user.interface.ChangePage('about', { storeInHistory: false });
+    openReport = () => user.interface.ChangePage('report', { storeInHistory: false });
+    openNotifications = () => user.interface.ChangePage('settings_notifications', { storeInHistory: false });
 
     openConsentPopup = async () => {
         this.setState({ waitingConsentPopup: true });
         await user.consent.ShowTrackingPopup(true);
         this.setState({ waitingConsentPopup: false });
-    }
+    };
 
     /** @param {ComboBoxItem | null} lang */
     onChangeLang = (lang) => {
-        if (lang === null) return;
+        if (lang === null || typeof lang.key !== 'string') return;
         this.setState({ cbSelectedLang: lang });
-        langManager.SetLangage(/** @type {'fr' | 'en'} */ (lang.key));
+
+        const key = langManager.IsLangAvailable(lang.key);
+        langManager.SetLangage(key);
         user.settings.Save();
-    }
+    };
 
     /** @param {number} themeIndex */
     onChangeTheme = (themeIndex) => {
         /** @type {ThemeName[]} */
-        const themes = [ 'Main', 'Light' ];
+        const themes = ['Main', 'Light'];
         const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
-            user.interface.SetTheme(themeIndex);
-            user.interface.forceUpdate();
             user.settings.Save();
         }
-    }
-
-    /** @param {boolean} enabled */
-    onChangeMorningNotifications = (enabled) => {
-        if (enabled) Notifications.Morning.Enable();
-        else Notifications.Morning.Disable();
-        this.setState({ switchMorningNotifs: enabled });
-        user.settings.morningNotifications = enabled;
-        user.settings.Save();
-    }
-
-    /** @param {boolean} enabled */
-    onChangeEveningNotifications = (enabled) => {
-        if (enabled) Notifications.Evening.Enable();
-        else Notifications.Evening.Disable();
-        this.setState({ switchEveningNotifs: enabled });
-        user.settings.eveningNotifications = enabled;
-        user.settings.Save();
-    }
+    };
 
     restartTuto = () => {
-        user.interface.ChangePage('home', { tuto: 1 }, true);
-    }
+        user.interface.ChangePage('home', { args: { tuto: 1 }, storeInHistory: false });
+    };
 
     disconnect = () => {
-        const event = async (button) => {
-            if (button === 'yes' && !await user.Disconnect(true)) {
-                const title = langManager.curr['settings']['alert-disconnecterror-title'];
-                const text = langManager.curr['settings']['alert-disconnecterror-text'];
-                user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        const lang = langManager.curr['settings'];
+
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-disconnect-title'],
+                message: lang['alert-disconnect-message']
+            },
+            callback: async (button) => {
+                if (button === 'yes' && !(await user.Disconnect(true))) {
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-disconnecterror-title'],
+                            message: lang['alert-disconnecterror-message']
+                        }
+                    });
+                }
             }
-        };
-        const title = langManager.curr['settings']['alert-disconnect-title'];
-        const text = langManager.curr['settings']['alert-disconnect-text'];
-        user.interface.popup.Open('yesno', [ title, text ], event);
-    }
+        });
+    };
 
     disconnectAll = async () => {
-        const event = async (button) => {
-            if (button === 'yes' && !await user.Disconnect(true, true)) {
-                const title = langManager.curr['settings']['alert-disconnecterrortitle'];
-                const text = langManager.curr['settings']['alert-disconnecterror-text'];
-                user.interface.popup.Open('ok', [ title, text ], undefined, false);
-            }
-        };
+        const lang = langManager.curr['settings'];
 
         this.setState({ devicesLoading: true });
-        const title = langManager.curr['settings']['alert-disconnectall-title'];
-        const text = langManager.curr['settings']['alert-disconnectall-text'];
+
         const devices = await user.GetDevices();
         const textDevices = devices === null ? 'Error' : '- ' + devices.join(' - \n- ') + ' -\n';
-        user.interface.popup.Open('yesno', [ title, text.replace('{}', textDevices) ], event);
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-disconnectall-title'],
+                message: lang['alert-disconnectall-message'].replace('{}', textDevices)
+            },
+            callback: async (button) => {
+                if (button === 'yes' && !(await user.Disconnect(true, true))) {
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-disconnecterror-title'],
+                            message: lang['alert-disconnecterror-message']
+                        }
+                    });
+                }
+            }
+        });
+
         this.setState({ devicesLoading: false });
-    }
+    };
 
     reconnectTCP = () => {
         user.tcp.Connect();
         this.setState({ serverTCPState: 'idle' });
-    }
+    };
 
     deleteAccount = () => {
-        /** @param {'yes' | 'no'} button */
-        const event = async (button) => {
-            if (button !== 'yes')
-                return;
-
-            this.setState({ sendingMail: true });
-
-            const data = {
-                email: user.settings.email,
-                lang: langManager.currentLangageKey
-            }
-
-            // Send mail
-            const result = await user.server.Request('deleteAccount', data);
-            if (result === null) return;
-
-            if (result['status'] === 'ok') {
-                // Mail sent
-                const title = langManager.curr['settings']['alert-deletedmailsent-title'];
-                const text = langManager.curr['settings']['alert-deletedmailsent-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
-                    this.setState({ sendingMail: false }, () => {
-                        user.Disconnect(true);
-                    });
-                }, false);
-                user.tempMailSent = now;
-            } else {
-                // Mail sent failed
-                const title = langManager.curr['settings']['alert-deletedfailed-title'];
-                const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
-                    this.setState({ sendingMail: false })
-                }, false);
-            }
-        };
-
         const now = GetGlobalTime();
         if (user.tempMailSent === null || now - user.tempMailSent > 1 * 60) {
             // Confirmation popup
             const title = langManager.curr['settings']['alert-deleteaccount-title'];
-            const text = langManager.curr['settings']['alert-deleteaccount-text'];
-            user.interface.popup.Open('yesno', [ title, text ], event);
+            const message = langManager.curr['settings']['alert-deleteaccount-message'];
+            user.interface.popup?.OpenT({
+                type: 'yesno',
+                data: { title, message },
+                callback: this.DeleteAccount
+            });
         } else {
             // Too early
             const title = langManager.curr['settings']['alert-deletedmailtooearly-title'];
-            const text = langManager.curr['settings']['alert-deletedmailtooearly-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+            const message = langManager.curr['settings']['alert-deletedmailtooearly-message'];
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title, message }
+            });
         }
-    }
+    };
+
+    /**
+     * @param {'yes' | 'no'} button
+     * @private
+     */
+    DeleteAccount = async (button) => {
+        if (button !== 'yes') {
+            return;
+        }
+
+        this.setState({ sendingMail: true });
+
+        const data = {
+            email: user.settings.email,
+            lang: langManager.currentLangageKey
+        };
+
+        // Send mail
+        const result = await user.server.Request('deleteAccount', data);
+        if (result === null) return;
+
+        if (result['status'] === 'ok') {
+            // Mail sent
+            const title = langManager.curr['settings']['alert-deletedmailsent-title'];
+            const message = langManager.curr['settings']['alert-deletedmailsent-message'];
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title, message },
+                callback: () => {
+                    this.setState({ sendingMail: false }, () => {
+                        user.Disconnect(true);
+                    });
+                }
+            });
+            user.tempMailSent = GetGlobalTime();
+        } else {
+            // Mail sent failed
+            const title = langManager.curr['settings']['alert-deletedfailed-title'];
+            const message = langManager.curr['settings']['alert-deletedfailed-message'];
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title, message },
+                callback: () => {
+                    this.setState({ sendingMail: false });
+                }
+            });
+        }
+    };
 }
 
 export default BackSettings;

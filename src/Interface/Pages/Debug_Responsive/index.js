@@ -20,7 +20,17 @@ const SCALES = Array(7)
     });
 
 /** @type {ComboBoxItem[]} */
-const PADDINGS = Array(10)
+const PADDINGS_VERTICAL = Array(21)
+    .fill(0)
+    .map((_, i) => {
+        return {
+            key: i,
+            value: `${i * 6}`
+        };
+    });
+
+/** @type {ComboBoxItem[]} */
+const PADDINGS_HORIZONTAL = Array(16)
     .fill(0)
     .map((_, i) => {
         return {
@@ -50,7 +60,7 @@ class Responsive extends BackResponsive {
                 <ComboBox
                     style={styles.combobox}
                     title='Vertical padding'
-                    data={PADDINGS}
+                    data={PADDINGS_VERTICAL}
                     selectedValue={paddingVerticalValue}
                     onSelect={this.handleChangePaddingVertical}
                 />
@@ -58,7 +68,7 @@ class Responsive extends BackResponsive {
                 <ComboBox
                     style={styles.combobox}
                     title='Horizontal padding'
-                    data={PADDINGS}
+                    data={PADDINGS_HORIZONTAL}
                     selectedValue={paddingHorizontalValue}
                     onSelect={this.handleChangePaddingHorizontal}
                 />

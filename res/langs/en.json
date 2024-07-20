@@ -623,6 +623,7 @@
         "input-about": "About us",
         "input-langage": "Langages",
         "input-theme": "Themes",
+        "input-notifications": "Notifications",
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-report": "Report",
@@ -634,19 +635,19 @@
         "input-delete-account": "Delete my account",
 
         "alert-disconnect-title": "Disconnecting",
-        "alert-disconnect-text": "Do you want to log out? Data will only be saved locally",
+        "alert-disconnect-message": "Do you want to log out? Data will only be saved locally",
         "alert-disconnectall-title": "Disconnect all devices?",
-        "alert-disconnectall-text": "Do you want to disconnect all devices from your account?\n\nConnected devices\n{}",
+        "alert-disconnectall-message": "Do you want to disconnect all devices from your account?\n\nConnected devices\n{}",
         "alert-disconnecterror-title": "Error",
-        "alert-disconnecterror-text": "An error has occurred, please check your internet connection or please try again later.",
+        "alert-disconnecterror-message": "An error has occurred, please check your internet connection or please try again later.",
         "alert-deleteaccount-title": "Delete account",
-        "alert-deleteaccount-text": "Are you sure you want to delete your account? A confirmation email will be sent to you.",
+        "alert-deleteaccount-message": "Are you sure you want to delete your account? A confirmation email will be sent to you.",
         "alert-deletedmailsent-title": "Mail sent",
-        "alert-deletedmailsent-text": "A confirmation email has been sent to you, check your mailbox.",
+        "alert-deletedmailsent-message": "A confirmation email has been sent to you, check your mailbox.",
         "alert-deletedmailtooearly-title": "Mail already sent",
-        "alert-deletedmailtooearly-text": "A confirmation e-mail has already been sent to you, so please wait a few minutes before sending another, and don't forget to check your spam.",
+        "alert-deletedmailtooearly-message": "A confirmation e-mail has already been sent to you, so please wait a few minutes before sending another, and don't forget to check your spam.",
         "alert-deletedfailed-title": "Failure",
-        "alert-deletedfailed-text": "The email was not sent, please check your internet connection or try again later."
+        "alert-deletedfailed-message": "The email was not sent, please check your internet connection or try again later."
     },
 
     "shop": {

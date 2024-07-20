@@ -249,9 +249,10 @@ class BackFlowEngine extends React.Component {
             return false;
         }
 
+        const isGoingBack = nextpage === this.history[this.history.length - 1]?.pageName;
         this.changing = true;
         this.mountPage(nextpage, options).then(options.callback);
-        this.unmountPage(selectedPage);
+        this.unmountPage(selectedPage, isGoingBack);
         this.pageDidUpdate(nextpage);
         this.changing = false;
 

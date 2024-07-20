@@ -1,34 +1,31 @@
 import * as React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 
+import styles from './style';
 import BackSettings from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, Switch, SwitchText, ComboBox } from 'Interface/Components';
+import { Text, Button, Switch, /*SwitchText,*/ ComboBox } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Settings extends BackSettings {
     render = () => {
-        const {
-            cbSelectedLang,
-            switchEveningNotifs,
-            switchMorningNotifs,
-            waitingConsentPopup,
-            sendingMail,
-            devicesLoading
-        } = this.state;
+        const { cbSelectedLang, waitingConsentPopup, sendingMail, devicesLoading } = this.state;
 
-        const langThemes = langManager.curr['themes'];
+        //const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
 
         return (
-            <View>
+            <View style={styles.page}>
                 <PageHeader onBackPress={this.onBack} />
 
-                <Button style={styles.margin} color='main2' onPress={this.openAbout}>{lang['input-about']}</Button>
+                <Button style={styles.margin} onPress={this.openAbout}>
+                    {lang['input-about']}
+                </Button>
 
+                {/* Language */}
                 <ComboBox
                     style={styles.margin}
                     title={lang['input-langage']}
@@ -37,6 +34,7 @@ class Settings extends BackSettings {
                     onSelect={this.onChangeLang}
                 />
 
+                {/* TODO: Finish themes */}
                 {/*
                 <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
                 <SwitchText
@@ -48,53 +46,70 @@ class Settings extends BackSettings {
                 />
                 */}
 
-                <View style={styles.inline}>
-                    <Text style={styles.inlineText}>{lang['input-notif-morning']}</Text>
-                    <Switch
-                        value={switchMorningNotifs}
-                        onChangeValue={this.onChangeMorningNotifications}
-                    />
-                </View>
+                {/* Notifications page */}
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    icon='arrow-left'
+                    iconAngle={180}
+                    onPress={this.openNotifications}
+                >
+                    {lang['input-notifications']}
+                </Button>
 
-                <View style={styles.inline}>
-                    <Text style={styles.inlineText}>{lang['input-notif-evening']}</Text>
-                    <Switch
-                        value={switchEveningNotifs}
-                        onChangeValue={this.onChangeEveningNotifications}
-                    />
-                </View>
-
-                <Button style={styles.margin} onPress={this.openReport} color='main2'>{lang['input-report']}</Button>
+                {/* Reports page */}
+                <Button style={styles.margin} appearance='outline' onPress={this.openReport}>
+                    {lang['input-report']}
+                </Button>
 
                 {/** TODO: Force consent popup on iOS */}
                 {Platform.OS === 'android' && (
-                    <Button style={styles.margin} onPress={this.openConsentPopup} color='main2' loading={waitingConsentPopup}>{lang['input-consent']}</Button>
+                    <Button
+                        style={styles.margin}
+                        onPress={this.openConsentPopup}
+                        appearance='outline'
+                        loading={waitingConsentPopup}
+                    >
+                        {lang['input-consent']}
+                    </Button>
                 )}
 
-                <Button style={styles.margin} onPress={this.disconnect} color='main2'>{lang['input-disconnect']}</Button>
-                <Button style={styles.margin} onPress={this.disconnectAll} color='main2' loading={devicesLoading}>{lang['input-disconnect-all']}</Button>
-                {user.server.IsConnected() && this.state.serverTCPState !== 'connected' && this.state.serverTCPState !== 'idle' && (
-                    <Button style={styles.margin} onPress={this.reconnectTCP} color='main3'>{lang['input-reconnect-tcp']}</Button>
-                )}
-                <Button style={styles.margin} onPress={this.restartTuto} color='main1'>{lang['input-tuto-again']}</Button>
-                <Button style={styles.margin} onPress={this.deleteAccount} color='danger' loading={sendingMail}>{lang['input-delete-account']}</Button>
+                {/* Disconnect / Disconnect all */}
+                <Button style={styles.margin} onPress={this.disconnect}>
+                    {lang['input-disconnect']}
+                </Button>
+                <Button style={styles.margin} onPress={this.disconnectAll} loading={devicesLoading}>
+                    {lang['input-disconnect-all']}
+                </Button>
+
+                {/* TODO: Add this button in multiplayer page ? */}
+                {/* Reconnect TCP */}
+                {/* {user.server.IsConnected() &&
+                    this.state.serverTCPState !== 'connected' &&
+                    this.state.serverTCPState !== 'idle' && (
+                        <Button style={styles.margin} onPress={this.reconnectTCP}>
+                            {lang['input-reconnect-tcp']}
+                        </Button>
+                    )} */}
+
+                {/* TODO: Restart tutorial (keep or remove ?) */}
+                {/* <Button style={styles.margin} onPress={this.restartTuto}>
+                    {lang['input-tuto-again']}
+                </Button> */}
+
+                {/* Delete account */}
+                <Button
+                    style={styles.margin}
+                    onPress={this.deleteAccount}
+                    appearance='uniform'
+                    color='danger'
+                    loading={sendingMail}
+                >
+                    {lang['input-delete-account']}
+                </Button>
             </View>
         );
-    }
+    };
 }
-
-const styles = StyleSheet.create({
-    margin: {
-        marginBottom: 24
-    },
-    inline: {
-        marginBottom: 24,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    inlineText: {
-        textAlign: 'left'
-    }
-});
 
 export default Settings;

@@ -1,6 +1,7 @@
 export { AddActivity } from './Widgets/AddActivity';
 export { MyQuestsSimpleList } from './Widgets/MyQuestsSimpleList';
 export { MyQuestsAdvancedList } from './Widgets/MyQuestsAdvancedList';
+export { PageHeader } from './Widgets/PageHeader';
 export { TodoSimpleList } from './Widgets/TodoSimpleList';
 export { TodoAdvancedList } from './Widgets/TodoAdvancedList';
 
@@ -14,7 +15,6 @@ import DailyQuest from './Widgets/DailyQuest';
 import Missions from './Widgets/Missions';
 import MultiplayerPanel from './Widgets/MultiplayerPanel';
 import News from './Widgets/News';
-import PageHeader from './Widgets/PageHeader';
 import PanelScreen from './Widgets/PanelScreen';
 import ScreenInput from './Widgets/ScreenInput';
 import ScreenList from './Widgets/ScreenList';
@@ -37,7 +37,6 @@ export {
     Missions,
     MultiplayerPanel,
     News,
-    PageHeader,
     PanelScreen,
     ScreenInput,
     ScreenList,

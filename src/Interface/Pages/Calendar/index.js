@@ -85,6 +85,7 @@ class Calendar extends BackCalendar {
                         initialScrollIndex={INITIAL_SCROLL_INDEX}
                         getItemLayout={getItemLayout}
                         renderItem={(props) => <RenderDay {...props} />}
+                        onLayout={this.onLayoutDayList}
                         onScroll={this.handleDayScroll}
                         onStartReached={this.onDayStartReached}
                         onStartReachedThreshold={0.4}

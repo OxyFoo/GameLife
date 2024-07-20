@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
+import styles from './style';
 import langManager from 'Managers/LangManager';
 
 import { Text, Icon } from 'Interface/Components';
@@ -9,16 +10,17 @@ import { Text, Icon } from 'Interface/Components';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ *
+ * @typedef {object} PageHeaderPropsType
+ * @prop {StyleProp} style
+ * @prop {(event: GestureResponderEvent) => void} onBackPress
+ * @prop {(event: GestureResponderEvent) => void} [onHelpPress]
  */
 
+/** @type {PageHeaderPropsType} */
 const PageHeaderProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {(event: GestureResponderEvent) => void} */
-    onBackPress: (event) => {},
-
-    /** @type {(event: GestureResponderEvent) => void} */
+    onBackPress: () => {},
     onHelpPress: undefined
 };
 
@@ -30,10 +32,16 @@ class PageHeader extends React.Component {
         return (
             <View style={[styles.header, this.props.style]}>
                 <TouchableOpacity style={styles.headerLeft} activeOpacity={0.5} onPress={onBackPress}>
-                    <Icon style={styles.headerLeftArrow} icon='arrow-left' size={30} />
+                    <Icon
+                        style={styles.headerLeftArrow}
+                        icon='arrow-square-outline'
+                        color='gradient'
+                        size={24}
+                        angle={-90}
+                    />
                     <Text fontSize={16}>{T_back}</Text>
                 </TouchableOpacity>
-                {!!onHelpPress && <Icon onPress={onHelpPress} icon='info-circle-outline' size={30} />}
+                {onHelpPress && <Icon onPress={onHelpPress} icon='info-circle-outline' size={30} />}
             </View>
         );
     }
@@ -42,27 +50,4 @@ class PageHeader extends React.Component {
 PageHeader.prototype.props = PageHeaderProps;
 PageHeader.defaultProps = PageHeaderProps;
 
-const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        marginTop: 36,
-        marginBottom: 48,
-
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-
-        elevation: 1000,
-        zIndex: 1000
-    },
-    headerLeft: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    headerLeftArrow: {
-        marginRight: 12
-    }
-});
-
-export default PageHeader;
+export { PageHeader };

@@ -623,6 +623,7 @@
         "input-about": "À propos de nous",
         "input-langage": "Langues",
         "input-theme": "Thèmes",
+        "input-notifications": "Notifications",
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",
         "input-report": "Report",
@@ -634,19 +635,19 @@
         "input-delete-account": "Supprimer le compte",
 
         "alert-disconnect-title": "Se déconnecter",
-        "alert-disconnect-text": "Veux-tu te déconnecter ?",
+        "alert-disconnect-message": "Veux-tu te déconnecter ?",
         "alert-disconnectall-title": "Déconnecter tous les appareils ?",
-        "alert-disconnectall-text": "Veux-tu déconnecter tous les appareils de ton compte ?\n\nAppareils connectés\n{}",
+        "alert-disconnectall-message": "Veux-tu déconnecter tous les appareils de ton compte ?\n\nAppareils connectés\n{}",
         "alert-disconnecterror-title": "Erreur",
-        "alert-disconnecterror-text": "Une erreur est survenue, vérifie ta connexion internet ou réessaye plus tard.",
+        "alert-disconnecterror-message": "Une erreur est survenue, vérifie ta connexion internet ou réessaye plus tard.",
         "alert-deleteaccount-title": "Supprimer le compte",
-        "alert-deleteaccount-text": "Es-tu sûr(e) de vouloir supprimer ton compte ? Un mail de confirmation te sera envoyé.",
+        "alert-deleteaccount-message": "Es-tu sûr(e) de vouloir supprimer ton compte ? Un mail de confirmation te sera envoyé.",
         "alert-deletedmailsent-title": "Mail envoyé",
-        "alert-deletedmailsent-text": "Un mail de confirmation t'a été envoyé, vérifie ta boîte mail.",
+        "alert-deletedmailsent-message": "Un mail de confirmation t'a été envoyé, vérifie ta boîte mail.",
         "alert-deletedmailtooearly-title": "Mail déjà envoyé",
-        "alert-deletedmailtooearly-text": "Un mail de confirmation t'a déjà été envoyé, patiente quelques minutes avant d'en renvoyer un, oublie pas de vérifier tes spams.",
+        "alert-deletedmailtooearly-message": "Un mail de confirmation t'a déjà été envoyé, patiente quelques minutes avant d'en renvoyer un, oublie pas de vérifier tes spams.",
         "alert-deletedfailed-title": "Échec",
-        "alert-deletedfailed-text": "Le mail n'a pas été envoyé, vérifie ta connexion internet ou réessaye plus tard."
+        "alert-deletedfailed-message": "Le mail n'a pas été envoyé, vérifie ta connexion internet ou réessaye plus tard."
     },
 
     "shop": {

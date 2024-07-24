@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackHome from './back';
@@ -19,7 +19,7 @@ class Home extends BackHome {
 
         const { Title } = this;
         return (
-            <View style={styles.page}>
+            <ScrollView style={styles.page}>
                 <ProgressBar
                     style={styles.progressbar}
                     height={8}
@@ -41,7 +41,7 @@ class Home extends BackHome {
 
                 {/* Today performance */}
                 <Title title={lang['section-today-performance']}>
-                    <Icon icon='add-outline' color='gradient' onPress={() => this.fe.console.AddLog('info', 'YAY')} />
+                    <Icon icon='add-outline' color='gradient' onPress={() => this.fe.console?.AddLog('info', 'YAY')} />
                 </Title>
                 <Swiper pages={[<TodayPieChart style={styles.todayPieChart} />]} />
 
@@ -51,7 +51,7 @@ class Home extends BackHome {
 
                 {/* My todoes */}
                 <Title title={lang['section-my-todoes']} />
-                <TodoSimpleList />
+                <TodoSimpleList style={styles.todoList} />
 
                 {/*
                 <View style={styles.homeRow}>
@@ -73,7 +73,7 @@ class Home extends BackHome {
                 <News />
                 <MultiplayerPanel ref={this.refMultiplayerPanel} hideWhenOffline />
                 */}
-            </View>
+            </ScrollView>
         );
     }
 

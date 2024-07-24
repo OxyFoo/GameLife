@@ -14,31 +14,26 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        opacity: .8,
+        opacity: 0.8,
         backgroundColor: '#000000'
     },
-    background2: {
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        right: 0,
-        height: 24
-    },
-
-    item: {
-        padding: 12
-    },
-
-    label: {
-        fontSize: 28,
-        paddingVertical: 12
-    },
     panel: {
-        top: '100%',
-        width: '100%',
-        maxHeight: '80%',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16
+        position: 'absolute',
+        top: 0,
+        left: 12,
+        right: 12,
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between'
+    },
+    input: {
+        flex: 1
+    },
+    button: {
+        width: 'auto',
+        marginLeft: 12,
+        paddingHorizontal: 30,
+        borderRadius: 8
     }
 });
 

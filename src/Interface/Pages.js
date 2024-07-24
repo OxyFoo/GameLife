@@ -25,6 +25,7 @@ const PAGES = {
     shop:                   require('./Pages/Shop').default,
     skill:                  require('./Pages/Skill').default,
     skills:                 require('./Pages/Skills').default,
+    statistics:             require('./Pages/Statistics').default,
     waitinternet:           require('./Pages/WaitInternet').default,
     waitmail:               require('./Pages/WaitMail').default,
     test:                   require('./Pages/Test').default,

@@ -6,6 +6,7 @@ export { Digit } from './Components/Digit';
 export { Icon } from './Components/Icon';
 export { IconCheckable } from './Components/IconCheckable';
 export { InputText } from './Components/InputText';
+export { KPI } from './Components/KPI';
 export { NotificationsInAppButton } from './Components/NotificationsInAppButton';
 export { ProgressBar } from './Components/ProgressBar';
 export { QuestButton } from './Components/QuestButton';
@@ -20,7 +21,6 @@ import Container from './OldComponents/Container';
 import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
-import KPI from './OldComponents/KPI';
 import DayClock from './OldComponents/DayClock';
 import HeatMap from './OldComponents/HeatMap';
 import OldIcon from './OldComponents/Icon';
@@ -38,7 +38,6 @@ export {
     Container,
     Frame,
     Character,
-    KPI,
     DayClock,
     HeatMap,
     KeyboardSpacerView,

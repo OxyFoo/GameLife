@@ -5,6 +5,7 @@ import styles from './style';
 import ScreenListBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
+import { DynamicBackground } from 'Interface/Primitives';
 import { Separator, Text } from 'Interface/Components';
 
 /**
@@ -12,33 +13,12 @@ import { Separator, Text } from 'Interface/Components';
  */
 
 class ScreenList extends ScreenListBack {
-    /**
-     * @param {{ item: ScreenListItem }} param0
-     * @returns 
-     */
-    renderItem = ({ item }) => {
-        const { id, value } = item;
-        const onPress = () => {
-            this.callback(id);
-            this.Close();
-        }
-        return (
-            <TouchableHighlight
-                style={styles.item}
-                onPress={onPress}
-                underlayColor={themeManager.GetColor('backgroundTransparent')}
-            >
-                <Text>{value}</Text>
-            </TouchableHighlight>
-        );
-    }
-
     render() {
         const { opened, anim, label, data } = this.state;
         const opacity = { opacity: anim };
         const event = opened ? 'auto' : 'none';
         const stylePosition = { transform: [{ translateY: this.state.positionY }] };
-        const styleBackground = { backgroundColor: themeManager.GetColor('backgroundCard') };
+        const styleBackground = { backgroundColor: themeManager.GetColor('ground1') };
 
         return (
             <Animated.View
@@ -50,17 +30,18 @@ class ScreenList extends ScreenListBack {
             >
                 <View style={styles.background} />
 
-                <Animated.View
-                    style={[styles.panel, styleBackground, stylePosition]}
-                    onLayout={this.onLayoutPanel}
-                >
+                <Animated.View style={[styles.panel, styleBackground, stylePosition]} onLayout={this.onLayoutPanel}>
+                    <DynamicBackground opacity={0.12} />
+
+                    {/** Background at bottom to hide space */}
                     <View style={[styles.background2, styleBackground]} />
+
                     <Text style={styles.label}>{label}</Text>
 
-                    <Separator style={{ marginLeft: '10%', width: '80%' }} />
+                    <Separator style={styles.separator} />
 
                     <FlatList
-                        ref={ref => this.refFlatlist = ref}
+                        ref={this.refFlatlist}
                         data={data}
                         renderItem={this.renderItem}
                         keyExtractor={(item) => `SL-${item?.id}-${item?.value}`}
@@ -73,6 +54,27 @@ class ScreenList extends ScreenListBack {
             </Animated.View>
         );
     }
+
+    /**
+     * @param {{ item: ScreenListItem }} param0
+     * @returns
+     */
+    renderItem = ({ item }) => {
+        const { id, value } = item;
+        const onPress = () => {
+            this.callback(id);
+            this.Close();
+        };
+        return (
+            <TouchableHighlight
+                style={styles.item}
+                onPress={onPress}
+                underlayColor={themeManager.GetColor('backgroundTransparent')}
+            >
+                <Text>{value}</Text>
+            </TouchableHighlight>
+        );
+    };
 }
 
-export default ScreenList;
+export { ScreenList };

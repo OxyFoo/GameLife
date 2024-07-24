@@ -111,11 +111,7 @@ const styles = StyleSheet.create({
         zIndex: 100,
         elevation: 100,
         fontSize: 12,
-        transform: [
-            { rotate: '-90deg' },
-            { translateX: -80 },
-            { translateY: -70 }
-        ]
+        transform: [{ rotate: '-90deg' }, { translateX: -80 }, { translateY: -70 }]
     }
 });
 

@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page: {
-        paddingHorizontal: 24,
-        marginBottom: 24
+        flex: 1,
+        paddingHorizontal: 24
     },
     progressbar: {
         marginTop: 12,
@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
     todayPieChart: {
         width: '100%',
         borderRadius: 8
+    },
+
+    todoList: {
+        marginBottom: 24
     }
 });
 

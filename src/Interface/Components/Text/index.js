@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
+import { Animated, Text as RNText, TouchableOpacity, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
@@ -19,6 +19,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @typedef {Object} TextPropsType
  * @property {TextStyleProp} style
  * @property {ViewStyleProp} containerStyle Style of touchable opacity for onPress text
+ * @property {TextStyleProp} styleAnimation Style for animated text
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText} color
  */
@@ -27,6 +28,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
 const TextProps = {
     style: {},
     containerStyle: {},
+    styleAnimation: null,
     fontSize: 18,
     color: 'primary'
 };
@@ -43,7 +45,7 @@ class Text extends React.Component {
     }
 
     render() {
-        const { style, containerStyle, color, fontSize, onPress, children, ...props } = this.props;
+        const { style, styleAnimation, containerStyle, color, fontSize, onPress, children, ...props } = this.props;
 
         /** @type {StyleProp} */
         const textStyle = {
@@ -52,21 +54,25 @@ class Text extends React.Component {
             fontSize: fontSize
         };
 
-        if (onPress) {
-            return (
-                <TouchableOpacity style={containerStyle} onPress={onPress} activeOpacity={0.5}>
-                    <RNText style={[textStyle, style]} {...props}>
-                        {children}
-                    </RNText>
-                </TouchableOpacity>
-            );
-        }
-
-        return (
+        let component = (
             <RNText style={[textStyle, style]} {...props}>
                 {children}
             </RNText>
         );
+
+        if (onPress) {
+            component = (
+                <TouchableOpacity style={containerStyle} onPress={onPress} activeOpacity={0.5}>
+                    {component}
+                </TouchableOpacity>
+            );
+        }
+
+        if (styleAnimation) {
+            component = <Animated.View style={styleAnimation}>{component}</Animated.View>;
+        }
+
+        return component;
     }
 }
 

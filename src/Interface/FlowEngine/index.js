@@ -1,20 +1,34 @@
 import * as React from 'react';
-import { Animated, View, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Animated, View, KeyboardAvoidingView } from 'react-native';
 
 import styles from './style';
 import BackFlowEngine from './back';
 import SafeAreaWithResponsive from './SafeAreaWithResponsive';
 import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
+import themeManager from 'Managers/ThemeManager';
 
 import PAGES from 'Interface/Pages';
 import { DynamicBackground } from 'Interface/Primitives';
-import { BottomPanel, Console, NavBar, NotificationsInApp, Popup, UserHeader } from 'Interface/Global';
+import {
+    BottomPanel,
+    Console,
+    NavBar,
+    NotificationsInApp,
+    Popup,
+    ScreenInput,
+    ScreenList,
+    UserHeader
+} from 'Interface/Global';
 
 class FlowEnginePagesRender extends BackFlowEngine {
     render() {
+        const styleBackground = {
+            backgroundColor: themeManager.GetColor('ground1')
+        };
+
         return (
             <SafeAreaWithResponsive>
-                <KeyboardAvoidingView style={[styles.fullscreen, styles.background]} behavior={'padding'}>
+                <KeyboardAvoidingView style={[styles.fullscreen, styleBackground]} behavior={'padding'}>
                     <DynamicBackground opacity={0.15} />
                     {this.renderPages()}
                     <UserHeader ref={this.userHeader} />
@@ -22,6 +36,8 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     <NavBar ref={this.navBar} />
                     <NotificationsInApp ref={this.notificationsInApp} />
                     <Popup ref={this.popup} />
+                    <ScreenInput ref={this.screenInput} />
+                    <ScreenList ref={this.screenList} />
                     <Console ref={this.console} />
                 </KeyboardAvoidingView>
             </SafeAreaWithResponsive>
@@ -57,18 +73,10 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     ]}
                     pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
                 >
-                    {Page.feScrollEnabled ? (
-                        <ScrollView
-                            style={styles.fullscreen}
-                            contentContainerStyle={styles.scrollviewContainer}
-                            children={<Page ref={page.ref} args={page.args} flowEngine={this._public} />}
-                        />
-                    ) : (
-                        <View
-                            style={styles.fullscreen}
-                            children={<Page ref={page.ref} args={page.args} flowEngine={this._public} />}
-                        />
-                    )}
+                    <View
+                        style={styles.fullscreen}
+                        children={<Page ref={page.ref} args={page.args} flowEngine={this._public} />}
+                    />
                 </Animated.View>
             );
         });

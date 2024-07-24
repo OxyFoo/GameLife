@@ -225,7 +225,7 @@
         "alert-aderror-nomore-message": "There are no more ads available. Try again tomorrow!",
 
         "alert-adempty-title": "No ads available",
-        "alert-adempty-text": "You have no more ads available for today.",
+        "alert-adempty-message": "You have no more ads available for today.",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later."
     },
@@ -501,7 +501,10 @@
         "value-age-empty": "Date of birth unknown",
         "value-title-empty": "No title selected",
 
-        "row-since": "of play",
+        "row-text-graph": "Hours completed this week",
+        "row-title-informations": "Informations",
+
+        "row-since": "days of play",
         "row-activities": "activities",
         "row-time": "spent",
 
@@ -509,37 +512,39 @@
         "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
 
-        "btn-settings": "Settings",
+        "coming-soon": "Coming\nsoon",
+        "btn-statistics": "My statistics",
 
         "input-username": "Username",
         "input-select-title": "Select a title",
         "input-title-none": "No title",
         "input-edit": "Edit",
 
+        "title-mail": "Email address",
         "edit-title": "Edit your profile",
         "edit-cancel": "Cancel",
 
         "alert-nowifi-title": "No connection",
-        "alert-nowifi-text": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
+        "alert-nowifi-message": "You must be connected to the internet to be able to modify your profile, if you are already connected to the internet restart the application",
 
         "alert-usernamewarning-title": "Change username",
-        "alert-usernamewarning-text": "You can only change your username once every {} days, so choose wisely!",
+        "alert-usernamewarning-message": "You can only change your username once every {} days, so choose wisely!",
         "alert-alreadyUsed-title": "Reserved username",
-        "alert-alreadyUsed-text": "This username is already in use, please choose another one.",
+        "alert-alreadyUsed-message": "This username is already in use, please choose another one.",
         "alert-alreadyChanged-title": "Username already changed",
-        "alert-alreadyChanged-text": "You must wait {} days before you can change it again.",
+        "alert-alreadyChanged-message": "You must wait {} days before you can change it again.",
         "alert-incorrect-title": "Incorrect username",
-        "alert-incorrect-text": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
+        "alert-incorrect-message": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
         "alert-error-title": "Error",
         "alert-error-message": "Change of username impossible",
         "alert-emptytitle-title": "No title available",
-        "alert-emptytitle-text": "You have not titles yet",
+        "alert-emptytitle-message": "You have not titles yet",
         "alert-birthtimewarning-title": "Change of date of birth",
-        "alert-birthtimewarning-text": "You can only set a birth date once every {} days, so choose wisely!",
+        "alert-birthtimewarning-message": "You can only set a birth date once every {} days, so choose wisely!",
         "alert-birthtimewait-title": "Change of date of birth",
-        "alert-birthtimewait-text": "You must wait {} days before you can change your date of birth again.",
+        "alert-birthtimewait-message": "You must wait {} days before you can change your date of birth again.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Are you {} years old?",
+        "alert-birthconfirm-message": "Are you {} years old?",
 
         "tuto": {
             "1": "This is your profile, you can change your personal information here",

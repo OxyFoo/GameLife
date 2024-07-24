@@ -2,6 +2,9 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     parent: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -23,8 +26,7 @@ const styles = StyleSheet.create({
         maxHeight: '80%',
         paddingHorizontal: 16,
         borderRadius: 16,
-        overflow: 'visible',
-        backgroundColor: '#03052E'
+        overflow: 'visible'
     },
     dynamicBackground: {
         borderRadius: 16,

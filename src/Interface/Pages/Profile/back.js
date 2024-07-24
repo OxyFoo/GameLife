@@ -1,111 +1,101 @@
+import React from 'react';
+import { Animated } from 'react-native';
+
 import StartTutorial from './tuto';
 import StartMission from './mission';
-
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { GetDate, GetGlobalTime } from 'Utils/Time';
+import { GetStringLength } from 'Utils/String';
 
 /**
- * @typedef {import('./editorAvatar').default} EditorAvatar
- * @typedef {import('./editorProfile').default} ProfileEditor
+ * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
+ *
+ * @typedef {import('./EditAvatar').default} EditorAvatar
+ * @typedef {import('./Components/statistic').StatsValues} StatsValues
  */
 
 class BackProfile extends PageBase {
     state = {
+        scrollY: new Animated.Value(0),
         editorOpened: false,
-        xpInfo: user.experience.GetExperience().xpInfo,
+        infoHeaderHeight: 258, // Arbitrary value to reduce the glitch on the first render
+        ...this.getUpdatedExperience()
+    };
 
-        playedDays: 0,
-        totalActivityLength: 0,
-        totalActivityTime: 0
-    }
+    /** @type {React.RefObject<EditorAvatar>} */
+    refAvatar = React.createRef();
 
-    constructor(props) {
-        super(props);
+    /** @type {Symbol | null} */
+    activitiesListener = null;
 
-        /** @type {EditorAvatar} */
-        this.refAvatar = null;
-
-        /** @type {ProfileEditor} */
-        this.refProfileEditor = null;
-
-        const activities = user.activities.Get();
-        this.state.playedDays = this.getTimeFromFirst(activities);
-        this.state.totalActivityLength = activities.length;
-        this.state.totalActivityTime = this.getTotalDuration(activities);
-    }
-
-    refTuto1 = null;
+    static feKeepMounted = true;
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
-            this.setState({
-                xpInfo: user.experience.GetExperience().xpInfo
-            });
+            this.setState({ ...this.getUpdatedExperience() });
         });
     }
 
-    componentDidFocused = (args) => {
-        this.updateKPI(); 
-
+    componentDidFocused = (/*args*/) => {
         // Update the avatar
         // TODO: Don't update the avatar if the user didn't change anything
-        this.refAvatar.updateEquippedItems();
-        this.refAvatar.forceUpdate();
-        this.refAvatar.selectSlot(this.refAvatar.state.slotSelected);
-        this.refAvatar.refFrame.forceUpdate();
+        this.refAvatar.current?.updateEquippedItems();
+        this.refAvatar.current?.forceUpdate();
+        if (this.refAvatar.current?.state.slotSelected !== null) {
+            this.refAvatar.current?.selectSlot(this.refAvatar.current?.state.slotSelected);
+        }
+        this.refAvatar.current?.refFrame.forceUpdate();
 
-        StartTutorial.call(this, args?.tuto);
-        StartMission.call(this, args?.missionName);
-    }
+        //StartTutorial.call(this, args?.tuto);
+        //StartMission.call(this, args?.missionName);
+    };
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
-    openProfileEditor = () => this.refProfileEditor?.Open();
-    openSettings = () => user.interface.ChangePage('settings');
-
-    updateKPI() {
-        const activities = user.activities.Get();
-        const playedDays = this.getTimeFromFirst(activities);
-        const totalActivityLength = activities.length;
-        const totalActivityTime = this.getTotalDuration(activities);
-
-        this.setState({ playedDays, totalActivityLength, totalActivityTime });
+    getUpdatedExperience() {
+        return {
+            experienceUser: user.experience.GetExperience().xpInfo,
+            experienceStats: user.statsKey
+                .sort(
+                    (a, b) =>
+                        GetStringLength(langManager.curr['statistics']['names'][b]) -
+                        GetStringLength(langManager.curr['statistics']['names'][a])
+                )
+                .map((statKey) => ({
+                    statKey,
+                    experience: user.experience.GetExperience().stats[statKey]
+                }))
+        };
     }
 
-    /**
-     * @returns {number} in hours
-     */
-    getTotalDuration(activities) {
-        let totalDuration = 0;
-        for (let a in activities) {
-            totalDuration += activities[a].duration;
-        }
-        const totalDurationHour = totalDuration / 60;
-        return Math.floor(totalDurationHour);
-    }
-    /**
-     * @returns {number} in days
-     */
-    getTimeFromFirst(activities) {
-        if (!activities.length) return 0;
+    /** @param {any} event */
+    onLayoutHeader = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ infoHeaderHeight: height });
+    };
 
-        const initTime = activities[0].startTime;
-        const initDate = GetDate(initTime);
-        const diff = (GetGlobalTime() - GetGlobalTime(initDate)) / (60 * 60 * 24);
-        return Math.floor(diff);
-    }
+    /** @param {NativeSyntheticScrollEvent} event */
+    handleScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+        this.state.scrollY.setValue(y);
+    };
+
+    openStatistics = () => {
+        user.interface.ChangePage('statistics');
+    };
 
     onBack = () => {
-        if (this.refAvatar !== null && this.refAvatar.state.editorOpened) {
-            this.refAvatar.CloseEditor();
+        if (this.refAvatar.current !== null && this.refAvatar.current.state.editorOpened) {
+            this.refAvatar.current.CloseEditor();
         } else {
             user.interface.BackHandle();
         }
-    }
+    };
 }
 
 export default BackProfile;

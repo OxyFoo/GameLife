@@ -11,29 +11,47 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 /**
- * @template {[data: any, closeReason: any]} T
+ * @typedef {{ data: any, closeReason: any }} PopupTemplateJSDoc
+ */
+
+/**
+ * @template {PopupTemplateJSDoc} T
  * @typedef {Object} PopupType
- * @property {(close: (closeReason: T[1]) => void) => React.JSX.Element} content
+ * @property {React.ComponentType<T>} content
  * @property {boolean} [priority=false] If true, popup will be opened immediately
- * @property {(button: T[1] | 'closed') => void} [callback=() => {}]
+ * @property {(button: T['closeReason'] | 'closed') => void} [callback=() => {}]
  * @property {boolean} [cancelable=true]
  */
 
 /**
- * @template {[data: any, closeReason: any]} T
+ * @template {PopupTemplateJSDoc} T
+ * @typedef {Object} PopupQueueType
+ * @property {React.ComponentType<T['data']>} content
+ * @property {T['data']} [data]
+ * @property {boolean} [priority=false] If true, popup will be opened immediately
+ * @property {(button: T['closeReason'] | 'closed') => void} [callback=() => {}]
+ * @property {boolean} [cancelable=true]
+ * @property {(event: LayoutChangeEvent) => void} onLayout
+ * @property {Animated.Value} animScale
+ * @property {Animated.Value} animOpacity
+ * @property {Animated.ValueXY} animQuitPos
+ */
+
+/**
+ * @template {PopupTemplateJSDoc} T
  * @typedef {Object} PopupTemplateType
  * @property {keyof POPUP_TEMPLATES} type
  * @property {{ title: string, message: string }} data
- * @property {boolean} [priority=false] If true, popup will be opened immediately
- * @property {(button: T[1] | 'closed') => void} [callback=() => {}]
+ * @property {boolean} [priority=false] If true, popup will be opened immediately over others, else it will be queued
+ * @property {(button: T['closeReason'] | 'closed') => void} [callback=() => {}]
  * @property {boolean} [cancelable=true]
  */
 
 /**
- * @template {[data: any, closeReason: any]} T
+ * @template {PopupTemplateJSDoc} T
  * @callback PopupRenderType
  * @param {Object} props
- * @param {T[0]} props.data
+ * @param {T['data']} props.data
  * @param {(closeReason: T[1]) => void} props.close
  * @returns {React.JSX.Element}
  */
@@ -41,16 +59,12 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 class PopupBack extends React.PureComponent {
     opened = false;
 
-    /** @type {PopupType<any>[]} */
+    /** @type {PopupQueueType<any>[]} */
     queue = [];
 
     state = {
-        /** @type {PopupType<any>[]} */
-        currents: [],
-
-        animQuitPos: new Animated.ValueXY({ x: 0, y: 0 }),
-        animOpacity: new Animated.Value(0),
-        animScale: new Animated.Value(0.9)
+        /** @type {PopupQueueType<any>[]} */
+        currents: []
     };
 
     /**
@@ -65,58 +79,85 @@ class PopupBack extends React.PureComponent {
      */
     lastLayout = { x: 0, y: 0 };
 
-    /** @param {LayoutChangeEvent} e */
-    onLayout = (e) => {
-        const { x, y } = e.nativeEvent.layout;
-        const SCREEN_SIZE = Dimensions.get('screen');
-
-        this.lastLayout = { x, y };
-        this.state.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
-        SpringAnimation(this.state.animQuitPos, { x: -x, y }).start();
-    };
-
     /**
-     * @template {[data: any, closeReason: any]} T
+     * @template {PopupTemplateJSDoc} T
      * @param {PopupType<T>} params
      * @returns {Promise<void>} Promise resolved when popup is opened
      */
     Open = async (params) => {
-        this.queue.push({
+        /** @type {PopupQueueType<any>} */
+        const newPopup = {
             content: params.content,
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),
-            cancelable: params?.cancelable ?? true
-        });
+            cancelable: params?.cancelable ?? true,
+            onLayout: (event) => {
+                const { x, y } = event.nativeEvent.layout;
+                const SCREEN_SIZE = Dimensions.get('screen');
+
+                this.lastLayout = { x, y };
+                newPopup.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
+                SpringAnimation(newPopup.animQuitPos, { x: -x, y }).start();
+            },
+            animOpacity: new Animated.Value(0),
+            animScale: new Animated.Value(0.9),
+            animQuitPos: new Animated.ValueXY({ x: 0, y: 0 })
+        };
+
+        this.queue.push(newPopup);
         this.proccessQueue();
     };
 
     /**
      * Open popup with template
-     * @template {[data: any, closeReason: any]} T
+     * @template {PopupTemplateJSDoc} T
      * @param {PopupTemplateType<T>} params
      * @returns {Promise<void>} Promise resolved when popup is opened
      */
     OpenT = async (params) => {
-        const Popup = POPUP_TEMPLATES[params.type];
-        const content = () => <Popup data={params.data} close={this.Close} />;
-
-        this.queue.push({
-            content,
+        /** @type {PopupQueueType<any>} */
+        const newPopup = {
+            content: POPUP_TEMPLATES[params.type],
+            data: params.data,
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),
-            cancelable: params?.cancelable ?? true
-        });
+            cancelable: params?.cancelable ?? true,
+            onLayout: (event) => {
+                const { x, y } = event.nativeEvent.layout;
+                const SCREEN_SIZE = Dimensions.get('screen');
+
+                this.lastLayout = { x, y };
+                newPopup.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
+                SpringAnimation(newPopup.animQuitPos, { x: -x, y }).start();
+            },
+            animScale: new Animated.Value(0.9),
+            animOpacity: new Animated.Value(0),
+            animQuitPos: new Animated.ValueXY({ x: 0, y: 0 })
+        };
+
+        this.queue.push(newPopup);
         this.proccessQueue();
     };
 
     /** @private */
     proccessQueue = () => {
-        if (this.opened || this.queue.length === 0) {
+        if (this.queue.length === 0) {
             return;
         }
 
-        const newPopup = this.queue.shift();
-        if (!newPopup) {
+        /** @type {PopupQueueType<any> | null} */
+        let newPopup = null;
+
+        if (this.queue.some((popup) => popup.priority)) {
+            newPopup = this.queue.find((popup) => popup.priority) || null;
+            if (newPopup !== null) {
+                this.queue = this.queue.filter((popup) => popup !== newPopup);
+            }
+        } else if (!this.opened) {
+            newPopup = this.queue.shift() || null;
+        }
+
+        if (newPopup === null) {
             return;
         }
 
@@ -126,10 +167,14 @@ class PopupBack extends React.PureComponent {
                 currents: [...prevState.currents, newPopup]
             }),
             () => {
+                if (newPopup === null) {
+                    return;
+                }
+
                 // Start animations
                 Animated.parallel([
-                    TimingAnimation(this.state.animOpacity, 1, 200),
-                    TimingAnimation(this.state.animScale, 1, 200)
+                    TimingAnimation(newPopup.animScale, 1, 200),
+                    TimingAnimation(newPopup.animOpacity, 1, 200)
                 ]).start();
             }
         );
@@ -156,10 +201,10 @@ class PopupBack extends React.PureComponent {
 
         // Start end animations
         Animated.parallel([
-            TimingAnimation(this.state.animOpacity, 0, 200),
-            TimingAnimation(this.state.animScale, 0.9, 200),
+            TimingAnimation(current.animOpacity, 0, 200),
+            TimingAnimation(current.animScale, 0.9, 200),
             TimingAnimation(
-                this.state.animQuitPos,
+                current.animQuitPos,
                 {
                     x: -this.lastLayout.x,
                     y: this.lastLayout.y + 48
@@ -169,13 +214,17 @@ class PopupBack extends React.PureComponent {
         ]).start(() => {
             this.setState(
                 (/** @type {this['state']} */ prevState) => ({
-                    currents: prevState.currents.slice(0, -1)
+                    currents: prevState.currents.filter((popup) => popup !== current)
                 }),
-                this.proccessQueue
+                () => {
+                    if (this.state.currents.length === 0) {
+                        this.opened = false;
+                        this.proccessQueue();
+                    }
+                }
             );
         });
 
-        this.opened = false;
         return true;
     };
 

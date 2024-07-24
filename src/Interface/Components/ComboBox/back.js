@@ -146,11 +146,13 @@ class ComboBoxBack extends React.Component {
         this.closeSelection();
     };
 
+    // TODO: Finish scroll handle
+
     EnablePageScroll = () => {
-        user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
+        //user.interface.GetCurrentPage()?.ref.current?.EnableScroll();
     };
     DisablePageScroll = () => {
-        user.interface.GetCurrentPage()?.refPage.current?.DisableScroll();
+        //user.interface.GetCurrentPage()?.ref.current?.DisableScroll();
     };
 }
 

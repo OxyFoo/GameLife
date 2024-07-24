@@ -1,18 +1,20 @@
 import * as React from 'react';
 import { View, Animated, FlatList } from 'react-native';
 
+import styles from './style';
+import EditorAvatarBack from './back';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import EditorAvatarBack from './editorAvatarBack';
-import ItemCard from './cards/ItemCard';
-import ColorCard from './cards/ColorCard';
-import CharacterCard from './cards/CharacterCard';
-import styles from './editorAvatarStyle';
+import ItemCard from '../cards/ItemCard';
+import ColorCard from '../cards/ColorCard';
+import CharacterCard from '../cards/CharacterCard';
 import { Text, Button, Separator, Icon, Frame, TextSwitch } from 'Interface/Components';
 import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
+
+// TODO: Finish avatars
 
 /**
  * @typedef {import('Class/Inventory').Stuff} Stuff
@@ -26,8 +28,8 @@ class EditorAvatarRender extends EditorAvatarBack {
     /** @param {SkinSlot} slot */
     renderButtonSkin = (slot) => {
         const icon = {
-            'skin': 'human',
-            'skinColor': 'item'
+            skin: 'human',
+            skinColor: 'item'
         };
         return (
             <Button
@@ -36,12 +38,11 @@ class EditorAvatarRender extends EditorAvatarBack {
                 color={this.getButtonBackground(slot)}
                 iconSize={24}
                 rippleColor='white'
-
                 icon={icon[slot]}
                 iconColor='main1'
             />
         );
-    }
+    };
 
     /** @param {Slot} slot */
     renderButtonItem = (slot) => {
@@ -67,7 +68,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 //iconColor='main1'
             >
                 <Frame
-                    characters={[ character ]}
+                    characters={[character]}
                     onlyItems={onlyItems}
                     bodyView={bodyView}
                     delayTime={2000}
@@ -75,7 +76,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 />
             </Button>
         );
-    }
+    };
 
     /** @param {{item: Stuff}} element */
     renderCardItem = ({ item: stuff }) => {
@@ -85,19 +86,12 @@ class EditorAvatarRender extends EditorAvatarBack {
         const isSelected = stuffSelected?.ID === stuff.ID;
         const isEquipped = equippedStuff.includes(stuff.ID);
 
-        return (
-            <ItemCard
-                stuff={stuff}
-                isSelected={isSelected}
-                isEquipped={isEquipped}
-                onPress={this.selectItem}
-            />
-        );
-    }
+        return <ItemCard stuff={stuff} isSelected={isSelected} isEquipped={isEquipped} onPress={this.selectItem} />;
+    };
 
     renderCharacter = ({ item: characterName }) => {
         const { sexeSelected } = this.state;
-        const sexe = [ 'MALE', 'FEMALE' ];
+        const sexe = ['MALE', 'FEMALE'];
 
         const sameSexe = sexe[sexeSelected] === user.character.sexe;
         const sameSkin = characterName === user.character.skin;
@@ -127,7 +121,7 @@ class EditorAvatarRender extends EditorAvatarBack {
 
             // Update database
             user.GlobalSave();
-        }
+        };
         const onPress = isSelected ? () => {} : selectCharacter;
 
         return (
@@ -139,7 +133,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 onPress={onPress}
             />
         );
-    }
+    };
 
     renderColor = ({ index, item: skinColor }) => {
         const selectColor = (color) => {
@@ -153,19 +147,14 @@ class EditorAvatarRender extends EditorAvatarBack {
                     this.slotCharacters[slot].Refresh();
                 }
             }
-        }
+        };
 
-        return (
-            <ColorCard
-                characterSkinColor={skinColor}
-                onPress={selectColor}
-            />
-        );
-    }
+        return <ColorCard characterSkinColor={skinColor} onPress={selectColor} />;
+    };
 
     renderSelectedStuff = () => {
         const { itemSelectionHeight } = this.state;
-        const interY = { inputRange: [0, 1], outputRange: [-itemSelectionHeight-12, 0] };
+        const interY = { inputRange: [0, 1], outputRange: [-itemSelectionHeight - 12, 0] };
         const translationY = { transform: [{ translateY: this.state.itemAnim.interpolate(interY) }] };
 
         let name = '',
@@ -180,7 +169,7 @@ class EditorAvatarRender extends EditorAvatarBack {
 
             name = langManager.GetText(item.Name);
             description = langManager.GetText(item.Description);
-            ox = Math.ceil(item.Value * .75);
+            ox = Math.ceil(item.Value * 0.75);
             isEquipped = equippedStuffsID.includes(stuffSelected.ID);
         }
 
@@ -190,10 +179,19 @@ class EditorAvatarRender extends EditorAvatarBack {
 
         return (
             <Animated.View style={[styles.editorCurrent, translationY]} onLayout={this.onItemSelectionLayout}>
-                <Icon containerStyle={styles.editorClose} onPress={() => this.selectItem()} icon='cross' color='main1' />
+                <Icon
+                    containerStyle={styles.editorClose}
+                    onPress={() => this.selectItem()}
+                    icon='cross'
+                    color='main1'
+                />
 
-                <Text style={styles.editorTitle} fontSize={24} bold>{name}</Text>
-                <Text style={styles.editorText} fontSize={16} color='secondary'>{description}</Text>
+                <Text style={styles.editorTitle} fontSize={24} bold>
+                    {name}
+                </Text>
+                <Text style={styles.editorText} fontSize={16} color='secondary'>
+                    {description}
+                </Text>
 
                 {/* Current stuff actions */}
                 <View style={styles.editorStuffParent}>
@@ -218,7 +216,7 @@ class EditorAvatarRender extends EditorAvatarBack {
                 <Separator color='border' style={{ width: '96%', marginHorizontal: '2%' }} />
             </Animated.View>
         );
-    }
+    };
 
     renderItemsList() {
         const { slotSelected, stuffsSelected, sexeSelected } = this.state;
@@ -227,15 +225,11 @@ class EditorAvatarRender extends EditorAvatarBack {
         if (slotSelected === 'skin') {
             const males = Object.keys(CHARACTERS.MALE);
             const females = Object.keys(CHARACTERS.FEMALE);
-            const characters = [ males, females ];
+            const characters = [males, females];
             const selectSexe = (state) => this.setState({ sexeSelected: state });
             return (
                 <>
-                    <TextSwitch
-                        texts={[lang['sexe-male'], lang['sexe-female']]}
-                        fontSize={28}
-                        onChange={selectSexe}
-                    />
+                    <TextSwitch texts={[lang['sexe-male'], lang['sexe-female']]} fontSize={28} onChange={selectSexe} />
                     <FlatList
                         data={characters[sexeSelected]}
                         numColumns={3}
@@ -268,24 +262,16 @@ class EditorAvatarRender extends EditorAvatarBack {
 
     render() {
         const lang = langManager.curr['profile'];
-        const {
-            characterPosY,
-            editorOpened,
-            editorAnim,
-            characterBottomPosY,
-        } = this.state;
+        const { characterPosY, editorOpened, editorAnim, characterBottomPosY } = this.state;
 
-        const maxPosY = - characterPosY + 96;
+        const maxPosY = -characterPosY + 96;
         const interCharacPosY = { inputRange: [0, 1], outputRange: [0, maxPosY] };
         const characTranslateY = editorAnim.interpolate(interCharacPosY);
 
         const columnOpacity = { opacity: editorAnim };
-        const characterStyle = [
-            styles.parent,
-            { transform: [{ translateY: characTranslateY }] }
-        ];
+        const characterStyle = [styles.parent, { transform: [{ translateY: characTranslateY }] }];
 
-        const interEditorPosY = { inputRange: [0, .5, 1], outputRange: [0, 0, maxPosY] };
+        const interEditorPosY = { inputRange: [0, 0.5, 1], outputRange: [0, 0, maxPosY] };
         const editorTranslateY = editorAnim.interpolate(interEditorPosY);
         const editorStyle = [
             styles.editor,
@@ -311,7 +297,7 @@ class EditorAvatarRender extends EditorAvatarBack {
         ];
 
         const { itemSelectionHeight, itemSelected, editorHeight, itemAnim } = this.state;
-        const interSelectionY = { inputRange: [0, 1], outputRange: [-itemSelectionHeight-12, 0] };
+        const interSelectionY = { inputRange: [0, 1], outputRange: [-itemSelectionHeight - 12, 0] };
         const selectionStyle = {
             height: !itemSelected ? editorHeight : editorHeight - itemSelectionHeight - 24,
             transform: [{ translateY: itemAnim.interpolate(interSelectionY) }]
@@ -331,14 +317,11 @@ class EditorAvatarRender extends EditorAvatarBack {
                             {this.renderButtonSkin('skinColor')}
                         </View>
                         <Animated.View style={avatarStyle}>
-                            <Text style={styles.tempText} color='secondary'>{lang['temporary-avatars']}</Text>
-                            <Frame ref={ref => this.refFrame = ref} characters={[ user.character ]} />
-                            {!editorOpened && (
-                                <Button
-                                    style={styles.avatarOverlay}
-                                    onPress={this.OpenEditor}
-                                />
-                            )}
+                            <Text style={styles.tempText} color='secondary'>
+                                {lang['temporary-avatars']}
+                            </Text>
+                            <Frame ref={(ref) => (this.refFrame = ref)} characters={[user.character]} />
+                            {!editorOpened && <Button style={styles.avatarOverlay} onPress={this.OpenEditor} />}
                         </Animated.View>
                     </View>
                     <Animated.View style={[styles.columnSide, columnOpacity]}>
@@ -348,14 +331,16 @@ class EditorAvatarRender extends EditorAvatarBack {
                 </Animated.View>
 
                 {/* Editor panel */}
-                <Animated.View style={editorStyle} onLayout={this.onEditorLayout} pointerEvents={editorOpened ? 'auto' : 'none'}>
+                <Animated.View
+                    style={editorStyle}
+                    onLayout={this.onEditorLayout}
+                    pointerEvents={editorOpened ? 'auto' : 'none'}
+                >
                     <Separator color='border' style={{ width: '96%', marginHorizontal: '2%', marginBottom: 12 }} />
                     {this.renderSelectedStuff()}
 
                     {/* Other stuffs */}
-                    <Animated.View style={[selectionStyle]}>
-                        {this.renderItemsList()}
-                    </Animated.View>
+                    <Animated.View style={[selectionStyle]}>{this.renderItemsList()}</Animated.View>
                 </Animated.View>
             </>
         );

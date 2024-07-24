@@ -83,7 +83,6 @@ class BackCalendar extends PageBase {
     static feKeepMounted = true;
     static feShowUserHeader = true;
     static feShowNavBar = true;
-    static feScrollEnabled = false;
 
     /** @type {React.RefObject<FlatListDay>} */
     refDayList = React.createRef();

@@ -24,7 +24,7 @@ const AvatarProps = {
 /**
  * @type {Array<string>} Used to store the list of available slots for the avatar.
  */
-const Slots = [ 'hair', 'top', 'bottom', 'shoes' ];
+const Slots = ['hair', 'top', 'bottom', 'shoes'];
 
 class EditorAvatarBack extends React.Component {
     state = {
@@ -56,7 +56,7 @@ class EditorAvatarBack extends React.Component {
 
         /** @type {boolean} */
         selling: false
-    }
+    };
 
     /** @type {React.RefObject<View>} */
     refButton = React.createRef();
@@ -66,7 +66,7 @@ class EditorAvatarBack extends React.Component {
 
         /** @type {{[key: string]: Character}} */
         this.slotCharacters = {};
-        Slots.forEach(slot => {
+        Slots.forEach((slot) => {
             this.slotCharacters[slot] = new Character(
                 'itemslot-' + slot,
                 user.character.sexe,
@@ -87,15 +87,15 @@ class EditorAvatarBack extends React.Component {
         if (this.state.characterPosY === 0) {
             this.setState({ characterPosY: y });
         }
-    }
+    };
     onEditorLayout = (event) => {
         const { height } = event.nativeEvent.layout;
         this.setState({ editorHeight: height });
-    }
+    };
     onItemSelectionLayout = (event) => {
         const { height } = event.nativeEvent.layout;
         this.setState({ itemSelectionHeight: height });
-    }
+    };
 
     OpenEditor = () => {
         this.setState({ editorOpened: true });
@@ -108,7 +108,7 @@ class EditorAvatarBack extends React.Component {
         }
 
         user.interface.SetCustomBackHandler(this.CloseEditor);
-    }
+    };
     CloseEditor = () => {
         this.setState({ editorOpened: false });
         this.props.onChangeState(false);
@@ -116,10 +116,10 @@ class EditorAvatarBack extends React.Component {
         SpringAnimation(this.state.editorAnim, 0).start();
         user.interface.ResetCustomBackHandler();
         return false;
-    }
+    };
 
     updateEquippedItems = () => {
-        Slots.forEach(slot => {
+        Slots.forEach((slot) => {
             const character = this.slotCharacters[slot];
 
             if (!user.inventory.avatar.hasOwnProperty(slot)) {
@@ -131,11 +131,11 @@ class EditorAvatarBack extends React.Component {
             const stuff = user.inventory.GetStuffByID(stuffID);
             if (stuff !== null) {
                 if (character.items.length === 0 || character.items[0] !== stuff.ItemID) {
-                    character.SetEquipment([ stuff.ItemID ]);
+                    character.SetEquipment([stuff.ItemID]);
                 }
             }
         });
-    }
+    };
 
     /** @param {AvatarSlot} slot */
     selectSlot = (slot) => {
@@ -157,14 +157,15 @@ class EditorAvatarBack extends React.Component {
             SpringAnimation(this.state.itemAnim, 0).start();
         } else {
             SpringAnimation(this.state.itemAnim, 1).start();
-            await Sleep(200); this.setState({ itemSelected: true });
+            await Sleep(200);
+            this.setState({ itemSelected: true });
         }
-    }
+    };
 
     /** @param {AvatarSlot} slot */
     getButtonBackground = (slot) => {
         return this.state.slotSelected === slot ? 'main2' : 'backgroundCard';
-    }
+    };
 
     buttonSellPress = () => {
         const lang = langManager.curr['profile-avatar'];
@@ -180,16 +181,15 @@ class EditorAvatarBack extends React.Component {
         if (equippedStuff.includes(stuffSelected.ID)) {
             const title = lang['alert-isequipped-title'];
             const text = lang['alert-isequipped-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+            user.interface.popup.Open('ok', [title, text]);
             return;
         }
 
         // Confirm sell
         const item = dataManager.items.GetByID(stuffSelected.ItemID);
         const title = lang['alert-sellconfirm-title'];
-        const text = lang['alert-sellconfirm-text']
-                        .replace('{}', Math.ceil(item.Value * .75).toString());
-        user.interface.popup.Open('yesno', [ title, text ], async (btn) => {
+        const text = lang['alert-sellconfirm-text'].replace('{}', Math.ceil(item.Value * 0.75).toString());
+        user.interface.popup.Open('yesno', [title, text], async (btn) => {
             if (btn === 'no') return;
 
             // Sell item
@@ -200,7 +200,7 @@ class EditorAvatarBack extends React.Component {
             if (response === null || response['status'] !== 'ok') {
                 const title = lang['alert-sellfailed-title'];
                 const text = lang['alert-sellfailed-text'];
-                user.interface.popup.Open('ok', [ title, text ]);
+                user.interface.popup.Open('ok', [title, text]);
                 return;
             }
 
@@ -213,10 +213,10 @@ class EditorAvatarBack extends React.Component {
             const title = lang['alert-sellsuccess-title'];
             let text = lang['alert-sellsuccess-text'];
             text = text.replace('{}', langManager.GetText(item.Name));
-            text = text.replace('{}', Math.ceil(item.Value * .75).toString());
-            user.interface.popup.Open('ok', [ title, text ], undefined, false);
+            text = text.replace('{}', Math.ceil(item.Value * 0.75).toString());
+            user.interface.popup.Open('ok', [title, text], undefined, false);
         });
-    }
+    };
 
     buttonEquipPress = () => {
         const { slotSelected, stuffSelected } = this.state;
@@ -231,7 +231,7 @@ class EditorAvatarBack extends React.Component {
         this.forceUpdate();
         this.refFrame.forceUpdate();
         this.slotCharacters[slotSelected].SetEquipment([stuffSelected.ItemID]);
-    }
+    };
 }
 
 EditorAvatarBack.prototype.props = AvatarProps;

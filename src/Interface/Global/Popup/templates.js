@@ -7,18 +7,19 @@ import langManager from 'Managers/LangManager';
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @template {[data: any, closeReason: any]} T
+ * @template {{ data: any, closeReason: any }} T
  * @typedef {import('./back').PopupRenderType<T>} PopupRenderType
  */
 
-/** @type {PopupRenderType<[{ title: string, message: string }, 'ok']>} */
-function PopupTemplate_OK({ data, close }) {
+/** @type {PopupRenderType<{ data: { title: string, message: string }, closeReason: 'ok' }>} */
+function PopupTemplate_OK(props) {
     const lang = langManager.curr['modal'];
+    const { data, close } = props;
 
     return (
         <>
-            <Text style={styles.title}>{data.title.toUpperCase()}</Text>
-            <Text style={styles.message}>{data.message}</Text>
+            <Text style={styles.title}>{data?.title?.toUpperCase()}</Text>
+            <Text style={styles.message}>{data?.message}</Text>
             <View style={styles.row}>
                 <Button style={[styles.button, styles.fillWidth]} onPress={() => close('ok')} color='main1'>
                     {lang['btn-ok']}
@@ -28,7 +29,7 @@ function PopupTemplate_OK({ data, close }) {
     );
 }
 
-/** @type {PopupRenderType<[{ title: string, message: string }, 'yes' | 'no']>} */
+/** @type {PopupRenderType<{data: { title: string, message: string }, closeReason: 'yes' | 'no'}>} */
 function PopupTemplate_YesNo({ data, close }) {
     const lang = langManager.curr['modal'];
 
@@ -48,7 +49,7 @@ function PopupTemplate_YesNo({ data, close }) {
     );
 }
 
-/** @type {PopupRenderType<[{ title: string, message: string }, 'accept' | 'refuse']>} */
+/** @type {PopupRenderType<{ data: { title: string, message: string }, closeReason: 'accept' | 'refuse' }>} */
 function PopupTemplate_AcceptOrNot({ data, close }) {
     const lang = langManager.curr['modal'];
 

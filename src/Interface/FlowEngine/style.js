@@ -5,9 +5,6 @@ const styles = StyleSheet.create({
         height: '100%',
         overflow: 'hidden'
     },
-    background: {
-        backgroundColor: '#03052E'
-    },
 
     safeView: {
         width: '100%',
@@ -23,9 +20,6 @@ const styles = StyleSheet.create({
 
         margin: 0,
         padding: 0
-    },
-    scrollviewContainer: {
-        minHeight: '100%'
     }
 });
 

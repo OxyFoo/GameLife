@@ -225,7 +225,7 @@
         "alert-aderror-nomore-message": "Il n'y a plus de pubs disponibles. Réessaye demain !",
 
         "alert-adempty-title": "Plus de pubs",
-        "alert-adempty-text": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
+        "alert-adempty-message": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard."
     },
@@ -501,7 +501,10 @@
         "value-age-empty": "Date de naissance inconnue",
         "value-title-empty": "Aucun titre sélectionné",
 
-        "row-since": "de jeu",
+        "row-text-graph": "Heures complétées cette semaine",
+        "row-title-informations": "Informations",
+
+        "row-since": "jours de jeu",
         "row-activities": "activités",
         "row-time": "heures",
 
@@ -509,37 +512,39 @@
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
 
-        "btn-settings": "Paramètres",
+        "coming-soon": "Bientôt\ndisponible",
+        "btn-statistics": "Mes statistiques",
 
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
         "input-title-none": "Aucun titre",
         "input-edit": "Modifier",
 
+        "title-mail": "Adresse mail",
         "edit-title": "Editer le profil",
         "edit-cancel": "Retour",
 
         "alert-nowifi-title": "Pas de connexion",
-        "alert-nowifi-text": "Tu dois être connecté à internet pour pouvoir modifier ton profil, si tu es déjà connecté à internet, essaye de redémarrer l'application",
+        "alert-nowifi-message": "Tu dois être connecté à internet pour pouvoir modifier ton profil, si tu es déjà connecté à internet, essaye de redémarrer l'application",
 
         "alert-usernamewarning-title": "Changement de pseudo",
-        "alert-usernamewarning-text": "Tu ne peux changer de pseudo qu'une seule fois tous les {} jours, choisis-bien !",
+        "alert-usernamewarning-message": "Tu ne peux changer de pseudo qu'une seule fois tous les {} jours, choisis-bien !",
         "alert-alreadyUsed-title": "Pseudo réservé",
-        "alert-alreadyUsed-text": "Ce pseudo est déjà utilisé, choisis-en un autre.",
+        "alert-alreadyUsed-message": "Ce pseudo est déjà utilisé, choisis-en un autre.",
         "alert-alreadyChanged-title": "Pseudo déjà modifié",
-        "alert-alreadyChanged-text": "Tu dois attendre {} jours avant de pouvoir le modifier à nouveau.",
+        "alert-alreadyChanged-message": "Tu dois attendre {} jours avant de pouvoir le modifier à nouveau.",
         "alert-incorrect-title": "Pseudo incorrect",
-        "alert-incorrect-text": "Ton pseudo doit contenir entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
+        "alert-incorrect-message": "Ton pseudo doit contenir entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
         "alert-error-title": "Erreur",
         "alert-error-message": "Modification du pseudo impossible",
         "alert-emptytitle-title": "Pas de titres disponibles",
-        "alert-emptytitle-text": "Tu n'as pas encore de titre à sélectionner",
+        "alert-emptytitle-message": "Tu n'as pas encore de titre à sélectionner",
         "alert-birthtimewarning-title": "Changement de date de naissance",
-        "alert-birthtimewarning-text": "Tu ne peux définir une date de naissance qu'une fois tous les {} jours, choisis-bien !",
+        "alert-birthtimewarning-message": "Tu ne peux définir une date de naissance qu'une fois tous les {} jours, choisis-bien !",
         "alert-birthtimewait-title": "Changement de date de naissance",
-        "alert-birthtimewait-text": "Tu dois attendre {} jours avant de pouvoir modifier ta date de naissance à nouveau.",
+        "alert-birthtimewait-message": "Tu dois attendre {} jours avant de pouvoir modifier ta date de naissance à nouveau.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Tu as bien {} ans ?",
+        "alert-birthconfirm-message": "Tu as bien {} ans ?",
 
         "tuto": {
             "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",

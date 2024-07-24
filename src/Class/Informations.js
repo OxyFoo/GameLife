@@ -19,14 +19,22 @@ class Informations {
     }
 
     username = new DynamicVar('');
+
+    /** @type {number | null} Null if disabled or unix timestamp (global UTC) */
     usernameTime = null;
 
     title = new DynamicVar(0);
+
+    /** @type {number | null} Null if disabled or title ID */
     UNSAVED_title = null;
 
-    /** @type {number} Null if disabled or unix timestamp (global UTC) */
+    /** @type {number | null} Null if disabled or unix timestamp (global UTC) */
     birthTime = null;
+
+    /** @type {number | null} Null if disabled or unix timestamp (global UTC) */
     lastBirthTime = null;
+
+    /** @type {number | null} Null if disabled or unix timestamp (global UTC) */
     UNSAVED_birthTime = null;
 
     xp = 0;
@@ -58,7 +66,7 @@ class Informations {
         this.purchasedCount = 0;
     }
     Load(informations) {
-        const contains = (key) => informations.hasOwnProperty(key);
+        const contains = /** @param {string} key */ (key) => informations.hasOwnProperty(key);
         if (contains('username')) this.username.Set(informations['username']);
         if (contains('usernameTime')) this.usernameTime = informations['usernameTime'];
         if (contains('title')) this.title.Set(informations['title']);
@@ -96,12 +104,13 @@ class Informations {
 
     IsUnsaved = () => {
         return this.UNSAVED_title !== null || this.UNSAVED_birthTime !== null;
-    }
+    };
     Purge = () => {
         this.UNSAVED_title = null;
         this.UNSAVED_birthTime = null;
-    }
+    };
 
+    /** @param {string} username */
     SetUsername = async (username) => {
         const request = await this.user.server.SaveUsername(username);
 
@@ -109,76 +118,74 @@ class Informations {
             this.username.Set(username);
             this.usernameTime = GetGlobalTime();
             this.user.LocalSave();
-
-            // Refresh front
-            this.user.interface.forceUpdate();
-            if (this.user.interface.popup.state.opened) {
-                this.user.interface.popup.forceUpdate();
-            }
         }
 
         return request;
-    }
+    };
 
     GetTitleText = () => {
         const title = dataManager.titles.GetByID(this.title.Get());
         return title === null ? '' : langManager.GetText(title.Name);
-    }
-    SetTitle = (ID) => {
-        if (typeof(ID) !== 'number') return;
+    };
 
+    /** @param {number} ID */
+    SetTitle = (ID) => {
         this.title.Set(ID);
         this.UNSAVED_title = ID;
-        this.user.interface.forceUpdate();
-        if (this.user.interface.popup.state.opened)
-            this.user.interface.popup.forceUpdate();
         this.user.LocalSave();
-    }
+    };
 
+    /**
+     * Consume ad remaining, increment ad total watched and show alert if ad remaining is 0
+     */
     DecrementAdRemaining = () => {
         this.adRemaining--;
         this.adTotalWatched++;
-        this.user.interface.console.AddLog('info', 'Remaining ad:', this.adRemaining);
+        this.user.interface.console?.AddLog('info', 'Remaining ad:', this.adRemaining);
         this.user.LocalSave();
 
         if (this.adRemaining <= 0) {
             const title = langManager.curr['server']['alert-adempty-title'];
-            const message = langManager.curr['server']['alert-adempty-text'];
-            this.user.interface.popup.Open('ok', [ title, message ], undefined, false);
+            const message = langManager.curr['server']['alert-adempty-message'];
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title, message }
+            });
         }
-    }
+    };
 
     /**
      * Return age in years
      * @returns {number | null}
      */
-    GetAge = () => this.birthTime === null ? null : GetAge(this.birthTime);
+    GetAge = () => (this.birthTime === null ? null : GetAge(this.birthTime));
 
+    /** @param {number} birthTime Unix timestamp in seconds (global UTC) */
     SetBirthTime = (birthTime) => {
         this.birthTime = birthTime;
         this.UNSAVED_birthTime = birthTime;
         this.lastBirthTime = GetGlobalTime();
         this.user.LocalSave();
-    }
+    };
 
     GetInfoToChangeUsername() {
         const delta = this.usernameTime === null ? null : GetDaysUntil(this.usernameTime);
-        const remain = DAYS_USERNAME_CHANGE - Math.round(delta);
-        const output = {
-            remain: delta === null ? 0 : remain,
+        const remain = delta === null ? 0 : DAYS_USERNAME_CHANGE - Math.round(delta);
+
+        return {
+            remain: remain,
             total: DAYS_USERNAME_CHANGE
         };
-        return output;
     }
 
     GetInfoToChangeBirthtime() {
         const delta = this.lastBirthTime === null ? null : GetDaysUntil(this.lastBirthTime);
-        const remain = DAYS_BIRTHTIME_CHANGE - Math.round(delta);
-        const output = {
-            remain: delta === null ? 0 : remain,
+        const remain = delta === null ? 0 : DAYS_BIRTHTIME_CHANGE - Math.round(delta);
+
+        return {
+            remain: remain,
             total: DAYS_BIRTHTIME_CHANGE
         };
-        return output;
     }
 }
 

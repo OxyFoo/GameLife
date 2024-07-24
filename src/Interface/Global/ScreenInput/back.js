@@ -1,30 +1,39 @@
 import * as React from 'react';
-import { Animated, Keyboard, Dimensions, Platform } from 'react-native';
+import { Animated, Keyboard, Platform, Dimensions } from 'react-native';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-
 /**
  * @typedef {import('Interface/Components').Input} Input
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').KeyboardEventListener} KeyboardEventListener
+ *
+ * @typedef {Object} ScreenInputType
+ * @property {string} [label] Title of the input
+ * @property {string} [initialText] Initial text of the input
+ * @property {boolean} [multiline] If true, the input is multiline
+ * @property {(text: string | null) => void} [callback] Callback called when the input is validated or closed, with the text or null
  */
 
 class ScreenInputBack extends React.Component {
     state = {
         opened: false,
-        label: '',
+
+        /** @type {ScreenInputType | null} */
+        input: null,
         text: '',
-        multiline: false,
+
         anim: new Animated.Value(0),
-        keyboardHeight: new Animated.Value(0),
-        callback: (text) => {},
-        callbackClose: () => {}
-    }
+        keyboardHeight: new Animated.Value(Dimensions.get('window').height)
+    };
 
     /** @type {React.RefObject<Input>} */
     refInput = React.createRef();
+
+    posX = 0;
+    posY = 0;
+    layoutHeight = 0;
 
     componentDidMount() {
         Keyboard.addListener('keyboardDidShow', this.onKeyboardShow);
@@ -35,38 +44,53 @@ class ScreenInputBack extends React.Component {
         Keyboard.removeAllListeners('keyboardDidHide');
     }
 
+    /** @param {LayoutChangeEvent} event */
+    onLayout = (event) => {
+        this.layoutHeight = event.nativeEvent.layout.height;
+    };
+
     /** @type {KeyboardEventListener} */
     onKeyboardShow = (event) => {
         const { height } = event.endCoordinates;
-        const offset = Platform.OS === 'android' ? -24 : -height;
+        const { height: screenHeight } = Dimensions.get('window');
+
+        //const offset = Platform.OS === 'android' ? -24 : -height;
+        const offset = screenHeight - height - this.layoutHeight - (Platform.OS === 'android' ? 48 : 48 + 24);
         SpringAnimation(this.state.keyboardHeight, offset).start();
-    }
+    };
+
     /** @type {KeyboardEventListener} event */
     onKeyboardHide = () => {
-        SpringAnimation(this.state.keyboardHeight, 0).start();
+        const { height: screenHeight } = Dimensions.get('window');
+        SpringAnimation(this.state.keyboardHeight, screenHeight).start();
         this.refInput?.current?.unfocus();
         this.Close(false);
-    }
+    };
 
     /**
      * Open the screen input
-     * @param {string} label Title of the input
-     * @param {string} initialText Initial text of the input
-     * @param {(text: string) => void} callback Callback called when the input is validated
-     * @param {boolean} multiline If true, the input is multiline
-     * @param {() => void} callbackClose Callback called when the input is closed
+     * @param {ScreenInputType} params
      */
-    Open = (label = 'Input', initialText = '', callback = (text) => {}, multiline = false, callbackClose = () => {}) => {
+    Open = (params) => {
+        /** @type {ScreenInputType} */
+        const defaultParams = {
+            label: 'Input',
+            initialText: '',
+            multiline: false,
+            callback: () => {}
+        };
+        const mergedParams = { ...defaultParams, ...params };
+
         TimingAnimation(this.state.anim, 1, 200).start();
-        this.setState({
-            opened: true,
-            label: label,
-            text: initialText,
-            multiline: multiline,
-            callback: callback,
-            callbackClose: callbackClose
-        }, this.refInput?.current?.focus);
-    }
+        this.setState(
+            {
+                opened: true,
+                text: mergedParams.initialText,
+                input: mergedParams
+            },
+            this.refInput?.current?.focus
+        );
+    };
 
     /**
      * Close the screen input
@@ -74,12 +98,14 @@ class ScreenInputBack extends React.Component {
      * @returns {boolean} True if the screen input is closed
      */
     Close = (valid = false) => {
-        if (!this.state.opened) return false;
+        const { opened, input, text } = this.state;
 
-        if (valid) {
-            this.state.callback(this.state.text);
+        if (!opened || input === null) {
+            return false;
         }
-        this.state.callbackClose();
+
+        input.callback?.(valid ? text : null);
+
         TimingAnimation(this.state.anim, 0, 200).start();
         this.setState({
             opened: false,
@@ -87,14 +113,15 @@ class ScreenInputBack extends React.Component {
         });
 
         return true;
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onPressIn = (event) => {
         const { pageX, pageY } = event.nativeEvent;
         this.posX = pageX;
         this.posY = pageY;
-    }
+    };
+
     /** @param {GestureResponderEvent} event */
     onPressOut = (event) => {
         const { pageX, pageY } = event.nativeEvent;
@@ -105,13 +132,15 @@ class ScreenInputBack extends React.Component {
             this.Close(false);
             this.refInput?.current?.unfocus(); // Hide keyboard
         }
-    }
+    };
+
+    /** @param {string} text */
     onChangeText = (text) => this.setState({ text: text });
 
     onValid = () => {
         this.refInput?.current?.unfocus();
         this.Close(true);
-    }
+    };
 }
 
 export default ScreenInputBack;

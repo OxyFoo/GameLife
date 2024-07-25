@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, ScrollView, FlatList } from 'react-native';
 
 import styles from './style';
 import BackNewPage from './back';
@@ -15,8 +15,8 @@ class NewPage extends BackNewPage {
         const { experienceStats, playedDays, totalActivityLength, totalActivityTime } = this.state;
 
         return (
-            <View style={styles.page}>
-                <PageHeader onBackPress={this.onBack} />
+            <ScrollView style={styles.page}>
+                <PageHeader title={lang['title-statistics']} onBackPress={this.onBack} />
 
                 <FlatList
                     data={experienceStats}
@@ -56,7 +56,7 @@ class NewPage extends BackNewPage {
                     />
                     <KPI style={styles.kpiProfile} title={lang['row-time']} value={totalActivityTime} />
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }

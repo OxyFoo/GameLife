@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './style';
-import { popupContent, statComponent } from './render';
+import { popupContent, statComponent } from './popup';
 import user from 'Managers/UserManager';
 
 /**
@@ -33,15 +33,13 @@ class StatsBars extends React.PureComponent {
 
         const output = user.statsKey.map((item, i) =>
             statComponent(item, data[item], supData[i], i, simplifiedDisplay, () => {
-                user.interface.popup.Open('custom', () => popupContent(item, data), undefined, true);
+                user.interface.popup?.Open({
+                    content: popupContent.bind(popupContent, item, data)
+                });
             })
         );
 
-        return (
-            <View style={[ styles.fullW, style ]}>
-                {output}
-            </View>
-        );
+        return <View style={[styles.fullW, style]}>{output}</View>;
     }
 }
 

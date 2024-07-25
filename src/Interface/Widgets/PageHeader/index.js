@@ -13,6 +13,7 @@ import { Text, Icon } from 'Interface/Components';
  *
  * @typedef {object} PageHeaderPropsType
  * @prop {StyleProp} style
+ * @prop {string | null} title
  * @prop {(event: GestureResponderEvent) => void} onBackPress
  * @prop {(event: GestureResponderEvent) => void} [onHelpPress]
  */
@@ -20,14 +21,15 @@ import { Text, Icon } from 'Interface/Components';
 /** @type {PageHeaderPropsType} */
 const PageHeaderProps = {
     style: {},
+    title: null,
     onBackPress: () => {},
     onHelpPress: undefined
 };
 
 class PageHeader extends React.Component {
     render() {
-        const { onBackPress, onHelpPress } = this.props;
-        const T_back = langManager.curr['modal']['back'];
+        const { title, onBackPress, onHelpPress } = this.props;
+        const text = title ?? langManager.curr['modal']['back'];
 
         return (
             <View style={[styles.header, this.props.style]}>
@@ -39,7 +41,8 @@ class PageHeader extends React.Component {
                         size={24}
                         angle={-90}
                     />
-                    <Text fontSize={16}>{T_back}</Text>
+
+                    {title === null ? <Text fontSize={16}>{text}</Text> : <Text style={styles.text}>{text}</Text>}
                 </TouchableOpacity>
                 {onHelpPress && <Icon onPress={onHelpPress} icon='info-circle-outline' size={30} />}
             </View>

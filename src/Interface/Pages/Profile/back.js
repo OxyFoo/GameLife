@@ -85,6 +85,10 @@ class BackProfile extends PageBase {
         this.state.scrollY.setValue(y);
     };
 
+    openSkills = () => {
+        user.interface.ChangePage('skills');
+    };
+
     openStatistics = () => {
         user.interface.ChangePage('statistics');
     };

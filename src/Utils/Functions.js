@@ -62,10 +62,11 @@ function SortByKey(array, key) {
 
 /**
  * Return element in array of object by key and value
- * @param {Array} array
- * @param {string} key
- * @param {*} value
- * @returns {object | null} Return object or null if didn't exists
+ * @template T
+ * @param {T[]} array
+ * @param {keyof T} key
+ * @param {T[keyof T]} value
+ * @returns {T | null} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
     for (let i = 0; i < array.length; i++) {
@@ -78,8 +79,9 @@ function GetByKey(array, key, value) {
 
 /**
  * Convert array of object to object
- * @param {Array} arr
- * @returns {object}
+ * @template T
+ * @param {T[]} arr
+ * @returns {Record<string, T>}
  */
 const ArrayToDict = (arr) => arr.reduce((acc, curr) => Object.assign(acc, curr), {});
 

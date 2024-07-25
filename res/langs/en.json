@@ -513,7 +513,11 @@
         "container-skills-title": "Skills",
 
         "coming-soon": "Coming\nsoon",
+        "btn-skills": "My skills",
         "btn-statistics": "My statistics",
+
+        "title-profile": "My profile",
+        "title-statistics": "My statistics",
 
         "input-username": "Username",
         "input-select-title": "Select a title",
@@ -779,6 +783,7 @@
     },
 
     "skills": {
+        "title": "My skills",
         "input-search": "Search",
         "top-sort-list": [
             "XP", "A-Z", "DATE"

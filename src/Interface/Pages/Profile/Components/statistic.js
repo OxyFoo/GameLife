@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
+import { popupContent } from 'Interface/Widgets/StatsBars/popup';
 
 /**
  * @typedef {import('Managers/UserManager').Stats} Stats
@@ -22,7 +24,15 @@ function RenderStatistic({ item }) {
     const lvlSize = value < 100 ? 18 : value < 1000 ? 14 : 12;
 
     return (
-        <View style={styles.view}>
+        <TouchableOpacity
+            style={styles.view}
+            activeOpacity={0.6}
+            onPress={() =>
+                user.interface.popup?.Open({
+                    content: popupContent.bind(popupContent, item.statKey, user.stats)
+                })
+            }
+        >
             <View
                 style={[
                     styles.count,
@@ -36,7 +46,7 @@ function RenderStatistic({ item }) {
                 </Text>
             </View>
             <Text>{title}</Text>
-        </View>
+        </TouchableOpacity>
     );
 }
 

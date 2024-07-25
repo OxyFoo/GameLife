@@ -513,7 +513,11 @@
         "container-skills-title": "Compétences",
 
         "coming-soon": "Bientôt\ndisponible",
+        "btn-skills": "Mes compétences",
         "btn-statistics": "Mes statistiques",
+
+        "title-profile": "Mon profil",
+        "title-statistics": "Mes statistiques",
 
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
@@ -779,6 +783,7 @@
     },
 
     "skills": {
+        "title": "Mes compétences",
         "input-search": "Rechercher",
         "top-sort-list": [
             "XP", "A-Z", "DATE"

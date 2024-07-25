@@ -31,8 +31,14 @@ class EnrichedSkill extends Skill {
     /** @type {string} */
     LogoXML = '';
 
-    /** @type {EnrichedXPInfo | null} */
-    Experience = null;
+    /** @type {EnrichedXPInfo} */
+    Experience = {
+        lvl: 0,
+        xp: 0,
+        next: 0,
+        totalXP: 0,
+        lastTime: 0
+    };
 }
 
 class Icon {
@@ -64,7 +70,7 @@ class Skills {
         this.categories = [];
     }
     Load(data) {
-        if (typeof(data) === 'object') {
+        if (typeof data === 'object') {
             if (data.hasOwnProperty('skills')) this.skills = data.skills;
             if (data.hasOwnProperty('skillsIcon')) this.icons = data.skillsIcon;
             if (data.hasOwnProperty('skillsCategory')) this.categories = data.skillsCategory;
@@ -84,13 +90,13 @@ class Skills {
      */
     Get = () => {
         return this.skills
-            .filter(skill => skill.Enabled)
+            .filter((skill) => skill.Enabled)
             .sort((a, b) => {
                 const nameA = langManager.GetText(a.Name).toLowerCase();
                 const nameB = langManager.GetText(b.Name).toLowerCase();
                 return nameA.localeCompare(nameB);
             });
-    }
+    };
 
     /**
      * @param {number} ID
@@ -102,13 +108,13 @@ class Skills {
      * @param {number} ID
      * @returns {Category | null} Return category if exists or null
      */
-    GetCategoryByID = (ID) => this.categories.find(category => category.ID === ID) || null;
+    GetCategoryByID = (ID) => this.categories.find((category) => category.ID === ID) || null;
 
     /**
      * @param {number} ID
      * @returns {Skill[]} Return skills by category
      */
-    GetByCategory = (ID) => this.Get().filter(skill => skill.CategoryID === ID);
+    GetByCategory = (ID) => this.Get().filter((skill) => skill.CategoryID === ID);
 
     /**
      * Return XML of logo by ID
@@ -120,13 +126,13 @@ class Skills {
         for (let i = 0; i < this.icons.length; i++) {
             const skillIcon = this.icons[i];
             const skillIconID = skillIcon.ID;
-            if (ID == skillIconID) {
+            if (ID === skillIconID) {
                 currXml = skillIcon.Content;
                 break;
             }
         }
         return currXml;
-    }
+    };
 }
 
 export { Skill, EnrichedSkill, Category };

@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: 12
+        marginTop: 12,
+        marginBottom: 24
     },
     kpiProfile: {
         paddingVertical: 24

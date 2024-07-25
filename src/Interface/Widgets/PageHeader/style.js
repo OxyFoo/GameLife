@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     header: {
         width: '100%',
         marginTop: 36,
-        marginBottom: 48,
+        marginBottom: 36,
 
         display: 'flex',
         flexDirection: 'row',
@@ -20,6 +20,10 @@ const styles = StyleSheet.create({
     },
     headerLeftArrow: {
         marginRight: 16
+    },
+    text: {
+        fontSize: 24,
+        fontWeight: 'bold'
     }
 });
 

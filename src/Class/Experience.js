@@ -3,22 +3,23 @@ import dataManager from 'Managers/DataManager';
 import { MinMax, Sum } from 'Utils/Functions';
 
 /**
+ * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Managers/UserManager').Stats} Stats
- * 
+ *
  * @typedef {'user' | 'stat' | 'skill'} XPTypes
- * 
+ *
  * @typedef {object} XPOptions
  * @property {number} xpPerLevel
  * @property {number} increaseRatio Default: 0.5. ]0, 1[ for logarithmic, 1 for linear and ]1, 2] for exponential
- * 
+ *
  * @typedef {object} XPInfo
  * @property {number} xp - Current XP
  * @property {number} lvl - Current level
  * @property {number} next - XP to next level
  * @property {number} totalXP - Total XP
- * 
+ *
  * @typedef {object} EnrichedXPInfo
  * @property {number} xp - Current XP
  * @property {number} lvl - Current level
@@ -61,7 +62,7 @@ class Experience {
 
     /** @returns {Stats} */
     GetEmptyExperience() {
-        const stats = this.user.statsKey.map(i => ({[i]: this.getXPDict()}));
+        const stats = this.user.statsKey.map((i) => ({ [i]: this.getXPDict() }));
         return Object.assign({}, ...stats);
     }
 
@@ -79,10 +80,10 @@ class Experience {
         let XP = 0;
 
         /** @type {Stats} */
-        const stats = Object.assign({}, ...statsKey.map(i => ({[i]: null})));
+        const stats = Object.assign({}, ...statsKey.map((i) => ({ [i]: null })));
 
         /** @type {{ [key: string]: number }} */
-        const statValues = Object.assign({}, ...statsKey.map(i => ({[i]: 0})));
+        const statValues = Object.assign({}, ...statsKey.map((i) => ({ [i]: 0 })));
 
         for (let a in activities) {
             const activity = activities[a];
@@ -129,17 +130,14 @@ class Experience {
     }
 
     /**
-     * @param {number} skillID
-     * @returns {EnrichedXPInfo | null} null if the skill doesn't exist
+     * @param {Skill} skill
+     * @returns {EnrichedXPInfo}
      */
-    GetSkillExperience(skillID) {
-        const skill = dataManager.skills.GetByID(skillID);
-        if (skill === null) return null;
-
-        const activities = this.user.activities.GetBySkillID(skillID);
+    GetSkillExperience(skill) {
+        const activities = this.user.activities.GetBySkillID(skill.ID);
         const durations = activities
-            .filter(activity => this.user.activities.GetExperienceStatus(activity) !== 'isNotPast')
-            .map(a => a.duration);
+            .filter((activity) => this.user.activities.GetExperienceStatus(activity) !== 'isNotPast')
+            .map((a) => a.duration);
 
         const totalDuration = Sum(durations);
         const totalXP = skill.XP * (totalDuration / 60);
@@ -175,7 +173,7 @@ class Experience {
      * @description Use arithmetic series
      * * Equation: `Sn = n/2 * (a1 + an)` with `an = (n - 1) * xpPerLevel`
      * * Variables: `a1 = 0`, `Sn -> Total xp`, `n -> level`
-     * 
+     *
      * - `Sn = n/2 * ((n - 1) * xpPerLevel)`
      * - `TotalXP = lvl/2 * ((lvl - 1) * xpPerLevel))`
      * - `lvl = 1/2 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)/2`
@@ -187,12 +185,12 @@ class Experience {
         const { xpPerLevel, increaseRatio } = XPOptions[type];
 
         if (totalXP < 0 || xpPerLevel <= 0) {
-            return { 'xp': 0, 'lvl': 0, 'next': 0, 'totalXP': 0 };
+            return { xp: 0, lvl: 0, next: 0, totalXP: 0 };
         }
 
-        const lvl = Math.floor((1 + Math.pow(1 + 8 * totalXP / xpPerLevel, increaseRatio)) / 2);
-        const xpForCurrLevel = xpPerLevel * (Math.pow(2 * (lvl + 0) - 1, 1 / increaseRatio) - 1) / 8;
-        const xpForNextLevel = xpPerLevel * (Math.pow(2 * (lvl + 1) - 1, 1 / increaseRatio) - 1) / 8;
+        const lvl = Math.floor((1 + Math.pow(1 + (8 * totalXP) / xpPerLevel, increaseRatio)) / 2);
+        const xpForCurrLevel = (xpPerLevel * (Math.pow(2 * (lvl + 0) - 1, 1 / increaseRatio) - 1)) / 8;
+        const xpForNextLevel = (xpPerLevel * (Math.pow(2 * (lvl + 1) - 1, 1 / increaseRatio) - 1)) / 8;
 
         const xp = totalXP - xpForCurrLevel;
         const next = xpForNextLevel - xpForCurrLevel;

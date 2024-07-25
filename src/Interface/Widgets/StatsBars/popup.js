@@ -5,7 +5,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Icon, Swiper, Text, XPBar } from 'Interface/Components';
+import { Button, Icon, ProgressBar, Swiper, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Experience').Stats} Stats
@@ -25,16 +25,14 @@ function popupContent(initStatKey, stats = user.experience.GetExperience().stats
         return (
             <View style={styles.popupContentStatPage}>
                 <Text fontSize={24}>{statName}</Text>
-                <View style={styles.popupContentStat}>
-                    {statComponent(statKey, stats[statKey], 0, 0, false)}
-                </View>
+                <View style={styles.popupContentStat}>{statComponent(statKey, stats[statKey], 0, 0, false)}</View>
                 <Text fontSize={14}>{statDescription}</Text>
             </View>
-        )
+        );
     };
 
-    /** @type {React.MutableRefObject<Swiper | null>} */
-    const swiperRef = React.useRef(null);
+    /** @type {React.RefObject<Swiper>} */
+    const swiperRef = React.createRef();
     const bars = user.statsKey.map(statBox);
     const initIndex = user.statsKey.indexOf(initStatKey);
 
@@ -50,8 +48,22 @@ function popupContent(initStatKey, stats = user.experience.GetExperience().stats
                 backgroundColor='transparent'
             />
             <View style={styles.popupContentHeader}>
-                <Icon onPress={swiperRef.current?.Prev} icon='chevron' angle={180} />
-                <Icon onPress={swiperRef.current?.Next} icon='chevron' />
+                <Button
+                    style={styles.popupButtonNavigation}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={() => swiperRef.current?.Prev()}
+                >
+                    <Icon icon='chevron' angle={180} />
+                </Button>
+                <Button
+                    style={styles.popupButtonNavigation}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={() => swiperRef.current?.Next()}
+                >
+                    <Icon icon='chevron' />
+                </Button>
             </View>
         </View>
     );
@@ -88,12 +100,12 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cal
             <TouchableOpacity
                 style={styles.fullW}
                 key={'skill_' + index}
-                activeOpacity={pressEvent === null ? 1 : .5}
+                activeOpacity={pressEvent === null ? 1 : 0.5}
                 onPress={pressEvent}
             >
                 <View style={styles.XPHeaderSimplified}>
                     <Text>{langStats[statKey]}</Text>
-                    <Text fontSize={20} bold={true}>{stat.lvl.toString()}</Text>
+                    <Text fontSize={20}>{`${stat.lvl}`}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -103,19 +115,14 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cal
         <TouchableOpacity
             style={styles.fullW}
             key={'skill_' + index}
-            activeOpacity={pressEvent === null ? 1 : .5}
+            activeOpacity={pressEvent === null ? 1 : 0.5}
             onPress={pressEvent}
         >
             <View style={styles.XPHeader}>
                 <Text>{textLevel}</Text>
                 <Text>{textXP}</Text>
             </View>
-            <XPBar
-                style={styles.XPBar}
-                value={stat.xp}
-                maxValue={stat.next}
-                supValue={sup}
-            />
+            <ProgressBar style={styles.XPBar} value={stat.xp} maxValue={stat.next} supValue={sup} />
         </TouchableOpacity>
     );
 }

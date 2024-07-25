@@ -36,6 +36,7 @@ class Profile extends BackProfile {
                 <View style={styles.header} onLayout={this.onLayoutHeader}>
                     <PageHeader
                         style={styles.pageHeader}
+                        title={lang['title-profile']}
                         onBackPress={this.onBack}
                         //onHelpPress={StartHelp.bind(this)}
                     />
@@ -96,8 +97,8 @@ class Profile extends BackProfile {
                 <View style={styles.buttons}>
                     <Button style={styles.button}>[Modifier mon apparence]</Button>
 
-                    <Button style={styles.button} appearance='outline-blur'>
-                        [Mes compétnces]
+                    <Button style={styles.button} appearance='outline-blur' onPress={this.openSkills}>
+                        {lang['btn-skills']}
                     </Button>
 
                     <Button style={styles.button} appearance='outline-blur' icon='graph' onPress={this.openStatistics}>

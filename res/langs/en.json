@@ -785,8 +785,9 @@
     "skills": {
         "title": "My skills",
         "input-search": "Search",
+        "input-sort": "Sort by",
         "top-sort-list": [
-            "XP", "A-Z", "DATE"
+            "xp", "a-z", "date"
         ],
         "text-empty": "Add an activity, the associated skills will appear here",
         "text-add": "Add an activiy"

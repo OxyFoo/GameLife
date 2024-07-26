@@ -117,7 +117,7 @@ class NavBar extends BottomBarBack {
                             ]
                         }}
                     >
-                        <Icon icon='add-outline' color='main3' size={24} />
+                        <Icon icon='add-outline' color='backgroundDark' size={24} />
                     </Animated.View>
                     <Animated.View
                         style={[
@@ -135,7 +135,7 @@ class NavBar extends BottomBarBack {
                             }
                         ]}
                     >
-                        <Icon icon='close-outline' color='main3' size={24} />
+                        <Icon icon='close-outline' color='backgroundDark' size={24} />
                     </Animated.View>
                 </Button>
             </View>

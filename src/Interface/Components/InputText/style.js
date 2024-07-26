@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     parent: {
         width: '100%',
-        minHeight: 54,
         borderRadius: 8
     },
     placeholderParent: {

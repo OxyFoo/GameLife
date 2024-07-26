@@ -94,7 +94,7 @@ class Test extends BackTest {
                     throttleTime={1000}
                     onPress={this.buttonLoop}
                     appearance={this.state.selectedButon}
-                    color='main3'
+                    color='backgroundDark'
                     icon={'cup'}
                 >
                     {"Changer l'apparence"}

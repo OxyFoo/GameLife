@@ -5,6 +5,8 @@ import styles from './style';
 import InputTextThinBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
+import { Icon } from '../../Icon';
+
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').TextInputProps} TextInputProps
@@ -24,6 +26,7 @@ class InputTextThin extends InputTextThinBack {
             style,
             containerStyle,
             type,
+            icon,
             enabled,
             borderWidth,
             activeColor,
@@ -32,7 +35,7 @@ class InputTextThin extends InputTextThinBack {
             pointerEvents,
             ...props
         } = this.props;
-        const { animBorder } = this.state;
+        const { focused, animBorder } = this.state;
 
         const hexActiveColor = themeManager.GetColor(activeColor);
         const textColor = themeManager.GetColor('secondary');
@@ -64,7 +67,7 @@ class InputTextThin extends InputTextThinBack {
                     {...props}
                     testID={'textInput'}
                     ref={this.refInput}
-                    style={[styles.input, style]}
+                    style={[styles.input, icon !== null && styles.inputWithIcon, style]}
                     selectionColor={'white'}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}
@@ -74,6 +77,23 @@ class InputTextThin extends InputTextThinBack {
                     autoComplete={textTypes[type]['android']}
                     autoCorrect={false}
                 />
+
+                {icon && (
+                    <Animated.View
+                        style={[
+                            styles.icon,
+                            {
+                                opacity: animBorder.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [0.75, 1]
+                                })
+                            }
+                        ]}
+                        pointerEvents='none'
+                    >
+                        <Icon color={focused ? activeColor : 'secondary'} icon={icon} />
+                    </Animated.View>
+                )}
             </Animated.View>
         );
     }

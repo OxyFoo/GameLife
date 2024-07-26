@@ -116,7 +116,7 @@ class ZapGPT extends ZapGPTBack {
                     />
                     <Button
                         style={styles.buttonRetry}
-                        color='main3'
+                        color='backgroundDark'
                         icon='retry'
                         onPress={this.Retry}
                     />

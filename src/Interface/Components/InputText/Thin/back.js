@@ -16,11 +16,13 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputFocusEventData>} NativeSyntheticEventFocus
  *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('Interface/Components/Icon/back').IconsName} IconsName
  *
  * @typedef {'default' | 'email' | 'username' | 'name'} TextContentType
  *
  * @typedef {Object} InputTextThinPropsType
  * @property {StyleProp} containerStyle Style of the TextInput.
+ * @property {IconsName | null} icon Icon for the TextInput.
  * @property {ThemeColor} activeColor Color used when the TextInput is active.
  * @property {TextContentType} type Type of content to handle.
  * @property {boolean} enabled If true, the TextInput is enabled.
@@ -32,6 +34,7 @@ import { TimingAnimation } from 'Utils/Animations';
 /** @type {TextInputProps & InputTextThinPropsType} */
 const InputTextThinProps = {
     containerStyle: {},
+    icon: null,
     activeColor: 'main1',
     type: 'default',
     enabled: true,
@@ -47,15 +50,17 @@ class InputTextThinBack extends React.Component {
     refInput = React.createRef();
 
     state = {
+        focused: false,
         animBorder: new Animated.Value(0)
     };
 
     /**
      * @param {InputTextThinProps} nextProps
-     * @param {InputTextThinBack['state']} _nextState
+     * @param {InputTextThinBack['state']} nextState
      */
-    shouldComponentUpdate(nextProps, _nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
+            nextState.focused !== this.state.focused ||
             nextProps.style !== this.props.style ||
             nextProps.placeholder !== this.props.placeholder ||
             nextProps.placeholderTextColor !== this.props.placeholderTextColor ||
@@ -74,6 +79,7 @@ class InputTextThinBack extends React.Component {
 
     /** @param {NativeSyntheticEventFocus} event */
     onFocusIn = (event) => {
+        this.setState({ focused: true });
         TimingAnimation(this.state.animBorder, 1, ANIM_DURATION).start();
 
         if (this.props.onFocus) {
@@ -83,6 +89,7 @@ class InputTextThinBack extends React.Component {
 
     /** @param {NativeSyntheticEventFocus} event */
     onFocusOut = (event) => {
+        this.setState({ focused: false });
         TimingAnimation(this.state.animBorder, 0, ANIM_DURATION).start();
 
         if (this.props.onBlur) {

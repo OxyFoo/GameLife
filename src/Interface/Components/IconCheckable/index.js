@@ -19,6 +19,8 @@ class IconCheckable extends IconCheckableBack {
                 style={[styles.box, style]}
                 appearance={checked ? 'uniform' : 'outline'}
                 color={backgroundColor}
+                fontColor={colorOn}
+                borderColor={colorOn}
                 onPress={this.switch}
             >
                 <Icon xml={xml} icon={icon} color={iconColor} size={size} />

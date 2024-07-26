@@ -5,6 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 import { SortByKey } from 'Utils/Functions';
 
@@ -83,8 +84,10 @@ class BackSkills extends PageBase {
     };
 
     addActivity = () => {
-        // TODO: Open AddActivity panel
-        console.log('TODO: Add activity');
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity />,
+            movable: false
+        });
     };
 
     /** @param {number} ID */

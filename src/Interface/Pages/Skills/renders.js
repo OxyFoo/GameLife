@@ -8,8 +8,6 @@ import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, IconCheckable, Icon } from 'Interface/Components';
-import { GetDate } from 'Utils/Time';
-import { DateToFormatString } from 'Utils/Date';
 
 /**
  * @typedef {import('./index').default} SkillsPage
@@ -41,6 +39,7 @@ function renderCategory(value, _index, _array) {
             xml={icon}
             size={24}
             checked={checked}
+            colorOn='main1'
             onPress={this.onSwitchCategory}
         />
     );
@@ -55,9 +54,8 @@ function renderSkill({ item }) {
     const { ID, LogoXML, FullName, Experience } = item;
 
     const xpLang = langManager.curr['level'];
-    const { lvl, lastTime } = Experience;
+    const { lvl } = Experience;
     const text = `${xpLang['level']} ${lvl}`;
-    const last = DateToFormatString(GetDate(lastTime));
     const onPress = () => user.interface.ChangePage('skill', { args: { skillID: ID } });
 
     return (

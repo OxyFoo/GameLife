@@ -7,42 +7,34 @@ import { renderCategory, renderSkill } from './renders';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { Input, Button, Icon, Text } from 'Interface/Components';
+import { Button, Icon, Text, InputText } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Skills extends BackSkills {
     render() {
-        const { sortSelectedIndex, search, selectedCategories, skills, ascending } = this.state;
+        const { sortSelectedIndex, search, skills, ascending } = this.state;
         const lang = langManager.curr['skills'];
-        const sortType = this.sortList[sortSelectedIndex];
 
-        let categories = dataManager.skills.categories;
-        if (categories.length % 6 !== 0) {
-            categories.push(...Array(6 - (categories.length % 6)).fill(0));
-        }
+        const sortType = this.sortList[sortSelectedIndex];
+        const categories = dataManager.skills.categories.slice(1);
 
         return (
             <View style={styles.page}>
                 <PageHeader title={lang['title']} onBackPress={this.handleBack} />
-
-                {/* <Input
-                    style={styles.inputSearch}
-                    label={lang['input-search']}
-                    text={search}
-                    onChangeText={this.onChangeSearch}
-                /> */}
 
                 {/* Categories buttons */}
                 <View style={styles.categoriesContainer}>{categories.map(renderCategory.bind(this))}</View>
 
                 {/* Category text & Sort button */}
                 <View style={styles.rowSort}>
-                    <Text style={styles.secondaryTitleText} color='light'>
-                        {
-                            'test' /*selectedCategory === null ? lang['title-category'] : this.categoriesNames[selectedCategory]*/
-                        }
-                    </Text>
-                    <View />
+                    <InputText.Thin
+                        containerStyle={styles.searchbarInput}
+                        placeholder={lang['input-search']}
+                        icon='rounded-magnifer-outline'
+                        value={search}
+                        onChangeText={this.onChangeSearch}
+                    />
+
                     <Button
                         style={styles.buttonSortType}
                         appearance='uniform'
@@ -50,33 +42,22 @@ class Skills extends BackSkills {
                         fontColor='border'
                         onPress={this.onSwitchSort}
                     >
-                        {`Trier par: ${sortType}`}
+                        {`${lang['input-sort']} ${sortType}`}
                     </Button>
                 </View>
 
                 <FlatList
                     ref={this.refSkills}
+                    style={styles.skillsFlatlist}
                     data={skills}
                     keyExtractor={(item) => `skill-${item.ID}`}
                     renderItem={renderSkill.bind(this)}
                     ListEmptyComponent={this.renderEmpty}
                 />
 
-                {/* Search button */}
-                <View style={{ position: 'absolute', top: 32, right: 24 }}>
-                    <Button
-                        style={styles.buttonAscendType}
-                        appearance='uniform'
-                        color='transparent'
-                        onPress={() => console.log('TODO: Search')}
-                    >
-                        <Icon icon='rounded-magnifer-outline' size={28} />
-                    </Button>
-                </View>
-
                 {/* Ascending/Descending button */}
-                <View style={{ position: 'absolute', bottom: 24, right: 24 }}>
-                    <Button style={styles.buttonAscendType} onPress={this.switchOrder}>
+                <View style={styles.ascendView}>
+                    <Button style={styles.ascendButton} appearance='uniform' color='main1' onPress={this.switchOrder}>
                         <Icon icon='filter-outline' color='ground1' angle={ascending ? 0 : 180} size={38} />
                     </Button>
                 </View>

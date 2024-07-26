@@ -15,7 +15,7 @@ class Page extends PageBack {
 
         const animation = Animated.multiply(topOverlayPosition, -(topOverlayHeight + 32));
         const position = { transform: [{ translateY: animation }] };
-        const backgroundColor = { backgroundColor: themeManager.GetColor('main3') };
+        const backgroundColor = { backgroundColor: themeManager.GetColor('backgroundDark') };
         const borderColor = { borderColor: themeManager.GetColor('main1') };
 
         return (

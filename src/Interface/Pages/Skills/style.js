@@ -6,9 +6,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
 
-    // Search
-    inputSearch: {
-        marginBottom: 24
+    // Categories
+    categoriesContainer: {
+        width: '100%',
+        marginBottom: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    secondaryTitleText: {
+        marginBottom: 4,
+        fontSize: 22,
+        textAlign: 'left'
     },
 
     // Sort & Filter
@@ -18,38 +27,36 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    buttonAscendType: {
-        width: 'auto',
-        paddingVertical: 8,
-        paddingHorizontal: 8
-    },
     buttonSortType: {
         width: 'auto',
         paddingVertical: 8,
         paddingHorizontal: 16
     },
 
-    // Categories
-    categoryFlatlist: {
-        marginBottom: 24,
-        justifyContent: 'space-between'
+    // Search button & input
+    searchButton: {
+        position: 'absolute',
+        top: 32,
+        right: 24,
+        zIndex: 1000,
+        elevation: 1000
     },
-    secondaryTitleText: {
-        marginBottom: 4,
-        fontSize: 22,
-        textAlign: 'left'
+    searchbarView: {
+        position: 'absolute',
+        top: 0,
+        right: 24,
+        left: 24,
+        zIndex: 1000,
+        elevation: 1000
     },
-    categoriesContainer: {
-        width: '100%',
-        marginBottom: 24,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
+    searchbarInput: {
+        flex: 1,
+        marginRight: 12
     },
 
     // Skills
     skillsFlatlist: {
-        //flex: 1
+        flex: 1
     },
 
     // Skills when empty
@@ -61,6 +68,18 @@ const styles = StyleSheet.create({
         width: '50%',
         marginTop: 24,
         paddingVertical: 12
+    },
+
+    // Ascend/Descend button
+    ascendView: {
+        position: 'absolute',
+        right: 24,
+        bottom: 24
+    },
+    ascendButton: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
     }
 });
 

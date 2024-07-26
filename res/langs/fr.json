@@ -785,8 +785,9 @@
     "skills": {
         "title": "Mes compétences",
         "input-search": "Rechercher",
+        "input-sort": "Trier par",
         "top-sort-list": [
-            "XP", "A-Z", "DATE"
+            "exp", "a-z", "date"
         ],
         "text-empty": "Ajoute une activité, les compétences associées apparaîtront ici",
         "text-add": "Ajouter une activité"

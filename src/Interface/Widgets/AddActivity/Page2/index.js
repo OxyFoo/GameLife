@@ -25,6 +25,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                     fontColor='primary'
                     borderColor='main1'
                     onPress={unSelectActivity}
+                    onLongPress={this.openSkill}
                 >
                     <Icon icon='arrow-left' />
                     <View style={styles.headerButtonActivity}>

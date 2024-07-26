@@ -71,7 +71,7 @@ class Quest extends BackQuest {
                 <PageHeader
                     style={styles.pageHeader}
                     onBackPress={user.interface.BackHandle}
-                    onHelpPress={StartHelp.bind(this)}
+                    onSecondaryIconPress={StartHelp.bind(this)}
                 />
 
                 <ShowTitle title='title' />

@@ -143,7 +143,7 @@ class AddActivityPage1 extends BackActivityPage1 {
 
     /** @type {ListRenderItemItemSkill} */
     renderSkill = ({ item, index }) => {
-        const { value, onPress } = item;
+        const { id, value, onPress } = item;
         const { flatlistHeight, buttonHeight } = this.state;
         const topItemPosY = buttonHeight * index;
         const topNextItemPosY = buttonHeight * (index + 1);
@@ -198,6 +198,7 @@ class AddActivityPage1 extends BackActivityPage1 {
                 borderColor='secondary'
                 fontColor='primary'
                 onPress={onPress}
+                onLongPress={() => this.openSkill(id)}
             >
                 <Text fontSize={16}>{value}</Text>
             </Button>

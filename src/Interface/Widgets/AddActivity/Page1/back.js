@@ -4,6 +4,7 @@ import { Animated } from 'react-native';
 import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
@@ -222,6 +223,11 @@ class BackActivityPage1 extends React.Component {
             ...activity,
             skillID: skill.ID
         });
+    };
+
+    /** @param {number} ID */
+    openSkill = (ID) => {
+        user.interface.ChangePage('skill', { args: { skillID: ID } });
     };
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
@@ -51,6 +52,11 @@ class BackActivityPage2 extends React.Component {
         this.activityText = `${categoryName} - ${skillName}`;
         this.xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
     }
+
+    openSkill = () => {
+        const { activity } = this.props;
+        user.interface.ChangePage('skill', { args: { skillID: activity.skillID } });
+    };
 }
 
 BackActivityPage2.defaultProps = BackActivityPage2Props;

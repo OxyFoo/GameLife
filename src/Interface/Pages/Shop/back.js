@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
@@ -7,9 +6,10 @@ import StartMission from './mission';
 import user from 'Managers/UserManager';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Data/Items').StuffID} StuffID
- * 
+ *
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
  * @typedef {import('./InAppPurchases').default} InAppPurchases
@@ -19,6 +19,9 @@ import user from 'Managers/UserManager';
  */
 
 class BackShop extends PageBase {
+    static feShowNavBar = true;
+    static feShowUserHeader = true;
+
     state = {
         refPage: null,
 
@@ -32,7 +35,7 @@ class BackShop extends PageBase {
 
         /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */
         targetChestsStats: null
-    }
+    };
 
     /** @type {React.RefObject<View>} */
     refShopHeader = React.createRef();
@@ -56,10 +59,9 @@ class BackShop extends PageBase {
     refDyes = React.createRef();
 
     componentDidMount() {
-        super.componentDidMount();
-
         this.componentDidFocused(this.props);
-        user.server.GetShopContent()
+        user.server
+            .GetShopContent()
             .then((shopInfo) => {
                 this.setState({
                     loaded: true,
@@ -77,14 +79,15 @@ class BackShop extends PageBase {
                 });
             })
             .catch((error) => {
-                user.interface.console.AddLog('error', '[Shop] Failed to load shop content', error);
+                user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
             });
     }
 
+    /** @param {any} args */
     componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
-        StartMission.call(this, args?.missionName);
-    }
+        //StartTutorial.call(this, args?.tuto);
+        //StartMission.call(this, args?.missionName);
+    };
 }
 
 export default BackShop;

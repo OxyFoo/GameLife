@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    page: {
+        height: '100%',
+        paddingHorizontal: 24
+    },
     header: {
         marginBottom: 24
     },

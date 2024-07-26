@@ -10,7 +10,7 @@ import ShopDailyDeals from './DailyDeals';
 import ShopRandomChests from './RandomChests';
 import ShopTargetedChests from './TargetedChests';
 import ShopDyes from './Dyes';
-import ShopIAP from './InAppPurchases'
+import ShopIAP from './InAppPurchases';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -19,11 +19,16 @@ import { Text, Icon } from 'Interface/Components';
 
 class Shop extends BackShop {
     render() {
-        const {
-            dailyItemsID,
-            randomChestsStats,
-            targetChestsStats
-        } = this.state;
+        const lang = langManager.curr['shop'];
+
+        return (
+            <View style={[styles.page, { alignItems: 'center', justifyContent: 'center' }]}>
+                <Text style={{ fontSize: 24 }}>{lang['temporary-message']}</Text>
+            </View>
+        );
+
+        /*
+        const { dailyItemsID, randomChestsStats, targetChestsStats } = this.state;
 
         if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com') {
             return this.renderForTesters();
@@ -33,16 +38,11 @@ class Shop extends BackShop {
             return this.renderLoading();
         }
 
-        const lang = langManager.curr['shop'];
         const Help = StartHelp.bind(this);
 
         return (
             <View style={styles.page}>
-                <ShopHeader
-                    ref={this.refHeader}
-                    refPage={this.refShopHeader}
-                    style={styles.shopHeader}
-                />
+                <ShopHeader ref={this.refHeader} refPage={this.refShopHeader} style={styles.shopHeader} />
 
                 <Text style={styles.title}>{lang['banner-header']}</Text>
 
@@ -70,20 +70,16 @@ class Shop extends BackShop {
                 <ShopDyes ref={this.refDyes} />
             </View>
         );
+        */
     }
 
     renderLoading = () => {
         return (
-            <Page
-                ref={this.setRef}
-                style={styles.pageFill}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.page}>
                 <Text>Loading...</Text>
-            </Page>
+            </View>
         );
-    }
+    };
 
     renderNoInternet = () => {
         const lang = langManager.curr['shop'];
@@ -97,29 +93,26 @@ class Shop extends BackShop {
                 <Text fontSize={16}>{text}</Text>
             </View>
         );
-    }
+    };
 
     renderForTesters = () => {
         const lang = langManager.curr['shop'];
 
         return (
             <View style={styles.page}>
-                <ShopHeader
-                    ref={this.refHeader}
-                    refPage={this.state.refPage}
-                    style={styles.shopHeader}
-                />
+                <ShopHeader ref={this.refHeader} refPage={this.state.refPage} style={styles.shopHeader} />
 
                 <Banner title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
             </View>
         );
-    }
+    };
 }
 
 const styles = StyleSheet.create({
     page: {
-        paddingHorizontal: 0
+        height: '100%',
+        paddingHorizontal: 24
     },
     pageFill: {
         alignItems: 'center',

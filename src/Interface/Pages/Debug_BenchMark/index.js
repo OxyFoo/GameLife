@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, ScrollView, FlatList } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 
 import styles from './style';
@@ -17,7 +17,7 @@ class BenchMark extends BackBenchMark {
         const { benchmarking, activitiesCount, activitiesLoaded, benchmarkResults, benchmarkTimes } = this.state;
 
         return (
-            <View>
+            <ScrollView style={styles.page}>
                 <PageHeader style={styles.header} onBackPress={this.handleBackPress} />
 
                 <View style={styles.content}>
@@ -58,7 +58,7 @@ class BenchMark extends BackBenchMark {
                         />
                     </View>
                 )}
-            </View>
+            </ScrollView>
         );
     }
 

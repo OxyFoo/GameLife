@@ -13,6 +13,7 @@ import { SpringAnimation } from 'Utils/Animations';
  *
  * @typedef {import('Managers/LangManager').Lang} Lang
  * @typedef {import('Interface/Components').Button} Button
+ * @typedef {'home' | 'calendar' | 'multiplayer' | 'shop'} MainPages
  */
 
 const NavBarProps = {
@@ -71,20 +72,34 @@ class NavBarBack extends React.Component {
         SpringAnimation(this.state.animationAddActivity, 0).start();
     };
 
-    openHome = () => user.interface.ChangePage('home');
-    openCalendar = () => user.interface.ChangePage('calendar');
+    openHome = () => this.openPageWithTransition('home');
+    openCalendar = () => this.openPageWithTransition('calendar');
     openAddActivity = () => {
-        if (user.interface.bottomPanel.IsOpened()) {
-            user.interface.bottomPanel.Close();
+        if (user.interface.bottomPanel?.IsOpened()) {
+            user.interface.bottomPanel?.Close();
             return;
         }
-        user.interface.bottomPanel.Open({
+        user.interface.bottomPanel?.Open({
             content: <AddActivity />,
             movable: false
         });
     };
-    openMultiplayer = () => user.interface.ChangePage('multiplayer');
-    openShop = () => user.interface.ChangePage('shop');
+    openMultiplayer = () => this.openPageWithTransition('multiplayer');
+    openShop = () => this.openPageWithTransition('shop');
+
+    /** @param {MainPages} page */
+    openPageWithTransition = (page) => {
+        /** @type {MainPages[]} */
+        const pageList = ['home', 'calendar', 'multiplayer', 'shop'];
+        const currentPage = user.interface.GetCurrentPageName();
+        // @ts-ignore
+        const fromIndex = pageList.indexOf(currentPage);
+        const toIndex = pageList.indexOf(page);
+        if (fromIndex === -1 || toIndex === -1) {
+            return;
+        }
+        user.interface.ChangePage(page, { transition: fromIndex < toIndex ? 'fromRight' : 'fromLeft' });
+    };
 }
 
 NavBarBack.prototype.props = NavBarProps;

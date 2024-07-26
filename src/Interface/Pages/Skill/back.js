@@ -1,21 +1,22 @@
+import React from 'react';
+
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { GetDate } from 'Utils/Time';
 import { Round } from 'Utils/Functions';
-import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
+import { DateFormat } from 'Utils/Date';
 
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
- * 
+ *
  * @typedef HistoryActivity
  * @property {Activity} activity
  * @property {string} title
- * @property {(event: GestureResponderEvent) => void} onPress
  */
 
 const BackSkillProps = {
@@ -26,9 +27,6 @@ const BackSkillProps = {
 };
 
 class BackSkill extends PageBase {
-    /** @type {ActivityPanel | null} */
-    refActivityPanel = null;
-
     /** @type {Array<HistoryActivity>} */
     history = [];
 
@@ -52,7 +50,7 @@ class BackSkill extends PageBase {
         super(props);
 
         // Property error handling
-        if (typeof(props.args) === 'undefined' || !props.args.hasOwnProperty('skillID')) {
+        if (typeof props.args === 'undefined' || !props.args.hasOwnProperty('skillID')) {
             return;
         }
 
@@ -60,20 +58,20 @@ class BackSkill extends PageBase {
         const skillID = props.args['skillID'];
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) {
-            user.interface.console.AddLog('error', 'Skill not found for skillID: ' + skillID);
+            user.interface.console?.AddLog('error', 'Skill not found for skillID: ' + skillID);
             return;
         }
 
         // Skill data
-        const skillXP = user.experience.GetSkillExperience(skillID);
+        const skillXP = user.experience.GetSkillExperience(skill);
         if (skillXP === null) {
-            user.interface.console.AddLog('error', 'SkillXP not found for skillID: ' + skillID);
+            user.interface.console?.AddLog('error', 'SkillXP not found for skillID: ' + skillID);
             return;
         }
 
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         if (category === null) {
-            user.interface.console.AddLog('error', 'Category not found for skillID: ' + skillID);
+            user.interface.console?.AddLog('error', 'Category not found for skillID: ' + skillID);
             return;
         }
 
@@ -108,36 +106,25 @@ class BackSkill extends PageBase {
     }
 
     __updateHIstory = () => {
-        const langDateName = langManager.curr['dates']['names'];
-
         if (this.skill.ID === 0) return;
         const userActivities = user.activities.GetBySkillID(this.skill.ID);
 
         this.history = [];
         for (const activity of userActivities.reverse()) {
-            // Format title with date and duration
             const date = GetDate(activity.startTime);
-            const dateStr = DateToFormatString(date);
-            const start = DateToFormatTimeString(date);
-            const durationH = Math.floor(activity.duration / 60);
-            const durationM = activity.duration % 60;
-            const title = `${dateStr}\n${start} - ${durationH}${langDateName['hours-min']} ${durationM}${langDateName['minutes-min']}`;
 
-            // On press function
-            const onPress = () => {
-                this.refActivityPanel?.SelectActivity(activity, () => {
-                    this.__updateHIstory();
-                    if (this.history.length === 0) {
-                        user.interface.BackHandle();
-                    } else {
-                        this.forceUpdate();
-                    }
-                });
-            }
+            // Start
+            const startDateText = DateFormat(date, 'DD/MM/YYYY');
+            const startTimeText = DateFormat(date, 'HH:mm');
 
-            this.history.push({ activity, title, onPress });
-        };
-    }
+            // End
+            date.setMinutes(date.getMinutes() + activity.duration);
+            const endTimeText = DateFormat(date, 'HH:mm');
+
+            const title = `${startDateText} ${startTimeText} - ${endTimeText}`;
+            this.history.push({ activity, title });
+        }
+    };
 
     /** @param {number} skillID */
     getTotalDurationFromSkillID = (skillID) => {
@@ -146,13 +133,31 @@ class BackSkill extends PageBase {
         for (const element of history) {
             totalDuration += element.duration;
         }
-        return Round(totalDuration/60, 1);
-    }
+        return Round(totalDuration / 60, 1);
+    };
 
     addActivity = () => {
         const skillID = this.skill.ID;
-        user.interface.ChangePage('activity', { skillID }, true);
-    }
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity openSkillID={skillID} />,
+            movable: false
+        });
+    };
+
+    showHistory = () => {
+        const lang = langManager.curr['skill'];
+        const items = this.history.map((item, index) => ({ id: index + 1, value: item.title }));
+        user.interface.screenList?.Open(lang['history-title'], items, (index) => {
+            const activity = this.history[index - 1].activity;
+            user.interface.bottomPanel?.Open({
+                content: <AddActivity editActivity={activity} />
+            });
+        });
+    };
+
+    onBackPress = () => {
+        user.interface.BackHandle();
+    };
 }
 
 BackSkill.defaultProps = BackSkillProps;

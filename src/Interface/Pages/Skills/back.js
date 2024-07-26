@@ -8,6 +8,7 @@ import dataManager from 'Managers/DataManager';
 import { AddActivity } from 'Interface/Widgets';
 import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 import { SortByKey } from 'Utils/Functions';
+import { FormatForSearch } from 'Utils/String';
 
 /**
  * @typedef {import('react-native').FlatList} FlatList
@@ -18,6 +19,8 @@ import { SortByKey } from 'Utils/Functions';
  */
 
 class BackSkills extends PageBase {
+    static feKeepMounted = true;
+
     state = {
         search: '',
         ascending: true,
@@ -153,8 +156,9 @@ class BackSkills extends PageBase {
 
         // Search filter
         if (search !== '') {
+            const formattedSearch = FormatForSearch(search);
             newSkills = newSkills.filter((skill) => {
-                return skill.FullName.toLowerCase().includes(search.toLowerCase());
+                return FormatForSearch(skill.FullName).includes(formattedSearch);
             });
         }
 

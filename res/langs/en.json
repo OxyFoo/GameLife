@@ -774,11 +774,14 @@
     },
 
     "skill": {
+        "title": "Skill",
         "text-author": "An idea from {}",
         "text-unallocated": "Competence unallocated",
         "stats-title": "Statistiques",
+        "informations-title": "Informations",
         "history-title": "History",
-        "activity-history": "Activity history",
+        "history-show": "Show history",
+        "history-activity": "Activity history",
         "text-add": "Add activity"
     },
 

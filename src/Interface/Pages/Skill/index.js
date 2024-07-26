@@ -1,169 +1,102 @@
 import * as React from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import BackSkill from './back';
 import styles from './style';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-import { Container, Text, Icon, ProgressBar, Button, KPI } from 'Interface/Components';
-import { PageHeader, ActivityPanel, SkillChart, StatsBars } from 'Interface/Widgets';
-
-/**
- * @typedef {import('react-native').ListRenderItem<HistoryActivity>} ListRenderItemHistoryActivity
- * 
- * @typedef {import('./back').HistoryActivity} HistoryActivity
- */
+import { Text, Icon, ProgressBar, Button, KPI } from 'Interface/Components';
+import { PageHeader, SkillChart } from 'Interface/Widgets';
 
 class Skill extends BackSkill {
     render() {
         const lang = langManager.curr['skill'];
         const langTime = langManager.curr['dates']['names'];
         const langLevel = langManager.curr['level'];
-        const backgroundMain = { backgroundColor: themeManager.GetColor('main1') };
 
         const txtCurrXp = Round(this.skill.xp, 1);
         const txtNextXP = Round(this.skill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
 
-        //bottomOffset={104}
-        //overlay={this.renderOverlay()}
-        //footer={this.renderFooter()}
         return (
-            <View>
-                <PageHeader onBackPress={user.interface.BackHandle} />
+            <>
+                <ScrollView style={styles.page}>
+                    <PageHeader title={lang['title']} onBackPress={this.onBackPress} />
 
-                {/* Skill name and icon */}
-                <View style={styles.skillContainer}>
-                    <View style={[styles.pictureContainer, backgroundMain]}>
-                        <Icon size={84} xml={this.skill.xml} />
-                    </View>
-                    <View style={styles.detailContainer}>
-                        <Text style={styles.skillTitle}>{this.skill.name}</Text>
-                        <Text style={styles.skillCategory}>{this.skill.category}</Text>
-                        {!this.skill.enabled && (
-                            <Text style={styles.skillUnallocated}>
-                                {lang['text-unallocated']}
+                    {/* Skill name and icon */}
+                    <View style={styles.titleContainer}>
+                        <LinearGradient
+                            style={styles.gradient}
+                            colors={[
+                                themeManager.GetColor('main1', { opacity: 0.65 }),
+                                themeManager.GetColor('main1', { opacity: 0.25 })
+                            ]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                        >
+                            <Icon style={styles.activityIcon} xml={this.skill.xml} />
+                            <View style={styles.activityTextView}>
+                                <Text style={styles.activityText}>{`${this.skill.name} - ${this.skill.category}`}</Text>
+                                {!this.skill.enabled && (
+                                    <Text style={styles.skillUnallocated} color='warning'>
+                                        {lang['text-unallocated']}
+                                    </Text>
+                                )}
+                            </View>
+                        </LinearGradient>
+
+                        {/* Creator */}
+                        {this.skill.creator !== '' && (
+                            <Text style={styles.creator} color='secondary'>
+                                {this.skill.creator}
                             </Text>
                         )}
                     </View>
-                </View>
 
-                {/* Level and XP bar */}
-                <View style={styles.levelContainer}>
-                    <View style={styles.level}>
-                        <Text>{this.skill.level}</Text>
-                        <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
+                    {/* Level and XP bar */}
+                    <View style={styles.levelContainer}>
+                        <ProgressBar color='main1' value={this.skill.xp} maxValue={this.skill.next} />
+                        <View style={styles.levelsView}>
+                            <Text>{this.skill.level}</Text>
+                            <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
+                        </View>
                     </View>
-                    <ProgressBar value={this.skill.xp} maxValue={this.skill.next} />
 
-                    {this.skill.creator !== '' && (
-                        <Text style={styles.creator} color='secondary'>{this.skill.creator}</Text>
-                    )}
-                </View>
-
-                {/* KPI place */}
-                <View style={styles.kpiContainer}>
-                    <KPI
-                        title={langLevel['total-hour']}
-                        value={this.skill.totalDuration}
-                        unit={langTime['hours-min']}
-                        style={[styles.statsContainer]}
-                    />
-                    <KPI
-                        title={langLevel['total']}
-                        value={this.skill.totalFloatXp}
-                        style={[styles.statsContainer]}
-                    />
-                </View>
-
-                {/* Skill use chart */}
-                {this.skill.ID !== 0 && (
-                    <SkillChart
-                        skillID={this.skill.ID}
-                        chartWidth={300}
-                        style={styles.statsContainer}
-                    />
-                )}
-
-                {/* Stats */}
-                <Container
-                    text={lang['stats-title']}
-                    style={styles.statsContainer}
-                    type='rollable'
-                    opened={false}
-                >
-                    <StatsBars data={user.stats} supData={this.skill.stats} />
-                </Container>
-
-                {/* History */}
-                {this.history.length > 0 && (
-                    <Container
-                        styleContainer={styles.historyContainer}
-                        text={lang['history-title']}
-                        type='rollable'
-                        opened={false}
-                    >
-                        <FlatList
-                            data={this.history}
-                            keyExtractor={(item, i) => 'history_' + i}
-                            renderItem={this.renderHistoryItem}
-                            numColumns={2}
-                            initialNumToRender={100}
-                            onTouchStart={() => {
-                                user.interface.GetCurrentPage()?.refPage.current?.DisableScroll();
-                            }}
-                            onTouchEnd={() => {
-                                user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
-                            }}
-                            onTouchCancel={() => {
-                                user.interface.GetCurrentPage()?.refPage.current?.EnableScroll();
-                            }}
+                    {/* KPI place */}
+                    <Text style={styles.title} color='border'>
+                        {lang['informations-title']}
+                    </Text>
+                    <View style={styles.kpiContainer}>
+                        <KPI
+                            style={styles.kpiLeft}
+                            title={langLevel['total-hour']}
+                            value={this.skill.totalDuration + ' ' + langTime['hours-min']}
                         />
-                    </Container>
+                        <KPI style={styles.kpiRight} title={langLevel['total']} value={this.skill.totalFloatXp} />
+                    </View>
+
+                    {/* Skill use chart */}
+                    <Text style={styles.title} color='border'>
+                        {lang['history-activity']}
+                    </Text>
+                    {this.skill.ID !== 0 && (
+                        <SkillChart style={styles.skillChart} skillID={this.skill.ID} chartWidth={300} />
+                    )}
+
+                    {/* History */}
+                    <Button appearance='uniform' color='main1' onPress={this.showHistory}>
+                        {lang['history-show']}
+                    </Button>
+                </ScrollView>
+
+                {/* Absolute add button */}
+                {this.skill.enabled && (
+                    <Button style={styles.addActivity} onPress={this.addActivity} icon='add-outline' iconSize={30} />
                 )}
-            </View>
-        );
-    }
-
-    /** @type {ListRenderItemHistoryActivity} */
-    renderHistoryItem = ({ item, index }) => {
-        return (
-            <TouchableOpacity
-                style={styles.historyItem}
-                activeOpacity={0.6}
-                onPress={item.onPress}
-            >
-                <Text>{item.title}</Text>
-            </TouchableOpacity>
-        );
-    }
-
-    renderOverlay = () => {
-        return (
-            <ActivityPanel
-                ref={ref => this.refActivityPanel = ref}
-                topOffset={200}
-            />
-        );
-    }
-
-    renderFooter() {
-        if (!this.skill.enabled) {
-            return null;
-        }
-
-        // Add activity button
-        return (
-            <Button
-                style={styles.addActivity}
-                color='main2'
-                onPress={this.addActivity}
-                icon='add'
-                iconSize={30}
-            />
+            </>
         );
     }
 }

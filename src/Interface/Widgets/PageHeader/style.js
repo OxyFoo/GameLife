@@ -14,6 +14,9 @@ const styles = StyleSheet.create({
         elevation: 1000,
         zIndex: 1000
     },
+    headerWithIcon: {
+        marginTop: 28
+    },
     headerLeft: {
         flexDirection: 'row',
         alignItems: 'center'
@@ -24,6 +27,11 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 24,
         fontWeight: 'bold'
+    },
+    secondaryButton: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
     }
 });
 

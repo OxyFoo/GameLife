@@ -38,7 +38,9 @@ class Profile extends BackProfile {
                         style={styles.pageHeader}
                         title={lang['title-profile']}
                         onBackPress={this.onBack}
-                        //onHelpPress={StartHelp.bind(this)}
+                        secondaryIcon='settings-outline'
+                        secondaryIconColor='gradient'
+                        onSecondaryIconPress={this.openSettings}
                     />
 
                     <Animated.View style={headerOpacity} pointerEvents={headerPointer}>
@@ -95,7 +97,9 @@ class Profile extends BackProfile {
                 />
 
                 <View style={styles.buttons}>
-                    <Button style={styles.button}>[Modifier mon apparence]</Button>
+                    <Button style={styles.button} enabled={false}>
+                        {lang['btn-edit-profile']}
+                    </Button>
 
                     <Button style={styles.button} appearance='outline-blur' onPress={this.openSkills}>
                         {lang['btn-skills']}

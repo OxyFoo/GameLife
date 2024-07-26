@@ -31,7 +31,7 @@ class Achievements extends BackAchievements {
                     <PageHeader
                         style={styles.pageHeader}
                         onBackPress={user.interface.BackHandle}
-                        onHelpPress={StartHelp.bind(this)}
+                        onSecondaryIconPress={StartHelp.bind(this)}
                     />
 
                     {/** Title for multiplayer success */}

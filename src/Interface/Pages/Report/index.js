@@ -21,7 +21,7 @@ class Report extends BackReport {
                 <PageHeader
                     style={{ marginBottom: 24 }}
                     onBackPress={this.back}
-                    onHelpPress={selectedType === 2 ? StartHelp : undefined}
+                    onSecondaryIconPress={selectedType === 2 ? StartHelp : undefined}
                 />
 
                 <Text containerStyle={{ marginBottom: 24 }} fontSize={36}>{lang['page-title']}</Text>

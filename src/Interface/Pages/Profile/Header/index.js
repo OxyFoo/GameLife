@@ -36,10 +36,6 @@ class Header extends HeaderBack {
                     >
                         <Icon icon='edit-outline' color='gradient' size={28} />
                     </Button>
-
-                    <Button style={styles.button} appearance='uniform' color='transparent' onPress={this.openSettings}>
-                        <Icon icon='settings-outline' color='gradient' size={28} />
-                    </Button>
                 </View>
             </View>
         );

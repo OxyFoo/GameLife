@@ -245,12 +245,13 @@
     },
 
     "about": {
-        "block-devs": "App made by",
-        "block-contributors": "Contributors",
+        "title": "About GameLife",
+        "block-devs": "App designed by",
+        "block-contributors": "Contributors 2021",
         "block-links": "Links",
         "text-manager": "Manager",
         "text-developer": "Développeur",
-        "text-version": "Version: {}",
+        "text-version": "Version {}",
         "text-contributors": "Thanks to you!"
     },
 
@@ -513,6 +514,7 @@
         "container-skills-title": "Skills",
 
         "coming-soon": "Coming\nsoon",
+        "btn-edit-profile": "Change my appearance",
         "btn-skills": "My skills",
         "btn-statistics": "My statistics",
 
@@ -629,6 +631,13 @@
     },
 
     "settings": {
+        "title": "Settings",
+
+        "section-informations-preferences": "INFORMATION AND PREFERENCES",
+        "section-notifications-ads": "NOTIFICATIONS AND ADVERTISING",
+        "section-support-feedback": "SUPPORT AND FEEDBACK",
+        "section-security-privacy": "SECURITY AND PRIVACY",
+
         "input-about": "About us",
         "input-langage": "Langages",
         "input-theme": "Themes",

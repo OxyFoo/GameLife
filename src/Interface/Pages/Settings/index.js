@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Platform } from 'react-native';
+import { ScrollView, Platform } from 'react-native';
 
 import styles from './style';
 import BackSettings from './back';
@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, Switch, /*SwitchText,*/ ComboBox } from 'Interface/Components';
+import { Text, Button, /*SwitchText,*/ ComboBox } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Settings extends BackSettings {
@@ -18,10 +18,15 @@ class Settings extends BackSettings {
         const lang = langManager.curr['settings'];
 
         return (
-            <View style={styles.page}>
-                <PageHeader onBackPress={this.onBack} />
+            <ScrollView style={styles.page}>
+                <PageHeader title={lang['title']} onBackPress={this.onBack} />
 
-                <Button style={styles.margin} onPress={this.openAbout}>
+                <Text style={styles.title} color='border'>
+                    {lang['section-informations-preferences']}
+                </Text>
+
+                {/* About page */}
+                <Button style={styles.margin} icon='arrow-left' iconAngle={180} onPress={this.openAbout}>
                     {lang['input-about']}
                 </Button>
 
@@ -46,6 +51,10 @@ class Settings extends BackSettings {
                 />
                 */}
 
+                <Text style={styles.title} color='border'>
+                    {lang['section-notifications-ads']}
+                </Text>
+
                 {/* Notifications page */}
                 <Button
                     style={styles.margin}
@@ -55,11 +64,6 @@ class Settings extends BackSettings {
                     onPress={this.openNotifications}
                 >
                     {lang['input-notifications']}
-                </Button>
-
-                {/* Reports page */}
-                <Button style={styles.margin} appearance='outline' onPress={this.openReport}>
-                    {lang['input-report']}
                 </Button>
 
                 {/** TODO: Force consent popup on iOS */}
@@ -74,11 +78,35 @@ class Settings extends BackSettings {
                     </Button>
                 )}
 
+                <Text style={styles.title} color='border'>
+                    {lang['section-support-feedback']}
+                </Text>
+
+                {/* Reports page */}
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    icon='arrow-left'
+                    iconAngle={180}
+                    onPress={this.openReport}
+                >
+                    {lang['input-report']}
+                </Button>
+
+                <Text style={styles.title} color='border'>
+                    {lang['section-security-privacy']}
+                </Text>
+
                 {/* Disconnect / Disconnect all */}
                 <Button style={styles.margin} onPress={this.disconnect}>
                     {lang['input-disconnect']}
                 </Button>
-                <Button style={styles.margin} onPress={this.disconnectAll} loading={devicesLoading}>
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    onPress={this.disconnectAll}
+                    loading={devicesLoading}
+                >
                     {lang['input-disconnect-all']}
                 </Button>
 
@@ -107,7 +135,7 @@ class Settings extends BackSettings {
                 >
                     {lang['input-delete-account']}
                 </Button>
-            </View>
+            </ScrollView>
         );
     };
 }

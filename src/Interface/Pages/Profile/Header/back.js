@@ -50,9 +50,6 @@ class HeaderBack extends React.Component {
             content: ProfileEditor
         });
     };
-    openSettings = () => {
-        user.interface.ChangePage('settings');
-    };
 }
 
 HeaderBack.prototype.props = UserHeaderProps;

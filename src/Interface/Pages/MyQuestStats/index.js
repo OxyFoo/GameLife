@@ -46,7 +46,7 @@ class MyQuestStats extends BackQuest {
                 <PageHeader
                     style={styles.pageHeaderView}
                     onBackPress={user.interface.BackHandle}
-                    onHelpPress={StartHelp.bind(this)}
+                    onSecondaryIconPress={StartHelp.bind(this)}
                 />
 
                 <View

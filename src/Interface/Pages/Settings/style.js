@@ -6,6 +6,11 @@ const styles = StyleSheet.create({
     },
     margin: {
         marginBottom: 24
+    },
+    title: {
+        marginBottom: 12,
+        fontSize: 21,
+        textAlign: 'left'
     }
 });
 

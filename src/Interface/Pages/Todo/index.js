@@ -24,7 +24,7 @@ class Todo extends BackTodo {
             <View>
                 <PageHeader
                     onBackPress={user.interface.BackHandle}
-                    onHelpPress={StartHelp.bind(this)}
+                    onSecondaryIconPress={StartHelp.bind(this)}
                 />
 
                 <SectionTitle

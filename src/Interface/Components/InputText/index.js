@@ -41,6 +41,7 @@ class InputText extends InputTextBack {
             inactiveColor,
             forceActive,
             error,
+            placeholderTextColor,
             onParentLayout,
             onSubmit,
             pointerEvents,
@@ -130,6 +131,7 @@ class InputText extends InputTextBack {
                     ref={this.refInput}
                     style={[styles.input, colorStyle, style]}
                     selectionColor={'white'}
+                    placeholderTextColor={placeholderTextColor || themeManager.GetColor('secondary')}
                     onFocus={this.onFocusIn}
                     onBlur={this.onFocusOut}
                     onSubmitEditing={onSubmit}
@@ -138,9 +140,9 @@ class InputText extends InputTextBack {
                     autoCorrect={false}
                 />
 
-                {/* Error icon */}
+                {/* Icon */}
                 {_icon !== null && (
-                    <View style={styles.error}>
+                    <View style={styles.icon}>
                         <Icon icon={_icon} color={color} />
                     </View>
                 )}

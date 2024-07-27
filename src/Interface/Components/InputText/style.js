@@ -19,15 +19,15 @@ const styles = StyleSheet.create({
     input: {
         minHeight: 12,
         maxHeight: 256,
-        paddingVertical: 12,
-        paddingHorizontal: 12,
+        paddingVertical: 16,
+        paddingHorizontal: 24,
         fontSize: 18,
-        verticalAlign: 'top'
+        verticalAlign: 'middle'
     },
 
-    error: {
+    icon: {
         position: 'absolute',
-        right: 8,
+        right: 24,
         top: 0,
         bottom: 0,
         justifyContent: 'center',

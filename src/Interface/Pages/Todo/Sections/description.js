@@ -1,93 +1,70 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Button, Text } from 'Interface/Components';
+import { InputText, Text } from 'Interface/Components';
 
+/**
+ * @typedef {import('Class/Todoes').Todo} Todo
+ *
+ * @typedef {Object} SectionDescriptionPropsType
+ * @property {Todo | null} todo
+ * @property {(newTodo: Todo) => void} onChangeTodo
+ */
+
+/** @type {SectionDescriptionPropsType} */
 const SectionDescriptionProps = {
-    onChange: () => {}
+    todo: null,
+    onChangeTodo: () => {}
 };
 
 class SectionDescription extends React.Component {
-    state = {
-        /** @type {string} */
-        description: ''
+    /** @param {SectionDescriptionPropsType} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return (
+            nextProps.todo !== this.props.todo ||
+            nextProps.todo?.description !== this.props.todo?.description ||
+            nextProps.onChangeTodo !== this.props.onChangeTodo
+        );
     }
 
-    refHelp1 = null;
-
-    /** @param {string} description */
-    SetDescription = (description) => {
-        this.setState({ description });
-    }
-    GetDescription = () => {
-        return this.state.description;
-    }
-
-    onAddComment = () => {
-        const callback = (text) => {
-            this.props.onChange();
-            this.setState({ description: text });
-        };
-        const titleCommentary = langManager.curr['todo']['title-commentary'];
-        user.interface.screenInput.Open(titleCommentary, '', callback, true);
-    }
-    onEditComment = () => {
-        const callback = (text) => {
-            this.props.onChange();
-            this.setState({ description: text });
-        };
-        const titleCommentary = langManager.curr['todo']['title-commentary']
-        user.interface.screenInput.Open(titleCommentary, this.state.description, callback, true);
-    }
-    onRemComment = () => {
-        const callback = (btn) => {
-            if (btn === 'yes') {
-                this.props.onChange();
-                this.setState({ description: '' });
-            }
+    /** @param {string} text */
+    onChangeText = (text) => {
+        const { todo, onChangeTodo } = this.props;
+        if (todo === null || text === null) {
+            return;
         }
-        const title = langManager.curr['todo']['alert-remcomment-title'];
-        const text = langManager.curr['todo']['alert-remcomment-text'];
-        user.interface.popup.Open('yesno', [title, text], callback);
-    }
+
+        todo.description = text;
+        onChangeTodo(todo);
+    };
 
     render() {
         const lang = langManager.curr['todo'];
-        const { description } = this.state;
-        const backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
+        const { todo } = this.props;
 
-        if (description === '') {
-            return (
-                <Button
-                    ref={ref => this.refHelp1 = ref}
-                    style={styles.comButton}
-                    onPress={this.onAddComment}
-                    color='main1'
-                    fontSize={14}
-                >
-                    {lang['button-commentary']}
-                </Button>
-            );
+        if (todo === null) {
+            return null;
         }
 
         return (
-            <View ref={ref => this.refHelp1 = ref}>
+            <View style={styles.parent}>
                 {/* Comment title */}
-                <Text style={styles.sectionTitle} fontSize={22}>{lang['title-commentary']}</Text>
+                <Text style={styles.title} color='border'>
+                    {lang['input-commentary-title']}
+                </Text>
 
-                {/* Comment content */}
-                <TouchableOpacity
-                    style={[styles.commentContainer, backgroundCard]}
-                    activeOpacity={.6}
-                    onPress={this.onEditComment}
-                    onLongPress={this.onRemComment}
-                >
-                    <Text style={styles.commentText}>{description}</Text>
-                </TouchableOpacity>
+                {/* Comment input */}
+                <InputText
+                    value={todo.description}
+                    placeholder={lang['input-commentary-placeholder']}
+                    inactiveColor='border'
+                    forceActive={todo.description.length > 0}
+                    onChangeText={this.onChangeText}
+                    maxLength={1280}
+                    multiline
+                />
             </View>
         );
     }
@@ -97,23 +74,14 @@ SectionDescription.prototype.props = SectionDescriptionProps;
 SectionDescription.defaultProps = SectionDescriptionProps;
 
 const styles = StyleSheet.create({
-    comButton: {
-        height: 48,
-        marginTop: 48,
-        marginHorizontal: 20
-    },
-    sectionTitle: {
-        marginTop: 32,
-        marginBottom: 12
+    parent: {
+        marginBottom: 24
     },
 
-    commentContainer: {
-        padding: '5%',
-        borderRadius: 24
-    },
-    commentText: {
-        fontSize: 16,
-        textAlign: 'left'
+    title: {
+        marginBottom: 8,
+        textAlign: 'left',
+        fontSize: 14
     }
 });
 

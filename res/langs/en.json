@@ -839,14 +839,16 @@
     },
 
     "todo": {
-        "title-schedule": "Scheduling",
-        "title-tasks": "Tasks",
-        "title-commentary": "Commentary",
+        "title": "My list",
+        "title-new": "Create my list",
 
         "input-title": "Title",
+        "input-title-placeholder": "Title of the todo",
         "input-deadline-title": "Due date",
-        "input-deadline-empty": "None",
-
+        "input-deadline-empty": "No deadline defined",
+        "input-commentary-title": "Commentary",
+        "input-commentary-placeholder": "Write a commentary here...",
+        "input-task-title": "Tasks",
         "input-task-placeholder": "Task",
 
         "button-commentary": "Add a commentary",
@@ -860,13 +862,13 @@
         "alert-remcomment-title": "Delete comment?",
         "alert-remcomment-text": "Are you sure you want to delete this comment?",
         "alert-remtodo-title": "Delete todo?",
-        "alert-remtodo-text": "Are you sure you want to delete this todo?",
+        "alert-remtodo-message": "Are you sure you want to delete this todo?",
         "alert-remtask-title": "Delete todo?",
         "alert-remtask-message": "Are you sure you want to delete this task?",
         "alert-taskslimit-title": "Limit reached",
         "alert-taskslimit-text": "You can't add more than 20 tasks to this todo",
         "alert-back-title": "Back",
-        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost.",
+        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
 
         "tuto": {
             "1": "Here you can set the deadline for your todo",
@@ -926,7 +928,7 @@
         "alert-remquest-title": "Delete quest?",
         "alert-remquest-text": "Are you sure you want to delete this quest?",
         "alert-back-title": "Back",
-        "alert-back-text": "Would you like to return to the home page? Unsaved changes will be lost.",
+        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
 
         "tuto": {
             "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",

@@ -48,7 +48,7 @@ class Profile extends BackProfile {
                     </Animated.View>
 
                     <Animated.View style={[styles.xpView, headerOpacity]}>
-                        <ProgressBar value={experienceUser.xp} maxValue={experienceUser.next} />
+                        <ProgressBar color='main1' value={experienceUser.xp} maxValue={experienceUser.next} />
                         <View style={styles.xpRow}>
                             <Text>{langManager.curr['level']['level'] + ' ' + experienceUser.lvl}</Text>
                             <Text>{Round(experienceUser.xp) + '/' + experienceUser.next}</Text>

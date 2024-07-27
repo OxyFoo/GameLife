@@ -50,7 +50,7 @@ class AddActivityPage1 extends BackActivityPage1 {
                             color='transparent'
                             onPress={this.openSearch}
                         >
-                            <Icon icon='rounded-magnifer-outline' size={24} color='gradient' />
+                            <Icon icon='rounded-magnifer-outline' size={24} color='white' />
                         </Button>
                     </Animated.View>
                 </View>

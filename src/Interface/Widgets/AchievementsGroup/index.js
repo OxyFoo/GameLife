@@ -14,14 +14,11 @@ class AchievementsGroup extends AchievementsGroupBack {
         const { Name, ID } = item;
         const Title = langManager.GetText(Name);
         return (
-            <TouchableOpacity
-                onPress={() => this.onAchievementPress(ID)}
-                activeOpacity={.6}
-            >
+            <TouchableOpacity onPress={() => this.onAchievementPress(ID)} activeOpacity={0.6}>
                 <Text style={styles.text}>{Title}</Text>
             </TouchableOpacity>
         );
-    }
+    };
 
     render() {
         const { style } = this.props;
@@ -36,18 +33,11 @@ class AchievementsGroup extends AchievementsGroupBack {
                     data={lastAchievements}
                     renderItem={this.renderAchievement}
                     keyExtractor={(item, index) => 'skill-' + index}
-                    ItemSeparatorComponent={() => (
-                        <Separator
-                            style={styles.separator}
-                            color='main1'
-                        />
-                    )}
+                    ItemSeparatorComponent={() => <Separator style={styles.separator} color='main1' />}
+                    scrollEnabled={false}
                 />
 
-                <Button
-                    style={[styles.btnSmall, btnMargin]}
-                    onPress={this.openAchievements}
-                >
+                <Button style={[styles.btnSmall, btnMargin]} onPress={this.openAchievements}>
                     {lang['widget-achievements-all']}
                 </Button>
             </>

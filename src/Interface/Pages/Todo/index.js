@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-
-import user from 'Managers/UserManager';
+import { ScrollView, StyleSheet } from 'react-native';
 
 import BackTodo from './back';
 import SectionTitle from './Sections/title';
@@ -9,75 +7,49 @@ import SectionDescription from './Sections/description';
 import SectionSchedule from './Sections/schedule';
 import SectionTasks from './Sections/tasks';
 
-import StartHelp from './help';
-import { Button, KeyboardSpacerView } from 'Interface/Components';
+import { Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Todo extends BackTodo {
     render() {
-        const { title, error } = this.state;
-
-        //onStartShouldSetResponder={this.keyboardDismiss}
-        //overlay={this.renderOverlay()}
-        //bottomOffset={72}
-        return (
-            <View>
-                <PageHeader
-                    onBackPress={user.interface.BackHandle}
-                    onSecondaryIconPress={StartHelp.bind(this)}
-                />
-
-                <SectionTitle
-                    title={title}
-                    error={error}
-                    onChangeTitle={this.onChangeTitle}
-                />
-
-                <SectionSchedule
-                    ref={ref => this.refSectionSchedule = ref}
-                    onChange={this.onEditTodo}
-                />
-
-                <SectionDescription
-                    ref={ref => this.refSectionDescription = ref}
-                    onChange={this.onEditTodo}
-                />
-
-                <SectionTasks
-                    ref={ref => this.refSectionTasks = ref}
-                    onChange={this.onEditTodo}
-                />
-
-                <KeyboardSpacerView onChangeState={this.onKeyboardChangeState} />
-            </View>
-        );
-    }
-
-    renderOverlay = () => {
-        const { button, error } = this.state;
+        const { title, action, button, tempTodo, error } = this.state;
 
         return (
-            <Button
-                style={styles.button}
-                color={button.color}
-                onPress={this.onButtonPress}
-                enabled={error.length === 0}
-            >
-                {button.text}
-            </Button>
+            <>
+                <ScrollView style={styles.page} onTouchStart={this.keyboardDismiss}>
+                    <PageHeader title={title} onBackPress={this.onBackPress} />
+
+                    <SectionTitle todo={tempTodo} error={error} onChangeTodo={this.onChangeTodo} />
+                    <SectionSchedule todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                    <SectionDescription todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                    <SectionTasks todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                </ScrollView>
+
+                <Button
+                    style={styles.button}
+                    appearance={action === 'new' ? 'normal' : 'uniform'}
+                    color={button.color}
+                    onPress={this.onButtonPress}
+                    enabled={error === null}
+                >
+                    {button.text}
+                </Button>
+            </>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    page: {
+        paddingHorizontal: 24
+    },
+
     button: {
         position: 'absolute',
-        height: 50,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        marginBottom: 24,
-        marginHorizontal: 24
+        width: 'auto',
+        left: 24,
+        right: 24,
+        bottom: 24
     }
 });
 

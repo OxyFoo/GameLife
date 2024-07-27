@@ -23,7 +23,7 @@ function Round(number, decimal = 0) {
  * @example Sum([1, 2, 3]) => 6
  */
 function Sum(arr) {
-    return arr.reduce((partial_sum, a) => partial_sum + parseInt(a), 0);
+    return arr.reduce((partial_sum, a) => partial_sum + a, 0);
 }
 
 /**
@@ -50,12 +50,16 @@ function MinMax(min, value, max) {
 }
 
 /**
- * @param {Array} array
- * @param {string} key Key of array
- * @returns {Array} Return sorted array
+ * Sort array of object by key
+ * @template T
+ * @param {T[]} array
+ * @param {keyof T} key
+ * @returns {T[]} Return sorted array
  */
 function SortByKey(array, key) {
+    /** @param {T[keyof T]} value */
     const format = (value) => (typeof value === 'string' ? value.toLowerCase() : value);
+    /** @param {T} a @param {T} b */
     const compare = (a, b) => (format(a[key]) < format(b[key]) ? -1 : 1);
     return array.sort(compare);
 }
@@ -70,7 +74,7 @@ function SortByKey(array, key) {
  */
 function GetByKey(array, key, value) {
     for (let i = 0; i < array.length; i++) {
-        if (array[i][key] == value) {
+        if (array[i][key] === value) {
             return array[i];
         }
     }
@@ -96,6 +100,7 @@ function Range(length, step = 1) {
     return Array.from({ length: length / step }, (_, i) => i * step);
 }
 
+/** @param {number} ms */
 function Sleep(ms) {
     const T = Math.max(0, ms);
     return new Promise((resolve) => setTimeout(resolve, T));

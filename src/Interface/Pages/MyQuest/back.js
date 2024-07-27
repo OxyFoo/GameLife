@@ -120,7 +120,7 @@ class BackQuest extends PageBase {
             }
         }
         const title = langManager.curr['quest']['alert-back-title'];
-        const text = langManager.curr['quest']['alert-back-text'];
+        const text = langManager.curr['quest']['alert-back-message'];
         user.interface.popup.Open('yesno', [ title, text ], callback);
         return false;
     }

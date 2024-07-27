@@ -4,20 +4,13 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetGlobalTime } from 'Utils/Time';
-
 /**
  * @typedef {import('Class/Todoes').Todo} Todo
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * @typedef {import('Interface/OldComponents/KeyboardSpacerView').KeyboardChangeStateEvent} KeyboardChangeStateEvent
- * 
+ *
  * @typedef {'new' | 'edit' | 'remove'} States
- * 
- * @typedef {import('./Sections/schedule').default} SectionSchedule
- * @typedef {import('./Sections/tasks').default} SectionTasks
- * @typedef {import('./Sections/description').default} SectionDescription
  */
 
 const BackTodoProps = {
@@ -29,6 +22,8 @@ const BackTodoProps = {
 
 class BackTodo extends PageBase {
     state = {
+        title: langManager.curr['todo']['title-new'],
+
         /** @type {States} */
         action: 'new',
         button: {
@@ -39,79 +34,60 @@ class BackTodo extends PageBase {
             color: 'main2'
         },
 
-        /** @type {string} */
-        title: '',
+        /** @type {string | null} Error message to display */
+        error: null,
 
-        /** @type {string} Error message to display */
-        error: ''
-    }
-
-    /** @type {SectionSchedule | null} */
-    refSectionSchedule = null;
-
-    /** @type {SectionDescription | null} */
-    refSectionDescription = null;
-
-    /** @type {SectionTasks | null} */
-    refSectionTasks = null;
-
-    /** @type {Todo | null} */
-    selectedTodo = null;
-
-    /** @type {NodeJS.Timeout | undefined} */
-    timeoutDidShow;
+        /** @type {Todo} */
+        tempTodo: {
+            title: '',
+            description: '',
+            tasks: [],
+            checked: 0,
+            deadline: 0,
+            created: 0
+        }
+    };
 
     /** @param {BackTodoProps} props */
     constructor(props) {
         super(props);
 
-        if (this.props.args?.todo) {
-            /** @type {Todo | null} */
-            const todo = this.props.args.todo || null;
-            this.selectedTodo = todo;
+        /** @type {Todo | null} */
+        const todo = this.props.args?.todo || null;
 
-            if (todo === null) {
-                user.interface.BackHandle();
-                user.interface.console.AddLog('error', 'Todo: Todo not found');
-                return;
-            }
-
-            this.state = {
-                action: 'remove',
-                button: {
-                    text: langManager.curr['todo']['button-remove'],
-                    color: 'danger'
-                },
-
-                title: todo.title,
-                error: ''
-            };
+        if (todo === null) {
+            user.interface.BackHandle();
+            user.interface.console?.AddLog('error', 'Todo: Todo not found');
+            return;
         }
-    }
 
-    componentDidMount() {
-        const { selectedTodo } = this;
-        if (selectedTodo === null) return;
+        this.state = {
+            title: langManager.curr['todo']['title'],
+            action: 'remove',
+            button: {
+                text: langManager.curr['todo']['button-remove'],
+                color: 'danger'
+            },
 
-        this.refSectionSchedule.SetDeadline(selectedTodo.deadline);
-        this.refSectionTasks.SetTasks(selectedTodo.tasks);
-        this.refSectionDescription.SetDescription(selectedTodo.description);
+            tempTodo: { ...todo, tasks: [...todo.tasks] },
+            error: null
+        };
     }
 
     componentDidFocused = () => {
         user.interface.SetCustomBackHandler(this.BackHandler);
-    }
+    };
 
-    componentWillUnmount() {
-        clearTimeout(this.timeoutDidShow);
-    }
+    onBackPress = () => {
+        user.interface.BackHandle();
+    };
 
     /**
-     * @param {boolean} askPopup Show a popup to ask the user if he wants to
-     *                           leave the page when he is editing a todo
+     * @param {boolean} askPopup Show a popup to ask the user if he wants to leave the page when he is editing a todo
      * @returns {boolean}
      */
     BackHandler = (askPopup = true) => {
+        const lang = langManager.curr['todo'];
         const { action } = this.state;
 
         // Don't show popup or todo not edited => leave
@@ -120,177 +96,165 @@ class BackTodo extends PageBase {
             return true;
         }
 
-        const callback = (btn) => {
-            if (btn === 'yes') {
-                user.interface.ResetCustomBackHandler();
-                user.interface.BackHandle();
-            }
-        }
-        const title = langManager.curr['todo']['alert-back-title'];
-        const text = langManager.curr['todo']['alert-back-text'];
-        user.interface.popup.Open('yesno', [ title, text ], callback);
-        return false;
-    }
-
-    onEditTodo = () => {
-        if (this.selectedTodo !== null && this.state.action !== 'edit') {
-            this.setState({
-                action: 'edit',
-                button: {
-                    text: langManager.curr['todo']['button-save'],
-                    color: 'success'
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-back-title'],
+                message: lang['alert-back-message']
+            },
+            callback: (btn) => {
+                if (btn === 'yes') {
+                    user.interface.ResetCustomBackHandler();
+                    user.interface.BackHandle();
                 }
-            });
-        }
-    }
+            }
+        });
+        return false;
+    };
 
     keyboardDismiss = () => {
         Keyboard.dismiss();
         return false;
-    }
+    };
+
+    /** @param {Todo} todo */
+    onChangeTodo = (todo) => {
+        const titleError = this.checkTitleErrors(todo.title);
+
+        if (this.state.action === 'edit') {
+            this.setState({
+                tempTodo: { ...todo },
+                error: titleError
+            });
+            return;
+        }
+
+        this.setState({
+            action: 'edit',
+            button: {
+                text: langManager.curr['todo']['button-save'],
+                color: 'success'
+            },
+            tempTodo: { ...todo },
+            error: titleError
+        });
+    };
 
     /**
-     * @param {string} title 
-     * @param {boolean} [init=false]
-     */
-    onChangeTitle = (title, init = false) => {
-        // Edition mode if title is modified
-        if (!init) this.onEditTodo();
-
-        this.checkTitleErrors(title);
-        this.setState({ title });
-    }
-
-    /**
-     * @param {string} title 
-     * @returns {boolean} True if error
+     * @param {string} title
+     * @returns {string | null} Error message or null if no error
      */
     checkTitleErrors = (title) => {
-        let message = '';
+        const lang = langManager.curr['todo'];
+        const todo = this.props.args?.todo || null;
 
-        const titleIsCurrent = title === (this.selectedTodo?.title || null);
-        const titleUsed = user.todoes.Get().some(t => t.title === title);
+        if (title === null || todo === null) {
+            return lang['error-title-empty'];
+        }
+
+        /** @type {string | null} */
+        let message = null;
+
+        const titleIsCurrent = title === todo.title;
+        const titleUsed = user.todoes.Get().some((t) => t.title === title);
 
         if (title.trim().length <= 0) {
-            message = langManager.curr['todo']['error-title-empty'];
+            message = lang['error-title-empty'];
+        } else if (!titleIsCurrent && titleUsed) {
+            message = lang['error-title-exists'];
         }
 
-        else if (!titleIsCurrent && titleUsed) {
-            message = langManager.curr['todo']['error-title-exists'];
-        }
-
-        this.setState({ error: message });
-        return message.length > 0;
-    }
+        return message;
+    };
 
     onButtonPress = () => {
         const { action } = this.state;
+
         switch (action) {
-            case 'new': this.addTodo(); break;
-            case 'edit': this.editTodo(); break;
-            case 'remove': this.removeTodo(); break;
+            case 'new':
+                this.addTodo();
+                break;
+            case 'edit':
+                this.editTodo();
+                break;
+            case 'remove':
+                this.removeTodo();
+                break;
             default:
-                user.interface.console.AddLog('error', 'Todo: Unknown action');
+                user.interface.console?.AddLog('error', 'Todo: Unknown action');
         }
-    }
+    };
 
     addTodo = () => {
-        const { title } = this.state;
-
-        const deadline = this.refSectionSchedule.GetDeadline();
-        const tasks = this.refSectionTasks.GetTasks()
-        const description = this.refSectionDescription.GetDescription();
-
+        const { title, description, deadline, tasks } = this.state.tempTodo;
         if (this.checkTitleErrors(title)) {
             return;
         }
 
-        const addition = user.todoes.AddOrEdit(
-            title,
-            description,
-            GetGlobalTime(),
-            deadline,
-            tasks
-        );
-
-        if (addition === 'edited') {
-            user.interface.console.AddLog('warn', 'Todo: Todo already exist, edited instead');
+        const addition = user.todoes.Add(title, description, deadline, tasks);
+        if (!addition) {
+            user.interface.console?.AddLog('warn', 'Todo: Todo already exist, cannot add');
+            return;
         }
 
         user.GlobalSave();
         user.interface.ResetCustomBackHandler();
         user.interface.BackHandle();
-    }
+    };
+
     editTodo = () => {
-        if (this.selectedTodo === null) {
-            user.interface.console.AddLog('error', 'Todo: Selected todo is null');
+        const todo = this.props.args?.todo || null;
+        if (todo === null) {
+            user.interface.console?.AddLog('warn', 'Todo: Todo already exist, cannot add');
             return;
         }
 
-        const { title } = this.state;
-
-        const deadline = this.refSectionSchedule.GetDeadline();
-        const tasks = this.refSectionTasks.GetTasks();
-        const description = this.refSectionDescription.GetDescription();
-
+        const { title, description, deadline, tasks } = this.state.tempTodo;
         if (this.checkTitleErrors(title)) {
             return;
         }
 
-        const edition = user.todoes.AddOrEdit(
-            title,
-            description,
-            this.selectedTodo.created || GetGlobalTime(),
-            deadline,
-            tasks
-        );
-
-        // Remove old todo (title different => new todo)
-        if (edition === 'added') {
-            const remove = user.todoes.Remove(this.selectedTodo);
-            if (remove === 'notExist') {
-                user.interface.console.AddLog('warn', 'Todo: Todo not exist');
-            }
+        const edition = user.todoes.Edit(todo, title, description, deadline, tasks);
+        if (!edition) {
+            user.interface.console?.AddLog('warn', 'Todo: Todo not exist, cannot edit');
+            return;
         }
 
         user.GlobalSave();
         user.interface.ResetCustomBackHandler();
         user.interface.BackHandle();
-    }
+    };
+
     removeTodo = () => {
-        if (this.selectedTodo === null) {
-            user.interface.console.AddLog('error', 'Todo: Selected todo is null');
+        const lang = langManager.curr['todo'];
+        const todo = this.props.args?.todo || null;
+
+        if (todo === null) {
+            user.interface.console?.AddLog('error', 'Todo: Selected todo is null');
             return;
         }
 
-        const callback = (btn) => {
-            if (btn === 'yes') {
-                const remove = user.todoes.Remove(this.selectedTodo);
+        const title = lang['alert-remtodo-title'];
+        const message = lang['alert-remtodo-message'];
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: { title, message },
+            callback: (btn) => {
+                if (btn !== 'yes') {
+                    return;
+                }
+
+                const remove = user.todoes.Remove(todo);
                 if (remove === 'removed') {
                     user.GlobalSave();
                     user.interface.ResetCustomBackHandler();
                     user.interface.BackHandle();
                 } else if (remove === 'notExist') {
-                    user.interface.console.AddLog('warn', 'Todo: Todo not exist');
+                    user.interface.console?.AddLog('warn', 'Todo: Todo not exist');
                 }
             }
-        }
-        const title = langManager.curr['todo']['alert-remtodo-title'];
-        const text = langManager.curr['todo']['alert-remtodo-text'];
-        user.interface.popup.Open('yesno', [ title, text ], callback);
-    }
-
-    /** @type {KeyboardChangeStateEvent} */
-    onKeyboardChangeState = (state, height) => {
-        if (state === 'opened') {
-            this.timeoutDidShow = setTimeout(() => {
-                this.refPage.current?.GoToYRelative(-height);
-            }, 100);
-        } else if (state === 'closed') {
-            this.refPage.current?.GoToYRelative(height);
-            clearTimeout(this.timeoutDidShow);
-        }
-    }
+        });
+    };
 }
 
 BackTodo.defaultProps = BackTodoProps;

@@ -839,14 +839,16 @@
     },
 
     "todo": {
-        "title-schedule": "Planification",
-        "title-tasks": "Tâches",
-        "title-commentary": "Commentaire",
+        "title": "Ma liste",
+        "title-new": "Créer ma liste",
 
         "input-title": "Titre",
+        "input-title-placeholder": "Titre de la liste",
         "input-deadline-title": "Date limite",
-        "input-deadline-empty": "Aucune",
-
+        "input-deadline-empty": "Aucune date définie",
+        "input-commentary-title": "Commentaire",
+        "input-commentary-placeholder": "Écris un commentaire ici...",
+        "input-task-title": "Tâches",
         "input-task-placeholder": "Tâche",
 
         "button-commentary": "Ajouter un commentaire",
@@ -860,13 +862,13 @@
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
         "alert-remtodo-title": "Suppression ?",
-        "alert-remtodo-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
+        "alert-remtodo-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-remtask-title": "Suppression ?",
         "alert-remtask-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-taskslimit-title": "Limite atteinte",
         "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
         "alert-back-title": "Retour",
-        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
+        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
 
         "tuto": {
             "1": "Ici tu peux définir la date limite de ta tâche.",
@@ -926,7 +928,7 @@
         "alert-remquest-title": "Suppression ?",
         "alert-remquest-text": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
-        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
+        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
 
         "tuto": {
             "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",

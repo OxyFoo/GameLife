@@ -39,7 +39,7 @@ import { TimingAnimation } from 'Utils/Animations';
 /** @type {TextInputProps & InputTextPropsType} */
 const InputTextProps = {
     containerStyle: {},
-    label: 'Default',
+    label: '',
     icon: null,
     staticLabel: false,
     activeColor: 'main1',

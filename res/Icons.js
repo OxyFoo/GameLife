@@ -90,6 +90,7 @@ const Icons = {
     'tiktok':                   require('./icons/tiktok').default,
     'trash-outline':            require('./icons/trash-outline').default,
     'trash':                    require('./icons/trash').default,
+    'uncheck-outline':          require('./icons/uncheck-outline').default,
     'undo':                     require('./icons/undo').default,
     'user-outline':             require('./icons/user-outline').default,
     'user':                     require('./icons/user').default,

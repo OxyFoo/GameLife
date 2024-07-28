@@ -884,8 +884,6 @@
         "todoes-empty-title": "Tu n'as pas encore de tâches",
         "todoes-empty-button": "En ajouter une",
 
-        "todo-type-deadline": "Avant le:",
-
         "alert-todoeslimit-title": "Limite atteinte",
         "alert-todoeslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },

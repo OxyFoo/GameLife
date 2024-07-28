@@ -884,8 +884,6 @@
         "todoes-empty-title": "No quest",
         "todoes-empty-button": "Add a quest",
 
-        "todo-type-deadline": "Ends on:",
-
         "alert-todoeslimit-title": "Limit reached",
         "alert-todoeslimit-message": "You have reached the limit of todoes, please delete some of them to add more."
     },

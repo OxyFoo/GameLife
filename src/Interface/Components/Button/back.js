@@ -25,7 +25,7 @@ import { Button } from 'react-native';
  * @property {'normal' | 'outline' | 'outline-blur' | 'uniform'} appearance
  * @property {ThemeColor | ThemeText} color Background color of the button, only used in 'uniform' appearance
  * @property {number} fontSize
- * @property {ThemeColor | ThemeText | 'automatic'} fontColor
+ * @property {ThemeColor | ThemeText | 'automatic' | 'gradient'} fontColor
  * @property {ThemeColor | ThemeText | 'automatic'} borderColor
  * @property {IconsName | null} icon
  * @property {string | null} iconXml

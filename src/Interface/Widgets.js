@@ -2,8 +2,7 @@ export { AddActivity } from './Widgets/AddActivity';
 export { MyQuestsSimpleList } from './Widgets/MyQuestsSimpleList';
 export { MyQuestsAdvancedList } from './Widgets/MyQuestsAdvancedList';
 export { PageHeader } from './Widgets/PageHeader';
-export { TodoSimpleList } from './Widgets/TodoSimpleList';
-export { TodoAdvancedList } from './Widgets/TodoAdvancedList';
+export { TodoList } from './Widgets/TodoList';
 
 import ActivityPanel from './Widgets/ActivityPanel';
 import AchievementsGroup from './Widgets/AchievementsGroup';

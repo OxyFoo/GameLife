@@ -2,10 +2,11 @@ import React from 'react';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import StartTutorial from './tuto';
+import StartMission from './mission';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import StartMission from './mission';
 
 /**
  * @typedef {import('Interface/Widgets').Missions} Missions
@@ -19,18 +20,19 @@ const BackHomeProps = {
 };
 
 class BackHome extends PageBase {
+    static feKeepMounted = true;
+    static feShowUserHeader = true;
+    static feShowNavBar = true;
+
     state = {
         experience: user.experience.GetExperience(),
         values: {
             currentLevel: '0',
             currentXP: '0',
             nextLevelXP: '0'
-        }
+        },
+        scrollable: true
     };
-
-    static feKeepMounted = true;
-    static feShowUserHeader = true;
-    static feShowNavBar = true;
 
     /** @type {React.RefObject<Missions>} */
     refMissions = React.createRef();
@@ -70,9 +72,45 @@ class BackHome extends PageBase {
 
     StartMission = StartMission.bind(this);
 
-    addActivity = () => user.interface.ChangePage('activity', { storeInHistory: false });
-    openSkills = () => user.interface.ChangePage('skills');
-    openQuests = () => user.interface.ChangePage('quests');
+    /** @param {boolean} scrollable */
+    onChangeScrollable = (scrollable) => {
+        this.setState({ scrollable });
+    };
+
+    /**
+     * Add a new quest to the list and open the quest page\
+     * Max 10 quests
+     */
+    addQuest = () => {
+        const lang = langManager.curr['quests'];
+        if (user.quests.myquests.IsMax()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-questslimit-title'],
+                    message: lang['alert-questslimit-message']
+                }
+            });
+            return;
+        }
+        user.interface.ChangePage('myquest', { storeInHistory: false });
+    };
+
+    addTodo = () => {
+        const lang = langManager.curr['todoes'];
+        if (user.todoes.IsMax()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-todoeslimit-title'],
+                    message: lang['alert-todoeslimit-message']
+                }
+            });
+            return;
+        }
+
+        user.interface.ChangePage('todo', { storeInHistory: false });
+    };
 }
 
 BackHome.defaultProps = BackHomeProps;

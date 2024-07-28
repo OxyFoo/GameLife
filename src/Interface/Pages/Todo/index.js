@@ -6,13 +6,26 @@ import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
 import SectionSchedule from './Sections/schedule';
 import SectionTasks from './Sections/tasks';
+import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
+import { WithInterpolation } from 'Utils/Animations';
 
 class Todo extends BackTodo {
     render() {
-        const { title, action, button, tempTodo, error } = this.state;
+        const lang = langManager.curr['todo'];
+        const { action, tempTodo, error, animEditButton, editButtonHeight } = this.state;
+        const title = action === 'new' ? lang['title-new'] : lang['title'];
+
+        const styleAnimEditButton = {
+            opacity: animEditButton,
+            transform: [
+                {
+                    translateY: WithInterpolation(animEditButton, 0, -editButtonHeight - 12)
+                }
+            ]
+        };
 
         return (
             <>
@@ -25,15 +38,34 @@ class Todo extends BackTodo {
                     <SectionTasks todo={tempTodo} onChangeTodo={this.onChangeTodo} />
                 </ScrollView>
 
-                <Button
-                    style={styles.button}
-                    appearance={action === 'new' ? 'normal' : 'uniform'}
-                    color={button.color}
-                    onPress={this.onButtonPress}
-                    enabled={error === null}
-                >
-                    {button.text}
-                </Button>
+                {/* Button: Add */}
+                {action === 'new' && (
+                    <Button style={styles.button} onPress={this.addTodo} enabled={error === null}>
+                        {lang['button-add']}
+                    </Button>
+                )}
+
+                {action !== 'new' && (
+                    <>
+                        {/* Button: Edit (Animated) */}
+                        <Button
+                            style={styles.button}
+                            styleAnimation={styleAnimEditButton}
+                            appearance='normal'
+                            color='success'
+                            onLayout={this.onEditButtonLayout}
+                            onPress={this.editTodo}
+                            enabled={error === null}
+                        >
+                            {lang['button-save']}
+                        </Button>
+
+                        {/* Button: Remove */}
+                        <Button style={styles.button} appearance='outline' icon='trash' onPress={this.removeTodo}>
+                            {lang['button-remove']}
+                        </Button>
+                    </>
+                )}
             </>
         );
     }

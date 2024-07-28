@@ -32,9 +32,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     sectionTitle: {
+        paddingVertical: 6,
         fontSize: 21,
         textAlign: 'left',
         textTransform: 'uppercase'
+    },
+    sectionTitleAddButton: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
     },
 
     todayPieChart: {

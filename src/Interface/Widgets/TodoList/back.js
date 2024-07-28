@@ -1,31 +1,43 @@
 import React from 'react';
 import { Animated } from 'react-native';
 
+import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { GetGlobalTime } from 'Utils/Time';
 import { MinMax } from 'Utils/Functions';
-import { GetAbsolutePosition } from 'Utils/UI';
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  *
  * @typedef {import('Class/Todoes').Todo} Todo
  * @typedef {import('react-native').FlatList<Todo>} FlatListTodo
+ *
+ * @typedef {Object} TodoListPropsType
+ * @property {StyleProp} style Style of todoes container
+ * @property {boolean} scrollable Scrollable state
+ * @property {(enabled: boolean) => void} changeScrollable Change scrollable state
  */
+
+/** @type {TodoListPropsType} */
+const TodoListProps = {
+    style: {},
+    scrollable: true,
+    changeScrollable: () => {}
+};
 
 class BackTodoList extends React.Component {
     state = {
         /** @type {Todo[]} */
         todoes: [],
-
-        /** @type {boolean} Used to disable scroll when dragging a todo */
-        scrollable: true,
 
         /** @type {boolean} Used to enable/disable undo button */
         undoEnabled: false,
@@ -39,20 +51,17 @@ class BackTodoList extends React.Component {
     /** @type {React.RefObject<FlatListTodo>} Used to manage todo sorting */
     refFlatlist = React.createRef();
 
-    flatlist = {
-        contentSizeHeight: 0,
-        layoutMeasurementHeight: 0,
-        contentOffsetY: 0
-    };
-
     /** @type {number[]} */
     initialSort = [];
 
     /** @type {NodeJS.Timeout | null} */
     undoTimeout = null;
 
-    /** @type {LayoutRectangle | null} */
-    tmpLayoutContainer = null;
+    firstPageY = 0;
+    selectedIndex = 0;
+
+    containerHeight = 0;
+    itemHeight = 46;
 
     /** @param {any} props */
     constructor(props) {
@@ -73,6 +82,18 @@ class BackTodoList extends React.Component {
         user.todoes.allTodoes.RemoveListener(this.listenerTodo);
     }
 
+    /** @param {LayoutChangeEvent} event */
+    onLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.containerHeight = height;
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutItem = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.itemHeight = height + styles.todoButton.marginBottom;
+    };
+
     /** @param {Todo} item */
     keyExtractor = (item) => 'todo-' + [item.title, ...item.created.toString(), ...item.deadline.toString()].join('-');
 
@@ -84,7 +105,7 @@ class BackTodoList extends React.Component {
         if (this.state.todoes.length >= 8) {
             const title = langManager.curr['todoes']['alert-todoeslimit-title'];
             const message = langManager.curr['todoes']['alert-todoeslimit-message'];
-            user.interface.popup.OpenT({
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message }
             });
@@ -130,6 +151,7 @@ class BackTodoList extends React.Component {
         });
     };
 
+    // TODO: Reimplement undo feature
     undo = () => {
         if (user.todoes.lastDeletedTodo === null) {
             return;
@@ -151,80 +173,49 @@ class BackTodoList extends React.Component {
 
     /** @param {Todo} item */
     onDrag = (item) => {
-        this.setState({
-            scrollable: false,
-            draggedItem: item
-        });
-    };
+        this.props.changeScrollable(false);
+        this.setState({ draggedItem: item });
 
-    /** @param {NativeSyntheticEvent} event */
-    onScroll = (event) => {
-        this.flatlist.contentOffsetY = event.nativeEvent.contentOffset.y;
+        this.selectedIndex = user.todoes.Get().indexOf(item);
+        const initY = this.selectedIndex * this.itemHeight;
+        TimingAnimation(this.state.mouseY, initY, 0).start();
     };
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
         this.initialSort = [...user.todoes.sort];
-
-        if (this.refFlatlist.current === null) {
-            return;
-        }
-
-        GetAbsolutePosition(this.refFlatlist.current).then((pos) => {
-            this.tmpLayoutContainer = pos;
-
-            const posY = this.tmpLayoutContainer.y + 32 / 2;
-            const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
-            TimingAnimation(this.state.mouseY, newY, 0).start();
-        });
+        this.firstPageY = pageY;
     };
 
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
-        const { draggedItem, scrollable } = this.state;
+        const { draggedItem } = this.state;
         const { pageY } = event.nativeEvent;
-        const { contentOffsetY: scrollY, contentSizeHeight, layoutMeasurementHeight } = this.flatlist;
 
-        if (!scrollable) {
-            event.stopPropagation();
-        }
-
-        if (this.tmpLayoutContainer === null || draggedItem === null) {
+        if (draggedItem === null) {
             return;
         }
 
         // Move todo selection
-        const posY = this.tmpLayoutContainer.y + 32 / 2;
-        const newY = MinMax(0, pageY - posY, this.tmpLayoutContainer.height);
+        const deltaY = pageY - this.firstPageY;
+        const relativeY = this.selectedIndex * this.itemHeight;
+        const newY = MinMax(0, deltaY + relativeY, this.containerHeight - this.itemHeight);
         TimingAnimation(this.state.mouseY, newY, 0).start();
 
         // Change todo order when dragging
-        const index = Math.floor((newY + scrollY) / 46);
+        const index = Math.floor((newY + this.itemHeight / 2) / this.itemHeight);
         const currIndex = user.todoes.sort.indexOf(draggedItem.created);
         if (index !== currIndex && user.todoes.Move(draggedItem, index)) {
             this.setState({ todoes: user.todoes.Get() });
-        }
-
-        // Scroll flatlist when dragging todo near top or bottom
-        const scrollOffset = 48;
-        const scrollYMax = contentSizeHeight - layoutMeasurementHeight;
-        if (newY < scrollOffset && scrollY > 0) {
-            const newOffset = Math.max(0, scrollY - scrollOffset);
-            this.refFlatlist.current?.scrollToOffset({ offset: newOffset, animated: true });
-        } else if (newY > this.tmpLayoutContainer.height - scrollOffset && scrollY < scrollYMax) {
-            const newOffset = Math.min(scrollYMax, scrollY + scrollOffset);
-            this.refFlatlist.current?.scrollToOffset({ offset: newOffset, animated: true });
         }
     };
 
     /** @param {GestureResponderEvent} _event */
     onTouchEnd = (_event) => {
         // Dragging ended & save new todoes order
-        this.setState({
-            scrollable: true,
-            draggedItem: null
-        });
+        this.props.changeScrollable(true);
+        this.setState({ draggedItem: null });
 
         // Save changes if todoes order changed (and not just a todo check)
         if (
@@ -233,10 +224,10 @@ class BackTodoList extends React.Component {
         ) {
             user.GlobalSave();
         }
-
-        // Reset tmpLayoutContainer
-        this.tmpLayoutContainer = null;
     };
 }
+
+BackTodoList.prototype.props = TodoListProps;
+BackTodoList.defaultProps = TodoListProps;
 
 export default BackTodoList;

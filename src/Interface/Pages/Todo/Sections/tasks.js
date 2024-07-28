@@ -54,11 +54,11 @@ class SectionTasks extends React.Component {
         user.interface.screenInput?.Open({
             label: lang['input-task-placeholder'],
             callback: (title) => {
-                if (!title) return;
+                if (!title || !title.trim()) return;
 
                 todo.tasks.push({
                     checked: false,
-                    title
+                    title: title.trim()
                 });
                 onChangeTodo(todo);
             }
@@ -78,9 +78,9 @@ class SectionTasks extends React.Component {
             label: lang['input-task-placeholder'],
             initialText: task.title,
             callback: (title) => {
-                if (!title) return;
+                if (!title || !title.trim()) return;
 
-                todo.tasks[index] = { ...task, title };
+                todo.tasks[index] = { ...task, title: title.trim() };
                 onChangeTodo(todo);
             }
         });

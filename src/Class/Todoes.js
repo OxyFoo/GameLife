@@ -9,6 +9,8 @@ import { GetGlobalTime } from 'Utils/Time';
  * @property {string} title
  */
 
+const MAX_TODOES = 10;
+
 class Todo {
     /** @type {number} Time in seconds or 0 if unchecked */
     checked = 0;
@@ -187,6 +189,10 @@ class Todoes {
         }
         this.UNSAVED_deletions = [];
         this.SAVED_sort = true;
+    };
+
+    IsMax = () => {
+        return this.Get().length >= MAX_TODOES;
     };
 
     /**
@@ -398,7 +404,7 @@ class Todoes {
      * @returns {number | null} Index of todo or null if not found
      */
     GetIndex(arr, todo) {
-        const index = arr.findIndex((a) => a.title === todo.title);
+        const index = arr.findIndex((a) => a.created === todo.created);
         if (index === -1) return null;
         return index;
     }

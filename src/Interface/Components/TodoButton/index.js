@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, TouchableOpacity } from 'react-native';
+import { View, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
@@ -9,35 +9,27 @@ import themeManager from 'Managers/ThemeManager';
 import { Text, Icon, Button, CheckBox } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
-/**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- *
- * @typedef {import('Class/Todoes').Todo} Todo
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- *
- * @typedef {Object} TodoPropsType
- * @property {StyleProp} style
- * @property {Todo | null} todo
- * @property {() => void} onDrag Icon to drag => onTouchStart event (todo only)
- * @property {(todo: Todo) => void} onCheck
- * @property {(todo: Todo, callbackRemove: (resolve: (cancel: () => void) => void) => void) => void} onRemove
- */
-
 class TodoButton extends TodoButtonBack {
     render() {
-        const { animElementY, animDeleteButtonX } = this.state;
-        const { style, todo, onDrag } = this.props;
+        const { animElementY, animDeleteButtonX, deadline } = this.state;
+        const { style, onLayout, todo } = this.props;
         if (todo === null) return null;
 
         const { title, checked } = todo;
+        const dateColor = (deadline !== null && deadline.deltaDays >= 0) || todo.checked ? 'main2' : 'danger';
 
         const styleAnimation = {
             transform: [{ translateY: WithInterpolation(animElementY, 0, -46) }]
         };
 
+        const styleIcon = {
+            opacity: WithInterpolation(animDeleteButtonX, 1, 0),
+            transform: [{ scale: WithInterpolation(animDeleteButtonX, 1, 0.8) }]
+        };
+
         const styleDeleteButton = {
-            transform: [{ translateX: WithInterpolation(animDeleteButtonX, 64, 0) }]
+            opacity: animDeleteButtonX,
+            transform: [{ translateX: WithInterpolation(animDeleteButtonX, 100, 0) }]
         };
 
         return (
@@ -49,61 +41,58 @@ class TodoButton extends TodoButtonBack {
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
+                onLayout={onLayout}
             >
-                <Button
-                    style={styles.buttonLeft}
-                    appearance='uniform'
-                    color='transparent'
-                    onPress={this.onCheck}
-                    onTouchStart={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                    }}
-                >
-                    <CheckBox value={checked !== 0} />
+                {/* Check button */}
+                <Button style={styles.checkButton} appearance='uniform' color='transparent' onPress={this.onCheck}>
+                    <CheckBox style={styles.checkbox} value={checked !== 0} />
                 </Button>
 
+                {/* Todo button (title + date + icon) */}
                 <Button
                     style={styles.buttonRight}
                     styleContent={styles.buttonRightContent}
                     appearance='uniform'
                     color='transparent'
                     onPress={this.openTodo}
+                    onTouchStart={this.onTouchStart}
+                    onTouchMove={this.onTouchMove}
+                    onTouchEnd={this.onTouchEnd}
+                    onTouchCancel={this.onTouchEnd}
                 >
-                    <View style={styles.contentLeft}>
-                        <Text style={styles.title}>{title}</Text>
+                    <View style={styles.titleView}>
+                        <Text style={styles.titleText} numberOfLines={2} ellipsizeMode='tail'>
+                            {title}
+                        </Text>
                     </View>
 
-                    <Animated.View style={[styles.contentRight, styleAnimation]}>
+                    <Animated.View style={[styles.todoContent, styleAnimation]}>
                         {/* Deadline */}
-                        <Text style={styles.dateText} color='main2'>
-                            {'[27/06/24]'}
-                        </Text>
-                        <Icon style={styles.dateIcon} icon='clock-outline' color='main2' />
+                        {deadline !== null && (
+                            <>
+                                <Text style={styles.todoDateText} color={dateColor}>
+                                    {deadline.text}
+                                </Text>
 
-                        <Icon icon='arrow-square' color='gradient' angle={90} />
+                                <Icon style={styles.todoDateIcon} icon='clock-outline' color={dateColor} />
+                            </>
+                        )}
 
-                        {/* {!!this.deadlineText.length && (
-                            <Text style={styles.dateText} color={this.colorText}>
-                                {this.deadlineText}
-                            </Text>
-                        )} */}
-
-                        {/* Drag&Drop button */}
-                        {/* <View onTouchStart={() => onDrag()}>
-                            <Icon icon='add-outline' color='main1' />
-                        </View> */}
-
-                        {/* Check button */}
-                        {/* <Button
-                            style={styles.trashButton}
-                            styleAnimation={styleDeleteButton}
-                            color={'backgroundCard'}
-                            onPress={this.onRemove}
-                        >
-                            <Icon icon='trash' color='danger' size={16} />
-                        </Button> */}
+                        <Animated.View style={styleIcon}>
+                            <Icon icon='arrow-square' color='gradient' angle={90} />
+                        </Animated.View>
                     </Animated.View>
+                </Button>
+
+                {/* Trash button */}
+                <Button
+                    style={styles.trashButton}
+                    styleAnimation={styleDeleteButton}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={this.onRemove}
+                >
+                    <Icon icon='trash' color='danger' size={24} />
                 </Button>
             </LinearGradient>
         );

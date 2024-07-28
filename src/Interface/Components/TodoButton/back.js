@@ -2,22 +2,23 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
-import { GetDate, GetGlobalTime } from 'Utils/Time';
-import { DateToFormatString } from 'Utils/Date';
+import { GetDate, GetGlobalTime, GetTimeToTomorrow } from 'Utils/Time';
+import { DateFormat } from 'Utils/Date';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Class/Todoes').Todo} Todo
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  *
  * @typedef {Object} TodoPropsType
  * @property {StyleProp} style
  * @property {Todo | null} todo
+ * @property {(event: LayoutChangeEvent) => void} onLayout
  * @property {() => void} onDrag Icon to drag => onTouchStart event (todo only)
  * @property {(todo: Todo) => void} onCheck
  * @property {(todo: Todo, callbackRemove: (resolve: (cancel: () => void) => void) => void) => void} onRemove
@@ -26,6 +27,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /** @type {TodoPropsType} */
 const TodoProps = {
     style: {},
+    onLayout: () => {},
     todo: null,
     onDrag: () => {},
     onCheck: () => {},
@@ -34,14 +36,17 @@ const TodoProps = {
 
 class TodoButtonBack extends React.Component {
     state = {
+        /** @type {{ deltaDays: number, text: string } | null} */
+        deadline: null,
         animElementY: new Animated.Value(0),
         animDeleteButtonX: new Animated.Value(0)
     };
 
-    deadlineText = '';
+    /** @type {number} Used to define start of onDrag event */
+    lastY = 0;
 
     /** @type {NodeJS.Timeout | null} */
-    timeoutDeleteButton = null;
+    timeout = null;
 
     /** @param {TodoProps} props */
     constructor(props) {
@@ -50,57 +55,81 @@ class TodoButtonBack extends React.Component {
         const { todo } = props;
         if (todo === null) return;
 
-        const { deadline: Deadline } = todo;
+        if (todo.checked) {
+            this.state.animDeleteButtonX.setValue(1);
+        }
+    }
 
+    componentDidMount() {
+        this.updateDate();
+    }
+
+    updateDate = () => {
+        const { todo } = this.props;
+        if (todo === null) return;
+
+        const { deadline } = todo;
         const now = GetGlobalTime();
 
         /** @type {number | null} Minimum number of days */
         let minDeltaDays = null;
 
         // Search next deadline (if earlier than schedule or no schedule)
-        if (Deadline > 0) {
-            const delta = (Deadline - now) / (60 * 60 * 24);
-            if (delta < minDeltaDays) {
+        if (deadline > 0) {
+            const delta = (deadline - now) / (60 * 60 * 24);
+            if (minDeltaDays === null || delta < minDeltaDays) {
                 minDeltaDays = delta;
-
-                // Define deadline text
-                const lang = langManager.curr['todoes'];
-                this.deadlineText = lang['todo-type-deadline'] + ' ' + DateToFormatString(GetDate(Deadline));
             }
         }
 
-        // Define color (red if overdue, orange if today, white otherwise)
-        /** @type {ThemeText} */
-        this.colorText = 'primary';
-        if (minDeltaDays !== null && minDeltaDays < 0) {
-            this.colorText = 'error';
-        } else if (minDeltaDays !== null && minDeltaDays < 1) {
-            this.colorText = 'warning';
+        if (minDeltaDays !== null) {
+            this.setState({
+                deadline: {
+                    deltaDays: minDeltaDays,
+                    text: DateFormat(GetDate(deadline), 'DD/MM/YYYY')
+                }
+            });
         }
-    }
+
+        if (this.timeout !== null) {
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(this.updateDate.bind(this), GetTimeToTomorrow() * 1000);
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onTouchStart = (event) => {
+        this.lastY = event.nativeEvent.pageY;
+        this.a = setTimeout(() => {
+            this.props.onDrag();
+        }, 300);
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onTouchMove = (event) => {
+        const deltaY = event.nativeEvent.pageY - this.lastY;
+        if (Math.abs(deltaY) > 10) {
+            clearTimeout(this.a);
+        }
+    };
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
+        clearTimeout(this.a);
+    };
 
     onCheck = () => {
         if (this.props.todo === null) return;
-
         this.props.onCheck(this.props.todo);
-        if (this.props.todo.checked) {
-            SpringAnimation(this.state.animDeleteButtonX, 1).start();
-            this.timeoutDeleteButton = setTimeout(() => {
-                SpringAnimation(this.state.animDeleteButtonX, 0).start();
-            }, 5000);
-        } else {
-            SpringAnimation(this.state.animDeleteButtonX, 0).start();
-            if (this.timeoutDeleteButton !== null) {
-                clearTimeout(this.timeoutDeleteButton);
-                this.timeoutDeleteButton = null;
-            }
-        }
+
+        // Animate delete button
+        const toValue = this.props.todo.checked ? 1 : 0;
+        SpringAnimation(this.state.animDeleteButtonX, toValue).start();
     };
 
     onRemove = () => {
         const { todo } = this.props;
         const { animElementY } = this.state;
-
         if (todo === null) return;
 
         this.props.onRemove(todo, (resolve) => {
@@ -117,9 +146,7 @@ class TodoButtonBack extends React.Component {
         const { todo } = this.props;
         if (todo === null) return;
 
-        if (todo !== null) {
-            user.interface.ChangePage('todo', { args: { todo } });
-        }
+        user.interface.ChangePage('todo', { args: { todo } });
     };
 }
 

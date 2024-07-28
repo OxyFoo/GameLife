@@ -76,16 +76,15 @@ function WithFunction(func, steps = 50, max = 1) {
  * @param {Animated.Value} animation Animated value to interpolate (0 to 1)
  * @param {number} minValue Correspond to inputRange[0]
  * @param {number} maxValue Correspond to inputRange[1]
+ * @param {Animated.ExtrapolateType} [extrapolate]
  */
-function WithInterpolation(animation, minValue, maxValue) {
+function WithInterpolation(animation, minValue, maxValue, extrapolate) {
     return animation.interpolate({
         inputRange: [0, 1],
-        outputRange: [minValue, maxValue]
+        outputRange: [minValue, maxValue],
+        extrapolate: extrapolate
     });
 }
 
-export {
-    TimingAnimation, SpringAnimation, CircularAnimation,
-    WithFunction, WithInterpolation
-};
+export { TimingAnimation, SpringAnimation, CircularAnimation, WithFunction, WithInterpolation };
 export default () => {};

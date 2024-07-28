@@ -8,83 +8,69 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
-    buttonLeft: {
+    checkButton: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
         width: 'auto',
-        paddingVertical: 8,
-        paddingHorizontal: 8
+        paddingVertical: 12,
+        paddingHorizontal: 14,
+        justifyContent: 'center',
+        zIndex: 1,
+        elevation: 1
+    },
+    checkbox: {
+        width: 24
     },
 
     buttonRight: {
-        flex: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 6
+        paddingVertical: 6,
+        paddingLeft: 56,
+        paddingRight: 12
     },
     buttonRightContent: {
         flexDirection: 'row',
+        flexWrap: 'nowrap',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
 
-    contentLeft: {
-        flexDirection: 'row',
-        alignItems: 'center'
+    titleView: {
+        flex: 1
     },
-    title: {
+    titleText: {
+        fontSize: 16,
+        textAlign: 'left'
+    },
+
+    todoContent: {
+        paddingLeft: 4,
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'flex-end'
     },
 
-    contentRight: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-
-    dateText: {
+    todoDateText: {
         marginRight: 4,
-        fontSize: 16
+        fontSize: 14,
+        textAlign: 'right'
     },
-    dateIcon: {
+    todoDateIcon: {
         marginRight: 12
     },
+
     trashButton: {
         position: 'absolute',
         top: 0,
         right: 0,
         bottom: 0,
-        width: 32,
-        height: 'auto'
-    },
-
-    // Tasks
-    parentTask: {
-        marginTop: 14,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    input: {
-        flex: 1,
-        height: '100%',
-        borderColor: '#fff',
-        borderRightWidth: 1,
-        borderBottomWidth: 1,
-        borderBottomRightRadius: 8
-    },
-
-    // Selection
-    selection: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        paddingVertical: 4,
-        marginHorizontal: 12,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-        backgroundColor: '#00000080',
-        zIndex: 10
-    },
-    selectionTodo: {
-        marginTop: 0
+        width: 'auto',
+        paddingVertical: 0,
+        paddingLeft: 12,
+        paddingRight: 12,
+        justifyContent: 'center'
     }
 });
 

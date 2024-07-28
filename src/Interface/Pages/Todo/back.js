@@ -1,14 +1,13 @@
-import { Keyboard } from 'react-native';
+import { Animated, Keyboard } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Class/Todoes').Todo} Todo
- *
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
- * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  *
  * @typedef {'new' | 'edit' | 'remove'} States
  */
@@ -22,17 +21,8 @@ const BackTodoProps = {
 
 class BackTodo extends PageBase {
     state = {
-        title: langManager.curr['todo']['title-new'],
-
         /** @type {States} */
         action: 'new',
-        button: {
-            /** @type {string} */
-            text: langManager.curr['todo']['button-add'],
-
-            /** @type {ThemeColor | ThemeText} */
-            color: 'main2'
-        },
 
         /** @type {string | null} Error message to display */
         error: null,
@@ -45,7 +35,10 @@ class BackTodo extends PageBase {
             checked: 0,
             deadline: 0,
             created: 0
-        }
+        },
+
+        editButtonHeight: 0,
+        animEditButton: new Animated.Value(0)
     };
 
     /** @param {BackTodoProps} props */
@@ -55,23 +48,15 @@ class BackTodo extends PageBase {
         /** @type {Todo | null} */
         const todo = this.props.args?.todo || null;
 
-        if (todo === null) {
-            user.interface.BackHandle();
-            user.interface.console?.AddLog('error', 'Todo: Todo not found');
-            return;
+        if (todo !== null) {
+            this.state = {
+                ...this.state,
+
+                action: 'remove',
+                tempTodo: { ...todo, tasks: [...todo.tasks] },
+                error: null
+            };
         }
-
-        this.state = {
-            title: langManager.curr['todo']['title'],
-            action: 'remove',
-            button: {
-                text: langManager.curr['todo']['button-remove'],
-                color: 'danger'
-            },
-
-            tempTodo: { ...todo, tasks: [...todo.tasks] },
-            error: null
-        };
     }
 
     componentDidFocused = () => {
@@ -80,6 +65,12 @@ class BackTodo extends PageBase {
 
     onBackPress = () => {
         user.interface.BackHandle();
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onEditButtonLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ editButtonHeight: height });
     };
 
     /**
@@ -117,24 +108,41 @@ class BackTodo extends PageBase {
         return false;
     };
 
+    isEdited = () => {
+        const todo = this.props.args?.todo || null;
+        const { tempTodo } = this.state;
+        if (todo === null || tempTodo === null) {
+            return false;
+        }
+
+        const oldTasks = todo.tasks.map((t) => Object.values(t).join('-')).join(',');
+        const newTasks = tempTodo.tasks.map((t) => Object.values(t).join('-')).join(',');
+
+        return (
+            todo.title !== tempTodo.title ||
+            todo.description !== tempTodo.description ||
+            todo.deadline !== tempTodo.deadline ||
+            oldTasks !== newTasks
+        );
+    };
+
     /** @param {Todo} todo */
     onChangeTodo = (todo) => {
+        const { action, animEditButton } = this.state;
         const titleError = this.checkTitleErrors(todo.title);
 
-        if (this.state.action === 'edit') {
+        if (action === 'edit' || action === 'remove') {
+            const edited = this.isEdited();
             this.setState({
+                action: edited ? 'edit' : 'remove',
                 tempTodo: { ...todo },
                 error: titleError
             });
+            SpringAnimation(animEditButton, edited ? 1 : 0).start();
             return;
         }
 
         this.setState({
-            action: 'edit',
-            button: {
-                text: langManager.curr['todo']['button-save'],
-                color: 'success'
-            },
             tempTodo: { ...todo },
             error: titleError
         });
@@ -148,14 +156,14 @@ class BackTodo extends PageBase {
         const lang = langManager.curr['todo'];
         const todo = this.props.args?.todo || null;
 
-        if (title === null || todo === null) {
+        if (title.trim().length <= 0) {
             return lang['error-title-empty'];
         }
 
         /** @type {string | null} */
         let message = null;
 
-        const titleIsCurrent = title === todo.title;
+        const titleIsCurrent = title === todo?.title;
         const titleUsed = user.todoes.Get().some((t) => t.title === title);
 
         if (title.trim().length <= 0) {
@@ -167,31 +175,13 @@ class BackTodo extends PageBase {
         return message;
     };
 
-    onButtonPress = () => {
-        const { action } = this.state;
-
-        switch (action) {
-            case 'new':
-                this.addTodo();
-                break;
-            case 'edit':
-                this.editTodo();
-                break;
-            case 'remove':
-                this.removeTodo();
-                break;
-            default:
-                user.interface.console?.AddLog('error', 'Todo: Unknown action');
-        }
-    };
-
     addTodo = () => {
         const { title, description, deadline, tasks } = this.state.tempTodo;
         if (this.checkTitleErrors(title)) {
             return;
         }
 
-        const addition = user.todoes.Add(title, description, deadline, tasks);
+        const addition = user.todoes.Add(title.trim(), description, deadline, tasks);
         if (!addition) {
             user.interface.console?.AddLog('warn', 'Todo: Todo already exist, cannot add');
             return;
@@ -214,7 +204,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const edition = user.todoes.Edit(todo, title, description, deadline, tasks);
+        const edition = user.todoes.Edit(todo, title.trim(), description, deadline, tasks);
         if (!edition) {
             user.interface.console?.AddLog('warn', 'Todo: Todo not exist, cannot edit');
             return;

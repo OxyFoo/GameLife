@@ -1,48 +1,48 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { Animated, View, FlatList } from 'react-native';
 
 import styles from './style';
 import BackTodoList from './back';
-//import TodoSelection from './Elements/todoSelection';
 
 import langManager from 'Managers/LangManager';
 
 import { Button, Text, TodoButton } from 'Interface/Components';
 
 /**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- *
  * @typedef {import('Class/Todoes').Todo} Todo
- * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
-const TodoListProps = {
-    /** @type {StyleProp} Style of todoes container */
-    style: {}
-};
-
-class TodoAdvancedList extends BackTodoList {
+class TodoList extends BackTodoList {
     render() {
+        const { style } = this.props;
         const { todoes, draggedItem, mouseY } = this.state;
 
         return (
-            <>
-                {/* <TodoSelection draggedItem={draggedItem} mouseY={mouseY} /> */}
+            <View style={style}>
+                {draggedItem !== null && (
+                    <Animated.View
+                        style={[styles.selection, { transform: [{ translateY: mouseY }] }]}
+                        pointerEvents='none'
+                    >
+                        <TodoButton style={styles.selectionTodo} todo={draggedItem} />
+                    </Animated.View>
+                )}
 
                 <FlatList
                     ref={this.refFlatlist}
-                    onScroll={this.onScroll}
+                    data={todoes}
+                    extraData={draggedItem}
+                    keyExtractor={this.keyExtractor}
+                    renderItem={this.renderItem}
+                    onLayout={this.onLayout}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}
-                    data={todoes}
-                    scrollEnabled={false}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
+                    onTouchCancel={this.onTouchEnd}
                     ListEmptyComponent={this.renderEmpty}
+                    scrollEnabled={false}
                 />
-            </>
+            </View>
         );
     }
 
@@ -57,7 +57,8 @@ class TodoAdvancedList extends BackTodoList {
 
         return (
             <TodoButton
-                style={styleOpacity}
+                style={[styles.todoButton, styleOpacity]}
+                onLayout={this.onLayoutItem}
                 todo={item}
                 onCheck={this.onTodoCheck}
                 onRemove={this.onTodoRemove}
@@ -80,7 +81,4 @@ class TodoAdvancedList extends BackTodoList {
     };
 }
 
-TodoAdvancedList.prototype.props = TodoListProps;
-TodoAdvancedList.defaultProps = TodoListProps;
-
-export { TodoAdvancedList };
+export { TodoList };

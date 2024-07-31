@@ -119,9 +119,12 @@ class InputText extends InputTextBack {
                     ]}
                     pointerEvents={'none'}
                 >
-                    <Text color={textColor} fontSize={16} onLayout={this.onTextLayout}>
-                        {label}
-                    </Text>
+                    {/* Hide title when empty to hide empty space on iOS */}
+                    {label.length > 0 && (
+                        <Text color={textColor} fontSize={16} onLayout={this.onTextLayout}>
+                            {label}
+                        </Text>
+                    )}
                 </Animated.View>
 
                 {/* Input */}

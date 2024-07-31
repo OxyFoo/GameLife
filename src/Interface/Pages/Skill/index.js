@@ -58,11 +58,17 @@ class Skill extends BackSkill {
 
                     {/* Level and XP bar */}
                     <View style={styles.levelContainer}>
-                        <ProgressBar color='main1' value={this.skill.xp} maxValue={this.skill.next} />
-                        <View style={styles.levelsView}>
-                            <Text>{this.skill.level}</Text>
-                            <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
-                        </View>
+                        {this.skill.earnXp > 0 ? (
+                            <>
+                                <ProgressBar color='main1' value={this.skill.xp} maxValue={this.skill.next} />
+                                <View style={styles.levelsView}>
+                                    <Text>{this.skill.level}</Text>
+                                    <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
+                                </View>
+                            </>
+                        ) : (
+                            <Text>{lang['text-no-xp']}</Text>
+                        )}
                     </View>
 
                     {/* KPI place */}
@@ -94,7 +100,14 @@ class Skill extends BackSkill {
 
                 {/* Absolute add button */}
                 {this.skill.enabled && (
-                    <Button style={styles.addActivity} onPress={this.addActivity} icon='add-outline' iconSize={30} />
+                    <Button
+                        style={styles.addActivity}
+                        appearance='uniform'
+                        color='main2'
+                        onPress={this.addActivity}
+                        icon='add-outline'
+                        iconSize={30}
+                    />
                 )}
             </>
         );

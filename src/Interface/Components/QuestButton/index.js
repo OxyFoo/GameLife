@@ -4,32 +4,15 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import QuestButtonBack from './back';
-import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Icon, Button } from 'Interface/Components';
 
 class QuestButton extends QuestButtonBack {
     render() {
-        const langTimes = langManager.curr['dates']['names'];
-        const { streakCount } = this.state;
+        const { timeText, streakCount } = this.state;
         const { style, quest } = this.props;
         if (quest === null) return null;
-
-        const timeHour = Math.floor(quest.schedule.duration / 60);
-        const timeMinute = quest.schedule.duration % 60;
-
-        const { title } = quest;
-        let titleText = `${title.length > 10 ? title.slice(0, 12) + '...' : title}`;
-        let timeText = '';
-        if (timeHour > 0 || timeMinute > 0) {
-            if (timeHour > 0) {
-                timeText += `${timeHour}${langTimes['hours-min']}`;
-            }
-            if (timeMinute > 0) {
-                timeText += ` ${timeMinute}${langTimes['minutes-min']}`;
-            }
-        }
 
         return (
             <LinearGradient
@@ -44,11 +27,11 @@ class QuestButton extends QuestButtonBack {
                 <Button style={styles.content} appearance='uniform' color='transparent' onPress={this.openQuest}>
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>
-                            <Text style={styles.title}>{titleText}</Text>
+                            <Text style={styles.title}>{quest.title}</Text>
                         </View>
                         <View style={styles.headerStreak}>
                             <Text style={styles.streakText2} color='main1'>
-                                {'0 / ' + timeText}
+                                {timeText}
                             </Text>
                             <Text style={styles.streakText} color='main2'>
                                 {streakCount.toString()}

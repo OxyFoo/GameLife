@@ -56,7 +56,7 @@ class BackNews extends React.Component {
                 const news = dataManager.news.news;
                 this.state.pagesNews.push(...news);
             } catch (e) {
-                user.interface.console.AddLog('error', 'News loading failed: ' + e);
+                user.interface.console?.AddLog('error', 'News loading failed: ' + e);
             }
         }
     }
@@ -80,7 +80,9 @@ class BackNews extends React.Component {
     /** @param {Array<MyQuest>} newQuests */
     updateMyQuests = (newQuests) => {
         const quests = newQuests
-            .filter((quest) => user.quests.myquests.GetDays(quest).find((d) => d.isToday && d.state === 'filling'))
+            .filter((quest) =>
+                user.quests.myquests.GetDays(quest).find((d) => d.state === 'today' && (d.fillingValue ?? 0) < 1)
+            )
             .slice(0, 2);
         this.setState({ quests });
     };

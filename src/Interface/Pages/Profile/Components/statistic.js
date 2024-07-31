@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     view: {
         flexDirection: 'row',
         alignItems: 'center',
+        paddingRight: 8,
         marginHorizontal: 24,
         marginBottom: 12
     },

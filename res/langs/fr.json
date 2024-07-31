@@ -182,7 +182,7 @@
             "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
             "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
         },
-        "loading-error-button": "Quitter"
+        "loading-error-button": "Redémarrer"
     },
 
     "navbar": {
@@ -298,6 +298,7 @@
     "activity": {
         "title-activity": "Choisir mon activité",
         "title-category": "Toutes les catégories",
+        "title-preselected": "Activités sélectionnées",
         "title-start-now": "Démarrer maintenant",
         "title-add": "Ajouter",
         "title-edit": "Modifier",
@@ -788,6 +789,7 @@
         "title": "Compétence",
         "text-author": "Une idée de {}",
         "text-unallocated": "Compétence désafectée",
+        "text-no-xp": "Cette activité ne rapporte pas d'expérience",
         "stats-title": "Statistiques",
         "informations-title": "Informations",
         "history-title": "Historique",
@@ -936,6 +938,9 @@
     },
 
     "quest-stats": {
+        "title-current-week": "Semaine en cours",
+        "title-heatmap": "Résultats",
+        "button-add-activity": "Ajouter une activité",
         "tuto": {
             "1": "Ici tu peux voir le nom de ta quête et les activités concernées, tu peux cliquer dessus pour la modifier.",
             "2": "Là c'est la série actuelle, c'est le nombre de jours consécutifs où tu as réalisé ta quête.",
@@ -951,8 +956,8 @@
         "alert-questslimit-message": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
 
         "current-streak": "Série actuelle",
-        "heatmap-title-weeks": "Réalisation par semaine",
-        "heatmap-title-days": "Réalisation par jour",
+        "heatmap-title-day": "Jour",
+        "heatmap-title-week": "Semaine",
 
         "tuto": {
             "1": "Ici, ce sont les quêtes ! Des missions que tu peux TE donner pour t'aider à te motiver.",

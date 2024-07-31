@@ -26,7 +26,7 @@ const StreakChartProps = {
 
     /** @type {number} */
     strokeWidth: 30
-}
+};
 
 class StreakChartBack extends React.Component {
     state = {
@@ -35,25 +35,26 @@ class StreakChartBack extends React.Component {
         progressBar: null,
         filledSemiCircle: null,
         renderTexts: null,
-        strokeDasharray: null,
-    }
+        strokeDasharray: null
+    };
 
     /** @param {StreakChartProps} props */
     constructor(props) {
         super(props);
 
-        const newState = this.compute(false);
         this.state = {
             ...this.state,
-            ...newState,
+            ...this.compute(false)
         };
     }
 
     /** @param {StreakChartProps} nextProps */
     shouldComponentUpdate(nextProps) {
-        if (nextProps.currentStreak !== this.props.currentStreak ||
+        if (
+            nextProps.currentStreak !== this.props.currentStreak ||
             nextProps.bestStreak !== this.props.bestStreak ||
-            nextProps.overValue !== this.props.overValue) {
+            nextProps.overValue !== this.props.overValue
+        ) {
             return true;
         }
 
@@ -65,20 +66,20 @@ class StreakChartBack extends React.Component {
     }
 
     compute(update = true) {
-        // So we don't have 120% or something like that 
+        // So we don't have 120% or something like that
         let bestStreak = this.props.bestStreak;
         if (this.props.currentStreak >= bestStreak) {
             bestStreak = this.props.currentStreak + this.props.overValue;
         }
 
-        // Compute the progress bar 
+        // Compute the progress bar
         const radius = (this.props.size - this.props.strokeWidth) / 2;
         const circumference = Math.PI * radius;
         const filling = (this.props.currentStreak / bestStreak) * circumference;
         const strokeDasharray = `${filling} ${circumference}`;
 
         // Compute the center item with text and background
-        const strokeWidthText = 30
+        const strokeWidthText = 30;
         const cornerRadius = 15;
 
         const textX = this.props.size / 2;
@@ -109,7 +110,7 @@ class StreakChartBack extends React.Component {
             M ${textX - strokeWidthText},${textY}
             a ${strokeWidthText},${strokeWidthText} 0 0,1 ${strokeWidthText * 2},0
             a ${cornerRadius},${cornerRadius} 0 0,1 ${-cornerRadius},${cornerRadius}
-            h ${-((strokeWidthText * 2) - (cornerRadius * 2))}
+            h ${-(strokeWidthText * 2 - cornerRadius * 2)}
             a ${cornerRadius},${cornerRadius} 0 0,1 ${-cornerRadius},${-cornerRadius}
             Z
         `;

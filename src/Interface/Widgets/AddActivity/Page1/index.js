@@ -19,7 +19,15 @@ import { Text, IconCheckable, InputText, Button, Icon } from 'Interface/Componen
 class AddActivityPage1 extends BackActivityPage1 {
     render() {
         const lang = langManager.curr['activity'];
+        const { listSkillsIDs } = this.props;
         const { searchEnabled, skillSearch, animSearch, skills, selectedCategory, inputText } = this.state;
+
+        let title = lang['title-category'];
+        if (listSkillsIDs.length > 0) {
+            title = lang['title-preselected'];
+        } else if (selectedCategory !== null) {
+            title = this.categoriesNames[selectedCategory];
+        }
 
         /** @type {StyleProp} */
         const animSearchTitle = {
@@ -80,7 +88,7 @@ class AddActivityPage1 extends BackActivityPage1 {
                 {/* Categories */}
                 <View style={styles.categoriesContainer}>{this.allCategoriesItems.map(this.renderCategory)}</View>
                 <Text style={styles.secondaryTitleText} color='light'>
-                    {selectedCategory === null ? lang['title-category'] : this.categoriesNames[selectedCategory]}
+                    {title}
                 </Text>
 
                 {/* Activities List */}

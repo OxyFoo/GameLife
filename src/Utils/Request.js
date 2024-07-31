@@ -1,8 +1,8 @@
 import Config from 'react-native-config';
 
 const defaultHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
 };
 
 class ReqResponse {

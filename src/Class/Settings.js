@@ -26,7 +26,7 @@ class Settings {
     onboardingWatched = false;
     testMessageReaded = false;
     tutoFinished = false;
-    questHeatMap = false;
+    questHeatMapIndex = 0;
 
     morningNotifications = true;
     eveningNotifications = true;
@@ -37,7 +37,7 @@ class Settings {
         this.email = '';
         this.connected = false;
         this.testMessageReaded = false;
-        this.questHeatMap = false;
+        this.questHeatMapIndex = 0;
 
         this.morningNotifications = true;
         this.eveningNotifications = true;
@@ -62,7 +62,7 @@ class Settings {
         if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
         if (contains('testMessageReaded')) this.testMessageReaded = settings['testMessageReaded'];
         if (contains('tutoFinished')) this.tutoFinished = settings['tutoFinished'];
-        if (contains('questHeatMap')) this.questHeatMap = settings['questHeatMap'];
+        if (contains('questHeatMapIndex')) this.questHeatMapIndex = settings['questHeatMapIndex'];
         if (contains('morningNotifications')) this.morningNotifications = settings['morningNotifications'];
         if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
         if (contains('musicLinks')) this.musicLinks = settings['musicLinks'];
@@ -79,7 +79,7 @@ class Settings {
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
-            questHeatMap: this.questHeatMap,
+            questHeatMapIndex: this.questHeatMapIndex,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
             musicLinks: this.musicLinks

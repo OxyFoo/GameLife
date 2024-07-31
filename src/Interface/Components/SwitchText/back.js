@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
 import user from 'Managers/UserManager';
 
@@ -43,8 +43,17 @@ class SwitchTextBack extends React.Component {
 
     last = 0;
 
+    /** @param {SwitchTextPropsType} props */
+    constructor(props) {
+        super(props);
+
+        // Approximate parent width to avoid glitches on first render
+        const { width } = Dimensions.get('window');
+        this.state.parentWidth = width * 0.9;
+    }
+
     /**
-     * @param {SwitchTextProps} nextProps
+     * @param {SwitchTextPropsType} nextProps
      * @param {SwitchTextBack['state']} nextState
      */
     shouldComponentUpdate(nextProps, nextState) {
@@ -55,12 +64,12 @@ class SwitchTextBack extends React.Component {
         );
     }
 
-    /** @param {SwitchTextProps} prevProps */
+    /** @param {SwitchTextPropsType} prevProps */
     componentDidUpdate(prevProps) {
         const { value } = this.props;
         if (prevProps.value !== this.props.value) {
             if (value < 0 || value >= this.props.texts.length) {
-                user.interface.console.AddLog('warn', 'TextSwitch value is out of bounds');
+                user.interface.console?.AddLog('warn', 'TextSwitch value is out of bounds');
                 return;
             }
 

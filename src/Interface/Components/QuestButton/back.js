@@ -24,7 +24,7 @@ const QuestProps = {
 
 class QuestButtonBack extends React.Component {
     state = {
-        /** @type {number} */
+        timeText: '',
         streakCount: 0
     };
 
@@ -33,6 +33,7 @@ class QuestButtonBack extends React.Component {
         super(props);
 
         if (props.quest !== null) {
+            this.state.timeText = user.quests.myquests.GetQuestTimeText(props.quest);
             this.state.streakCount = user.quests.myquests.GetStreak(props.quest);
         }
     }
@@ -44,7 +45,9 @@ class QuestButtonBack extends React.Component {
         this.listenerActivities = user.activities.allActivities.AddListener(() => {
             const { quest } = this.props;
             if (quest === null) return;
+
             this.setState({
+                timeText: user.quests.myquests.GetQuestTimeText(quest),
                 streakCount: user.quests.myquests.GetStreak(quest)
             });
         });
@@ -56,11 +59,13 @@ class QuestButtonBack extends React.Component {
 
     /**
      * @param {QuestProps} nextProps
-     * @param {this['state']} _nextState
+     * @param {this['state']} nextState
      */
-    shouldComponentUpdate(nextProps, _nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
         // Check if quest changed
         if (
+            this.state.timeText !== nextState.timeText ||
+            this.state.streakCount !== nextState.streakCount ||
             this.props.quest?.title !== nextProps.quest?.title ||
             JSON.stringify(this.props.quest?.skills) !== JSON.stringify(nextProps.quest?.skills) ||
             JSON.stringify(this.props.quest?.schedule) !== JSON.stringify(nextProps.quest?.schedule)
@@ -75,10 +80,7 @@ class QuestButtonBack extends React.Component {
         const { quest } = this.props;
         if (quest === null) return;
 
-        user.interface.ChangePage('myqueststats', {
-            args: { quest },
-            storeInHistory: false
-        });
+        user.interface.ChangePage('myqueststats', { args: { quest } });
     };
 }
 

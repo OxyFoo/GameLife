@@ -1,11 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    todoesContainer: {
-        padding: 28,
-        paddingTop: 14
-    },
     todoButton: {
+        minHeight: 46,
         marginBottom: 8
     },
 

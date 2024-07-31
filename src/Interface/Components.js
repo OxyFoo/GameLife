@@ -3,6 +3,7 @@ export { Button } from './Components/Button';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
 export { Digit } from './Components/Digit';
+export { HeatMap } from './Components/HeatMap';
 export { Icon } from './Components/Icon';
 export { IconCheckable } from './Components/IconCheckable';
 export { InputText } from './Components/InputText';
@@ -21,8 +22,6 @@ import Container from './OldComponents/Container';
 import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
-import DayClock from './OldComponents/DayClock';
-import HeatMap from './OldComponents/HeatMap';
 import OldIcon from './OldComponents/Icon';
 import KeyboardSpacerView from './OldComponents/KeyboardSpacerView';
 import LineChartSvg from './OldComponents/LineChartSvg';
@@ -38,8 +37,6 @@ export {
     Container,
     Frame,
     Character,
-    DayClock,
-    HeatMap,
     KeyboardSpacerView,
     LineChartSvg,
     PieChart,

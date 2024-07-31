@@ -22,7 +22,9 @@ class StreakChart extends StreakChartBack {
 
         return (
             <View style={this.props.style}>
-                <Text style={styles.text} fontSize={18} bold>{title}</Text>
+                <Text style={styles.text} fontSize={18}>
+                    {title}
+                </Text>
 
                 <Svg width={this.props.size} height={this.props.height}>
                     <Defs>
@@ -33,7 +35,7 @@ class StreakChart extends StreakChartBack {
                     </Defs>
 
                     {/* Dotted line linking central KPI and progress bar  */}
-                    {this.state.dottedLine &&
+                    {this.state.dottedLine && (
                         <Path
                             d={this.state.dottedLine}
                             fill='none'
@@ -41,10 +43,11 @@ class StreakChart extends StreakChartBack {
                             strokeWidth={2}
                             strokeDasharray='5, 5' // This creates a pattern of 5px dash and 5px gap
                             strokeLinecap='round'
-                        />}
+                        />
+                    )}
 
                     {/* Background progress bar */}
-                    {this.state.backgroundProgressBar &&
+                    {this.state.backgroundProgressBar && (
                         <Path
                             d={this.state.backgroundProgressBar}
                             fill='none'
@@ -52,10 +55,11 @@ class StreakChart extends StreakChartBack {
                             strokeWidth={this.props.strokeWidth}
                             strokeLinecap='round'
                             transform={`rotate(270 ${this.props.size / 2} ${this.props.size / 2})`}
-                        />}
+                        />
+                    )}
 
                     {/* Progress bar */}
-                    {this.state.progressBar &&
+                    {this.state.progressBar && (
                         <Path
                             d={this.state.progressBar}
                             fill='none'
@@ -65,16 +69,12 @@ class StreakChart extends StreakChartBack {
                             strokeLinecap='round'
                             transform={`rotate(270 ${this.props.size / 2} ${this.props.size / 2})`}
                         />
-                    }
+                    )}
 
                     {/* Filled semi-circle for the current streak number background */}
-                    {this.state.filledSemiCircle &&
-                        <Path
-                            d={this.state.filledSemiCircle}
-                            fill='url(#progressGradient)'
-                        />
-                    }
-
+                    {this.state.filledSemiCircle && (
+                        <Path d={this.state.filledSemiCircle} fill='url(#progressGradient)' />
+                    )}
 
                     {/* Text element for current streak number */}
                     <TextSVG
@@ -101,14 +101,8 @@ class StreakChart extends StreakChartBack {
                     </TextSVG>
 
                     {/* Text for 'current streak' */}
-                    <TextSVG
-                        x={centerTextX}
-                        y={bottomTextY}
-                        textAnchor='middle'
-                        fill='white'
-                        fontSize='14'
-                    >
-                        {langManager.curr['quests']['currSteak']}
+                    <TextSVG x={centerTextX} y={bottomTextY} textAnchor='middle' fill='white' fontSize='14'>
+                        {langManager.curr['quests']['current-streak']}
                     </TextSVG>
 
                     {/* Text for '208' */}
@@ -124,7 +118,6 @@ class StreakChart extends StreakChartBack {
                     </TextSVG>
                 </Svg>
             </View>
-
         );
     }
 }

@@ -19,7 +19,6 @@ import StatsBars from './Widgets/StatsBars';
 import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TodayPieChart from './Widgets/TodayPieChart';
-import YearHeatMap from './Widgets/YearHeatMap';
 import ZapGPT from './Widgets/ZapGPT';
 
 export {
@@ -38,6 +37,5 @@ export {
     SkillChart,
     SkillsGroup,
     TodayPieChart,
-    YearHeatMap,
     ZapGPT
 };

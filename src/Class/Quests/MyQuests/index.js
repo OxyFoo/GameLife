@@ -1,3 +1,5 @@
+import langManager from 'Managers/LangManager';
+
 import DynamicVar from 'Utils/DynamicVar';
 import { Sum } from 'Utils/Functions';
 import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
@@ -6,20 +8,22 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {'week' | 'month'} RepeatModes
  * @typedef {'title-empty' | 'title-exists' | 'skills-empty' | 'schedule-empty'} InputsError
- * 
+ *
  * @typedef {object} Schedule
  * @property {RepeatModes} type
  * @property {Array<number>} repeat
  * @property {number} duration In minutes
- * 
- * @typedef {'normal' | 'full' | 'filling' | 'disabled'} DayClockStates
- * 
+ *
+ * @typedef {'past' | 'today' | 'future' | 'disabled'} DayClockStates
+ *
  * @typedef {object} DayType
  * @property {number} day
- * @property {boolean} isToday
  * @property {DayClockStates} state
- * @property {number} [fillingValue] Only used if state === 'filling'
+ * @property {number} [fillingValue] Value between 0 and 1, Only used if state is 'past' or 'today'
  */
+
+/** @type {Array<MyQuest>} */
+const EMPTY_QUESTS = [];
 
 class MyQuest {
     /** @type {string} Quest title with max 128 characters */
@@ -72,7 +76,7 @@ class MyQuests {
      * @description All quests (saved and unsaved)
      * @type {DynamicVar<Array<MyQuest>>}
      */
-    allQuests = new DynamicVar([]);
+    allQuests = new DynamicVar(EMPTY_QUESTS);
 
     Clear() {
         this.SAVED_quests = [];
@@ -83,20 +87,20 @@ class MyQuests {
         this.allQuests.Set([]);
     }
     Load(data) {
-        const contains = (key) => data.hasOwnProperty(key);
-        if (contains('quests'))     this.SAVED_quests = data['quests'];
-        if (contains('additions'))  this.UNSAVED_additions = data['additions'];
-        if (contains('deletions'))  this.UNSAVED_deletions = data['deletions'];
-        if (contains('sort'))       this.sort = data['sort'];
-        if (contains('sortSaved'))  this.SAVED_sort = data['sortSaved'];
+        const contains = (key = '') => data.hasOwnProperty(key);
+        if (contains('quests')) this.SAVED_quests = data['quests'];
+        if (contains('additions')) this.UNSAVED_additions = data['additions'];
+        if (contains('deletions')) this.UNSAVED_deletions = data['deletions'];
+        if (contains('sort')) this.sort = data['sort'];
+        if (contains('sortSaved')) this.SAVED_sort = data['sortSaved'];
         this.allQuests.Set(this.Get());
     }
     LoadOnline(data) {
-        if (typeof(data) !== 'object') return;
-        const contains = (key) => data.hasOwnProperty(key);
+        if (typeof data !== 'object') return;
+        const contains = (key = '') => data.hasOwnProperty(key);
         if (contains('data')) {
-            this.SAVED_quests = data['data'].map(quest => Object.assign(new MyQuest(), quest));
-            this.user.interface.console.AddLog('info', `${this.SAVED_quests.length} quests loaded`);
+            this.SAVED_quests = data['data'].map((quest) => Object.assign(new MyQuest(), quest));
+            this.user.interface.console?.AddLog('info', `${this.SAVED_quests.length} quests loaded`);
             this.allQuests.Set(this.Get());
         }
         if (contains('sort')) this.sort = data['sort'];
@@ -116,27 +120,25 @@ class MyQuests {
      * @returns {Array<MyQuest>}
      */
     Get() {
-        let quests = [ ...this.SAVED_quests, ...this.UNSAVED_additions ];
+        let quests = [...this.SAVED_quests, ...this.UNSAVED_additions];
 
         // Add new quests at the top (use created time as index)
-        quests.forEach(quest => {
-            if (this.sort.findIndex(created => quest.created === created) === -1) {
+        quests.forEach((quest) => {
+            if (this.sort.findIndex((created) => quest.created === created) === -1) {
                 this.sort.splice(0, 0, quest.created);
                 this.SAVED_sort = false;
             }
         });
 
         // Remove deleted quests from sort
-        this.sort = this.sort.filter(created => {
-            const index = quests.findIndex(quest => quest.created === created);
+        this.sort = this.sort.filter((created) => {
+            const index = quests.findIndex((quest) => quest.created === created);
             if (index !== -1) return true;
             this.SAVED_sort = false;
             return false;
         });
 
-        return this.sort.map(created =>
-            quests.find(quest => quest.created === created)
-        );
+        return this.sort.map((created) => quests.find((quest) => quest.created === created));
     }
 
     IsUnsaved = () => {
@@ -147,7 +149,7 @@ class MyQuests {
             return true;
         }
         return false;
-    }
+    };
     GetUnsaved = () => {
         const data = {};
 
@@ -168,7 +170,7 @@ class MyQuests {
             data['sort'] = this.sort;
         }
         return data;
-    }
+    };
     Purge = () => {
         this.SAVED_quests.push(...this.UNSAVED_additions);
         this.UNSAVED_additions = [];
@@ -181,7 +183,7 @@ class MyQuests {
         }
         this.UNSAVED_deletions = [];
         this.SAVED_sort = true;
-    }
+    };
 
     IsMax = () => this.Get().length >= this.MAX_QUESTS;
 
@@ -199,7 +201,7 @@ class MyQuests {
         }
 
         // Check if title already exists
-        if (this.Get().some(q => q.title === quest.title && q.created !== quest.created)) {
+        if (this.Get().some((q) => q.title === quest.title && q.created !== quest.created)) {
             errors.push('title-exists');
         }
 
@@ -214,7 +216,38 @@ class MyQuests {
         }
 
         return errors;
-    }
+    };
+
+    /**
+     * @param {MyQuest} quest
+     * @returns {string} Time text
+     */
+    GetQuestTimeText = (quest) => {
+        if (quest === null) return '';
+
+        const totalDuration = Sum(
+            this.user.activities
+                .GetByTime()
+                .filter((activity) => quest.skills.includes(activity.skillID))
+                .map((activity) => activity.duration)
+        );
+
+        const langTimes = langManager.curr['dates']['names'];
+        const timeHour = Math.floor(totalDuration / 60);
+        const timeMinute = totalDuration % 60;
+        const goalHour = Math.floor(quest.schedule.duration / 60);
+        const goalMinute = quest.schedule.duration % 60;
+        let text = `${timeHour}${langTimes['hours-min']}`;
+        if (timeMinute > 0) {
+            text += ` ${timeMinute}${langTimes['minutes-min']}`;
+        }
+        text += ` / ${goalHour}${langTimes['hours-min']}`;
+        if (goalMinute > 0) {
+            text += ` ${goalMinute}${langTimes['minutes-min']}`;
+        }
+
+        return text;
+    };
 
     /**
      * Add quest
@@ -300,16 +333,25 @@ class MyQuests {
      */
     Move(quest, newIndex) {
         if (!this.sort.includes(quest.created)) {
-            this.user.interface.console.AddLog('warn', `Quests - move failed: quest not found (${quest.title} ${newIndex})`);
+            this.user.interface.console?.AddLog(
+                'warn',
+                `Quests - move failed: quest not found (${quest.title} ${newIndex})`
+            );
             return false;
         }
         if (newIndex < 0 || newIndex > this.sort.length) {
-            this.user.interface.console.AddLog('warn', `Quests - move failed: index out of range (${quest.title} ${newIndex})`);
+            this.user.interface.console?.AddLog(
+                'warn',
+                `Quests - move failed: index out of range (${quest.title} ${newIndex})`
+            );
             return false;
         }
         const oldIndex = this.sort.indexOf(quest.created);
         if (oldIndex === newIndex) {
-            this.user.interface.console.AddLog('warn', `Quests - move failed: same index (${quest.title} ${newIndex})`);
+            this.user.interface.console?.AddLog(
+                'warn',
+                `Quests - move failed: same index (${quest.title} ${newIndex})`
+            );
             return false;
         }
         this.sort.splice(oldIndex, 1);
@@ -325,7 +367,7 @@ class MyQuests {
      * @returns {number | null} Index of quest or null if not found
      */
     GetIndex(arr, quest) {
-        const index = arr.findIndex(a => a.created === quest.created);
+        const index = arr.findIndex((a) => a.created === quest.created);
         if (index === -1) return null;
         return index;
     }
@@ -341,7 +383,10 @@ class MyQuests {
         const dateNow = GetDate(time);
         const currentDate = dateNow.getDate() - 1;
         const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
-        const { skills, schedule: { type, repeat, duration } } = quest;
+        const {
+            skills,
+            schedule: { type, repeat, duration }
+        } = quest;
 
         if (duration === 0) return []; // Avoid division by 0
 
@@ -349,16 +394,15 @@ class MyQuests {
         const days = [];
 
         for (let i = 0; i < 7; i++) {
-            const isToday = i === currentDayIndex;
-
             /** @type {DayClockStates} */
-            let state = 'normal';
+            let state = 'today';
             let fillingValue = 0;
 
             // Disabled if not in repeat
-            if (type === 'week' && !repeat.includes(i)) {
-                state = 'disabled';
-            } else if (type === 'month' && !repeat.includes((currentDate - currentDayIndex + i + 31) % 31)) {
+            if (
+                (type === 'week' && !repeat.includes(i)) ||
+                (type === 'month' && !repeat.includes((currentDate - currentDayIndex + i + 31) % 31))
+            ) {
                 state = 'disabled';
             }
 
@@ -367,21 +411,24 @@ class MyQuests {
                 const deltaToNewDay = i - currentDayIndex;
                 const activitiesNewDay = this.user.activities
                     .GetByTime(time + deltaToNewDay * DAY_TIME)
-                    .filter(activity => skills.includes(activity.skillID))
-                    .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant');
+                    .filter((activity) => skills.includes(activity.skillID))
+                    .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant');
 
-                if (deltaToNewDay <= 0) {
-                    const totalDuration = Sum(activitiesNewDay.map(activity => activity.duration));
+                // Past
+                if (deltaToNewDay < 0) {
+                    const totalDuration = Sum(activitiesNewDay.map((activity) => activity.duration));
                     const progress = totalDuration / duration;
-                    state = progress >= 1 ? 'full' : 'filling';
+                    state = 'past';
                     fillingValue = Math.min(progress, 1) * 100;
                 }
+
+                // Future
                 else if (deltaToNewDay > 0) {
-                    state = 'normal';
+                    state = 'future';
                 }
             }
 
-            days.push({ day: i, isToday, state, fillingValue });
+            days.push({ day: i, state, fillingValue });
         }
 
         return days;
@@ -391,12 +438,13 @@ class MyQuests {
     GetStreak(quest) {
         let streak = 0;
         const timeNow = GetLocalTime();
-        const todayMidnight = timeNow - timeNow % DAY_TIME - GetTimeZone() * 60 * 60;
+        const todayMidnight = timeNow - (timeNow % DAY_TIME) - GetTimeZone() * 60 * 60;
 
-        const allActivitiesTime = this.user.activities.Get()
-            .filter(activity => quest.skills.includes(activity.skillID))
-            .filter(activity => this.user.activities.GetExperienceStatus(activity) === 'grant')
-            .map(activity => ({
+        const allActivitiesTime = this.user.activities
+            .Get()
+            .filter((activity) => quest.skills.includes(activity.skillID))
+            .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant')
+            .map((activity) => ({
                 localStart: activity.startTime + activity.timezone * 60 * 60,
                 duration: activity.duration
             }));

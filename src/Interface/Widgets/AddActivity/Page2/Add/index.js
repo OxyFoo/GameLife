@@ -124,9 +124,18 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 />
 
                 {/* Button: Add to planner */}
-                <Button style={styles.addActivityButton} onPress={this.onAddActivity}>
-                    {editActivity === null ? lang['button-add'] : lang['button-edit']}
-                </Button>
+                {editActivity === null && (
+                    <Button style={styles.addActivityButton} onPress={this.onAddActivity}>
+                        {lang['button-add']}
+                    </Button>
+                )}
+
+                {/* Button: Edit activity */}
+                {editActivity !== null && this.isEdited() && (
+                    <Button style={styles.addActivityButton} onPress={this.onAddActivity}>
+                        {lang['button-edit']}
+                    </Button>
+                )}
 
                 {/* Button: Edit activity */}
                 {editActivity !== null && (

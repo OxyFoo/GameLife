@@ -182,7 +182,7 @@
             "userdata-not-loaded": "User data not loaded",
             "userdata-not-saved": "User data could not be saved"
         },
-        "loading-error-button": "Quitter"
+        "loading-error-button": "Restart"
     },
 
     "navbar": {
@@ -298,6 +298,7 @@
     "activity": {
         "title-activity": "Choose my activity",
         "title-category": "All categories",
+        "title-preselected": "Selected activities",
         "title-start-now": "Start now",
         "title-add": "Add",
         "title-edit": "Edit",
@@ -788,6 +789,7 @@
         "title": "Skill",
         "text-author": "An idea from {}",
         "text-unallocated": "Competence unallocated",
+        "text-no-xp": "This activity does not earn experience",
         "stats-title": "Statistiques",
         "informations-title": "Informations",
         "history-title": "History",
@@ -936,6 +938,9 @@
     },
 
     "quest-stats": {
+        "title-current-week": "Current week",
+        "title-heatmap": "Results",
+        "button-add-activity": "Add an activity",
         "tuto": {
             "1": "Here you define the deadline for your quest, or its frequency if it's a recurring one.",
             "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
@@ -951,8 +956,8 @@
         "alert-questslimit-message": "You have reached the limit of quests, please delete some of them to add more.",
 
         "current-streak": "Current streak",
-        "heatmap-title-weeks": "Completion by week",
-        "heatmap-title-days": "Completion by day",
+        "heatmap-title-day": "Day",
+        "heatmap-title-week": "Week",
 
         "tuto": {
             "1": "These are the quests! Missions you can give yourself to help motivate you.",

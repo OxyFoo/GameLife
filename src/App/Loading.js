@@ -28,13 +28,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Ping request
     await user.server.Ping(); // TODO: Set timeout ?
     if (user.server.IsConnected() === false) {
-        user.interface.console.AddLog('warn', 'Ping request failed, retrying...');
+        user.interface.console?.AddLog('warn', 'Ping request failed, retrying...');
         await user.server.Ping();
     }
 
     const online = user.server.IsConnected();
     if (!online) {
-        user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+        user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }
 
     nextStep();
@@ -49,7 +49,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Check if internal data are loaded
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
-        user.interface.console.AddLog('error', 'Internal data not loaded');
+        user.interface.console?.AddLog('error', 'Internal data not loaded');
         if (!online) {
             fe.ChangePage('waitinternet', {
                 storeInHistory: false,
@@ -98,7 +98,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         if (status === 'limitDevice') {
             const title = langManager.curr['login']['alert-deviceRemoved-title'];
             const message = langManager.curr['login']['alert-deviceRemoved-message'];
-            user.interface.popup.OpenT({
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message },
                 cancelable: false,
@@ -124,7 +124,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         else if (status === 'free') {
             const title = langManager.curr['login']['alert-deletedaccount-title'];
             const message = langManager.curr['login']['alert-deletedaccount-message'];
-            user.interface.popup.OpenT({
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message },
                 callback: () => user.Disconnect(true),
@@ -144,7 +144,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Check if user data are loaded
     if (user.informations.username.Get() === '') {
-        user.interface.console.AddLog('error', 'User data not loaded');
+        user.interface.console?.AddLog('error', 'User data not loaded');
         callbackError('userdata-not-loaded');
         return;
     }
@@ -160,7 +160,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         user.inventory.avatar.skinColor
     );
     user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.interface.userHeader.ShowAvatar(true);
+    user.interface.userHeader?.ShowAvatar(true);
 
     // Loading: Notifications
     Notifications.DisableAll().then(() => {
@@ -175,7 +175,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
-        user.interface.console.AddLog('info', 'No more ads available');
+        user.interface.console?.AddLog('info', 'No more ads available');
     }
 
     // Connect to the server TCP
@@ -198,7 +198,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         const lang = langManager.curr['home'];
         const title = lang['alert-maintenance-title'];
         const message = lang['alert-maintenance-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message },
             cancelable: false
@@ -209,7 +209,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const time_end = new Date().getTime();
     const time_text = `Initialisation done in ${time_end - time_start}ms`;
     console.log(time_text);
-    user.interface.console.AddLog('info', time_text);
+    user.interface.console?.AddLog('info', time_text);
     user.appIsLoaded = true;
 
     nextPage();

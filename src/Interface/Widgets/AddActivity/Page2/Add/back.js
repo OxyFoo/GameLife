@@ -81,6 +81,21 @@ class BackActivityPage2Add extends React.Component {
         RemoveActivity(editActivity);
     };
 
+    isEdited = () => {
+        const { activity, editActivity } = this.props;
+
+        if (editActivity === null) {
+            return false;
+        }
+
+        return (
+            activity.skillID !== editActivity.skillID ||
+            activity.startTime !== editActivity.startTime ||
+            activity.duration !== editActivity.duration ||
+            activity.comment !== editActivity.comment
+        );
+    };
+
     setDate = () => {
         const { activity } = this.props;
         this.showDTP('date', 'startTime', activity.startTime);

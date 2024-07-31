@@ -1,13 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    questItem: {
+    switchText: {
         marginBottom: 12
     },
-
-    buttonOpenQuest: {
-        marginTop: 2,
-        paddingVertical: 14
+    headerText: {
+        fontSize: 16,
+        fontWeight: 'bold'
     }
 });
 

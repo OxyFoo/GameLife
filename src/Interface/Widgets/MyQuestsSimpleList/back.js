@@ -1,13 +1,21 @@
 import React from 'react';
 
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('react-native').FlatList<MyQuest>} FlatListMyQuest
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ *
+ * @typedef {Object} BackQuestsListPropsType
+ * @property {StyleProp} style
  */
+
+/** @type {BackQuestsListPropsType} */
+const QuestsProps = {
+    style: {}
+};
 
 class BackQuestsList extends React.Component {
     state = {
@@ -42,22 +50,10 @@ class BackQuestsList extends React.Component {
     /** @param {MyQuest} item */
     keyExtractor = (item) => 'quest-' + item.title + JSON.stringify(item.skills) + JSON.stringify(item.schedule);
 
-    /**
-     * Add a new quest to the list and open the quest page\
-     * Max 10 quests
-     */
-    addQuest = () => {
-        if (user.quests.myquests.IsMax()) {
-            const title = langManager.curr['quests']['alert-questslimit-title'];
-            const message = langManager.curr['quests']['alert-questslimit-message'];
-            user.interface.popup.OpenT({
-                type: 'ok',
-                data: { title, message }
-            });
-            return;
-        }
-        user.interface.ChangePage('myquest', { storeInHistory: false });
-    };
+    openMyQuests = () => user.interface.ChangePage('myquest');
 }
+
+BackQuestsList.defaultProps = QuestsProps;
+BackQuestsList.prototype.props = QuestsProps;
 
 export default BackQuestsList;

@@ -1,99 +1,112 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import BackQuest from './back';
-import StartHelp from './help';
+//import StartHelp from './help';
+import WeekMap from './Components/WeekMap';
+import YearHeatMap from './Components/YearHeatMap';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, StreakChart, Text } from 'Interface/Components';
-import { PageHeader, YearHeatMap } from 'Interface/Widgets';
+import { PageHeader } from 'Interface/Widgets';
 
 class MyQuestStats extends BackQuest {
-    renderFooter() {
-        return (
-            <Button
-                style={styles.addActivity}
-                color='main2'
-                onPress={this.onAddPress}
-                icon='add'
-                iconSize={30}
-            />
-        );
-    }
     render() {
+        if (this.selectedQuest === null) {
+            return null;
+        }
+
+        const lang = langManager.curr['quest-stats'];
         const { maximumStreak } = this.selectedQuest;
 
         const currentStreak = user.quests.myquests.GetStreak(this.selectedQuest);
         const maxStreak = Math.max(10, maximumStreak);
 
         const skillsName = this.selectedQuest.skills
-            .map(skillID => dataManager.skills.GetByID(skillID))
-            .filter(skill => skill !== null) 
-            .map(skill => langManager.GetText(skill.Name))
+            .map((skillID) => dataManager.skills.GetByID(skillID))
+            .filter((skill) => skill !== null)
+            .map((skill) => skill !== null && langManager.GetText(skill.Name))
             .join(' • ');
-            
-        const styleContainer = {
-            backgroundColor: themeManager.GetColor('dataBigKpi')
-        };
 
-        //footer={this.renderFooter()}
         return (
-            <View>
-                <PageHeader
-                    style={styles.pageHeaderView}
-                    onBackPress={user.interface.BackHandle}
-                    onSecondaryIconPress={StartHelp.bind(this)}
-                />
-
-                <View
-                    ref={ref => this.refTuto1 = ref}
-                    style={[styles.questHeader, styleContainer]}
-                >
-                    <View style={styles.questText}>
-                        <Text
-                            style={styles.questTitle}
-                            color='primary'
-                            fontSize={30}
-                            bold={true}
-                        >
-                            {this.selectedQuest.title}
-                        </Text>
-                        <Text
-                            style={styles.questSkills}
-                            color='primary'
-                            fontSize={14}
-                        >
-                            {skillsName}
-                        </Text>
-                    </View>
-
-                    <Button
-                        style={styles.editActivity}
-                        icon='edit'
-                        iconSize={24}
-                        onPress={this.onEditPress}
+            <>
+                <ScrollView style={styles.page}>
+                    <PageHeader
+                        style={styles.pageHeader}
+                        onBackPress={this.onBackPress}
+                        //onSecondaryIconPress={StartHelp.bind(this)}
                     />
-                </View>
 
-                <StreakChart
-                    ref={ref => this.refTuto2 = ref}
-                    style={[styles.streakChartContainer, styleContainer]}
-                    size={200}
-                    height={150}
-                    currentStreak={currentStreak}
-                    bestStreak={maxStreak}
-                />
+                    {/* MyQuest info: Title + skills + duration + edit button */}
+                    <LinearGradient
+                        style={styles.questHeader}
+                        colors={[
+                            themeManager.GetColor('backgroundCard', { opacity: 0.65 }),
+                            themeManager.GetColor('backgroundCard', { opacity: 0.25 })
+                        ]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                    >
+                        <View style={styles.questTextView}>
+                            <Text style={styles.questTitle} color='primary'>
+                                {this.selectedQuest.title}
+                            </Text>
+                            <Text style={styles.questSkills} color='primary'>
+                                {skillsName}
+                            </Text>
+                        </View>
 
-                <YearHeatMap
-                    ref={ref => this.refTuto3 = ref}
-                    style={styles.yearHeatMap}
-                    quest={this.selectedQuest}
-                />
-            </View>
+                        <View style={styles.editActivityView}>
+                            <Text style={styles.editActivityTime} color='main1'>
+                                {this.activitiesTimeText}
+                            </Text>
+                            <Button
+                                style={styles.editActivityButton}
+                                appearance='uniform'
+                                color='transparent'
+                                icon='edit'
+                                iconSize={24}
+                                fontColor='gradient'
+                                onPress={this.onEditPress}
+                            />
+                        </View>
+                    </LinearGradient>
+
+                    {/* Streak chart */}
+                    <LinearGradient
+                        style={styles.streakChartContainer}
+                        colors={[
+                            themeManager.GetColor('main1', { opacity: 0.45 }),
+                            themeManager.GetColor('main1', { opacity: 0.15 })
+                        ]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                    >
+                        <StreakChart size={200} height={150} currentStreak={currentStreak} bestStreak={maxStreak} />
+                    </LinearGradient>
+
+                    {/* Current week */}
+                    <Text style={styles.title} color='border'>
+                        {lang['title-current-week']}
+                    </Text>
+                    <WeekMap quest={this.selectedQuest} />
+
+                    {/* Year heatmap */}
+                    <Text style={styles.title} color='border'>
+                        {lang['title-heatmap']}
+                    </Text>
+                    <YearHeatMap style={styles.yearHeatMap} quest={this.selectedQuest} />
+                </ScrollView>
+
+                <Button style={styles.addActivity} onPress={this.onAddPress}>
+                    {lang['button-add-activity']}
+                </Button>
+            </>
         );
     }
 }

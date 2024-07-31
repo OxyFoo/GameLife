@@ -29,6 +29,7 @@ En 3 mots : Gestion RPG IRL
 * [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
 * [React Native Permissions](https://www.npmjs.com/package/react-native-permissions)
 * [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
+* [React Native Restart](https://www.npmjs.com/package/react-native-restart)
 * [React Native Exit App](https://www.npmjs.com/package/react-native-exit-app)
 * [React Native IAP](https://github.com/dooboolab-community/react-native-iap)
 * [React Native Community Blur](https://www.npmjs.com/package/@react-native-community/blur)

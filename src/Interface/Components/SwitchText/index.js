@@ -47,7 +47,7 @@ class SwitchText extends SwitchTextBack {
 
         const childrenCount = texts.length;
         if (childrenCount === 0) {
-            user.interface.console.AddLog('warn', 'SwitchText has no children');
+            user.interface.console?.AddLog('warn', 'SwitchText has no children');
             return null;
         }
 

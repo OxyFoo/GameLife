@@ -19,6 +19,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
+    statsView: {
+        alignSelf: 'flex-start',
+        justifyContent: 'flex-start'
+    },
+    statsFlatList: {
+        flexGrow: 0
+    },
+
     avatarView: {
         position: 'absolute',
         width: '75%',

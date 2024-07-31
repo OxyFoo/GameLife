@@ -1,5 +1,9 @@
+import React from 'react';
+
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
+
+import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -17,29 +21,38 @@ class BackQuest extends PageBase {
     constructor(props) {
         super(props);
 
-        if (this.props.args.quest !== null) {
-            /** @type {MyQuest | null} */
-            const quest = this.props.args.quest;
-            this.selectedQuest = quest;
-
+        const quest = props.args.quest;
+        if (quest === null) {
             user.interface.BackHandle();
-            user.interface.console.AddLog('error', 'MyQuest: Quest not found');
+            user.interface.console?.AddLog('error', 'MyQuest: Quest not found');
+            return;
         }
-    }
 
-    refTuto1 = null;
-    refTuto2 = null;
-    refTuto3 = null;
+        /** @type {MyQuest} */
+        this.selectedQuest = quest;
+        this.activitiesTimeText = user.quests.myquests.GetQuestTimeText(quest);
+    }
 
     onAddPress = () => {
+        if (this.selectedQuest === null) return;
         const { skills } = this.selectedQuest;
-        user.interface.ChangePage('activity', { skills }, true);
-    }
+
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity listSkillsIDs={skills} />,
+            movable: false
+        });
+    };
 
     onEditPress = () => {
+        if (this.selectedQuest === null) return;
         const quest = this.selectedQuest;
-        user.interface.ChangePage('myquest', { quest }, true);
-    }
+
+        user.interface.ChangePage('myquest', { args: { quest }, storeInHistory: false });
+    };
+
+    onBackPress = () => {
+        user.interface.BackHandle();
+    };
 }
 
 BackQuest.defaultProps = BackQuestProps;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View, ScrollView, Dimensions } from 'react-native';
+import { Animated, View, ScrollView, FlatList, Dimensions } from 'react-native';
 
 import styles from './style';
 import BackProfile from './back';
@@ -79,22 +79,26 @@ class Profile extends BackProfile {
                             styles.avatarComingSoonText,
                             {
                                 textShadowColor: themeManager.GetColor('main2')
-                            }
+                            },
+                            styles.avatarComingSoon,
+                            styleParallax2
                         ]}
-                        styleAnimation={[styles.avatarComingSoon, styleParallax2]}
                         color='secondary'
+                        animated
                     >
                         {lang['coming-soon']}
                     </Text>
                 </View>
 
-                <Animated.FlatList
-                    style={styleParallax2_5}
-                    data={experienceStats}
-                    renderItem={RenderStatistic}
-                    keyExtractor={(item) => `user-stat-${item.statKey}`}
-                    scrollEnabled={false}
-                />
+                <Animated.View style={[styles.statsView, styleParallax2_5]}>
+                    <FlatList
+                        style={styles.statsFlatList}
+                        data={experienceStats}
+                        renderItem={RenderStatistic}
+                        keyExtractor={(item) => `user-stat-${item.statKey}`}
+                        scrollEnabled={false}
+                    />
+                </Animated.View>
 
                 <View style={styles.buttons}>
                     <Button style={styles.button} enabled={false}>

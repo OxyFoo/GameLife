@@ -82,12 +82,29 @@ class UserManager {
     tempMailSent = null;
 
     StartTimers() {
-        const saveTime = 5 * 60 * 1000; // 5 minutes
+        // Save all data every 5 minutes
         const save = this.server.IsConnected() ? this.OnlineSave : this.LocalSave;
-        this.intervalSave = window.setInterval(save, saveTime);
+        this.intervalSave = setInterval(save, 5 * 60 * 1000);
 
-        const achievementsTime = 20 * 1000; // 20 seconds
-        this.intervalAchievements = window.setInterval(this.achievements.CheckAchievements, achievementsTime);
+        // Check achievements every 20 seconds
+        this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
+
+        // Refresh activities at each 5 minutes if needed
+        const timeUntilNext5MinutesInSeconds = 5 * 60 - ((Date.now() / 1000) % (5 * 60));
+        this.timeoutActivities = setTimeout(
+            () => {
+                this.activities.RefreshActivities();
+                this.intervalActivities = setInterval(this.activities.RefreshActivities, 5 * 60 * 1000);
+            },
+            (timeUntilNext5MinutesInSeconds + 1) * 1000
+        );
+    }
+
+    CleanTimers() {
+        clearInterval(this.intervalSave);
+        clearInterval(this.intervalAchievements);
+        clearTimeout(this.timeoutActivities);
+        clearInterval(this.intervalActivities);
     }
 
     async Clear(keepOnboardingState = true) {
@@ -141,14 +158,12 @@ class UserManager {
             this.interface.ChangePage('login');
         }
 
-        clearInterval(this.intervalSave);
-        clearInterval(this.intervalAchievements);
+        this.CleanTimers();
 
         return result['status'] === 'ok';
     }
     async Unmount() {
-        clearInterval(this.intervalSave);
-        clearInterval(this.intervalAchievements);
+        this.CleanTimers();
         this.tcp.Disconnect();
         await this.settings.Save();
         await this.LocalSave();

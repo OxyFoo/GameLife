@@ -44,7 +44,7 @@ class WeekMap extends WeekMapBack {
         const { layout } = this.state;
         const { day, animBorder, animBackground } = item;
 
-        const value = day.fillingValue ?? 0;
+        const value = day.progress ?? 0;
 
         /** @type {ThemeText | ThemeColor} */
         let dayColor = 'main1';

@@ -6,6 +6,7 @@ import InputBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
 import Text from 'Interface/OldComponents/Text';
+import InputText from 'Interface/Components/InputText';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -26,6 +27,10 @@ const textTypes = {
     username:   { ios: 'username',      android: 'username' }
 };
 
+/**
+ * @deprecated Replaced by InputText
+ * @see InputText
+ */
 class Input extends InputBack {
     render() {
         const isActive = this.state.isFocused || this.props.active;

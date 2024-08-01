@@ -28,7 +28,7 @@ class ProgressBarInfinite extends React.Component {
 
     componentDidMount() {
         this.loop();
-        this.interval = window.setInterval(this.loop, 2000);
+        this.interval = setInterval(this.loop, 2000);
     }
 
     componentWillUnmount() {
@@ -56,10 +56,7 @@ class ProgressBarInfinite extends React.Component {
                         styles.bar,
                         {
                             backgroundColor: themeManager.GetColor(color),
-                            transform: [
-                                { translateX: this.state.animTranslate },
-                                { scaleX: this.state.animScale }
-                            ]
+                            transform: [{ translateX: this.state.animTranslate }, { scaleX: this.state.animScale }]
                         }
                     ]}
                 />

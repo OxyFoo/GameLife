@@ -62,7 +62,7 @@ class WeekMapBack extends React.Component {
 
     componentDidMount() {
         this.state.days.forEach((item, index) => {
-            const value = item.day.fillingValue ?? 0;
+            const value = item.day.progress ?? 0;
 
             if (item.day.state === 'past' || item.day.state === 'today') {
                 this.timeouts.push(

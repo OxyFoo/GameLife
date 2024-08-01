@@ -27,7 +27,7 @@ class BackQuestsList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state.quests = user.quests.myquests.Get().slice(0, 3);
+        this.state.quests = user.quests.myquests.Get();
     }
 
     /** @type {Symbol | null} */
@@ -42,9 +42,8 @@ class BackQuestsList extends React.Component {
     }
 
     refreshQuests = () => {
-        this.setState({
-            quests: user.quests.myquests.Get().slice(0, 3)
-        });
+        const quests = user.quests.myquests.Get();
+        this.setState({ quests });
     };
 
     /** @param {MyQuest} item */

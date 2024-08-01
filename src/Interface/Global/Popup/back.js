@@ -182,7 +182,7 @@ class PopupBack extends React.PureComponent {
 
     /**
      * Close popup
-     * @param {any} closeReason
+     * @param {any} [closeReason]
      * @returns {boolean} True if popup was closed
      */
     Close = (closeReason) => {

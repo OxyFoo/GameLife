@@ -25,11 +25,13 @@ const styles = StyleSheet.create({
     },
 
     buttonRight: {
+        minHeight: 46,
         paddingVertical: 6,
         paddingLeft: 56,
         paddingRight: 12
     },
     buttonRightContent: {
+        flex: 1,
         flexDirection: 'row',
         flexWrap: 'nowrap',
         alignItems: 'center',

@@ -19,7 +19,7 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
  * @typedef {object} DayType
  * @property {number} day
  * @property {DayClockStates} state
- * @property {number} [fillingValue] Value between 0 and 1, Only used if state is 'past' or 'today'
+ * @property {number} [progress] Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'today'
  */
 
 /** @type {Array<MyQuest>} */
@@ -35,7 +35,7 @@ class MyQuest {
     /** @type {number} Timestamp in seconds */
     created = 0;
 
-    /** @type {Schedule} Null to don't repeat */
+    /** @type {Schedule} */
     schedule = {
         type: 'week',
         repeat: [],
@@ -227,8 +227,9 @@ class MyQuests {
 
         const totalDuration = Sum(
             this.user.activities
-                .GetByTime()
+                .GetByTime(GetLocalTime())
                 .filter((activity) => quest.skills.includes(activity.skillID))
+                .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant')
                 .map((activity) => activity.duration)
         );
 
@@ -396,7 +397,7 @@ class MyQuests {
         for (let i = 0; i < 7; i++) {
             /** @type {DayClockStates} */
             let state = 'today';
-            let fillingValue = 0;
+            let progress = 0;
 
             // Disabled if not in repeat
             if (
@@ -415,11 +416,12 @@ class MyQuests {
                     .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant');
 
                 // Past
-                if (deltaToNewDay < 0) {
+                if (deltaToNewDay <= 0) {
                     const totalDuration = Sum(activitiesNewDay.map((activity) => activity.duration));
-                    const progress = totalDuration / duration;
-                    state = 'past';
-                    fillingValue = Math.min(progress, 1) * 100;
+                    progress = totalDuration / duration;
+                    if (deltaToNewDay < 0) {
+                        state = 'past';
+                    }
                 }
 
                 // Future
@@ -428,7 +430,7 @@ class MyQuests {
                 }
             }
 
-            days.push({ day: i, state, fillingValue });
+            days.push({ day: i, state, progress });
         }
 
         return days;

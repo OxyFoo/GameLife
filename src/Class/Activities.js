@@ -223,6 +223,10 @@ class Activities {
         activities: []
     };
 
+    RefreshActivities = () => {
+        this.allActivities.Set(this.Get());
+    };
+
     /**
      * @description Get activities that have brought xp
      * @returns {Array<Activity>}
@@ -285,7 +289,7 @@ class Activities {
             ...skill,
             FullName: langManager.GetText(skill.Name),
             LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            Experience: this.user.experience.GetSkillExperience(skill.ID)
+            Experience: this.user.experience.GetSkillExperience(skill)
         });
 
         /** @type {EnrichedSkill[]} */

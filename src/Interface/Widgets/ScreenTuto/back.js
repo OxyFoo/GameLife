@@ -206,7 +206,7 @@ class ScreenTutoBack extends React.Component {
 
         // Hint opacity - Start
         let hintOpacity = 0;
-        this.hinterval = window.setInterval(() => {
+        this.hinterval = setInterval(() => {
             hintOpacity = hintOpacity === 0 ? 1 : 0;
             TimingAnimation(this.state.component.hintOpacity, hintOpacity, 1000).start();
         }, 5000);

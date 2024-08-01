@@ -3,7 +3,9 @@ import { Animated, Keyboard } from 'react-native';
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+
 import { SpringAnimation } from 'Utils/Animations';
+import { DeepCopy } from 'Utils/Object';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -53,7 +55,7 @@ class BackTodo extends PageBase {
                 ...this.state,
 
                 action: 'remove',
-                tempTodo: { ...todo, tasks: [...todo.tasks] },
+                tempTodo: DeepCopy(todo),
                 error: null
             };
         }

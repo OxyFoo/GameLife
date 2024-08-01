@@ -60,7 +60,7 @@ class ActivityTimerTitle extends React.Component {
     }
 
     componentDidMount() {
-        this.timer_tick = window.setInterval(this.tick, 500);
+        this.timer_tick = setInterval(this.tick, 500);
     }
     componentWillUnmount() {
         clearInterval(this.timer_tick);

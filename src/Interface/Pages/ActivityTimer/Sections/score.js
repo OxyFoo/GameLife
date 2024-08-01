@@ -59,7 +59,7 @@ class ActivityTimerScore extends React.Component {
     }
 
     componentDidMount() {
-        this.timer_tick = window.setInterval(this.tick, 200);
+        this.timer_tick = setInterval(this.tick, 200);
     }
 
     componentWillUnmount() {

@@ -35,7 +35,7 @@ class Todo extends BackTodo {
                     <SectionTitle todo={tempTodo} error={error} onChangeTodo={this.onChangeTodo} />
                     <SectionSchedule todo={tempTodo} onChangeTodo={this.onChangeTodo} />
                     <SectionDescription todo={tempTodo} onChangeTodo={this.onChangeTodo} />
-                    <SectionTasks todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                    <SectionTasks style={styles.last} todo={tempTodo} onChangeTodo={this.onChangeTodo} />
                 </ScrollView>
 
                 {/* Button: Add */}
@@ -61,7 +61,7 @@ class Todo extends BackTodo {
                         </Button>
 
                         {/* Button: Remove */}
-                        <Button style={styles.button} appearance='outline' icon='trash' onPress={this.removeTodo}>
+                        <Button style={styles.button} appearance='outline-blur' icon='trash' onPress={this.removeTodo}>
                             {lang['button-remove']}
                         </Button>
                     </>
@@ -82,6 +82,10 @@ const styles = StyleSheet.create({
         left: 24,
         right: 24,
         bottom: 24
+    },
+
+    last: {
+        marginBottom: 200
     }
 });
 

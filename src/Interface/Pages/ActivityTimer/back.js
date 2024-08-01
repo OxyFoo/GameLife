@@ -45,7 +45,7 @@ class BackActivityTimer extends PageBase {
     }
 
     componentDidMount() {
-        this.timer_tick = window.setInterval(this.tick, 1000);
+        this.timer_tick = setInterval(this.tick, 1000);
         user.interface.SetCustomBackHandler(this.onPressCancel);
         this.currentActivityEvent = user.activities.currentActivity.AddListener((currentActivity) => {
             this.setState({ currentActivity });
@@ -120,7 +120,7 @@ class BackActivityTimer extends PageBase {
     onPressCancel = () => {
         const title = langManager.curr['activity']['timeralert-cancel-title'];
         const message = langManager.curr['activity']['timeralert-cancel-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'yesno',
             data: { title, message },
             callback: (button) => {
@@ -153,7 +153,7 @@ class BackActivityTimer extends PageBase {
             const title = lang['timeralert-tooshort-title'];
             const message = lang['timeralert-tooshort-message'];
 
-            user.interface.popup.OpenT({
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message }
             });
@@ -178,7 +178,7 @@ class BackActivityTimer extends PageBase {
     /** @param {keyof MusicLinks} musicKey */
     openURL = (musicKey) => {
         const url = user.settings.musicLinks[musicKey];
-        Linking.openURL(url).catch((err) => user.interface.console.AddLog('error', "Couldn't load page", err));
+        Linking.openURL(url).catch((err) => user.interface.console?.AddLog('error', "Couldn't load page", err));
     };
 }
 

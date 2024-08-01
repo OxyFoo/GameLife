@@ -91,7 +91,7 @@ class SwiperBack extends React.Component {
 
         const { delayNext } = this.props;
         clearInterval(this.interval);
-        this.interval = window.setInterval(this.Next, delayNext * 1000);
+        this.interval = setInterval(this.Next, delayNext * 1000);
     };
     stopTimer = () => {
         clearInterval(this.interval);

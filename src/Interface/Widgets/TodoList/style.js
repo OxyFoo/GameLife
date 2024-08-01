@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     todoButton: {
-        minHeight: 46,
         marginBottom: 8
     },
 

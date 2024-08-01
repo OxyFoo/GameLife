@@ -83,7 +83,7 @@ class YearHeatMapBack extends React.Component {
                     user.activities.GetExperienceStatus(activity) === 'grant'
             )
             .map((activity) => ({
-                start: activity.startTime + activity.timezone * 60 * 60,
+                start: activity.startTime,
                 duration: activity.duration
             }));
 

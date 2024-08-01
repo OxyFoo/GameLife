@@ -7,17 +7,22 @@ import langManager from 'Managers/LangManager';
 import { Text, Button, Icon } from 'Interface/Components';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StylePropView
+ *
  * @typedef {import('Class/Todoes').Todo} Todo
  * @typedef {import('Class/Todoes').Task} Task
  * @typedef {import('react-native').ListRenderItem<Task>} ListRenderItemTask
  *
  * @typedef {Object} SectionTasksPropsType
+ * @property {StylePropView} style
  * @property {Todo | null} todo
  * @property {(newTodo: Todo) => void} onChangeTodo
  */
 
 /** @type {SectionTasksPropsType} */
 const SectionTasksProps = {
+    style: {},
     todo: null,
     onChangeTodo: () => {}
 };
@@ -128,11 +133,11 @@ class SectionTasks extends React.Component {
 
     render() {
         const lang = langManager.curr['todo'];
-        const { todo } = this.props;
+        const { style, todo } = this.props;
         if (todo === null) return null;
 
         return (
-            <View style={styles.parent}>
+            <View style={[styles.parent, style]}>
                 <View style={styles.header}>
                     <Text style={styles.title}>{lang['input-task-title']}</Text>
                     <Button style={styles.smallButton} appearance='uniform' color='transparent' onPress={this.addTask}>

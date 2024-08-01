@@ -11,8 +11,8 @@ class BackWaitmail extends PageBase {
     };
 
     componentDidMount() {
-        this.tick = window.setInterval(this.onTick, 1000);
-        this.login = window.setInterval(this.Login, REFRESH_DELAY * 1000);
+        this.tick = setInterval(this.onTick, 1000);
+        this.login = setInterval(this.Login, REFRESH_DELAY * 1000);
         this.Login();
     }
 

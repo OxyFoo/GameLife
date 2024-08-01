@@ -38,7 +38,6 @@ const RenderActivity = React.memo(
         }
 
         const activityText = langManager.GetText(skill.Name);
-        const categoryText = langManager.GetText(category.Name);
         const startTime = activity.startTime + activity.timezone * 3600;
         const endTime = startTime + activity.duration * 60;
         const startTimeString = TimeToFormatString(startTime);
@@ -82,7 +81,6 @@ const RenderActivity = React.memo(
                     <Text style={styles.activityName} numberOfLines={1} ellipsizeMode='tail'>
                         {activityText}
                     </Text>
-                    <Text style={styles.categoryName}>{categoryText}</Text>
                 </View>
                 <View style={styles.activityTimes}>
                     <Text style={styles.activityTime}>{activityTime}</Text>

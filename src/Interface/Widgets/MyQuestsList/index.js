@@ -13,7 +13,7 @@ import { Button, QuestButton } from 'Interface/Components';
  * @typedef {import('react-native').ListRenderItem<MyQuest>} ListRenderItemMyQuest
  */
 
-class MyQuestsSimpleList extends BackQuestsList {
+class MyQuestsList extends BackQuestsList {
     render() {
         const { style } = this.props;
         const { quests } = this.state;
@@ -47,4 +47,4 @@ class MyQuestsSimpleList extends BackQuestsList {
     };
 }
 
-export { MyQuestsSimpleList };
+export { MyQuestsList };

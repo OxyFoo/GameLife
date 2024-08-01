@@ -189,7 +189,7 @@ class PieChart extends BackPieChart {
                 style={styles.myQuestsText}
                 fontSize={14}
             >
-                {`- ${quest.title}: ${questToday.fillingValue}%`}
+                {`- ${quest.title}: ${questToday.progress}%`}
             </Text>
         );
     }

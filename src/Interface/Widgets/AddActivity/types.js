@@ -35,7 +35,7 @@ const CategoryToItem = (category) => ({
 });
 
 /**
- * @param {(param: Skill) => void} callback
+ * @param {(param: Skill) => void} [callback]
  * @returns {Array<ItemSkill>}
  */
 const GetRecentSkills = (callback) => {

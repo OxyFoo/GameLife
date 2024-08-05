@@ -9,12 +9,8 @@ import { Button, Icon } from 'Interface/Components';
 import { DynamicBackground } from 'Interface/Primitives';
 
 /**
- * @typedef {import('./back').PopupTemplateJSDoc} PopupTemplateJSDoc
- */
-
-/**
- * @template {import('./back').PopupTemplateJSDoc} T
- * @typedef {import('./back').PopupQueueType<T>} PopupType
+ * @template {any} T
+ * @typedef {import('./back').PopupQueueType<T>} PopupQueueType
  */
 
 class Popup extends PopupBack {
@@ -31,8 +27,8 @@ class Popup extends PopupBack {
     }
 
     /**
-     * @template {PopupTemplateJSDoc} T
-     * @param {PopupType<T>} current
+     * @template {any} T
+     * @param {PopupQueueType<T>} current
      * @returns {React.ReactNode}
      */
     renderPopup = (current) => {
@@ -75,7 +71,7 @@ class Popup extends PopupBack {
                     onLayout={current.onLayout}
                 >
                     <DynamicBackground style={styles.dynamicBackground} opacity={0.12} />
-                    <current.content data={current.data} close={this.Close} />
+                    {current.content}
                 </Animated.View>
             </Animated.View>
         );
@@ -83,4 +79,3 @@ class Popup extends PopupBack {
 }
 
 export { Popup };
-export { POPUP_TEMPLATES } from './templates';

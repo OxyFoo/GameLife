@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     content: {
-        height: '100%'
+        height: '100%',
+        paddingBottom: 24
     },
     dots: {
         position: 'absolute',

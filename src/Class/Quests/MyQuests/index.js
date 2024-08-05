@@ -6,20 +6,28 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'week' | 'month'} RepeatModes
+ * @typedef {'week' | 'month' | 'frequency'} RepeatModes
+ * @typedef {'week' | 'month'} FrequencyRepeatModes
  * @typedef {'title-empty' | 'title-exists' | 'skills-empty' | 'schedule-empty'} InputsError
  *
- * @typedef {object} Schedule
- * @property {RepeatModes} type
+ * @typedef {object} ScheduleRepeat
+ * @property {'week' | 'month'} type
  * @property {Array<number>} repeat
  * @property {number} duration In minutes
  *
- * @typedef {'past' | 'today' | 'future' | 'disabled'} DayClockStates
+ * @typedef {object} ScheduleFrequency
+ * @property {'frequency'} type
+ * @property {FrequencyRepeatModes} frequencyMode
+ * @property {number} quantity
+ * @property {number} duration In minutes
+ *
+ * @typedef {'past' | 'filling' | 'future' | 'disabled'} DayClockStates
  *
  * @typedef {object} DayType
  * @property {number} day
+ * @property {boolean} isToday
  * @property {DayClockStates} state
- * @property {number} [progress] Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'today'
+ * @property {number} [progress] Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'filling'
  */
 
 /** @type {Array<MyQuest>} */
@@ -35,7 +43,7 @@ class MyQuest {
     /** @type {number} Timestamp in seconds */
     created = 0;
 
-    /** @type {Schedule} */
+    /** @type {ScheduleRepeat | ScheduleFrequency} */
     schedule = {
         type: 'week',
         repeat: [],
@@ -201,7 +209,7 @@ class MyQuests {
         }
 
         // Check if title already exists
-        if (this.Get().some((q) => q.title === quest.title && q.created !== quest.created)) {
+        if (this.Get().some((q) => q.title === quest.title.trim() && q.created !== quest.created)) {
             errors.push('title-exists');
         }
 
@@ -211,7 +219,7 @@ class MyQuests {
         }
 
         // Check if repeat mode is valid
-        if (quest.schedule.repeat.length <= 0) {
+        if ((quest.schedule.type === 'week' || quest.schedule.type === 'month') && quest.schedule.repeat.length <= 0) {
             errors.push('schedule-empty');
         }
 
@@ -252,11 +260,13 @@ class MyQuests {
 
     /**
      * Add quest
-     * @param {MyQuest} quest Auto define created time if null
-     * @returns {'added' | 'edited' | InputsError}
+     * @param {MyQuest} quest Auto define created time if equal to 0
+     * @returns {'added' | 'already-added' | InputsError}
      */
-    AddOrEdit(quest) {
-        quest.created ??= GetLocalTime();
+    Add(quest) {
+        if (quest.created === 0) {
+            quest.created = GetLocalTime();
+        }
 
         const errors = this.VerifyInputs(quest);
         if (errors.length > 0) {
@@ -268,30 +278,59 @@ class MyQuests {
         const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
         const indexDeletion = this.GetIndex(this.UNSAVED_deletions, quest);
 
+        // Quest already exist
+        if (indexQuest !== null || indexUnsaved !== null) {
+            return 'already-added';
+        }
+
         // Quest was deleted, remove it from deletion list
         if (indexDeletion !== null) {
             this.UNSAVED_deletions.splice(indexDeletion, 1);
-        }
-
-        // Quest already exist
-        if (indexQuest !== null || indexUnsaved !== null) {
-            if (indexQuest !== null) {
-                this.SAVED_quests.splice(indexQuest, 1, quest);
-            }
-            if (indexUnsaved !== null) {
-                this.UNSAVED_additions.splice(indexUnsaved, 1, quest);
-            }
-
-            // Add edited quests as new quest to save
-            this.UNSAVED_additions.push(quest);
-            this.allQuests.Set(this.Get());
-            return 'edited';
         }
 
         // Quest not exist, add it
         this.UNSAVED_additions.push(quest);
         this.allQuests.Set(this.Get());
         return 'added';
+    }
+
+    /**
+     * Add quest
+     * @param {MyQuest} quest
+     * @returns {'edited' | 'not-exists' | InputsError}
+     */
+    Edit(quest) {
+        const errors = this.VerifyInputs(quest);
+        if (errors.length > 0) {
+            return errors[0];
+        }
+
+        // Check where the quest is
+        const indexQuest = this.GetIndex(this.SAVED_quests, quest);
+        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
+        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, quest);
+
+        // Quest not exist
+        if (indexQuest === null && indexUnsaved === null) {
+            return 'not-exists';
+        }
+
+        // Quest was deleted, remove it from deletion list
+        if (indexDeletion !== null) {
+            this.UNSAVED_deletions.splice(indexDeletion, 1);
+        }
+
+        if (indexQuest !== null) {
+            this.SAVED_quests.splice(indexQuest, 1, quest);
+        }
+        if (indexUnsaved !== null) {
+            this.UNSAVED_additions.splice(indexUnsaved, 1, quest);
+        }
+
+        // Add edited quests as new quest to save
+        this.UNSAVED_additions.push(quest);
+        this.allQuests.Set(this.Get());
+        return 'edited';
     }
 
     /**
@@ -384,25 +423,23 @@ class MyQuests {
         const dateNow = GetDate(time);
         const currentDate = dateNow.getDate() - 1;
         const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
-        const {
-            skills,
-            schedule: { type, repeat, duration }
-        } = quest;
+        const { skills, schedule } = quest;
 
-        if (duration === 0) return []; // Avoid division by 0
+        if (schedule.duration === 0) return []; // Avoid division by 0
 
         /** @type {Array<DayType>} */
         const days = [];
 
         for (let i = 0; i < 7; i++) {
             /** @type {DayClockStates} */
-            let state = 'today';
+            let state = 'filling';
             let progress = 0;
+            const isToday = i === currentDayIndex;
 
             // Disabled if not in repeat
             if (
-                (type === 'week' && !repeat.includes(i)) ||
-                (type === 'month' && !repeat.includes((currentDate - currentDayIndex + i + 31) % 31))
+                (schedule.type === 'week' && !schedule.repeat.includes(i)) ||
+                (schedule.type === 'month' && !schedule.repeat.includes((currentDate - currentDayIndex + i + 31) % 31))
             ) {
                 state = 'disabled';
             }
@@ -418,7 +455,7 @@ class MyQuests {
                 // Past
                 if (deltaToNewDay <= 0) {
                     const totalDuration = Sum(activitiesNewDay.map((activity) => activity.duration));
-                    progress = totalDuration / duration;
+                    progress = totalDuration / schedule.duration;
                     if (deltaToNewDay < 0) {
                         state = 'past';
                     }
@@ -430,7 +467,7 @@ class MyQuests {
                 }
             }
 
-            days.push({ day: i, state, progress });
+            days.push({ day: i, isToday, state, progress });
         }
 
         return days;
@@ -518,7 +555,7 @@ class MyQuests {
         if (streak > quest.maximumStreak) {
             const newQuest = Object.assign({}, quest);
             newQuest.maximumStreak = streak;
-            this.AddOrEdit(newQuest);
+            this.Edit(newQuest);
             this.user.GlobalSave();
         }
         return streak;

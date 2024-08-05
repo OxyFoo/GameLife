@@ -7,12 +7,18 @@ import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ *
+ * @typedef {Object} BackQuestPropsType
+ * @property {Object} args
+ * @property {MyQuest | null} args.quest
+ * @property {boolean | undefined} [args.showAnimations]
  */
 
+/** @type {BackQuestPropsType} */
 const BackQuestProps = {
     args: {
-        /** @type {MyQuest | null} */
-        quest: null
+        quest: null,
+        showAnimations: true
     }
 };
 
@@ -30,7 +36,8 @@ class BackQuest extends PageBase {
 
         /** @type {MyQuest} */
         this.selectedQuest = quest;
-        this.activitiesTimeText = user.quests.myquests.GetQuestTimeText(quest);
+        this.activitiesTimeText = user.quests.myquests.GetQuestTimeText(this.selectedQuest);
+        this.showAnimations = props.args.showAnimations ?? BackQuestProps.args.showAnimations;
     }
 
     onAddPress = () => {

@@ -90,7 +90,7 @@ class BackQuestsList extends React.Component {
         if (user.quests.myquests.IsMax()) {
             const title = langManager.curr['quests']['alert-questslimit-title'];
             const message = langManager.curr['quests']['alert-questslimit-message'];
-            user.interface.popup.OpenT({
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message }
             });

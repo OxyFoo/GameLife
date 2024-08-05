@@ -35,7 +35,7 @@ async function Login(email) {
     else if (status === 'limitDevice') {
         const title = lang['alert-limitDevice-title'];
         const message = lang['alert-limitDevice-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
@@ -81,7 +81,7 @@ async function Signin(email, username) {
     else if (signinStatus === 'limitAccount') {
         const title = lang['alert-limitAccount-title'];
         const message = lang['alert-limitAccount-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });

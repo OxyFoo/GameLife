@@ -182,7 +182,7 @@ class BackSettings extends PageBase {
     };
 
     /**
-     * @param {'yes' | 'no'} button
+     * @param {'yes' | 'no' | 'closed'} button
      * @private
      */
     DeleteAccount = async (button) => {

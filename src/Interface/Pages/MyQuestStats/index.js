@@ -38,6 +38,7 @@ class MyQuestStats extends BackQuest {
                 <ScrollView style={styles.page}>
                     <PageHeader
                         style={styles.pageHeader}
+                        title={lang['title']}
                         onBackPress={this.onBackPress}
                         //onSecondaryIconPress={StartHelp.bind(this)}
                     />
@@ -94,7 +95,7 @@ class MyQuestStats extends BackQuest {
                     <Text style={styles.title} color='border'>
                         {lang['title-current-week']}
                     </Text>
-                    <WeekMap quest={this.selectedQuest} />
+                    <WeekMap quest={this.selectedQuest} showAnimations={this.showAnimations} />
 
                     {/* Year heatmap */}
                     <Text style={styles.title} color='border'>

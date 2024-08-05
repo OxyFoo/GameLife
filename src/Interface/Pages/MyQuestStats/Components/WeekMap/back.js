@@ -22,12 +22,14 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {Object} WeekMapBackPropsType
  * @property {StyleProp} style
  * @property {MyQuest | null} quest
+ * @property {boolean} showAnimations
  */
 
 /** @type {WeekMapBackPropsType} */
 const WeekMapBackProps = {
     style: {},
-    quest: null
+    quest: null,
+    showAnimations: true
 };
 
 class WeekMapBack extends React.Component {
@@ -61,27 +63,37 @@ class WeekMapBack extends React.Component {
     }
 
     componentDidMount() {
+        const { showAnimations } = this.props;
+
         this.state.days.forEach((item, index) => {
             const value = item.day.progress ?? 0;
 
-            if (item.day.state === 'past' || item.day.state === 'today') {
-                this.timeouts.push(
-                    setTimeout(() => {
-                        // Past days with 0 value are not displayed, so we set a minimum value to display them
-                        TimingAnimation(item.animBorder, MinMax(0.02, value, 1), 1000, false).start();
-                    }, index * 100)
-                );
+            if (item.day.state === 'past' || item.day.state === 'filling') {
+                if (!showAnimations) {
+                    item.animBorder.setValue(value);
+                } else {
+                    this.timeouts.push(
+                        setTimeout(() => {
+                            // Past days with 0 value are not displayed, so we set a minimum value to display them
+                            TimingAnimation(item.animBorder, MinMax(0.02, value, 1), 1000, false).start();
+                        }, index * 100)
+                    );
+                }
 
                 // Show background animation only if the day was completed
                 if (value >= 1) {
-                    this.timeouts.push(
-                        setTimeout(
-                            () => {
-                                TimingAnimation(item.animBackground, 1, 200, false).start();
-                            },
-                            1000 + index * 100
-                        )
-                    );
+                    if (!showAnimations) {
+                        item.animBackground.setValue(1);
+                    } else {
+                        this.timeouts.push(
+                            setTimeout(
+                                () => {
+                                    TimingAnimation(item.animBackground, 1, 200, false).start();
+                                },
+                                1000 + index * 100
+                            )
+                        );
+                    }
                 }
             }
         });

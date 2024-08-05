@@ -10,9 +10,9 @@ import user from 'Managers/UserManager';
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  *
  * @typedef {Object} QuestPropsType
- * @prop {StyleProp} style
- * @prop {MyQuest | null} quest
- * @prop {() => void} onDrag Icon to drag => onTouchStart event (quest only)
+ * @property {StyleProp} style
+ * @property {MyQuest | null} quest
+ * @property {() => void} onDrag Icon to drag => onTouchStart event (quest only)
  */
 
 /** @type {QuestPropsType} */
@@ -80,7 +80,7 @@ class QuestButtonBack extends React.Component {
         const { quest } = this.props;
         if (quest === null) return;
 
-        user.interface.ChangePage('myqueststats', { args: { quest } });
+        user.interface.ChangePage('myqueststats', { args: { quest }, storeInHistory: false });
     };
 }
 

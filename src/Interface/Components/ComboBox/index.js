@@ -29,7 +29,7 @@ class ComboBox extends ComboBoxBack {
     }
 
     renderElement = () => {
-        const { style, title, activeColor, enabled, selectedValue } = this.props;
+        const { style, inputStyle, title, activeColor, enabled, selectedValue } = this.props;
         const { anim, selectionMode } = this.state;
 
         const angle = anim.interpolate({
@@ -52,7 +52,7 @@ class ComboBox extends ComboBoxBack {
 
                 {/* InputText to show result */}
                 <InputText
-                    containerStyle={styles.input}
+                    style={inputStyle}
                     label={title}
                     value={selectedValue}
                     activeColor={activeColor}

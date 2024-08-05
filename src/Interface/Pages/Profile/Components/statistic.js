@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
-import { popupContent } from 'Interface/Widgets/StatsBars/popup';
+import { PopupContent } from 'Interface/Widgets/StatsBars/popup';
 
 /**
  * @typedef {import('Managers/UserManager').Stats} Stats
@@ -29,7 +29,7 @@ function RenderStatistic({ item }) {
             activeOpacity={0.6}
             onPress={() =>
                 user.interface.popup?.Open({
-                    content: popupContent.bind(popupContent, item.statKey, user.stats)
+                    content: <PopupContent stats={user.stats} initStatKey={item.statKey} />
                 })
             }
         >

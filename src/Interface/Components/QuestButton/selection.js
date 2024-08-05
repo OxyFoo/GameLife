@@ -8,8 +8,8 @@ import { QuestButton } from './index';
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  *
  * @typedef {Object} QuestSelectionProps
- * @prop {MyQuest | null} draggedItem
- * @prop {Animated.Value} mouseY
+ * @property {MyQuest | null} draggedItem
+ * @property {Animated.Value} mouseY
  */
 
 /** @type {QuestSelectionProps} */

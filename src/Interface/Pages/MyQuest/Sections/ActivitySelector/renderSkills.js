@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, FlatList } from 'react-native';
 
+import styles from './style';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -14,7 +15,8 @@ import { FormatForSearch } from 'Utils/String';
  * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
  */
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+/** @type {ItemSkill[]} */
+const EMPTY_ITEMS_SKILLS = [];
 
 /** @returns {JSX.Element} */
 function renderEmptyList() {
@@ -81,7 +83,7 @@ const RenderSkillsMemo = React.memo(RenderSkills, (prev, next) => prev.category.
  * @returns {React.ReactNode}
  */
 function RenderSkillsSearch({ searchInput, callback }) {
-    const [skillsItems, setSkillsItems] = React.useState([]);
+    const [skillsItems, setSkillsItems] = React.useState(EMPTY_ITEMS_SKILLS);
 
     React.useEffect(() => {
         const search = FormatForSearch(searchInput);
@@ -102,27 +104,5 @@ function RenderSkillsSearch({ searchInput, callback }) {
         />
     );
 }
-
-const styles = StyleSheet.create({
-    activitiesFlatlist: {
-        width: '100%',
-        height: Math.min(500, SCREEN_HEIGHT * 0.8 - 142 - 16) - 50,
-        marginTop: 12
-    },
-    activityElement: {
-        marginHorizontal: 12,
-        marginBottom: 6,
-        padding: 8,
-        borderRadius: 8,
-        overflow: 'hidden'
-    },
-    emptyList: {
-        marginTop: 24
-    },
-    emptyListText: {
-        textAlign: 'center',
-        fontSize: 24
-    }
-});
 
 export { RenderSkillsMemo, RenderSkillsSearch };

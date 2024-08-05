@@ -92,7 +92,7 @@ class BottomPanelBack extends React.Component {
         if (this.opened || this.state.state !== 'closed') return;
         this.opened = true;
 
-        user.interface.navBar.onOpenBottomPanel();
+        user.interface.navBar?.onOpenBottomPanel();
         TimingAnimation(this.state.animOpacity, 1, 200).start();
         this.setState({ state: 'opening', current: params }, () => {
             this.opened = false;
@@ -119,7 +119,7 @@ class BottomPanelBack extends React.Component {
                 ]).start();
 
                 this.state.current?.onClose?.();
-                user.interface.navBar.onCloseBottomPanel();
+                user.interface.navBar?.onCloseBottomPanel();
 
                 setTimeout(() => {
                     // Reset state

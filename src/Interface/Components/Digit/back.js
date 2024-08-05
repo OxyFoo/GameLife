@@ -7,6 +7,7 @@ import { MinMax } from 'Utils/Functions';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ * @typedef {import('react-native').DimensionValue} DimensionValue
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
@@ -15,7 +16,7 @@ import { MinMax } from 'Utils/Functions';
  *
  * @typedef {Object} DigitPropsType
  * @property {StyleViewProp} style
- * @property {number} containerWidth
+ * @property {DimensionValue} containerWidth
  * @property {number} minDigitWidth
  * @property {ThemeColor | ThemeText} color
  * @property {boolean} lock If true, value can't be changed
@@ -42,7 +43,7 @@ const DigitProps = {
     stepValue: 1,
     velocity: 1,
     fontSize: 16,
-    fadeColor: 'background',
+    fadeColor: 'ground1',
     onChangeValue: () => {}
 };
 
@@ -65,6 +66,7 @@ class DigitBack extends React.Component {
 
     state = {
         paddingLeft: 0,
+        containerWidth: 0,
         digitWidth: 0,
         animLeft: new Animated.Value(0)
     };
@@ -107,10 +109,16 @@ class DigitBack extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
-        const { minDigitWidth, containerWidth } = this.props;
+        const { width } = event.nativeEvent.layout;
+        this.setState({ containerWidth: width });
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutDigit = (event) => {
+        const { containerWidth } = this.state;
         const { width } = event.nativeEvent.layout;
         const margins = 4; // 2 * 2
-        const digitWidth = Math.max(minDigitWidth, width) + margins;
+        const digitWidth = width + margins;
 
         // Init
         if (digitWidth > this.state.digitWidth) {

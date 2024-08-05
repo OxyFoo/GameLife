@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Text, Digit } from 'Interface/Components';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
@@ -10,83 +9,94 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
 const MAX_DURATION_MINUTES = 12 * 60;
 
 /**
- * @typedef {import('Interface/OldComponents/Digit/back').DigitCallback} DigitCallback
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ *
+ * @typedef {Object} DurationPropsType
+ * @property {MyQuest | null} quest
+ * @property {(quest: MyQuest) => void} onChangeQuest/
  */
 
+/** @type {DurationPropsType} */
 const DurationProps = {
-    /** @type {number} Duration in minutes */
-    duration: 60,
-
-    /** @param {number} duration */
-    onChange: (duration) => {}
+    quest: null,
+    onChangeQuest: () => {}
 };
 
 class SectionDuration extends React.Component {
-    state = {
-        /** @type {number} */
-        duration: 0
-    }
+    /** @param {number} index */
+    onChangeDurationHour = (index) => {
+        const { quest, onChangeQuest } = this.props;
+        if (quest === null) return;
 
-    refHelp1 = null;
-
-    /** @type {DigitCallback} */
-    onChangeDurationDigit = (name, index) => {
         // Get current durations (hour / minute)
-        let durationHours = Math.floor(this.props.duration / 60);
-        let durationMinutes = this.props.duration % 60;
-
-        // Update duration
-        if (name === 'duration_hour')
-            durationHours = index;
-        else if (name === 'duration_minute')
-            durationMinutes = index * TIME_STEP_MINUTES;
+        const duration = quest.schedule.duration;
+        const durationHours = index;
+        const durationMinutes = duration % 60;
 
         // Update state
         const durationTotal = durationHours * 60 + durationMinutes;
-        this.props.onChange(durationTotal);
-    }
+        onChangeQuest({
+            ...quest,
+            schedule: {
+                ...quest.schedule,
+                duration: durationTotal
+            }
+        });
+    };
+
+    /** @param {number} index */
+    onChangeDurationMinute = (index) => {
+        const { quest, onChangeQuest } = this.props;
+        if (quest === null) return;
+
+        // Get current durations (hour / minute)
+        const duration = quest.schedule.duration;
+        const durationHours = Math.floor(duration / 60);
+        const durationMinutes = index * TIME_STEP_MINUTES;
+
+        // Update state
+        const durationTotal = durationHours * 60 + durationMinutes;
+        onChangeQuest({
+            ...quest,
+            schedule: {
+                ...quest.schedule,
+                duration: durationTotal
+            }
+        });
+    };
 
     render() {
-        const { duration } = this.props;
         const langDatesNames = langManager.curr['dates']['names'];
+        const { quest } = this.props;
+        if (quest === null) return null;
 
-        const borderColor = {
-            borderColor: themeManager.GetColor('main1', { opacity: 0.5 })
-        };
-        const backgroundColor = {
-            backgroundColor: themeManager.GetColor('backgroundCard')
-        };
+        const duration = quest.schedule.duration;
 
         return (
-            <View
-                ref={ref => this.refHelp1 = ref}
-                style={[backgroundColor, styles.schedulePanel]}
-            >
+            <View ref={(ref) => (this.refHelp1 = ref)} style={styles.schedulePanel}>
                 <Digit
-                    name='duration_hour'
-                    containerStyle={[styles.digitHour, borderColor]}
-                    containerWidth={60}
-                    fontSize={24}
-                    minDigitWidth={12}
-                    fadeColor='backgroundGrey'
-                    initValue={Math.floor(duration / 60)}
+                    style={styles.digitHour}
+                    containerWidth={'40%'}
+                    minDigitWidth={40}
+                    fontSize={18}
+                    value={Math.floor(duration / 60)}
                     maxValue={12}
                     velocity={2}
-                    callback={this.onChangeDurationDigit}
+                    onChangeValue={this.onChangeDurationHour}
                 />
                 <Text fontSize={24}>{langDatesNames['hours-min']}</Text>
+
                 <Digit
-                    name='duration_minute'
-                    containerStyle={[styles.digitMinute, borderColor]}
-                    containerWidth={60}
-                    fontSize={24}
-                    fadeColor='backgroundGrey'
-                    initValue={duration % 60}
+                    style={styles.digitMinute}
+                    containerWidth={'40%'}
+                    fontSize={18}
+                    minDigitWidth={40}
+                    value={duration % 60}
                     minValue={duration < 60 ? 5 : 0}
                     maxValue={duration >= MAX_DURATION_MINUTES ? 0 : 59}
                     stepValue={5}
-                    velocity={duration >= MAX_DURATION_MINUTES ? .25 : 2}
-                    callback={this.onChangeDurationDigit}
+                    velocity={duration >= MAX_DURATION_MINUTES ? 0.5 : 2}
+                    onChangeValue={this.onChangeDurationMinute}
                 />
                 <Text fontSize={24}>{langDatesNames['minutes-min']}</Text>
             </View>
@@ -101,18 +111,17 @@ const styles = StyleSheet.create({
     schedulePanel: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
-
-        padding: 24,
-        borderRadius: 12
+        justifyContent: 'space-between'
     },
     digitHour: {
-        height: 48,
-        borderRadius: 4
+        minHeight: 50,
+        borderWidth: 1,
+        borderRadius: 8
     },
     digitMinute: {
-        height: 48,
-        borderRadius: 4
+        minHeight: 50,
+        borderWidth: 1,
+        borderRadius: 8
     }
 });
 

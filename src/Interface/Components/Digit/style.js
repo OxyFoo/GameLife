@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     },
     digit: {
         marginHorizontal: 2,
-        fontSize: 18
+        fontSize: 18,
+        textAlign: 'center'
     },
     gradient: {
         position: 'absolute',

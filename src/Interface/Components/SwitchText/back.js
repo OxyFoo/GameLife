@@ -37,7 +37,7 @@ const SwitchTextProps = {
 
 class SwitchTextBack extends React.Component {
     state = {
-        anim: new Animated.Value(this.props.value),
+        anim: new Animated.Value(0),
         parentWidth: 0
     };
 
@@ -50,6 +50,13 @@ class SwitchTextBack extends React.Component {
         // Approximate parent width to avoid glitches on first render
         const { width } = Dimensions.get('window');
         this.state.parentWidth = width * 0.9;
+
+        if (props.value < 0 || props.value >= props.texts.length) {
+            user.interface.console?.AddLog('warn', 'TextSwitch value is out of bounds');
+            return;
+        }
+
+        this.state.anim.setValue(props.value);
     }
 
     /**

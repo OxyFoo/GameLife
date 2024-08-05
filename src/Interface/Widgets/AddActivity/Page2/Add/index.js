@@ -71,7 +71,6 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                                 <View style={styles.stDigitView}>
                                     <Digit
                                         style={[styles.stDigit, styleBorderColor]}
-                                        fadeColor='backgroundGrey'
                                         maxValue={maxDuration}
                                         velocity={1.25}
                                         value={selectedHours}
@@ -83,7 +82,6 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                                 <View style={styles.stDigitView}>
                                     <Digit
                                         style={[styles.stDigit, styleBorderColor]}
-                                        fadeColor='backgroundGrey'
                                         minValue={activity.duration < 60 ? 5 : 0}
                                         maxValue={activity.duration >= maxDuration * 60 ? 0 : 59}
                                         stepValue={5}

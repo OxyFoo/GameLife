@@ -8,52 +8,44 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('./templates').PopupTemplatesProps} PopupTemplatesProps
  */
 
 /**
- * @typedef {{ data: any, closeReason: any }} PopupTemplateJSDoc
+ * @template {any} T
+ * @typedef {(params: PopupType<T>) => Promise<void>} PopupOpenType Promise resolved when popup is opened
  */
 
 /**
- * @template {PopupTemplateJSDoc} T
+ * @template {any} T
  * @typedef {Object} PopupType
- * @property {React.ComponentType<T>} content
+ * @property {React.ReactNode} content
  * @property {boolean} [priority=false] If true, popup will be opened immediately
- * @property {(button: T['closeReason'] | 'closed') => void} [callback=() => {}]
+ * @property {(button: T | 'closed') => void} [callback=() => {}] TODO: Why T is not recognized ?
  * @property {boolean} [cancelable=true]
  */
 
 /**
- * @template {PopupTemplateJSDoc} T
+ * @template {keyof POPUP_TEMPLATES} T
+ * @typedef {Object} PopupTemplateType
+ * @property {T} type
+ * @property {{ title: string, message: string }} data
+ * @property {boolean} [priority=false] If true, popup will be opened immediately over others, else it will be queued
+ * @property {(button: PopupTemplatesProps[T] | 'closed') => void} [callback=() => {}]
+ * @property {boolean} [cancelable=true]
+ */
+
+/**
+ * @template {any} T
  * @typedef {Object} PopupQueueType
- * @property {React.ComponentType<T['data']>} content
- * @property {T['data']} [data]
+ * @property {React.ReactNode} content
  * @property {boolean} [priority=false] If true, popup will be opened immediately
- * @property {(button: T['closeReason'] | 'closed') => void} [callback=() => {}]
+ * @property {(button: T | 'closed') => void} [callback=() => {}]
  * @property {boolean} [cancelable=true]
  * @property {(event: LayoutChangeEvent) => void} onLayout
  * @property {Animated.Value} animScale
  * @property {Animated.Value} animOpacity
  * @property {Animated.ValueXY} animQuitPos
- */
-
-/**
- * @template {PopupTemplateJSDoc} T
- * @typedef {Object} PopupTemplateType
- * @property {keyof POPUP_TEMPLATES} type
- * @property {{ title: string, message: string }} data
- * @property {boolean} [priority=false] If true, popup will be opened immediately over others, else it will be queued
- * @property {(button: T['closeReason'] | 'closed') => void} [callback=() => {}]
- * @property {boolean} [cancelable=true]
- */
-
-/**
- * @template {PopupTemplateJSDoc} T
- * @callback PopupRenderType
- * @param {Object} props
- * @param {T['data']} props.data
- * @param {(closeReason: T[1]) => void} props.close
- * @returns {React.JSX.Element}
  */
 
 class PopupBack extends React.PureComponent {
@@ -80,12 +72,11 @@ class PopupBack extends React.PureComponent {
     lastLayout = { x: 0, y: 0 };
 
     /**
-     * @template {PopupTemplateJSDoc} T
-     * @param {PopupType<T>} params
-     * @returns {Promise<void>} Promise resolved when popup is opened
+     * @template {any} T
+     * @type {PopupOpenType<T>}
      */
     Open = async (params) => {
-        /** @type {PopupQueueType<any>} */
+        /** @type {PopupQueueType<T>} */
         const newPopup = {
             content: params.content,
             priority: params?.priority ?? false,
@@ -110,15 +101,17 @@ class PopupBack extends React.PureComponent {
 
     /**
      * Open popup with template
-     * @template {PopupTemplateJSDoc} T
+     * @template {keyof POPUP_TEMPLATES} T
      * @param {PopupTemplateType<T>} params
      * @returns {Promise<void>} Promise resolved when popup is opened
      */
     OpenT = async (params) => {
-        /** @type {PopupQueueType<any>} */
+        /** @type {POPUP_TEMPLATES[keyof POPUP_TEMPLATES]} */
+        const PopupTemplate = POPUP_TEMPLATES[params.type];
+
+        /** @type {PopupQueueType<PopupTemplatesProps[T]>} */
         const newPopup = {
-            content: POPUP_TEMPLATES[params.type],
-            data: params.data,
+            content: <PopupTemplate data={params.data} close={this.Close} />,
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),
             cancelable: params?.cancelable ?? true,
@@ -182,7 +175,7 @@ class PopupBack extends React.PureComponent {
 
     /**
      * Close popup
-     * @param {any} [closeReason]
+     * @param {string} [closeReason]
      * @returns {boolean} True if popup was closed
      */
     Close = (closeReason) => {

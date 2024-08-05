@@ -8,17 +8,7 @@ import { GetAge, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native-modal-datetime-picker').default} DateTimePickerModal
- *
- * TODO: Real type of popup
- * @typedef {import('Interface/Global/Popup').PopupType<any>} PopupType
- * @typedef {Object} BackProfileEditorPropsType
- * @property {() => void} close
  */
-
-/** @type {BackProfileEditorPropsType} */
-const BackProfileEditorProps = {
-    close: () => {}
-};
 
 class BackProfileEditor extends React.PureComponent {
     state = {
@@ -30,7 +20,7 @@ class BackProfileEditor extends React.PureComponent {
         stateDTP: ''
     };
 
-    /** @param {BackProfileEditorPropsType} props */
+    /** @param {any} props */
     constructor(props) {
         super(props);
 
@@ -250,9 +240,10 @@ class BackProfileEditor extends React.PureComponent {
             });
         }
     };
-}
 
-BackProfileEditor.defaultProps = BackProfileEditorProps;
-BackProfileEditor.prototype.props = BackProfileEditorProps;
+    onClosePress = () => {
+        user.interface.popup?.Close();
+    };
+}
 
 export default BackProfileEditor;

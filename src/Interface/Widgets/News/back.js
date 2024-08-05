@@ -81,7 +81,7 @@ class BackNews extends React.Component {
     updateMyQuests = (newQuests) => {
         const quests = newQuests
             .filter((quest) =>
-                user.quests.myquests.GetDays(quest).find((d) => d.state === 'today' && (d.progress ?? 0) < 1)
+                user.quests.myquests.GetDays(quest).find((d) => d.state === 'filling' && (d.progress ?? 0) < 1)
             )
             .slice(0, 2);
         this.setState({ quests });

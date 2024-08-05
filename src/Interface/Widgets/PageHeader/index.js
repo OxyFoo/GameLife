@@ -15,12 +15,12 @@ import { Text, Icon, Button } from 'Interface/Components';
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  *
  * @typedef {object} PageHeaderPropsType
- * @prop {StyleProp} style
- * @prop {string | null} title
- * @prop {(event: GestureResponderEvent) => void} onBackPress
- * @prop {IconsName} [secondaryIcon]
- * @prop {ThemeColor | ThemeText | 'gradient'} [secondaryIconColor]
- * @prop {(event: GestureResponderEvent) => void} [onSecondaryIconPress]
+ * @property {StyleProp} style
+ * @property {string | null} title
+ * @property {(event: GestureResponderEvent) => void} onBackPress
+ * @property {IconsName} [secondaryIcon]
+ * @property {ThemeColor | ThemeText | 'gradient'} [secondaryIconColor]
+ * @property {(event: GestureResponderEvent) => void} [onSecondaryIconPress]
  */
 
 /** @type {PageHeaderPropsType} */

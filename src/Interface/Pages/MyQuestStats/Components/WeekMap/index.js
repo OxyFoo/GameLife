@@ -10,6 +10,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Text } from 'Interface/Components';
 
 /**
+ * @typedef {import('react-native').TextStyle} TextStyle
  * @typedef {import('react-native').Animated.AnimatedInterpolation<string | number>} AnimatedInterpolationStringNumber
  *
  * @typedef {import('./back').DayObject} DayObject
@@ -48,17 +49,15 @@ class WeekMap extends WeekMapBack {
 
         /** @type {ThemeText | ThemeColor} */
         let dayColor = 'main1';
-        if (day.state === 'today') {
-            dayColor = 'main2';
-        }
 
         /** @type {ThemeText | ThemeColor} */
         let dayTextColor = 'primary';
 
-        if (day.state === 'disabled') {
-            dayTextColor = 'border';
-        } else if (day.state === 'today') {
+        if (day.isToday) {
+            dayColor = 'main2';
             dayTextColor = 'main2';
+        } else if (day.state === 'disabled') {
+            dayTextColor = 'border';
         } else if (day.state === 'past') {
             dayTextColor = 'main1';
         }
@@ -68,6 +67,11 @@ class WeekMap extends WeekMapBack {
             inputRange: [0, 1],
             outputRange: [themeManager.GetColor(dayTextColor), themeManager.GetColor('primary')]
         });
+
+        /** @type {TextStyle} */
+        const decorationStyle = {
+            textDecorationLine: day.state === 'disabled' ? 'line-through' : 'none'
+        };
 
         return (
             <View style={styles.day} onLayout={this.onLayout}>
@@ -89,11 +93,11 @@ class WeekMap extends WeekMapBack {
                 />
 
                 {value >= 1 ? (
-                    <Text style={[styles.dayText, { color: animatedColor }]} animated>
+                    <Text style={[styles.dayText, decorationStyle, { color: animatedColor }]} animated>
                         {langDates['days-min'][day.day]}
                     </Text>
                 ) : (
-                    <Text style={styles.dayText} color={dayTextColor}>
+                    <Text style={[styles.dayText, decorationStyle]} color={dayTextColor}>
                         {langDates['days-min'][day.day]}
                     </Text>
                 )}

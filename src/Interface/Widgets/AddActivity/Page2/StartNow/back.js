@@ -6,7 +6,7 @@ import { Activity } from 'Class/Activities';
 
 /**
  * @typedef {Object} BackActivityPage2StartNowPropsType
- * @prop {Activity} activity
+ * @property {Activity} activity
  */
 
 /** @type {BackActivityPage2StartNowPropsType} */

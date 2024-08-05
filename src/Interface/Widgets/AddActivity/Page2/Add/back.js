@@ -17,10 +17,10 @@ import {
  * @typedef {import('Interface/Components').InputText} InputText
  *
  * @typedef {Object} BackActivityPage2AddPropsType
- * @prop {Activity} activity
- * @prop {Activity | null} editActivity
- * @prop {(newActivity: Activity) => Promise<void>} changeActivity
- * @prop {() => void} unSelectActivity
+ * @property {Activity} activity
+ * @property {Activity | null} editActivity
+ * @property {(newActivity: Activity) => Promise<void>} changeActivity
+ * @property {() => void} unSelectActivity
  */
 
 /** @type {BackActivityPage2AddPropsType} */

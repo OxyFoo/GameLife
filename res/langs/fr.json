@@ -136,6 +136,8 @@
             "day": "Jour",
             "days": "Jours",
             "never": "Jamais",
+            "week": "Semaine",
+            "month": "Mois",
             "weekly": "Semaine",
             "monthly": "Mois",
             "day-min": "j",
@@ -891,6 +893,9 @@
     },
 
     "quest": {
+        "title": "Ma quête",
+        "title-new": "Créer une quête",
+
         "titles": {
             "title": "Titre de la quête",
             "skills": "Sélectionne tes activités",
@@ -899,18 +904,18 @@
             "comment": "Commentaire"
         },
 
-        "input-title": "Titre",
         "input-activity-title": "Aucune activité sélectionnée",
         "input-activity-add": "Ajouter",
+        "input-comment-placeholder": "Commentaire à propos de la quête...",
+        "input-switch-frequency": "Fréquence",
 
         "popup-all-categories": "Toutes les catégories",
 
         "input-panel-activity": "Sélectionne une activité",
         "input-panel-category": "Sélectionne une catégorie",
 
-        "input-comment": "Commentaire",
-
-        "text-hint-select": "Reste appuyé pour sélectionner un colone",
+        "text-hint-select": "Reste appuyé pour sélectionner un colonne",
+        "text-hint-frequency": "À quelle fréquence tu veux faire tes activités",
 
         "input-errors": {
             "title-empty": "Le titre ne peut pas être vide",
@@ -926,7 +931,7 @@
         },
 
         "alert-remquest-title": "Suppression ?",
-        "alert-remquest-text": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
+        "alert-remquest-message": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
         "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
 
@@ -938,6 +943,7 @@
     },
 
     "quest-stats": {
+        "title": "Ma quête",
         "title-current-week": "Semaine en cours",
         "title-heatmap": "Résultats",
         "button-add-activity": "Ajouter une activité",

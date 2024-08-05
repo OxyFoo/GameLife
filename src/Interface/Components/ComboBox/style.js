@@ -6,9 +6,6 @@ const styles = StyleSheet.create({
         zIndex: 1010,
         elevation: 1010
     },
-    input: {
-        borderRadius: 8
-    },
 
     overlayParent: {
         position: 'absolute',

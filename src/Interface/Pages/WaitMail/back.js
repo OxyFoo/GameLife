@@ -65,10 +65,10 @@ class BackWaitmail extends PageBase {
         if (status === 'limitDevice') {
             const title = langManager.curr['login']['alert-limitDevice-title'];
             const message = langManager.curr['login']['alert-limitDevice-message'];
-            user.interface.popup.OpenT({
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message },
-                callback: user.interface.BackHandle
+                callback: () => user.interface.BackHandle()
             });
 
             user.settings.email = '';

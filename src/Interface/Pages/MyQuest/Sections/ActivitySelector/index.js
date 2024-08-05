@@ -1,12 +1,13 @@
 import React from 'react';
-import { Animated, View, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { Animated, View } from 'react-native';
 
+import styles from './style';
 import { RenderSkillsMemo, RenderSkillsSearch } from './renderSkills';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Text, IconCheckable, Swiper, Button, Icon, Input } from 'Interface/Components';
+import { Text, IconCheckable, Swiper, Button, Icon, InputText } from 'Interface/Components';
 import { CategoryToItem, GetRecentSkills } from 'Interface/Widgets/AddActivity/types';
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -14,7 +15,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
  *
  * @typedef {Object} ActivitySelectorPropsType
- * @prop {(id: number) => void} callback
+ * @property {(id: number) => void} callback
  */
 
 /** @type {ActivitySelectorPropsType} */
@@ -36,14 +37,14 @@ class ActivitySelector extends React.Component {
     /** @type {React.RefObject<Swiper>} */
     refSwiper = React.createRef();
 
-    /** @type {React.RefObject<Input>} */
+    /** @type {React.RefObject<InputText>} */
     refInput = React.createRef();
 
     /** @type {Array<ItemCategory>} */
     allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
 
     componentDidMount() {
-        const isRecentSkills = GetRecentSkills(undefined).length > 0;
+        const isRecentSkills = GetRecentSkills().length > 0;
         this.refSwiper.current?.GoTo(isRecentSkills ? 0 : 1);
     }
 
@@ -55,9 +56,9 @@ class ActivitySelector extends React.Component {
 
         // Focus input if searching
         if (!isSearching) {
-            this.refInput.current?.focus();
+            this.refInput.current?.focus?.();
         } else {
-            this.refInput.current?.unfocus();
+            this.refInput.current?.blur?.();
         }
     };
     /** @param {string} search */
@@ -78,7 +79,7 @@ class ActivitySelector extends React.Component {
                     searchInput={search}
                     callback={(id) => {
                         this.props.callback(id);
-                        user.interface.popup.Close();
+                        user.interface.popup?.Close();
                     }}
                 />
             );
@@ -93,7 +94,7 @@ class ActivitySelector extends React.Component {
                         category={category}
                         callback={(id) => {
                             this.props.callback(id);
-                            user.interface.popup.Close();
+                            user.interface.popup?.Close();
                         }}
                     />
                 ))
@@ -101,47 +102,58 @@ class ActivitySelector extends React.Component {
         }
 
         const styleAnimCategories = {
-            transform: [{ translateY: 10 }, { translateY: Animated.multiply(-100, animSearch) }]
+            transform: [{ translateY: Animated.multiply(-150, animSearch) }]
         };
         const styleAnimSearch = {
-            transform: [{ translateY: -40 }, { translateY: Animated.multiply(-100, Animated.subtract(1, animSearch)) }]
+            transform: [{ translateY: Animated.multiply(-150, Animated.subtract(1, animSearch)) }]
         };
-
-        // Get swiper height from popup height (max 80% screen height)
-        const { height } = Dimensions.get('window');
-        const swiperHeight = Math.min(500, height * 0.8 - 142 - 16);
 
         return (
             <View style={styles.popup}>
                 {/* Categories */}
                 <Animated.View style={[styles.categoriesContainer, styleAnimCategories]}>
-                    <ScrollView style={styles.categoriesScrollView} horizontal>
-                        {this.allCategoriesItems.map((category) => this.renderCategory({ item: category }))}
-                    </ScrollView>
+                    <View style={styles.categoriesParent}>
+                        {this.allCategoriesItems.map((category, index) => (
+                            <IconCheckable
+                                key={`category-${category.id}`}
+                                style={[styles.categoryItem, index === 0 && styles.categoryItemFirst]}
+                                id={category.id}
+                                xml={category.icon}
+                                size={32}
+                                checked={this.state.selectedCategory === category.id}
+                                onPress={this.handleCategoryButton}
+                            />
+                        ))}
+                    </View>
                 </Animated.View>
 
                 {/* Search */}
                 <Animated.View style={[styles.searchContainer, styleAnimSearch]}>
-                    <Input
+                    <InputText
                         ref={this.refInput}
                         label={lang['popup-all-categories']}
-                        text={search}
+                        value={search}
                         onChangeText={this.handleSearchInput}
                     />
                 </Animated.View>
 
                 {/* Title & search button */}
                 <View style={styles.containerTitle}>
-                    <Text fontSize={isSearching ? 16 : 24}>{title}</Text>
-                    <Button style={styles.searchButton} onPress={this.handleSearchButton}>
-                        <Icon icon={isSearching ? 'cross' : 'magnifyingGlass'} size={28} />
+                    <Text fontSize={isSearching ? 18 : 24}>{title}</Text>
+                    <Button
+                        style={styles.searchButton}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={this.handleSearchButton}
+                    >
+                        <Icon color='main1' icon={isSearching ? 'close' : 'rounded-magnifer-outline'} size={28} />
                     </Button>
                 </View>
 
                 {/* Skills list */}
                 <Swiper
                     ref={this.refSwiper}
-                    height={swiperHeight}
+                    backgroundColor='transparent'
                     onSwipe={this.handleCategorySwiper}
                     pages={pages}
                     enableAutoNext={false}
@@ -159,66 +171,9 @@ class ActivitySelector extends React.Component {
     handleCategoryButton = (id) => {
         this.refSwiper.current?.GoTo(id);
     };
-
-    /**
-     * @param {{ item: ItemCategory }} param0
-     * @returns {JSX.Element}
-     */
-    renderCategory = ({ item }) => {
-        const { id, icon } = item;
-        const checked = this.state.selectedCategory === id;
-
-        return (
-            <IconCheckable
-                key={`category-${id}`}
-                style={styles.category}
-                id={id}
-                xml={icon}
-                size={32}
-                checked={checked}
-                onPress={this.handleCategoryButton}
-            />
-        );
-    };
 }
 
 ActivitySelector.prototype.props = ActivitySelectorProps;
 ActivitySelector.defaultProps = ActivitySelectorProps;
-
-const styles = StyleSheet.create({
-    popup: {
-        overflow: 'hidden'
-    },
-
-    category: {
-        marginVertical: 4,
-        marginHorizontal: 4
-    },
-    categoriesContainer: {
-        marginTop: 6,
-        alignItems: 'center'
-    },
-    categoriesScrollView: {
-        maxWidth: '100%',
-        marginBottom: 0
-    },
-
-    searchContainer: {
-        height: 24,
-        marginHorizontal: 16
-    },
-
-    containerTitle: {
-        marginBottom: 4,
-        marginHorizontal: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    searchButton: {
-        aspectRatio: 1,
-        paddingHorizontal: 0
-    }
-});
 
 export default ActivitySelector;

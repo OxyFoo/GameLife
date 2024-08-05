@@ -47,7 +47,7 @@ class HeaderBack extends React.Component {
 
     openEditProfile = () => {
         user.interface.popup?.Open({
-            content: ProfileEditor
+            content: <ProfileEditor />
         });
     };
 }

@@ -1,21 +1,20 @@
-import { Keyboard } from 'react-native';
+import { Animated, Keyboard } from 'react-native';
 
+//import StartMission from './mission';
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import StartMission from './mission';
+import { DeepCopy } from 'Utils/Object';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
- * @typedef {import('Class/Quests/MyQuests').RepeatModes} RepeatModes
- * 
+ *
  * @typedef {'add' | 'save' | 'remove'} States
- * 
- * @typedef {import('./Sections/skills').default} SectionActivity
- * @typedef {import('./Sections/schedule').default} SectionSchedule
- * @typedef {import('./Sections/comment').default} SectionComment
  */
 
 const BackQuestProps = {
@@ -30,76 +29,107 @@ class BackQuest extends PageBase {
         /** @type {States} */
         action: 'add',
 
-        /** @type {string} */
-        title: '',
-
-        /** @type {Array<number>} */
-        skills: [],
-
-        schedule: {
-            /** @type {RepeatModes} */
-            type: 'week',
-
-            /** @type {Array<number>} */
-            repeat: []
+        /** @type {MyQuest} */
+        tempQuest: {
+            title: '',
+            comment: '',
+            created: 0, // 0 To autodefined when added
+            maximumStreak: 0,
+            schedule: {
+                type: 'week',
+                repeat: [],
+                duration: 60
+            },
+            skills: []
         },
 
-        /** @type {number} */
-        duration: 60,
-
-        /** @type {string} */
-        comment: '',
+        editButtonHeight: 0,
+        animEditButton: new Animated.Value(0),
 
         /** @type {Array<InputsError>} Error message to display */
         errors: []
-    }
-
-    /** @type {SectionActivity | null} */
-    refSectionSkill = null;
-
-    /** @type {SectionSchedule | null} */
-    refSectionSchedule = null;
-
-    /** @type {SectionComment | null} */
-    refSectionComment = null;
+    };
 
     /** @type {MyQuest | null} */
     selectedQuest = null;
 
+    /** @param {BackQuestProps} props */
     constructor(props) {
         super(props);
 
-        if (this.props.args?.quest) {
+        if (props.args?.quest) {
             /** @type {MyQuest | null} */
-            const quest = this.props.args.quest || null;
+            const quest = props.args.quest || null;
             this.selectedQuest = quest;
 
             if (quest === null) {
                 user.interface.BackHandle();
-                user.interface.console.AddLog('error', 'Quest: Quest not found');
+                user.interface.console?.AddLog('error', 'Quest: Quest not found');
                 return;
             }
 
             this.state = {
+                ...this.state,
                 action: 'remove',
-                title: quest.title,
-                skills: quest.skills,
-                schedule: {
-                    type: quest.schedule.type,
-                    repeat: quest.schedule.repeat
-                },
-                duration: quest.schedule.duration,
-                comment: quest.comment,
-                errors: []
+                tempQuest: DeepCopy(quest)
             };
         }
     }
 
-    componentDidFocused = (args) => {
-        StartMission.call(this, args?.missionName);
+    componentDidMount() {
+        //StartMission.call(this, this.props.args?.missionName);
         user.interface.SetCustomBackHandler(this.BackHandler);
+        this.onChangeQuest(this.state.tempQuest);
     }
 
+    /** @param {LayoutChangeEvent} event */
+    onEditButtonLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ editButtonHeight: height });
+    };
+
+    /** @param {MyQuest} quest */
+    IsEdited = (quest) => {
+        if (this.selectedQuest === null) {
+            return false;
+        }
+
+        const oldQuest = DeepCopy(this.selectedQuest);
+        const newQuest = DeepCopy(quest);
+
+        if (newQuest.schedule.type !== oldQuest.schedule.type) {
+            return true;
+        }
+
+        newQuest.skills = newQuest.skills.sort();
+        oldQuest.skills = oldQuest.skills.sort();
+        if (newQuest.schedule.type !== 'frequency' && oldQuest.schedule.type !== 'frequency') {
+            newQuest.schedule.repeat = newQuest.schedule.repeat.sort();
+            oldQuest.schedule.repeat = oldQuest.schedule.repeat.sort();
+        }
+
+        return JSON.stringify(oldQuest) !== JSON.stringify(newQuest);
+    };
+
+    /** @param {MyQuest} quest */
+    onChangeQuest = (quest) => {
+        const { action, animEditButton } = this.state;
+
+        const errors = user.quests.myquests.VerifyInputs(quest);
+
+        if (action === 'save' || action === 'remove') {
+            const edited = this.IsEdited(quest);
+            this.setState({
+                action: edited ? 'save' : 'remove',
+                tempQuest: quest,
+                errors
+            });
+            SpringAnimation(animEditButton, edited ? 1 : 0).start();
+            return;
+        }
+
+        this.setState({ tempQuest: quest, errors });
+    };
     /**
      * @param {boolean} askPopup Show a popup to ask the user if he wants to
      *                           leave the page when he is editing a quest
@@ -110,156 +140,130 @@ class BackQuest extends PageBase {
 
         // Don't show popup or quest not edited => leave
         if (!askPopup || action === 'remove') {
-            return true;
+            user.interface.ResetCustomBackHandler();
+            user.interface.ChangePage('myqueststats', {
+                args: { quest: this.selectedQuest, showAnimations: false },
+                storeInHistory: false,
+                transition: 'fromLeft'
+            });
+            return false;
         }
 
-        const callback = (btn) => {
-            if (btn === 'yes') {
-                user.interface.ResetCustomBackHandler();
-                user.interface.BackHandle();
-            }
+        if (action === 'add') {
+            user.interface.ResetCustomBackHandler();
+            user.interface.BackHandle();
+            return false;
         }
-        const title = langManager.curr['quest']['alert-back-title'];
-        const text = langManager.curr['quest']['alert-back-message'];
-        user.interface.popup.Open('yesno', [ title, text ], callback);
+
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: langManager.curr['quest']['alert-back-title'],
+                message: langManager.curr['quest']['alert-back-message']
+            },
+            callback: (btn) => {
+                if (btn === 'yes') {
+                    user.interface.ResetCustomBackHandler();
+                    user.interface.ChangePage('myqueststats', {
+                        args: { quest: this.selectedQuest, showAnimations: false },
+                        storeInHistory: false,
+                        transition: 'fromLeft'
+                    });
+                }
+            }
+        });
         return false;
-    }
+    };
 
     keyboardDismiss = () => {
         Keyboard.dismiss();
         return false;
-    }
+    };
 
-    /** @returns {boolean} True if no errors */
-    onEditQuest = () => {
-        const newStates = {};
+    AddQuest = () => {
+        const { tempQuest } = this.state;
+        const addStatus = user.quests.myquests.Add(tempQuest);
 
-        const errors = user.quests.myquests.VerifyInputs({
-            title: this.state.title,
-            comment: this.state.comment,
-            created: this.selectedQuest?.created || 0,
-            schedule: {
-                type: this.state.schedule.type,
-                repeat: this.state.schedule.repeat,
-                duration: this.state.duration
-            },
-            skills: this.state.skills,
-            maximumStreak: 0
-        });
-        if (this.state.errors.join() !== errors.join()) {
-            newStates.errors = errors;
-        }
-
-        if (this.selectedQuest !== null && this.state.action !== 'save') {
-            newStates.action = 'save';
-        }
-
-        if (Object.keys(newStates).length > 0) {
-            this.setState(newStates);
-        }
-
-        return errors.length === 0;
-    }
-
-    /** @param {string} title */
-    onChangeTitle = (title) => {
-        this.setState({ title }, this.onEditQuest);
-    }
-
-    /** @param {Array<number>} skills */
-    onChangeSkills = (skills) => {
-        this.setState({ skills }, this.onEditQuest);
-    }
-
-    /**
-     * @param {RepeatModes} repeatMode
-     * @param {Array<number>} repeatDays
-     */
-    onScheduleChange = (repeatMode, repeatDays) => {
-        const schedule = { type: repeatMode, repeat: repeatDays };
-        this.setState({ schedule }, this.onEditQuest);
-    }
-
-    /** @param {number} duration */
-    onChangeDuration = (duration) => {
-        this.setState({ duration }, this.onEditQuest);
-    }
-
-    /** @param {string} comment */
-    onChangeComment = (comment) => {
-        this.setState({ comment }, this.onEditQuest);
-    }
-
-    onButtonPress = () => {
-        const { action } = this.state;
-        switch (action) {
-            case 'add': this.addOrEditQuest(false); break;
-            case 'save': this.addOrEditQuest(true); break;
-            case 'remove': this.removeQuest(); break;
-            default:
-                user.interface.console.AddLog('error', 'Quest: Unknown action');
-        }
-    }
-
-    addOrEditQuest = (edit = false) => {
-        const { title, skills, schedule, duration, comment } = this.state;
-
-        if (edit && this.selectedQuest === null) {
-            user.interface.console.AddLog('error', 'Quest: Selected quest is null');
-            return;
-        }
-
-        if (!this.onEditQuest()) {
-            return;
-        }
-
-        const addition = user.quests.myquests.AddOrEdit({
-            title,
-            comment: comment,
-            created: edit ? this.selectedQuest.created : null,
-            schedule: {
-                type: schedule.type,
-                repeat: schedule.repeat,
-                duration: duration
-            },
-            skills,
-            maximumStreak: 0
-        });
-
-        if (addition === 'added' || addition === 'edited') {
+        if (addStatus === 'added') {
             // Update mission
             user.missions.SetMissionState('mission2', 'completed');
 
             user.GlobalSave();
             user.interface.ResetCustomBackHandler();
+
+            user.interface.ChangePage('myqueststats', {
+                args: { quest: tempQuest },
+                storeInHistory: false,
+                transition: 'fromLeft'
+            });
+        } else if (addStatus === 'already-added') {
+            user.interface.console?.AddLog('warn', 'Quest: Quest already added');
             user.interface.BackHandle();
         } else {
-            user.interface.console.AddLog('error', 'Quest: Unknown error');
+            user.interface.console?.AddLog('error', 'Quest: Unknown error');
         }
-    }
+    };
 
-    removeQuest = () => {
+    EditQuest = () => {
+        const { tempQuest } = this.state;
+
         if (this.selectedQuest === null) {
-            user.interface.console.AddLog('error', 'Quest: Selected quest is null');
+            user.interface.console?.AddLog('error', 'Quest: Selected quest is null');
             return;
         }
 
-        const callback = (btn) => {
-            if (btn === 'yes') {
-                const remove = user.quests.myquests.Remove(this.selectedQuest);
-                if (remove === 'removed') {
-                    user.GlobalSave();
-                    user.interface.ResetCustomBackHandler();
-                    user.interface.BackHandle();
-                } else if (remove === 'notExist') {
-                    user.interface.console.AddLog('warn', 'Quest: Quest not exist');
+        const addition = user.quests.myquests.Edit(tempQuest);
+
+        if (addition === 'edited') {
+            // Update mission
+            user.missions.SetMissionState('mission2', 'completed');
+
+            user.GlobalSave();
+            user.interface.ResetCustomBackHandler();
+
+            user.interface.ChangePage('myqueststats', {
+                args: { quest: tempQuest, showAnimations: false },
+                storeInHistory: false,
+                transition: 'fromLeft'
+            });
+        } else if (addition === 'not-exists') {
+            user.interface.console?.AddLog('warn', 'Quest: Quest not exist');
+            user.interface.BackHandle();
+        } else {
+            user.interface.console?.AddLog('error', 'Quest: Unknown error');
+        }
+    };
+
+    RemoveQuest = () => {
+        if (this.selectedQuest === null) {
+            user.interface.console?.AddLog('error', 'Quest: Selected quest is null');
+            return;
+        }
+
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: langManager.curr['quest']['alert-remquest-title'],
+                message: langManager.curr['quest']['alert-remquest-message']
+            },
+            callback: (btn) => {
+                if (btn === 'yes' && this.selectedQuest !== null) {
+                    const remove = user.quests.myquests.Remove(this.selectedQuest);
+                    if (remove === 'removed') {
+                        user.GlobalSave();
+                        user.interface.ResetCustomBackHandler();
+                        user.interface.BackHandle();
+                    } else if (remove === 'notExist') {
+                        user.interface.console?.AddLog('warn', 'Quest: Quest not exist');
+                    }
                 }
             }
-        }
-        const title = langManager.curr['quest']['alert-remquest-title'];
-        const text = langManager.curr['quest']['alert-remquest-text'];
-        user.interface.popup.Open('yesno', [ title, text ], callback);
-    }
+        });
+    };
+
+    onBackPress = () => {
+        user.interface.BackHandle();
+    };
 }
 
 BackQuest.defaultProps = BackQuestProps;

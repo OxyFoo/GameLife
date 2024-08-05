@@ -53,7 +53,7 @@ class ProfileEditor extends BackProfileEditor {
                     </Button>
                 </View>
 
-                <Button style={styles.buttonCancel} fontSize={14} onPress={this.props.close}>
+                <Button style={styles.buttonCancel} fontSize={14} onPress={this.onClosePress}>
                     {lang['edit-cancel']}
                 </Button>
 

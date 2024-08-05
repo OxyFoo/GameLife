@@ -20,6 +20,7 @@ import { SpringAnimation } from 'Utils/Animations';
  *
  * @typedef {Object} ComboBoxPropsType
  * @property {StyleProp} style
+ * @property {StyleProp} inputStyle
  * @property {number} maxContentHeight
  * @property {string} title
  * @property {ThemeColor} activeColor
@@ -33,6 +34,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /** @type {ComboBoxPropsType} */
 const ComboBoxProps = {
     style: {},
+    inputStyle: {},
     maxContentHeight: 256,
     title: 'Title',
     activeColor: 'main1',

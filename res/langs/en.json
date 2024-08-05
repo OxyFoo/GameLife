@@ -136,6 +136,8 @@
             "day": "Day",
             "days": "Days",
             "never": "Never",
+            "week": "Week",
+            "month": "Month",
             "weekly": "Weekly",
             "monthly": "Monthly",
             "day-min": "d",
@@ -891,6 +893,9 @@
     },
 
     "quest": {
+        "title": "My quest",
+        "title-new": "Create my quest",
+
         "titles": {
             "title": "Title quest",
             "skills": "Select your activities",
@@ -899,18 +904,18 @@
             "comment": "Commentary"
         },
 
-        "input-title": "Title",
         "input-activity-title": "No activity selected",
         "input-activity-add": "Add",
+        "input-comment-placeholder": "Comments about the quest...",
+        "input-switch-frequency": "Frequency",
 
         "popup-all-categories": "All categories",
 
         "input-panel-activity": "Select an activity",
         "input-panel-category": "Select a category",
 
-        "input-comment": "Commentary",
-
         "text-hint-select": "Press and hold to select the column",
+        "text-hint-frequency": "How often do you want to do your activities?",
 
         "input-errors": {
             "title-empty": "Please enter a title",
@@ -926,7 +931,7 @@
         },
 
         "alert-remquest-title": "Delete quest?",
-        "alert-remquest-text": "Are you sure you want to delete this quest?",
+        "alert-remquest-message": "Are you sure you want to delete this quest?",
         "alert-back-title": "Back",
         "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
 
@@ -938,6 +943,7 @@
     },
 
     "quest-stats": {
+        "title": "My quest",
         "title-current-week": "Current week",
         "title-heatmap": "Results",
         "button-add-activity": "Add an activity",

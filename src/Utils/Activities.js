@@ -23,7 +23,7 @@ function StartActivityNow(skillID) {
     if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];
         const message = langManager.curr['activity']['alert-wrongtiming-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
@@ -168,21 +168,21 @@ function AddActivity(activity) {
     } else if (status === 'notFree') {
         const title = lang['alert-wrongtiming-title'];
         const message = lang['alert-wrongtiming-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
     } else if (status === 'tooEarly') {
         const title = lang['alert-alreadyexist-title'];
         const message = lang['alert-alreadyexist-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
     } else if (status === 'alreadyExist') {
         const title = lang['alert-tooearly-title'];
         const message = lang['alert-tooearly-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
@@ -204,12 +204,12 @@ function EditActivity(oldActivity, newActivity, confirm = false) {
 
     if (status === 'edited' && activity !== null) {
         user.GlobalSave().then(() => user.RefreshStats(false));
-        user.interface.bottomPanel.Close();
+        user.interface.bottomPanel?.Close();
         return true;
     } else if (status === 'needConfirmation') {
         const title = lang['alert-needconfirmation-title'];
         const message = lang['alert-needconfirmation-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'yesno',
             data: { title, message },
             callback: (button) => {
@@ -221,21 +221,21 @@ function EditActivity(oldActivity, newActivity, confirm = false) {
     } else if (status === 'notFree') {
         const title = lang['alert-wrongtiming-title'];
         const message = lang['alert-wrongtiming-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
     } else if (status === 'tooEarly') {
         const title = lang['alert-alreadyexist-title'];
         const message = lang['alert-alreadyexist-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
     } else if (status === 'notExist') {
         const title = lang['alert-error-title'];
         const message = lang['alert-error-message'];
-        user.interface.popup.OpenT({
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message }
         });
@@ -250,7 +250,7 @@ function EditActivity(oldActivity, newActivity, confirm = false) {
 function RemoveActivity(activity) {
     const lang = langManager.curr['activity'];
 
-    user.interface.popup.OpenT({
+    user.interface.popup?.OpenT({
         type: 'yesno',
         data: {
             title: lang['alert-remove-title'],
@@ -266,7 +266,7 @@ function RemoveActivity(activity) {
             if (removedStatus === 'removed') {
                 user.GlobalSave().then(() => user.RefreshStats(false));
             } else if (removedStatus === 'notExist') {
-                user.interface.popup.OpenT({
+                user.interface.popup?.OpenT({
                     type: 'ok',
                     data: {
                         title: lang['alert-error-not-exist-title'],
@@ -274,7 +274,7 @@ function RemoveActivity(activity) {
                     }
                 });
             }
-            user.interface.bottomPanel.Close();
+            user.interface.bottomPanel?.Close();
         }
     });
 }

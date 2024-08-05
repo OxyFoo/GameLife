@@ -1,30 +1,55 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
 import langManager from 'Managers/LangManager';
 
-import { Input } from 'Interface/Components';
+import { InputText } from 'Interface/Components';
 
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ *
+ * @typedef {Object} SectionCommentPropsType
+ * @property {StyleProp} style
+ * @property {MyQuest | null} quest
+ * @property {(quest: MyQuest) => void} onChangeQuest
+ */
+
+/** @type {SectionCommentPropsType} */
 const SectionCommentProps = {
-    /** @type {string} */
-    comment: '',
-
-    /** @param {string} comment */
-    onChange: (comment) => {}
+    style: {},
+    quest: null,
+    onChangeQuest: () => {}
 };
 
 class SectionComment extends React.Component {
+    /** @param {string} comment */
+    onChangeComment = (comment) => {
+        const { quest, onChangeQuest } = this.props;
+        if (quest === null) return;
+
+        onChangeQuest({
+            ...quest,
+            comment: comment
+        });
+    };
+
     render() {
         const lang = langManager.curr['quest'];
-        const { comment, onChange } = this.props;
+        const { style, quest } = this.props;
+        if (quest === null) return null;
 
         return (
-            <Input
-                text={comment}
-                label={lang['input-comment']}
-                onChangeText={onChange}
-                multiline={true}
-                maxLength={1024}
-            />
+            <View style={style}>
+                <InputText
+                    value={quest.comment}
+                    placeholder={lang['input-comment-placeholder']}
+                    onChangeText={this.onChangeComment}
+                    multiline={true}
+                    maxLength={1024}
+                />
+            </View>
         );
     }
 }

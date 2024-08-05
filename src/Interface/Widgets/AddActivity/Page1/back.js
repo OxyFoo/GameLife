@@ -22,11 +22,11 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('../types').ItemCategory} ItemCategory
  *
  * @typedef {Object} BackActivityPage1PropsType
- * @prop {Activity} activity
- * @prop {(newActivity: Activity) => Promise<void>} changeActivity
- * @prop {() => void} unSelectActivity
- * @prop {number | null} categoryID
- * @prop {Array<number>} listSkillsIDs
+ * @property {Activity} activity
+ * @property {(newActivity: Activity) => Promise<void>} changeActivity
+ * @property {() => void} unSelectActivity
+ * @property {number | null} categoryID
+ * @property {Array<number>} listSkillsIDs
  */
 
 /** @type {BackActivityPage1PropsType} */

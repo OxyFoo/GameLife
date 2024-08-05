@@ -11,10 +11,11 @@ import { Range } from 'Utils/Functions';
 
 class Digit extends DigitBack {
     render() {
-        const { style } = this.props;
+        const { style, containerWidth } = this.props;
+        const { animLeft, paddingLeft } = this.state;
 
         const translateX = {
-            transform: [{ translateX: Animated.subtract(0, this.state.animLeft) }]
+            transform: [{ translateX: Animated.subtract(0, animLeft) }]
         };
 
         const fadeColor = themeManager.GetColor(this.props.fadeColor);
@@ -26,10 +27,11 @@ class Digit extends DigitBack {
                     styles.containerStyle,
                     style,
                     {
-                        width: this.props.containerWidth,
-                        paddingLeft: this.state.paddingLeft
+                        minWidth: containerWidth,
+                        paddingLeft: paddingLeft
                     }
                 ]}
+                onLayout={this.onLayout}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
@@ -58,7 +60,7 @@ class Digit extends DigitBack {
 
     /** @param {number} i */
     renderDigit = (i) => {
-        const { color, fontSize } = this.props;
+        const { color, fontSize, minDigitWidth } = this.props;
         //const { digitWidth } = this.state;
 
         return (
@@ -68,12 +70,12 @@ class Digit extends DigitBack {
                     styles.digit,
                     {
                         // It works with the font size, is it a coincidence?
-                        minWidth: fontSize + 4,
+                        minWidth: Math.max(minDigitWidth, fontSize + 4),
                         fontSize: fontSize
                     }
                 ]}
                 color={color}
-                onLayout={this.onLayout}
+                onLayout={this.onLayoutDigit}
             >
                 {i.toString()}
             </Text>
@@ -82,9 +84,17 @@ class Digit extends DigitBack {
 
     /** @param {number} i */
     renderDigitEmpty = (i) => {
-        const { fontSize } = this.props;
+        const { fontSize, minDigitWidth } = this.props;
         //const { digitWidth } = this.state;
-        return <Text key={`digit-text-${i}`} style={[styles.digit, { minWidth: fontSize + 4, fontSize }]} />;
+        return (
+            <Text
+                key={`digit-text-${i}`}
+                style={[styles.digit, { minWidth: Math.max(minDigitWidth, fontSize + 4), fontSize }]}
+                color='transparent'
+            >
+                {i.toString()}
+            </Text>
+        );
     };
 }
 

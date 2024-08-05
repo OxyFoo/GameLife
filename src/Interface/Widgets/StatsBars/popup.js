@@ -13,10 +13,11 @@ import { Button, Icon, ProgressBar, Swiper, Text } from 'Interface/Components';
  */
 
 /**
- * @param {keyof Stats} initStatKey
- * @param {Stats} [stats]
+ * @param {Object} props
+ * @param {keyof Stats} props.initStatKey
+ * @param {Stats} [props.stats]
  */
-function popupContent(initStatKey, stats = user.experience.GetExperience().stats) {
+function PopupContent({ initStatKey, stats = user.experience.GetExperience().stats }) {
     /** @param {keyof Stats} statKey */
     const statBox = (statKey) => {
         const statName = langManager.curr['statistics']['names'][statKey];
@@ -127,4 +128,4 @@ function statComponent(statKey, stat, sup, index, simplifiedDisplay = false, cal
     );
 }
 
-export { statComponent, popupContent };
+export { statComponent, PopupContent };

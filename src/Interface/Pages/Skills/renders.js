@@ -63,8 +63,8 @@ function renderSkill({ item }) {
             <LinearGradient
                 style={styles.skillGradient}
                 colors={[
-                    themeManager.GetColor('ground1', { opacity: 0.55 }),
-                    themeManager.GetColor('ground1', { opacity: 0.25 })
+                    themeManager.GetColor('grey', { opacity: 0.45 }),
+                    themeManager.GetColor('grey', { opacity: 0.15 })
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}

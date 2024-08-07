@@ -109,7 +109,7 @@ class BackNews extends React.Component {
     };
 
     goToQuestsPage = () => {
-        user.interface.ChangePage('quests');
+        user.interface.ChangePage('myquests');
     };
 }
 

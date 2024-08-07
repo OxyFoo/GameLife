@@ -17,7 +17,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {'add' | 'save' | 'remove'} States
  */
 
-const BackQuestProps = {
+const BackMyQuestProps = {
     args: {
         /** @type {MyQuest | null} */
         quest: null
@@ -53,7 +53,7 @@ class BackQuest extends PageBase {
     /** @type {MyQuest | null} */
     selectedQuest = null;
 
-    /** @param {BackQuestProps} props */
+    /** @param {BackMyQuestProps} props */
     constructor(props) {
         super(props);
 
@@ -266,7 +266,7 @@ class BackQuest extends PageBase {
     };
 }
 
-BackQuest.defaultProps = BackQuestProps;
-BackQuest.prototype.props = BackQuestProps;
+BackQuest.defaultProps = BackMyQuestProps;
+BackQuest.prototype.props = BackMyQuestProps;
 
 export default BackQuest;

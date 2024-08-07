@@ -3,10 +3,11 @@ import { View, FlatList } from 'react-native';
 
 import styles from './style';
 import BackQuestsList from './back';
+import { MyQuestButton } from './Button';
 
 import langManager from 'Managers/LangManager';
 
-import { Button, QuestButton } from 'Interface/Components';
+import { Button } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -14,6 +15,8 @@ import { Button, QuestButton } from 'Interface/Components';
  */
 
 class MyQuestsList extends BackQuestsList {
+    static Button = MyQuestButton;
+
     render() {
         const { style } = this.props;
         const { quests } = this.state;
@@ -33,7 +36,7 @@ class MyQuestsList extends BackQuestsList {
 
     /** @type {ListRenderItemMyQuest} */
     renderItem = ({ item }) => {
-        return <QuestButton style={styles.questItem} quest={item} />;
+        return <MyQuestButton style={styles.questItem} quest={item} />;
     };
 
     renderFooter = () => {

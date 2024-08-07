@@ -8,10 +8,10 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Text, Icon, Button } from 'Interface/Components';
 
-class QuestButton extends QuestButtonBack {
+class MyQuestButton extends QuestButtonBack {
     render() {
         const { timeText, streakCount } = this.state;
-        const { style, quest } = this.props;
+        const { style, quest, onLayout } = this.props;
         if (quest === null) return null;
 
         return (
@@ -23,8 +23,18 @@ class QuestButton extends QuestButtonBack {
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
+                onLayout={onLayout}
             >
-                <Button style={styles.content} appearance='uniform' color='transparent' onPress={this.openQuest}>
+                <Button
+                    style={styles.content}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={this.openQuest}
+                    onTouchStart={this.onTouchStart}
+                    onTouchMove={this.onTouchMove}
+                    onTouchEnd={this.onTouchEnd}
+                    onTouchCancel={this.onTouchEnd}
+                >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>
                             <Text style={styles.title}>{quest.title}</Text>
@@ -44,22 +54,6 @@ class QuestButton extends QuestButtonBack {
             </LinearGradient>
         );
     }
-
-    renderContentScrollable() {
-        const { quest, onDrag } = this.props;
-        if (quest === null) return null;
-
-        const { title } = quest;
-
-        return (
-            <View style={styles.itemScrollable} onTouchStart={() => onDrag()}>
-                <View style={styles.scrollableHeader}>
-                    <Icon icon='default' color='main1' />
-                    <Text style={styles.scrollableTitle}>{title}</Text>
-                </View>
-            </View>
-        );
-    }
 }
 
-export { QuestButton };
+export { MyQuestButton };

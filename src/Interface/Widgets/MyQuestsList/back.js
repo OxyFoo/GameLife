@@ -49,7 +49,7 @@ class BackQuestsList extends React.Component {
     /** @param {MyQuest} item */
     keyExtractor = (item) => 'quest-' + item.title + JSON.stringify(item.skills) + JSON.stringify(item.schedule);
 
-    openMyQuests = () => user.interface.ChangePage('myquest');
+    openMyQuests = () => user.interface.ChangePage('myquests');
 }
 
 BackQuestsList.defaultProps = QuestsProps;

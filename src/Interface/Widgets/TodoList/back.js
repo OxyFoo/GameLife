@@ -12,11 +12,8 @@ import { TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  *
  * @typedef {import('Class/Todoes').Todo} Todo
  * @typedef {import('react-native').FlatList<Todo>} FlatListTodo

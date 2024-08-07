@@ -3,16 +3,19 @@ import { Animated, View, FlatList } from 'react-native';
 
 import styles from './style';
 import BackTodoList from './back';
+import { TodoButton } from './Button';
 
 import langManager from 'Managers/LangManager';
 
-import { Button, Text, TodoButton } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Todoes').Todo} Todo
  */
 
 class TodoList extends BackTodoList {
+    static Button = TodoButton;
+
     render() {
         const { style } = this.props;
         const { todoes, draggedItem, mouseY } = this.state;

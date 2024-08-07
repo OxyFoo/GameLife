@@ -5,6 +5,7 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
@@ -12,14 +13,16 @@ import user from 'Managers/UserManager';
  * @typedef {Object} QuestPropsType
  * @property {StyleProp} style
  * @property {MyQuest | null} quest
- * @property {() => void} onDrag Icon to drag => onTouchStart event (quest only)
+ * @property {(quest: MyQuest) => void} onDrag Icon to drag => onTouchStart event (quest only)
+ * @property {(event: LayoutChangeEvent) => void} onLayout
  */
 
 /** @type {QuestPropsType} */
 const QuestProps = {
     style: {},
     quest: null,
-    onDrag: () => {}
+    onDrag: () => {},
+    onLayout: () => {}
 };
 
 class QuestButtonBack extends React.Component {
@@ -40,6 +43,9 @@ class QuestButtonBack extends React.Component {
 
     /** @type {Symbol | null} */
     listenerActivities = null;
+
+    /** @type {number} */
+    lastY = 0;
 
     componentDidMount() {
         this.listenerActivities = user.activities.allActivities.AddListener(() => {
@@ -81,6 +87,30 @@ class QuestButtonBack extends React.Component {
         if (quest === null) return;
 
         user.interface.ChangePage('myqueststats', { args: { quest }, storeInHistory: false });
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onTouchStart = (event) => {
+        const { quest, onDrag } = this.props;
+        if (quest === null) return;
+
+        this.lastY = event.nativeEvent.pageY;
+        this.a = setTimeout(() => {
+            onDrag(quest);
+        }, 300);
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onTouchMove = (event) => {
+        const deltaY = event.nativeEvent.pageY - this.lastY;
+        if (Math.abs(deltaY) > 10) {
+            clearTimeout(this.a);
+        }
+    };
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
+        clearTimeout(this.a);
     };
 }
 

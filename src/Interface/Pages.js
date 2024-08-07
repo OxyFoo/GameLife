@@ -18,7 +18,7 @@ const PAGES = {
     onboarding:             require('./Pages/Onboarding').default,
     profile:                require('./Pages/Profile').default,
     profilefriend:          require('./Pages/ProfileFriend').default,
-    quests:                 require('./Pages/Quests').default,
+    myquests:               require('./Pages/MyQuests').default,
     report:                 require('./Pages/Report').default,
     settings:               require('./Pages/Settings').default,
     settings_notifications: require('./Pages/Settings/Notifications').default,

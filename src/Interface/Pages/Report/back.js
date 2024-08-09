@@ -1,5 +1,5 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { Keyboard } from 'react-native';
+import { Dimensions, Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -7,11 +7,16 @@ import langManager from 'Managers/LangManager';
 import { Sum } from 'Utils/Functions';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ *
+ * @typedef {import('Managers/UserManager').Stats} Stats
  * @typedef {import('Class/Server').ReportTypes} ReportTypes
+ * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
+const MAX_POINTS = 7;
+
 class BackReport extends PageBase {
-    stats = Object.assign({}, ...user.statsKey.map(i => ({[i]: 0})));
     state = {
         sending: false,
         selectedType: 0,
@@ -20,15 +25,20 @@ class BackReport extends PageBase {
         input_activity: {},
         input_skillname: '',
         input_skillcategory: '',
+
+        /** @type {{ [key in keyof Stats]: number }} */
+        input_skillstats: Object.assign({}, ...user.statsKey.map((i) => ({ [i]: 0 }))),
+
+        /** @type {{ [key in keyof Stats]: number }} */
+        input_skillstats_max: Object.assign({}, ...user.statsKey.map((i) => ({ [i]: MAX_POINTS }))),
+
+        input_skillstats_remain: MAX_POINTS,
+
         input_suggest: '',
         input_bug1: '',
         input_bug2: '',
-        input_message: '',
-        remain: 0,
-        statsRemain: this.stats
-    }
-
-    maxPoints = 7;
+        input_message: ''
+    };
 
     reportTypes = [
         { key: 0, value: langManager.curr['report']['types']['activity'] },
@@ -37,91 +47,150 @@ class BackReport extends PageBase {
         { key: 3, value: langManager.curr['report']['types']['message'] }
     ];
 
-    componentDidMount() {
-        this.refreshRemainPoints();
-    }
+    back = () => user.interface.BackHandle();
 
-    back = user.interface.BackHandle;
-
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
+        const { height } = Dimensions.get('window');
         const { y } = event.nativeEvent.layout;
-        const reportHeight = user.interface.screenHeight - y - 48;
-        this.setState({ reportHeight: reportHeight });
-    }
 
-    selectType = (item) => item !== null && this.setState({ selectedType: item.key });
-    changeTextInputSkillName = (text) => { this.setState({ input_skillname: text }); }
-    changeTextInputSkillCategory = (text) => { this.setState({ input_skillcategory: text }); }
-    changeTextInputSuggest = (text) => { this.setState({ input_suggest: text }); }
-    changeTextInputBug1 = (text) => { this.setState({ input_bug1: text }); }
-    changeTextInputBug2 = (text) => { this.setState({ input_bug2: text }); }
-    changeTextInputMessage = (text) => { this.setState({ input_message: text }); }
+        const reportHeight = height - y - 48;
+        this.setState({ reportHeight });
+    };
+
+    /** @param {ComboBoxItem | null} item */
+    selectType = (item) => {
+        if (item === null) return;
+        this.setState({ selectedType: item.key });
+    };
+
+    /** @param {string} text */
+    changeTextInputSkillName = (text) => {
+        this.setState({ input_skillname: text });
+    };
+
+    /** @param {string} text */
+    changeTextInputSkillCategory = (text) => {
+        this.setState({ input_skillcategory: text });
+    };
+
+    /** @param {string} text */
+    changeTextInputSuggest = (text) => {
+        this.setState({ input_suggest: text });
+    };
+
+    /** @param {string} text */
+    changeTextInputBug1 = (text) => {
+        this.setState({ input_bug1: text });
+    };
+
+    /** @param {string} text */
+    changeTextInputBug2 = (text) => {
+        this.setState({ input_bug2: text });
+    };
+
+    /** @param {string} text */
+    changeTextInputMessage = (text) => {
+        this.setState({ input_message: text });
+    };
 
     keyboardDismiss = () => {
         Keyboard.dismiss();
         return false;
-    }
+    };
 
-    changeDigit = (index, value) => {
-        if (Object.keys(this.stats).includes(index)) {
-            this.stats[index] = value;
-            this.refreshRemainPoints();
+    /**
+     * @param {keyof Stats} stat
+     * @param {number} value
+     */
+    changeDigit = (stat, value) => {
+        const { input_skillstats, input_skillstats_max } = this.state;
+
+        const newStats = { ...input_skillstats, [stat]: value };
+        const total = Sum(Object.values(newStats));
+        const remain = MAX_POINTS - total;
+
+        /** @type {keyof Stats} */
+        let key;
+        const newMaxStat = { ...input_skillstats_max };
+        for (key in input_skillstats) {
+            if (key !== stat) {
+                newMaxStat[key] = Math.min(input_skillstats[key] + remain, MAX_POINTS);
+            }
         }
-    }
-    refreshRemainPoints = () => {
-        const total = Sum(Object.values(this.stats));
-        const remain = this.maxPoints - total;
-        let newStatsRemain = {...this.state.statsRemain};
-        for (let key in this.stats) {
-            const newMaxValue = Math.min(this.stats[key] + remain, this.maxPoints);
-            newStatsRemain[key] = newMaxValue;
-        }
-        this.setState({ statsRemain: newStatsRemain, remain: remain });
-    }
+
+        this.setState({
+            input_skillstats: newStats,
+            input_skillstats_max: newMaxStat,
+            input_skillstats_remain: remain
+        });
+    };
 
     sendData = async () => {
         const type = this.state.selectedType;
+
         /** @type {Array<ReportTypes>} */
-        const types = [ 'activity', 'suggest', 'bug', 'message' ];
+        const types = ['activity', 'suggest', 'bug', 'message'];
         if (type < 0 || type >= types.length) {
-            user.interface.console.AddLog('info', 'Error report: Invalid selected type (selectedType: "' + type + '")');
+            user.interface.console?.AddLog(
+                'info',
+                'Error report: Invalid selected type (selectedType: "' + type + '")'
+            );
             return;
         }
 
+        let isFilled = true;
         let dataReport = {};
         switch (type) {
             case 0: // Activity
                 dataReport['name'] = this.state.input_skillname;
                 dataReport['category'] = this.state.input_skillcategory;
-                dataReport['stats'] = this.stats;
+                dataReport['stats'] = this.state.input_skillstats;
+
+                if (
+                    dataReport['name'] === '' ||
+                    dataReport['category'] === '' ||
+                    this.state.input_skillstats_remain !== 0
+                ) {
+                    isFilled = false;
+                }
+
                 break;
             case 1: // Suggest
                 dataReport['suggest'] = this.state.input_suggest;
+
+                if (dataReport['suggest'] === '') {
+                    isFilled = false;
+                }
+
                 break;
             case 2: // Bug
                 dataReport['bug-description'] = this.state.input_bug1;
                 dataReport['bug-details'] = this.state.input_bug2;
+
+                if (dataReport['bug-description'] === '' || dataReport['bug-details'] === '') {
+                    isFilled = false;
+                }
+
                 break;
             case 3: // Message
                 dataReport['message'] = this.state.input_message;
-                break;
-        }
 
-        let isFilled = true;
-        for (let key in dataReport) {
-            if (typeof(dataReport[key]) === 'undefined' || dataReport[key] == '') {
-                isFilled = false;
+                if (dataReport['message'] === '') {
+                    isFilled = false;
+                }
+
                 break;
-            }
-        }
-        if (type === 0 && this.state.remain != 0) {
-            isFilled = false;
         }
 
         if (!isFilled) {
-            const title = langManager.curr['report']['alert-notfill-title'];
-            const text = langManager.curr['report']['alert-notfill-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['report']['alert-notfill-title'],
+                    message: langManager.curr['report']['alert-notfill-message']
+                }
+            });
             return;
         }
 
@@ -130,16 +199,26 @@ class BackReport extends PageBase {
         this.setState({ sending: false });
 
         if (sendSuccessfully) {
-            const title = langManager.curr['report']['alert-success-title'];
-            const text = langManager.curr['report']['alert-success-text'];
-            user.interface.popup.Open('ok', [ title, text ], user.interface.BackHandle, false);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['report']['alert-success-title'],
+                    message: langManager.curr['report']['alert-success-message']
+                },
+                callback: () => user.interface.BackHandle(),
+                cancelable: false
+            });
         } else {
-            const title = langManager.curr['report']['alert-error-title'];
-            const text = langManager.curr['report']['alert-error-message'];
-            user.interface.popup.Open('ok', [ title, text ]);
-            user.interface.console.AddLog('error', 'Report: Send report failed');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['report']['alert-error-title'],
+                    message: langManager.curr['report']['alert-error-message']
+                }
+            });
+            user.interface.console?.AddLog('error', 'Report: Send report failed');
         }
-    }
+    };
 }
 
 export default BackReport;

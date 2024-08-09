@@ -622,9 +622,9 @@
         "button-send": "Send",
 
         "alert-notfill-title": "Not completed",
-        "alert-notfill-text": "Please fill in all fields",
+        "alert-notfill-message": "Please fill in all fields",
         "alert-success-title": "Sent",
-        "alert-success-text": "Thank you so much for your feedback!",
+        "alert-success-message": "Thank you so much for your feedback!",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later.",
 

@@ -622,9 +622,9 @@
         "button-send": "Envoyer",
 
         "alert-notfill-title": "Pas terminé",
-        "alert-notfill-text": "Merci de remplir tous les champs",
+        "alert-notfill-message": "Merci de remplir tous les champs",
         "alert-success-title": "Envoyé",
-        "alert-success-text": "Merci beacoup pour ton retour !",
+        "alert-success-message": "Merci beacoup pour ton retour !",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
 

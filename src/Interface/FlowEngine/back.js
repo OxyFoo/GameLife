@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Animated, BackHandler } from 'react-native';
+import RNExitApp from 'react-native-exit-app';
 
 import PageBase from './PageBase';
 import PAGES from 'Interface/Pages';
+import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
@@ -196,6 +198,7 @@ class BackFlowEngine extends React.Component {
     GetPageName = (pageName) => (this.availablePages.includes(pageName) ? pageName : null);
 
     /**
+     * TODO: Remove
      * @description Custom back button handler
      * @type {(() => boolean) | null} Return true if back is handled
      * @private
@@ -203,9 +206,31 @@ class BackFlowEngine extends React.Component {
     customBackHandle = null;
 
     /**
+     * @description Custom back button handler
+     * @type {(() => boolean)[]} Return true if back is handled
+     * @private
+     */
+    customBackHandlers = [];
+
+    /**
      * @param {() => boolean} handle
      * @returns {boolean} True if handle is set
      * @public
+     */
+    AddCustomBackHandler = (handle) => {
+        if (typeof handle !== 'function') {
+            return false;
+        }
+        this.customBackHandlers.push(handle);
+        return true;
+    };
+
+    /**
+     * TODO: Remove
+     * @param {() => boolean} handle
+     * @returns {boolean} True if handle is set
+     * @public
+     * @deprecated
      */
     SetCustomBackHandler = (handle) => {
         if (typeof handle !== 'function') {
@@ -216,7 +241,9 @@ class BackFlowEngine extends React.Component {
     };
 
     /**
+     * TODO: Remove
      * @public
+     * @deprecated
      */
     ResetCustomBackHandler = () => {
         this.customBackHandle = null;
@@ -229,11 +256,11 @@ class BackFlowEngine extends React.Component {
      * @public
      */
     BackHandle = (options = {}) => {
-        if (this.customBackHandle !== null) {
-            if (!this.customBackHandle()) {
-                return true;
+        if (this.customBackHandlers.length > 0) {
+            if (this.customBackHandlers.at(-1)?.()) {
+                this.customBackHandlers.pop();
             }
-            this.ResetCustomBackHandler();
+            return true;
         }
 
         this.backPage(options);
@@ -284,6 +311,7 @@ class BackFlowEngine extends React.Component {
 
         const lastPage = this.history.pop();
         if (lastPage === undefined) {
+            this.AskToClose();
             return false;
         }
 
@@ -299,6 +327,21 @@ class BackFlowEngine extends React.Component {
         this.changing = false;
 
         return true;
+    };
+
+    AskToClose = () => {
+        this.popup.current?.OpenT({
+            type: 'yesno',
+            data: {
+                title: langManager.curr['home']['alert-exit-title'],
+                message: langManager.curr['home']['alert-exit-text']
+            },
+            callback: (btn) => {
+                if (btn === 'yes') {
+                    RNExitApp.exitApp();
+                }
+            }
+        });
     };
 
     /**
@@ -522,6 +565,7 @@ class BackFlowEngine extends React.Component {
         GetPageName: this.GetPageName,
         GetCurrentPage: this.GetCurrentPage,
         GetCurrentPageName: this.GetCurrentPageName,
+        AddCustomBackHandler: this.AddCustomBackHandler,
         SetCustomBackHandler: this.SetCustomBackHandler,
         ResetCustomBackHandler: this.ResetCustomBackHandler
     };

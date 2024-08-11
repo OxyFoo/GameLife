@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
+import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -87,6 +88,16 @@ class QuestButtonBack extends React.Component {
         if (quest === null) return;
 
         user.interface.ChangePage('myqueststats', { args: { quest }, storeInHistory: false });
+    };
+
+    openQuickAddActivity = () => {
+        const { quest } = this.props;
+        if (quest === null) return;
+
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity listSkillsIDs={quest.skills} />,
+            movable: false
+        });
     };
 
     /** @param {GestureResponderEvent} event */

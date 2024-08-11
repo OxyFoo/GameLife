@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated, Dimensions } from 'react-native';
 
 import { POPUP_TEMPLATES } from './templates';
+import user from 'Managers/UserManager';
 
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -70,6 +71,12 @@ class PopupBack extends React.PureComponent {
      * @type {{ x: number, y: number }}
      */
     lastLayout = { x: 0, y: 0 };
+
+    /**
+     * @private Temporary variable to manage close reason
+     * @type {string | undefined}
+     */
+    tempCloseReason;
 
     /**
      * @template {any} T
@@ -169,6 +176,9 @@ class PopupBack extends React.PureComponent {
                     TimingAnimation(newPopup.animScale, 1, 200),
                     TimingAnimation(newPopup.animOpacity, 1, 200)
                 ]).start();
+
+                // Back handler
+                user.interface.AddCustomBackHandler(this.CloseHandle);
             }
         );
     };
@@ -176,9 +186,17 @@ class PopupBack extends React.PureComponent {
     /**
      * Close popup
      * @param {string} [closeReason]
-     * @returns {boolean} True if popup was closed
      */
     Close = (closeReason) => {
+        this.tempCloseReason = closeReason;
+        user.interface.BackHandle();
+    };
+
+    /**
+     * Close popup
+     * @returns {boolean} True if popup was closed
+     */
+    CloseHandle = () => {
         const { currents } = this.state;
 
         if (!this.opened || currents.length === 0) {
@@ -190,7 +208,7 @@ class PopupBack extends React.PureComponent {
             return false;
         }
 
-        current.callback && current.callback(closeReason);
+        current.callback && current.callback(this.tempCloseReason);
 
         // Start end animations
         Animated.parallel([

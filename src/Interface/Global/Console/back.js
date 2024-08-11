@@ -216,14 +216,20 @@ class ConsoleBack extends React.Component {
         this.setState({ opened: true }, this.processQueue);
         SpringAnimation(this.state.animation, 1).start();
         this.refDebug?.current?.scrollToEnd();
+        user.interface.AddCustomBackHandler(this.close);
+    };
+    onClosePress = () => {
+        user.interface.BackHandle();
     };
     close = () => {
         if (!this.state.opened) {
-            return;
+            return true;
         }
+
         this.setState({ opened: false });
         SpringAnimation(this.state.animation, 0).start();
         TimingAnimation(this.state.animationDeleteButtons, 0).start();
+        return true;
     };
     toggleDeleteButtons = () => {
         this.toggle = !this.toggle;
@@ -235,12 +241,12 @@ class ConsoleBack extends React.Component {
     };
 
     goToBenchMark = () => {
-        this.close();
+        user.interface.BackHandle();
         user.interface.ChangePage('benchmark');
     };
 
     goToResponsive = () => {
-        this.close();
+        user.interface.BackHandle();
         user.interface.ChangePage('responsive');
     };
 

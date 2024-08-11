@@ -83,10 +83,15 @@ class NotificationsInApp extends React.Component {
         this.setState({ opened: true, pointerEvent: 'auto' });
         SpringAnimation(this.state.animOpen, 0).start();
 
-        user.interface.SetCustomBackHandler(this.Close);
+        user.interface.AddCustomBackHandler(this.closeHandler);
     };
 
     Close = () => {
+        user.interface.BackHandle();
+    };
+
+    /** @private */
+    closeHandler = () => {
         this.opening = false;
         this.setState({ pointerEvent: 'none' });
         SpringAnimation(this.state.animOpen, 1).start(() => {
@@ -96,7 +101,7 @@ class NotificationsInApp extends React.Component {
         });
 
         user.interface.ResetCustomBackHandler();
-        return false;
+        return true;
     };
 
     render() {

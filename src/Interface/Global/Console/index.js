@@ -134,7 +134,7 @@ class Console extends ConsoleBack {
                     styleAnimation={{ opacity: animation }}
                     appearance='uniform'
                     color='main2'
-                    onPress={this.close}
+                    onPress={this.onClosePress}
                     onLongPress={this.toggleDeleteButtons}
                     pointerEvents={opened ? undefined : 'none'}
                 >

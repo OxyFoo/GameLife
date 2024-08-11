@@ -97,6 +97,8 @@ class BottomPanelBack extends React.Component {
         this.setState({ state: 'opening', current: params }, () => {
             this.opened = false;
         });
+
+        user.interface.AddCustomBackHandler(this.BackHandler);
     };
 
     /** Close the screen list */
@@ -127,6 +129,11 @@ class BottomPanelBack extends React.Component {
                 }, 150);
             });
         });
+    };
+
+    BackHandler = () => {
+        this.Close();
+        return true;
     };
 
     IsOpened = () => this.state.state === 'opened' || this.state.state === 'opening';

@@ -30,6 +30,7 @@ class MyQuestButton extends QuestButtonBack {
                     appearance='uniform'
                     color='transparent'
                     onPress={this.openQuest}
+                    onLongPress={this.openQuickAddActivity}
                     onTouchStart={this.onTouchStart}
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}

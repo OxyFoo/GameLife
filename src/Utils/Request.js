@@ -32,7 +32,7 @@ class ReqResponse {
  * @param {object} data
  * @param {string} url - Default : App server
  * @param {'GET' | 'POST'} method  - Default : 'POST'
- * @param {object} headers - Default :
+ * @param {HeadersInit} headers - Default :
  * {'Accept': 'application/json', 'Content-Type': 'application/json'}
  * @returns {Promise<ReqResponse>}
  */
@@ -40,6 +40,7 @@ async function Request_Async(data = {}, url = Config.SERVER_URL, method = 'POST'
     let status = null;
     let content = null;
 
+    /** @type {RequestInit} */
     const header = {
         method: method,
         headers: headers,

@@ -80,6 +80,7 @@ class ScreenListBack extends React.Component {
                 this.posY = Math.max(-this.heightPanel, -400);
                 SpringAnimation(this.state.positionY, this.posY).start();
                 this.callback = callback;
+                user.interface.AddCustomBackHandler(this.closeHandler);
             }
         );
     };
@@ -89,6 +90,11 @@ class ScreenListBack extends React.Component {
      * @returns {boolean} True if closed
      */
     Close = () => {
+        user.interface.BackHandle();
+        return true;
+    };
+
+    closeHandler = () => {
         if (!this.state.opened) return false;
 
         TimingAnimation(this.state.anim, 0, 200).start();

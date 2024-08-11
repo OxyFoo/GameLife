@@ -101,8 +101,8 @@ class BackActivityPage1 extends React.Component {
             this.state.skills = this.allSkillsItems.filter((skill) => this.preselectedSkillsIDs.includes(skill.id));
         }
 
-        // Set default to recent if there is more than 5 skills
-        if (this.allRecentSkillsItems.length > 5 && this.preselectedSkillsIDs.length === 0) {
+        // Set default to recent if there is more than 3 skills
+        if (this.allRecentSkillsItems.length >= 3 && this.preselectedSkillsIDs.length === 0) {
             this.state.selectedCategory = 0;
         }
 

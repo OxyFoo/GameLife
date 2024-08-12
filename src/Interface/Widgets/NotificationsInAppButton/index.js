@@ -6,9 +6,9 @@ import styles from './style';
 import BackNotificationsInApp from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from '../Text';
-import { Icon } from '../Icon';
-import { Button } from '../Button';
+import { Text } from '../../Components/Text';
+import { Icon } from '../../Components/Icon';
+import { Button } from '../../Components/Button';
 
 class NotificationsInAppButton extends BackNotificationsInApp {
     render() {

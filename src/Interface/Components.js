@@ -8,7 +8,6 @@ export { Icon } from './Components/Icon';
 export { IconCheckable } from './Components/IconCheckable';
 export { InputText } from './Components/InputText';
 export { KPI } from './Components/KPI';
-export { NotificationsInAppButton } from './Components/NotificationsInAppButton';
 export { ProgressBar } from './Components/ProgressBar';
 export { Separator } from './Components/Separator';
 export { Swiper } from './Components/Swiper';

@@ -205,7 +205,7 @@ class BackReport extends PageBase {
                     title: langManager.curr['report']['alert-success-title'],
                     message: langManager.curr['report']['alert-success-message']
                 },
-                callback: () => user.interface.BackHandle(),
+                callback: this.back,
                 cancelable: false
             });
         } else {

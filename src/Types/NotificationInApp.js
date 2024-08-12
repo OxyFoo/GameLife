@@ -1,19 +1,19 @@
 /**
  * @typedef {import('Managers/LangManager').LangKey} LangKey
- * 
+ *
  * @typedef {'friend-pending' | 'achievement-pending' | 'global-message'} NotificationInAppTypes
  * @typedef {object} NotificationInAppValue
  * @property {NIA_FriendPending} friend-pending
  * @property {NIA_AchievementPending} achievement-pending
  * @property {NIA_GlobalMessage} global-message
- * 
+ *
  * @typedef {object} NIA_FriendPending
  * @property {number} accountID
  * @property {string} username
- * 
+ *
  * @typedef {object} NIA_AchievementPending
  * @property {number} achievementID
- * 
+ *
  * @typedef {object} NIA_GlobalMessage
  * @property {number} ID Unique ID in the database
  * @property {{ [key in LangKey]: string }} message
@@ -44,7 +44,7 @@ class NotificationInApp {
     data;
 
     /** @type {number} Unix timestamp in seconds (UTC) */
-    timestamp;
+    timestamp = 0;
 }
 
 export { NotificationInApp };

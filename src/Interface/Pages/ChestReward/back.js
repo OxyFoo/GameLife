@@ -12,17 +12,17 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Data/Items').StuffID} StuffID
- * 
+ *
  * @typedef {Object} ChestRewardProps
  * @property {number} chestRarity
  * @property {StuffID} itemID
  * @property {() => void} callback
- * 
+ *
  * @typedef {Object} OxRewardProps
  * @property {'ox'} chestRarity
  * @property {number} oxCount
  * @property {() => void} callback
- * 
+ *
  * @typedef {ChestRewardProps | OxRewardProps} ChestRewardArgs
  */
 
@@ -37,7 +37,7 @@ const BackChestRewardProps = {
 
 class BackChestReward extends PageBase {
     state = {
-        animGlobal: new Animated.Value(.7),
+        animGlobal: new Animated.Value(0.7),
         animChest: new Animated.Value(0),
         animItem: new Animated.Value(0),
         animInteractions: new Animated.Value(0),
@@ -46,9 +46,14 @@ class BackChestReward extends PageBase {
             width: 0,
             height: 0
         }
-    }
+    };
 
     buttonEnabled = false;
+
+    /** @type {Character | null} */
+    character = null;
+    oxCount = 0;
+    callback = () => {};
 
     /**
      * @param {Object} props
@@ -61,13 +66,17 @@ class BackChestReward extends PageBase {
             throw new Error('[ChestReward] Missing arguments');
         }
 
+        if (user.character === null) {
+            throw new Error('[ChestReward] User character is null');
+        }
+
+        this.chestRarity = props.args.chestRarity;
+
         if (props.args.chestRarity === 'ox') {
-            this.chestRarity = props.args.chestRarity;
             this.oxCount = props.args.oxCount;
             this.callback = props.args.callback;
 
-            this.text = langManager.curr['shop']['iap']['reward-page-text']
-                .replace('{}', this.oxCount.toString());
+            this.text = langManager.curr['shop']['iap']['reward-page-text'].replace('{}', this.oxCount.toString());
             this.rarityColor = themeManager.GetColor('ox');
             return;
         }
@@ -75,7 +84,7 @@ class BackChestReward extends PageBase {
         const itemID = props.args['itemID'];
         const item = dataManager.items.GetByID(itemID);
         if (item === null) {
-            user.interface.console.AddLog('error', `ChestReward: item not found (${itemID})`);
+            user.interface.console?.AddLog('error', `ChestReward: item not found (${itemID})`);
             user.interface.BackHandle();
             return;
         }
@@ -84,9 +93,8 @@ class BackChestReward extends PageBase {
         this.textSecondary = langManager.curr['rarities'][item.Rarity];
         this.rarityColor = themeManager.GetRariryColors(item.Rarity)[0];
         this.character = new Character('character-reward', user.character.sexe, 'skin_01', 0);
-        this.character.SetEquipment([ itemID.toString() ]);
+        this.character.SetEquipment([itemID.toString()]);
         this.characterSize = dataManager.items.GetContainerSize(item.Slot);
-        this.chestRarity = props.args.chestRarity;
         this.callback = props.args.callback;
     }
 
@@ -109,13 +117,13 @@ class BackChestReward extends PageBase {
     /** @param {LayoutChangeEvent} layout */
     onOxLayout = (layout) => {
         const { width, height } = layout.nativeEvent.layout;
-        this.setState({ layoutFrameOx: { width, height } })
-    }
+        this.setState({ layoutFrameOx: { width, height } });
+    };
 
     onPress = () => {
         if (this.buttonEnabled === false) return;
-        this.callback();
-    }
+        this.callback?.();
+    };
 }
 
 BackChestReward.defaultProps = BackChestRewardProps;

@@ -52,6 +52,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {Object} PageOptionsBack
+ * @property {any} [args] Pass args to callback function
  * @property {Transitions} [transition]
  * @property {() => void} [callback] Callback after page changed
  */
@@ -207,7 +208,7 @@ class BackFlowEngine extends React.Component {
 
     /**
      * @description Custom back button handler
-     * @type {(() => boolean)[]} Return true if back is handled
+     * @type {((args: any) => boolean)[]} Return true if back is handled
      * @private
      */
     customBackHandlers = [];
@@ -257,8 +258,13 @@ class BackFlowEngine extends React.Component {
      */
     BackHandle = (options = {}) => {
         if (this.customBackHandlers.length > 0) {
-            if (this.customBackHandlers.at(-1)?.()) {
-                this.customBackHandlers.pop();
+            const customHandler = this.customBackHandlers.pop();
+            if (typeof customHandler !== 'undefined') {
+                if (customHandler(options.args)) {
+                    options?.callback?.();
+                } else {
+                    this.customBackHandlers.push(customHandler);
+                }
             }
             return true;
         }

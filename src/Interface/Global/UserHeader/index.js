@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, Icon, Button, Frame } from 'Interface/Components';
-import { NotificationsInAppButton } from 'Interface/Components';
+import { NotificationsInAppButton } from 'Interface/Widgets';
 
 const AVATAR_FRAME_SIZE = { x: 250, y: 50, width: 400, height: 350 };
 

@@ -73,12 +73,6 @@ class PopupBack extends React.PureComponent {
     lastLayout = { x: 0, y: 0 };
 
     /**
-     * @private Temporary variable to manage close reason
-     * @type {string | undefined}
-     */
-    tempCloseReason;
-
-    /**
      * @template {any} T
      * @type {PopupOpenType<T>}
      */
@@ -188,17 +182,18 @@ class PopupBack extends React.PureComponent {
      * @param {string} [closeReason]
      */
     Close = (closeReason) => {
-        this.tempCloseReason = closeReason;
-        user.interface.BackHandle();
+        user.interface.BackHandle({ args: closeReason });
     };
 
     /**
      * Close popup
+     * @param {string} [closeReason]
      * @returns {boolean} True if popup was closed
      */
-    CloseHandle = () => {
+    CloseHandle = (closeReason) => {
         const { currents } = this.state;
 
+        // Popup is not opened
         if (!this.opened || currents.length === 0) {
             return false;
         }
@@ -208,7 +203,12 @@ class PopupBack extends React.PureComponent {
             return false;
         }
 
-        current.callback && current.callback(this.tempCloseReason);
+        // Popup try to close with back button but it's not cancelable
+        if (!current.cancelable && typeof closeReason === 'undefined') {
+            return false;
+        }
+
+        current.callback && current.callback(closeReason ?? 'closed');
 
         // Start end animations
         Animated.parallel([

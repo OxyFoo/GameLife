@@ -1,3 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`[Component] Text should render correctly 1`] = `null`;
+exports[`[Component] Text should render correctly 1`] = `
+<Text
+  style={
+    [
+      {
+        "fontFamily": "Hind Vadodara",
+        "margin": 0,
+        "padding": 0,
+        "textAlign": "center",
+      },
+      {
+        "color": "#ECECEC",
+        "fontSize": 18,
+      },
+      {},
+    ]
+  }
+/>
+`;

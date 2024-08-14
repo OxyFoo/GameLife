@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { View, ScrollView, Animated } from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
@@ -27,17 +27,17 @@ import { Gradient } from 'Interface/Primitives';
 class Test extends BackTest {
     render() {
         return (
-            <View style={styles.page}>
+            <ScrollView style={styles.page}>
                 <MaskedView style={{ marginVertical: 24 }} maskElement={<Text fontSize={32}>{'Page de test'}</Text>}>
                     <Gradient style={{ width: '100%', height: 45 }} />
                 </MaskedView>
 
                 {/*
                     {this.renderButtonsPanic()}
-                    {this.renderComboBox()}
-                */}
+                    */}
 
                 {this.renderButtons()}
+                {this.renderComboBox()}
                 {this.renderInputText()}
                 {this.renderPopups()}
                 {this.renderIcons()}
@@ -45,7 +45,7 @@ class Test extends BackTest {
                 {this.renderSwitchText()}
                 {this.renderDigit()}
                 {this.renderProgressBars()}
-            </View>
+            </ScrollView>
         );
     }
 

@@ -8,7 +8,7 @@ exports[`[Component] Input renders correctly 1`] = `
   style={
     {
       "backgroundColor": "#0E1247",
-      "borderColor": "#808080",
+      "borderColor": "#999EB5",
       "borderRadius": 4,
       "borderWidth": 1.2,
       "opacity": 1,
@@ -139,7 +139,7 @@ exports[`[Component] Input renders correctly 1`] = `
     onChangeText={[Function]}
     onFocus={[Function]}
     onSubmitEditing={[Function]}
-    selectionColor="#808080"
+    selectionColor="#999EB5"
     style={
       [
         {

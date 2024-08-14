@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import user from 'Managers/UserManager';
-
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
+import { GetAbsolutePosition } from 'Utils/UI';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  *
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
@@ -47,12 +47,14 @@ const ComboBoxProps = {
 
 class ComboBoxBack extends React.Component {
     state = {
+        /** @type {LayoutRectangle} */
         parent: {
             x: 0,
             y: 0,
             width: 0,
             height: 0
         },
+
         anim: new Animated.Value(0),
 
         data: this.props.data,
@@ -60,8 +62,11 @@ class ComboBoxBack extends React.Component {
         search: ''
     };
 
+    /** @type {React.RefObject<View>} */
+    refParent = React.createRef();
+
     /** @type {React.RefObject<FlatList>} */
-    flatlistRef = React.createRef();
+    refFlatlist = React.createRef();
 
     /**
      * @param {ComboBoxProps} nextProps
@@ -88,18 +93,8 @@ class ComboBoxBack extends React.Component {
         }
     }
 
-    /** @param {LayoutChangeEvent} event */
-    onLayout = (event) => {
-        const { x: _x, y: _y, width: _width, height: _height } = this.state.parent;
-        const { x, y, width, height } = event.nativeEvent.layout;
-        if (x !== _x || y !== _y || width !== _width || height !== _height) {
-            const parent = { x: x, y: y, width: width, height: height };
-            this.setState({ parent: parent });
-        }
-    };
-
     onPress = () => {
-        if (!this.props.enabled) {
+        if (!this.props.enabled || this.refParent.current === null) {
             return;
         }
 
@@ -109,14 +104,17 @@ class ComboBoxBack extends React.Component {
         }
 
         // Scroll to top
-        this.flatlistRef.current?.scrollToOffset({
+        this.refFlatlist.current?.scrollToOffset({
             offset: 0,
             animated: false
         });
 
         // Open selection
-        SpringAnimation(this.state.anim, 1).start();
-        this.setState({ selectionMode: true });
+        GetAbsolutePosition(this.refParent.current).then((rect) => {
+            this.setState({ parent: rect, selectionMode: true }, () => {
+                SpringAnimation(this.state.anim, 1).start();
+            });
+        });
     };
 
     closeSelection = () => {
@@ -146,15 +144,6 @@ class ComboBoxBack extends React.Component {
     onItemPress = (item) => {
         this.props.onSelect(item);
         this.closeSelection();
-    };
-
-    // TODO: Finish scroll handle
-
-    EnablePageScroll = () => {
-        //user.interface.GetCurrentPage()?.ref.current?.EnableScroll();
-    };
-    DisablePageScroll = () => {
-        //user.interface.GetCurrentPage()?.ref.current?.DisableScroll();
     };
 }
 

@@ -9,7 +9,6 @@ exports[`[Component] InputText renders correctly 1`] = `
       "borderColor": "#D0D0D0",
       "borderRadius": 8,
       "borderWidth": 1.2,
-      "minHeight": 54,
       "opacity": 1,
       "paddingRight": 0,
       "width": "100%",
@@ -72,42 +71,27 @@ exports[`[Component] InputText renders correctly 1`] = `
         ],
       }
     }
-  >
-    <Text
-      onLayout={[Function]}
-      style={
-        [
-          {
-            "color": "#ECECEC",
-            "fontFamily": "Hind Vadodara",
-            "fontSize": 16,
-            "margin": 0,
-            "padding": 0,
-            "textAlign": "center",
-          },
-          {},
-        ]
-      }
-    >
-      Default
-    </Text>
-  </View>
+  />
   <TextInput
     autoComplete="off"
     autoCorrect={false}
     onBlur={[Function]}
     onFocus={[Function]}
     onSubmitEditing={[Function]}
+    placeholderTextColor="#B0B0B0"
     selectionColor="white"
     style={
       [
         {
-          "color": "#FFFFFF",
           "fontSize": 18,
           "maxHeight": 256,
           "minHeight": 12,
-          "paddingHorizontal": 12,
-          "paddingVertical": 12,
+          "paddingHorizontal": 24,
+          "paddingVertical": 16,
+          "verticalAlign": "middle",
+        },
+        {
+          "color": "#ECECEC",
         },
         undefined,
       ]

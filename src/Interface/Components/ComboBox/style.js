@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
     },
     overlayBackground: {
         position: 'absolute',
-        top: '-1000%',
-        left: '-1000%',
-        right: '-1000%',
-        bottom: '-1000%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         backgroundColor: '#00000055',
         zIndex: 900,
         elevation: 900

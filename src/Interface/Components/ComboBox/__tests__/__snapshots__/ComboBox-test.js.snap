@@ -1,294 +1,338 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`[Component] Input should render correctly 1`] = `
-[
+<View
+  style={
+    [
+      {
+        "elevation": 1010,
+        "width": "100%",
+        "zIndex": 1010,
+      },
+      {},
+    ]
+  }
+>
   <View
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "disabled": false,
+      }
+    }
+    accessible={true}
+    borderColor="automatic"
+    fontColor="automatic"
     onLayout={[Function]}
+    onTouchCancel={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    pointerEvents="auto"
     style={
       [
         {
-          "elevation": 1010,
+          "backgroundColor": "transparent",
+          "borderRadius": 8,
+          "overflow": "hidden",
+          "paddingHorizontal": 24,
+          "paddingVertical": 16,
           "width": "100%",
-          "zIndex": 1010,
         },
-        {},
+        {
+          "borderRadius": 6,
+          "bottom": 2,
+          "elevation": 800,
+          "height": "auto",
+          "left": 2,
+          "position": "absolute",
+          "right": 2,
+          "top": 2,
+          "width": "auto",
+          "zIndex": 800,
+        },
+        null,
       ]
     }
+    testID="combobox-button"
+    throttleTime={250}
   >
     <View
-      onLayout={[Function]}
-      onTouchCancel={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
       style={
         [
           {
-            "backgroundColor": "transparent",
-            "borderRadius": 8,
-            "minHeight": 54,
-            "overflow": "hidden",
-            "paddingHorizontal": 24,
-            "paddingVertical": 16,
-            "width": "100%",
-          },
-          {
-            "borderRadius": 6,
-            "bottom": 2,
-            "elevation": 800,
-            "height": "auto",
-            "left": 2,
+            "bottom": 0,
+            "left": 0,
             "position": "absolute",
-            "right": 2,
-            "top": 2,
-            "width": "auto",
-            "zIndex": 800,
+            "right": 0,
+            "top": 0,
           },
-          null,
+          {},
+          {
+            "backgroundColor": "#00000000",
+          },
         ]
       }
-      testID="combobox-button"
+    />
+    <View
+      pointerEvents="none"
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexWrap": "wrap",
+            "justifyContent": "center",
+          },
+          {
+            "justifyContent": "center",
+            "opacity": 1,
+          },
+          {},
+        ]
+      }
+    />
+    <View
+      collapsable={false}
+      pointerEvents="none"
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 0,
+          "left": 0,
+          "opacity": 0,
+          "position": "absolute",
+          "top": 0,
+          "transform": [
+            {
+              "translateX": 0,
+            },
+            {
+              "translateY": 0,
+            },
+            {
+              "scale": 0,
+            },
+          ],
+          "width": 3,
+        }
+      }
+    />
+  </View>
+  <View
+    collapsable={false}
+    onLayout={[Function]}
+    pointerEvents="none"
+    style={
+      {
+        "borderColor": "#D0D0D0",
+        "borderRadius": 8,
+        "borderWidth": 1.2,
+        "opacity": 1,
+        "paddingRight": 0,
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "backgroundColor": "#0E1247",
+          "height": 3,
+          "left": 6,
+          "position": "absolute",
+          "top": -2,
+          "transform": [
+            {
+              "scaleX": 0,
+            },
+          ],
+          "width": 0,
+        }
+      }
+    />
+    <View
+      collapsable={false}
+      pointerEvents="none"
+      style={
+        {
+          "alignItems": "center",
+          "display": "flex",
+          "justifyContent": "center",
+          "left": 0,
+          "overflow": "scroll",
+          "paddingHorizontal": 4,
+          "position": "absolute",
+          "top": 0,
+          "transform": [
+            {
+              "translateX": -0,
+            },
+            {
+              "translateY": -0,
+            },
+            {
+              "scale": 1,
+            },
+            {
+              "translateX": 0,
+            },
+            {
+              "translateY": 0,
+            },
+            {
+              "translateX": 16,
+            },
+            {
+              "translateY": -2,
+            },
+          ],
+        }
+      }
     >
-      <View
-        pointerEvents="none"
+      <Text
+        onLayout={[Function]}
         style={
           [
             {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "flexWrap": "wrap",
-              "justifyContent": "center",
+              "fontFamily": "Hind Vadodara",
+              "margin": 0,
+              "padding": 0,
+              "textAlign": "center",
             },
             {
-              "justifyContent": "center",
-              "opacity": 1,
+              "color": "#ECECEC",
+              "fontSize": 16,
             },
             {},
           ]
         }
-      />
-      <View
-        collapsable={false}
-        pointerEvents="none"
-        style={
-          {
-            "aspectRatio": 1,
-            "backgroundColor": "#FFFFFF",
-            "borderRadius": 0,
-            "left": 0,
-            "opacity": 0,
-            "position": "absolute",
-            "top": 0,
-            "transform": [
-              {
-                "translateX": 0,
-              },
-              {
-                "translateY": 0,
-              },
-              {
-                "scale": 0,
-              },
-            ],
-            "width": 2,
-          }
-        }
-      />
+      >
+        Title
+      </Text>
     </View>
+    <TextInput
+      autoComplete="off"
+      autoCorrect={false}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      placeholderTextColor="#B0B0B0"
+      selectionColor="white"
+      style={
+        [
+          {
+            "fontSize": 18,
+            "maxHeight": 256,
+            "minHeight": 12,
+            "paddingHorizontal": 24,
+            "paddingVertical": 16,
+            "verticalAlign": "middle",
+          },
+          {
+            "color": "#ECECEC",
+          },
+          {},
+        ]
+      }
+      testID="textInput"
+      textContentType="none"
+      value=""
+    />
+  </View>
+  <View
+    pointerEvents="none"
+    style={
+      {
+        "bottom": 0,
+        "justifyContent": "center",
+        "position": "absolute",
+        "right": 12,
+        "top": 0,
+      }
+    }
+  >
     <View
       collapsable={false}
-      onLayout={[Function]}
-      pointerEvents="none"
       style={
         {
-          "borderColor": "#D0D0D0",
-          "borderRadius": 8,
-          "borderWidth": 1.2,
-          "minHeight": 54,
-          "opacity": 1,
-          "paddingRight": 0,
-          "width": "100%",
+          "transform": [
+            {
+              "rotateX": "0deg",
+            },
+          ],
         }
       }
     >
       <View
-        collapsable={false}
-        style={
-          {
-            "backgroundColor": "#0E1247",
-            "height": 3,
-            "left": 6,
-            "position": "absolute",
-            "top": -2,
-            "transform": [
-              {
-                "scaleX": 0,
-              },
-            ],
-            "width": 0,
-          }
-        }
-      />
-      <View
-        collapsable={false}
-        pointerEvents="none"
-        style={
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "justifyContent": "center",
-            "left": 0,
-            "overflow": "scroll",
-            "paddingHorizontal": 4,
-            "position": "absolute",
-            "top": 0,
-            "transform": [
-              {
-                "translateX": -0,
-              },
-              {
-                "translateY": -0,
-              },
-              {
-                "scale": 1,
-              },
-              {
-                "translateX": 0,
-              },
-              {
-                "translateY": 0,
-              },
-              {
-                "translateX": 16,
-              },
-              {
-                "translateY": -2,
-              },
-            ],
-          }
-        }
-      >
-        <Text
-          onLayout={[Function]}
-          style={
-            [
-              {
-                "color": "#ECECEC",
-                "fontFamily": "Hind Vadodara",
-                "fontSize": 16,
-                "margin": 0,
-                "padding": 0,
-                "textAlign": "center",
-              },
-              {},
-            ]
-          }
-        >
-          Title
-        </Text>
-      </View>
-      <TextInput
-        autoComplete="off"
-        autoCorrect={false}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        selectionColor="white"
         style={
           [
             {
-              "color": "#FFFFFF",
-              "fontSize": 18,
-              "maxHeight": 256,
-              "minHeight": 12,
-              "paddingHorizontal": 12,
-              "paddingVertical": 12,
+              "height": 20,
+              "width": 20,
             },
-            undefined,
+            {},
           ]
         }
-        testID="textInput"
-        textContentType="none"
-        value=""
-      />
-    </View>
-    <View
-      pointerEvents="none"
-      style={
-        {
-          "bottom": 0,
-          "justifyContent": "center",
-          "position": "absolute",
-          "right": 12,
-          "top": 0,
-        }
-      }
-    >
-      <View
-        collapsable={false}
-        style={
-          {
-            "transform": [
-              {
-                "rotateX": "0deg",
-              },
-            ],
-          }
-        }
       >
-        <View
+        <RNSVGSvgView
+          align="xMidYMid"
+          bbHeight={20}
+          bbWidth={20}
+          collapsable={false}
+          color="#999EB5"
+          fill="#999EB5"
+          focusable={false}
+          height={20}
+          meetOrSlice={0}
+          minX={0}
+          minY={0}
           style={
             [
               {
+                "backgroundColor": "transparent",
+                "borderWidth": 0,
+              },
+              {},
+              {
+                "flex": 0,
                 "height": 20,
                 "width": 20,
               },
-              {},
             ]
           }
+          tintColor="#999EB5"
+          transform={
+            [
+              {
+                "rotate": -1.5707963267948966,
+              },
+            ]
+          }
+          vbHeight={185.343}
+          vbWidth={185.343}
+          width={20}
         >
-          <RNSVGSvgView
-            align="xMidYMid"
-            bbHeight={20}
-            bbWidth={20}
-            collapsable={false}
-            color="#808080"
-            fill="#808080"
-            focusable={false}
-            height={20}
-            meetOrSlice={0}
-            minX={0}
-            minY={0}
-            style={
+          <RNSVGGroup
+            fill={
+              {
+                "payload": 4288257717,
+                "type": 0,
+              }
+            }
+            propList={
               [
-                {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                {},
-                {
-                  "flex": 0,
-                  "height": 20,
-                  "width": 20,
-                },
+                "fill",
               ]
             }
-            tintColor="#808080"
-            transform={
-              [
-                {
-                  "rotate": -1.5707963267948966,
-                },
-              ]
-            }
-            vbHeight={185.343}
-            vbWidth={185.343}
-            width={20}
           >
-            <RNSVGGroup
+            <RNSVGPath
+              d="M51.707 185.343a10.692 10.692 0 01-7.593-3.149 10.724 10.724 0 010-15.175l74.352-74.347L44.114 18.32c-4.194-4.194-4.194-10.987 0-15.175 4.194-4.194 10.987-4.194 15.18 0l81.934 81.934c4.194 4.194 4.194 10.987 0 15.175l-81.934 81.939a10.678 10.678 0 01-7.587 3.15z"
               fill={
                 {
-                  "payload": 4286611584,
+                  "payload": 4288257717,
                   "type": 0,
                 }
               }
@@ -297,135 +341,11 @@ exports[`[Component] Input should render correctly 1`] = `
                   "fill",
                 ]
               }
-            >
-              <RNSVGPath
-                d="M51.707 185.343a10.692 10.692 0 01-7.593-3.149 10.724 10.724 0 010-15.175l74.352-74.347L44.114 18.32c-4.194-4.194-4.194-10.987 0-15.175 4.194-4.194 10.987-4.194 15.18 0l81.934 81.934c4.194 4.194 4.194 10.987 0 15.175l-81.934 81.939a10.678 10.678 0 01-7.587 3.15z"
-                fill={
-                  {
-                    "payload": 4286611584,
-                    "type": 0,
-                  }
-                }
-                propList={
-                  [
-                    "fill",
-                  ]
-                }
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-        </View>
+            />
+          </RNSVGGroup>
+        </RNSVGSvgView>
       </View>
     </View>
-  </View>,
-  <View
-    collapsable={false}
-    pointerEvents="none"
-    style={
-      {
-        "borderColor": "#9095FF",
-        "borderLeftWidth": 1,
-        "borderRightWidth": 1,
-        "elevation": 1020,
-        "height": 14,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": -12,
-        "transform": [
-          {
-            "translateX": 0,
-          },
-          {
-            "translateY": 0,
-          },
-        ],
-        "zIndex": 1020,
-      }
-    }
-  />,
-  <View
-    collapsable={false}
-    pointerEvents="none"
-    style={
-      {
-        "elevation": 1000,
-        "left": 0,
-        "maxHeight": 256,
-        "overflow": "hidden",
-        "position": "absolute",
-        "top": 0,
-        "transform": [
-          {
-            "translateX": 0,
-          },
-          {
-            "translateY": 0,
-          },
-        ],
-        "width": 0,
-        "zIndex": 1000,
-      }
-    }
-  >
-    <View
-      collapsable={false}
-      style={
-        {
-          "borderBottomLeftRadius": 8,
-          "borderBottomRightRadius": 8,
-          "borderColor": "#9095FF",
-          "borderTopWidth": 0,
-          "borderWidth": 1,
-          "marginBottom": 12,
-          "opacity": 0,
-          "overflow": "hidden",
-          "transform": [
-            {
-              "translateY": -60,
-            },
-          ],
-        }
-      }
-    >
-      <RCTScrollView
-        ListHeaderComponent={null}
-        data={[]}
-        getItem={[Function]}
-        getItemCount={[Function]}
-        keyExtractor={[Function]}
-        nestedScrollEnabled={true}
-        onContentSizeChange={[Function]}
-        onLayout={[Function]}
-        onMomentumScrollBegin={[Function]}
-        onMomentumScrollEnd={[Function]}
-        onScroll={[Function]}
-        onScrollBeginDrag={[Function]}
-        onScrollEndDrag={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        removeClippedSubviews={false}
-        renderItem={[Function]}
-        scrollEventThrottle={0.0001}
-        stickyHeaderIndices={[]}
-        style={
-          [
-            {
-              "borderBottomLeftRadius": 8,
-              "borderBottomRightRadius": 8,
-            },
-            {
-              "backgroundColor": "#222740",
-            },
-          ]
-        }
-        viewabilityConfigCallbackPairs={[]}
-      >
-        <View />
-      </RCTScrollView>
-    </View>
-  </View>,
-]
+  </View>
+</View>
 `;

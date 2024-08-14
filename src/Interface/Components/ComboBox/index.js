@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, TouchableHighlight, FlatList, Platform } from 'react-native';
+import { View, Animated, TouchableHighlight, FlatList, Modal } from 'react-native';
 
 import styles from './style';
 import ComboBoxBack from './back';
@@ -19,11 +19,16 @@ import { InputText } from '../InputText';
 
 class ComboBox extends ComboBoxBack {
     render() {
+        const { selectionMode } = this.state;
+
         return (
             <>
                 {this.renderElement()}
-                {this.renderOverlay()}
-                {this.renderContent()}
+
+                <Modal visible={selectionMode} transparent={selectionMode} animationType='fade'>
+                    {this.renderOverlay()}
+                    {this.renderContent()}
+                </Modal>
             </>
         );
     }
@@ -38,7 +43,7 @@ class ComboBox extends ComboBoxBack {
         });
 
         return (
-            <View style={[styles.parentContent, style]} onLayout={this.onLayout}>
+            <View ref={this.refParent} style={[styles.parentContent, style]}>
                 {/* Button for interaction (open combobox) */}
                 <Button
                     testID='combobox-button'
@@ -84,8 +89,8 @@ class ComboBox extends ComboBoxBack {
 
     renderContent = () => {
         const { enableSearchBar: setSearchBar, maxContentHeight: maxHeight, activeColor } = this.props;
-        const { anim, data, selectionMode } = this.state;
-        const { x, y, width, height } = this.state.parent;
+        const { parent, anim, data, selectionMode } = this.state;
+        const { x, y, width, height } = parent;
 
         const animValue = anim.interpolate({
             inputRange: [0, 1],
@@ -115,7 +120,7 @@ class ComboBox extends ComboBoxBack {
 
         return (
             <>
-                <Animated.View style={[styles.borderFix, borderFixStyle]} pointerEvents={'none'} />
+                <Animated.View style={[styles.borderFix, borderFixStyle, { width }]} pointerEvents={'none'} />
 
                 <Animated.View
                     style={[styles.overlayParent, overlayStyle]}
@@ -123,7 +128,7 @@ class ComboBox extends ComboBoxBack {
                 >
                     <Animated.View style={[styles.overlayPanel, panelStyle]}>
                         <FlatList
-                            ref={this.flatlistRef}
+                            ref={this.refFlatlist}
                             ListHeaderComponent={
                                 !setSearchBar ? null : (
                                     <View style={styles.parentSearchBar}>
@@ -145,13 +150,7 @@ class ComboBox extends ComboBoxBack {
                             ]}
                             data={data}
                             renderItem={this.renderItem}
-                            onTouchMove={(e) => e.stopPropagation()}
                             keyExtractor={(item, index) => `i-${item.key}-${index}`}
-                            onTouchStart={this.DisablePageScroll}
-                            onTouchEnd={this.EnablePageScroll}
-                            onMomentumScrollEnd={this.EnablePageScroll}
-                            onScrollEndDrag={this.EnablePageScroll}
-                            nestedScrollEnabled={Platform.OS === 'ios'}
                         />
                     </Animated.View>
                 </Animated.View>

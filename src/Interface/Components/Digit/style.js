@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     containerStyle: {
         width: 46,
-        paddingLeft: 7,
         paddingVertical: 4,
         justifyContent: 'center',
 
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     digit: {
-        marginHorizontal: 2,
+        marginRight: 4,
         fontSize: 18,
         textAlign: 'center'
     },

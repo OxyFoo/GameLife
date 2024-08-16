@@ -428,13 +428,13 @@
     },
 
     "login": {
-        "page-title": "Yo",
-        "page-text": "Bonjour à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
+        "page-title": "Bienvenue",
+        "page-text": "Prêt à dominer ton quotidien ? Rejoins notre communauté et prends le contrôle de ton avenir !",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
         "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
-        "button-login-text": "Se connecter ou s'inscrire",
+        "button-login-text": "Suivant",
         "button-signin-text": "S'inscrire",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",

@@ -36,8 +36,9 @@ class BackQuest extends PageBase {
             created: 0, // 0 To autodefined when added
             maximumStreak: 0,
             schedule: {
-                type: 'week',
-                repeat: [],
+                type: 'frequency',
+                frequencyMode: 'week',
+                quantity: 1,
                 duration: 60
             },
             skills: []
@@ -78,7 +79,7 @@ class BackQuest extends PageBase {
 
     componentDidMount() {
         //StartMission.call(this, this.props.args?.missionName);
-        user.interface.SetCustomBackHandler(this.BackHandler);
+        user.interface.AddCustomBackHandler(this.BackHandler);
         this.onChangeQuest(this.state.tempQuest);
     }
 
@@ -130,17 +131,18 @@ class BackQuest extends PageBase {
 
         this.setState({ tempQuest: quest, errors });
     };
-    /**
-     * @param {boolean} askPopup Show a popup to ask the user if he wants to
-     *                           leave the page when he is editing a quest
-     * @returns {boolean}
-     */
-    BackHandler = (askPopup = true) => {
+
+    onBackPress = () => {
+        user.interface.BackHandle();
+    };
+
+    /** @returns {boolean} */
+    BackHandler = () => {
         const { action } = this.state;
 
         // Don't show popup or quest not edited => leave
-        if (!askPopup || action === 'remove') {
-            user.interface.ResetCustomBackHandler();
+        if (action === 'remove') {
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.ChangePage('myqueststats', {
                 args: { quest: this.selectedQuest, showAnimations: false },
                 storeInHistory: false,
@@ -150,7 +152,7 @@ class BackQuest extends PageBase {
         }
 
         if (action === 'add') {
-            user.interface.ResetCustomBackHandler();
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.BackHandle();
             return false;
         }
@@ -163,7 +165,7 @@ class BackQuest extends PageBase {
             },
             callback: (btn) => {
                 if (btn === 'yes') {
-                    user.interface.ResetCustomBackHandler();
+                    user.interface.RemoveCustomBackHandler(this.BackHandler);
                     user.interface.ChangePage('myqueststats', {
                         args: { quest: this.selectedQuest, showAnimations: false },
                         storeInHistory: false,
@@ -189,15 +191,15 @@ class BackQuest extends PageBase {
             user.missions.SetMissionState('mission2', 'completed');
 
             user.GlobalSave();
-            user.interface.ResetCustomBackHandler();
-
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.ChangePage('myqueststats', {
-                args: { quest: tempQuest },
+                args: { quest: tempQuest, showAnimations: false },
                 storeInHistory: false,
                 transition: 'fromLeft'
             });
         } else if (addStatus === 'already-added') {
             user.interface.console?.AddLog('warn', 'Quest: Quest already added');
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.BackHandle();
         } else {
             user.interface.console?.AddLog('error', 'Quest: Unknown error');
@@ -219,8 +221,7 @@ class BackQuest extends PageBase {
             user.missions.SetMissionState('mission2', 'completed');
 
             user.GlobalSave();
-            user.interface.ResetCustomBackHandler();
-
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.ChangePage('myqueststats', {
                 args: { quest: tempQuest, showAnimations: false },
                 storeInHistory: false,
@@ -228,6 +229,7 @@ class BackQuest extends PageBase {
             });
         } else if (addition === 'not-exists') {
             user.interface.console?.AddLog('warn', 'Quest: Quest not exist');
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.BackHandle();
         } else {
             user.interface.console?.AddLog('error', 'Quest: Unknown error');
@@ -251,7 +253,7 @@ class BackQuest extends PageBase {
                     const remove = user.quests.myquests.Remove(this.selectedQuest);
                     if (remove === 'removed') {
                         user.GlobalSave();
-                        user.interface.ResetCustomBackHandler();
+                        user.interface.RemoveCustomBackHandler(this.BackHandler);
                         user.interface.BackHandle();
                     } else if (remove === 'notExist') {
                         user.interface.console?.AddLog('warn', 'Quest: Quest not exist');
@@ -259,10 +261,6 @@ class BackQuest extends PageBase {
                 }
             }
         });
-    };
-
-    onBackPress = () => {
-        user.interface.BackHandle();
     };
 }
 

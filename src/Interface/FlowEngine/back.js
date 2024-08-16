@@ -208,13 +208,13 @@ class BackFlowEngine extends React.Component {
 
     /**
      * @description Custom back button handler
-     * @type {((args: any) => boolean)[]} Return true if back is handled
+     * @type {((args: any) => (boolean | (() => void)))[]} Return true if back is handled
      * @private
      */
     customBackHandlers = [];
 
     /**
-     * @param {() => boolean} handle
+     * @param {() => (boolean | (() => void))} handle Function to handle back button, return true or function (to execute after back handle) if back is handled or false if not
      * @returns {boolean} True if handle is set
      * @public
      */
@@ -251,25 +251,48 @@ class BackFlowEngine extends React.Component {
     };
 
     /**
+     * @param {() => boolean} handle
+     * @returns {boolean} True if handle is removed
+     * @public
+     */
+    RemoveCustomBackHandler = (handle) => {
+        const index = this.customBackHandlers.findIndex((h) => h === handle);
+        if (index === -1) {
+            return false;
+        }
+        this.customBackHandlers.splice(index, 1);
+        return true;
+    };
+
+    /**
      * @description Handle back button
      * @param {PageOptionsBack} [options]
      * @returns {boolean} True if back is handled
      * @public
      */
     BackHandle = (options = {}) => {
-        if (this.customBackHandlers.length > 0) {
-            const customHandler = this.customBackHandlers.pop();
-            if (typeof customHandler !== 'undefined') {
-                if (customHandler(options.args)) {
-                    options?.callback?.();
-                } else {
-                    this.customBackHandlers.push(customHandler);
-                }
-            }
+        // No custom back handler, use default back page
+        if (this.customBackHandlers.length <= 0) {
+            this.backPage(options);
             return true;
         }
 
-        this.backPage(options);
+        // Get custom back handler
+        const customHandler = this.customBackHandlers.at(-1);
+        if (typeof customHandler === 'undefined') {
+            return true;
+        }
+
+        // Execute custom back handler
+        const resultBackHandler = customHandler(options.args);
+        if (resultBackHandler === true || typeof resultBackHandler === 'function') {
+            options?.callback?.();
+            this.customBackHandlers.pop();
+            if (typeof resultBackHandler === 'function') {
+                resultBackHandler();
+            }
+        }
+
         return true;
     };
 
@@ -572,7 +595,11 @@ class BackFlowEngine extends React.Component {
         GetCurrentPage: this.GetCurrentPage,
         GetCurrentPageName: this.GetCurrentPageName,
         AddCustomBackHandler: this.AddCustomBackHandler,
+        RemoveCustomBackHandler: this.RemoveCustomBackHandler,
+
+        /** @deprecated */
         SetCustomBackHandler: this.SetCustomBackHandler,
+        /** @deprecated */
         ResetCustomBackHandler: this.ResetCustomBackHandler
     };
 }

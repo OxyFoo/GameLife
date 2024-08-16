@@ -165,10 +165,11 @@ class SectionSchedule extends BackSectionSchedule {
             <View style={styles.frequencyContainer}>
                 <Digit
                     style={styles.frequencyDigit}
-                    //containerWidth={60}
+                    minDigitWidth={20}
                     value={quest.schedule.quantity}
                     minValue={1}
                     maxValue={quest.schedule.frequencyMode === 'week' ? 7 : 30}
+                    velocity={quest.schedule.frequencyMode === 'week' ? 1 : 2}
                     onChangeValue={this.onFrequencyChange}
                 />
                 <Text style={styles.frequencySeparator}>/</Text>

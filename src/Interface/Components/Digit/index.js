@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, PanResponder } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
@@ -10,9 +10,14 @@ import { Text } from 'Interface/Components/Text';
 import { Range } from 'Utils/Functions';
 
 class Digit extends DigitBack {
+    panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => true
+    });
+
     render() {
-        const { style, containerWidth } = this.props;
-        const { animLeft, paddingLeft } = this.state;
+        const { style } = this.props;
+        const { animLeft, containerWidth, digitWidth } = this.state;
 
         const translateX = {
             transform: [{ translateX: Animated.subtract(0, animLeft) }]
@@ -27,8 +32,7 @@ class Digit extends DigitBack {
                     styles.containerStyle,
                     style,
                     {
-                        minWidth: containerWidth,
-                        paddingLeft: paddingLeft
+                        paddingLeft: (containerWidth - digitWidth - 4) / 2
                     }
                 ]}
                 onLayout={this.onLayout}
@@ -36,6 +40,7 @@ class Digit extends DigitBack {
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
                 onTouchCancel={this.onTouchEnd}
+                {...this.panResponder.panHandlers}
             >
                 <Animated.View style={[styles.content, translateX]}>
                     <this.renderDigits />
@@ -61,7 +66,7 @@ class Digit extends DigitBack {
     /** @param {number} i */
     renderDigit = (i) => {
         const { color, fontSize, minDigitWidth } = this.props;
-        //const { digitWidth } = this.state;
+        const { digitWidth } = this.state;
 
         return (
             <Text
@@ -69,8 +74,7 @@ class Digit extends DigitBack {
                 style={[
                     styles.digit,
                     {
-                        // It works with the font size, is it a coincidence?
-                        minWidth: Math.max(minDigitWidth, fontSize + 4),
+                        minWidth: Math.max(digitWidth, minDigitWidth),
                         fontSize: fontSize
                     }
                 ]}
@@ -84,14 +88,10 @@ class Digit extends DigitBack {
 
     /** @param {number} i */
     renderDigitEmpty = (i) => {
-        const { fontSize, minDigitWidth } = this.props;
-        //const { digitWidth } = this.state;
+        const { digitWidth } = this.state;
+
         return (
-            <Text
-                key={`digit-text-${i}`}
-                style={[styles.digit, { minWidth: Math.max(minDigitWidth, fontSize + 4), fontSize }]}
-                color='transparent'
-            >
+            <Text key={`digit-text-${i}`} style={[styles.digit, { minWidth: digitWidth }]} color='transparent'>
                 {i.toString()}
             </Text>
         );

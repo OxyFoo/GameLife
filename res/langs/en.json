@@ -429,12 +429,12 @@
 
     "login": {
         "page-title": "Welcome !",
-        "page-text": "I need an email address and a username to create your account, don't worry, it will be quick!",
+        "page-text": "Ready to dominate your daily life? Join our community and take control of your future!",
 
         "input-email-title": "Email address",
         "input-username-title": "Pseudo",
         "input-cgu-text": "I have read and agree to the %terms and conditions%.",
-        "button-login-text": "Login or create an account",
+        "button-login-text": "Next",
         "button-signin-text": "Signin",
 
         "error-login-nonmail": "Please enter a valid email address.",

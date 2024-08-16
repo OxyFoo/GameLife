@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     frequencyDigit: {
-        height: 'auto',
-        borderWidth: 1.2
+        width: 80,
+        borderWidth: 1.5
     },
     frequencySeparator: {
         marginHorizontal: 8,

@@ -2,12 +2,11 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
-import { MinMax } from 'Utils/Functions';
+import { MinMax, Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
- * @typedef {import('react-native').DimensionValue} DimensionValue
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
@@ -16,7 +15,6 @@ import { MinMax } from 'Utils/Functions';
  *
  * @typedef {Object} DigitPropsType
  * @property {StyleViewProp} style
- * @property {DimensionValue} containerWidth
  * @property {number} minDigitWidth
  * @property {ThemeColor | ThemeText} color
  * @property {boolean} lock If true, value can't be changed
@@ -33,7 +31,6 @@ import { MinMax } from 'Utils/Functions';
 /** @type {DigitPropsType} */
 const DigitProps = {
     style: {},
-    containerWidth: 46,
     minDigitWidth: 0,
     color: 'primary',
     lock: false,
@@ -56,16 +53,11 @@ const DigitProps = {
  * PaddingLeft = (46 - 4 - 28) / 2 = 14 / 2 = 7
  */
 
-/**
- * @TODO Disable parent vertical scroll when dragging
- */
-
 class DigitBack extends React.Component {
     /** @type {number} Position of X scroll in pixels */
     scrollX = 0;
 
     state = {
-        paddingLeft: 0,
         containerWidth: 0,
         digitWidth: 0,
         animLeft: new Animated.Value(0)
@@ -115,26 +107,21 @@ class DigitBack extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayoutDigit = (event) => {
-        const { containerWidth } = this.state;
         const { width } = event.nativeEvent.layout;
-        const margins = 4; // 2 * 2
-        const digitWidth = width + margins;
-
-        // Init
-        if (digitWidth > this.state.digitWidth) {
-            const containerBorders = 4; // 2 * 2
-            const paddingLeft = (containerWidth - containerBorders - digitWidth) / 2;
-            this.setState({ digitWidth, paddingLeft });
+        if (width > this.state.digitWidth) {
+            this.setState({ digitWidth: width });
         }
     };
 
     /** @param {number} index Scroll position index */
     SetDigitsIndex = (index) => {
         const { digitWidth } = this.state;
-        const { maxValue, stepValue } = this.props;
+        const { minValue, maxValue, stepValue, onChangeValue } = this.props;
 
-        const _index = MinMax(0, index, maxValue / stepValue);
-        this.SetDigitsPosX(_index * digitWidth);
+        const _index = MinMax(minValue, index, maxValue / stepValue);
+        const _width = digitWidth + 4;
+        this.SetDigitsPosX(_index * _width);
+        onChangeValue(_index);
     };
 
     /** @param {number} posX Scroll position in pixels */
@@ -164,27 +151,16 @@ class DigitBack extends React.Component {
 
     /** @param {GestureResponderEvent} _event */
     onTouchEnd = (_event) => {
-        if (this.props.lock) {
+        const { digitWidth } = this.state;
+        const { lock } = this.props;
+
+        if (lock) {
             this.SetDigitsPosX(this.scrollX);
             return;
         }
 
-        const { digitWidth } = this.state;
-        const { stepValue, minValue, maxValue, onChangeValue } = this.props;
-
-        let min_index = -1;
-        let min_delta = -1;
-        for (let i = 0; i <= maxValue / stepValue; i++) {
-            const delta = Math.abs(this.newPosX - i * digitWidth);
-            if (min_delta === -1 || delta < min_delta) {
-                min_index = i;
-                min_delta = delta;
-            }
-        }
-
-        const newIndex = Math.max(min_index, minValue / stepValue);
+        const newIndex = Round((this.newPosX + (digitWidth + 4) / 2) / (digitWidth + 4));
         this.SetDigitsIndex(newIndex);
-        onChangeValue(newIndex);
     };
 }
 

@@ -18,7 +18,7 @@ import { Range } from 'Utils/Functions';
  */
 
 /** @type {RepeatModes[]} */
-const TYPES = ['week', 'month', 'frequency'];
+const TYPES = ['frequency', 'week', 'month'];
 
 /** @type {FrequencyRepeatModes[]} */
 const TYPES_FREQ = ['week', 'month'];

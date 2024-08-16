@@ -188,7 +188,7 @@ class PopupBack extends React.PureComponent {
     /**
      * Close popup
      * @param {string} [closeReason]
-     * @returns {boolean} True if popup was closed
+     * @returns {boolean | (() => void)} True if popup was closed
      */
     CloseHandle = (closeReason) => {
         const { currents } = this.state;
@@ -207,8 +207,6 @@ class PopupBack extends React.PureComponent {
         if (!current.cancelable && typeof closeReason === 'undefined') {
             return false;
         }
-
-        current.callback && current.callback(closeReason ?? 'closed');
 
         // Start end animations
         Animated.parallel([
@@ -235,6 +233,11 @@ class PopupBack extends React.PureComponent {
                 }
             );
         });
+
+        const callback = current.callback;
+        if (callback) {
+            return () => callback(closeReason ?? 'closed');
+        }
 
         return true;
     };

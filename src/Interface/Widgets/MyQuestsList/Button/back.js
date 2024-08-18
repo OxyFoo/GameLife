@@ -14,6 +14,7 @@ import { AddActivity } from 'Interface/Widgets';
  * @typedef {Object} QuestPropsType
  * @property {StyleProp} style
  * @property {MyQuest | null} quest
+ * @property {boolean} enableQuickAdd
  * @property {(quest: MyQuest) => void} onDrag Icon to drag => onTouchStart event (quest only)
  * @property {(event: LayoutChangeEvent) => void} onLayout
  */
@@ -22,6 +23,7 @@ import { AddActivity } from 'Interface/Widgets';
 const QuestProps = {
     style: {},
     quest: null,
+    enableQuickAdd: false,
     onDrag: () => {},
     onLayout: () => {}
 };
@@ -91,8 +93,8 @@ class QuestButtonBack extends React.Component {
     };
 
     openQuickAddActivity = () => {
-        const { quest } = this.props;
-        if (quest === null) return;
+        const { quest, enableQuickAdd } = this.props;
+        if (quest === null || !enableQuickAdd) return;
 
         user.interface.bottomPanel?.Open({
             content: <AddActivity listSkillsIDs={quest.skills} />,

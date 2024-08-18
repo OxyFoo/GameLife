@@ -1,3 +1,4 @@
+import React from 'react';
 import { Animated, Keyboard } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
@@ -8,6 +9,9 @@ import { SpringAnimation } from 'Utils/Animations';
 import { DeepCopy } from 'Utils/Object';
 
 /**
+ * @typedef {import('react-native').ScrollView} ScrollView
+ * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Class/Todoes').Todo} Todo
  *
@@ -39,9 +43,16 @@ class BackTodo extends PageBase {
             created: 0
         },
 
+        scrollable: true,
         editButtonHeight: 0,
         animEditButton: new Animated.Value(0)
     };
+
+    /** @type {React.RefObject<ScrollView>} */
+    refScrollView = React.createRef();
+
+    /** @type {number} Position of the scroll (0-1) */
+    scrollRatio = 0;
 
     /** @param {BackTodoProps} props */
     constructor(props) {
@@ -61,8 +72,16 @@ class BackTodo extends PageBase {
         }
     }
 
-    componentDidFocused = () => {
-        user.interface.SetCustomBackHandler(this.BackHandler);
+    componentDidMount() {
+        user.interface.AddCustomBackHandler(this.BackHandler);
+    }
+
+    /** @param {NativeSyntheticEvent} event */
+    onScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+        const { height } = event.nativeEvent.contentSize;
+        const { height: layoutHeight } = event.nativeEvent.layoutMeasurement;
+        this.scrollRatio = y / (height - layoutHeight);
     };
 
     onBackPress = () => {
@@ -75,18 +94,23 @@ class BackTodo extends PageBase {
         this.setState({ editButtonHeight: height });
     };
 
+    /** @param {boolean} enabled */
+    onChangeScrollable = (enabled) => {
+        this.setState({ scrollable: enabled });
+    };
+
     /**
-     * @param {boolean} askPopup Show a popup to ask the user if he wants to leave the page when he is editing a todo
      * @returns {boolean}
      */
-    BackHandler = (askPopup = true) => {
+    BackHandler = () => {
         const lang = langManager.curr['todo'];
         const { action } = this.state;
 
         // Don't show popup or todo not edited => leave
-        if (!askPopup || action === 'remove') {
-            user.interface.ResetCustomBackHandler();
-            return true;
+        if (action === 'remove') {
+            user.interface.RemoveCustomBackHandler(this.BackHandler);
+            user.interface.BackHandle();
+            return false;
         }
 
         user.interface.popup?.OpenT({
@@ -97,7 +121,7 @@ class BackTodo extends PageBase {
             },
             callback: (btn) => {
                 if (btn === 'yes') {
-                    user.interface.ResetCustomBackHandler();
+                    user.interface.RemoveCustomBackHandler(this.BackHandler);
                     user.interface.BackHandle();
                 }
             }
@@ -135,11 +159,19 @@ class BackTodo extends PageBase {
 
         if (action === 'edit' || action === 'remove') {
             const edited = this.isEdited();
-            this.setState({
-                action: edited ? 'edit' : 'remove',
-                tempTodo: { ...todo },
-                error: titleError
-            });
+            this.setState(
+                {
+                    action: edited ? 'edit' : 'remove',
+                    tempTodo: { ...todo },
+                    error: titleError
+                },
+                () => {
+                    // If scroll is at the bottom, scroll to the bottom
+                    if (this.scrollRatio >= 0.9 && action !== this.state.action) {
+                        this.refScrollView.current?.scrollToEnd({ animated: true });
+                    }
+                }
+            );
             SpringAnimation(animEditButton, edited ? 1 : 0).start();
             return;
         }
@@ -190,7 +222,7 @@ class BackTodo extends PageBase {
         }
 
         user.GlobalSave();
-        user.interface.ResetCustomBackHandler();
+        user.interface.RemoveCustomBackHandler(this.BackHandler);
         user.interface.BackHandle();
     };
 
@@ -213,7 +245,7 @@ class BackTodo extends PageBase {
         }
 
         user.GlobalSave();
-        user.interface.ResetCustomBackHandler();
+        user.interface.RemoveCustomBackHandler(this.BackHandler);
         user.interface.BackHandle();
     };
 
@@ -226,11 +258,12 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const title = lang['alert-remtodo-title'];
-        const message = lang['alert-remtodo-message'];
         user.interface.popup?.OpenT({
             type: 'yesno',
-            data: { title, message },
+            data: {
+                title: lang['alert-remtodo-title'],
+                message: lang['alert-remtodo-message']
+            },
             callback: (btn) => {
                 if (btn !== 'yes') {
                     return;
@@ -239,7 +272,7 @@ class BackTodo extends PageBase {
                 const remove = user.todoes.Remove(todo);
                 if (remove === 'removed') {
                     user.GlobalSave();
-                    user.interface.ResetCustomBackHandler();
+                    user.interface.RemoveCustomBackHandler(this.BackHandler);
                     user.interface.BackHandle();
                 } else if (remove === 'notExist') {
                     user.interface.console?.AddLog('warn', 'Todo: Todo not exist');

@@ -43,7 +43,15 @@ class ActivityTimelineBack extends React.Component {
 
     /** @param {ActivityTimelinePropsType} prevProps */
     componentDidUpdate(prevProps) {
-        if (this.props.activities !== prevProps.activities) {
+        // Before the first render
+        if (this.state.timelineWidth === 0) {
+            return;
+        }
+
+        // Activities list has changed
+        const oldActivities = JSON.stringify(prevProps.activities);
+        const newActivities = JSON.stringify(this.props.activities);
+        if (oldActivities !== newActivities) {
             this.setState({ activities: this.prepareActivities() });
         }
     }
@@ -51,15 +59,19 @@ class ActivityTimelineBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
-        if (this.state.timelineWidth !== width) {
-            this.setState({ timelineWidth: width });
+
+        if (this.state.timelineWidth === width) {
+            return;
         }
+
+        this.setState({
+            activities: this.prepareActivities(width),
+            timelineWidth: width
+        });
     };
 
     /** @returns {ActivityTimelineItem[]} */
-    prepareActivities() {
-        const { timelineWidth } = this.state;
-
+    prepareActivities(timelineWidth = this.state.timelineWidth) {
         if (timelineWidth === 0 || this.props.activities.length === 0) {
             return [];
         }

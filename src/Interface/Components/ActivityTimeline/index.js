@@ -11,10 +11,12 @@ import ActivityTimelineBack from './back';
 
 class ActivityTimeline extends ActivityTimelineBack {
     render() {
+        const { activities } = this.state;
+
         return (
             <View style={[styles.parent, this.props.style]} onLayout={this.onLayout}>
                 <FlatList
-                    data={this.state.activities}
+                    data={activities}
                     renderItem={this.renderActivity}
                     keyExtractor={(item, index) => `activity-${item.startTime}-${index}`}
                     showsHorizontalScrollIndicator={false}

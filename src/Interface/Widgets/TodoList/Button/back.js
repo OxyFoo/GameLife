@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import { GetDate, GetGlobalTime, GetTimeToTomorrow } from 'Utils/Time';
 import { DateFormat } from 'Utils/Date';
@@ -100,7 +101,7 @@ class TodoButtonBack extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.lastY = event.nativeEvent.pageY;
-        this.a = setTimeout(() => {
+        this.timeoutDrag = setTimeout(() => {
             this.props.onDrag();
         }, 300);
     };
@@ -109,13 +110,13 @@ class TodoButtonBack extends React.Component {
     onTouchMove = (event) => {
         const deltaY = event.nativeEvent.pageY - this.lastY;
         if (Math.abs(deltaY) > 10) {
-            clearTimeout(this.a);
+            clearTimeout(this.timeoutDrag);
         }
     };
 
     /** @param {GestureResponderEvent} _event */
     onTouchEnd = (_event) => {
-        clearTimeout(this.a);
+        clearTimeout(this.timeoutDrag);
     };
 
     onCheck = () => {
@@ -128,17 +129,31 @@ class TodoButtonBack extends React.Component {
     };
 
     onRemove = () => {
+        const lang = langManager.curr['todo'];
         const { todo } = this.props;
         const { animElementY } = this.state;
         if (todo === null) return;
 
-        this.props.onRemove(todo, (resolve) => {
-            SpringAnimation(animElementY, 1).start();
-            setTimeout(() => {
-                resolve(() => {
-                    SpringAnimation(animElementY, 0).start();
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-remtodo-title'],
+                message: lang['alert-remtodo-message']
+            },
+            callback: (btn) => {
+                if (btn !== 'yes') {
+                    return;
+                }
+
+                this.props.onRemove(todo, (resolve) => {
+                    SpringAnimation(animElementY, 1).start();
+                    setTimeout(() => {
+                        resolve(() => {
+                            SpringAnimation(animElementY, 0).start();
+                        });
+                    }, 200);
                 });
-            }, 200);
+            }
         });
     };
 

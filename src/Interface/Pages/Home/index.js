@@ -76,7 +76,7 @@ class Home extends BackHome {
                         onPress={this.addTodo}
                     />
                 </Title>
-                <TodoList style={styles.todoList} scrollable={scrollable} changeScrollable={this.onChangeScrollable} />
+                <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
             </ScrollView>
         );
     }

@@ -35,6 +35,7 @@ class Quests extends BackQuests {
 
                     <FlatList
                         data={quests}
+                        extraData={draggedItem}
                         onLayout={this.onLayout}
                         onTouchStart={this.onTouchStart}
                         onTouchMove={this.onTouchMove}
@@ -52,9 +53,16 @@ class Quests extends BackQuests {
 
     /** @type {ListRenderItemMyQuest} */
     renderItem = ({ item }) => {
+        const { draggedItem } = this.state;
+
+        const styleOpacity = { opacity: 1 };
+        if (draggedItem !== null && item.title === draggedItem.title) {
+            styleOpacity.opacity = 0.25;
+        }
+
         return (
             <MyQuestsList.Button
-                style={styles.questItem}
+                style={[styles.questItem, styleOpacity]}
                 onLayout={this.onLayoutItem}
                 quest={item}
                 onDrag={this.onDrag}

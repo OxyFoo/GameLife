@@ -32,7 +32,6 @@ class TodoList extends BackTodoList {
                 )}
 
                 <FlatList
-                    ref={this.refFlatlist}
                     data={todoes}
                     extraData={draggedItem}
                     keyExtractor={this.keyExtractor}

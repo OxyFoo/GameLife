@@ -72,12 +72,6 @@ class Todoes {
      */
     allTodoes = new DynamicVar(EMPTY_TODO_LIST);
 
-    /**
-     * @description Not saved, only to undo last deletion
-     * @type {Todo | null}
-     */
-    lastDeletedTodo = null;
-
     Clear() {
         this.SAVED_todoes = [];
         this.UNSAVED_additions = [];
@@ -299,7 +293,6 @@ class Todoes {
         }
 
         if (deleted !== null) {
-            this.lastDeletedTodo = deleted;
             this.allTodoes.Set(this.Get());
             return 'removed';
         }
@@ -373,29 +366,6 @@ class Todoes {
      */
     Uncheck(todo) {
         return this.Check(todo, 0);
-    }
-
-    /**
-     * Restore last deleted todo
-     * @returns {boolean} Success of the operation
-     */
-    Undo() {
-        if (this.lastDeletedTodo === null) return false;
-
-        // Delete todo from UNSAVED_deletions
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, this.lastDeletedTodo);
-        if (indexDeletion !== null) this.UNSAVED_deletions.splice(indexDeletion, 1);
-
-        // Save unchecked todo in UNSAVED_additions
-        this.lastDeletedTodo.checked = 0;
-        this.UNSAVED_additions.push(this.lastDeletedTodo);
-        this.lastDeletedTodo = null;
-        this.allTodoes.Set(this.Get());
-
-        // Save new sort
-        this.SAVED_sort = false;
-
-        return true;
     }
 
     /**

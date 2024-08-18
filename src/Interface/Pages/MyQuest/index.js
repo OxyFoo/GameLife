@@ -46,7 +46,12 @@ class Quest extends BackQuest {
 
         return (
             <>
-                <ScrollView style={[styles.page, styleAnimPage]} onStartShouldSetResponder={this.keyboardDismiss}>
+                <ScrollView
+                    ref={this.refScrollView}
+                    style={[styles.page, styleAnimPage]}
+                    onScroll={this.onScroll}
+                    onStartShouldSetResponder={this.keyboardDismiss}
+                >
                     <PageHeader style={styles.pageHeader} title={title} onBackPress={this.onBackPress} />
 
                     <ShowTitle title='title' />

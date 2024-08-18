@@ -17,8 +17,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 14,
         justifyContent: 'center',
-        zIndex: 1,
-        elevation: 1
+        zIndex: 1
     },
     checkbox: {
         width: 24

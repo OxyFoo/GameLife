@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 
+import styles from './style';
 import BackTodo from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
 import SectionSchedule from './Sections/schedule';
-import SectionTasks from './Sections/tasks';
+import SectionTasks from './Sections/Tasks';
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
@@ -15,27 +16,49 @@ import { WithInterpolation } from 'Utils/Animations';
 class Todo extends BackTodo {
     render() {
         const lang = langManager.curr['todo'];
-        const { action, tempTodo, error, animEditButton, editButtonHeight } = this.state;
+        const { action, tempTodo, error, animEditButton, editButtonHeight, scrollable } = this.state;
         const title = action === 'new' ? lang['title-new'] : lang['title'];
 
         const styleAnimEditButton = {
             opacity: animEditButton,
             transform: [
                 {
-                    translateY: WithInterpolation(animEditButton, 0, -editButtonHeight - 12)
+                    translateY: WithInterpolation(animEditButton, editButtonHeight, 0)
                 }
             ]
         };
 
         return (
             <>
-                <ScrollView style={styles.page} onTouchStart={this.keyboardDismiss}>
+                <ScrollView
+                    ref={this.refScrollView}
+                    style={styles.page}
+                    onTouchStart={this.keyboardDismiss}
+                    onScroll={this.onScroll}
+                    scrollEnabled={scrollable}
+                >
                     <PageHeader title={title} onBackPress={this.onBackPress} />
 
                     <SectionTitle todo={tempTodo} error={error} onChangeTodo={this.onChangeTodo} />
                     <SectionSchedule todo={tempTodo} onChangeTodo={this.onChangeTodo} />
                     <SectionDescription todo={tempTodo} onChangeTodo={this.onChangeTodo} />
-                    <SectionTasks style={styles.last} todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                    <SectionTasks
+                        todo={tempTodo}
+                        onChangeTodo={this.onChangeTodo}
+                        changeScrollable={this.onChangeScrollable}
+                    />
+
+                    {/* Button: Remove */}
+                    {action !== 'new' && (
+                        <Button
+                            style={[styles.removeButton, action === 'edit' && styles.removeButtonWithEdit]}
+                            appearance='outline'
+                            icon='trash'
+                            onPress={this.removeTodo}
+                        >
+                            {lang['button-remove']}
+                        </Button>
+                    )}
                 </ScrollView>
 
                 {/* Button: Add */}
@@ -45,48 +68,24 @@ class Todo extends BackTodo {
                     </Button>
                 )}
 
+                {/* Button: Edit (Animated) */}
                 {action !== 'new' && (
-                    <>
-                        {/* Button: Edit (Animated) */}
-                        <Button
-                            style={styles.button}
-                            styleAnimation={styleAnimEditButton}
-                            appearance='normal'
-                            color='success'
-                            onLayout={this.onEditButtonLayout}
-                            onPress={this.editTodo}
-                            enabled={error === null}
-                        >
-                            {lang['button-save']}
-                        </Button>
-
-                        {/* Button: Remove */}
-                        <Button style={styles.button} appearance='outline-blur' icon='trash' onPress={this.removeTodo}>
-                            {lang['button-remove']}
-                        </Button>
-                    </>
+                    <Button
+                        style={styles.button}
+                        styleAnimation={styleAnimEditButton}
+                        appearance='normal'
+                        color='success'
+                        onLayout={this.onEditButtonLayout}
+                        onPress={this.editTodo}
+                        enabled={error === null}
+                        pointerEvents={action === 'edit' ? 'auto' : 'none'}
+                    >
+                        {lang['button-save']}
+                    </Button>
                 )}
             </>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    page: {
-        paddingHorizontal: 24
-    },
-
-    button: {
-        position: 'absolute',
-        width: 'auto',
-        left: 24,
-        right: 24,
-        bottom: 24
-    },
-
-    last: {
-        marginBottom: 200
-    }
-});
 
 export default Todo;

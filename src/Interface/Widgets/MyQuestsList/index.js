@@ -36,7 +36,7 @@ class MyQuestsList extends BackQuestsList {
 
     /** @type {ListRenderItemMyQuest} */
     renderItem = ({ item }) => {
-        return <MyQuestButton style={styles.questItem} quest={item} />;
+        return <MyQuestButton style={styles.questItem} quest={item} enableQuickAdd />;
     };
 
     renderFooter = () => {

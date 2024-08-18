@@ -1,3 +1,4 @@
+import React from 'react';
 import { Animated, Keyboard } from 'react-native';
 
 //import StartMission from './mission';
@@ -9,7 +10,10 @@ import { DeepCopy } from 'Utils/Object';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
@@ -54,6 +58,12 @@ class BackQuest extends PageBase {
     /** @type {MyQuest | null} */
     selectedQuest = null;
 
+    /** @type {React.RefObject<ScrollView>} */
+    refScrollView = React.createRef();
+
+    /** @type {number} Position of the scroll (0-1) */
+    scrollRatio = 0;
+
     /** @param {BackMyQuestProps} props */
     constructor(props) {
         super(props);
@@ -89,6 +99,14 @@ class BackQuest extends PageBase {
         this.setState({ editButtonHeight: height });
     };
 
+    /** @param {NativeSyntheticEvent} event */
+    onScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+        const { height } = event.nativeEvent.contentSize;
+        const { height: layoutHeight } = event.nativeEvent.layoutMeasurement;
+        this.scrollRatio = y / (height - layoutHeight);
+    };
+
     /** @param {MyQuest} quest */
     IsEdited = (quest) => {
         if (this.selectedQuest === null) {
@@ -120,11 +138,19 @@ class BackQuest extends PageBase {
 
         if (action === 'save' || action === 'remove') {
             const edited = this.IsEdited(quest);
-            this.setState({
-                action: edited ? 'save' : 'remove',
-                tempQuest: quest,
-                errors
-            });
+            this.setState(
+                {
+                    action: edited ? 'save' : 'remove',
+                    tempQuest: quest,
+                    errors
+                },
+                () => {
+                    // If scroll is at the bottom, scroll to the bottom
+                    if (this.scrollRatio >= 0.9) {
+                        this.refScrollView.current?.scrollToEnd({ animated: true });
+                    }
+                }
+            );
             SpringAnimation(animEditButton, edited ? 1 : 0).start();
             return;
         }

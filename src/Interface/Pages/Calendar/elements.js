@@ -102,17 +102,32 @@ const RenderDay = React.memo(
     ({ item }) => {
         const { day, month, year, selected, containsActivity, onPress } = item;
         const date = new Date(year, month, day);
-        const dayText = langManager.curr['dates']['days-min'][date.getDay()];
+        const dayInt = (date.getDay() + 6) % 7;
+        const dayText = langManager.curr['dates']['days-min'][dayInt];
 
         /** @type {ThemeColor} */
-        const colorText = selected ? 'ground1' : 'border';
+        let colorText = 'border';
+
         /** @type {ThemeColor} */
-        const colorBackground = selected ? 'main1' : 'transparent';
+        let colorBackground = 'transparent';
 
         /** @type {ViewStyle} */
         const borderColor = {
             borderColor: themeManager.GetColor('main1')
         };
+
+        if (selected) {
+            colorText = 'ground1';
+            colorBackground = 'main1';
+        }
+
+        if (date.getDate() === new Date().getDate()) {
+            colorText = 'main2';
+            if (selected) {
+                colorText = 'ground1';
+                colorBackground = 'main2';
+            }
+        }
 
         return (
             <Button

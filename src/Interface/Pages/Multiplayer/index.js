@@ -13,7 +13,7 @@ class Multiplayer extends BackMultiplayer {
         //overlay={this.renderAddButton()}
         //bottomOffset={64}
         return (
-            <View>
+            <View style={{ paddingHorizontal: 24 }}>
                 <PageHeader onBackPress={this.Back} />
                 {this.renderContent()}
             </View>
@@ -48,15 +48,15 @@ class Multiplayer extends BackMultiplayer {
                 )}
             </>
         );
-    }
+    };
 
     renderContent = () => {
         const lang = langManager.curr['multiplayer'];
         const { state, friends, friendsPending } = this.state;
 
-        if (state === 'disconnected')   return this.renderDisconnected();
-        else if (state === 'idle')      return this.renderLoading();
-        else if (state === 'error')     return this.renderError();
+        if (state === 'disconnected') return this.renderDisconnected();
+        else if (state === 'idle') return this.renderLoading();
+        else if (state === 'error') return this.renderError();
 
         return (
             <View>
@@ -65,28 +65,26 @@ class Multiplayer extends BackMultiplayer {
                     style={styles.flatList}
                     data={friends}
                     keyExtractor={(item, index) => 'multi-player-' + item.accountID}
-                    renderItem={({ item, index }) => (
-                        <UserOnlineElement friend={item} />
-                    )}
+                    renderItem={({ item, index }) => <UserOnlineElement friend={item} />}
                     ListEmptyComponent={this.renderEmpty}
                 />
 
                 {friendsPending.length > 0 && (
                     <>
-                        <Text style={styles.topMargin} fontSize={24}>{lang['category-friend-pending']}</Text>
+                        <Text style={styles.topMargin} fontSize={24}>
+                            {lang['category-friend-pending']}
+                        </Text>
                         <FlatList
                             style={styles.flatList}
                             data={friendsPending}
                             keyExtractor={(item, index) => 'multi-player-' + item.accountID}
-                            renderItem={({ item, index }) => (
-                                <UserOnlineElement friend={item} />
-                            )}
+                            renderItem={({ item, index }) => <UserOnlineElement friend={item} />}
                         />
                     </>
                 )}
             </View>
         );
-    }
+    };
 
     renderEmpty = () => {
         const lang = langManager.curr['multiplayer'];
@@ -95,7 +93,7 @@ class Multiplayer extends BackMultiplayer {
                 <Text style={styles.firstText}>{lang['container-friends-empty']}</Text>
             </>
         );
-    }
+    };
 
     renderLoading = () => {
         const textLoading = langManager.curr['multiplayer']['connection-loading'];
@@ -104,7 +102,7 @@ class Multiplayer extends BackMultiplayer {
                 <Text style={styles.firstText}>{textLoading}</Text>
             </>
         );
-    }
+    };
 
     renderError = () => {
         const textFailed = langManager.curr['multiplayer']['connection-failed'];
@@ -112,10 +110,12 @@ class Multiplayer extends BackMultiplayer {
         return (
             <>
                 <Text style={styles.firstText}>{textFailed}</Text>
-                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>{textRetry}</Button>
+                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>
+                    {textRetry}
+                </Button>
             </>
         );
-    }
+    };
 
     renderDisconnected = () => {
         const textFailed = langManager.curr['multiplayer']['connection-offline'];
@@ -123,10 +123,12 @@ class Multiplayer extends BackMultiplayer {
         return (
             <>
                 <Text style={styles.firstText}>{textFailed}</Text>
-                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>{textRetry}</Button>
+                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>
+                    {textRetry}
+                </Button>
             </>
         );
-    }
+    };
 }
 
 const styles = StyleSheet.create({

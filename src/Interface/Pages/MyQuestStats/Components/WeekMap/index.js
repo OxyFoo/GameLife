@@ -45,8 +45,6 @@ class WeekMap extends WeekMapBack {
         const { layout } = this.state;
         const { day, animBorder, animBackground } = item;
 
-        const value = day.progress ?? 0;
-
         /** @type {ThemeText | ThemeColor} */
         let dayColor = 'main1';
 
@@ -92,7 +90,7 @@ class WeekMap extends WeekMapBack {
                     color={dayColor}
                 />
 
-                {value >= 1 ? (
+                {day.progress >= 1 ? (
                     <Text style={[styles.dayText, decorationStyle, { color: animatedColor }]} animated>
                         {langDates['days-min'][day.day]}
                     </Text>

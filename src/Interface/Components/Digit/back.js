@@ -118,7 +118,9 @@ class DigitBack extends React.Component {
         const { digitWidth } = this.state;
         const { minValue, maxValue, stepValue, onChangeValue } = this.props;
 
-        const _index = MinMax(minValue, index, maxValue / stepValue);
+        const _min = Math.floor(minValue / stepValue);
+        const _max = Math.floor(maxValue / stepValue);
+        const _index = MinMax(_min, index, _max);
         const _width = digitWidth + 4;
         this.SetDigitsPosX(_index * _width);
         onChangeValue(_index);

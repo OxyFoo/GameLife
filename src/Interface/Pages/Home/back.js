@@ -7,6 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
+import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Interface/Widgets').Missions} Missions
@@ -75,6 +76,13 @@ class BackHome extends PageBase {
     /** @param {boolean} scrollable */
     onChangeScrollable = (scrollable) => {
         this.setState({ scrollable });
+    };
+
+    addActivity = () => {
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity />,
+            movable: false
+        });
     };
 
     /**

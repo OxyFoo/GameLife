@@ -37,7 +37,8 @@ class Home extends BackHome {
 
                 {/* Today missions */}
                 <Title title={lang['section-missions']} />
-                <Missions refHome={this} />
+                <Text>[Not finished]</Text>
+                {/* <Missions refHome={this} /> */}
 
                 {/* Today performance */}
                 <Title title={lang['section-today-performance']}>
@@ -47,10 +48,11 @@ class Home extends BackHome {
                         color='transparent'
                         icon='add-outline'
                         fontColor='gradient'
-                        onPress={() => this.fe.console?.AddLog('info', 'YAY')}
+                        onPress={this.addActivity}
                     />
                 </Title>
-                <Swiper pages={[<TodayPieChart style={styles.todayPieChart} />]} />
+                <Text>[Not finished]</Text>
+                {/* <Swiper pages={[<TodayPieChart style={styles.todayPieChart} />]} /> */}
 
                 {/* Today quests */}
                 <Title title={lang['section-today-quests']}>

@@ -66,22 +66,23 @@ class WeekMapBack extends React.Component {
         const { showAnimations } = this.props;
 
         this.state.days.forEach((item, index) => {
-            const value = item.day.progress ?? 0;
+            const progress = item.day.progress;
 
             if (item.day.state === 'past' || item.day.state === 'filling') {
+                const progressAnimValue = MinMax(0.02, progress, 1);
                 if (!showAnimations) {
-                    item.animBorder.setValue(value);
+                    item.animBorder.setValue(progressAnimValue);
                 } else {
                     this.timeouts.push(
                         setTimeout(() => {
                             // Past days with 0 value are not displayed, so we set a minimum value to display them
-                            TimingAnimation(item.animBorder, MinMax(0.02, value, 1), 1000, false).start();
+                            TimingAnimation(item.animBorder, progressAnimValue, 1000, false).start();
                         }, index * 100)
                     );
                 }
 
                 // Show background animation only if the day was completed
-                if (value >= 1) {
+                if (progress >= 1) {
                     if (!showAnimations) {
                         item.animBackground.setValue(1);
                     } else {
@@ -106,7 +107,9 @@ class WeekMapBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width, height } = event.nativeEvent.layout;
-        this.setState({ layout: { width, height } });
+        if (width !== this.state.layout.width || height !== this.state.layout.height) {
+            this.setState({ layout: { width, height } });
+        }
     };
 }
 

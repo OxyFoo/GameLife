@@ -45,7 +45,7 @@ function RenderStatistic({ item }) {
                     {value}
                 </Text>
             </View>
-            <Text>{title}</Text>
+            <Text color='border'>{title}</Text>
         </TouchableOpacity>
     );
 }

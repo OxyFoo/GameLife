@@ -45,6 +45,13 @@ class UserHeader extends UserHeaderBack {
         );
     }
 
+    renderNotificationsInAppButton = () => {
+        if (!user.server.IsConnected()) {
+            return <Icon style={styles.noWifiIcon} icon='no-wifi' color='border' size={32} />;
+        }
+        return <NotificationsInAppButton ref={this.refBellButton} style={styles.interactionsButton} />;
+    };
+
     renderInteraction = () => {
         const { showAvatar } = this.state;
         const openProfile = () => user.interface.ChangePage('profile');
@@ -63,13 +70,6 @@ class UserHeader extends UserHeaderBack {
                 )}
             </Button>
         );
-    };
-
-    renderNotificationsInAppButton = () => {
-        if (!user.server.IsConnected()) {
-            return <Icon style={styles.noWifiIcon} icon='no-wifi' color='border' size={32} />;
-        }
-        return <NotificationsInAppButton ref={this.refBellButton} style={styles.interactionsButton} />;
     };
 }
 

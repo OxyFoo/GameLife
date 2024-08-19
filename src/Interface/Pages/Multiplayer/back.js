@@ -12,6 +12,8 @@ import langManager from 'Managers/LangManager';
  */
 
 class BackMultiplayer extends PageBase {
+    static feShowNavBar = true;
+
     state = {
         /** @type {ConnectionState} */
         state: 'idle',
@@ -21,7 +23,7 @@ class BackMultiplayer extends PageBase {
 
         /** @type {Array<Friend>} */
         friendsPending: []
-    }
+    };
 
     /** @type {React.RefObject<Button>} */
     refAddButton = React.createRef();
@@ -35,7 +37,7 @@ class BackMultiplayer extends PageBase {
 
     componentDidFocused = (args) => {
         StartMission.call(this, args?.missionName);
-    }
+    };
 
     componentWillUnmount() {
         user.tcp.state.RemoveListener(this.listenerState);
@@ -45,43 +47,48 @@ class BackMultiplayer extends PageBase {
     /** @param {ConnectionState} state */
     updateState = (state) => {
         this.setState({ state });
-    }
+    };
 
     /** @param {Array<Friend>} friends */
     updateFriends = (friends) => {
         const newFriends = friends
-            .filter(friend => friend.friendshipState === 'accepted')
+            .filter((friend) => friend.friendshipState === 'accepted')
             .sort((a, b) => a.username.localeCompare(b.username));
 
         const newFriendsPending = friends
-            .filter(friend => friend.friendshipState === 'pending')
+            .filter((friend) => friend.friendshipState === 'pending')
             .sort((a, b) => a.username.localeCompare(b.username));
 
         this.setState({ friends: newFriends, friendsPending: newFriendsPending });
-    }
+    };
 
     openLeaderboard = () => {
         user.interface.ChangePage('leaderboard');
-    }
+    };
 
     addFriendHandle = () => {
         const lang = langManager.curr['multiplayer'];
-        user.interface.screenInput.Open(lang['input-search-friend'], '', (username) => {
-            // Update mission
-            user.missions.SetMissionState('mission5', 'completed');
+        user.interface.screenInput.Open(
+            lang['input-search-friend'],
+            '',
+            (username) => {
+                // Update mission
+                user.missions.SetMissionState('mission5', 'completed');
 
-            user.multiplayer.AddFriend(username);
-        }, false);
-    }
+                user.multiplayer.AddFriend(username);
+            },
+            false
+        );
+    };
 
     Reconnect = () => {
         this.setState({ state: 'idle' });
         user.tcp.Connect();
-    }
+    };
 
     Back = () => {
         user.interface.BackHandle();
-    }
+    };
 }
 
 export default BackMultiplayer;

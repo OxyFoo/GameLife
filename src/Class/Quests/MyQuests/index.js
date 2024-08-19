@@ -27,7 +27,7 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
  * @property {number} day
  * @property {boolean} isToday
  * @property {DayClockStates} state
- * @property {number} [progress] Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'filling'
+ * @property {number} progress Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'filling'
  */
 
 /** @type {Array<MyQuest>} */
@@ -434,7 +434,28 @@ class MyQuests {
      */
     GetDays(quest, time = GetLocalTime()) {
         if (quest === null) return [];
+        const { schedule } = quest;
 
+        if (schedule.type === 'week' || schedule.type === 'month') {
+            return this.getDayFromMonthOrWeek(quest, time);
+        } else if (schedule.type === 'frequency') {
+            if (schedule.frequencyMode === 'month') {
+                return this.getDayFromFrequencyByMonth(quest, time);
+            } else if (schedule.frequencyMode === 'week') {
+                return this.getDayFromFrequencyByWeek(quest, time);
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @param {MyQuest} quest
+     * @param {number} time in seconds
+     * @returns {Array<DayType>} Days of the week
+     * @private
+     */
+    getDayFromMonthOrWeek(quest, time = GetLocalTime()) {
         const dateNow = GetDate(time);
         const currentDate = dateNow.getDate() - 1;
         const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
@@ -486,6 +507,92 @@ class MyQuests {
         }
 
         return days;
+    }
+
+    /**
+     * @param {MyQuest} quest
+     * @param {number} time in seconds
+     * @returns {Array<DayType>} Days of the week
+     * @private
+     */
+    getDayFromFrequencyByMonth(quest, time = GetLocalTime()) {
+        const dateNow = GetDate(time);
+        const currentDate = new Date().getDate();
+        const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
+        const firstDateWeek = currentDate - currentDayIndex;
+        const { skills, schedule } = quest;
+
+        /** @type {Array<DayType>} */
+        const days = [];
+
+        // Avoid division by 0
+        if (schedule.type !== 'frequency' || schedule.frequencyMode !== 'month' || schedule.duration === 0) {
+            return days;
+        }
+
+        const firstDayMonth = new Date();
+        firstDayMonth.setDate(1);
+        const firstTime = firstDayMonth.setHours(0, 0, 0, 0) / 1000;
+
+        let dayFilled = 0;
+        const activities = this.user.activities
+            .Get()
+            .filter((activity) => activity.startTime + activity.timezone * 3600 >= firstTime)
+            .filter((activity) => skills.includes(activity.skillID))
+            .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant');
+
+        for (let i = 0; i < currentDate; i++) {
+            const day = i - firstDateWeek + 1;
+
+            /** @type {DayType} */
+            const newDay = {
+                day,
+                state: 'disabled',
+                isToday: day === currentDayIndex,
+                progress: 0
+            };
+
+            const deltaToNewDay = day - currentDayIndex;
+
+            const activitiesDay = activities.filter(
+                (activity) =>
+                    activity.startTime + activity.timezone * 3600 >= firstTime + i * DAY_TIME &&
+                    activity.startTime + activity.timezone * 3600 < firstTime + (i + 1) * DAY_TIME
+            );
+
+            const totalDuration = Sum(activitiesDay.map((activity) => activity.duration));
+
+            if (dayFilled < schedule.quantity) {
+                newDay.state = 'filling';
+                newDay.progress = totalDuration / schedule.duration;
+
+                if (deltaToNewDay < 0) {
+                    newDay.state = 'past';
+                } else if (deltaToNewDay > 0) {
+                    newDay.state = 'future';
+                }
+
+                if (totalDuration >= schedule.duration) {
+                    dayFilled++;
+                }
+            }
+
+            if (day >= 0) {
+                days.push(newDay);
+            }
+        }
+
+        return days;
+    }
+
+    /**
+     * @param {MyQuest} quest
+     * @param {number} time in seconds
+     * @returns {Array<DayType>} Days of the week
+     * @private
+     */
+    getDayFromFrequencyByWeek(quest, time = GetLocalTime()) {
+        return [];
     }
 
     /** @param {MyQuest} quest */

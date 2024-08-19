@@ -54,6 +54,7 @@ function CardHeader() {
     const firstActivity = activities[0].activity;
     const firstActivityMidnight = GetMidnightTime(firstActivity.startTime + firstActivity.timezone * 60 * 60);
     const addButtonAdd = firstActivity.startTime > time;
+
     if (!addButtonAdd) {
         return null;
     }
@@ -69,22 +70,24 @@ function CardHeader() {
  * @this BackCalendar
  */
 function CardFooter() {
-    const { activities } = this.state;
+    const { activities, selectedDay } = this.state;
 
-    if (activities.length === 0) {
+    if (activities.length === 0 || selectedDay === null) {
         return null;
     }
 
     const prevActivity = activities[activities.length - 1].activity;
     const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
-    const addButtonAdd = GetDate(prevActivity.startTime).getDate() === GetDate(prevEnd).getDate();
+    const startDate = GetDate(prevActivity.startTime);
+    const sameDay = startDate.getUTCDate() === selectedDay.day;
+    const notAddButtonAdd = !sameDay && (startDate.getUTCHours() > 0 || startDate.getUTCMinutes() > 0);
 
-    if (!addButtonAdd) {
+    if (notAddButtonAdd) {
         return null;
     }
 
     const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);
-    const nextMidnight = midnight + 86400;
+    const nextMidnight = midnight + 86400 * (sameDay ? 2 : 1);
     const text = createSeparatorText(nextMidnight - prevEnd);
     const onPress = () => this.onAddActivityFromTime(prevActivity.startTime + prevActivity.duration * 60);
 

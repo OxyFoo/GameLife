@@ -11,7 +11,7 @@ import { Text, Icon, Button } from 'Interface/Components';
 class MyQuestButton extends QuestButtonBack {
     render() {
         const { timeText, streakCount } = this.state;
-        const { style, quest, onLayout } = this.props;
+        const { style, quest, onLayout, enableQuickAdd } = this.props;
         if (quest === null) return null;
 
         return (
@@ -35,10 +35,13 @@ class MyQuestButton extends QuestButtonBack {
                     onTouchMove={this.onTouchMove}
                     onTouchEnd={this.onTouchEnd}
                     onTouchCancel={this.onTouchEnd}
+                    rippleDuration={enableQuickAdd ? 800 : undefined}
                 >
                     <View style={styles.header}>
                         <View style={styles.headerTitle}>
-                            <Text style={styles.title}>{quest.title}</Text>
+                            <Text style={styles.title} numberOfLines={1} ellipsizeMode='tail'>
+                                {quest.title}
+                            </Text>
                         </View>
                         <View style={styles.headerStreak}>
                             <Text style={styles.streakText2} color='main1'>

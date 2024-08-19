@@ -519,6 +519,7 @@ class MyQuests {
         const dateNow = GetDate(time);
         const currentDate = new Date().getDate();
         const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
+        const maxDate = currentDate + 7 - currentDayIndex;
         const firstDateWeek = currentDate - currentDayIndex;
         const { skills, schedule } = quest;
 
@@ -541,7 +542,7 @@ class MyQuests {
             .filter((activity) => skills.includes(activity.skillID))
             .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant');
 
-        for (let i = 0; i < currentDate; i++) {
+        for (let i = 0; i < maxDate; i++) {
             const day = i - firstDateWeek + 1;
 
             /** @type {DayType} */
@@ -592,11 +593,102 @@ class MyQuests {
      * @private
      */
     getDayFromFrequencyByWeek(quest, time = GetLocalTime()) {
-        return [];
+        const dateNow = GetDate(time);
+        const currentDate = new Date().getDate();
+        const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
+        const { skills, schedule } = quest;
+
+        /** @type {Array<DayType>} */
+        const days = [];
+
+        // Avoid division by 0
+        if (schedule.type !== 'frequency' || schedule.frequencyMode !== 'week' || schedule.duration === 0) {
+            return days;
+        }
+
+        const firstDayWeek = new Date();
+        firstDayWeek.setDate(currentDate - currentDayIndex);
+        const firstTime = firstDayWeek.setHours(0, 0, 0, 0) / 1000;
+
+        let dayFilled = 0;
+        const activities = this.user.activities
+            .Get()
+            .filter((activity) => activity.startTime + activity.timezone * 3600 >= firstTime)
+            .filter((activity) => skills.includes(activity.skillID))
+            .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant');
+
+        for (let i = 0; i < 7; i++) {
+            /** @type {DayType} */
+            const newDay = {
+                day: i,
+                state: 'disabled',
+                isToday: i === currentDayIndex,
+                progress: 0
+            };
+
+            const deltaToNewDay = i - currentDayIndex;
+
+            const activitiesDay = activities.filter(
+                (activity) =>
+                    activity.startTime + activity.timezone * 3600 >= firstTime + i * DAY_TIME &&
+                    activity.startTime + activity.timezone * 3600 < firstTime + (i + 1) * DAY_TIME
+            );
+
+            const totalDuration = Sum(activitiesDay.map((activity) => activity.duration));
+
+            if (dayFilled < schedule.quantity) {
+                newDay.state = 'filling';
+                newDay.progress = totalDuration / schedule.duration;
+
+                if (deltaToNewDay < 0) {
+                    newDay.state = 'past';
+                } else if (deltaToNewDay > 0) {
+                    newDay.state = 'future';
+                }
+
+                if (totalDuration >= schedule.duration) {
+                    dayFilled++;
+                }
+            }
+
+            days.push(newDay);
+        }
+
+        return days;
     }
 
-    /** @param {MyQuest} quest */
+    /**
+     * @param {MyQuest} quest
+     * @returns {number} Streak
+     */
     GetStreak(quest) {
+        let streak = 0;
+
+        if (quest.schedule.type === 'week' || quest.schedule.type === 'month') {
+            streak = this.getStreakFromMonthOrWeek(quest);
+        } else if (quest.schedule.type === 'frequency') {
+            if (quest.schedule.frequencyMode === 'month') {
+                streak = this.getStreakFromFrequencyByMonth(quest);
+            } else if (quest.schedule.frequencyMode === 'week') {
+                streak = this.getStreakFromFrequencyByWeek(quest);
+            }
+        }
+
+        if (streak > quest.maximumStreak) {
+            const newQuest = Object.assign({}, quest);
+            newQuest.maximumStreak = streak;
+            this.Edit(newQuest);
+            this.user.GlobalSave();
+        }
+
+        return streak;
+    }
+
+    /**
+     * @param {MyQuest} quest
+     * @returns {number} Streak
+     */
+    getStreakFromMonthOrWeek(quest) {
         let streak = 0;
         const timeNow = GetLocalTime();
         const todayMidnight = timeNow - (timeNow % DAY_TIME) - GetTimeZone() * 60 * 60;
@@ -674,13 +766,25 @@ class MyQuests {
             }
         }
 
-        if (streak > quest.maximumStreak) {
-            const newQuest = Object.assign({}, quest);
-            newQuest.maximumStreak = streak;
-            this.Edit(newQuest);
-            this.user.GlobalSave();
-        }
         return streak;
+    }
+
+    /**
+     * TODO: Implement this
+     * @param {MyQuest} quest
+     * @returns {number} Streak
+     */
+    getStreakFromFrequencyByMonth(quest) {
+        return 0;
+    }
+
+    /**
+     * TODO: Implement this
+     * @param {MyQuest} quest
+     * @returns {number} Streak
+     */
+    getStreakFromFrequencyByWeek(quest) {
+        return 0;
     }
 }
 

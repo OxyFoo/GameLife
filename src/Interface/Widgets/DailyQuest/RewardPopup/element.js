@@ -16,7 +16,7 @@ import { DateFormat } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Ressources/items/quests/DailyQuest').DailyQuestRewardType} DailyQuestRewardType
  */
 
@@ -31,21 +31,14 @@ import { DateFormat } from 'Utils/Date';
 const RenderItem = (props) => {
     const lang = langManager.curr['daily-quest'];
     const langD = langManager.curr['dates']['names'];
-    const [ loading, setLoading ] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const currentDay = props.index + 1;
     const textToday = langD['day'] + ' ' + currentDay.toString();
 
-    /** @type {StyleProp[]} */
-    const styleItem = [
-        {
-            backgroundColor: themeManager.GetColor('backgroundCard')
-        },
-        props.style || {}
-    ];
-    const styleBorder = {
-        borderColor: '#B83EFFE3',
-        borderWidth: 1.5
+    /** @type {StyleProp} */
+    const styleItem = {
+        backgroundColor: themeManager.GetColor('backgroundCard')
     };
 
     /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claim-tomorrow' | 'claimed'} */
@@ -80,6 +73,7 @@ const RenderItem = (props) => {
         }
     }
 
+    /** @type {StyleProp} */
     const styleOpacity = {
         opacity: status === 'claimed' ? 0.5 : 1
     };
@@ -89,61 +83,51 @@ const RenderItem = (props) => {
 
         setLoading(true);
         const claimList = user.quests.dailyquest.claimsList.Get()[props.claimIndex];
-        const result = await user.quests.dailyquest.ClaimReward(claimList.start, [ props.index ]);
+        const result = await user.quests.dailyquest.ClaimReward(claimList.start, [props.index]);
         setLoading(false);
 
         if (result === 'error') {
-            const title = lang['alert-claim-error-title'];
-            const text = lang['alert-claim-error-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ]);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-claim-error-title'],
+                    message: lang['alert-claim-error-message']
+                },
+                cancelable: false,
+                priority: true
+            });
             return;
         }
 
         props.handleClaim && props.handleClaim(props.index);
-    }
+    };
 
     return (
-        <View style={[styles.item, styleItem]}>
+        <View style={[styles.item, styleItem, props.style]}>
             <View style={[styles.content, styleOpacity]}>
                 <Text style={styles.itemDay}>{textToday}</Text>
 
-                {
-                    DAILY_QUEST_REWARDS[props.index].map((reward, index) => (
-                        <RenderReward
-                            key={`dailyquest-reward-${index}`}
-                            item={reward}
-                        />
-                    ))
-                }
+                {DAILY_QUEST_REWARDS[props.index].map((reward, index) => (
+                    <RenderReward key={`dailyquest-reward-${index}`} item={reward} />
+                ))}
             </View>
 
             <View style={styles.claimState}>
                 {status === 'claim-tomorrow' && (
-                    <Button
-                        style={[styles.claimButton, styleBorder]}
-                        color='transparent'
-                        fontSize={12}
-                    >
+                    <Button style={styles.claimButton} color='transparent' fontSize={12}>
                         {timeToTomorrowText}
                     </Button>
                 )}
                 {(status === 'claiming' || status === 'loading') && (
-                    <Button
-                        style={[styles.claimButton, styleBorder]}
-                        color='transparent'
-                        onPress={handleEvent}
-                        loading={loading}
-                    >
+                    <Button style={styles.claimButton} color='transparent' onPress={handleEvent} loading={loading}>
                         {lang['popup']['claim']}
                     </Button>
                 )}
-                {status === 'claimed' && (
-                    <Icon icon='check' color='success' />
-                )}
+                {status === 'claimed' && <Icon icon='check' color='success' />}
             </View>
         </View>
     );
-}
+};
 
 const RenderItemMemo = React.memo(RenderItem, (prevProps, nextProps) => {
     if (prevProps.index !== nextProps.index) {
@@ -165,27 +149,19 @@ function RenderReward(props) {
     if (props.item.type === 'ox') {
         return (
             <View style={styleReward}>
-                <Image
-                    style={styles.rewardImage}
-                    source={IMG_OX}
-                />
-                <Text style={styles.rewardValue}>
-                    {'x' + props.item.value.toString()}
-                </Text>
+                <Image style={styles.rewardImage} source={IMG_OX} />
+                <Text style={styles.rewardValue}>{'x' + props.item.value.toString()}</Text>
+            </View>
+        );
+    } else if (props.item.type === 'chest') {
+        return (
+            <View style={styleReward}>
+                <Image style={styles.rewardImage} source={IMG_CHESTS[props.item.value]} />
             </View>
         );
     }
 
-    else if (props.item.type === 'chest') {
-        return (
-            <View style={styleReward}>
-                <Image
-                    style={styles.rewardImage}
-                    source={IMG_CHESTS[props.item.value]}
-                />
-            </View>
-        );
-    }
+    return null;
 }
 
 export { RenderItemMemo };

@@ -20,7 +20,6 @@ class BackSettings extends PageBase {
             value: langManager.curr['name']
         },
 
-        waitingConsentPopup: false,
         sendingMail: false,
         devicesLoading: false,
 
@@ -34,31 +33,14 @@ class BackSettings extends PageBase {
         value: langManager.GetAllLangs()[lang]['name']
     }));
 
-    /** @type {NodeJS.Timeout | null} */
-    intervalConsentChecking = null;
-
     /** @type {Symbol | null} */
     listenerTCP = null;
 
     componentDidMount() {
-        if (user.consent.loading) {
-            this.setState({ waitingConsentPopup: true });
-            this.intervalConsentChecking = setInterval(() => {
-                if (!user.consent.loading) {
-                    this.setState({ waitingConsentPopup: false });
-                    if (this.intervalConsentChecking !== null) {
-                        clearInterval(this.intervalConsentChecking);
-                    }
-                }
-            }, 100);
-        }
         this.listenerTCP = user.tcp.state.AddListener(this.onTCPStateChange);
     }
 
     componentWillUnmount() {
-        if (this.intervalConsentChecking !== null) {
-            clearInterval(this.intervalConsentChecking);
-        }
         user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
@@ -71,12 +53,7 @@ class BackSettings extends PageBase {
     openAbout = () => user.interface.ChangePage('about', { storeInHistory: false });
     openReport = () => user.interface.ChangePage('report', { storeInHistory: false });
     openNotifications = () => user.interface.ChangePage('settings_notifications', { storeInHistory: false });
-
-    openConsentPopup = async () => {
-        this.setState({ waitingConsentPopup: true });
-        await user.consent.ShowTrackingPopup(true);
-        this.setState({ waitingConsentPopup: false });
-    };
+    openConsents = () => user.interface.ChangePage('settings_consents', { storeInHistory: false });
 
     /** @param {ComboBoxItem | null} lang */
     onChangeLang = (lang) => {

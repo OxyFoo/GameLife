@@ -5,12 +5,13 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { GetLocalTime } from 'Utils/Time';
-import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
  * @typedef {import('Interface/OldComponents/PieChart/back').FocusedActivity} FocusedActivity
  *
@@ -22,6 +23,9 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {string} color
  * @property {string} gradientCenterColor
  * @property {boolean} focused
+ *
+ * @typedef {object} InputPropsType
+ * @property {StyleProp} style
  */
 
 const InputProps = {
@@ -43,10 +47,13 @@ class TodayPieChartBack extends React.Component {
         /** @type {FocusedActivity | null} */
         focusedActivityFullDay: null,
 
-        switched: user.informations.switchHomeTodayPieChart,
         layoutWidth: 0
     };
 
+    /** @type {Symbol | null} */
+    activitiesListener = null;
+
+    /** @param {InputPropsType} props */
     constructor(props) {
         super(props);
         this.state = {
@@ -140,7 +147,7 @@ class TodayPieChartBack extends React.Component {
 
             const category = dataManager.skills.GetCategoryByID(allCategories[i].ID);
             if (category === null) {
-                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found');
+                user.interface.console?.AddLog('error', 'Error in PieChartHome: category not found');
             } else if (category.Name) {
                 newData.name = langManager.GetText(category.Name);
                 newData.color = category.Color;
@@ -162,7 +169,7 @@ class TodayPieChartBack extends React.Component {
         for (const activity of allActivitiesOfToday) {
             const category = dataManager.skills.GetByID(activity.skillID);
             if (category === null) {
-                user.interface.console.AddLog(
+                user.interface.console?.AddLog(
                     'error',
                     'Error in PieChartHome: category not found in dataManager.skills'
                 );
@@ -171,7 +178,7 @@ class TodayPieChartBack extends React.Component {
 
             const index = updatingData.findIndex((item) => item.id === category.CategoryID);
             if (index === -1) {
-                user.interface.console.AddLog(
+                user.interface.console?.AddLog(
                     'error',
                     'Error in PieChartHome: categoryID not found in state.updatingData'
                 );
@@ -238,21 +245,14 @@ class TodayPieChartBack extends React.Component {
         return totalPercent;
     };
 
-    onPress = () => {
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-            user.informations.switchHomeTodayPieChart = this.state.switched;
-            user.LocalSave();
-        }, 3000);
-
-        SpringAnimation(this.state.animSwitch, this.state.switched ? 0 : 1);
-        this.setState({ switched: !this.state.switched });
-    };
-
     onAddActivityPress = () => {
-        user.interface.ChangePage('activity', undefined, true);
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity />,
+            movable: false
+        });
     };
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         this.setState({ layoutWidth: event.nativeEvent.layout.width });
     };

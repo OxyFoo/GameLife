@@ -637,7 +637,7 @@
         "title": "Settings",
 
         "section-informations-preferences": "INFORMATION AND PREFERENCES",
-        "section-notifications-ads": "NOTIFICATIONS AND ADVERTISING",
+        "section-notifications-consents": "NOTIFICATIONS AND CONSENTS",
         "section-support-feedback": "SUPPORT AND FEEDBACK",
         "section-security-privacy": "SECURITY AND PRIVACY",
 
@@ -648,7 +648,8 @@
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-report": "Report",
-        "input-consent": "Consent popup",
+        "input-consent": "Consent",
+        "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",
         "input-reconnect-tcp": "Reconnect to multiplayer",
@@ -991,7 +992,7 @@
         },
 
         "alert-claim-error-title": "Error",
-        "alert-claim-error-text": "An error has occurred, please try again later.",
+        "alert-claim-error-message": "An error has occurred, please try again later.",
 
         "help": {
             "1": "Here are the daily quests, complete the required activity to earn rewards!",

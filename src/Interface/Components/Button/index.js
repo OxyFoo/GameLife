@@ -41,6 +41,7 @@ class Button extends ButtonBack {
             pointerEvents,
             onPress,
             onLongPress,
+            rippleDuration,
             ...rest
         } = this.props;
 
@@ -64,7 +65,13 @@ class Button extends ButtonBack {
                 {this.renderContent()}
 
                 {/** Ripple */}
-                {enabled && <Ripple ref={this.rippleRef} rippleColor={appearance === 'normal' ? 'black' : 'white'} />}
+                {enabled && (
+                    <Ripple
+                        ref={this.rippleRef}
+                        rippleColor={appearance === 'normal' ? 'black' : 'white'}
+                        duration={rippleDuration}
+                    />
+                )}
             </ButtonView>
         );
     }

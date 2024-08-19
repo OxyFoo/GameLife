@@ -76,8 +76,7 @@ class SectionDuration extends React.Component {
             <View ref={(ref) => (this.refHelp1 = ref)} style={styles.schedulePanel}>
                 <Digit
                     style={styles.digitHour}
-                    containerWidth={'40%'}
-                    minDigitWidth={40}
+                    minDigitWidth={30}
                     fontSize={18}
                     value={Math.floor(duration / 60)}
                     maxValue={12}
@@ -88,9 +87,8 @@ class SectionDuration extends React.Component {
 
                 <Digit
                     style={styles.digitMinute}
-                    containerWidth={'40%'}
                     fontSize={18}
-                    minDigitWidth={40}
+                    minDigitWidth={30}
                     value={duration % 60}
                     minValue={duration < 60 ? 5 : 0}
                     maxValue={duration >= MAX_DURATION_MINUTES ? 0 : 59}
@@ -114,11 +112,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     digitHour: {
+        width: '30%',
         minHeight: 50,
         borderWidth: 1,
         borderRadius: 8
     },
     digitMinute: {
+        width: '30%',
         minHeight: 50,
         borderWidth: 1,
         borderRadius: 8

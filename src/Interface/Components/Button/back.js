@@ -41,6 +41,7 @@ import { Button } from 'react-native';
  * @property {(event: GestureResponderEvent) => void} onTouchEnd
  * @property {(event: GestureResponderEvent) => void} onTouchCancel
  * @property {(event: LayoutChangeEvent) => void} onLayout
+ * @property {number} [rippleDuration]
  */
 
 /** @type {ButtonProps & ButtonPropsType} */

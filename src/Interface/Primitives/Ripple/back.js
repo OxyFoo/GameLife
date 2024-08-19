@@ -11,7 +11,10 @@ import { TimingAnimation } from 'Utils/Animations';
 
 const RippleProps = {
     /** @type {ThemeColor | ThemeText} */
-    rippleColor: 'white'
+    rippleColor: 'white',
+
+    /** @type {number} */
+    duration: 300
 };
 
 class RippleBack extends React.PureComponent {
@@ -32,6 +35,8 @@ class RippleBack extends React.PureComponent {
      * @param {number} size
      */
     Press = (x, y, size) => {
+        const { duration } = this.props;
+
         if (!this.anim_ended) return;
         if (this.timeoutAnim !== null) {
             clearTimeout(this.timeoutAnim);
@@ -43,8 +48,8 @@ class RippleBack extends React.PureComponent {
         TimingAnimation(this.ripplePosX, x, 0).start();
         TimingAnimation(this.ripplePosY, y, 0).start();
 
-        TimingAnimation(this.ripple_opacity, 0.2, 100).start();
-        TimingAnimation(this.ripple_anim, size * 1.2, 300).start(() => {
+        TimingAnimation(this.ripple_opacity, 0.2, duration / 3).start();
+        TimingAnimation(this.ripple_anim, size * 1.2, duration).start(() => {
             this.anim_ended = true;
             if (!this.pressed) {
                 this.Hide();
@@ -59,7 +64,9 @@ class RippleBack extends React.PureComponent {
         }
     };
 
-    Hide(duration = 150) {
+    Hide() {
+        const duration = 150;
+
         TimingAnimation(this.ripple_opacity, 0, duration).start();
         this.timeoutAnim = setTimeout(() => {
             TimingAnimation(this.ripple_anim, 0, 0).start();

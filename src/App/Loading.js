@@ -64,8 +64,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
     if (showOnboard) {
-        fe.ChangePage('onboarding', { storeInHistory: false });
-        return;
+        //fe.ChangePage('onboarding', { storeInHistory: false });
+        //return;
     }
 
     // Redirection: Login page (or wait internet page)
@@ -163,15 +163,15 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.interface.userHeader?.ShowAvatar(true);
 
     // Loading: Notifications
-    Notifications.DisableAll().then(() => {
-        if (user.settings.morningNotifications) {
-            return Notifications.Morning.Enable();
-        }
-        if (user.settings.eveningNotifications) {
-            return Notifications.Evening.Enable();
-        }
-        return;
-    });
+    //await Notifications.DisableAll().then(() => {
+    //    if (user.settings.morningNotifications) {
+    //        return Notifications.Morning.Enable();
+    //    }
+    //    if (user.settings.eveningNotifications) {
+    //        return Notifications.Evening.Enable();
+    //    }
+    //    return;
+    //});
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
@@ -179,7 +179,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connect to the server TCP
-    user.tcp.Connect();
+    //user.tcp.Connect();
 
     // Load admob
     //await user.consent.ShowTrackingPopup().then(user.admob.LoadAds);

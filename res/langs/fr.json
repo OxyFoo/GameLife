@@ -637,7 +637,7 @@
         "title": "Paramètres",
 
         "section-informations-preferences": "INFORMATIONS ET PRÉFÉRENCES",
-        "section-notifications-ads": "NOTIFICATIONS ET PUBLICITÉ",
+        "section-notifications-consents": "NOTIFICATIONS ET CONSENTEMENT",
         "section-support-feedback": "SUPPORT ET RETOUR D’EXPÉRIENCE",
         "section-security-privacy": "SÉCURITÉ ET CONFIDENTIALITÉ",
 
@@ -648,7 +648,8 @@
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",
         "input-report": "Report",
-        "input-consent": "Consentement de la publicité",
+        "input-consent": "Consentement",
+        "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",
         "input-reconnect-tcp": "Se reconnecter au multijoueur",
@@ -991,7 +992,7 @@
         },
 
         "alert-claim-error-title": "Erreur",
-        "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard.",
+        "alert-claim-error-message": "Une erreur est survenue, réessaye plus tard.",
 
         "help": {
             "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",

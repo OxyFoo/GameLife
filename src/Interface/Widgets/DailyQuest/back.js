@@ -8,9 +8,8 @@ import { DateFormat } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Interface/Components').Button} Button
- * @typedef {import('Interface/Components').SimpleContainer} SimpleContainer
  */
 
 const DailyQuestProps = {
@@ -25,7 +24,7 @@ class DailyQuestBack extends React.Component {
         claimIndex: -1,
         claimDay: 0,
         claimDate: null
-    }
+    };
 
     /** @type {Symbol | null} */
     dailyQuestListener = null;
@@ -33,14 +32,8 @@ class DailyQuestBack extends React.Component {
     /** @type {Symbol | null} */
     claimListsListener = null;
 
-    /** @type {React.RefObject<SimpleContainer>} */
-    refContainer = React.createRef();
-
     /** @type {React.RefObject<Button>} */
     refOpenStreakPopup = React.createRef();
-
-    gradientPos1 = { x: 0, y: -2 };
-    gradientPos2 = { x: 1, y: 2 };
 
     componentDidMount() {
         this.updateClaimList();
@@ -78,11 +71,14 @@ class DailyQuestBack extends React.Component {
             claimDay,
             claimDate
         });
-    }
+    };
 
     openRewardPopup = () => {
-        user.interface.popup.Open('custom', RenderPopup, undefined, true, false);
-    }
+        user.interface.popup?.Open({
+            content: <RenderPopup />,
+            cancelable: true
+        });
+    };
 }
 
 DailyQuestBack.prototype.props = DailyQuestProps;

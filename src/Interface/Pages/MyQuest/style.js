@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
     sectionTitle: {
         textAlign: 'left',
         marginTop: 36,
-        marginBottom: 12
+        marginBottom: 12,
+        fontSize: 14
     },
     sectionError: {
         marginTop: 6,

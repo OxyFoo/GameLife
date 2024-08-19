@@ -20,19 +20,16 @@ const styles = StyleSheet.create({
         marginBottom: 8
     },
     headerTitle: {
-        flexDirection: 'row',
-        alignItems: 'center'
+        flex: 1,
+        marginLeft: 4
     },
     title: {
-        height: 24,
-        marginLeft: 8,
         fontSize: 16,
         textAlign: 'left'
     },
     headerStreak: {
         flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 8
+        alignItems: 'center'
     },
     streakText2: {
         marginRight: 12,

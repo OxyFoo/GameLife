@@ -11,12 +11,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0
     },
     headerButtonLeft: {
+        width: 'auto',
         marginRight: 4,
         paddingHorizontal: 12,
         borderTopLeftRadius: 8,
         borderBottomLeftRadius: 0
     },
     headerButtonRight: {
+        width: 'auto',
         marginLeft: 4,
         paddingHorizontal: 12,
         borderTopRightRadius: 8,
@@ -24,7 +26,6 @@ const styles = StyleSheet.create({
     },
     iconStaticHeader: {
         width: 'auto',
-        height: 'auto',
         alignContent: 'center'
     },
     buttonInfo: {
@@ -36,8 +37,10 @@ const styles = StyleSheet.create({
     },
 
     // Container body
-    containerItem: {
-        padding: 8
+    bodyStyle: {
+        paddingBottom: 6,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8
     },
     viewTitle: {
         flexDirection: 'row',
@@ -75,10 +78,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12
     },
     skillButton: {
-        height: 'auto',
-        paddingVertical: 10,
+        width: 'auto',
         marginVertical: 2,
-        paddingHorizontal: 12
+        paddingVertical: 10,
+        paddingHorizontal: 10
     },
 
     viewFinished: {

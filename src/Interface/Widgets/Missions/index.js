@@ -74,7 +74,7 @@ class Missions extends BackMissions {
                     <View style={styles.columnContent}>
                         {(mission?.state === 'pending' && (
                             <View>
-                                <Text style={styles.text} fontSize={16} bold>
+                                <Text style={styles.text} fontSize={16}>
                                     {lang['content'][MISSIONS[step].name].title}
                                 </Text>
 
@@ -83,7 +83,7 @@ class Missions extends BackMissions {
                                 </Text>
                             </View>
                         )) || (
-                            <Text style={styles.text} fontSize={16} bold>
+                            <Text style={styles.text} fontSize={16}>
                                 {lang['text-claim']}
                             </Text>
                         )}

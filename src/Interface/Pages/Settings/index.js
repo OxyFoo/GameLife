@@ -12,7 +12,7 @@ import { PageHeader } from 'Interface/Widgets';
 
 class Settings extends BackSettings {
     render = () => {
-        const { cbSelectedLang, waitingConsentPopup, sendingMail, devicesLoading } = this.state;
+        const { cbSelectedLang, sendingMail, devicesLoading } = this.state;
 
         //const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
@@ -52,7 +52,7 @@ class Settings extends BackSettings {
                 */}
 
                 <Text style={styles.title} color='border'>
-                    {lang['section-notifications-ads']}
+                    {lang['section-notifications-consents']}
                 </Text>
 
                 {/* Notifications page */}
@@ -66,17 +66,15 @@ class Settings extends BackSettings {
                     {lang['input-notifications']}
                 </Button>
 
-                {/** TODO: Force consent popup on iOS */}
-                {Platform.OS === 'android' && (
-                    <Button
-                        style={styles.margin}
-                        onPress={this.openConsentPopup}
-                        appearance='outline'
-                        loading={waitingConsentPopup}
-                    >
-                        {lang['input-consent']}
-                    </Button>
-                )}
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    icon='arrow-left'
+                    iconAngle={180}
+                    onPress={this.openConsents}
+                >
+                    {lang['input-consent']}
+                </Button>
 
                 <Text style={styles.title} color='border'>
                     {lang['section-support-feedback']}

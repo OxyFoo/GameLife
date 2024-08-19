@@ -111,7 +111,7 @@ class Quest extends BackQuest {
 
     /** @param {{ title: keyof Lang['quest']['titles'] }} props */
     ShowTitle = ({ title: text }) => (
-        <Text style={styles.sectionTitle} fontSize={22}>
+        <Text style={styles.sectionTitle} color='border'>
             {langManager.curr['quest']['titles'][text]}
         </Text>
     );

@@ -87,7 +87,7 @@ function CardFooter() {
     }
 
     const midnight = GetMidnightTime(prevActivity.startTime + prevActivity.timezone * 60 * 60);
-    const nextMidnight = midnight + 86400 * (sameDay ? 2 : 1);
+    const nextMidnight = midnight + 86400 * (!sameDay ? 2 : 1);
     const text = createSeparatorText(nextMidnight - prevEnd);
     const onPress = () => this.onAddActivityFromTime(prevActivity.startTime + prevActivity.duration * 60);
 

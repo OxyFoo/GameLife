@@ -12,12 +12,8 @@ import { Text, Button, PieChart } from 'Interface/Components';
 class TodayPieChart extends TodayPieChartBack {
     render() {
         const lang = langManager.curr['home'];
-        const { switched } = this.state;
 
         let headerText = lang['chart-today-recap'];
-        //if (switched) {
-        //    headerText = lang['chart-today-performance'];
-        //}
 
         // If there is no focused activity or no data to display, show add activity button
         if (!this.state.focusedActivity || !this.state.dataToDisplay) {
@@ -48,8 +44,8 @@ class TodayPieChart extends TodayPieChartBack {
         return (
             <Button
                 style={[styles.container, this.props.style]}
-                color='dataBigKpi'
-                onPress={this.onPress}
+                appearance='uniform'
+                color='backgroundTransparent'
                 onLayout={this.onLayout}
             >
                 {/* Top row view */}
@@ -60,11 +56,10 @@ class TodayPieChart extends TodayPieChartBack {
                 {/* Pie chart view */}
                 <PieChart
                     data={this.state.dataToDisplay}
-                    dataFullDay={this.state.dataToDisplayFullDay}
+                    //dataFullDay={this.state.dataToDisplayFullDay}
                     focusedActivity={this.state.focusedActivity}
                     focusedActivityFullDay={this.state.focusedActivityFullDay}
-                    switched={this.state.switched}
-                    layoutWidth={this.state.layoutWidth - 32}
+                    //layoutWidth={this.state.layoutWidth - 32}
                 />
             </Button>
         );

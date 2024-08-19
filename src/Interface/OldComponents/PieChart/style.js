@@ -8,8 +8,18 @@ const styles = StyleSheet.create({
         marginRight: 4,
         marginLeft: 8
     },
+    pieChartContainer: {
+        width: '100%',
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch'
+    },
     pieChart: {
-        width: '50%'
+        width: '45%',
+        alignItems: 'center'
     },
     pieChartFullDay: {
         position: 'absolute',
@@ -18,20 +28,13 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0
     },
-    pieChartContainer: {
-        width: '100%',
-        marginLeft: 12,
-        paddingHorizontal: 0,
-        paddingVertical: 0,
 
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+    flatlist: {
+        flexGrow: 0
     },
-
     legendContainer: {
-        width: '50%',
-        marginTop: 8
+        flex: 1,
+        justifyContent: 'center'
     },
     legendContainerFullDay: {
         width: '50%',

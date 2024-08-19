@@ -16,7 +16,7 @@ class SettingsNotifications extends BackSettings {
 
         return (
             <View style={styles.page}>
-                <PageHeader onBackPress={this.onBack} />
+                <PageHeader title={lang['input-notifications']} onBackPress={this.onBack} />
 
                 <Text style={styles.title}>[Notifications générales]</Text>
 

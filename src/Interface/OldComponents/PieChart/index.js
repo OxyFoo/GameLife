@@ -9,15 +9,14 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import Text from '../Text';
-import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData
  * @typedef {import('react-native').ListRenderItem<UpdatingData>} ListRenderItem
- * 
+ *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('react-native').ListRenderItem<MyQuest>} FlatListMyQuestProps
- * 
+ *
  */
 
 class PieChart extends BackPieChart {
@@ -28,9 +27,12 @@ class PieChart extends BackPieChart {
      */
     renderDot = (color) => (
         <View
-            style={[styles.dot, {
-                backgroundColor: color
-            }]}
+            style={[
+                styles.dot,
+                {
+                    backgroundColor: color
+                }
+            ]}
         />
     );
 
@@ -57,7 +59,7 @@ class PieChart extends BackPieChart {
                 </Text>
             </View>
         );
-    }
+    };
 
     /**
      * Renders the center label component. (biggest activity value + name)
@@ -95,82 +97,39 @@ class PieChart extends BackPieChart {
                 </Text>
             </View>
         );
-    }
+    };
 
     render() {
-        const { animSwitch } = this.state;
-        const { style, data, dataFullDay, focusedActivity, layoutWidth } = this.props;
+        const { style, data, focusedActivity } = this.props;
 
         if (!data || !focusedActivity) {
             return null;
         }
 
-        const opacityData = {
-            opacity: animSwitch
-        };
-
-        const opacityDataFullDay = {
-            opacity: animSwitch.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 0]
-            })
-        };
-
-        const animStyle = {
-            transform: [
-                { translateX: Animated.multiply(animSwitch, -layoutWidth/2) }
-            ]
-        };
-
         return (
-            <View style={style}>
-                <Animated.View style={[styles.pieChartContainer, animStyle]}>
-                    {/** Left panel */}
-                    <Animated.View style={[styles.legendContainerFullDay, opacityDataFullDay]}>
-                        <FlatList
-                            data={dataFullDay.slice(0, -1)}
-                            renderItem={this.renderLegendItemFullDay}
-                            keyExtractor={(item, index) => 'piechart-legend-full-' + index.toString()}
-                            scrollEnabled={false}
-                        />
-                    </Animated.View>
+            <View style={[styles.pieChartContainer, style]}>
+                <View style={styles.pieChart}>
+                    <PieGiftedChart
+                        data={data}
+                        donut
+                        showGradient
+                        sectionAutoFocus
+                        radius={50}
+                        innerRadius={30}
+                        innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
+                        centerLabelComponent={this.renderCenterLabelComponentFullDay}
+                    />
+                </View>
 
-                    <Animated.View style={[styles.pieChartFullDay, opacityDataFullDay]}>
-                        <PieGiftedChart
-                            data={dataFullDay}
-                            donut
-                            showGradient
-                            sectionAutoFocus
-                            radius={50}
-                            innerRadius={30}
-                            innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
-                            centerLabelComponent={this.renderCenterLabelComponent}
-                        />
-                    </Animated.View>
-
-                    {/** Right panel */}
-                    <Animated.View style={[styles.pieChart, opacityData]}>
-                        <PieGiftedChart
-                            data={data}
-                            donut
-                            showGradient
-                            sectionAutoFocus
-                            radius={50}
-                            innerRadius={30}
-                            innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
-                            centerLabelComponent={this.renderCenterLabelComponentFullDay}
-                        />
-                    </Animated.View>
-
-                    <Animated.View style={[styles.legendContainer, opacityData]}>
-                        <FlatList
-                            data={data}
-                            renderItem={this.renderLegendItem}
-                            keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
-                            scrollEnabled={false}
-                        />
-                    </Animated.View>
-                </Animated.View>
+                <View style={styles.legendContainer}>
+                    <FlatList
+                        data={data}
+                        style={styles.flatlist}
+                        renderItem={this.renderLegendItem}
+                        keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
+                        scrollEnabled={false}
+                    />
+                </View>
             </View>
         );
     }
@@ -178,21 +137,18 @@ class PieChart extends BackPieChart {
     /** @type {FlatListMyQuestProps} */
     renderMyQuest = ({ item: quest }) => {
         const daysQuest = user.quests.myquests.GetDays(quest);
-        const questToday = daysQuest.find(day => day.isToday);
+        const questToday = daysQuest.find((day) => day.isToday);
 
         if (!questToday) {
             return null;
         }
 
         return (
-            <Text
-                style={styles.myQuestsText}
-                fontSize={14}
-            >
+            <Text style={styles.myQuestsText} fontSize={14}>
                 {`- ${quest.title}: ${questToday.progress}%`}
             </Text>
         );
-    }
+    };
 }
 
 export default PieChart;

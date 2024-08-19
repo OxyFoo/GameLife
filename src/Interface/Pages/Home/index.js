@@ -5,8 +5,8 @@ import styles from './style';
 import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
-import { Text, ProgressBar, Swiper, Button } from 'Interface/Components';
-import { TodayPieChart, Missions, MyQuestsList, TodoList } from 'Interface/Widgets';
+import { Text, ProgressBar, Button } from 'Interface/Components';
+import { TodayPieChart, Missions, DailyQuest, MyQuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -37,8 +37,9 @@ class Home extends BackHome {
 
                 {/* Today missions */}
                 <Title title={lang['section-missions']} />
-                <Text>[Not finished]</Text>
-                {/* <Missions refHome={this} /> */}
+                <View pointerEvents='none'>
+                    <Missions refHome={this} />
+                </View>
 
                 {/* Today performance */}
                 <Title title={lang['section-today-performance']}>
@@ -51,8 +52,10 @@ class Home extends BackHome {
                         onPress={this.addActivity}
                     />
                 </Title>
-                <Text>[Not finished]</Text>
-                {/* <Swiper pages={[<TodayPieChart style={styles.todayPieChart} />]} /> */}
+                <TodayPieChart style={styles.todayPieChart} />
+
+                {/* Today missions */}
+                <DailyQuest style={styles.dailyQuests} />
 
                 {/* Today quests */}
                 <Title title={lang['section-today-quests']}>

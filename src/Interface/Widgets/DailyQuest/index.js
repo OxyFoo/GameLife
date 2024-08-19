@@ -9,89 +9,68 @@ import { RenderItemMemo } from './RewardPopup/element';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { SimpleContainer, Text, Button, Icon, XPBar } from 'Interface/Components';
+import { Text, Button, Icon, ProgressBar } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ListRenderItem<string>} ListRenderItemString
- * 
- * @typedef {import('Class/Shop').Icons} Icons
  */
 
 class DailyQuest extends DailyQuestBack {
     render() {
-        return (
-            <SimpleContainer
-                ref={this.refContainer}
-                style={this.props.style}
-            >
-                <SimpleContainer.Header>
-                    {this.renderHeader()}
-                </SimpleContainer.Header>
+        const { style } = this.props;
 
-                <SimpleContainer.Body style={styles.containerItem}>
-                    {this.renderBody()}
-                </SimpleContainer.Body>
-            </SimpleContainer>
+        return (
+            <View style={style}>
+                {this.renderHeader()}
+                {this.renderBody()}
+            </View>
         );
     }
 
     renderHeader = () => {
         const lang = langManager.curr['daily-quest'];
-        const titleColors = ['#384065', '#B83EFFE3'];
-
-        /** @type {Icons} */
-        let icon = 'arrowLeft';
 
         return (
             <LinearGradient
                 style={styles.headerStyle}
-                colors={titleColors}
-                start={this.gradientPos1}
-                end={this.gradientPos2}
+                colors={[
+                    themeManager.GetColor('main2', { opacity: 0.65 }),
+                    themeManager.GetColor('main2', { opacity: 0.25 })
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
             >
                 <View style={styles.buttonInfo}>
                     <Button
                         style={styles.headerButtonLeft}
-                        onPress={StartHelp.bind(this)}
+                        appearance='uniform'
+                        color='transparent'
+                        //onPress={StartHelp.bind(this)}
                     >
-                        <Icon
-                            containerStyle={styles.iconStaticHeader}
-                            icon={'info'}
-                            size={24}
-                        />
+                        <Icon containerStyle={styles.iconStaticHeader} icon={'info-circle-outline'} size={24} />
                     </Button>
-                    <Text color={'primary'}>
-                        {lang['container-title']}
-                    </Text>
+                    <Text color={'primary'}>{lang['container-title']}</Text>
                 </View>
 
-                {icon !== null && (
-                    <Button
-                        ref={this.refOpenStreakPopup}
-                        style={styles.headerButtonRight}
-                        onPress={this.openRewardPopup}
-                    >
-                        <Icon
-                            containerStyle={styles.iconStaticHeader}
-                            icon={icon}
-                            size={24}
-                            angle={180}
-                        />
-                    </Button>
-                )}
+                <Button
+                    ref={this.refOpenStreakPopup}
+                    style={styles.headerButtonRight}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={this.openRewardPopup}
+                >
+                    <Icon containerStyle={styles.iconStaticHeader} icon={'arrow-left'} size={24} angle={180} />
+                </Button>
             </LinearGradient>
-        )
-    }
+        );
+    };
 
     renderBody = () => {
         const lang = langManager.curr['daily-quest'];
         const { claimIndex, claimDay, claimDate } = this.state;
-        const {
-            selectedSkillsID,
-            refreshesRemaining,
-            progression
-        } = this.state.dailyQuest;
+        const { selectedSkillsID, refreshesRemaining, progression } = this.state.dailyQuest;
 
         const REFRESH_PER_DAY = user.quests.dailyquest.config.refresh_count_per_day;
         const ACTIVITY_MINUTES_PER_DAY = user.quests.dailyquest.config.activity_minutes_per_day;
@@ -102,26 +81,22 @@ class DailyQuest extends DailyQuestBack {
                 <View style={styles.viewFinished}>
                     {/* Claim date if not last streak */}
                     {claimDate !== null && (
-                        <Text style={styles.containerDateText}>
-                            {lang['container-date'].replace('{}', claimDate)}
-                        </Text>
+                        <Text style={styles.containerDateText}>{lang['container-date'].replace('{}', claimDate)}</Text>
                     )}
 
                     <Text>{lang['label-finished']}</Text>
-                    <RenderItemMemo
-                        style={styles.dailyFinished}
-                        index={claimDay}
-                        claimIndex={claimIndex}
-                    />
+                    <RenderItemMemo style={styles.dailyFinished} index={claimDay} claimIndex={claimIndex} />
                 </View>
             );
         }
 
-        const skillsNames = selectedSkillsID.map(ID =>
-            langManager.GetText(
-                dataManager.skills.GetByID(ID).Name
-            )
-        );
+        const skillsNames = selectedSkillsID
+            .map((ID) => {
+                const skill = dataManager.skills.GetByID(ID);
+                if (skill === null) return null;
+                return langManager.GetText(skill.Name);
+            })
+            .filter((name) => name !== null);
 
         const titleTime = lang['label-time']
             .replace('{0}', progression.toString())
@@ -131,38 +106,38 @@ class DailyQuest extends DailyQuestBack {
             .replace('{1}', REFRESH_PER_DAY.toString());
 
         return (
-            <View>
+            <LinearGradient
+                style={styles.bodyStyle}
+                colors={[
+                    themeManager.GetColor('backgroundCard', { opacity: 0.65 }),
+                    themeManager.GetColor('backgroundCard', { opacity: 0.25 })
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+            >
                 <View style={styles.viewTitle}>
                     <View style={styles.columnTitle}>
-                        <Icon icon='alarmClock' size={20} />
+                        <Icon icon='clock-outline' size={20} />
                         <Text style={styles.title}>{titleTime}</Text>
                     </View>
                     <View style={styles.columnTitle}>
                         <Text style={styles.title}>{titleReroll}</Text>
-                        <Icon
-                            icon='retry'
-                            size={18}
-                            color={refreshesRemaining > 0 ? 'primary' : 'secondary'}
-                        />
+                        <Icon icon='retry' size={18} color={refreshesRemaining > 0 ? 'primary' : 'secondary'} />
                     </View>
                 </View>
                 <View style={styles.viewProgression}>
-                    <XPBar
-                        style={styles.progressBar}
-                        value={progression}
-                        maxValue={ACTIVITY_MINUTES_PER_DAY}
-                    />
+                    <ProgressBar style={styles.progressBar} value={progression} maxValue={ACTIVITY_MINUTES_PER_DAY} />
                 </View>
                 <View style={styles.skillsItems}>
                     <FlatList
                         data={skillsNames}
                         renderItem={this.renderItem}
-                        keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={(item, index) => `daily-${item}-${index}`}
                     />
                 </View>
-            </View>
+            </LinearGradient>
         );
-    }
+    };
 
     /** @type {ListRenderItemString} */
     renderItem = ({ item, index }) => {
@@ -171,6 +146,7 @@ class DailyQuest extends DailyQuestBack {
                 <Text>{item}</Text>
                 <Button
                     style={styles.skillButton}
+                    appearance='outline'
                     icon='retry'
                     iconSize={18}
                     onPress={() => user.quests.dailyquest.RefreshSkillSelection(index)}
@@ -178,7 +154,7 @@ class DailyQuest extends DailyQuestBack {
                 />
             </View>
         );
-    }
+    };
 }
 
 export default DailyQuest;

@@ -44,7 +44,6 @@ class Informations {
 
     /** @type {ZapGPTState} */
     zapGPT = { remaining: 0, total: 0 };
-    switchHomeTodayPieChart = true;
     achievementSelfFriend = false;
     purchasedCount = 0;
 
@@ -61,7 +60,6 @@ class Informations {
         this.adRemaining = 0;
         this.adTotalWatched = 0;
         this.zapGPT = { remaining: 0, total: 0 };
-        this.switchHomeTodayPieChart = true;
         this.achievementSelfFriend = false;
         this.purchasedCount = 0;
     }
@@ -78,7 +76,6 @@ class Informations {
         if (contains('ox')) this.ox.Set(parseInt(informations['ox']));
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
-        if (contains('switchHomeTodayPieChart')) this.switchHomeTodayPieChart = informations['switchHomeTodayPieChart'];
         if (contains('achievementSelfFriend')) this.achievementSelfFriend = informations['achievementSelfFriend'];
         if (contains('purchasedCount')) this.purchasedCount = informations['purchasedCount'];
     }
@@ -95,7 +92,6 @@ class Informations {
             ox: this.ox.Get(),
             adRemaining: this.adRemaining,
             adTotalWatched: this.adTotalWatched,
-            switchHomeTodayPieChart: this.switchHomeTodayPieChart,
             achievementSelfFriend: this.achievementSelfFriend,
             purchasedCount: this.purchasedCount
         };

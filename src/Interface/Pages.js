@@ -21,6 +21,7 @@ const PAGES = {
     myquests:               require('./Pages/MyQuests').default,
     report:                 require('./Pages/Report').default,
     settings:               require('./Pages/Settings').default,
+    settings_consents:      require('./Pages/Settings/Consents').default,
     settings_notifications: require('./Pages/Settings/Notifications').default,
     shop:                   require('./Pages/Shop').default,
     skill:                  require('./Pages/Skill').default,

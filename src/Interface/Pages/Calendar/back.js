@@ -145,8 +145,7 @@ class BackCalendar extends PageBase {
 
     addActivity = () => {
         this.fe.bottomPanel?.Open({
-            content: <AddActivity />,
-            movable: false
+            content: <AddActivity />
         });
     };
 
@@ -155,16 +154,14 @@ class BackCalendar extends PageBase {
         const { activity } = activityData;
 
         this.fe.bottomPanel?.Open({
-            content: <AddActivity editActivity={activity} />,
-            movable: false
+            content: <AddActivity editActivity={activity} />
         });
     }
 
     /** @param {number} startTime */
     onAddActivityFromTime(startTime) {
         this.fe.bottomPanel?.Open({
-            content: <AddActivity time={startTime} />,
-            movable: false
+            content: <AddActivity time={startTime} />
         });
     }
 

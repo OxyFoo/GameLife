@@ -15,31 +15,31 @@ import { DynamicBackground } from 'Interface/Primitives';
 
 class BottomPanel extends BottomPanelBack {
     render() {
-        const { state, current, height, animOpacity } = this.state;
+        const { state, current, animOpacity } = this.state;
 
+        // Offset used to avoid animation void space at the bottom of the screen
+        const offset = 24;
         const opened = state === 'opened';
+        const navbarHeight = user.interface?.navBar?.show ? user.interface?.navBar?.state?.height ?? 0 : 0;
+
         /** @type {StyleProp} */
         const styleParent = {
-            bottom: user.interface?.navBar?.show ? user.interface?.navBar?.state?.height ?? 0 : 0,
             zIndex: current?.zIndex ?? 0,
             elevation: current?.zIndex ?? 0
         };
+
         /** @type {StyleProp} */
         const styleBackground = {
             opacity: Animated.multiply(animOpacity, 0.8)
         };
+
         /** @type {StyleProp} */
         const stylePanel = {
-            minHeight: state === 'opened' ? height : undefined,
+            minHeight: state === 'opened' ? this.mover.panel.height : undefined,
+            maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
-            transform: [
-                {
-                    translateY: Animated.add(
-                        height + 48, // 48 = padding bottom to avoid animation space at the bottom
-                        this.state.animPosY
-                    )
-                }
-            ],
+            paddingBottom: navbarHeight + offset,
+            transform: [{ translateY: Animated.add(this.mover.panel.posAnimY, offset) }],
             backgroundColor: themeManager.GetColor('ground1')
         };
 
@@ -48,20 +48,20 @@ class BottomPanel extends BottomPanelBack {
                 {/* Background */}
                 <Animated.View
                     style={[styles.background, styleBackground]}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
+                    onTouchStart={this.mover.touchStart}
+                    onTouchMove={this.mover.touchMove}
                     onTouchEnd={this.onTouchEndBackground}
                 />
 
                 {/* Panel */}
                 <Animated.View
                     style={[styles.panel, stylePanel]}
-                    onTouchStart={this.onTouchStart}
-                    onTouchMove={this.onTouchMove}
-                    onTouchEnd={this.onTouchEnd}
+                    onTouchStart={this.mover.touchStart}
+                    onTouchMove={this.mover.touchMove}
+                    onTouchEnd={this.mover.touchEnd}
                     onLayout={this.onLayoutPanel}
                 >
-                    <DynamicBackground opacity={0.15} />
+                    <DynamicBackground style={styles.gradient} opacity={0.15} />
                     {current?.content}
                 </Animated.View>
             </View>

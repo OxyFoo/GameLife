@@ -3,6 +3,7 @@ import { Animated, View } from 'react-native';
 
 import BackActivityPage1 from './back';
 import styles from './style';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, IconCheckable, InputText, Button, Icon } from 'Interface/Components';
@@ -93,10 +94,13 @@ class AddActivityPage1 extends BackActivityPage1 {
 
                 {/* Activities List */}
                 <Animated.FlatList
-                    ref={this.refActivities}
+                    ref={user.interface.bottomPanel?.mover.SetScrollView}
                     style={styles.activitiesFlatlist}
                     onLayout={this.onLayoutFlatlist}
+                    onContentSizeChange={this.onContentSizeChange}
                     data={skills}
+                    initialNumToRender={15}
+                    windowSize={100}
                     renderItem={this.renderSkill}
                     keyExtractor={(item) => 'act-skill-' + item.id}
                     ListEmptyComponent={this.renderEmptyList}
@@ -112,6 +116,7 @@ class AddActivityPage1 extends BackActivityPage1 {
                         ],
                         { useNativeDriver: true }
                     )}
+                    scrollEnabled={false}
                 />
             </View>
         );

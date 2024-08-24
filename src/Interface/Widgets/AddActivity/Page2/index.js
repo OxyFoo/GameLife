@@ -36,7 +36,12 @@ class AddActivityPage2 extends BackActivityPage2 {
                 </Button>
                 <View style={styles.headerStats}>{this.renderStatsText()}</View>
 
-                <ScrollView>
+                <ScrollView
+                    ref={user.interface.bottomPanel?.mover.SetScrollView}
+                    onLayout={user.interface.bottomPanel?.mover.onLayoutFlatList}
+                    onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
+                    scrollEnabled={false}
+                >
                     {editActivity === null && (
                         <>
                             <AddActivityPage2StartNow activity={activity} />

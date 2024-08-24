@@ -38,7 +38,11 @@ function DynamicBackground(props) {
     const [layout, setLayout] = React.useState({ width: 0, height: 0 });
 
     return (
-        <View style={[styles.parent, props.style]} onLayout={(e) => setLayout(e.nativeEvent.layout)}>
+        <View
+            style={[styles.parent, props.style]}
+            onLayout={(e) => setLayout(e.nativeEvent.layout)}
+            pointerEvents='none'
+        >
             <Radial
                 color='main1'
                 animPath={PATH1}
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        pointerEvents: 'none'
+        overflow: 'hidden'
     }
 });
 

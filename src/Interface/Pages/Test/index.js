@@ -34,12 +34,14 @@ class Test extends BackTest {
 
                 {/*
                     {this.renderButtonsPanic()}
-                    */}
+                */}
 
                 {this.renderButtons()}
                 {this.renderComboBox()}
                 {this.renderInputText()}
                 {this.renderPopups()}
+                {this.renderBottomPanel()}
+                {this.renderBottomList()}
                 {this.renderIcons()}
                 {this.renderSwitches()}
                 {this.renderSwitchText()}
@@ -187,6 +189,47 @@ class Test extends BackTest {
                     icon='planner-outline'
                 >
                     {"Ouvrir 4 popups d'affilée"}
+                </Button>
+            </View>
+        );
+    };
+
+    renderBottomPanel = () => {
+        return (
+            <View>
+                {this.renderTitle('BottomPanel')}
+                <Button
+                    style={styles.marginBot}
+                    onPress={this.openBottomPanel}
+                    appearance={this.state.selectedButon}
+                    icon='planner-outline'
+                >
+                    {'Ouvrir un petit BottomPanel'}
+                </Button>
+
+                <Button
+                    style={styles.marginBot}
+                    onPress={this.openBigBottomPanel}
+                    appearance={this.state.selectedButon}
+                    icon='planner-outline'
+                >
+                    {'Ouvrir un grand BottomPanel'}
+                </Button>
+            </View>
+        );
+    };
+
+    renderBottomList = () => {
+        return (
+            <View>
+                {this.renderTitle('BottomList')}
+                <Button
+                    style={styles.marginBot}
+                    onPress={this.openBottomList}
+                    appearance={this.state.selectedButon}
+                    icon='planner-outline'
+                >
+                    {'Ouvrir une BottomList'}
                 </Button>
             </View>
         );

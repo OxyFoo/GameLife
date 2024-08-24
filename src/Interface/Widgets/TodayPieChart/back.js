@@ -247,8 +247,7 @@ class TodayPieChartBack extends React.Component {
 
     onAddActivityPress = () => {
         user.interface.bottomPanel?.Open({
-            content: <AddActivity />,
-            movable: false
+            content: <AddActivity />
         });
     };
 

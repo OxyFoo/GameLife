@@ -1,8 +1,11 @@
-import { Animated } from 'react-native';
+import React from 'react';
+import { Animated, FlatList, View } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 
+import { Text } from 'Interface/Components';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('Interface/Components').Button} Button
@@ -98,6 +101,52 @@ class BackTest extends PageBase {
                 cancelable: i % 2 === 0
             });
         }
+    };
+
+    openBottomPanel = () => {
+        this.fe.bottomPanel?.Open({
+            content: (
+                <View style={{ width: '100%', height: 256, paddingVertical: 4, backgroundColor: 'red' }}>
+                    <FlatList
+                        ref={user.interface.bottomPanel?.mover.SetScrollView}
+                        onLayout={user.interface.bottomPanel?.mover.onLayoutFlatList}
+                        onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
+                        style={{ flex: 1, backgroundColor: 'blue' }}
+                        data={Array.from({ length: 100 }).map((_, i) => ({ key: i }))}
+                        renderItem={({ item }) => <Text>{`Test ${item.key}`}</Text>}
+                    />
+                </View>
+            ),
+            maxPosY: 500,
+            defaultPosY: 1,
+            onClose: () => {
+                console.log('Closed');
+            }
+        });
+    };
+
+    openBigBottomPanel = () => {
+        this.fe.bottomPanel?.Open({
+            content: (
+                <View style={{ width: '100%', height: 3000, backgroundColor: 'blue' }}>
+                    <Text>Test</Text>
+                </View>
+            ),
+            defaultPosY: 1,
+            onClose: () => {
+                console.log('Closed');
+            }
+        });
+    };
+
+    openBottomList = () => {
+        this.fe.screenList?.Open(
+            'TEST',
+            Array(100)
+                .fill(0)
+                .map((_, i) => ({ id: i, value: `Test ${i}` })),
+            console.log
+        );
     };
 }
 

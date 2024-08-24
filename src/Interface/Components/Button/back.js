@@ -85,6 +85,7 @@ class ButtonBack extends React.Component {
     posX = 0;
     posY = 0;
     size = 0;
+    validAction = false;
 
     /** @param {ButtonProps & ButtonPropsType} nextProps */
     shouldComponentUpdate(nextProps) {
@@ -107,17 +108,25 @@ class ButtonBack extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.props.onTouchStart(event);
-        const { locationX, locationY } = event.nativeEvent;
+        const { pageX, pageY, locationX, locationY } = event.nativeEvent;
         if (this.props.enabled) {
             this.rippleRef.current?.Press(locationX, locationY, this.size);
         }
-        this.posX = event.nativeEvent.pageX;
-        this.posY = event.nativeEvent.pageY;
+        this.posX = pageX;
+        this.posY = pageY;
         this.time = new Date().getTime();
+        this.validAction = true;
     };
 
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        const { pageX, pageY } = event.nativeEvent;
+        const deltaX = Math.abs(pageX - this.posX);
+        const deltaY = Math.abs(pageY - this.posY);
+        if (deltaX > 10 || deltaY > 10) {
+            this.validAction = false;
+        }
+
         this.props.onTouchMove(event);
     };
 
@@ -142,6 +151,11 @@ class ButtonBack extends React.Component {
             return;
         }
 
+        // Prevent press event if the user moved the finger
+        if (!this.validAction) {
+            return;
+        }
+
         const deltaX = Math.abs(event.nativeEvent.pageX - this.posX);
         const deltaY = Math.abs(event.nativeEvent.pageY - this.posY);
         const deltaT = now - this.time;
@@ -152,7 +166,7 @@ class ButtonBack extends React.Component {
             this.last = now;
             if (deltaT < 500) {
                 onPress();
-            } else {
+            } else if (deltaT < 3000) {
                 onLongPress();
             }
         }

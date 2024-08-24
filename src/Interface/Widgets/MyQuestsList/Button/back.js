@@ -97,8 +97,7 @@ class QuestButtonBack extends React.Component {
         if (quest === null || !enableQuickAdd) return;
 
         user.interface.bottomPanel?.Open({
-            content: <AddActivity listSkillsIDs={quest.skills} />,
-            movable: false
+            content: <AddActivity listSkillsIDs={quest.skills} />
         });
     };
 

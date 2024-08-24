@@ -775,7 +775,7 @@ class MyQuests {
      * @returns {number} Streak
      */
     getStreakFromFrequencyByMonth(quest) {
-        return 0;
+        return -1;
     }
 
     /**
@@ -784,7 +784,7 @@ class MyQuests {
      * @returns {number} Streak
      */
     getStreakFromFrequencyByWeek(quest) {
-        return 0;
+        return -1;
     }
 }
 

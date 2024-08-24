@@ -173,13 +173,21 @@ async function Bench(activities) {
 
     // Test 20: slice
     timer = performance.now();
-    const sliceResult = activities.slice(0, 10);
+    const sliceResult = activities.slice(0, activities.length / 2);
     output.push({ name: 'Slice', value: sliceResult.length, time: performance.now() - timer });
 
     // Test 21: splice
     timer = performance.now();
-    const spliceResult = activities.splice(0, 10);
+    const spliceResult = activities.splice(0, activities.length / 2);
     output.push({ name: 'Splice', value: spliceResult.length, time: performance.now() - timer });
+
+    // Test 22: map + Date
+    timer = performance.now();
+    const mapDateResult = activities.map((activity) => ({
+        id: activity.skillID,
+        value: new Date(activity.startTime * 1000).setDate(1)
+    }));
+    output.push({ name: 'Map + Date', value: mapDateResult.length, time: performance.now() - timer });
 
     return output;
 }

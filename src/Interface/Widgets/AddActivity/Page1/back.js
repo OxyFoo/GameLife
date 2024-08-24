@@ -121,7 +121,7 @@ class BackActivityPage1 extends React.Component {
     /**
      * @param {string} textSearch
      * @param {number | null} categoryID
-     * @returns {object}
+     * @returns {object | Promise<object>}
      */
     refreshSkills = (textSearch = '', categoryID = null, refreshState = true) => {
         const formattedSearch = FormatForSearch(textSearch);
@@ -163,7 +163,11 @@ class BackActivityPage1 extends React.Component {
         };
 
         if (refreshState) {
-            this.setState(newState);
+            return new Promise((resolve) => {
+                this.setState(newState, () => {
+                    resolve(newState);
+                });
+            });
         }
 
         return newState;
@@ -173,7 +177,10 @@ class BackActivityPage1 extends React.Component {
     onLayoutFlatlist = (event) => {
         const { height } = event.nativeEvent.layout;
         this.setState({ flatlistHeight: height });
+        user.interface.bottomPanel?.mover.onLayoutFlatList?.(event);
     };
+
+    onContentSizeChange = user.interface.bottomPanel?.mover.onContentSizeChange;
 
     /** @param {LayoutChangeEvent} event */
     onLayoutActivity = (event) => {
@@ -200,18 +207,18 @@ class BackActivityPage1 extends React.Component {
     };
 
     /** @param {string} text */
-    onSearchChange = (text) => {
-        this.refreshSkills(text, this.state.selectedCategory);
-        this.refActivities.current?.scrollToOffset({ offset: 0, animated: false });
+    onSearchChange = async (text) => {
+        await this.refreshSkills(text, this.state.selectedCategory);
+        user.interface.bottomPanel?.mover.ScrollTo(0, false);
     };
 
     /**
      * @param {number} ID
      * @param {boolean} checked
      */
-    selectCategory = (ID, checked) => {
-        this.refreshSkills(this.state.skillSearch, checked ? ID : null);
-        this.refActivities.current?.scrollToOffset({ offset: 0, animated: false });
+    selectCategory = async (ID, checked) => {
+        await this.refreshSkills(this.state.skillSearch, checked ? ID : null);
+        user.interface.bottomPanel?.mover.ScrollTo(0, false);
     };
 
     /**

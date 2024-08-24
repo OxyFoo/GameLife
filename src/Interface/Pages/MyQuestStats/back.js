@@ -44,9 +44,8 @@ class BackQuest extends PageBase {
         if (this.selectedQuest === null) return;
         const { skills } = this.selectedQuest;
 
-        user.interface.bottomPanel?.Open({
-            content: <AddActivity listSkillsIDs={skills} />,
-            movable: false
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity listSkillsIDs={skills} />
         });
     };
 

@@ -87,9 +87,8 @@ class BackSkills extends PageBase {
     };
 
     addActivity = () => {
-        user.interface.bottomPanel?.Open({
-            content: <AddActivity />,
-            movable: false
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity />
         });
     };
 

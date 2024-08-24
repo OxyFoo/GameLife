@@ -140,9 +140,9 @@ class BackSkill extends PageBase {
 
     addActivity = () => {
         const skillID = this.skill.ID;
-        user.interface.bottomPanel?.Open({
-            content: <AddActivity openSkillID={skillID} />,
-            movable: false
+
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity openSkillID={skillID} />
         });
     };
 
@@ -151,7 +151,8 @@ class BackSkill extends PageBase {
         const items = this.history.map((item, index) => ({ id: index + 1, value: item.title }));
         user.interface.screenList?.Open(lang['history-title'], items, (index) => {
             const activity = this.history[index - 1].activity;
-            user.interface.bottomPanel?.Open({
+
+            this.fe.bottomPanel?.Open({
                 content: <AddActivity editActivity={activity} />
             });
         });

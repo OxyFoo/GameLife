@@ -79,9 +79,9 @@ class NavBarBack extends React.Component {
             user.interface.bottomPanel?.Close();
             return;
         }
+
         user.interface.bottomPanel?.Open({
-            content: <AddActivity />,
-            movable: false
+            content: <AddActivity />
         });
     };
     openMultiplayer = () => this.openPageWithTransition('multiplayer');

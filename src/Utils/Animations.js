@@ -2,7 +2,8 @@ import { Animated, Easing } from 'react-native';
 
 /**
  * @typedef {Animated.Value | Animated.ValueXY} AnimatedType
- * @typedef {number | Animated.Value | Animated.ValueXY | { x: number; y: number; } | Animated.AnimatedInterpolation<number>} AnimatedValue
+ * @typedef {number | { x: number; y: number; }} NumberValue
+ * @typedef {NumberValue | AnimatedType | Animated.AnimatedInterpolation<number>} AnimatedValue
  */
 
 /**
@@ -56,6 +57,24 @@ function CircularAnimation(anim, toValue, duration = 300, native = true) {
 }
 
 /**
+ * @description Used to create a decaying animation
+ * @param {Animated.Value | Animated.ValueXY} anim Animated value to animate
+ * @param {NumberValue} toValue Value to animate to
+ * @param {number} [duration=300] Duration of animation
+ * @param {boolean} [native=true] Use native driver
+ * @returns {Animated.CompositeAnimation}
+ */
+function EasingAnimation(anim, toValue, duration = 300, native = true) {
+    return Animated.timing(anim, {
+        toValue: toValue,
+        duration: duration,
+        easing: Easing.out(Easing.exp),
+        delay: 0,
+        useNativeDriver: native
+    });
+}
+
+/**
  * @description Used to interpolate animated with function
  * @param {Function} func
  * @param {number} [steps=50]
@@ -86,5 +105,5 @@ function WithInterpolation(animation, minValue, maxValue, extrapolate) {
     });
 }
 
-export { TimingAnimation, SpringAnimation, CircularAnimation, WithFunction, WithInterpolation };
+export { TimingAnimation, SpringAnimation, CircularAnimation, EasingAnimation, WithFunction, WithInterpolation };
 export default () => {};

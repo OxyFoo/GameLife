@@ -93,7 +93,7 @@ class Skill extends BackSkill {
                     )}
 
                     {/* History */}
-                    <Button appearance='uniform' color='main1' onPress={this.showHistory}>
+                    <Button style={styles.historyButton} appearance='uniform' color='main1' onPress={this.showHistory}>
                         {lang['history-show']}
                     </Button>
                 </ScrollView>

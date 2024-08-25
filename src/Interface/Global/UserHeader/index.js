@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, Image, View } from 'react-native';
 
 import styles from './style';
 import UserHeaderBack from './back';
@@ -59,13 +59,19 @@ class UserHeader extends UserHeaderBack {
         return (
             <Button ref={this.refContainer} style={styles.avatar} onPress={openProfile}>
                 {showAvatar && user.character && (
-                    <Frame
-                        ref={this.refFrame}
-                        characters={[user.character]}
-                        size={AVATAR_FRAME_SIZE}
-                        delayTime={0}
-                        loadingTime={0}
-                        bodyView={'topHalf'}
+                    // TODO: Real avatar
+                    // <Frame
+                    //     ref={this.refFrame}
+                    //     characters={[user.character]}
+                    //     size={AVATAR_FRAME_SIZE}
+                    //     delayTime={0}
+                    //     loadingTime={0}
+                    //     bodyView={'topHalf'}
+                    // />
+                    <Image
+                        style={{ width: 48, height: 48 }}
+                        resizeMode='stretch'
+                        source={require('Ressources/items/avatar_min_placeholder.png')}
                     />
                 )}
             </Button>

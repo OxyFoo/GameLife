@@ -14,7 +14,7 @@ const getItemLayout = (_, index) => ({
 const styles = StyleSheet.create({
     page: {
         height: '100%',
-        paddingBottom: 40,
+        paddingBottom: 30,
         flexDirection: 'column',
         justifyContent: 'space-between'
     },
@@ -101,10 +101,20 @@ const styles = StyleSheet.create({
     },
 
     // Day list
-    dayList: {},
+    dayList: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+        paddingHorizontal: 24
+    },
     monthTitle: {
-        fontSize: 18,
-        marginBottom: 12
+        fontSize: 18
+    },
+    daysButtonOption: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
     },
     dayItem: {
         width: 65,

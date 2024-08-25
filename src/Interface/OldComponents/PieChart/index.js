@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { PieChart as PieGiftedChart } from 'react-native-gifted-charts';
 
 import BackPieChart from './back';
@@ -126,7 +126,7 @@ class PieChart extends BackPieChart {
                         data={data}
                         style={styles.flatlist}
                         renderItem={this.renderLegendItem}
-                        keyExtractor={(item, index) => 'piechart-legend-' + index.toString()}
+                        keyExtractor={(item) => `piechart-legend-${item.name}`}
                         scrollEnabled={false}
                     />
                 </View>

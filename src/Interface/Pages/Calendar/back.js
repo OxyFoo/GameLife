@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { AddActivity } from 'Interface/Widgets';
-import { SpringAnimation } from 'Utils/Animations';
+import { SpringAnimation, EasingAnimation } from 'Utils/Animations';
 import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
 /**
@@ -74,7 +74,8 @@ class BackCalendar extends PageBase {
                 };
             }),
 
-        animSummaryY: new Animated.Value(0)
+        animSummaryY: new Animated.Value(0),
+        animTodayButton: new Animated.Value(0)
     };
 
     /** @type {Symbol | null} */
@@ -119,6 +120,52 @@ class BackCalendar extends PageBase {
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
+
+    openCalendar = () => {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: 'Pas terminé',
+                message: "Cette feature n'est pas encore implémentée, un peu de patience 👀"
+            }
+        });
+    };
+
+    openToday = () => {
+        const { days } = this.state;
+
+        const today = new Date();
+        const date = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
+
+        const todayDay = days.findIndex((day) => day.day === date && day.month === month && day.year === year);
+        if (todayDay !== -1) {
+            if (!days[todayDay].selected) {
+                this.onDayPress(days[todayDay], true);
+            }
+        } else {
+            // Reset days to the current date
+            const newDays = Array(TOTAL_DAYS_COUNT)
+                .fill(0)
+                .map((_, index) => {
+                    const tempDate = new Date(INITIAL_DATE);
+                    tempDate.setDate(tempDate.getDate() + index);
+                    tempDate.setHours(0, 0, 0, 0);
+                    return {
+                        day: tempDate.getDate(),
+                        month: tempDate.getMonth(),
+                        year: tempDate.getFullYear(),
+                        selected: false,
+                        containsActivity: this.batchContainsActivity(GetGlobalTime(tempDate)),
+                        onPress: this.onDayPress.bind(this)
+                    };
+                });
+            this.setState({ days: newDays }, () => {
+                this.onDayPress(newDays[newDays.length / 2], true);
+            });
+        }
+    };
 
     refreshActivitiesInBatch() {
         this.activitiesInBatch = user.activities
@@ -196,6 +243,17 @@ class BackCalendar extends PageBase {
                 onPress: this.onActivityPress.bind(this)
             })
         );
+
+        const today = new Date();
+        const selectedIsToday =
+            selectedDay.day === today.getDate() &&
+            selectedDay.month === today.getMonth() &&
+            selectedDay.year === today.getFullYear();
+        if (selectedIsToday) {
+            EasingAnimation(this.state.animTodayButton, 0, 200).start();
+        } else {
+            EasingAnimation(this.state.animTodayButton, 1, 200).start();
+        }
 
         this.setState({ days, selectedDay, activities });
 

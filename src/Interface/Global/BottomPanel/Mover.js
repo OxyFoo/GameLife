@@ -2,6 +2,7 @@ import { Animated, Dimensions, FlatList } from 'react-native';
 
 import user from 'Managers/UserManager';
 
+import PAGES from 'Interface/Pages';
 import { MinMax } from 'Utils/Functions';
 import { EasingAnimation, SpringAnimation } from 'Utils/Animations';
 
@@ -49,7 +50,10 @@ class Mover {
         tickTime: 0,
 
         /** @type {boolean} */
-        isScrolling: false
+        isScrolling: false,
+
+        /** @type {boolean} */
+        isClosing: false
     };
 
     /** @type {boolean} Disable panel moving */
@@ -170,11 +174,15 @@ class Mover {
         }
 
         // Hide navbar on scroll
-        const isScrolling = this.panel.posY > 0 && this.panel.posY < this.panel.maxPosY - 10;
-        if (isScrolling && user.interface.navBar?.show) {
-            user.interface.navBar?.Hide();
-        } else if (!isScrolling && !user.interface.navBar?.show) {
-            user.interface.navBar?.Show();
+        if (!this.events.isClosing) {
+            const pageName = user.interface.GetCurrentPageName();
+            const pageHasNavBar = pageName !== null && PAGES[pageName].feShowNavBar;
+            const isScrolling = this.panel.posY > 0 && this.panel.posY < this.panel.maxPosY - 10;
+            if (isScrolling && user.interface.navBar?.show) {
+                user.interface.navBar?.Hide();
+            } else if (pageHasNavBar && !isScrolling && !user.interface.navBar?.show) {
+                user.interface.navBar?.Show();
+            }
         }
     };
 
@@ -262,7 +270,7 @@ class Mover {
             this.panel.posY < 0 ||
             (!this.events.isScrolling && this.events.accY < -1500 && this.panel.posY < this.panel.minPosY)
         ) {
-            user.interface.bottomPanel?.Close();
+            user.interface.bottomPanel?.Close(true);
             return;
         }
 

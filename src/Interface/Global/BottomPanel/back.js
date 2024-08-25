@@ -70,16 +70,27 @@ class BottomPanelBack extends React.Component {
             this.opened = false;
         });
 
-        user.interface.AddCustomBackHandler(this.Close);
+        user.interface.AddCustomBackHandler(this._close);
     };
 
-    /** Close the screen list */
-    Close = () => {
+    _close = () => {
+        this.Close(true);
+        return false;
+    };
+
+    /**
+     * Close the screen list
+     * @param {boolean} [triggerNavbarRefresh] Trigger navbar refresh
+     */
+    Close = (triggerNavbarRefresh = false) => {
         if (this.state.state !== 'opened') {
-            return false;
+            return;
         }
 
-        user.interface.RemoveCustomBackHandler(this.Close);
+        if (!triggerNavbarRefresh) {
+            this.mover.events.isClosing = true;
+        }
+        user.interface.RemoveCustomBackHandler(this._close);
         this.mover.UnsetScrollView();
 
         // Close animation
@@ -94,10 +105,11 @@ class BottomPanelBack extends React.Component {
             setTimeout(() => {
                 // Reset state (wait for the animation to finish)
                 this.setState({ current: null });
+                this.mover.events.isClosing = false;
             }, 150);
         });
 
-        return false;
+        return;
     };
 
     IsOpened = () => this.state.state === 'opened' || this.state.state === 'opening';
@@ -139,7 +151,7 @@ class BottomPanelBack extends React.Component {
             Math.abs(this.mover.events.accX) < 5 &&
             Math.abs(this.mover.events.accY) < 5
         ) {
-            this.Close();
+            this.Close(true);
             return;
         }
 

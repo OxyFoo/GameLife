@@ -133,6 +133,7 @@ class DailyQuest extends DailyQuestBack {
                         data={skillsNames}
                         renderItem={this.renderItem}
                         keyExtractor={(item, index) => `daily-${item}-${index}`}
+                        scrollEnabled={false}
                     />
                 </View>
             </LinearGradient>

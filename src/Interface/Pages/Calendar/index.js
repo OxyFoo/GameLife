@@ -7,7 +7,7 @@ import { RenderActivity, RenderDay } from './elements';
 import { CardHeader, CardSeparator, CardFooter } from './AddButtons';
 import langManager from 'Managers/LangManager';
 
-import { ActivityTimeline, Button, Text } from 'Interface/Components';
+import { ActivityTimeline, Button, Icon, Text } from 'Interface/Components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(null, 0).length + 1) / 2;
@@ -15,10 +15,10 @@ const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(nu
 class Calendar extends BackCalendar {
     render() {
         const lang = langManager.curr['calendar'];
-        const { activities, selectedDay, selectedMonth, days } = this.state;
+        const { activities, selectedDay, selectedMonth, days, animSummaryY, animTodayButton } = this.state;
 
         const summaryStyle = {
-            marginTop: this.state.animSummaryY
+            marginTop: animSummaryY
         };
 
         return (
@@ -74,10 +74,29 @@ class Calendar extends BackCalendar {
                 </View>
 
                 {/** Days selection */}
-                <View style={styles.dayList}>
-                    <Text style={styles.monthTitle} color='secondary'>
-                        {selectedMonth}
-                    </Text>
+                <View>
+                    <View style={styles.dayList}>
+                        <Button
+                            style={styles.daysButtonOption}
+                            appearance='uniform'
+                            color='transparent'
+                            onPress={this.openCalendar}
+                        >
+                            <Icon icon='planner' color='main1' size={18} />
+                        </Button>
+                        <Text style={styles.monthTitle} color='secondary'>
+                            {selectedMonth}
+                        </Text>
+                        <Button
+                            style={styles.daysButtonOption}
+                            styleAnimation={{ opacity: animTodayButton }}
+                            appearance='uniform'
+                            color='transparent'
+                            onPress={this.openToday}
+                        >
+                            <Icon icon='retry' color='main2' size={16} />
+                        </Button>
+                    </View>
                     <FlatList
                         ref={this.refDayList}
                         data={days}

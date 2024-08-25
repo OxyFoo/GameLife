@@ -77,6 +77,9 @@ const styles = StyleSheet.create({
     },
 
     // History
+    historyButton: {
+        marginBottom: 24
+    },
     historyContainer: {
         maxHeight: 400,
         paddingHorizontal: 6

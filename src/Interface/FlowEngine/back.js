@@ -488,17 +488,17 @@ class BackFlowEngine extends React.Component {
             this.userHeader.current?.Hide();
         }
 
+        // Update bottom panel visibility
+        if (this.bottomPanel.current?.IsOpened()) {
+            this.bottomPanel.current?.Close();
+        }
+
         // Update nav bar visibility
         const showNavBar = PAGES[pageName].feShowNavBar;
         if (showNavBar && this.navBar.current?.show === false) {
             this.navBar.current?.Show();
         } else if (!showNavBar && this.navBar.current?.show === true) {
             this.navBar.current?.Hide();
-        }
-
-        // Update bottom panel visibility
-        if (this.bottomPanel.current?.IsOpened()) {
-            this.bottomPanel.current?.Close();
         }
     };
 

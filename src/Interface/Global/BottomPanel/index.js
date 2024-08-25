@@ -20,7 +20,7 @@ class BottomPanel extends BottomPanelBack {
         // Offset used to avoid animation void space at the bottom of the screen
         const offset = 24;
         const opened = state === 'opened';
-        const navbarHeight = user.interface?.navBar?.show ? user.interface?.navBar?.state?.height ?? 0 : 0;
+        const navbarHeight = user.interface?.navBar?.show ? user.interface?.navBar?.state?.height ?? 24 : 24;
 
         /** @type {StyleProp} */
         const styleParent = {

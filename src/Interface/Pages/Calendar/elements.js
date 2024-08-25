@@ -121,7 +121,12 @@ const RenderDay = React.memo(
             colorBackground = 'main1';
         }
 
-        if (date.getDate() === new Date().getDate()) {
+        const today = new Date();
+        if (
+            date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear()
+        ) {
             colorText = 'main2';
             if (selected) {
                 colorText = 'ground1';

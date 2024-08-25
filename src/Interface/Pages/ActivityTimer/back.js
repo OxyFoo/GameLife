@@ -46,7 +46,7 @@ class BackActivityTimer extends PageBase {
 
     componentDidMount() {
         this.timer_tick = setInterval(this.tick, 1000);
-        user.interface.SetCustomBackHandler(this.onPressCancel);
+        user.interface.AddCustomBackHandler(this.onPressCancel);
         this.currentActivityEvent = user.activities.currentActivity.AddListener((currentActivity) => {
             this.setState({ currentActivity });
         });
@@ -61,7 +61,7 @@ class BackActivityTimer extends PageBase {
 
     componentWillUnmount() {
         clearInterval(this.timer_tick);
-        user.interface.ResetCustomBackHandler();
+        user.interface.RemoveCustomBackHandler(this.onPressCancel);
         user.activities.currentActivity.RemoveListener(this.currentActivityEvent);
 
         // Clear if activity is finished
@@ -168,7 +168,7 @@ class BackActivityTimer extends PageBase {
     Back = () => {
         clearInterval(this.timer_tick);
         if (user.interface.history.length > 1) {
-            user.interface.ResetCustomBackHandler();
+            user.interface.RemoveCustomBackHandler(this.onPressCancel);
             user.interface.BackHandle();
         } else {
             user.interface.ChangePage('calendar');

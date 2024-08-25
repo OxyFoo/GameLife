@@ -11,6 +11,7 @@ const Color = {
     backgroundCard: '#384065', // Transparent purple
     backgroundGrey: '#222740', // Grey
     backgroundDark: '#0B112F', // Dark (background)
+    backgroundInput: '#1F2540DD', // Transparent blue
     backgroundTransparent: '#FFFFFF33', // Transparent white
     success: '#27AE60', // Green
     danger: '#C0392B', // Red
@@ -21,7 +22,6 @@ const Color = {
 
     ox: '#962D8B',
     dataBigKpi: '#232B5D', // Dark blue
-    dataSmallKpi: '#38406550', // Transparent blue
 
     ground1: '#03052E',
     ground1a: '#0C0E35',

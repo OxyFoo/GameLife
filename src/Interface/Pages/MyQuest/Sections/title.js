@@ -49,7 +49,9 @@ class SectionTitle extends React.Component {
             return null;
         }
 
-        return <InputText style={style} value={quest.title} onChangeText={this.onChangeText} maxLength={128} />;
+        return (
+            <InputText style={style} value={quest.title} onChangeText={this.onChangeText} maxLength={128} showCounter />
+        );
     }
 }
 

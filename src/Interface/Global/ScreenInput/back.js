@@ -4,14 +4,15 @@ import { Animated, Keyboard, Platform, Dimensions } from 'react-native';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Interface/Components').Input} Input
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').KeyboardEventListener} KeyboardEventListener
+ * @typedef {import('Interface/Components').InputText} InputText
  *
  * @typedef {Object} ScreenInputType
  * @property {string} [label] Title of the input
  * @property {string} [initialText] Initial text of the input
+ * @property {number} [maxLength] Maximum length of the input
  * @property {boolean} [multiline] If true, the input is multiline
  * @property {(text: string | null) => void} [callback] Callback called when the input is validated or closed, with the text or null
  */
@@ -28,11 +29,12 @@ class ScreenInputBack extends React.Component {
         keyboardHeight: new Animated.Value(Dimensions.get('window').height)
     };
 
-    /** @type {React.RefObject<Input>} */
+    /** @type {React.RefObject<InputText>} */
     refInput = React.createRef();
 
     posX = 0;
     posY = 0;
+    timer = 0;
     layoutHeight = 0;
 
     componentDidMount() {
@@ -63,7 +65,7 @@ class ScreenInputBack extends React.Component {
     onKeyboardHide = () => {
         const { height: screenHeight } = Dimensions.get('window');
         SpringAnimation(this.state.keyboardHeight, screenHeight).start();
-        this.refInput?.current?.unfocus();
+        this.refInput?.current?.blur?.();
         this.Close(false);
     };
 
@@ -77,6 +79,7 @@ class ScreenInputBack extends React.Component {
             label: 'Input',
             initialText: '',
             multiline: false,
+            maxLength: params.multiline ?? false ? 1024 : 64,
             callback: () => {}
         };
         const mergedParams = { ...defaultParams, ...params };
@@ -120,6 +123,7 @@ class ScreenInputBack extends React.Component {
         const { pageX, pageY } = event.nativeEvent;
         this.posX = pageX;
         this.posY = pageY;
+        this.timer = Date.now();
     };
 
     /** @param {GestureResponderEvent} event */
@@ -127,10 +131,11 @@ class ScreenInputBack extends React.Component {
         const { pageX, pageY } = event.nativeEvent;
         const deltaX = Math.abs(pageX - this.posX);
         const deltaY = Math.abs(pageY - this.posY);
+        const deltaTime = Date.now() - this.timer;
 
-        if (deltaX < 10 && deltaY < 10) {
+        if (deltaX < 10 && deltaY < 10 && deltaTime < 300) {
             this.Close(false);
-            this.refInput?.current?.unfocus(); // Hide keyboard
+            this.refInput?.current?.blur?.(); // Hide keyboard
         }
     };
 
@@ -138,7 +143,7 @@ class ScreenInputBack extends React.Component {
     onChangeText = (text) => this.setState({ text: text });
 
     onValid = () => {
-        this.refInput?.current?.unfocus();
+        this.refInput?.current?.blur?.();
         this.Close(true);
     };
 }

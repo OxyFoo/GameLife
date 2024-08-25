@@ -85,7 +85,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                     {lang['title-no-experience']}
                 </Text>
             );
-        } else if (activityStatus === 'isNotPast') {
+        } else if (activityStatus === 'isNotPast' && this.props.editActivity !== null) {
             return (
                 <Text fontSize={14} color='main1'>
                     {lang['title-not-past']}

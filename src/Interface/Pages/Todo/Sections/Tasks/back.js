@@ -144,6 +144,7 @@ class BackSectionTasks extends React.Component {
         user.interface.screenInput?.Open({
             label: lang['input-task-placeholder'],
             initialText: task.title,
+            maxLength: 256,
             callback: (title) => {
                 if (!title || !title.trim()) return;
 

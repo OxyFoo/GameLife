@@ -168,6 +168,14 @@ class Mover {
             this.panel.posAnimY.setValue(-this.panel.posY);
             this.scrollView.scrollAnimY.setValue(this.scrollView.scrollY);
         }
+
+        // Hide navbar on scroll
+        const isScrolling = this.panel.posY > 0 && this.panel.posY < this.panel.maxPosY - 10;
+        if (isScrolling && user.interface.navBar?.show) {
+            user.interface.navBar?.Hide();
+        } else if (!isScrolling && !user.interface.navBar?.show) {
+            user.interface.navBar?.Show();
+        }
     };
 
     /**

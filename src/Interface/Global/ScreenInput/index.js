@@ -4,7 +4,7 @@ import { Animated, View } from 'react-native';
 import styles from './style';
 import ScreenInputBack from './back';
 
-import { Button, Input } from 'Interface/Components';
+import { Button, InputText } from 'Interface/Components';
 
 class ScreenInput extends ScreenInputBack {
     render() {
@@ -20,15 +20,17 @@ class ScreenInput extends ScreenInputBack {
             <Animated.View style={[styles.parent, opacity]} pointerEvents={event}>
                 <View style={styles.background} onTouchStart={this.onPressIn} onTouchEnd={this.onPressOut} />
                 <Animated.View style={[styles.panel, animInput]} onLayout={this.onLayout}>
-                    <Input
+                    <InputText
                         ref={this.refInput}
                         style={styles.input}
                         label={input?.label}
-                        text={text}
+                        value={text}
+                        backgroundColor='backgroundInput'
                         onChangeText={this.onChangeText}
                         onSubmit={this.onValid}
                         multiline={input?.multiline}
-                        maxLength={input?.multiline ? 1024 : 64}
+                        maxLength={input?.maxLength}
+                        showCounter
                     />
                     <Button style={styles.button} icon='check' onPress={this.onValid} />
                 </Animated.View>

@@ -90,7 +90,7 @@ class SectionTasks extends BackSectionTasks {
                 <TouchableOpacity
                     style={styles.taskTextParent}
                     activeOpacity={0.6}
-                    onPress={() => this.onEditTask(item, !item.checked, item.title)}
+                    onPress={() => this.editTitleTask(item)}
                 >
                     <Text style={styles.taskText}>{item.title}</Text>
                 </TouchableOpacity>

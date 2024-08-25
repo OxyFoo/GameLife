@@ -39,15 +39,27 @@ class InputText extends InputTextBack {
             staticLabel,
             activeColor,
             inactiveColor,
+            backgroundColor,
             forceActive,
             error,
+            showCounter,
             placeholderTextColor,
             onParentLayout,
             onSubmit,
             pointerEvents,
             ...props
         } = this.props;
-        const { animTop, animLeft, animScale, isFocused, boxHeight, borderWidth, textWidth, textHeight } = this.state;
+        const {
+            animTop,
+            animLeft,
+            animScale,
+            isFocused,
+            boxHeight,
+            borderWidth,
+            textWidth,
+            textHeight,
+            textCounterWidth
+        } = this.state;
 
         const isActive = isFocused || forceActive;
 
@@ -65,6 +77,7 @@ class InputText extends InputTextBack {
         const _icon = icon || (error ? 'danger' : null);
         const hexColor = themeManager.GetColor(color);
         const labelY = this.props.multiline ? 28 : boxHeight / 2;
+        const textLength = props.value?.length || 0;
 
         /** @type {TextInput['props']['style']} */
         const colorStyle = {
@@ -76,7 +89,8 @@ class InputText extends InputTextBack {
             borderColor: hexColor,
             borderWidth: borderWidth,
             opacity: enabled ? 1 : 0.6,
-            paddingRight: _icon !== null ? 32 : 0
+            paddingRight: _icon !== null ? 32 : 0,
+            backgroundColor: themeManager.GetColor(backgroundColor)
         };
 
         /** @type {ViewStyle} */
@@ -86,14 +100,23 @@ class InputText extends InputTextBack {
             transform: [{ scaleX: Animated.subtract(1, animTop) }]
         };
 
+        /** @type {ViewStyle} */
+        const barCounterMaskStyle = {
+            width: textCounterWidth + 6,
+            backgroundColor: themeManager.GetColor('background')
+        };
+
         return (
             <Animated.View
                 style={[styles.parent, containerStyle, containerStyle2]}
                 onLayout={this.onBoxLayout}
                 pointerEvents={enabled ? pointerEvents : 'none'}
             >
-                {/* Mask bar to hider border between text and input border */}
+                {/* Mask bar to hide border between text and input border */}
                 <Animated.View style={[styles.bar, barMaskStyle]} />
+
+                {/* Mask bar to hide counter */}
+                {showCounter && <Animated.View style={[styles.barCounter, barCounterMaskStyle]} />}
 
                 {/* Title (in center or move into top border if focused or active) */}
                 <Animated.View
@@ -126,6 +149,16 @@ class InputText extends InputTextBack {
                         </Text>
                     )}
                 </Animated.View>
+
+                {/* Counter Text */}
+                <Text
+                    style={styles.counter}
+                    color={showCounter ? textColor : 'transparent'}
+                    fontSize={12}
+                    onLayout={this.onTextCounterLayout}
+                >
+                    {`${textLength}/${props.maxLength}`}
+                </Text>
 
                 {/* Input */}
                 <TextInput

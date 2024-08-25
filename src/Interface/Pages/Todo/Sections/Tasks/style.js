@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6
     },
     taskText: {
-        textAlign: 'left'
+        textAlign: 'left',
+        fontSize: 14
     },
     taskDetails: {
         flexDirection: 'row',

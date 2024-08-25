@@ -37,7 +37,7 @@ function RenderSkill({ item }) {
     const { value, onPress } = item;
 
     const backgroundCard = {
-        backgroundColor: themeManager.GetColor('dataSmallKpi')
+        backgroundColor: themeManager.GetColor('backgroundInput')
     };
 
     return (

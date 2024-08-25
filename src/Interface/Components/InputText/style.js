@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         verticalAlign: 'middle'
     },
+    counter: {
+        position: 'absolute',
+        top: -9,
+        right: 12
+    },
 
     icon: {
         position: 'absolute',
@@ -38,6 +43,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: -2,
         left: 6,
+        height: 3
+    },
+    barCounter: {
+        position: 'absolute',
+        top: -2,
+        right: 8,
         height: 3
     }
 });

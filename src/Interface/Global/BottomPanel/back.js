@@ -4,7 +4,7 @@ import { Animated, Platform } from 'react-native';
 import Mover from './Mover';
 import user from 'Managers/UserManager';
 
-import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').FlatList} FlatList
@@ -82,14 +82,12 @@ class BottomPanelBack extends React.Component {
         user.interface.RemoveCustomBackHandler(this.Close);
         this.mover.UnsetScrollView();
 
+        // Close animation
+        this.mover.GotoY(0);
+        TimingAnimation(this.state.animOpacity, 0, 200).start();
+
         // Close state to enable click through
         this.setState({ state: 'closed' }, () => {
-            // Close animation
-            Animated.parallel([
-                SpringAnimation(this.mover.panel.posAnimY, 0),
-                TimingAnimation(this.state.animOpacity, 0, 200)
-            ]).start();
-
             this.state.current?.onClose?.();
             user.interface.navBar?.onCloseBottomPanel();
 

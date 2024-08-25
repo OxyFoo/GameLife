@@ -99,11 +99,17 @@ class AddActivityPage1 extends BackActivityPage1 {
                     onLayout={this.onLayoutFlatlist}
                     onContentSizeChange={this.onContentSizeChange}
                     data={skills}
-                    initialNumToRender={15}
-                    windowSize={100}
+                    keyExtractor={(item) => `act-skill-${item.id}`}
                     renderItem={this.renderSkill}
-                    keyExtractor={(item) => 'act-skill-' + item.id}
                     ListEmptyComponent={this.renderEmptyList}
+                    initialNumToRender={15}
+                    maxToRenderPerBatch={10}
+                    windowSize={500}
+                    getItemLayout={(_data, index) => ({
+                        length: this.state.buttonHeight,
+                        offset: this.state.buttonHeight * index,
+                        index
+                    })}
                     onScroll={Animated.event(
                         [
                             {
@@ -157,59 +163,15 @@ class AddActivityPage1 extends BackActivityPage1 {
     /** @type {ListRenderItemItemSkill} */
     renderSkill = ({ item, index }) => {
         const { id, value, onPress } = item;
-        const { flatlistHeight, buttonHeight } = this.state;
-        const topItemPosY = buttonHeight * index;
-        const topNextItemPosY = buttonHeight * (index + 1);
 
         return (
             <Button
-                onLayout={this.onLayoutActivity}
                 style={styles.activityElement}
-                styleAnimation={
-                    buttonHeight === 0 || flatlistHeight === 0
-                        ? {}
-                        : {
-                              opacity: this.state.animScroll.interpolate({
-                                  inputRange: [
-                                      topItemPosY - flatlistHeight,
-                                      topItemPosY - flatlistHeight + buttonHeight,
-                                      topItemPosY,
-                                      topNextItemPosY
-                                  ],
-                                  outputRange: [0, 1, 1, 0],
-                                  extrapolate: 'clamp'
-                              }),
-                              transform: [
-                                  {
-                                      translateY: this.state.animScroll.interpolate({
-                                          inputRange: [
-                                              topItemPosY - flatlistHeight,
-                                              topItemPosY - flatlistHeight + buttonHeight,
-                                              topItemPosY,
-                                              topNextItemPosY
-                                          ],
-                                          outputRange: [20, 0, 0, -20],
-                                          extrapolate: 'clamp'
-                                      })
-                                  },
-                                  {
-                                      scale: this.state.animScroll.interpolate({
-                                          inputRange: [
-                                              topItemPosY - flatlistHeight,
-                                              topItemPosY - flatlistHeight + buttonHeight,
-                                              topItemPosY,
-                                              topNextItemPosY
-                                          ],
-                                          outputRange: [0.9, 1, 1, 0.9],
-                                          extrapolate: 'clamp'
-                                      })
-                                  }
-                              ]
-                          }
-                }
+                styleAnimation={this.getAnimationStyles(index)}
                 appearance='outline'
                 borderColor='secondary'
                 fontColor='primary'
+                onLayout={this.onLayoutActivity}
                 onPress={onPress}
                 onLongPress={() => this.openSkill(id)}
             >
@@ -229,6 +191,56 @@ class AddActivityPage1 extends BackActivityPage1 {
                 <Text style={styles.emptyListText}>{lang['empty-activity']}</Text>
             </View>
         );
+    };
+
+    /** @param {number} index */
+    getAnimationStyles = (index) => {
+        const { flatlistHeight, buttonHeight, animScroll } = this.state;
+        const topItemPosY = buttonHeight * index;
+        const topNextItemPosY = buttonHeight * (index + 1);
+
+        if (buttonHeight === 0 || flatlistHeight === 0) {
+            return {};
+        }
+
+        return {
+            opacity: animScroll.interpolate({
+                inputRange: [
+                    topItemPosY - flatlistHeight,
+                    topItemPosY - flatlistHeight + buttonHeight,
+                    topItemPosY,
+                    topNextItemPosY
+                ],
+                outputRange: [0, 1, 1, 0],
+                extrapolate: 'clamp'
+            }),
+            transform: [
+                {
+                    translateY: animScroll.interpolate({
+                        inputRange: [
+                            topItemPosY - flatlistHeight,
+                            topItemPosY - flatlistHeight + buttonHeight,
+                            topItemPosY,
+                            topNextItemPosY
+                        ],
+                        outputRange: [20, 0, 0, -20],
+                        extrapolate: 'clamp'
+                    })
+                },
+                {
+                    scale: animScroll.interpolate({
+                        inputRange: [
+                            topItemPosY - flatlistHeight,
+                            topItemPosY - flatlistHeight + buttonHeight,
+                            topItemPosY,
+                            topNextItemPosY
+                        ],
+                        outputRange: [0.9, 1, 1, 0.9],
+                        extrapolate: 'clamp'
+                    })
+                }
+            ]
+        };
     };
 }
 

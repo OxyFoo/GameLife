@@ -16,7 +16,7 @@ import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Act
  * @property {number | null} categoryID Default category ID selected, If null no category will be selected (or recent with more than 5 activities)
  * @property {number | null} openSkillID Default skill ID selected, If null no skill will be selected
  * @property {Array<number>} listSkillsIDs If only one skill is passed, it will be opened by default (/!\ Disable categories feature)
- * @property {Activity | null} editActivity If true, the activity will be edited instead of added (need: )
+ * @property {Activity | null} editActivity If true, the activity will be edited instead of added
  */
 
 /** @type {BackActivityPropsType} */

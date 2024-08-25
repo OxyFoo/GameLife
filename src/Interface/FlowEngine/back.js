@@ -10,6 +10,7 @@ import DynamicVar from 'Utils/DynamicVar';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').ScreenList} ScreenList
@@ -103,6 +104,11 @@ class BackFlowEngine extends React.Component {
         paddingHorizontal: 0
     });
 
+    size = {
+        width: 0,
+        height: 0
+    };
+
     /**
      * @type {Array<PageNames>}
      * @protected
@@ -167,6 +173,13 @@ class BackFlowEngine extends React.Component {
     shouldComponentUpdate(_nextProps, nextState) {
         return this.state.selectedPage !== nextState.selectedPage || this.state.mountedPages !== nextState.mountedPages;
     }
+
+    /** @param {LayoutChangeEvent} event */
+    onLayout = (event) => {
+        const { width, height } = event.nativeEvent.layout;
+        this.size.width = width;
+        this.size.height = height;
+    };
 
     /**
      * @description Get current page name
@@ -587,6 +600,7 @@ class BackFlowEngine extends React.Component {
         notificationsInApp: null,
 
         history: this.history,
+        size: this.size,
         responsive: this.responsive,
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,

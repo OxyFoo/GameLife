@@ -35,7 +35,7 @@ class BottomPanel extends BottomPanelBack {
 
         /** @type {StyleProp} */
         const stylePanel = {
-            minHeight: state === 'opened' ? this.mover.panel.height : undefined,
+            minHeight: opened ? this.mover.panel.height : undefined,
             maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
             paddingBottom: navbarHeight + offset,

@@ -46,7 +46,10 @@ class Mover {
         startTime: 0,
 
         /** @type {number} Last tick time */
-        tickTime: 0
+        tickTime: 0,
+
+        /** @type {boolean} */
+        isScrolling: false
     };
 
     /** @type {boolean} Disable panel moving */
@@ -80,9 +83,14 @@ class Mover {
             if (scrollView.props.scrollEnabled !== false) {
                 scrollView.setNativeProps({ scrollEnabled: false });
             }
-            if (scrollView.props.onContentSizeChange !== this.onContentSizeChange) {
+
+            if (typeof scrollView.props.onLayout !== 'function') {
+                user.interface.console?.AddLog('warn', '[BottomPanel] onLayout is not set to Mover.onLayoutFlatList');
+            }
+
+            if (typeof scrollView.props.onContentSizeChange !== 'function') {
                 user.interface.console?.AddLog(
-                    'error',
+                    'warn',
                     '[BottomPanel] onContentSizeChange is not set to Mover.onContentSizeChange'
                 );
             }
@@ -198,6 +206,7 @@ class Mover {
         this.events.accY = 0;
         this.events.startTime = Date.now();
         this.events.tickTime = Date.now();
+        this.events.isScrolling = false;
     };
 
     /** @param {GestureResponderEvent} event */
@@ -210,8 +219,8 @@ class Mover {
 
         // Acceleration
         const deltaTime = (Date.now() - this.events.tickTime) / 1000;
-        this.events.accX = deltaX / deltaTime;
-        this.events.accY = deltaY / deltaTime;
+        this.events.accX = MinMax(-5000, deltaX / deltaTime, 5000);
+        this.events.accY = MinMax(-5000, deltaY / deltaTime, 5000);
         this.events.tickTime = Date.now();
 
         if (!this.scrollEnabled) return;
@@ -229,6 +238,10 @@ class Mover {
             this.panel.posY += deltaY;
         }
 
+        if (this.scrollView.scrollY > 10) {
+            this.events.isScrolling = true;
+        }
+
         this.GotoY(null, false);
     };
 
@@ -239,12 +252,9 @@ class Mover {
         // Big swipe down
         if (
             this.panel.posY < 0 ||
-            (Date.now() - this.events.startTime < 300 &&
-                this.scrollView.scrollY <= 0 &&
-                this.events.accY < -1000 &&
-                this.panel.posY < this.panel.minPosY)
+            (!this.events.isScrolling && this.events.accY < -1500 && this.panel.posY < this.panel.minPosY)
         ) {
-            user.interface.BackHandle();
+            user.interface.bottomPanel?.Close();
             return;
         }
 

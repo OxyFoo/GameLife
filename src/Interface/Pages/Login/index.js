@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
@@ -24,6 +24,7 @@ class Login extends BackLogin {
 
         const btnLoginX = Animated.multiply(84, animSignin);
         const btnBackX = Animated.add(-128, Animated.multiply(128, animSignin));
+        const bisPointerEvents = signinMode ? 'auto' : 'none';
 
         return (
             <View style={styles.page}>
@@ -54,7 +55,7 @@ class Login extends BackLogin {
                     </Text>
 
                     {/* Username */}
-                    <Animated.View style={[styles.input, { opacity: animSignin }]}>
+                    <Animated.View style={[styles.input, { opacity: animSignin }]} pointerEvents={bisPointerEvents}>
                         <InputText
                             error={!!errorUsername}
                             type='name'
@@ -69,7 +70,7 @@ class Login extends BackLogin {
                     </Animated.View>
 
                     {/* CGU */}
-                    <Animated.View style={{ opacity: animSigninBis }}>
+                    <Animated.View style={{ opacity: animSigninBis }} pointerEvents={bisPointerEvents}>
                         <View style={styles.cgu}>
                             <CheckBox
                                 style={styles.cguCheckBox}

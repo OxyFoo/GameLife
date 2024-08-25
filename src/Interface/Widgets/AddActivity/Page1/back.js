@@ -180,7 +180,11 @@ class BackActivityPage1 extends React.Component {
         user.interface.bottomPanel?.mover.onLayoutFlatList?.(event);
     };
 
-    onContentSizeChange = user.interface.bottomPanel?.mover.onContentSizeChange;
+    /** @param {number} w @param {number} _h */
+    onContentSizeChange = (w, _h) => {
+        const { skills, buttonHeight } = this.state;
+        user.interface.bottomPanel?.mover.onContentSizeChange?.(w, skills.length * buttonHeight);
+    };
 
     /** @param {LayoutChangeEvent} event */
     onLayoutActivity = (event) => {
@@ -189,6 +193,7 @@ class BackActivityPage1 extends React.Component {
 
         if (height + margin !== this.state.buttonHeight) {
             this.setState({ buttonHeight: height + margin });
+            user.interface.bottomPanel?.mover.onContentSizeChange?.(0, this.state.skills.length * (height + margin));
         }
     };
 

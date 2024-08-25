@@ -5,10 +5,16 @@ import styles from './style';
 import user from 'Managers/UserManager';
 
 /**
- * @param {{ children: JSX.Element }} props
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ */
+
+/**
+ * @param {Object} props
+ * @param {JSX.Element} props.children
+ * @param {(event: LayoutChangeEvent) => void} [props.onLayout]
  * @returns {JSX.Element}
  */
-const SafeAreaWithResponsive = ({ children }) => {
+const SafeAreaWithResponsive = ({ children, onLayout }) => {
     const [responsive, setResponsive] = React.useState(user.interface?.responsive.Get());
 
     React.useEffect(() => {
@@ -44,6 +50,7 @@ const SafeAreaWithResponsive = ({ children }) => {
                     ]
                 }
             ]}
+            onLayout={onLayout}
             children={children}
         />
     );

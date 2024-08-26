@@ -71,7 +71,8 @@ class Quests extends BackQuests {
     };
 
     renderAddQuest = () => {
-        return <Button onPress={this.addQuest}>[Add activity]</Button>;
+        const lang = langManager.curr['quests'];
+        return <Button onPress={this.addQuest}>{lang['button-add-quest']}</Button>;
     };
 }
 

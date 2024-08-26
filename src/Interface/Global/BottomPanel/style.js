@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     panel: {
-        top: '100%',
+        top: 0,
         left: 0,
         right: 0,
         borderTopLeftRadius: 16,

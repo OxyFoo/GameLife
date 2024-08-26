@@ -116,7 +116,21 @@ class InputText extends InputTextBack {
                 <Animated.View style={[styles.bar, barMaskStyle]} />
 
                 {/* Mask bar to hide counter */}
-                {showCounter && <Animated.View style={[styles.barCounter, barCounterMaskStyle]} />}
+                {textLength > 0 && (
+                    <>
+                        {showCounter && <Animated.View style={[styles.barCounter, barCounterMaskStyle]} />}
+
+                        {/* Counter Text */}
+                        <Text
+                            style={styles.counter}
+                            color={showCounter ? textColor : 'transparent'}
+                            fontSize={12}
+                            onLayout={this.onTextCounterLayout}
+                        >
+                            {`${textLength}/${props.maxLength}`}
+                        </Text>
+                    </>
+                )}
 
                 {/* Title (in center or move into top border if focused or active) */}
                 <Animated.View
@@ -149,16 +163,6 @@ class InputText extends InputTextBack {
                         </Text>
                     )}
                 </Animated.View>
-
-                {/* Counter Text */}
-                <Text
-                    style={styles.counter}
-                    color={showCounter ? textColor : 'transparent'}
-                    fontSize={12}
-                    onLayout={this.onTextCounterLayout}
-                >
-                    {`${textLength}/${props.maxLength}`}
-                </Text>
 
                 {/* Input */}
                 <TextInput

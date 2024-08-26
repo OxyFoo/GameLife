@@ -48,6 +48,7 @@ class SectionComment extends React.Component {
                     onChangeText={this.onChangeComment}
                     multiline={true}
                     maxLength={1024}
+                    showCounter
                 />
             </View>
         );

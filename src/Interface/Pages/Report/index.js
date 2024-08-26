@@ -16,7 +16,7 @@ class Report extends BackReport {
         const { selectedType, reportHeight, sending } = this.state;
 
         return (
-            <View style={styles.page} onStartShouldSetResponder={this.keyboardDismiss}>
+            <View style={styles.page} onTouchStart={this.keyboardDismiss}>
                 <PageHeader onBackPress={this.back} onSecondaryIconPress={selectedType === 2 ? StartHelp : undefined} />
 
                 <Text style={styles.titleContainer}>{lang['page-title']}</Text>

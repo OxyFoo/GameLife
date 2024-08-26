@@ -63,7 +63,7 @@ class MyQuests {
         this.user = user;
     }
 
-    MAX_QUESTS = 10;
+    MAX_QUESTS = 5;
 
     /** @type {Array<MyQuest>} */
     SAVED_quests = [];

@@ -13,6 +13,7 @@ import { DeepCopy } from 'Utils/Object';
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('Class/Todoes').Todo} Todo
  *
  * @typedef {'new' | 'edit' | 'remove'} States
@@ -129,8 +130,11 @@ class BackTodo extends PageBase {
         return false;
     };
 
-    keyboardDismiss = () => {
-        Keyboard.dismiss();
+    /** @param {GestureResponderEvent} event */
+    keyboardDismiss = (event) => {
+        if (event.target === event.currentTarget) {
+            Keyboard.dismiss();
+        }
         return false;
     };
 

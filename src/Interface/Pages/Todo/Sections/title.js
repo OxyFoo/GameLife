@@ -64,6 +64,7 @@ class SectionTitle extends React.Component {
                     maxLength={128}
                     icon={error === null ? 'check-filled' : 'close-filled'}
                     onChangeText={this.onChangeTitle}
+                    showCounter
                 />
 
                 {/* Error */}

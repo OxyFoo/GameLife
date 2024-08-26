@@ -8,6 +8,7 @@ import { Sum } from 'Utils/Functions';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Managers/UserManager').Stats} Stats
  * @typedef {import('Class/Server').ReportTypes} ReportTypes
@@ -94,8 +95,11 @@ class BackReport extends PageBase {
         this.setState({ input_message: text });
     };
 
-    keyboardDismiss = () => {
-        Keyboard.dismiss();
+    /** @param {GestureResponderEvent} event */
+    keyboardDismiss = (event) => {
+        if (event.target === event.currentTarget) {
+            Keyboard.dismiss();
+        }
         return false;
     };
 

@@ -149,6 +149,10 @@ class Mover {
      * @param {boolean} [animation] Default is true (smooth animation)
      */
     GotoY = (y = null, animation = true) => {
+        if (this.events.isClosing) {
+            return;
+        }
+
         // Clamp panel position
         const maxScroll = Math.min(this.panel.height, this.panel.maxPosY);
         if (y !== null) {
@@ -174,15 +178,13 @@ class Mover {
         }
 
         // Hide navbar on scroll
-        if (!this.events.isClosing) {
-            const pageName = user.interface.GetCurrentPageName();
-            const pageHasNavBar = pageName !== null && PAGES[pageName].feShowNavBar;
-            const isScrolling = this.panel.posY > 0 && this.panel.posY < this.panel.maxPosY - 10;
-            if (isScrolling && user.interface.navBar?.show) {
-                user.interface.navBar?.Hide();
-            } else if (pageHasNavBar && !isScrolling && !user.interface.navBar?.show) {
-                user.interface.navBar?.Show();
-            }
+        const pageName = user.interface.GetCurrentPageName();
+        const pageHasNavBar = pageName !== null && PAGES[pageName].feShowNavBar;
+        const isScrolling = this.panel.posY > 0 && this.panel.posY < this.panel.maxPosY - 10;
+        if (isScrolling && user.interface.navBar?.show) {
+            user.interface.navBar?.Hide();
+        } else if (pageHasNavBar && !isScrolling && !user.interface.navBar?.show) {
+            user.interface.navBar?.Show();
         }
     };
 

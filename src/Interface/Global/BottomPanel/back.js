@@ -87,15 +87,15 @@ class BottomPanelBack extends React.Component {
             return;
         }
 
+        // Close animation
+        this.mover.GotoY(0);
+        TimingAnimation(this.state.animOpacity, 0, 200).start();
+
         if (!triggerNavbarRefresh) {
             this.mover.events.isClosing = true;
         }
         user.interface.RemoveCustomBackHandler(this._close);
         this.mover.UnsetScrollView();
-
-        // Close animation
-        this.mover.GotoY(0);
-        TimingAnimation(this.state.animOpacity, 0, 200).start();
 
         // Close state to enable click through
         this.setState({ state: 'closed' }, () => {

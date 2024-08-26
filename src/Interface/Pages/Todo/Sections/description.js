@@ -64,6 +64,7 @@ class SectionDescription extends React.Component {
                     onChangeText={this.onChangeText}
                     maxLength={1280}
                     multiline
+                    showCounter
                 />
             </View>
         );

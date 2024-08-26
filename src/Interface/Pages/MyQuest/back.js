@@ -14,6 +14,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
+ * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
@@ -203,8 +204,11 @@ class BackQuest extends PageBase {
         return false;
     };
 
-    keyboardDismiss = () => {
-        Keyboard.dismiss();
+    /** @param {GestureResponderEvent} event */
+    keyboardDismiss = (event) => {
+        if (event.target === event.currentTarget) {
+            Keyboard.dismiss();
+        }
         return false;
     };
 

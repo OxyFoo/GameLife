@@ -3,7 +3,6 @@ import { Animated } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
 import { GetGlobalTime } from 'Utils/Time';
 import { MinMax } from 'Utils/Functions';
@@ -76,24 +75,6 @@ class BackTodoList extends React.Component {
 
     /** @param {Todo} item */
     keyExtractor = (item) => 'todo-' + [item.title, ...item.created.toString(), ...item.deadline.toString()].join('-');
-
-    /**
-     * Add a new todo to the list and open the todo page\
-     * Max 8 todoes
-     */
-    addTodo = () => {
-        if (this.state.todoes.length >= 8) {
-            const title = langManager.curr['todoes']['alert-todoeslimit-title'];
-            const message = langManager.curr['todoes']['alert-todoeslimit-message'];
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: { title, message }
-            });
-            return;
-        }
-
-        user.interface.ChangePage('todo', { storeInHistory: false });
-    };
 
     /** @param {Todo} todo */
     onTodoCheck = (todo) => {

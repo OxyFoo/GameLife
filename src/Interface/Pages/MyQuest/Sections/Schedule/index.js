@@ -22,7 +22,7 @@ class SectionSchedule extends BackSectionSchedule {
         if (quest === null) return null;
 
         const dateNames = langManager.curr['dates']['names'];
-        const timeIntervals = [dateNames['weekly'], dateNames['monthly'], lang['input-switch-frequency']];
+        const timeIntervals = [lang['input-switch-frequency'], dateNames['weekly'], dateNames['monthly']];
 
         return (
             <View>

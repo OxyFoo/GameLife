@@ -7,7 +7,7 @@ import { TodoButton } from './Button';
 
 import langManager from 'Managers/LangManager';
 
-import { Button, Text } from 'Interface/Components';
+import { Text } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Todoes').Todo} Todo
@@ -72,14 +72,7 @@ class TodoList extends BackTodoList {
     renderEmpty = () => {
         const lang = langManager.curr['todoes'];
 
-        return (
-            <>
-                <Text style={styles.emptyText}>{lang['todoes-empty-title']}</Text>
-                <Button style={styles.emptyButton} onPress={this.addTodo} color='main1'>
-                    {lang['todoes-empty-button']}
-                </Button>
-            </>
-        );
+        return <Text style={styles.emptyText}>{lang['todoes-empty-text']}</Text>;
     };
 }
 

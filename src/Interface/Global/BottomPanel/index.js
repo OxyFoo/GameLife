@@ -39,7 +39,9 @@ class BottomPanel extends BottomPanelBack {
             maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
             paddingBottom: navbarHeight + offset,
-            transform: [{ translateY: Animated.add(this.mover.panel.posAnimY, offset) }],
+            transform: [
+                { translateY: Animated.add(this.mover.panel.posAnimY, offset + (user.interface?.size?.height || 0)) }
+            ],
             backgroundColor: themeManager.GetColor('ground1')
         };
 

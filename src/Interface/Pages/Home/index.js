@@ -36,10 +36,10 @@ class Home extends BackHome {
                 </View>
 
                 {/* Today missions */}
-                <Title title={lang['section-missions']} />
+                {/* <Title title={lang['section-missions']} />
                 <View pointerEvents='none'>
                     <Missions refHome={this} />
-                </View>
+                </View> */}
 
                 {/* Today performance */}
                 <Title title={lang['section-today-performance']}>
@@ -55,7 +55,7 @@ class Home extends BackHome {
                 <TodayPieChart style={styles.todayPieChart} />
 
                 {/* Today missions */}
-                <DailyQuest style={styles.dailyQuests} />
+                {/* <DailyQuest style={styles.dailyQuests} /> */}
 
                 {/* Today quests */}
                 <Title title={lang['section-today-quests']}>

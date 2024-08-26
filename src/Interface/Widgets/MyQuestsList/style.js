@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
     },
 
     buttonOpenQuest: {
-        marginTop: 2,
         paddingVertical: 14
     }
 });

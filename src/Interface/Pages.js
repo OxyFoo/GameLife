@@ -30,7 +30,6 @@ const PAGES = {
     waitinternet:           require('./Pages/WaitInternet').default,
     waitmail:               require('./Pages/WaitMail').default,
     test:                   require('./Pages/Test').default,
-    test2:                  require('./Pages/Test2').default,
     todo:                   require('./Pages/Todo').default
 };
 /* eslint-enable prettier/prettier */

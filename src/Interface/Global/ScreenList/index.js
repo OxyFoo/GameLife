@@ -23,12 +23,17 @@ class ScreenList extends ScreenListBack {
         return (
             <Animated.View
                 style={[styles.parent, opacity]}
-                pointerEvents={event}
                 onTouchStart={this.onTouchStart}
                 onTouchMove={this.onTouchMove}
                 onTouchEnd={this.onTouchEnd}
+                pointerEvents={event}
             >
-                <View style={styles.background} />
+                <View
+                    style={styles.background}
+                    onTouchStart={this.onBackgroundTouchStart}
+                    onTouchMove={this.onBackgroundTouchMove}
+                    onTouchEnd={this.onBackgroundTouchEnd}
+                />
 
                 <Animated.View style={[styles.panel, styleBackground, stylePosition]} onLayout={this.onLayoutPanel}>
                     <DynamicBackground opacity={0.12} />
@@ -61,14 +66,11 @@ class ScreenList extends ScreenListBack {
      */
     renderItem = ({ item }) => {
         const { id, value } = item;
-        const onPress = () => {
-            this.callback(id);
-            this.Close();
-        };
+
         return (
             <TouchableHighlight
                 style={styles.item}
-                onPress={onPress}
+                onPress={() => this.onPressItem(id)}
                 underlayColor={themeManager.GetColor('backgroundTransparent')}
             >
                 <Text>{value}</Text>

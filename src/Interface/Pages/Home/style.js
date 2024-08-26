@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     },
 
     todoList: {
-        marginBottom: 24
+        //marginBottom: 24
     }
 });
 

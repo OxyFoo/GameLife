@@ -35,7 +35,13 @@ class ScreenListBack extends React.Component {
     accY = 0;
     lastY = 0;
     tickTime = 0;
+    isClosing = false;
     isPressed = false;
+
+    // Background press
+    firstX = 0;
+    firstY = 0;
+    hasMoved = false;
 
     heightScreen = Dimensions.get('window').height;
     heightPanel = 0;
@@ -95,19 +101,34 @@ class ScreenListBack extends React.Component {
     };
 
     closeHandler = () => {
-        if (!this.state.opened) return false;
+        if (!this.state.opened) {
+            return false;
+        }
+
+        this.isClosing = true;
+        this.posY = 0;
+        this.accY = 0;
+        this.callback = () => {};
 
         TimingAnimation(this.state.anim, 0, 200).start();
-        this.setState({
-            opened: false,
-            callback: () => {}
-        });
+        Animated.parallel([
+            SpringAnimation(this.state.positionY, this.posY),
+            SpringAnimation(this.state.positionFlatlistY, this.posY)
+        ]).start();
 
-        this.posY = 0;
-        SpringAnimation(this.state.positionY, this.posY).start();
-        SpringAnimation(this.state.positionFlatlistY, this.posY).start();
-
+        setTimeout(() => {
+            this.setState({ opened: false }, () => {
+                this.isClosing = false;
+            });
+        }, 150);
         return true;
+    };
+
+    /** @param {number} id */
+    onPressItem = (id) => {
+        this.callback(id);
+        this.isClosing = true;
+        this.Close();
     };
 
     /** @param {LayoutChangeEvent} event */
@@ -181,11 +202,37 @@ class ScreenListBack extends React.Component {
         SpringAnimation(this.state.positionY, Math.max(this.posY, -this.heightPanel)).start();
         SpringAnimation(this.state.positionFlatlistY, -this.posY - (this.heightScreen * 2) / 3).start();
 
-        if (this.posY > -100) {
+        if (this.posY > -100 && !this.isClosing) {
             this.Close();
         }
 
         this.isPressed = false;
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onBackgroundTouchStart = (event) => {
+        const { pageX, pageY } = event.nativeEvent;
+        this.hasMoved = false;
+        this.firstX = pageX;
+        this.firstY = pageY;
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onBackgroundTouchMove = (event) => {
+        const { pageX, pageY } = event.nativeEvent;
+        const deltaX = pageX - this.firstX;
+        const deltaY = pageY - this.firstY;
+
+        if (!this.hasMoved && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+            this.hasMoved = true;
+        }
+    };
+
+    /** @param {GestureResponderEvent} event */
+    onBackgroundTouchEnd = (event) => {
+        if (event.target === event.currentTarget && !this.hasMoved) {
+            this.Close();
+        }
     };
 }
 

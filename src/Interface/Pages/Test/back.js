@@ -79,11 +79,7 @@ class BackTest extends PageBase {
     }
     */
 
-    goToPage2 = () =>
-        this.fe.ChangePage('test2', {
-            storeInHistory: false,
-            transition: 'auto'
-        });
+    goToHome = () => this.fe.ChangePage('home');
 
     openPopup = (count = 1) => {
         for (let i = 0; i < count; i++) {
@@ -95,7 +91,7 @@ class BackTest extends PageBase {
                 },
                 callback: (closeReason) => {
                     if (closeReason === 'accept' && i === count - 1) {
-                        this.fe.console?.Enable();
+                        //this.fe.console?.Enable();
                     }
                 },
                 cancelable: i % 2 === 0
@@ -145,7 +141,15 @@ class BackTest extends PageBase {
             Array(100)
                 .fill(0)
                 .map((_, i) => ({ id: i, value: `Test ${i}` })),
-            console.log
+            (id) => {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: 'Test',
+                        message: `Selected item: ${id}`
+                    }
+                });
+            }
         );
     };
 }

@@ -47,6 +47,8 @@ class Test extends BackTest {
                 {this.renderSwitchText()}
                 {this.renderDigit()}
                 {this.renderProgressBars()}
+
+                <View style={{ marginVertical: 24 }} />
             </ScrollView>
         );
     }
@@ -76,7 +78,7 @@ class Test extends BackTest {
                 {this.renderTitle('Boutons - ' + this.state.selectedButon)}
                 <Button
                     style={styles.marginBot}
-                    onPress={this.goToPage2}
+                    onPress={this.goToHome}
                     appearance={this.state.selectedButon}
                     icon='home'
                 />
@@ -108,7 +110,7 @@ class Test extends BackTest {
                     color='white'
                     loading={this.state.selectedButon === 'normal'}
                 >
-                    {'Quêtes journalières'}
+                    {"Changer l'apparence"}
                 </Button>
             </View>
         );

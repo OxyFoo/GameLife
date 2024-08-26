@@ -100,7 +100,7 @@ class NotificationsInApp extends React.Component {
             }
         });
 
-        user.interface.ResetCustomBackHandler();
+        user.interface.RemoveCustomBackHandler(this.closeHandler);
         return true;
     };
 
@@ -118,7 +118,7 @@ class NotificationsInApp extends React.Component {
             })
         };
         const animStyle = {
-            top: user.interface.userHeader.state.height,
+            top: user.interface.userHeader?.state.height || 0,
             transform: [
                 {
                     translateY: animOpen.interpolate({

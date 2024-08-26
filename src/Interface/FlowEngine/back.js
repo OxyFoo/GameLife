@@ -335,6 +335,11 @@ class BackFlowEngine extends React.Component {
         this.pageDidUpdate(nextpage);
         this.changing = false;
 
+        // Avoid next back handle to go back to the same page
+        if (isGoingBack) {
+            this.history.pop();
+        }
+
         return true;
     };
 

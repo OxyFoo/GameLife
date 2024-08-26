@@ -10,12 +10,16 @@ import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
 class Multiplayer extends BackMultiplayer {
     render() {
+        const lang = langManager.curr['multiplayer'];
+
         //overlay={this.renderAddButton()}
         //bottomOffset={64}
         return (
-            <View style={{ paddingHorizontal: 24 }}>
+            <View style={{ flex: 1, paddingHorizontal: 24 }}>
                 <PageHeader onBackPress={this.Back} />
-                {this.renderContent()}
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <Text fontSize={24}>{lang['temporary-message']}</Text>
+                </View>
             </View>
         );
     }

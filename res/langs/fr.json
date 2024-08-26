@@ -455,6 +455,7 @@
     },
 
     "multiplayer": {
+        "temporary-message": "Le multijoueur est en cours de développement, il sera bientôt disponible !",
         "connection-loading": "Connexion en cours",
         "connection-offline": "Connecte toi à internet et redémarre l'application pour accéder à cette page.",
         "connection-failed": "La connexion au serveur a échouée, réessaye plus tard.",

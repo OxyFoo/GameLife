@@ -48,7 +48,7 @@ class BackLogin extends PageBase {
         this.checkConnection();
     }
     componentWillUnmount() {
-        user.interface.ResetCustomBackHandler();
+        user.interface.RemoveCustomBackHandler(this.backToLogin);
     }
 
     checkConnection = async () => {
@@ -114,7 +114,7 @@ class BackLogin extends PageBase {
         setTimeout(SpringAnimation(animSigninBis, 1, false).start, 100);
 
         this.setState({ signinMode: true });
-        user.interface.SetCustomBackHandler(this.backToLogin);
+        user.interface.AddCustomBackHandler(this.backToLogin);
     };
 
     backToLogin = () => {
@@ -133,7 +133,7 @@ class BackLogin extends PageBase {
             errorUsername: '',
             errorCgu: ''
         });
-        user.interface.ResetCustomBackHandler();
+        user.interface.RemoveCustomBackHandler(this.backToLogin);
         return false;
     };
 

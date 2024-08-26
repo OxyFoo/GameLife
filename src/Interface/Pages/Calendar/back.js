@@ -282,10 +282,10 @@ class BackCalendar extends PageBase {
     handleActivityScroll = (event) => {
         const { y } = event.nativeEvent.contentOffset;
 
-        if (!this.hideSummary && y > 300) {
+        if (!this.hideSummary && y > 150) {
             this.hideSummary = true;
             SpringAnimation(this.state.animSummaryY, -this.summaryHeight, false).start();
-        } else if (this.hideSummary && y <= 150) {
+        } else if (this.hideSummary && y <= 50) {
             this.hideSummary = false;
             SpringAnimation(this.state.animSummaryY, 0, false).start();
         }

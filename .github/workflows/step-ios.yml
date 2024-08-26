@@ -105,7 +105,7 @@ jobs:
 
           # Execute bundleSwitcher.sh if environment is test
           if [ ${{ inputs.environment }} == 'test' ]; then
-            ./Tools/BundleSwitcher/bundleSwitcher.sh test
+            ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
           fi
 
           # Go to the ios directory

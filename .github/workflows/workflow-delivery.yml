@@ -3,15 +3,6 @@ name: '✋ GameLife - Continuous Delivery'
 on:
   workflow_dispatch:
     inputs:
-      actions:
-        description: 'Choose platform to build'
-        required: true
-        default: 'both'
-        type: choice
-        options:
-        - both
-        - android
-        - ios
       environment:
         description: 'Choose environment to build'
         required: true
@@ -21,6 +12,15 @@ on:
         - dev
         - test
         - prod
+      actions:
+        description: 'Choose platform to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+        - both
+        - android
+        - ios
       delivery:
         description: 'Delivery to stores (test & prod only)'
         required: true

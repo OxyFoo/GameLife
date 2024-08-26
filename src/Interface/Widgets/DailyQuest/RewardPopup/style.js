@@ -88,6 +88,10 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 12
     },
+    claimTomorrow: {
+        marginRight: 16,
+        fontSize: 16
+    },
 
     claimAllView: {
         position: 'absolute',

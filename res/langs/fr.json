@@ -980,7 +980,7 @@
     "daily-quest": {
         "container-title": "Quête du jour",
         "container-date": "Récompenses du {}",
-        "container-tomorrow": "Demain",
+        "container-tomorrow": "Reviens demain",
 
         "label-time": "{0}/{1} min",
         "label-reroll": "{0}/{1}",

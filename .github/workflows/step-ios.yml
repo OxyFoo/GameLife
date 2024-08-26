@@ -93,8 +93,7 @@ jobs:
             -workspace GameLife.xcworkspace \
             -scheme GameLife \
             -sdk iphoneos \
-            -configuration Release \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2'
+            -configuration Release
 
       - name: 'Archive app'
         env:
@@ -119,7 +118,6 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath $PWD/build/GameLife.xcarchive \
-            -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
@@ -146,12 +144,19 @@ jobs:
             CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
             PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
 
+          # Rename ipa
+          if [ ${{ inputs.environment }} == 'test' ]; then
+            mv $PWD/build/GameLife.test.ipa $PWD/build/${{ env.FILE_IPA }}
+          else
+            mv $PWD/build/GameLife.ipa $PWD/build/${{ env.FILE_IPA }}
+          fi
+
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILE_IPA }}
           path: ios/build/${{ env.FILE_IPA }}
-          if-no-files-found: error  
+          if-no-files-found: error
 
   delivery:
     name: '📦 Delivery'
@@ -188,12 +193,6 @@ jobs:
 
           # Go back
           cd -
-
-          # Print current directory
-          pwd
-
-          # Check if key is valid
-          ls -l $KEY_PATH/$KEY_NAME
 
       - name: 'Upload to App Store'
         env:

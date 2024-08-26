@@ -49,7 +49,9 @@ jobs:
 
       - name: 'Change bundle id for test environment'
         if: inputs.environment == 'test'
-        run: ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
+        run: |
+          chmod +x ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh
+          ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
 
       - name: 'Get config files'
         run: |

@@ -105,6 +105,7 @@ jobs:
 
           # Execute bundleSwitcher.sh if environment is test
           if [ ${{ inputs.environment }} == 'test' ]; then
+            chmod +x ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh
             ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
           fi
 

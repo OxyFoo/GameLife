@@ -2,17 +2,26 @@
 
 exports[`[Component] Button renders correctly 1`] = `
 <View
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "disabled": false,
+    }
+  }
+  accessible={true}
+  borderColor="automatic"
+  fontColor="automatic"
   onLayout={[Function]}
   onTouchCancel={[Function]}
   onTouchEnd={[Function]}
   onTouchMove={[Function]}
   onTouchStart={[Function]}
+  pointerEvents="auto"
   style={
     [
       {
         "backgroundColor": "transparent",
         "borderRadius": 8,
-        "minHeight": 54,
         "overflow": "hidden",
         "paddingHorizontal": 24,
         "paddingVertical": 16,
@@ -22,6 +31,7 @@ exports[`[Component] Button renders correctly 1`] = `
       null,
     ]
   }
+  throttleTime={250}
 >
   <BVLinearGradient
     angle={267}
@@ -77,12 +87,14 @@ exports[`[Component] Button renders correctly 1`] = `
       style={
         [
           {
-            "color": "#384065",
             "fontFamily": "Hind Vadodara",
-            "fontSize": 16,
             "margin": 0,
             "padding": 0,
             "textAlign": "center",
+          },
+          {
+            "color": "#384065",
+            "fontSize": 16,
           },
           {},
         ]
@@ -114,7 +126,7 @@ exports[`[Component] Button renders correctly 1`] = `
             "scale": 0,
           },
         ],
-        "width": 2,
+        "width": 3,
       }
     }
   />

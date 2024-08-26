@@ -6,6 +6,7 @@ exports[`[Component] InputText renders correctly 1`] = `
   onLayout={[Function]}
   style={
     {
+      "backgroundColor": "#00000000",
       "borderColor": "#D0D0D0",
       "borderRadius": 8,
       "borderWidth": 1.2,

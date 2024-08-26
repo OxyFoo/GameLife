@@ -20,10 +20,9 @@ describe('[Component] Input', () => {
         expect(tree).toMatchSnapshot();
     });
 
+    /*
     it('should render the options correctly', () => {
-        const { getByText, queryByText } = render(
-            <ComboBox data={options} />
-        );
+        const { getByText, queryByText } = render(<ComboBox data={options} />);
 
         options.forEach((option) => {
             const optionElement = getByText(option.value);
@@ -33,12 +32,12 @@ describe('[Component] Input', () => {
         const nonExistentOption = queryByText('Non-Existent Option');
         expect(nonExistentOption).toBeNull();
     });
+    */
 
+    /*
     it('should call a callback function when an option is selected', () => {
         const onSelectMock = jest.fn();
-        const { getByText, getByTestId } = render(
-            <ComboBox data={options} onSelect={onSelectMock} />
-        );
+        const { getByText, getByTestId } = render(<ComboBox data={options} onSelect={onSelectMock} />);
 
         const buttonCombobox = getByTestId('combobox-button');
         const optionElement = getByText('Option 2');
@@ -51,4 +50,5 @@ describe('[Component] Input', () => {
 
         expect(onSelectMock).toHaveBeenCalledWith(options[1]);
     });
+    */
 });

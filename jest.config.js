@@ -9,13 +9,12 @@ module.exports = {
         '\\.(xml|txt|md)$': 'jest-raw-loader'
     },
     moduleNameMapper: {
-        'react-native/Libraries/Image/assetPathUtils':
-            'react-native/Libraries/Image/assetPathUtilsWeb',
-        'react-native-web/dist/exports/Image/ImageResizeMode':
-            'react-native/Libraries/Image/ImageResizeMode',
+        'react-native/Libraries/Image/assetPathUtils': 'react-native/Libraries/Image/assetPathUtilsWeb',
+        'react-native-web/dist/exports/Image/ImageResizeMode': 'react-native/Libraries/Image/ImageResizeMode',
         'react-native/Libraries/Components/View/ViewStylePropTypes':
             'react-native-web/dist/exports/View/ViewStylePropTypes',
         'react-native/Libraries/Renderer/shims/ReactNativePropRegistry':
             'react-native-web/dist/modules/ReactNativePropRegistry'
-    }
+    },
+    testPathIgnorePatterns: ['Backups']
 };

@@ -126,6 +126,7 @@ exports[`[Component] Input should render correctly 1`] = `
     pointerEvents="none"
     style={
       {
+        "backgroundColor": "#00000000",
         "borderColor": "#D0D0D0",
         "borderRadius": 8,
         "borderWidth": 1.2,

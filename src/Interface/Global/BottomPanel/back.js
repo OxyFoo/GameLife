@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Platform } from 'react-native';
+import { Animated } from 'react-native';
 
 import Mover from './Mover';
 import user from 'Managers/UserManager';
@@ -53,12 +53,9 @@ class BottomPanelBack extends React.Component {
             return;
         }
 
-        // TODO: Why iOS is not working with 0.9 ?
-        const defaultHeight = Platform.OS === 'android' ? 0.9 : 0.8;
-
         this.opened = true;
         this.mover.scrollEnabled = true;
-        this.mover.panel.maxPosY = params.maxPosY ?? user.interface.size.height * defaultHeight;
+        this.mover.panel.maxPosY = params.maxPosY ?? user.interface.size.height * 0.9;
         this.mover.panel.minPosY = params.minPosY ?? this.mover.panel.maxPosY;
         if (this.mover.panel.minPosY > this.mover.panel.maxPosY) {
             this.mover.panel.minPosY = this.mover.panel.maxPosY;

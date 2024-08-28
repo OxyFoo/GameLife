@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, Platform } from 'react-native';
 
 import styles from './style';
 import BottomPanelBack from './back';
@@ -38,7 +38,7 @@ class BottomPanel extends BottomPanelBack {
             minHeight: opened ? this.mover.panel.height : undefined,
             maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
-            paddingBottom: navbarHeight + offset,
+            paddingBottom: navbarHeight + offset + (Platform.select({ ios: 100, android: 0 }) ?? 0),
             transform: [
                 { translateY: Animated.add(this.mover.panel.posAnimY, offset + (user.interface?.size?.height || 0)) }
             ],

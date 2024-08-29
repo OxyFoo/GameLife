@@ -1,0 +1,3 @@
+[submodule "src/Types"]
+	path = src/Types
+	url = https://github.com/OxyFoo/GameLife-Types

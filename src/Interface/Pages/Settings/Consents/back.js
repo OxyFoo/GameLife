@@ -2,12 +2,6 @@ import user from 'Managers/UserManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 
-/**
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
- * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
- * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
- */
-
 class BackSettingsNotifications extends PageBase {
     state = {
         switchShareData: true,

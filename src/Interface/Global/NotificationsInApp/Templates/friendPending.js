@@ -9,7 +9,7 @@ import { Text, Button } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Types/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInApp
+ * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInApp
  */
 
 /**

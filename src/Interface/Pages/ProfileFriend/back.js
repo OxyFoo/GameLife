@@ -7,7 +7,7 @@ import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/UserOnline').Friend} Friend
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
  * @typedef {import('Class/Experience').XPInfo} XPInfo
  * @typedef {import('Class/Experience').Stats} Stats
  */

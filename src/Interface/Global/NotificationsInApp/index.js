@@ -10,8 +10,8 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
- * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
+ * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
+ * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
 class NotificationsInApp extends React.Component {

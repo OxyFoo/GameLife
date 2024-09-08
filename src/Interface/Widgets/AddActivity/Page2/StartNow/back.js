@@ -1,17 +1,18 @@
 import React from 'react';
 
+import { DEFAULT_ACTIVITY } from 'Class/Activities';
 import { StartActivityNow } from 'Utils/Activities';
 
-import { Activity } from 'Class/Activities';
-
 /**
+ * @typedef {import('Types/Class').Activity} Activity
+ *
  * @typedef {Object} BackActivityPage2StartNowPropsType
  * @property {Activity} activity
  */
 
 /** @type {BackActivityPage2StartNowPropsType} */
 const BackActivityPage2StartNowProps = {
-    activity: new Activity()
+    activity: DEFAULT_ACTIVITY
 };
 
 class BackActivityPage2StartNow extends React.Component {

@@ -5,10 +5,10 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
- * 
+ *
  * @typedef {import('Interface/OldComponents/Container').default} Container
- * @typedef {import('Types/UserOnline').Friend} Friend
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
  */
 
 const MultiplayerPanelProps = {
@@ -26,7 +26,7 @@ class BackMultiplayerPanel extends React.Component {
 
         /** @type {Array<Friend>} */
         friends: []
-    }
+    };
 
     /** @type {React.RefObject<Container>} */
     refContainer = React.createRef();
@@ -39,8 +39,12 @@ class BackMultiplayerPanel extends React.Component {
     }
 
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerState);
-        user.multiplayer.friends.RemoveListener(this.listenerFriends);
+        if (this.listenerState) {
+            user.tcp.state.RemoveListener(this.listenerState);
+        }
+        if (this.listenerFriends) {
+            user.multiplayer.friends.RemoveListener(this.listenerFriends);
+        }
     }
 
     /** @param {ConnectionState} state */
@@ -48,24 +52,25 @@ class BackMultiplayerPanel extends React.Component {
         if (state !== this.state.state) {
             this.setState({ state });
         }
-    }
+    };
 
     /** @param {Array<Friend>} friends */
     updateFriends = (friends) => {
         const newFriends = friends
-            .filter(friend => friend.friendshipState === 'accepted')
-            .filter(friend => friend.status === 'online')
+            .filter((friend) => friend.friendshipState === 'accepted')
+            .filter((friend) => friend.status === 'online')
             .slice(0, 5);
         this.setState({ friends: newFriends });
-    }
+    };
 
     openMultiplayer = () => {
         user.interface.ChangePage('multiplayer');
-    }
+    };
     Reconnect = () => {
+        console.log('Reconnect');
         this.setState({ state: 'idle' });
         user.tcp.Connect();
-    }
+    };
 }
 
 BackMultiplayerPanel.prototype.props = MultiplayerPanelProps;

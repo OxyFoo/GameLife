@@ -13,7 +13,7 @@ import { GetDate, GetLocalTime } from 'Utils/Time';
 import { TwoDigit } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
+ * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  */
 
 const ActivityTimerTitleProps = {

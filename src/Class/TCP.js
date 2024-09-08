@@ -9,11 +9,14 @@ const TCP_SETTINGS = {
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * 
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
- * @typedef {import('Types/TCP').TCPServerRequest} ReceiveRequest
- * @typedef {import('Types/TCP').TCPClientRequest} TCPClientRequest
+ *
+ * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/Request').TCPServerRequest} ReceiveRequest
+ * @typedef {import('Types/TCP/Request').TCPClientRequest} TCPClientRequest
  */
+
+/** @type {ConnectionState} */
+const INITIAL_STATE = 'idle';
 
 class TCP {
     /**
@@ -27,8 +30,9 @@ class TCP {
     socket = null;
 
     /** @type {DynamicVar<ConnectionState>} */
-    state = new DynamicVar('idle');
+    state = new DynamicVar(INITIAL_STATE);
 
+    /** @type {Record<string, (data: ReceiveRequest) => void>} */
     callbacks = {};
 
     /**
@@ -41,31 +45,37 @@ class TCP {
         }
 
         const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
-        const socket = new WebSocket(url, 'server-multiplayer');
+        const socket = new WebSocket(url, 'gamelife-client');
         socket.addEventListener('open', this.onOpen);
         socket.addEventListener('message', this.onMessage);
         socket.addEventListener('error', this.onError);
         socket.addEventListener('close', this.onClose);
         this.socket = socket;
-    }
+        return true;
+    };
 
     Disconnect = () => {
         if (this.IsConnected()) {
-            this.socket.close();
+            this.socket?.close();
         }
         this.socket = null;
         this.user.multiplayer.notifications.Set([]);
-    }
+    };
 
     IsConnected = () => {
         return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
-    }
+    };
 
-    /** @param {Event} event */
-    onOpen = (event) => {
-        const data = { token: this.user.server.token };
-        this.socket.send(JSON.stringify(data));
-    }
+    /** @param {Event} _event */
+    onOpen = (_event) => {
+        // TODO: Real connection
+        this.Send({
+            action: 'login',
+            email: this.user.settings.email,
+            hashID: 'hDaIhs',
+            callbackID: 'test'
+        });
+    };
 
     /** @param {MessageEvent} event */
     onMessage = (event) => {
@@ -76,7 +86,7 @@ class TCP {
         if (status === 'connected' || status === 'disconnected' || status === 'error') {
             this.state.Set(status);
             if (status === 'error') {
-                this.user.interface.console.AddLog('error', 'Server error:', event.data.message);
+                this.user.interface.console?.AddLog('error', 'Server error:', event.data.message);
             }
             if (status !== 'connected') {
                 this.Disconnect();
@@ -90,46 +100,46 @@ class TCP {
         if (status === 'callback') {
             const callbackID = data.callbackID;
             const callback = this.callbacks[callbackID];
-            if (typeof(callback) === 'function') {
+            if (typeof callback === 'function') {
                 callback(data);
                 delete this.callbacks[callbackID];
             } else {
-                this.user.interface.console.AddLog('warn', 'Callback not found:', callbackID);
+                this.user.interface.console?.AddLog('warn', 'Callback not found:', callbackID);
             }
         }
-    }
+    };
 
     /** @param {Event} event */
     onError = (event) => {
-        this.user.interface.console.AddLog('warn', 'TCP server:', event);
+        this.user.interface.console?.AddLog('warn', 'TCP server:', event);
         this.state.Set('error');
         this.Disconnect();
-    }
+    };
 
-    /** @param {CloseEvent} event */
-    onClose = (event) => {
+    /** @param {CloseEvent} _event */
+    onClose = (_event) => {
         this.state.Set('disconnected');
         this.Disconnect();
-    }
+    };
 
     /**
      * @param {TCPClientRequest} message
      * @returns {boolean} Whether the message was sent successfully
      */
     Send = (message) => {
-        if (typeof(message) !== 'object') {
-            this.user.interface.console.AddLog('warn', 'Send socket: Invalid message type.');
+        if (typeof message !== 'object') {
+            this.user.interface.console?.AddLog('warn', 'Send socket: Invalid message type.');
             return false;
         }
 
-        if (this.IsConnected() === false) {
-            this.user.interface.console.AddLog('warn', 'Send socket: Not connected.');
+        if (this.socket === null || this.IsConnected() === false) {
+            this.user.interface.console?.AddLog('warn', 'Send socket: Not connected.');
             return false;
         }
 
         this.socket.send(JSON.stringify(message));
         return true;
-    }
+    };
 
     /**
      * @param {string} callbackID
@@ -137,16 +147,16 @@ class TCP {
      * @returns {Promise<'timeout' | any>} The result of the callback or 'timeout' if it took too long
      */
     WaitForCallback = (callbackID, timeout = 10000) => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
             const timer = setTimeout(() => {
                 resolve('timeout');
             }, timeout);
             this.callbacks[callbackID] = (data) => {
                 clearTimeout(timer);
-                resolve(data['result']);
+                resolve(data);
             };
         });
-    }
+    };
 }
 
 export default TCP;

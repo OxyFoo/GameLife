@@ -455,7 +455,6 @@
     },
 
     "multiplayer": {
-        "temporary-message": "The multiplayer is under development, it will soon be available!",
         "connection-loading": "Connection in progress",
         "connection-offline": "Please connect to the internet and restart the application to access this page.",
         "connection-failed": "The connection to the server failed, please try again later.",

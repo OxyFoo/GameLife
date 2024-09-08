@@ -11,7 +11,7 @@ import { Text, Button, Frame, Character } from 'Interface/Components';
 
 /**
  * @typedef {import('Class/Experience').XPInfo} XPInfo
- * @typedef {import('Types/UserOnline').Friend} Friend
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
  */
 
 /**

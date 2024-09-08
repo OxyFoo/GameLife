@@ -6,7 +6,7 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetGlobalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
  * @typedef {import('Managers/LangManager').LangKey} LangKey
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem

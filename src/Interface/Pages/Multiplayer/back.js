@@ -7,8 +7,8 @@ import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('Interface/OldComponents/Button').default} Button
- * @typedef {import('Types/UserOnline').Friend} Friend
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
  */
 
 class BackMultiplayer extends PageBase {
@@ -35,13 +35,17 @@ class BackMultiplayer extends PageBase {
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
-    componentDidFocused = (args) => {
-        StartMission.call(this, args?.missionName);
-    };
+    // componentDidFocused = (args) => {
+    //     StartMission.call(this, args?.missionName);
+    // };
 
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerState);
-        user.multiplayer.friends.RemoveListener(this.listenerFriends);
+        if (this.listenerState) {
+            user.tcp.state.RemoveListener(this.listenerState);
+        }
+        if (this.listenerFriends) {
+            user.multiplayer.friends.RemoveListener(this.listenerFriends);
+        }
     }
 
     /** @param {ConnectionState} state */
@@ -68,17 +72,21 @@ class BackMultiplayer extends PageBase {
 
     addFriendHandle = () => {
         const lang = langManager.curr['multiplayer'];
-        user.interface.screenInput.Open(
-            lang['input-search-friend'],
-            '',
-            (username) => {
+        user.interface.screenInput?.Open({
+            label: lang['input-search-friend'],
+            initialText: '',
+            callback: (username) => {
+                if (!username) {
+                    return;
+                }
+
                 // Update mission
                 user.missions.SetMissionState('mission5', 'completed');
 
+                // Add friend
                 user.multiplayer.AddFriend(username);
-            },
-            false
-        );
+            }
+        });
     };
 
     Reconnect = () => {

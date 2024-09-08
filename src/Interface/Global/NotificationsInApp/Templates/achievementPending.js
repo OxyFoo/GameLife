@@ -9,12 +9,12 @@ import langManager from 'Managers/LangManager';
 import { Button, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInApp
+ * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievements
  */
 
 /**
  * @param {object} props
- * @param {NotificationInApp} props.notif
+ * @param {NotificationInAppAchievements} props.notif
  * @param {number} props.index
  * @returns {React.JSX.Element | null}
  */
@@ -42,8 +42,8 @@ function NIA_AchievementPending({ notif }) {
         if (claimText === false) {
             const title = langAch['alert-achievement-error-title'];
             const message = langAch['alert-achievement-error-message'];
-            user.interface.notificationsInApp.Close();
-            user.interface.popup.OpenT({
+            user.interface.notificationsInApp?.Close();
+            user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message }
             });
@@ -51,8 +51,8 @@ function NIA_AchievementPending({ notif }) {
         }
 
         const title = langAch['alert-achievement-title'];
-        user.interface.notificationsInApp.Close();
-        user.interface.popup.OpenT({
+        user.interface.notificationsInApp?.Close();
+        user.interface.popup?.OpenT({
             type: 'ok',
             data: { title, message: claimText }
         });

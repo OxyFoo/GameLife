@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Activity } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Class/Activities';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime } from 'Utils/Time';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'Utils/Activities';
 
 /**
+ * @typedef {import('Types/Class').Activity} Activity
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *
@@ -25,7 +26,7 @@ import {
 
 /** @type {BackActivityPage2AddPropsType} */
 const BackActivityPage2AddProps = {
-    activity: new Activity(),
+    activity: DEFAULT_ACTIVITY,
     editActivity: null,
     changeActivity: async () => {},
     unSelectActivity: () => {}

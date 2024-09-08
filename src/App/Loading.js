@@ -179,7 +179,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connect to the server TCP
-    //user.tcp.Connect();
+    user.tcp.Connect();
 
     // Load admob
     //await user.consent.ShowTrackingPopup().then(user.admob.LoadAds);

@@ -6,10 +6,16 @@ const FRIENDS_LIMIT = 10;
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/UserOnline').Friend} Friend
- * @typedef {import('Types/NotificationInApp').NotificationInApp} NotificationInApp
- * @typedef {import('Types/TCP').TCPServerRequest} ReceiveRequest
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<*>} NotificationInApp
+ * @typedef {import('Types/TCP/Request').TCPServerRequest} ReceiveRequest
  */
+
+/** @type {Array<Friend>} */
+const INIT_FRIENDS = [];
+
+/** @type {Array<NotificationInApp>} */
+const INIT_NOTIFS = [];
 
 class Multiplayer {
     /** @param {UserManager} user */
@@ -18,15 +24,15 @@ class Multiplayer {
     }
 
     /** @type {DynamicVar<Array<Friend>>} */
-    friends = new DynamicVar([]);
+    friends = new DynamicVar(INIT_FRIENDS);
 
     /** @type {DynamicVar<Array<NotificationInApp>>} */
-    notifications = new DynamicVar([]);
+    notifications = new DynamicVar(INIT_NOTIFS);
 
     /** @param {number} accountID */
     GetFriendByID = (accountID) => {
-        return this.friends.Get().find(f => f.accountID === accountID) || null;
-    }
+        return this.friends.Get().find((f) => f.accountID === accountID) || null;
+    };
 
     /** @param {ReceiveRequest} data */
     onMessage = (data) => {
@@ -49,20 +55,23 @@ class Multiplayer {
                 this.user.informations.zapGPT = data.zapGPTStatus;
                 break;
         }
-    }
+    };
 
     /**
      * @param {{ title: string, message: string }} lang
-     * @param {string} [additionnal]
+     * @param {string | null} [additionnal]
      */
     ShowError = (lang, additionnal = null) => {
         const title = lang.title;
-        let text = lang.message;
+        let message = lang.message;
         if (additionnal !== null) {
-            text = text.replace('{}', additionnal);
+            message = message.replace('{}', additionnal);
         }
-        this.user.interface.popup.Open('ok', [ title, text ]);
-    }
+        this.user.interface.popup?.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
+    };
 
     /** @param {string} username */
     AddFriend = async (username) => {
@@ -95,7 +104,7 @@ class Multiplayer {
         } else if (result === 'sql-error' || result === 'get-friend-error') {
             this.ShowError(lang['alert-error'], result);
         }
-    }
+    };
     /** @param {number} accountID */
     RemoveFriend = async (accountID) => {
         const callbackID = 'remove-friend-' + Date.now();
@@ -117,7 +126,7 @@ class Multiplayer {
         } else if (result === 'sql-error') {
             this.ShowError(lang['alert-error'], result);
         }
-    }
+    };
     /** @param {number} accountID */
     CancelFriend = async (accountID) => {
         const callbackID = 'cancel-friend-' + Date.now();
@@ -139,7 +148,7 @@ class Multiplayer {
         } else if (result === 'sql-error') {
             this.ShowError(lang['alert-error'], result);
         }
-    }
+    };
     /** @param {number} accountID */
     AcceptFriend = async (accountID) => {
         const callbackID = 'accept-friend-' + Date.now();
@@ -161,7 +170,7 @@ class Multiplayer {
         } else if (result === 'sql-error' || result === 'get-friend-error') {
             this.ShowError(lang['alert-error'], result);
         }
-    }
+    };
     /** @param {number} accountID */
     DeclineFriend = async (accountID) => {
         const callbackID = 'decline-friend-' + Date.now();
@@ -183,7 +192,7 @@ class Multiplayer {
         } else if (result === 'sql-error' || result === 'sql-error2') {
             this.ShowError(lang['alert-error'], result);
         }
-    }
+    };
     /** @param {number} accountID */
     BlockFriend = async (accountID) => {
         const callbackID = 'block-friend-' + Date.now();
@@ -205,7 +214,7 @@ class Multiplayer {
         } else if (result === 'sql-error' || result === 'sql-error2') {
             this.ShowError(lang['alert-error'], result);
         }
-    }
+    };
 }
 
 export { FRIENDS_LIMIT };

@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * 
- * @typedef {import('Types/UserOnline').Friend} Friend
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
  * @typedef {import('Class/Achievements').Achievement} Achievement
  */
 

@@ -11,7 +11,7 @@ import IMG_CHESTS, { CHEST_RARITIES } from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
 
 /**
- * @typedef {import('Types/NotificationInApp').NotificationInApp<'global-message'>} NotificationInApp
+ * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'global-message'>} NotificationInApp
  */
 
 /**

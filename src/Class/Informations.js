@@ -6,7 +6,7 @@ import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/TCP').ZapGPTState} ZapGPTState
+ * @typedef {import('Types/TCP/Request').ZapGPTState} ZapGPTState
  */
 
 const DAYS_USERNAME_CHANGE = 30;

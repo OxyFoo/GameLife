@@ -1,14 +1,13 @@
 import React from 'react';
 import { Animated } from 'react-native';
 
-import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
-
 import styles from './style';
+import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Activity } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Class/Activities';
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -16,6 +15,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
+ * @typedef {import('Types/Class').Activity} Activity
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('../types').ItemSkill} ItemSkill
@@ -31,7 +31,7 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /** @type {BackActivityPage1PropsType} */
 const BackActivityPage1Props = {
-    activity: new Activity(),
+    activity: DEFAULT_ACTIVITY,
     changeActivity: async () => {},
     unSelectActivity: () => {},
 

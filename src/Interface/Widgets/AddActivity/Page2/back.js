@@ -4,9 +4,11 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Activity } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Class/Activities';
 
 /**
+ * @typedef {import('Types/Class').Activity} Activity
+ *
  * @typedef {Object} BackActivityPage2PropsType
  * @property {Activity} activity
  * @property {Activity | null} editActivity
@@ -16,7 +18,7 @@ import { Activity } from 'Class/Activities';
 
 /** @type {BackActivityPage2PropsType} */
 const BackActivityPage2Props = {
-    activity: new Activity(),
+    activity: DEFAULT_ACTIVITY,
     changeActivity: async () => {},
     unSelectActivity: () => {},
     editActivity: null

@@ -7,7 +7,7 @@ import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('Data/Achievements').Condition} Condition
- * @typedef {import('Types/UserOnline').Friend} Friend
+ * @typedef {import('Types/Features/UserOnline').Friend} Friend
  * 
  * @typedef {Object} PanelAchievementType
  * @property {number} ID

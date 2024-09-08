@@ -5,7 +5,7 @@ import BackMultiplayer from './back';
 import langManager from 'Managers/LangManager';
 
 import { Button, Text, UserOnlineElement } from 'Interface/Components';
-import { PageHeader } from 'Interface/Widgets';
+import { MultiplayerPanel, PageHeader } from 'Interface/Widgets';
 import { FRIENDS_LIMIT } from 'Class/Multiplayer';
 
 class Multiplayer extends BackMultiplayer {
@@ -17,9 +17,9 @@ class Multiplayer extends BackMultiplayer {
         return (
             <View style={{ flex: 1, paddingHorizontal: 24 }}>
                 <PageHeader onBackPress={this.Back} />
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text fontSize={24}>{lang['temporary-message']}</Text>
-                </View>
+
+                <MultiplayerPanel />
+                {this.renderContent()}
             </View>
         );
     }

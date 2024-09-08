@@ -9,51 +9,36 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/Skills').Skill} Skill
  * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
- * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
+ * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
+ * @typedef {import('Types/Class').Activity} Activity
+ * @typedef {import('Types/Class').ActivityUnsaved} ActivityUnsaved
  *
- * @typedef {'normal' | 'start-now' | 'zap-gpt'} ActivityAddedType
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
  * @typedef {'edited' | 'needConfirmation' | 'notFree' | 'notExist' | 'tooEarly'} EditStatus
  * @typedef {'removed' | 'notExist'} RemoveStatus
- *
- * @typedef {Activity & { type: 'add' | 'rem' }} ActivityUnsaved
  */
 
 const MAX_HOUR_PER_DAY = 12;
 const HOURS_BEFORE_LIMIT = 48;
-
-class Activity {
-    /** @type {number} Skill ID */
-    skillID = 0;
-
-    /** @type {number} Start time in seconds, unix timestamp (UTC) */
-    startTime = 0;
-
-    /** @type {number} Duration in minutes */
-    duration = 0;
-
-    /** @type {string} Optional comment */
-    comment = '';
-
-    /** @type {number} Timezone offset in hours */
-    timezone = 0;
-
-    /** @type {ActivityAddedType} */
-    addedType = 'normal';
-
-    /** @type {number} Time when activity was added (unix timestamp, UTC) */
-    addedTime = 0;
-
-    /** @type {Array<number>} IDs of friends who have participated in the activity */
-    friends = [];
-}
 
 /** @type {Array<Activity>} */
 const EMPTY_ACTIVITIES = [];
 
 /** @type {CurrentActivity | null} */
 const INITIAL_ACTIVITY = null;
+
+/** @type {Activity} */
+const DEFAULT_ACTIVITY = {
+    skillID: 0,
+    startTime: 0,
+    duration: 0,
+    comment: '',
+    timezone: 0,
+    addedType: 'normal',
+    addedTime: 0,
+    friends: []
+};
 
 class Activities {
     /** @param {UserManager} user */
@@ -105,7 +90,7 @@ class Activities {
 
             // Check if all keys are present
             const keys = Object.keys(activity);
-            const keysActivity = Object.keys(new Activity());
+            const keysActivity = Object.keys(DEFAULT_ACTIVITY);
             if (!keys.every((key) => keysActivity.includes(key))) {
                 continue;
             }
@@ -126,7 +111,7 @@ class Activities {
         }
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
-        this.user.interface.console.AddLog('info', `${length} activities loaded`);
+        this.user.interface.console?.AddLog('info', `${length} activities loaded`);
     }
     Save() {
         const activities = {
@@ -567,5 +552,5 @@ class Activities {
     }
 }
 
-export { Activity };
+export { DEFAULT_ACTIVITY };
 export default Activities;

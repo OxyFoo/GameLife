@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/UserOnline').CurrentActivity} CurrentActivity
+ * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  */
 
 const ActivityFriendsProps = {

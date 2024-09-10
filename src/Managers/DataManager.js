@@ -7,7 +7,6 @@ import Items from 'Data/Items';
 import Quotes from 'Data/Quotes';
 import Skills from 'Data/Skills';
 import Titles from 'Data/Titles';
-import News from 'Data/News';
 
 /**
  * @typedef {import('Managers/UserManager').default} User
@@ -21,7 +20,6 @@ class DataManager {
         this.quotes = new Quotes();
         this.skills = new Skills();
         this.titles = new Titles();
-        this.news = new News();
     }
 
     Clear() {
@@ -31,7 +29,6 @@ class DataManager {
         this.quotes.Clear();
         this.skills.Clear();
         this.titles.Clear();
-        this.news.Clear();
         DataStorage.Save(STORAGE.INTERNAL, null);
         DataStorage.Save(STORAGE.INTERNAL_HASHES, null);
     }
@@ -55,18 +52,20 @@ class DataManager {
      * @returns {Promise<boolean>} True if the data was successfully saved
      */
     async LocalSave(user) {
-        const debugIndex = user.interface.console.AddLog('info', 'Internal data: local saving...');
+        const debugIndex = user.interface.console?.AddLog('info', 'Internal data: local saving...');
         const internalData = {
-            'achievements': this.achievements.Save(),
-            'contributors': this.contributors.Save(),
-            'items': this.items.Save(),
-            'quotes': this.quotes.Save(),
-            'skills': this.skills.Save(),
-            'titles': this.titles.Save()
-        }
+            achievements: this.achievements.Save(),
+            contributors: this.contributors.Save(),
+            items: this.items.Save(),
+            quotes: this.quotes.Save(),
+            skills: this.skills.Save(),
+            titles: this.titles.Save()
+        };
         const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData);
-        if (saved) user.interface.console.EditLog(debugIndex, 'same', 'Internal data: local save success');
-        else user.interface.console.EditLog(debugIndex, 'error', 'Internal data: local save failed');
+        if (debugIndex) {
+            if (saved) user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local save success');
+            else user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: local save failed');
+        }
         return saved;
     }
 
@@ -76,7 +75,7 @@ class DataManager {
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async LocalLoad(user) {
-        const debugIndex = user.interface.console.AddLog('info', 'Internal data: local loading...');
+        const debugIndex = user.interface.console?.AddLog('info', 'Internal data: local loading...');
         const internalData = await DataStorage.Load(STORAGE.INTERNAL);
         if (internalData !== null) {
             this.achievements.Load(internalData['achievements']);
@@ -85,9 +84,13 @@ class DataManager {
             this.quotes.Load(internalData['quotes']);
             this.skills.Load(internalData['skills']);
             this.titles.Load(internalData['titles']);
-            user.interface.console.EditLog(debugIndex, 'same', 'Internal data: local load success');
+            if (debugIndex) {
+                user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local load success');
+            }
         } else {
-            user.interface.console.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
+            if (debugIndex) {
+                user.interface.console?.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
+            }
         }
         return internalData !== null;
     }
@@ -100,11 +103,11 @@ class DataManager {
     async OnlineLoad(user) {
         await this.LocalLoad(user);
 
-        const debugIndex = user.interface.console.AddLog('info', 'Internal data: online loading...');
+        const debugIndex = user.interface.console?.AddLog('info', 'Internal data: online loading...');
         const appHashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES);
         const data = {
-            'action': 'getInternalData',
-            'hashes': appHashes
+            action: 'getInternalData',
+            hashes: appHashes
         };
         const reqInternalData = await Request_Async(data);
 
@@ -112,23 +115,18 @@ class DataManager {
             const status = reqInternalData.content['status'];
 
             if (status === 'ok') {
-                const reqNews = reqInternalData.content['news'];
-                if (typeof(reqNews) === 'object') {
-                    this.news.Load(reqNews);
-                }
-
                 const reqMusicLinks = reqInternalData.content['music-links'];
-                if (typeof(reqMusicLinks) === 'object') {
+                if (typeof reqMusicLinks === 'object') {
                     user.settings.LoadMusicLinks(reqMusicLinks);
                 }
 
                 const reqIAP = reqInternalData.content['iap'];
-                if (typeof(reqIAP) === 'object') {
+                if (typeof reqIAP === 'object') {
                     user.shop.LoadIAPs(reqIAP);
                 }
 
                 const priceFactor = reqInternalData.content['priceFactor'];
-                if (typeof(priceFactor) === 'number') {
+                if (typeof priceFactor === 'number') {
                     user.shop.priceFactor = priceFactor;
                 }
 
@@ -142,12 +140,16 @@ class DataManager {
 
                 const reqHashes = reqInternalData.content['hashes'];
                 await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes);
-                user.interface.console.EditLog(debugIndex, 'same', 'Internal data: online load success');
+                if (debugIndex) {
+                    user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: online load success');
+                }
                 await this.LocalSave(user);
                 return true;
             }
         }
-        user.interface.console.EditLog(debugIndex, 'error', 'Internal data: online load failed');
+        if (debugIndex) {
+            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: online load failed');
+        }
         return false;
     }
 }

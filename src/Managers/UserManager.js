@@ -9,6 +9,7 @@ import Missions from 'Class/Missions';
 import Multiplayer from 'Class/Multiplayer';
 import Quests from 'Class/Quests';
 import Server from 'Class/Server';
+import Server2 from 'Class/Server2';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
 import Todoes from 'Class/Todoes';
@@ -51,11 +52,15 @@ class UserManager {
         this.missions = new Missions(this);
         this.multiplayer = new Multiplayer(this);
         this.quests = new Quests(this);
-        this.server = new Server(this);
+        this.server2 = new Server2(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this);
-        this.tcp = new TCP(this);
         this.todoes = new Todoes(this);
+
+        /** @deprecated TODO: Remove */
+        this.server = new Server(this);
+        /** @deprecated TODO: Remove */
+        this.tcp = new TCP(this);
 
         /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
@@ -124,7 +129,7 @@ class UserManager {
         this.shop.Clear();
         this.todoes.Clear();
         await this.settings.Save();
-        this.tcp.Disconnect();
+        this.server2.Disconnect();
 
         await DataStorage.ClearAll();
         await this.LocalSave();
@@ -164,7 +169,7 @@ class UserManager {
     }
     async Unmount() {
         this.CleanTimers();
-        this.tcp.Disconnect();
+        this.server2.Disconnect();
         await this.settings.Save();
         await this.LocalSave();
         await this.OnlineSave();
@@ -225,15 +230,17 @@ class UserManager {
             todoes: this.todoes.Save()
         };
 
-        const debugIndex = this.interface.console.AddLog('info', 'User data: local saving...');
+        const debugIndex = this.interface.console?.AddLog('info', 'User data: local saving...');
         const saved = await DataStorage.Save(STORAGE.USER, data);
-        if (saved) this.interface.console.EditLog(debugIndex, 'same', 'User data: local save');
-        else this.interface.console.EditLog(debugIndex, 'error', 'User data: local save failed');
+        if (debugIndex) {
+            if (saved) this.interface.console?.EditLog(debugIndex, 'same', 'User data: local save');
+            else this.interface.console?.EditLog(debugIndex, 'error', 'User data: local save failed');
+        }
         return saved;
     };
 
     async LocalLoad() {
-        const debugIndex = this.interface.console.AddLog('info', 'User data: local loading...');
+        const debugIndex = this.interface.console?.AddLog('info', 'User data: local loading...');
         let data = await DataStorage.Load(STORAGE.USER);
 
         if (data !== null) {
@@ -252,9 +259,13 @@ class UserManager {
             if (contains('shop')) this.shop.Load(data['shop']);
             if (contains('todoes')) this.todoes.Load(data['todoes']);
 
-            this.interface.console.EditLog(debugIndex, 'same', 'User data: local load success');
+            if (debugIndex) {
+                this.interface.console?.EditLog(debugIndex, 'same', 'User data: local load success');
+            }
         } else {
-            this.interface.console.EditLog(debugIndex, 'warn', 'User data: local load failed');
+            if (debugIndex) {
+                this.interface.console?.EditLog(debugIndex, 'warn', 'User data: local load failed');
+            }
         }
 
         this.RefreshStats(true);
@@ -300,7 +311,7 @@ class UserManager {
         }
 
         if (Object.keys(data).length) {
-            const debugIndex = this.interface.console.AddLog('info', 'User data: online saving...');
+            const debugIndex = this.interface.console?.AddLog('info', 'User data: online saving...');
             saved = await this.server.SaveUserData(data);
             if (saved) {
                 this.activities.Purge();
@@ -309,10 +320,14 @@ class UserManager {
                 this.todoes.Purge();
                 this.inventory.Purge();
                 this.missions.Purge();
-                this.interface.console.EditLog(debugIndex, 'same', 'User data: online save success');
+                if (debugIndex) {
+                    this.interface.console?.EditLog(debugIndex, 'same', 'User data: online save success');
+                }
                 await this.LocalSave();
             } else {
-                this.interface.console.EditLog(debugIndex, 'error', 'User data: online save failed');
+                if (debugIndex) {
+                    this.interface.console?.EditLog(debugIndex, 'error', 'User data: online save failed');
+                }
             }
             if (DEBUG_DATA) console.log('User data online save:', data);
         }
@@ -323,7 +338,7 @@ class UserManager {
     /** @param {'normal' | 'force' | 'inventories'} [type] */
     async OnlineLoad(type = 'normal') {
         if (!this.server.IsConnected()) return false;
-        const debugIndex = this.interface.console.AddLog('info', 'User data: online loading...');
+        const debugIndex = this.interface.console?.AddLog('info', 'User data: online loading...');
 
         let data = null;
         if (type === 'normal' || type === 'force') {
@@ -354,12 +369,16 @@ class UserManager {
             if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
-                this.interface.console.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');
+                this.interface.console?.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');
             }
 
-            this.interface.console.EditLog(debugIndex, 'same', 'User data: online load success');
+            if (debugIndex) {
+                this.interface.console?.EditLog(debugIndex, 'same', 'User data: online load success');
+            }
         } else {
-            this.interface.console.EditLog(debugIndex, 'error', 'User data: online load failed');
+            if (debugIndex) {
+                this.interface.console?.EditLog(debugIndex, 'error', 'User data: online load failed');
+            }
         }
 
         this.RefreshStats(true);

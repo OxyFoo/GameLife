@@ -15,8 +15,8 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Types/Class').Activity} Activity
- * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Data/Skills').Skill} Skill
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('../types').ItemSkill} ItemSkill
  * @typedef {import('../types').ItemCategory} ItemCategory

@@ -13,9 +13,9 @@ import { FormatForSearch } from 'Utils/String';
 /**
  * @typedef {import('react-native').FlatList} FlatList
  *
- * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('Data/Skills').Category} Category
- * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/Skills').Skill} Skill
+ * @typedef {import('Types/Data/Skills').Category} Category
+ * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
  */
 
 class BackSkills extends PageBase {

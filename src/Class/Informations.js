@@ -63,6 +63,7 @@ class Informations {
         this.achievementSelfFriend = false;
         this.purchasedCount = 0;
     }
+
     Load(informations) {
         const contains = /** @param {string} key */ (key) => informations.hasOwnProperty(key);
         if (contains('username')) this.username.Set(informations['username']);
@@ -73,12 +74,13 @@ class Informations {
         if (contains('lastBirthTime')) this.lastBirthTime = informations['lastBirthTime'];
         if (contains('UNSAVED_birthTime')) this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
         if (contains('xp')) this.xp = informations['xp'];
-        if (contains('ox')) this.ox.Set(parseInt(informations['ox']));
+        if (contains('ox')) this.ox.Set(parseInt(informations['ox'], 10));
         if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
         if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
         if (contains('achievementSelfFriend')) this.achievementSelfFriend = informations['achievementSelfFriend'];
         if (contains('purchasedCount')) this.purchasedCount = informations['purchasedCount'];
     }
+
     Save() {
         const informations = {
             username: this.username.Get(),

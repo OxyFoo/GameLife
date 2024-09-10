@@ -7,11 +7,11 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/Skills').Skill} Skill
+ * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
- * @typedef {import('Types/Class').Activity} Activity
- * @typedef {import('Types/Class').ActivityUnsaved} ActivityUnsaved
+ * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Class/Activities').ActivityUnsaved} ActivityUnsaved
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
@@ -74,7 +74,16 @@ class Activities {
         this.currentActivity.Set(null);
         this.allActivities.Set([]);
     }
+
+    /**
+     * @param {Object} activities
+     * @param {Array<Activity>} activities.activities
+     * @param {Array<Activity>} activities.unsaved
+     * @param {Array<Activity>} activities.deletions
+     * @param {CurrentActivity} activities.current
+     */
     Load(activities) {
+        /** @param {string} key */
         const contains = (key) => activities.hasOwnProperty(key);
         if (contains('activities')) this.activities = activities['activities'];
         if (contains('unsaved')) this.UNSAVED_activities = activities['unsaved'];
@@ -82,6 +91,10 @@ class Activities {
         if (contains('current')) this.currentActivity.Set(activities['current']);
         this.allActivities.Set(this.Get());
     }
+
+    /**
+     * @param {Array<Activity>} activities
+     */
     LoadOnline(activities) {
         if (typeof activities !== 'object') return;
         this.activities = [];

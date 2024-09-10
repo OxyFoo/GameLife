@@ -4,7 +4,7 @@ import langManager from 'Managers/LangManager';
 
 import { Sleep } from 'Utils/Functions';
 import { CheckDate } from 'Utils/DateCheck';
-import Notifications from 'Utils/Notifications';
+//import Notifications from 'Utils/Notifications';
 import { Character } from 'Interface/Components';
 
 /**
@@ -25,37 +25,66 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Loading: Settings
     await user.settings.Load();
 
-    // Ping request
-    await user.server.Ping(); // TODO: Set timeout ?
-    if (user.server.IsConnected() === false) {
-        user.interface.console?.AddLog('warn', 'Ping request failed, retrying...');
-        await user.server.Ping();
+    // Connect to the server TCP
+    //await user.tcp.Connect();
+    const t1 = performance.now();
+    const connected1 = await user.server2.Connect();
+    const t2 = performance.now();
+    if (!connected1) {
+        console.log('Failed to connect to the server TCP');
+    } else {
+        console.log('Connect to the server TCP:', t2 - t1, 'ms');
     }
 
-    const online = user.server.IsConnected();
-    if (!online) {
-        user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+    // Loading internal data
+    if (user.server2.IsLogged()) {
+        await user.server2.LoadInternalData();
     }
+
+    // Ping request
+    //await user.server.Ping(); // TODO: Set timeout ?
+    //if (user.server.IsConnected() === false) {
+    //    user.interface.console?.AddLog('warn', 'Ping request failed, retrying...');
+    //    await user.server.Ping();
+    //}
+
+    //const online = user.server.IsConnected();
+    //if (!online) {
+    //    user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+    //}
 
     nextStep();
 
     // Loading: Internal data
-    if (online) {
-        await dataManager.OnlineLoad(user);
-    } else {
-        await dataManager.LocalLoad(user);
-    }
+    //if (online) {
+    //    await dataManager.OnlineLoad(user);
+    //} else {
+    //    await dataManager.LocalLoad(user);
+    //}
 
     // Check if internal data are loaded
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
         user.interface.console?.AddLog('error', 'Internal data not loaded');
-        if (!online) {
+        // Not connected to the server (TODO: and not logged) => Wait internet to login
+        if (!user.server2.IsConnected()) {
             fe.ChangePage('waitinternet', {
                 storeInHistory: false,
                 transition: 'fromBottom'
             });
-        } else {
+        }
+
+        // Connected to the server but not logged => Login page
+        else if (!user.server2.IsLogged()) {
+            // TODO: Disconnect correctly & show popup ?
+            fe.ChangePage('login', {
+                storeInHistory: false,
+                transition: 'fromBottom'
+            });
+        }
+
+        // Connected & logged but internal data not loaded => Error message
+        else {
             callbackError('internaldata-not-loaded');
         }
         return;
@@ -71,7 +100,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Redirection: Login page (or wait internet page)
     const email = user.settings.email;
     if (email === '') {
-        if (online) {
+        if (user.server2.IsConnected()) {
             fe.ChangePage('login', { storeInHistory: false });
             return;
         } else {
@@ -91,7 +120,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     await user.LocalLoad();
 
     // Connect account if online
-    if (online && user.server.token === '') {
+    if (user.server2.IsLogged() && user.server.token === '') {
         const { status } = await user.server.Connect(email);
 
         // Too many devices
@@ -137,7 +166,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     nextStep();
 
     // Loading: User data online
-    if (online) {
+    if (user.server2.IsLogged()) {
         await user.OnlineSave();
         await user.OnlineLoad();
     }
@@ -177,9 +206,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     if (user.informations.adRemaining === 0) {
         user.interface.console?.AddLog('info', 'No more ads available');
     }
-
-    // Connect to the server TCP
-    user.tcp.Connect();
 
     // Load admob
     //await user.consent.ShowTrackingPopup().then(user.admob.LoadAds);

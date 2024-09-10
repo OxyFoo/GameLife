@@ -3,29 +3,20 @@ import dataManager from 'Managers/DataManager';
 import { MinMax, Sum } from 'Utils/Functions';
 
 /**
- * @typedef {import('Data/Skills').Skill} Skill
- * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Managers/UserManager').Stats} Stats
- *
+ * @typedef {import('Types/Data/Skills').Skill} Skill
+ * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
+ * @typedef {import('Types/Class/Activities').Activity} Activity
+ */
+
+/**
  * @typedef {'user' | 'stat' | 'skill'} XPTypes
  *
  * @typedef {object} XPOptions
  * @property {number} xpPerLevel
  * @property {number} increaseRatio Default: 0.5. ]0, 1[ for logarithmic, 1 for linear and ]1, 2] for exponential
- *
- * @typedef {object} XPInfo
- * @property {number} xp - Current XP
- * @property {number} lvl - Current level
- * @property {number} next - XP to next level
- * @property {number} totalXP - Total XP
- *
- * @typedef {object} EnrichedXPInfo
- * @property {number} xp - Current XP
- * @property {number} lvl - Current level
- * @property {number} next - XP to next level
- * @property {number} totalXP - Total XP
- * @property {number} lastTime - Last time the user gained XP
  */
 
 /** @type {{ [key in XPTypes]: XPOptions }} */

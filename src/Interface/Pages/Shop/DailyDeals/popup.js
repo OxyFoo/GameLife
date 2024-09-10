@@ -65,7 +65,7 @@ const buyDailyDeals = async(item) => {
     const price = Math.round(item.Value * user.shop.priceFactor);
     if (user.informations.ox.Get() < price) {
         const title = lang['popup-notenoughox-title'];
-        const text = lang['popup-notenoughox-text'];
+        const text = lang['popup-notenoughox-message'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }
@@ -77,7 +77,7 @@ const buyDailyDeals = async(item) => {
     // Request failed
     if (response['status'] !== 'ok') {
         const title = lang['reward-failed-title'];
-        const text = lang['reward-failed-text'];
+        const text = lang['reward-failed-message'];
         user.interface.popup.ForceOpen('ok', [ title, text ]);
         return;
     }

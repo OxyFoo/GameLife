@@ -14,11 +14,23 @@ const STORAGE_KEYS = {
 class DataStorage {
     /**
      * @param {string} storageKey Storage key
-     * @param {object} data Data to save (JSON object)
+     * @param {object | null} data Data to save (JSON object)
      * @returns {Promise<boolean>} True if data was saved
      */
     static async Save(storageKey, data) {
         let success = true;
+
+        // If data is null, reset the storage
+        if (data === null) {
+            await AsyncStorage.removeItem(storageKey, (err) => {
+                if (err) {
+                    console.error(err);
+                    success = false;
+                }
+            });
+            return success;
+        }
+
         const strData = JSON.stringify(data);
         await AsyncStorage.setItem(storageKey, strData, (err) => {
             if (err) {

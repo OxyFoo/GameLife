@@ -13,7 +13,7 @@ import {
 } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Class').Activity} Activity
+ * @typedef {import('Types/Class/Activities').Activity} Activity
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *

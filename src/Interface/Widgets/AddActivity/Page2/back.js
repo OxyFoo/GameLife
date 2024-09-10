@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import { DEFAULT_ACTIVITY } from 'Class/Activities';
 
 /**
- * @typedef {import('Types/Class').Activity} Activity
+ * @typedef {import('Types/Class/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2PropsType
  * @property {Activity} activity

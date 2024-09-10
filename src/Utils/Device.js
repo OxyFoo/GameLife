@@ -1,3 +1,4 @@
+import crypto from 'crypto-js';
 import { NativeModules, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
@@ -26,6 +27,18 @@ function GetDeviceInformations(OS = false, version = false) {
 }
 
 /**
+ * Return a hash to identify the device
+ * @returns {string}
+ */
+function GetDeviceHash() {
+    const deviceID = DeviceInfo.getUniqueIdSync();
+    const deviceOS = DeviceInfo.getSystemName();
+    const text = `${deviceID}-${deviceOS}`;
+    const hash = crypto.SHA256(text).toString();
+    return hash;
+}
+
+/**
  * Return the current battery level, or null if not available (emulator)
  * @returns {number | null}
  */
@@ -49,4 +62,4 @@ function GetLangRegionLocale() {
     return langRegionLocale.split('_')[0];
 }
 
-export { GetDeviceInformations, GetBattery, GetLangRegionLocale };
+export { GetDeviceInformations, GetDeviceHash, GetBattery, GetLangRegionLocale };

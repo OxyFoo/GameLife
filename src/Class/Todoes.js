@@ -80,6 +80,7 @@ class Todoes {
         this.SAVED_sort = true;
         this.allTodoes.Set([]);
     }
+
     Load(data) {
         const contains = /** @param {string} key */ (key) => data.hasOwnProperty(key);
         if (contains('todoes')) this.SAVED_todoes = data['todoes'];
@@ -89,6 +90,7 @@ class Todoes {
         if (contains('sortSaved')) this.SAVED_sort = data['sortSaved'];
         this.allTodoes.Set(this.Get());
     }
+
     LoadOnline(data) {
         if (typeof data !== 'object') return;
         const contains = /** @param {string} key */ (key) => data.hasOwnProperty(key);
@@ -100,6 +102,7 @@ class Todoes {
         }
         if (contains('sort')) this.sort = data['sort'];
     }
+
     Save() {
         const todoes = {
             todoes: this.SAVED_todoes,
@@ -110,6 +113,7 @@ class Todoes {
         };
         return todoes;
     }
+
     /**
      * Return all todoes (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Todo>}
@@ -149,6 +153,7 @@ class Todoes {
         }
         return false;
     };
+
     GetUnsaved = () => {
         const data = {};
 
@@ -171,6 +176,7 @@ class Todoes {
 
         return data;
     };
+
     Purge = () => {
         this.SAVED_todoes.push(...this.UNSAVED_additions);
         this.UNSAVED_additions = [];

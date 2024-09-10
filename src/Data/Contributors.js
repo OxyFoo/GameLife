@@ -1,7 +1,6 @@
-class Contributor {
-    ID = 0;
-    Name = '';
-}
+/**
+ * @typedef {import('Types/Data/Contributors').Contributor} Contributor
+ */
 
 class Contributors {
     /** @type {Contributor[]} */
@@ -10,11 +9,14 @@ class Contributors {
     Clear() {
         this.contributors = [];
     }
+
+    /** @param {Contributor[]} contributors */
     Load(contributors) {
-        if (typeof(contributors) === 'object') {
+        if (typeof contributors === 'object') {
             this.contributors = contributors;
         }
     }
+
     Save() {
         return this.contributors;
     }

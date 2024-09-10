@@ -1,14 +1,14 @@
 import langManager from 'Managers/LangManager';
 
-import { DateToFormatString } from 'Utils/Date';
+import { DateFormat } from 'Utils/Date';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
- * 
+ *
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
- * 
+ *
  * @typedef Chest
  * @property {number} priceOriginal
  * @property {number} priceDiscount
@@ -17,7 +17,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {number} probas.rare
  * @property {number} probas.epic
  * @property {number} probas.legendary
- * 
+ *
  * @typedef BuyableRandomChest
  * @property {string} ref
  * @property {string | number} ID
@@ -29,12 +29,12 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
  * @property {() => void} OnPress
- * 
+ *
  * @typedef Target
  * @property {string} id
  * @property {IconsName} icon
  * @property {() => void} onPress
- * 
+ *
  * @typedef BuyableTargetedChest
  * @property {string} ref
  * @property {string | number} ID
@@ -79,21 +79,33 @@ class Shop {
             dyes: []
         };
     }
+
+    /**
+     * @param {Object} inventory
+     * @param {this['buyToday']} inventory.buyToday
+     */
     LoadOnline(inventory) {
-        if (typeof(inventory) !== 'object') return;
+        if (typeof inventory !== 'object') return;
+        /** @param {string} key */
         const contains = (key) => inventory.hasOwnProperty(key);
         if (contains('buyToday')) {
-            const today = DateToFormatString(new Date());
+            const today = DateFormat(new Date(), 'DD/MM/YYYY');
             this.buyToday = inventory['buyToday'];
             this.buyToday.day = today;
             this.user.LocalSave();
         }
     }
+
+    /**
+     * @param {Object} data
+     * @param {this['buyToday']} data.buyToday
+     */
     Load(data) {
+        /** @param {string} key */
         const contains = (key) => data.hasOwnProperty(key);
         if (contains('buyToday')) this.buyToday = data['buyToday'];
 
-        const today = DateToFormatString(new Date());
+        const today = DateFormat(new Date(), 'DD/MM/YYYY');
         if (today !== this.buyToday.day) {
             this.buyToday.day = today;
             this.buyToday.items = [];
@@ -101,6 +113,7 @@ class Shop {
             this.user.LocalSave();
         }
     }
+
     Save() {
         const data = {
             buyToday: this.buyToday
@@ -108,6 +121,7 @@ class Shop {
         return data;
     }
 
+    /** @param {string[]} iaps */
     LoadIAPs(iaps) {
         if (Array.isArray(iaps)) {
             this.IAP_IDs = iaps;
@@ -121,9 +135,13 @@ class Shop {
 
         // Check Ox Amount
         if (this.user.informations.ox.Get() < price) {
-            const title = lang['popup-notenoughox-title'];
-            const text = lang['popup-notenoughox-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
             return;
         }
 
@@ -134,9 +152,13 @@ class Shop {
 
         // Check error
         if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
-            const title = lang['reward-failed-title'];
-            const text = lang['reward-failed-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
             return;
         }
 
@@ -156,13 +178,15 @@ class Shop {
         this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
-        const args = {
-            itemID: newItem['ItemID'],
-            chestRarity: chest.Rarity,
-            callback: this.user.interface.BackHandle
-        };
-        this.user.interface.ChangePage('chestreward', args, true);
-    }
+        this.user.interface.ChangePage('chestreward', {
+            args: {
+                itemID: newItem['ItemID'],
+                chestRarity: chest.Rarity,
+                callback: this.user.interface.BackHandle
+            },
+            storeInHistory: false
+        });
+    };
 
     /** @param {BuyableTargetedChest} chest */
     BuyTargetedChest = async (chest) => {
@@ -171,9 +195,13 @@ class Shop {
 
         // Check Ox Amount
         if (this.user.informations.ox.Get() < price) {
-            const title = lang['popup-notenoughox-title'];
-            const text = lang['popup-notenoughox-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
             return;
         }
 
@@ -187,9 +215,13 @@ class Shop {
 
         // Check error
         if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
-            const title = lang['reward-failed-title'];
-            const text = lang['reward-failed-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
             return;
         }
 
@@ -209,13 +241,15 @@ class Shop {
         this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
-        const args = {
-            itemID: newItem['ItemID'],
-            chestRarity: chest.Rarity,
-            callback: this.user.interface.BackHandle
-        };
-        this.user.interface.ChangePage('chestreward', args, true);
-    }
+        this.user.interface.ChangePage('chestreward', {
+            args: {
+                itemID: newItem['ItemID'],
+                chestRarity: chest.Rarity,
+                callback: this.user.interface.BackHandle
+            },
+            storeInHistory: false
+        });
+    };
 }
 
 export default Shop;

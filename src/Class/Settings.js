@@ -22,6 +22,7 @@ class Settings {
     }
 
     email = '';
+    token = '';
     connected = false;
     onboardingWatched = false;
     testMessageReaded = false;
@@ -35,6 +36,7 @@ class Settings {
 
     Clear() {
         this.email = '';
+        this.token = '';
         this.connected = false;
         this.testMessageReaded = false;
         this.questHeatMapIndex = 0;
@@ -42,13 +44,15 @@ class Settings {
         this.morningNotifications = true;
         this.eveningNotifications = true;
     }
+
     async Load() {
-        const { AddLog, EditLog } = this.user.interface.console;
-        const debugIndex = AddLog('info', 'Settings data: local loading...');
+        const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local loading...');
 
         const settings = await DataStorage.Load(STORAGE.LOGIN);
         if (settings === null) {
-            EditLog(debugIndex, 'warn', 'Settings data: local load failed');
+            if (debugIndex) {
+                this.user.interface.console?.EditLog(debugIndex, 'warn', 'Settings data: local load failed');
+            }
             return;
         }
 
@@ -58,6 +62,7 @@ class Settings {
         if (contains('lang')) langManager.SetLangage(settings['lang']);
         if (contains('theme')) themeManager.SetTheme(settings['theme']);
         if (contains('email')) this.email = settings['email'];
+        if (contains('token')) this.token = settings['token'];
         if (contains('connected')) this.connected = settings['connected'];
         if (contains('onboardingWatched')) this.onboardingWatched = settings['onboardingWatched'];
         if (contains('testMessageReaded')) this.testMessageReaded = settings['testMessageReaded'];
@@ -67,14 +72,17 @@ class Settings {
         if (contains('eveningNotifications')) this.eveningNotifications = settings['eveningNotifications'];
         if (contains('musicLinks')) this.musicLinks = settings['musicLinks'];
 
-        EditLog(debugIndex, 'same', 'Settings data: local load success');
+        if (debugIndex) {
+            this.user.interface.console?.EditLog(debugIndex, 'same', 'Settings data: local load success');
+        }
     }
+
     async Save() {
-        const { AddLog, EditLog } = this.user.interface.console;
         const settings = {
             lang: langManager.currentLangageKey,
             theme: themeManager.selectedTheme,
             email: this.email,
+            token: this.token,
             connected: this.connected,
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
@@ -85,13 +93,15 @@ class Settings {
             musicLinks: this.musicLinks
         };
 
-        const debugIndex = AddLog('info', 'Settings data: local saving...');
+        const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local saving...');
 
         const status = await DataStorage.Save(STORAGE.LOGIN, settings);
 
         const statusText = status ? 'success' : 'failed';
         const statusType = status ? 'same' : 'error';
-        EditLog(debugIndex, statusType, 'Settings data: local save ' + statusText);
+        if (debugIndex) {
+            this.user.interface.console?.EditLog(debugIndex, statusType, 'Settings data: local save ' + statusText);
+        }
 
         return status;
     }

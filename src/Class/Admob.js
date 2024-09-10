@@ -4,27 +4,28 @@ import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 're
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * 
+ *
  * @typedef {'rewarded' | 'interstitial'} AdTypesName
  * @typedef {Ad<RewardedAd> | Ad<InterstitialAd>} AdTypes
- * 
+ *
  * @typedef {'shop' | 'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds | InterstitialAds} AdNames
- * 
+ *
  * @typedef {'watched' | 'ready' | 'notAvailable' | 'wait' | 'closed' | 'error'} AdStates
  * @typedef {(state: AdStates) => void} AdEvent
  */
 
-const FIREBASE_DEFAULT = {"react-native-google-mobile-ads": {
-    "admob_app_id": "","admob_android_app_id": "","admob_ios_app_id": "",
-    "ios": {"rewarded": {"shop": ""}},
-    "android": {"rewarded": {"shop": ""}}
-}};
-const AD_KEYWORDS = [
-    'video-game',
-    'sports'
-];
+const FIREBASE_DEFAULT = {
+    'react-native-google-mobile-ads': {
+        admob_app_id: '',
+        admob_android_app_id: '',
+        admob_ios_app_id: '',
+        ios: { rewarded: { shop: '' } },
+        android: { rewarded: { shop: '' } }
+    }
+};
+const AD_KEYWORDS = ['video-game', 'sports'];
 
 const OX_AMOUNT = 10;
 const FIREBASE = __DEV__ ? FIREBASE_DEFAULT : require('../../app.json');
@@ -77,36 +78,40 @@ class Admob {
 
         if (adsRaw.hasOwnProperty('rewarded')) {
             const rewarded = adsRaw['rewarded'];
-            Object.keys(rewarded).forEach(/** @param {AdNames} name */ name => {
-                const adUnitId = __DEV__ ? TestIds.REWARDED : rewarded[name];
+            Object.keys(rewarded).forEach(
+                /** @param {AdNames} name */ (name) => {
+                    const adUnitId = __DEV__ ? TestIds.REWARDED : rewarded[name];
 
-                /** @type {Ad<RewardedAd>} */
-                const newAd = new Ad(name, 'rewarded');
-                newAd.ad = RewardedAd.createForAdRequest(adUnitId, {
-                    requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
-                    keywords: AD_KEYWORDS
-                });
-                newAd.ad.load();
-                this.rewardedAds.push(newAd);
-            });
+                    /** @type {Ad<RewardedAd>} */
+                    const newAd = new Ad(name, 'rewarded');
+                    newAd.ad = RewardedAd.createForAdRequest(adUnitId, {
+                        requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
+                        keywords: AD_KEYWORDS
+                    });
+                    newAd.ad.load();
+                    this.rewardedAds.push(newAd);
+                }
+            );
         }
 
         if (adsRaw.hasOwnProperty('interstitial')) {
             const interstitial = adsRaw['interstitial'];
-            Object.keys(interstitial).forEach(/** @param {AdNames} name */ name => {
-                const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : interstitial[name];
+            Object.keys(interstitial).forEach(
+                /** @param {AdNames} name */ (name) => {
+                    const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : interstitial[name];
 
-                /** @type {Ad<InterstitialAd>} */
-                const newAd = new Ad(name, 'interstitial');
-                newAd.ad = InterstitialAd.createForAdRequest(adUnitId, {
-                    requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
-                    keywords: AD_KEYWORDS
-                });
-                newAd.ad.load();
-                this.interstitialAds.push(newAd);
-            });
+                    /** @type {Ad<InterstitialAd>} */
+                    const newAd = new Ad(name, 'interstitial');
+                    newAd.ad = InterstitialAd.createForAdRequest(adUnitId, {
+                        requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
+                        keywords: AD_KEYWORDS
+                    });
+                    newAd.ad.load();
+                    this.interstitialAds.push(newAd);
+                }
+            );
         }
-    }
+    };
 
     /**
      * @param {AdTypesName} type
@@ -129,7 +134,7 @@ class Admob {
         }
 
         // Get ad index
-        let rewardedIndex = ads.findIndex(ad => ad.name === adName);
+        let rewardedIndex = ads.findIndex((ad) => ad.name === adName);
         if (rewardedIndex === -1) return null;
 
         // Get ad & clear events
@@ -190,7 +195,7 @@ class Admob {
                 callback('error');
                 break;
         }
-    }
+    };
 
     /** @param {AdTypes | null} ad */
     ClearEvents(ad) {

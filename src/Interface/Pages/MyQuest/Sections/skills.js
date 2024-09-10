@@ -13,7 +13,7 @@ import { GetLocalTime } from 'Utils/Time';
 const MAX_SKILLS = 10;
 
 /**
- * @typedef {import('Data/Skills').Skill} Skill
+ * @typedef {import('Types/Data/Skills').Skill} Skill
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Interface/Global/ScreenList').ScreenListItem} ScreenListItem
  *
@@ -106,7 +106,7 @@ class SectionSkill extends React.Component {
 
     /**
      * @param {Object} props
-     * @param {import('Data/Skills').Skill} props.skill
+     * @param {Skill} props.skill
      */
     renderSkills = ({ skill }) => {
         const skillTitle = langManager.GetText(skill.Name);

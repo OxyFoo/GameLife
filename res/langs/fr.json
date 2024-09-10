@@ -733,13 +733,13 @@
         "alert-code-button": "Valider",
 
         "popup-notenoughox-title": "Insuffisant",
-        "popup-notenoughox-text": "Tu n'as pas assez d'Ox pour acheter cet item.",
+        "popup-notenoughox-message": "Tu n'as pas assez d'Ox pour acheter cet item.",
 
         "internet-offline-title": "Pas de connexion",
         "internet-offline-text": "Tu dois être connecté à internet !",
 
         "reward-failed-title": "Échec",
-        "reward-failed-text": "Une erreur est survenue, réessaye plus tard.",
+        "reward-failed-message": "Une erreur est survenue, réessaye plus tard.",
         "reward-wrong-title": "Code incorrect",
         "reward-wrong-text": "Le code que tu as entré est incorrect.",
         "reward-success-title": "Code utilisé",

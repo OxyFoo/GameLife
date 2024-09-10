@@ -36,7 +36,7 @@ class App extends React.Component {
     async componentChangeState(state) {
         if (state === 'active') {
             CheckDate();
-            user.tcp.Connect();
+            //user.tcp.Connect();
         } else if (state === 'background' || state === 'inactive') {
             (await user.OnlineSave()) || (await user.LocalSave());
         }

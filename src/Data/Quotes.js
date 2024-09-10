@@ -1,10 +1,8 @@
 import { Random } from 'Utils/Functions';
 
-class Quote {
-    ID = 0;
-    Quote = { fr: '', en: '' };
-    Author = '';
-}
+/**
+ * @typedef {import('Types/Data/Quotes').Quote} Quote
+ */
 
 class Quotes {
     /** @type {Quote[]} */
@@ -13,11 +11,14 @@ class Quotes {
     Clear() {
         this.quotes = [];
     }
+
+    /** @param {Quote[]} quotes */
     Load(quotes) {
-        if (typeof(quotes) === 'object') {
+        if (typeof quotes === 'object') {
             this.quotes = quotes;
         }
     }
+
     Save() {
         return this.quotes;
     }
@@ -26,9 +27,7 @@ class Quotes {
         return this.quotes;
     }
 
-    /**
-     * @returns {Quote|null}
-     */
+    /** @returns {Quote|null} */
     GetRandomQuote() {
         let quote = null;
         if (this.quotes.length > 0) {
@@ -39,5 +38,4 @@ class Quotes {
     }
 }
 
-export { Quote };
 export default Quotes;

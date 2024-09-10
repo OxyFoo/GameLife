@@ -118,4 +118,26 @@ function Random(min = 0, max = 1, decimal = 0) {
     return Round(r, decimal);
 }
 
-export { TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict, IsUndefined, MinMax, Sleep, Random };
+function RandomString(length = 8) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+export {
+    TwoDigit,
+    Round,
+    Sum,
+    Range,
+    SortByKey,
+    GetByKey,
+    ArrayToDict,
+    IsUndefined,
+    MinMax,
+    Sleep,
+    Random,
+    RandomString
+};

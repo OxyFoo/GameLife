@@ -1,9 +1,6 @@
-class Title {
-    ID = 0;
-    Name = { fr: '', en: '' };
-    Value = 0;
-    Buyable = 0;
-}
+/**
+ * @typedef {import('Types/Data/Titles').Title} Title
+ */
 
 class Titles {
     /** @type {Array<Title>} */
@@ -12,11 +9,14 @@ class Titles {
     Clear() {
         this.titles = [];
     }
+
+    /** @param {Array<Title>} titles */
     Load(titles) {
-        if (typeof(titles) === 'object') {
+        if (typeof titles === 'object') {
             this.titles = titles;
         }
     }
+
     Save() {
         return this.titles;
     }
@@ -24,19 +24,18 @@ class Titles {
     /** @returns {Array<Title>} */
     Get = () => {
         return this.titles;
-    }
+    };
 
     /** @returns {Array<Title>} */
     GetBuyable = () => {
-        return this.titles.filter(t => t.Buyable === 1);
-    }
+        return this.titles.filter((t) => t.Buyable === 1);
+    };
 
     /**
-     * @param {number} ID 
-     * @returns {?Title}
+     * @param {number} ID
+     * @returns {Title | null}
      */
-    GetByID = (ID) => this.titles.find(title => title.ID == ID) || null;
+    GetByID = (ID) => this.titles.find((title) => title.ID === ID) || null;
 }
 
-export { Title };
 export default Titles;

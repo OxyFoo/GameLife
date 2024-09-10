@@ -5,8 +5,8 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
+ *
+ * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
  */
 
 const SkillsGroupProps = {
@@ -18,8 +18,9 @@ class SkillsGroupBack extends React.Component {
     state = {
         /** @type {Array<EnrichedSkill | null>} 4th is null to show "all" button */
         skills: []
-    }
+    };
 
+    /** @param {SkillsGroupProps} props */
     constructor(props) {
         super(props);
 
@@ -32,6 +33,7 @@ class SkillsGroupBack extends React.Component {
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            /** @type {this['state']['skills']} */
             const skills = user.activities.GetLastSkills(4);
             if (skills.length >= 4) {
                 skills[3] = null;
@@ -42,11 +44,15 @@ class SkillsGroupBack extends React.Component {
     }
 
     componentWillUnmount() {
-        user.activities.allActivities.RemoveListener(this.activitiesListener);
+        if (this.activitiesListener) {
+            user.activities.allActivities.RemoveListener(this.activitiesListener);
+        }
     }
 
     openSkills = () => user.interface.ChangePage('skills');
-    openSkill = (ID) => user.interface.ChangePage('skill', { skillID: ID });
+
+    /** @param {number} ID */
+    openSkill = (ID) => user.interface.ChangePage('skill', { args: { skillID: ID } });
 }
 
 SkillsGroupBack.prototype.props = SkillsGroupProps;

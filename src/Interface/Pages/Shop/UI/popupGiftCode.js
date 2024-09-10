@@ -33,7 +33,7 @@ async function checkCode(code) {
     if (result['status'] !== 'ok') {
         // Error
         const title = lang['reward-failed-title'];
-        const text = lang['reward-failed-text'];
+        const text = lang['reward-failed-message'];
         user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
         return;
     }

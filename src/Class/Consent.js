@@ -44,8 +44,7 @@ class Consent {
     isPersonalized() {
         if (Platform.OS === 'android') {
             return !this.android_consent.nonPersonalized;
-        }
-        else if (Platform.OS === 'ios') {
+        } else if (Platform.OS === 'ios') {
             return this.ios_tracking.enabled;
         }
         return false;
@@ -62,13 +61,12 @@ class Consent {
         }
         this.loading = true;
 
-        const ConsoleError = (err) => this.user.interface.console.AddLog('error', 'Ad consent popup:', err);
+        /** @param {Error} err */
+        const ConsoleError = (err) => this.user.interface.console?.AddLog('error', 'Ad consent popup:', err);
 
         if (Platform.OS === 'android') {
             await this.__adConsentPopup(force).catch(ConsoleError);
-        }
-
-        else if (Platform.OS === 'ios') {
+        } else if (Platform.OS === 'ios') {
             await this.__trackingTransparencyPopup(force).catch(ConsoleError);
         }
 

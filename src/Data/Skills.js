@@ -3,56 +3,10 @@ import langManager from 'Managers/LangManager';
 import { GetByKey } from 'Utils/Functions';
 
 /**
- * @typedef {import('Class/Experience').EnrichedXPInfo} EnrichedXPInfo
+ * @typedef {import('Types/Data/Skills').Skill} Skill
+ * @typedef {import('Types/Data/Skills').Icon} Icon
+ * @typedef {import('Types/Data/Skills').Category} Category
  */
-
-class Skill {
-    ID = 0;
-    Name = { fr: '', en: '' };
-    CategoryID = 0;
-    Stats = {
-        int: 0,
-        soc: 0,
-        for: 0,
-        sta: 0,
-        agi: 0,
-        dex: 0
-    };
-    LogoID = 0;
-    Creator = '';
-    XP = 0;
-    Enabled = true;
-}
-
-class EnrichedSkill extends Skill {
-    /** @type {string} */
-    FullName = '';
-
-    /** @type {string} */
-    LogoXML = '';
-
-    /** @type {EnrichedXPInfo} */
-    Experience = {
-        lvl: 0,
-        xp: 0,
-        next: 0,
-        totalXP: 0,
-        lastTime: 0
-    };
-}
-
-class Icon {
-    ID = 0;
-    //Name = ''; // Unused
-    Content = '';
-}
-
-class Category {
-    ID = 0;
-    Name = { fr: '', en: '' };
-    Color = '#000000';
-    LogoID = 0;
-}
 
 class Skills {
     /** @type {Skill[]} */
@@ -69,6 +23,13 @@ class Skills {
         this.icons = [];
         this.categories = [];
     }
+
+    /**
+     * @param {Object} data
+     * @param {Skill[]} data.skills
+     * @param {Icon[]} data.skillsIcon
+     * @param {Category[]} data.skillsCategory
+     */
     Load(data) {
         if (typeof data === 'object') {
             if (data.hasOwnProperty('skills')) this.skills = data.skills;
@@ -76,6 +37,7 @@ class Skills {
             if (data.hasOwnProperty('skillsCategory')) this.categories = data.skillsCategory;
         }
     }
+
     Save() {
         const data = {
             skills: this.skills,
@@ -135,5 +97,4 @@ class Skills {
     };
 }
 
-export { Skill, EnrichedSkill, Category };
 export default Skills;

@@ -14,10 +14,10 @@ const { versionName } = require('../../package.json');
  * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Data/Items').StuffID} StuffID
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Types/TCP/Request').ServerStatus} ServerStatus
+ * @typedef {import('Types/TCP/Request').LoginStatus} LoginStatus
+ * @typedef {import('Types/TCP/Request').SigninStatus} SigninStatus
  *
- * @typedef {'offline'|'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'maintenance'|'update'|'downdate'|'limitDevice'|'error'} ServerStatus
- * @typedef {'ok'|'free'|'waitMailConfirmation'|'newDevice'|'remDevice'|'limitDevice'|'error'} LoginStatus
- * @typedef {'ok'|'pseudoUsed'|'pseudoIncorrect'|'limitAccount'|'error'} SigninStatus
  * @typedef {'ping'|'login'|'signin'|'getUserData'|'getUserIntentories'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimDailyQuest'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes
  */

@@ -1,5 +1,6 @@
 import Config from 'react-native-config';
 import DynamicVar from 'Utils/DynamicVar';
+import { RandomString, Sleep } from 'Utils/Functions';
 
 const TCP_SETTINGS = {
     protocol: Config.VPS_PROTOCOL,
@@ -36,14 +37,18 @@ class TCP {
     callbacks = {};
 
     /**
-     * @returns {boolean} Whether the connection was successful, or if it was already connected
+     * TODO: Reimplement selfCallback in a better way
+     * @type {(success: boolean) => void}
+     * @private
      */
-    Connect = () => {
-        // If already connected, or if the user is not connected to the server
-        if (this.IsConnected() || !this.user.server.IsConnected(false)) {
-            return false;
-        }
+    selfCallback = (a) => {
+        console.log(a);
+    };
 
+    /**
+     * @returns {Promise<boolean>} Whether the connection was successful, or if it was already connected
+     */
+    Connect = async () => {
         const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'gamelife-client');
         socket.addEventListener('open', this.onOpen);
@@ -51,7 +56,14 @@ class TCP {
         socket.addEventListener('error', this.onError);
         socket.addEventListener('close', this.onClose);
         this.socket = socket;
-        return true;
+
+        this.state.Set('connecting');
+        return new Promise(async (resolve) => {
+            while (this.state.Get() === 'connecting') {
+                await Sleep(100);
+            }
+            resolve(this.state.Get() === 'connected');
+        });
     };
 
     Disconnect = () => {
@@ -68,19 +80,24 @@ class TCP {
 
     /** @param {Event} _event */
     onOpen = (_event) => {
-        // TODO: Real connection
-        this.Send({
-            action: 'login',
-            email: this.user.settings.email,
-            hashID: 'hDaIhs',
-            callbackID: 'test'
-        });
+        this.state.Set('connected');
+        this.selfCallback(true);
     };
 
     /** @param {MessageEvent} event */
     onMessage = (event) => {
         /** @type {ReceiveRequest} */
         const data = JSON.parse(event.data);
+
+        if (data.callbackID && data.callbackID in this.callbacks) {
+            const callbackID = data.callbackID;
+            const callback = this.callbacks[callbackID];
+            if (typeof callback === 'function') {
+                callback(data);
+                delete this.callbacks[callbackID];
+                return;
+            }
+        }
 
         const { status } = data;
         if (status === 'connected' || status === 'disconnected' || status === 'error') {
@@ -96,17 +113,6 @@ class TCP {
         if (status.startsWith('update-')) {
             this.user.multiplayer.onMessage(data);
         }
-
-        if (status === 'callback') {
-            const callbackID = data.callbackID;
-            const callback = this.callbacks[callbackID];
-            if (typeof callback === 'function') {
-                callback(data);
-                delete this.callbacks[callbackID];
-            } else {
-                this.user.interface.console?.AddLog('warn', 'Callback not found:', callbackID);
-            }
-        }
     };
 
     /** @param {Event} event */
@@ -114,12 +120,14 @@ class TCP {
         this.user.interface.console?.AddLog('warn', 'TCP server:', event);
         this.state.Set('error');
         this.Disconnect();
+        this.selfCallback(false);
     };
 
     /** @param {CloseEvent} _event */
     onClose = (_event) => {
         this.state.Set('disconnected');
         this.Disconnect();
+        this.selfCallback(false);
     };
 
     /**
@@ -132,7 +140,7 @@ class TCP {
             return false;
         }
 
-        if (this.socket === null || this.IsConnected() === false) {
+        if (this.socket === null) {
             this.user.interface.console?.AddLog('warn', 'Send socket: Not connected.');
             return false;
         }
@@ -144,7 +152,7 @@ class TCP {
     /**
      * @param {string} callbackID
      * @param {number} [timeout] in milliseconds
-     * @returns {Promise<'timeout' | any>} The result of the callback or 'timeout' if it took too long
+     * @returns {Promise<'timeout' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
      */
     WaitForCallback = (callbackID, timeout = 10000) => {
         return new Promise((resolve, _reject) => {
@@ -156,6 +164,19 @@ class TCP {
                 resolve(data);
             };
         });
+    };
+
+    /**
+     * @param {TCPClientRequest} message
+     * @param {number} [timeout] in milliseconds
+     * @returns {Promise<'timeout' | 'not-sent' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
+     */
+    SendAndWait = async (message, timeout = 10000) => {
+        const randomID = RandomString(8);
+        if (this.Send({ ...message, callbackID: randomID })) {
+            return this.WaitForCallback(randomID, timeout);
+        }
+        return 'not-sent';
     };
 }
 

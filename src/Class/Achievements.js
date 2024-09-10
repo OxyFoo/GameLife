@@ -12,18 +12,9 @@ import { Round } from 'Utils/Functions';
  * @typedef {import('Data/Achievements').Reward} Reward
  * @typedef {import('Data/Achievements').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
+ * @typedef {import('Types/Class/Achievements').AchievementItem} AchievementItem
  * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
-
-class AchievementItem {
-    AchievementID = 0;
-
-    /** @type {'OK' | 'PENDING'} */
-    State = 'OK';
-
-    /** @type {number} Unix UTC timestamp in seconds */
-    Date = 0;
-}
 
 /** @type {Array<AchievementItem>} */
 const INIT_ACHIEVEMENTS = [];
@@ -49,27 +40,33 @@ class Achievements {
     Clear() {
         this.achievements.Set([]);
     }
+
+    /** @param {AchievementItem[]} achievements */
     Load(achievements) {
+        /** @param {string} key */
         const contains = (key) => achievements.hasOwnProperty(key);
         if (contains('solved')) this.achievements.Set(achievements['solved']);
     }
+
+    /** @param {AchievementItem[]} achievements */
     LoadOnline(achievements) {
-        /** @type {any} @returns {AchievementItem} */
-        const mapper = (a) => Object.assign(new AchievementItem(), a);
-        this.achievements.Set(achievements.map(mapper));
+        this.achievements.Set(achievements);
     }
+
     Save() {
         const achievements = {
             solved: this.achievements.Get()
         };
         return achievements;
     }
+
     GetSolved() {
         return this.achievements
             .Get()
             .filter((a) => a.State === 'OK')
             .sort((a, b) => b.Date - a.Date);
     }
+
     GetPending() {
         return this.achievements
             .Get()
@@ -80,6 +77,7 @@ class Achievements {
     GetSolvedIDs() {
         return this.GetSolved().map((a) => a.AchievementID);
     }
+
     GetPendingIDs() {
         return this.GetPending().map((a) => a.AchievementID);
     }
@@ -510,5 +508,4 @@ class Achievements {
     };
 }
 
-export { AchievementItem };
 export default Achievements;

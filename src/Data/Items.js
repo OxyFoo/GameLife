@@ -1,10 +1,10 @@
 /**
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- * 
+ *
  * @typedef {'skin' | 'skinColor'} SkinSlot
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
- * 
+ *
  * @typedef {object} Buff
  * @property {number} int
  * @property {number} soc
@@ -63,11 +63,14 @@ class Items {
     Clear() {
         this.items = [];
     }
+
+    /** @param {Array<Item>} items */
     Load(items) {
-        if (typeof(items) === 'object') {
+        if (typeof items === 'object') {
             this.items = items;
         }
     }
+
     Save() {
         return this.items;
     }
@@ -82,8 +85,9 @@ class Items {
      * @returns {Array<Item>}
      */
     GetBuyable(slot = false) {
-        const checkSlot = s => slot === false || s === slot;
-        return this.items.filter(i => i.Buyable && i.Rarity <= 3 && checkSlot(i.Slot));
+        /** @param {Slot} s */
+        const checkSlot = (s) => slot === false || s === slot;
+        return this.items.filter((i) => i.Buyable && i.Rarity <= 3 && checkSlot(i.Slot));
     }
 
     /**
@@ -93,14 +97,14 @@ class Items {
      */
     GetDyables(itemID, items = this.items) {
         const itemMainID = itemID.split('-')[0];
-        return items.filter(i => i.ID.startsWith(itemMainID + '-') && i.ID !== itemID);
+        return items.filter((i) => i.ID.startsWith(itemMainID + '-') && i.ID !== itemID);
     }
 
     /**
      * @param {StuffID} ID
      * @returns {Item | null}
      */
-    GetByID = (ID) => this.items.find(item => item.ID === ID) || null;
+    GetByID = (ID) => this.items.find((item) => item.ID === ID) || null;
 
     /**
      * @param {'default'|Slot} slot

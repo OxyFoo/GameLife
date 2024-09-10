@@ -733,13 +733,13 @@
         "alert-code-button": "Validate",
 
         "popup-notenoughox-title": "Insufficient",
-        "popup-notenoughox-text": "You don't have enough Ox to buy this item.",
+        "popup-notenoughox-message": "You don't have enough Ox to buy this item.",
 
         "internet-offline-title": "No connection",
         "internet-offline-text": "You must be connected to the internet!",
 
         "reward-failed-title": "Failure",
-        "reward-failed-text": "An error has occurred, please retry again later.",
+        "reward-failed-message": "An error has occurred, please retry again later.",
         "reward-wrong-title": "Incorrect code",
         "reward-wrong-text": "The code you entered is incorrect.",
         "reward-success-title": "Code used",

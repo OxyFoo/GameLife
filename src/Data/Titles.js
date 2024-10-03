@@ -1,16 +1,19 @@
+import DataClassTemplate from './_Template';
+
 /**
  * @typedef {import('Types/Data/Titles').Title} Title
  */
 
-class Titles {
-    /** @type {Array<Title>} */
+/** @extends {DataClassTemplate<Title[]>} */
+class Titles extends DataClassTemplate {
+    /** @type {Title[]} */
     titles = [];
 
     Clear() {
         this.titles = [];
     }
 
-    /** @param {Array<Title>} titles */
+    /** @param {Title[]} titles */
     Load(titles) {
         if (typeof titles === 'object') {
             this.titles = titles;
@@ -21,12 +24,12 @@ class Titles {
         return this.titles;
     }
 
-    /** @returns {Array<Title>} */
+    /** @returns {Title[]} */
     Get = () => {
         return this.titles;
     };
 
-    /** @returns {Array<Title>} */
+    /** @returns {Title[]} */
     GetBuyable = () => {
         return this.titles.filter((t) => t.Buyable === 1);
     };

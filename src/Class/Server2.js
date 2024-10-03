@@ -1,6 +1,6 @@
 import TCP from './TCP';
 
-import { GetDeviceHash } from 'Utils/Device';
+import { GetDeviceIdentifiers } from 'Utils/Device';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -11,47 +11,97 @@ class Server {
     constructor(user) {
         /** @private */
         this.user = user;
-
-        /** @private */
         this.tcp = new TCP(user);
     }
 
-    logged = false;
+    token = '';
+    isLogged = false;
+    isBanned = false;
 
-    IsConnected = this.tcp.IsConnected;
-    IsLogged = () => this.logged && this.tcp.IsConnected();
+    IsConnected = () => this.tcp.IsConnected();
+    /** @deprecated */
+    IsLogged = () => this.token !== '' && this.tcp.IsConnected();
 
-    /** @returns {Promise<boolean>} */
+    /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'error'>} */
     Connect = async () => {
-        if (this.logged) {
+        if (this.tcp.IsConnected()) {
             this.user.interface.console?.AddLog('warn', 'Already logged to the server');
-            return true;
+            return 'already-connected';
         }
 
-        if (!this.tcp.IsConnected()) {
-            const connected = await this.tcp.Connect();
-            if (!connected) return false;
+        const connected = await this.tcp.Connect();
+        if (!connected) {
+            this.user.interface.console?.AddLog('error', 'Server connection failed');
+            return 'not-connected';
         }
 
+        const device = GetDeviceIdentifiers();
         const response = await this.tcp.SendAndWait({
-            action: 'login',
-            email: this.user.settings.email,
-            hashID: GetDeviceHash(),
-            token: this.user.settings.token
+            action: 'connect',
+            deviceName: device.deviceName,
+            OSName: device.OSName,
+            OSVersion: device.OSVersion,
+            deviceIdentifier: device.identifier
         });
 
-        if (response === 'timeout' || response === 'not-sent') {
+        if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
+            this.user.interface.console?.AddLog('error', `Server connection failed (${response})`);
+            return 'not-connected';
+        }
+
+        if (response.status !== 'connect' || response.result !== 'ok') {
+            this.user.interface.console?.AddLog('error', 'Server connection failed (invalid response)');
+            return 'error';
+        }
+
+        return 'success';
+    };
+
+    /**
+     * @param {string} email
+     */
+    Login = async (email) => {
+        const response = await this.tcp.SendAndWait({
+            action: 'login',
+            email,
+            token: this.token
+        });
+        if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
             this.user.interface.console?.AddLog('error', `Server connection failed (${response})`);
             return false;
         }
 
-        if (response.status !== 'connected') {
+        if (response.status !== 'login') {
             this.user.interface.console?.AddLog('error', 'Server connection failed');
             return false;
         }
 
-        this.logged = true;
-        return true;
+        this.isLogged = response.result === 'ok';
+        this.isBanned = response.banned ?? false;
+        return response.result;
+    };
+
+    /**
+     * @param {string} username
+     * @param {string} email
+     */
+    Signin = async (username, email) => {
+        const response = await this.tcp.SendAndWait({
+            action: 'signin',
+            username,
+            email
+        });
+        if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
+            this.user.interface.console?.AddLog('error', `Server connection failed (${response})`);
+            return false;
+        }
+
+        if (response.status !== 'signin') {
+            this.user.interface.console?.AddLog('error', 'Server connection failed');
+            return false;
+        }
+
+        return response.result;
     };
 
     Disconnect = () => {

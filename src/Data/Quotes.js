@@ -1,10 +1,13 @@
+import DataClassTemplate from './_Template';
+
 import { Random } from 'Utils/Functions';
 
 /**
  * @typedef {import('Types/Data/Quotes').Quote} Quote
  */
 
-class Quotes {
+/** @extends {DataClassTemplate<Quote[]>} */
+class Quotes extends DataClassTemplate {
     /** @type {Quote[]} */
     quotes = [];
 

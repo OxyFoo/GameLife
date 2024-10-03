@@ -1,3 +1,5 @@
+import DataClassTemplate from './_Template';
+
 /**
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  *
@@ -56,7 +58,8 @@ class Item {
     Buffs = [];
 }
 
-class Items {
+/** @extends {DataClassTemplate<Item[]>} */
+class Items extends DataClassTemplate {
     /** @type {Array<Item>} */
     items = [];
 

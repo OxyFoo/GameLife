@@ -10,9 +10,9 @@ import { Text, Button, ProgressBar } from 'Interface/Components';
 class Waitmail extends BackWaitmail {
     render() {
         const email = user.settings.email;
+        const { statusText } = this.state;
         const langWait = langManager.curr['wait'];
         const textWait = langWait['wait-email-text'];
-        const timeText = this.getTimeText();
 
         return (
             <View style={styles.page}>
@@ -30,7 +30,7 @@ class Waitmail extends BackWaitmail {
                 <View style={styles.bottomView}>
                     <Button style={styles.backButton} appearance='outline' icon='arrow-left' onPress={this.onBack} />
                     <View style={styles.waitingView}>
-                        <Text style={styles.resendText}>{timeText}</Text>
+                        <Text style={styles.resendText}>{statusText}</Text>
                         <ProgressBar.Infinite />
                     </View>
                 </View>

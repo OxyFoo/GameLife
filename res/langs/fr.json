@@ -444,12 +444,12 @@
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
 
+        "alert-error-title": "Erreur",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
         "alert-deletedaccount-title": "Compte supprimé",
         "alert-deletedaccount-message": "Ton compte a été supprimé.",
         "alert-limitAccount-title": "Trop de compte",
         "alert-limitAccount-message": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
-        "alert-limitDevice-title": "Trop d'appareils sur ce compte",
-        "alert-limitDevice-message": "Tu ne peux pas avoir plus de 5 appareils connectés sur un seul compte.",
         "alert-deviceRemoved-title": "Appareil retiré",
         "alert-deviceRemoved-message": "Ton appareil a été retiré car tu as déjà le nombre maximum d'appareils sur ce compte."
     },

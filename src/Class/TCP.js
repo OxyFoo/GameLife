@@ -1,12 +1,6 @@
 import Config from 'react-native-config';
 import DynamicVar from 'Utils/DynamicVar';
-import { RandomString, Sleep } from 'Utils/Functions';
-
-const TCP_SETTINGS = {
-    protocol: Config.VPS_PROTOCOL,
-    host: Config.VPS_IP,
-    port: Config.VPS_PORT
-};
+import { RandomString } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -15,6 +9,12 @@ const TCP_SETTINGS = {
  * @typedef {import('Types/TCP/Request').TCPServerRequest} ReceiveRequest
  * @typedef {import('Types/TCP/Request').TCPClientRequest} TCPClientRequest
  */
+
+const TCP_SETTINGS = {
+    protocol: Config.VPS_PROTOCOL,
+    host: Config.VPS_IP,
+    port: Config.VPS_PORT
+};
 
 /** @type {ConnectionState} */
 const INITIAL_STATE = 'idle';
@@ -33,22 +33,17 @@ class TCP {
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar(INITIAL_STATE);
 
-    /** @type {Record<string, (data: ReceiveRequest) => void>} */
+    /**
+     * @description Callback => If True is returned, the callback will be removed
+     * @type {Record<string, (data: ReceiveRequest) => boolean | Promise<boolean>>}
+     */
     callbacks = {};
 
     /**
-     * TODO: Reimplement selfCallback in a better way
-     * @type {(success: boolean) => void}
-     * @private
-     */
-    selfCallback = (a) => {
-        console.log(a);
-    };
-
-    /**
+     * @param {number} [timeout] in milliseconds
      * @returns {Promise<boolean>} Whether the connection was successful, or if it was already connected
      */
-    Connect = async () => {
+    Connect = async (timeout = 10000) => {
         const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'gamelife-client');
         socket.addEventListener('open', this.onOpen);
@@ -59,10 +54,23 @@ class TCP {
 
         this.state.Set('connecting');
         return new Promise(async (resolve) => {
-            while (this.state.Get() === 'connecting') {
-                await Sleep(100);
-            }
-            resolve(this.state.Get() === 'connected');
+            /** @param {boolean} bool */
+            const finish = (bool) => {
+                console.log('TCP connection: ========', bool);
+                clearTimeout(_timeout);
+                this.state.RemoveListener(id);
+                resolve(bool);
+            };
+
+            // Timeout
+            const _timeout = setTimeout(() => {
+                finish(false);
+            }, timeout);
+
+            // Listen for the connection
+            const id = this.state.AddListener((state) => {
+                finish(state === 'connected');
+            });
         });
     };
 
@@ -81,20 +89,34 @@ class TCP {
     /** @param {Event} _event */
     onOpen = (_event) => {
         this.state.Set('connected');
-        this.selfCallback(true);
     };
 
     /** @param {MessageEvent} event */
-    onMessage = (event) => {
+    onMessage = async (event) => {
         /** @type {ReceiveRequest} */
         const data = JSON.parse(event.data);
 
+        // Callbacks
         if (data.callbackID && data.callbackID in this.callbacks) {
             const callbackID = data.callbackID;
             const callback = this.callbacks[callbackID];
             if (typeof callback === 'function') {
-                callback(data);
-                delete this.callbacks[callbackID];
+                const removeCallback = await callback(data);
+                if (removeCallback) {
+                    delete this.callbacks[callbackID];
+                }
+                return;
+            }
+        }
+
+        // Callbacks from status
+        if (data.status in this.callbacks) {
+            const callback = this.callbacks[data.status];
+            if (typeof callback === 'function') {
+                const removeCallback = await callback(data);
+                if (removeCallback) {
+                    delete this.callbacks[data.status];
+                }
                 return;
             }
         }
@@ -120,14 +142,12 @@ class TCP {
         this.user.interface.console?.AddLog('warn', 'TCP server:', event);
         this.state.Set('error');
         this.Disconnect();
-        this.selfCallback(false);
     };
 
     /** @param {CloseEvent} _event */
     onClose = (_event) => {
         this.state.Set('disconnected');
         this.Disconnect();
-        this.selfCallback(false);
     };
 
     /**
@@ -150,33 +170,72 @@ class TCP {
     };
 
     /**
-     * @param {string} callbackID
+     * @param {TCPClientRequest} message
+     * @param {(data: ReceiveRequest) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
      * @param {number} [timeout] in milliseconds
-     * @returns {Promise<'timeout' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
+     * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
      */
-    WaitForCallback = (callbackID, timeout = 10000) => {
-        return new Promise((resolve, _reject) => {
-            const timer = setTimeout(() => {
-                resolve('timeout');
-            }, timeout);
-            this.callbacks[callbackID] = (data) => {
-                clearTimeout(timer);
-                resolve(data);
-            };
-        });
+    SendAndWait = async (message, callback = undefined, timeout = 10000, useCallbackID = true) => {
+        let ID;
+
+        if (useCallbackID) {
+            // Define random callback ID
+            while (!ID || ID in this.callbacks) {
+                ID = RandomString(8);
+            }
+        } else {
+            // Use the action as callback ID
+            ID = message.action;
+        }
+
+        if (this.Send({ ...message, callbackID: ID })) {
+            return this.WaitForCallback(ID, callback, timeout);
+        }
+        return 'not-sent';
     };
 
     /**
-     * @param {TCPClientRequest} message
-     * @param {number} [timeout] in milliseconds
-     * @returns {Promise<'timeout' | 'not-sent' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
+     * @param {string} callbackID The callback ID to wait for (or the action if useCallbackID is false)
+     * @param {(data: ReceiveRequest) => boolean | Promise<boolean>} callback The callback to call when the response is received, return true to remove the callback and send the response to the promise
+     * @param {number} [timeout] in milliseconds, -1 to disable
+     * @returns {Promise<'timeout' | 'interrupted' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
      */
-    SendAndWait = async (message, timeout = 10000) => {
-        const randomID = RandomString(8);
-        if (this.Send({ ...message, callbackID: randomID })) {
-            return this.WaitForCallback(randomID, timeout);
-        }
-        return 'not-sent';
+    WaitForCallback = (callbackID, callback = () => true, timeout = 10000) => {
+        return new Promise((resolve, _reject) => {
+            // Init the timeout timer
+            /** @type {NodeJS.Timeout | null} */
+            let timer = null;
+            if (timeout !== -1) {
+                timer = setTimeout(() => {
+                    resolve('timeout');
+                }, timeout);
+            }
+
+            // Reset the timeout timer
+            const resetTimeout = () => {
+                if (timeout === -1 || timer === null) {
+                    return;
+                }
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    resolve('timeout');
+                }, timeout);
+            };
+
+            // Set the callback
+            this.callbacks[callbackID] = async (data) => {
+                if (timer !== null) {
+                    clearTimeout(timer);
+                }
+                const finished = await callback(data); // Result from caller
+                if (finished) {
+                    resolve(data); // Send the response to the promise
+                    return true; // Remove the callback
+                }
+                resetTimeout(); // Reset the timer
+                return false; // Keep the callback
+            };
+        });
     };
 }
 

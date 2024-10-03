@@ -2,23 +2,22 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-const REFRESH_DELAY = 10; // seconds
-
 class BackWaitmail extends PageBase {
     state = {
-        /** @type {number | 'sent' | null} */
-        time: null
+        time: 0,
+        statusText: ''
     };
 
+    /** @type {number} */
+    secondsRemainingToShowSentMessage = 0;
+
     componentDidMount() {
+        this.WaitingMailConfirmation();
         this.tick = setInterval(this.onTick, 1000);
-        this.login = setInterval(this.Login, REFRESH_DELAY * 1000);
-        this.Login();
     }
 
     componentWillUnmount() {
         clearInterval(this.tick);
-        clearInterval(this.login);
     }
 
     onBack = () => {
@@ -29,63 +28,94 @@ class BackWaitmail extends PageBase {
 
     onTick = () => {
         const { time } = this.state;
-        if (typeof time === 'number' && time > 0) {
-            this.setState({ time: Math.max(0, time - 1) });
-        }
-    };
-
-    getTimeText = () => {
-        const { time } = this.state;
         const langWait = langManager.curr['wait'];
 
-        let timeText = '';
-        if (time === 'sent') {
-            timeText = langWait['wait-email-send'];
+        if (this.secondsRemainingToShowSentMessage > 0) {
+            this.secondsRemainingToShowSentMessage--;
+        }
+
+        let statusText = '';
+        if (this.secondsRemainingToShowSentMessage > 0) {
+            statusText = langWait['wait-email-send'];
         } else if (typeof time === 'number') {
             const SS = time % 60;
             const MM = (time - SS) / 60;
-            timeText = langWait['wait-email-remain'].replace('{}', MM.toString()).replace('{}', SS.toString());
+            statusText = langWait['wait-email-remain'].replace('{}', MM.toString()).replace('{}', SS.toString());
         }
-        return timeText;
+
+        this.setState({
+            time: Math.max(0, time - 1),
+            statusText: statusText
+        });
     };
 
-    Login = async () => {
-        const email = user.settings.email;
-        const { status, remainMailTime } = await user.server.Connect(email);
+    WaitingMailConfirmation = async () => {
+        const response = await user.server2.tcp.SendAndWait(
+            { action: 'wait-mail', email: user.settings.email },
+            (data) => {
+                // Mail confirmed
+                if (data.status === 'wait-mail') {
+                    if (data.result === 'confirmed') {
+                        return true;
+                    }
+
+                    // Mail sent
+                    if (data.result === 'sent') {
+                        this.setState({ time: data.remainingTime ?? 3600 });
+                    }
+                }
+
+                return false;
+            },
+            -1,
+            false
+        );
+
+        if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
+            user.interface.console?.AddLog('error', `Server connection failed (${response})`);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['login']['alert-error-title'],
+                    message: langManager.curr['login']['alert-error-message']
+                },
+                callback: () => user.interface.BackHandle(),
+                cancelable: false
+            });
+
+            user.settings.email = '';
+            user.settings.Save();
+            return;
+        }
+
+        // Error
+        if (response.status !== 'wait-mail' || response.result === 'error') {
+            user.interface.console?.AddLog('error', 'Server error:', response);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['login']['alert-error-title'],
+                    message: langManager.curr['login']['alert-error-message']
+                },
+                callback: () => user.interface.BackHandle(),
+                cancelable: false
+            });
+
+            user.settings.email = '';
+            user.settings.Save();
+            return;
+        }
 
         // Connected
-        if (status === 'ok') {
+        if (response.result === 'confirmed') {
             user.settings.connected = true;
             await user.settings.Save();
             user.interface.ChangePage('loading', { storeInHistory: false });
             return;
         }
 
-        // Too many devices
-        if (status === 'limitDevice') {
-            const title = langManager.curr['login']['alert-limitDevice-title'];
-            const message = langManager.curr['login']['alert-limitDevice-message'];
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: { title, message },
-                callback: () => user.interface.BackHandle()
-            });
-
-            user.settings.email = '';
-            user.settings.Save();
-        }
-
-        // Error, account not exists
-        else if (status === 'free') {
-            user.settings.email = '';
-            user.settings.Save();
-            user.interface.BackHandle();
-        } else if (status === 'newDevice') {
+        if (response.result === 'sent') {
             this.setState({ time: 'sent' });
-        } else if (status === 'waitMailConfirmation') {
-            this.setState({ time: remainMailTime });
-        } else if (status === 'remDevice') {
-            await this.Login();
         }
     };
 }

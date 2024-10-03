@@ -1,8 +1,11 @@
+import DataClassTemplate from './_Template';
+
 /**
  * @typedef {import('Types/Data/Contributors').Contributor} Contributor
  */
 
-class Contributors {
+/** @extends {DataClassTemplate<Contributor[]>} */
+class Contributors extends DataClassTemplate {
     /** @type {Contributor[]} */
     contributors = [];
 
@@ -18,6 +21,10 @@ class Contributors {
     }
 
     Save() {
+        return this.contributors;
+    }
+
+    Get() {
         return this.contributors;
     }
 }

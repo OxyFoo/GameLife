@@ -28,25 +28,45 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Connect to the server TCP
     //await user.tcp.Connect();
     const t1 = performance.now();
-    const connected1 = await user.server2.Connect();
+    const status = await user.server2.Connect();
+    console.log('Connect to the server TCP:', status);
     const t2 = performance.now();
-    if (!connected1) {
-        console.log('Failed to connect to the server TCP');
-    } else {
-        console.log('Connect to the server TCP:', t2 - t1, 'ms');
+    if (status === 'not-connected') {
+        fe.ChangePage('waitinternet', {
+            storeInHistory: false,
+            transition: 'fromBottom'
+        });
+        return;
+    } else if (status === 'error') {
+        fe.ChangePage('display', {
+            args: {
+                icon: 'close-filled',
+                // TODO: Message "Server not reachable"
+                text: '[Connection to the server failed]',
+                button: 'Retry',
+                action: () => {
+                    fe.ChangePage('loading', { storeInHistory: false });
+                }
+            },
+            storeInHistory: false
+        });
+        return;
     }
 
-    // Loading internal data
-    if (user.server2.IsLogged()) {
-        await user.server2.LoadInternalData();
+    console.log('Connect to the server TCP:', t2 - t1, 'ms');
+
+    const email = user.settings.email;
+    if (email === '') {
+        fe.ChangePage('login', {
+            storeInHistory: false,
+            transition: 'fromBottom'
+        });
+        return;
     }
 
-    // Ping request
+    //await user.server2.LoadInternalData();
+
     //await user.server.Ping(); // TODO: Set timeout ?
-    //if (user.server.IsConnected() === false) {
-    //    user.interface.console?.AddLog('warn', 'Ping request failed, retrying...');
-    //    await user.server.Ping();
-    //}
 
     //const online = user.server.IsConnected();
     //if (!online) {
@@ -98,7 +118,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Redirection: Login page (or wait internet page)
-    const email = user.settings.email;
+    //const email = user.settings.email;
     if (email === '') {
         if (user.server2.IsConnected()) {
             fe.ChangePage('login', { storeInHistory: false });
@@ -110,11 +130,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Redirection: Wait mail page (if needed)
-    const connected = user.settings.connected;
-    if (!connected) {
+    if (!user.settings.connected) {
         fe.ChangePage('waitmail', { storeInHistory: false });
         return;
     }
+
+    console.log('User connected:', email);
+    return;
 
     // Loading: User data
     await user.LocalLoad();

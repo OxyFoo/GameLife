@@ -4,10 +4,11 @@ import { GetByKey } from 'Utils/Functions';
 
 /**
  * @typedef {import('Types/Data/Skills').Skill} Skill
- * @typedef {import('Types/Data/Skills').Icon} Icon
- * @typedef {import('Types/Data/Skills').Category} Category
+ * @typedef {import('Types/Data/Skills').SkillIcon} Icon
+ * @typedef {import('Types/Data/Skills').SkillCategory} Category
  */
 
+/** @extends {DataClassTemplate<{ skills: Skill[], skillsIcon: Icon[], skillsCategory: Category[] }>} */
 class Skills {
     /** @type {Skill[]} */
     skills = [];
@@ -39,12 +40,11 @@ class Skills {
     }
 
     Save() {
-        const data = {
+        return {
             skills: this.skills,
             skillsIcon: this.icons,
             skillsCategory: this.categories
         };
-        return data;
     }
 
     /**

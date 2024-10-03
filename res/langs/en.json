@@ -444,12 +444,12 @@
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
 
+        "alert-error-title": "Error",
+        "alert-error-message": "An error has occurred, please try again later.",
         "alert-deletedaccount-title": "Account deleted",
         "alert-deletedaccount-message": "Your account has been deleted.",
         "alert-limitAccount-title": "Too many accounts",
         "alert-limitAccount-message": "You can't create more than 3 accounts with one device.",
-        "alert-limitDevice-title": "Too many devices on this account",
-        "alert-limitDevice-message": "You can't have more than 5 devices connected to a single account.",
         "alert-deviceRemoved-title": "Device removed",
         "alert-deviceRemoved-message": "Your device has been removed from your account because you already have the maximum number of devices on this account."
     },

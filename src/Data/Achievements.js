@@ -1,3 +1,5 @@
+import DataClassTemplate from './_Template';
+
 /**
  * @typedef {import('Types/Data/Achievements').Comparator} Comparator
  * @typedef {import('Types/Data/Achievements').Operator} Operator
@@ -17,7 +19,8 @@ const OPERATORS = ['None', 'LT', 'GT'];
 /** @type {Array<RewardType>} */
 const REWARDS = ['Title', 'Item', 'OX'];
 
-class Achievements {
+/** @extends {DataClassTemplate<Achievement[]>} */
+class Achievements extends DataClassTemplate {
     /** @type {Array<Achievement>} */
     achievements = [];
 
@@ -48,6 +51,10 @@ class Achievements {
     }
 
     Save() {
+        return this.achievements;
+    }
+
+    Get() {
         return this.achievements;
     }
 

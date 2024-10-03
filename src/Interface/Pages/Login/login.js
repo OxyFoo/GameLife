@@ -15,7 +15,7 @@ async function Login(email) {
     const lang = langManager.curr['login'];
 
     this.setState({ loading: true });
-    const { status } = await user.server.Connect(email);
+    const status = await user.server2.Login(email);
     await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Logged in
@@ -31,25 +31,15 @@ async function Login(email) {
         this.goToSignin();
     }
 
-    // Too many devices
-    else if (status === 'limitDevice') {
-        const title = lang['alert-limitDevice-title'];
-        const message = lang['alert-limitDevice-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
-    }
-
     // New device or mail unconfirmed
-    else if (status === 'waitMailConfirmation' || status === 'newDevice') {
+    else if (status === 'waitMailConfirmation') {
         user.settings.email = email;
         await user.settings.Save();
         user.interface.ChangePage('waitmail', { storeInHistory: false });
     }
 
     // Error
-    else if (status === 'error') {
+    else {
         this.setState({ errorEmail: lang['error-signin-server'] }, () => {
             this.checkConnection();
         });
@@ -66,39 +56,39 @@ async function Login(email) {
 async function Signin(email, username) {
     const lang = langManager.curr['login'];
     this.setState({ loading: true });
-    const signinStatus = await user.server.Signin(email, username);
+    const signinStatus = await user.server2.Signin(username, email);
     await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Signin success
     if (signinStatus === 'ok') {
-        user.settings.email = email;
-        await user.settings.Save();
-        user.interface.ChangePage('waitmail', { storeInHistory: false });
+        await Login.call(this, email);
         return;
     }
 
     // Too many devices
     else if (signinStatus === 'limitAccount') {
-        const title = lang['alert-limitAccount-title'];
-        const message = lang['alert-limitAccount-message'];
         user.interface.popup?.OpenT({
             type: 'ok',
-            data: { title, message }
+            data: {
+                title: lang['alert-limitAccount-title'],
+                message: lang['alert-limitAccount-message']
+            }
         });
     }
 
     // Username already used
-    else if (signinStatus === 'pseudoUsed') {
+    else if (signinStatus === 'usernameAlreadyUsed') {
         this.setState({ errorUsername: lang['error-signin-pseudoUsed'] });
     }
 
     // Username incorrect
-    else if (signinStatus === 'pseudoIncorrect') {
+    else if (signinStatus === 'invalidUsername' || signinStatus === 'usernameIsBlacklisted') {
         this.setState({ errorUsername: lang['error-signin-pseudoIncorrect'] });
     }
 
     // Error
     else {
+        user.interface.console?.AddLog('error', 'Signin error:', signinStatus);
         this.setState({
             username: '',
             errorUsername: '',

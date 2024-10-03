@@ -26,16 +26,16 @@ function GetDeviceInformations(OS = false, version = false) {
     return device;
 }
 
-/**
- * Return a hash to identify the device
- * @returns {string}
- */
-function GetDeviceHash() {
+function GetDeviceIdentifiers() {
+    const constKey = 'GameLifeIsBestAppToLiveBestLife';
     const deviceID = DeviceInfo.getUniqueIdSync();
-    const deviceOS = DeviceInfo.getSystemName();
-    const text = `${deviceID}-${deviceOS}`;
-    const hash = crypto.SHA256(text).toString();
-    return hash;
+    const deviceName = DeviceInfo.getDeviceNameSync();
+    const OSName = DeviceInfo.getSystemName();
+    const OSVersion = DeviceInfo.getSystemVersion();
+
+    const text = `${deviceID}-${OSName}-${OSVersion}-${constKey}`;
+    const identifier = crypto.SHA256(text).toString();
+    return { identifier, deviceName, OSName, OSVersion };
 }
 
 /**
@@ -62,4 +62,4 @@ function GetLangRegionLocale() {
     return langRegionLocale.split('_')[0];
 }
 
-export { GetDeviceInformations, GetDeviceHash, GetBattery, GetLangRegionLocale };
+export { GetDeviceInformations, GetDeviceIdentifiers, GetBattery, GetLangRegionLocale };

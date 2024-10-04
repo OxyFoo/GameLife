@@ -14,13 +14,9 @@ class Server {
         this.tcp = new TCP(user);
     }
 
-    token = '';
-    isLogged = false;
-    isBanned = false;
-
     IsConnected = () => this.tcp.IsConnected();
     /** @deprecated */
-    IsLogged = () => this.token !== '' && this.tcp.IsConnected();
+    IsLogged = () => this.user.settings.token !== '' && this.tcp.IsConnected();
 
     /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'error'>} */
     Connect = async () => {
@@ -64,7 +60,7 @@ class Server {
         const response = await this.tcp.SendAndWait({
             action: 'login',
             email,
-            token: this.token
+            token: this.user.settings.token
         });
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
             this.user.interface.console?.AddLog('error', `Server connection failed (${response})`);

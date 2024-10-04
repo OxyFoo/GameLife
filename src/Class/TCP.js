@@ -56,7 +56,6 @@ class TCP {
         return new Promise(async (resolve) => {
             /** @param {boolean} bool */
             const finish = (bool) => {
-                console.log('TCP connection: ========', bool);
                 clearTimeout(_timeout);
                 this.state.RemoveListener(id);
                 resolve(bool);

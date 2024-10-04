@@ -61,7 +61,13 @@ class BackWaitmail extends PageBase {
 
                     // Mail sent
                     if (data.result === 'sent') {
-                        this.setState({ time: data.remainingTime ?? 3600 });
+                        this.secondsRemainingToShowSentMessage = 11;
+                        this.setState({ time: data.remainingTime ?? 0 });
+                    }
+
+                    // Update time
+                    if (data.result === 'wait') {
+                        this.setState({ time: data.remainingTime ?? 0 });
                     }
                 }
 
@@ -89,7 +95,7 @@ class BackWaitmail extends PageBase {
         }
 
         // Error
-        if (response.status !== 'wait-mail' || response.result === 'error') {
+        if (response.status !== 'wait-mail' || response.result !== 'confirmed' || typeof response.token !== 'string') {
             user.interface.console?.AddLog('error', 'Server error:', response);
             user.interface.popup?.OpenT({
                 type: 'ok',
@@ -109,13 +115,10 @@ class BackWaitmail extends PageBase {
         // Connected
         if (response.result === 'confirmed') {
             user.settings.connected = true;
+            user.settings.token = response.token;
             await user.settings.Save();
             user.interface.ChangePage('loading', { storeInHistory: false });
             return;
-        }
-
-        if (response.result === 'sent') {
-            this.setState({ time: 'sent' });
         }
     };
 }

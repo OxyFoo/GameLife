@@ -26,11 +26,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     await user.settings.Load();
 
     // Connect to the server TCP
-    //await user.tcp.Connect();
     const t1 = performance.now();
     const status = await user.server2.Connect();
-    console.log('Connect to the server TCP:', status);
     const t2 = performance.now();
+    user.interface.console?.AddLog('info', `Connect to the server TCP in ${t2 - t1}ms (${status})`);
+
     if (status === 'not-connected') {
         fe.ChangePage('waitinternet', {
             storeInHistory: false,
@@ -53,14 +53,17 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    console.log('Connect to the server TCP:', t2 - t1, 'ms');
-
+    await user.settings.Load();
     const email = user.settings.email;
+    console.log('Email:', email, 'Connected:', user.settings.IsLogged());
     if (email === '') {
         fe.ChangePage('login', {
             storeInHistory: false,
             transition: 'fromBottom'
         });
+        return;
+    } else if (!user.settings.IsLogged()) {
+        fe.ChangePage('waitmail', { storeInHistory: false });
         return;
     }
 
@@ -83,32 +86,32 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     //}
 
     // Check if internal data are loaded
-    const dataLoaded = dataManager.DataAreLoaded();
-    if (!dataLoaded) {
-        user.interface.console?.AddLog('error', 'Internal data not loaded');
-        // Not connected to the server (TODO: and not logged) => Wait internet to login
-        if (!user.server2.IsConnected()) {
-            fe.ChangePage('waitinternet', {
-                storeInHistory: false,
-                transition: 'fromBottom'
-            });
-        }
+    // const dataLoaded = dataManager.DataAreLoaded();
+    // if (!dataLoaded) {
+    //     user.interface.console?.AddLog('error', 'Internal data not loaded');
+    //     // Not connected to the server (TODO: and not logged) => Wait internet to login
+    //     if (!user.server2.IsConnected()) {
+    //         fe.ChangePage('waitinternet', {
+    //             storeInHistory: false,
+    //             transition: 'fromBottom'
+    //         });
+    //     }
 
-        // Connected to the server but not logged => Login page
-        else if (!user.server2.IsLogged()) {
-            // TODO: Disconnect correctly & show popup ?
-            fe.ChangePage('login', {
-                storeInHistory: false,
-                transition: 'fromBottom'
-            });
-        }
+    //     // Connected to the server but not logged => Login page
+    //     else if (!user.server2.IsLogged()) {
+    //         // TODO: Disconnect correctly & show popup ?
+    //         fe.ChangePage('login', {
+    //             storeInHistory: false,
+    //             transition: 'fromBottom'
+    //         });
+    //     }
 
-        // Connected & logged but internal data not loaded => Error message
-        else {
-            callbackError('internaldata-not-loaded');
-        }
-        return;
-    }
+    //     // Connected & logged but internal data not loaded => Error message
+    //     else {
+    //         callbackError('internaldata-not-loaded');
+    //     }
+    //     return;
+    // }
 
     // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
@@ -119,21 +122,15 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Redirection: Login page (or wait internet page)
     //const email = user.settings.email;
-    if (email === '') {
-        if (user.server2.IsConnected()) {
-            fe.ChangePage('login', { storeInHistory: false });
-            return;
-        } else {
-            fe.ChangePage('waitinternet', { storeInHistory: false });
-            return;
-        }
-    }
-
-    // Redirection: Wait mail page (if needed)
-    if (!user.settings.connected) {
-        fe.ChangePage('waitmail', { storeInHistory: false });
-        return;
-    }
+    // if (email === '') {
+    //     if (user.server2.IsConnected()) {
+    //         fe.ChangePage('login', { storeInHistory: false });
+    //         return;
+    //     } else {
+    //         fe.ChangePage('waitinternet', { storeInHistory: false });
+    //         return;
+    //     }
+    // }
 
     console.log('User connected:', email);
     return;

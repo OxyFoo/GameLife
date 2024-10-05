@@ -129,14 +129,13 @@ class UserManager {
         this.shop.Clear();
         this.todoes.Clear();
         await this.settings.Save();
-        this.server2.Disconnect();
 
         await DataStorage.ClearAll();
         await this.LocalSave();
 
         if (keepOnboardingState) {
             this.settings.onboardingWatched = onboarding;
-            this.settings.Save();
+            await this.settings.Save();
         }
     }
 
@@ -166,7 +165,7 @@ class UserManager {
         if (success || forceClear) {
             await this.Clear();
             this.CleanTimers();
-            this.interface.ChangePage('login');
+            this.interface.ChangePage('login', { storeInHistory: false });
         }
 
         return success;

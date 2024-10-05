@@ -36,6 +36,8 @@ class TCP {
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar(INITIAL_STATE);
 
+    isTrusted = false;
+
     /**
      * @description Callback => If True is returned, the callback will be removed
      * @type {Record<string, (data: ReceiveRequest) => boolean | Promise<boolean>>}
@@ -76,16 +78,16 @@ class TCP {
         });
     };
 
+    IsConnected = () => {
+        return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
+    };
+
     Disconnect = () => {
         if (this.IsConnected()) {
             this.socket?.close();
         }
         this.socket = null;
         this.#user.multiplayer.notifications.Set([]);
-    };
-
-    IsConnected = () => {
-        return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
     };
 
     /** @param {Event} _event */
@@ -123,20 +125,11 @@ class TCP {
             }
         }
 
-        const { status } = data;
-        if (status === 'connected' || status === 'disconnected' || status === 'error') {
-            this.state.Set(status);
-            if (status === 'error') {
-                this.#user.interface.console?.AddLog('error', 'Server error:', event.data.message);
-            }
-            if (status !== 'connected') {
-                this.Disconnect();
-            }
-        }
-
-        if (status.startsWith('update-')) {
-            this.#user.multiplayer.onMessage(data);
-        }
+        // TODO: Implement global listeners
+        // const { status } = data;
+        // if (status.startsWith('update-')) {
+        //     this.#user.multiplayer.onMessage(data);
+        // }
     };
 
     /** @param {Event} event */

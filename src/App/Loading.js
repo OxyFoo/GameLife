@@ -2,12 +2,13 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Sleep } from 'Utils/Functions';
+import { Round, Sleep } from 'Utils/Functions';
 import { CheckDate } from 'Utils/DateCheck';
 //import Notifications from 'Utils/Notifications';
 import { Character } from 'Interface/Components';
 
 /**
+ * @typedef {Awaited<ReturnType<import('Managers/DataManager').User['server2']['Login']>>} LoginResponse
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  */
@@ -22,26 +23,25 @@ import { Character } from 'Interface/Components';
 async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const time_start = new Date().getTime();
 
-    // Loading: Settings
+    // TODO: Remove
+    user.interface.console?.Enable();
+
+    // Load important data
     await user.settings.Load();
+    const email = user.settings.email;
 
     // Connect to the server TCP
     const t1 = performance.now();
     const status = await user.server2.Connect();
     const t2 = performance.now();
-    user.interface.console?.AddLog('info', `Connect to the server TCP in ${t2 - t1}ms (${status})`);
+    user.interface.console?.AddLog('info', `Connect to the server in ${Round(t2 - t1, 2)}ms (${status})`);
 
-    if (status === 'not-connected') {
-        fe.ChangePage('waitinternet', {
-            storeInHistory: false,
-            transition: 'fromBottom'
-        });
-        return;
-    } else if (status === 'error') {
+    // An error occured, go to the error page
+    if (status === 'error') {
         fe.ChangePage('display', {
             args: {
                 icon: 'close-filled',
-                // TODO: Message "Server not reachable"
+                // TODO: Message "Server not reachable" with error code ?
                 text: '[Connection to the server failed]',
                 button: 'Retry',
                 action: () => {
@@ -53,60 +53,70 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    await user.settings.Load();
-    const email = user.settings.email;
-
-    // Not logged, go to login page
-    if (email === '') {
-        fe.ChangePage('login', {
+    // Connection to the server failed and not logged (no offline mode), go to the wait internet page
+    if ((status === 'not-connected' || !user.server2.IsTrusted()) && !user.server2.IsLogged()) {
+        fe.ChangePage('waitinternet', {
             storeInHistory: false,
             transition: 'fromBottom'
         });
         return;
     }
 
-    // Already logged, check if the token is still valid
-    else {
-        const response = await user.server2.Login(email);
-
-        // Redirection: Wait mail page
-        if (response === 'waitMailConfirmation') {
-            fe.ChangePage('waitmail', { storeInHistory: false });
-            return;
-        } else if (response === 'free') {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langManager.curr['login']['alert-deletedaccount-title'],
-                    message: langManager.curr['login']['alert-deletedaccount-message']
-                },
-                callback: () => user.Disconnect(true),
-                cancelable: false
-            });
-            return;
-        } else if (response !== 'ok') {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langManager.curr['login']['alert-error-title'],
-                    message: langManager.curr['login']['alert-error-message']
-                },
-                callback: () => user.Disconnect(true),
-                cancelable: false
-            });
-            return;
-        }
+    // Connection to the server is OK but not logged, go to the login page
+    if (user.settings.email === '') {
+        fe.ChangePage('login', { storeInHistory: false });
+        return;
     }
 
-    console.log('User connected:', email);
-    return;
+    /**
+     * User is logged, check if the token is still valid (online)
+     * @type {LoginResponse} Default: false (offline)
+     */
+    let loggedState = false;
+    if (user.server2.IsTrusted() && email !== '') {
+        loggedState = await user.server2.Login(email);
+    }
 
-    // TODO: Offline mode
-    //const online = user.server.IsConnected();
-    //if (!online) {
-    //    user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
-    //}
+    // Try to login but not yet confirmed, go to the wait mail confirmation page
+    if (loggedState === 'waitMailConfirmation') {
+        fe.ChangePage('waitmail', { storeInHistory: false });
+        return;
+    }
 
+    // Account not found, probably deleted, go to the login page
+    else if (loggedState === 'free') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: langManager.curr['login']['alert-deletedaccount-title'],
+                message: langManager.curr['login']['alert-deletedaccount-message']
+            },
+            callback: () => user.Disconnect(true),
+            cancelable: false
+        });
+        return;
+    }
+
+    // An error occured, go to the error page
+    else if (loggedState === 'error' || loggedState === 'mailNotSent') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: langManager.curr['login']['alert-error-title'],
+                message: langManager.curr['login']['alert-error-message'] // TODO: Add error code ?
+            },
+            callback: () => user.Disconnect(true),
+            cancelable: false
+        });
+        return;
+    }
+
+    // Offline mode
+    else if (loggedState === false) {
+        user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+    }
+
+    // 1. User is connected
     nextStep();
 
     // TODO: Load internal data
@@ -138,6 +148,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     await user.LocalLoad();
 
     nextStep();
+
+    console.log('Connected with email:', email);
+    return;
 
     // Loading: User data online
     if (user.server2.IsLogged()) {

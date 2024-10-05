@@ -55,22 +55,53 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     await user.settings.Load();
     const email = user.settings.email;
-    console.log('Email:', email, 'Connected:', user.settings.IsLogged());
+
+    // Not logged, go to login page
     if (email === '') {
         fe.ChangePage('login', {
             storeInHistory: false,
             transition: 'fromBottom'
         });
         return;
-    } else if (!user.settings.IsLogged()) {
-        fe.ChangePage('waitmail', { storeInHistory: false });
-        return;
     }
 
-    //await user.server2.LoadInternalData();
+    // Already logged, check if the token is still valid
+    else {
+        const response = await user.server2.Login(email);
 
-    //await user.server.Ping(); // TODO: Set timeout ?
+        // Redirection: Wait mail page
+        if (response === 'waitMailConfirmation') {
+            fe.ChangePage('waitmail', { storeInHistory: false });
+            return;
+        } else if (response === 'free') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['login']['alert-deletedaccount-title'],
+                    message: langManager.curr['login']['alert-deletedaccount-message']
+                },
+                callback: () => user.Disconnect(true),
+                cancelable: false
+            });
+            return;
+        } else if (response !== 'ok') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['login']['alert-error-title'],
+                    message: langManager.curr['login']['alert-error-message']
+                },
+                callback: () => user.Disconnect(true),
+                cancelable: false
+            });
+            return;
+        }
+    }
 
+    console.log('User connected:', email);
+    return;
+
+    // TODO: Offline mode
     //const online = user.server.IsConnected();
     //if (!online) {
     //    user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
@@ -78,38 +109,21 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     nextStep();
 
+    // TODO: Load internal data
+    //await user.server2.LoadInternalData();
+
     // Loading: Internal data
-    //if (online) {
-    //    await dataManager.OnlineLoad(user);
-    //} else {
-    //    await dataManager.LocalLoad(user);
-    //}
+    // if (online) {
+    //     await dataManager.OnlineLoad(user);
+    // } else {
+    //     await dataManager.LocalLoad(user);
+    // }
 
     // Check if internal data are loaded
     // const dataLoaded = dataManager.DataAreLoaded();
     // if (!dataLoaded) {
     //     user.interface.console?.AddLog('error', 'Internal data not loaded');
-    //     // Not connected to the server (TODO: and not logged) => Wait internet to login
-    //     if (!user.server2.IsConnected()) {
-    //         fe.ChangePage('waitinternet', {
-    //             storeInHistory: false,
-    //             transition: 'fromBottom'
-    //         });
-    //     }
-
-    //     // Connected to the server but not logged => Login page
-    //     else if (!user.server2.IsLogged()) {
-    //         // TODO: Disconnect correctly & show popup ?
-    //         fe.ChangePage('login', {
-    //             storeInHistory: false,
-    //             transition: 'fromBottom'
-    //         });
-    //     }
-
-    //     // Connected & logged but internal data not loaded => Error message
-    //     else {
-    //         callbackError('internaldata-not-loaded');
-    //     }
+    //     callbackError('internaldata-not-loaded');
     //     return;
     // }
 
@@ -120,67 +134,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         //return;
     }
 
-    // Redirection: Login page (or wait internet page)
-    //const email = user.settings.email;
-    // if (email === '') {
-    //     if (user.server2.IsConnected()) {
-    //         fe.ChangePage('login', { storeInHistory: false });
-    //         return;
-    //     } else {
-    //         fe.ChangePage('waitinternet', { storeInHistory: false });
-    //         return;
-    //     }
-    // }
-
-    console.log('User connected:', email);
-    return;
-
     // Loading: User data
     await user.LocalLoad();
-
-    // Connect account if online
-    if (user.server2.IsLogged() && user.server.token === '') {
-        const { status } = await user.server.Connect(email);
-
-        // Too many devices
-        if (status === 'limitDevice') {
-            const title = langManager.curr['login']['alert-deviceRemoved-title'];
-            const message = langManager.curr['login']['alert-deviceRemoved-message'];
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: { title, message },
-                cancelable: false,
-                callback: () => user.Disconnect(true)
-            });
-            return;
-        }
-
-        // Mail not confirmed
-        else if (status === 'newDevice' || status === 'waitMailConfirmation') {
-            while (
-                !fe.ChangePage('waitmail', {
-                    args: { email: email },
-                    storeInHistory: false
-                })
-            ) {
-                await Sleep(100);
-            }
-            return;
-        }
-
-        // Account is deleted
-        else if (status === 'free') {
-            const title = langManager.curr['login']['alert-deletedaccount-title'];
-            const message = langManager.curr['login']['alert-deletedaccount-message'];
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: { title, message },
-                callback: () => user.Disconnect(true),
-                cancelable: false
-            });
-            return;
-        }
-    }
 
     nextStep();
 

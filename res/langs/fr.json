@@ -449,9 +449,7 @@
         "alert-deletedaccount-title": "Compte supprimé",
         "alert-deletedaccount-message": "Ton compte a été supprimé.",
         "alert-limitAccount-title": "Trop de compte",
-        "alert-limitAccount-message": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
-        "alert-deviceRemoved-title": "Appareil retiré",
-        "alert-deviceRemoved-message": "Ton appareil a été retiré car tu as déjà le nombre maximum d'appareils sur ce compte."
+        "alert-limitAccount-message": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil."
     },
 
     "multiplayer": {

@@ -155,17 +155,21 @@ class UserManager {
      * @returns {Promise<boolean>}
      */
     async Disconnect(forceClear = false, allDevices = false) {
-        const result = await this.server.Request('disconnect', { allDevices });
-        const success = result !== null && result['status'] === 'ok';
+        const result = await this.server2.tcp.SendAndWait({ action: 'disconnect', allDevices });
+        const success =
+            result === 'timeout' ||
+            result === 'not-sent' ||
+            result === 'interrupted' ||
+            result.status !== 'disconnect' ||
+            result.result !== 'ok';
 
         if (success || forceClear) {
             await this.Clear();
+            this.CleanTimers();
             this.interface.ChangePage('login');
         }
 
-        this.CleanTimers();
-
-        return result['status'] === 'ok';
+        return success;
     }
     async Unmount() {
         this.CleanTimers();

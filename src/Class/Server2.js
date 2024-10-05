@@ -74,6 +74,10 @@ class Server {
 
         this.isLogged = response.result === 'ok';
         this.isBanned = response.banned ?? false;
+        if (typeof response.token === 'string') {
+            this.user.settings.token = response.token;
+            await this.user.settings.Save();
+        }
         return response.result;
     };
 

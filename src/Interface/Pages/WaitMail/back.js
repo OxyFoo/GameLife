@@ -14,10 +14,22 @@ class BackWaitmail extends PageBase {
     componentDidMount() {
         this.WaitingMailConfirmation();
         this.tick = setInterval(this.onTick, 1000);
+
+        this.listenerServer = user.server2.tcp.state.AddListener((state) => {
+            if (state !== 'connected') {
+                this.fe.ChangePage('waitinternet', {
+                    storeInHistory: false,
+                    transition: 'fromBottom'
+                });
+            }
+        });
     }
 
     componentWillUnmount() {
         clearInterval(this.tick);
+        if (this.listenerServer) {
+            user.server2.tcp.state.RemoveListener(this.listenerServer);
+        }
     }
 
     onBack = () => {

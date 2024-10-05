@@ -449,9 +449,7 @@
         "alert-deletedaccount-title": "Account deleted",
         "alert-deletedaccount-message": "Your account has been deleted.",
         "alert-limitAccount-title": "Too many accounts",
-        "alert-limitAccount-message": "You can't create more than 3 accounts with one device.",
-        "alert-deviceRemoved-title": "Device removed",
-        "alert-deviceRemoved-message": "Your device has been removed from your account because you already have the maximum number of devices on this account."
+        "alert-limitAccount-message": "You can't create more than 3 accounts with one device."
     },
 
     "multiplayer": {

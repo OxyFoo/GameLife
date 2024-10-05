@@ -40,9 +40,7 @@ async function Login(email) {
 
     // Error
     else {
-        this.setState({ errorEmail: lang['error-signin-server'] }, () => {
-            this.checkConnection();
-        });
+        this.setState({ errorEmail: lang['error-signin-server'] });
     }
 }
 

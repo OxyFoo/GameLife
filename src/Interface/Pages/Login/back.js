@@ -45,18 +45,21 @@ class BackLogin extends PageBase {
     }
 
     componentDidMount() {
-        this.checkConnection();
+        this.listenerServer = user.server2.tcp.state.AddListener((state) => {
+            if (state !== 'connected') {
+                this.fe.ChangePage('waitinternet', {
+                    storeInHistory: false,
+                    transition: 'fromBottom'
+                });
+            }
+        });
     }
     componentWillUnmount() {
         user.interface.RemoveCustomBackHandler(this.backToLogin);
-    }
-
-    checkConnection = async () => {
-        await user.server.Ping(true);
-        if (!user.server.online) {
-            user.interface.ChangePage('waitinternet');
+        if (this.listenerServer) {
+            user.server2.tcp.state.RemoveListener(this.listenerServer);
         }
-    };
+    }
 
     /** @param {string} newEmail */
     onChangeEmail = (newEmail) => {

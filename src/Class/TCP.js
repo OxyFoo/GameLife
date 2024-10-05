@@ -20,11 +20,14 @@ const TCP_SETTINGS = {
 const INITIAL_STATE = 'idle';
 
 class TCP {
+    /** @type {UserManager} */
+    #user;
+
     /**
      * @param {UserManager} user Used to get the token & print logs
      */
     constructor(user) {
-        this.user = user;
+        this.#user = user;
     }
 
     /** @type {WebSocket | null} */
@@ -37,7 +40,7 @@ class TCP {
      * @description Callback => If True is returned, the callback will be removed
      * @type {Record<string, (data: ReceiveRequest) => boolean | Promise<boolean>>}
      */
-    callbacks = {};
+    #callbacks = {};
 
     /**
      * @param {number} [timeout] in milliseconds
@@ -46,10 +49,10 @@ class TCP {
     Connect = async (timeout = 10000) => {
         const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'gamelife-client');
-        socket.addEventListener('open', this.onOpen);
-        socket.addEventListener('message', this.onMessage);
-        socket.addEventListener('error', this.onError);
-        socket.addEventListener('close', this.onClose);
+        socket.addEventListener('open', this.#onOpen);
+        socket.addEventListener('message', this.#onMessage);
+        socket.addEventListener('error', this.#onError);
+        socket.addEventListener('close', this.#onClose);
         this.socket = socket;
 
         this.state.Set('connecting');
@@ -78,7 +81,7 @@ class TCP {
             this.socket?.close();
         }
         this.socket = null;
-        this.user.multiplayer.notifications.Set([]);
+        this.#user.multiplayer.notifications.Set([]);
     };
 
     IsConnected = () => {
@@ -86,35 +89,35 @@ class TCP {
     };
 
     /** @param {Event} _event */
-    onOpen = (_event) => {
+    #onOpen = (_event) => {
         this.state.Set('connected');
     };
 
     /** @param {MessageEvent} event */
-    onMessage = async (event) => {
+    #onMessage = async (event) => {
         /** @type {ReceiveRequest} */
         const data = JSON.parse(event.data);
 
         // Callbacks
-        if (data.callbackID && data.callbackID in this.callbacks) {
+        if (data.callbackID && data.callbackID in this.#callbacks) {
             const callbackID = data.callbackID;
-            const callback = this.callbacks[callbackID];
+            const callback = this.#callbacks[callbackID];
             if (typeof callback === 'function') {
                 const removeCallback = await callback(data);
                 if (removeCallback) {
-                    delete this.callbacks[callbackID];
+                    delete this.#callbacks[callbackID];
                 }
                 return;
             }
         }
 
         // Callbacks from status
-        if (data.status in this.callbacks) {
-            const callback = this.callbacks[data.status];
+        if (data.status in this.#callbacks) {
+            const callback = this.#callbacks[data.status];
             if (typeof callback === 'function') {
                 const removeCallback = await callback(data);
                 if (removeCallback) {
-                    delete this.callbacks[data.status];
+                    delete this.#callbacks[data.status];
                 }
                 return;
             }
@@ -124,7 +127,7 @@ class TCP {
         if (status === 'connected' || status === 'disconnected' || status === 'error') {
             this.state.Set(status);
             if (status === 'error') {
-                this.user.interface.console?.AddLog('error', 'Server error:', event.data.message);
+                this.#user.interface.console?.AddLog('error', 'Server error:', event.data.message);
             }
             if (status !== 'connected') {
                 this.Disconnect();
@@ -132,19 +135,19 @@ class TCP {
         }
 
         if (status.startsWith('update-')) {
-            this.user.multiplayer.onMessage(data);
+            this.#user.multiplayer.onMessage(data);
         }
     };
 
     /** @param {Event} event */
-    onError = (event) => {
-        this.user.interface.console?.AddLog('warn', 'TCP server:', event);
+    #onError = (event) => {
+        this.#user.interface.console?.AddLog('warn', 'TCP server:', event);
         this.state.Set('error');
         this.Disconnect();
     };
 
     /** @param {CloseEvent} _event */
-    onClose = (_event) => {
+    #onClose = (_event) => {
         this.state.Set('disconnected');
         this.Disconnect();
     };
@@ -155,12 +158,12 @@ class TCP {
      */
     Send = (message) => {
         if (typeof message !== 'object') {
-            this.user.interface.console?.AddLog('warn', 'Send socket: Invalid message type.');
+            this.#user.interface.console?.AddLog('warn', 'Send socket: Invalid message type.');
             return false;
         }
 
         if (this.socket === null) {
-            this.user.interface.console?.AddLog('warn', 'Send socket: Not connected.');
+            this.#user.interface.console?.AddLog('warn', 'Send socket: Not connected.');
             return false;
         }
 
@@ -179,7 +182,7 @@ class TCP {
 
         if (useCallbackID) {
             // Define random callback ID
-            while (!ID || ID in this.callbacks) {
+            while (!ID || ID in this.#callbacks) {
                 ID = RandomString(8);
             }
         } else {
@@ -222,7 +225,7 @@ class TCP {
             };
 
             // Set the callback
-            this.callbacks[callbackID] = async (data) => {
+            this.#callbacks[callbackID] = async (data) => {
                 if (timer !== null) {
                     clearTimeout(timer);
                 }

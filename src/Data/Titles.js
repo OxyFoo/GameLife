@@ -31,7 +31,7 @@ class Titles extends DataClassTemplate {
 
     /** @returns {Title[]} */
     GetBuyable = () => {
-        return this.titles.filter((t) => t.Buyable === 1);
+        return this.titles.filter((t) => t.Buyable);
     };
 
     /**

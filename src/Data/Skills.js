@@ -4,8 +4,8 @@ import { GetByKey } from 'Utils/Functions';
 
 /**
  * @typedef {import('Types/Data/Skills').Skill} Skill
- * @typedef {import('Types/Data/Skills').SkillIcon} Icon
- * @typedef {import('Types/Data/Skills').SkillCategory} Category
+ * @typedef {import('Types/Data/SkillIcons').SkillIcon} Icon
+ * @typedef {import('Types/Data/SkillCategories').SkillCategory} Category
  */
 
 /** @extends {DataClassTemplate<{ skills: Skill[], skillsIcon: Icon[], skillsCategory: Category[] }>} */

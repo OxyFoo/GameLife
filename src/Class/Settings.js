@@ -114,10 +114,6 @@ class Settings {
             }
         }
     }
-
-    IsLogged() {
-        return this.email !== '' && this.token !== '';
-    }
 }
 
 export default Settings;

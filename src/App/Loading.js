@@ -119,8 +119,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // 1. User is connected
     nextStep();
 
-    // TODO: Load internal data
-    //await user.server2.LoadInternalData();
+    // Load local user data
+    await user.LocalLoad();
+
+    // Load internal data
+    await user.server2.LoadInternalData();
 
     // Loading: Internal data
     // if (online) {
@@ -143,9 +146,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         //fe.ChangePage('onboarding', { storeInHistory: false });
         //return;
     }
-
-    // Loading: User data
-    await user.LocalLoad();
 
     nextStep();
 

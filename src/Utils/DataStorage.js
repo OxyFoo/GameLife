@@ -5,9 +5,9 @@ import { StrIsJSON } from './String';
 const STORAGE_KEYS = {
     LOGIN: '@data/login',
     USER: '@data/user',
-    INTERNAL: '@data/internal',
+    APPDATA: '@data/app',
 
-    INTERNAL_HASHES: '@settings/internal_hashes',
+    APPDATA_HASHES: '@settings/appdata_hashes',
     DATE: '@tools/date'
 };
 

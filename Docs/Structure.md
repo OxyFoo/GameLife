@@ -8,7 +8,7 @@
 | `src` | Contient tous les codes sources pour la compilation de l'application |
 | `src > App` | Contient le script principal, qui gère le chargement de l'application |
 | `src > Class` | Toutes les classes utilisées par le UserManager, correspondantes aux données côté utilisateur |
-| `src > Data` | Toutes les classes utilisées dans les "Internal data" correspondantes aux données côté base de donnée |
+| `src > Data` | Toutes les classes utilisées dans les "App data" correspondantes aux données côté base de donnée |
 | `src > Interface` | Les pages de l'app (front + back) ainsi que les composants et les widgets (ensemble de composants) |
 | `src > Managers` | Classes qui gèrent toute une partie de l'app |
 | `src > HTTP` | Contient tous les fichiers serveurs HTTP, responsables de tous les échanges de données entre le serveur et l'application |
@@ -17,7 +17,7 @@
 | `Tools` | Outils pour améliorer l'app (Legion pour DDOS l'app, TableFusion pour synchroniser les bases de données) |
 
 ### Variables
-| Internal Data | User class | Database |
+| App Data | User class | Database |
 |-|-|-|
 | Achievements | Achievement | InventoriesAchievements |
 | Skills (SkillsIcon & SkillsCategory) | Activity | Activities |
@@ -33,7 +33,7 @@
 - Notifications (amis)
 
 ### HTTP (PHP - Apache2)
-- Internal data
+- App data
 - Inventaires
 - Pubs
 - Shop

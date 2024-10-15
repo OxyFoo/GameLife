@@ -135,7 +135,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         'items'
     );
 
-    // Load internal data
+    // Load app data
     await dataManager.LocalLoad(user);
     if (user.server2.IsAuthenticated()) {
         const _t = performance.now();
@@ -156,11 +156,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         await dataManager.LocalSave(user);
     }
 
-    // Check if internal data are loaded
+    // Check if app data are loaded
     // const dataLoaded = dataManager.DataAreLoaded();
     // if (!dataLoaded) {
-    //     user.interface.console?.AddLog('error', 'Internal data not loaded');
-    //     callbackError('internaldata-not-loaded');
+    //     user.interface.console?.AddLog('error', 'App data not loaded');
+    //     callbackError('appdata-not-loaded');
     //     return;
     // }
 

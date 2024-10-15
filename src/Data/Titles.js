@@ -1,11 +1,11 @@
-import { IInternalData } from 'Types/Interface/IInternalData';
+import { IAppData } from 'Types/Interface/IAppData';
 
 /**
  * @typedef {import('Types/Data/Titles').Title} Title
  */
 
-/** @extends {IInternalData<Title[]>} */
-class Titles extends IInternalData {
+/** @extends {IAppData<Title[]>} */
+class Titles extends IAppData {
     /** @type {Title[]} */
     titles = [];
 

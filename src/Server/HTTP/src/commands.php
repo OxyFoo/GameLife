@@ -26,7 +26,7 @@ require('./src/sql/accounts.php');
 require('./src/sql/achievements.php');
 require('./src/sql/devices.php');
 require('./src/sql/users.php');
-require('./src/sql/internalData.php');
+require('./src/sql/appData.php');
 require('./src/sql/sql.php');
 
 class Commands {
@@ -128,7 +128,7 @@ class Commands {
             return;
         } else if ($versionServer < $versionApp) {
             $this->output['status'] = 'downdate';
-            // Don't return to download resources (internalData) if the app is newer than the server
+            // Don't return to download resources (appData) if the app is newer than the server
         } else if ($maintenance) {
             $this->output['status'] = 'maintenance';
             return;
@@ -296,10 +296,10 @@ class Commands {
     }
 
     /**
-     * Recover all the internal data of the application if it has them
+     * Recover all the app data of the application if it has them
      * namely: activities, quotes, icons, titles, successes etc.
      */
-    public function GetInternalData() {
+    public function GetAppData() {
         global $IAP_REWARDS;
 
         $appData = GetAppData($this->db);
@@ -307,7 +307,7 @@ class Commands {
 
         if (isset($reqHashes) || $reqHashes === null) {
             $appHashes = $appData['Hashes'];
-            $newTables = GetNewInternalData($this->db, $reqHashes, $appHashes);
+            $newTables = GetNewAppData($this->db, $reqHashes, $appHashes);
 
             // Return new hashes & data
             $this->output['news'] = $appData['News'];

@@ -254,7 +254,7 @@ class ConsoleBack extends React.Component {
         user.interface.ChangePage('responsive');
     };
 
-    refreshInternalData = async () => {
+    refreshAppData = async () => {
         this.toggleDeleteButtons();
 
         dataManager.Clear();

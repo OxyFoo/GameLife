@@ -42,8 +42,8 @@ class DataManager {
         this.quotes.Clear();
         this.skills.Clear();
         this.titles.Clear();
-        DataStorage.Save(STORAGE.INTERNAL, null);
-        DataStorage.Save(STORAGE.INTERNAL_HASHES, null);
+        DataStorage.Save(STORAGE.APPDATA, null);
+        DataStorage.Save(STORAGE.APPDATA_HASHES, null);
     }
 
     /**
@@ -60,23 +60,23 @@ class DataManager {
     }
 
     /**
-     * Local save Internal data
+     * Local save App data
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully saved
      */
     async LocalSave(user) {
-        const debugIndex = user.interface.console?.AddLog('info', 'Internal data: local saving...');
+        const debugIndex = user.interface.console?.AddLog('info', 'App data: local saving...');
 
         // Save hashes
-        const savedHashes = await DataStorage.Save(STORAGE.INTERNAL_HASHES, this.#tableHashes);
+        const savedHashes = await DataStorage.Save(STORAGE.APPDATA_HASHES, this.#tableHashes);
         if (!savedHashes) {
-            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: local save failed');
+            user.interface.console?.EditLog(debugIndex, 'error', 'App data: local save failed');
             return false;
         }
 
-        // Save internal data
+        // Save app data
         /** @type {DataTypes} */
-        const internalData = {
+        const appData = {
             achievements: this.achievements.Save(),
             contributors: this.contributors.Save(),
             //items: this.items.Save(), // TODO: Reimplement items
@@ -85,68 +85,68 @@ class DataManager {
             titles: this.titles.Save()
         };
 
-        const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData);
+        const saved = await DataStorage.Save(STORAGE.APPDATA, appData);
         if (saved) {
-            user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local save success');
+            user.interface.console?.EditLog(debugIndex, 'same', 'App data: local save success');
         } else {
-            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: local save failed');
+            user.interface.console?.EditLog(debugIndex, 'error', 'App data: local save failed');
         }
 
         return saved;
     }
 
     /**
-     * Local load Internal data
+     * Local load app data
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async LocalLoad(user) {
-        const debugIndex = user.interface.console?.AddLog('info', 'Internal data: local loading...');
+        const debugIndex = user.interface.console?.AddLog('info', 'App data: local loading...');
 
         // Load hashes
         /** @type {DataHashes | null} */
-        const hashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES);
+        const hashes = await DataStorage.Load(STORAGE.APPDATA_HASHES);
         if (hashes === null) {
-            user.interface.console?.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
+            user.interface.console?.EditLog(debugIndex, 'warn', 'App data: local load failed');
             return false;
         }
 
         this.#tableHashes = hashes;
 
-        // Load internal data
+        // Load app data
         /** @type {DataTypes | null} */
-        const internalData = await DataStorage.Load(STORAGE.INTERNAL);
-        if (internalData === null) {
-            user.interface.console?.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
+        const appData = await DataStorage.Load(STORAGE.APPDATA);
+        if (appData === null) {
+            user.interface.console?.EditLog(debugIndex, 'warn', 'App data: local load failed');
             return false;
         }
 
         // Load data
-        this.achievements.Load(internalData.achievements);
-        this.contributors.Load(internalData.contributors);
-        //this.items.Load(internalData.items); // TODO: Reimplement items
-        this.quotes.Load(internalData.quotes);
+        this.achievements.Load(appData.achievements);
+        this.contributors.Load(appData.contributors);
+        //this.items.Load(appData.items); // TODO: Reimplement items
+        this.quotes.Load(appData.quotes);
         this.skills.Load({
-            skills: internalData.skills,
-            skillIcons: internalData.skillIcons,
-            skillCategories: internalData.skillCategories
+            skills: appData.skills,
+            skillIcons: appData.skillIcons,
+            skillCategories: appData.skillCategories
         });
-        this.titles.Load(internalData.titles);
+        this.titles.Load(appData.titles);
 
-        user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local load success');
+        user.interface.console?.EditLog(debugIndex, 'same', 'App data: local load success');
         return true;
     }
 
     /**
-     * Load Internal data from the server
+     * Load app data from the server
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async OnlineLoad(user) {
-        const debugIndex = user.interface.console?.AddLog('info', 'Internal data: online loading...');
+        const debugIndex = user.interface.console?.AddLog('info', 'App data: online loading...');
 
         const response = await user.server2.tcp.SendAndWait({
-            action: 'get-internal-data',
+            action: 'get-app-data',
             tableHashes: this.#tableHashes
         });
 
@@ -161,8 +161,8 @@ class DataManager {
         }
 
         // Check if the response is valid
-        if (response.status !== 'get-internal-data' || response.data === null || response.hashes === null) {
-            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: invalid response');
+        if (response.status !== 'get-app-data' || response.data === null || response.hashes === null) {
+            user.interface.console?.EditLog(debugIndex, 'error', 'App data: invalid response');
             return false;
         }
 
@@ -201,7 +201,7 @@ class DataManager {
         // TODO: Load IAPs => user.shop.LoadIAPs(reqIAP);
         // TODO: Load price factor => user.shop.priceFactor = priceFactor;
 
-        user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: online load success');
+        user.interface.console?.EditLog(debugIndex, 'same', 'App data: online load success');
         return true;
     }
 }

@@ -1,4 +1,4 @@
-import { IInternalData } from 'Types/Interface/IInternalData';
+import { IAppData } from 'Types/Interface/IAppData';
 
 import { Random } from 'Utils/Functions';
 
@@ -6,8 +6,8 @@ import { Random } from 'Utils/Functions';
  * @typedef {import('Types/Data/Quotes').Quote} Quote
  */
 
-/** @extends {IInternalData<Quote[]>} */
-class Quotes extends IInternalData {
+/** @extends {IAppData<Quote[]>} */
+class Quotes extends IAppData {
     /** @type {Quote[]} */
     quotes = [];
 

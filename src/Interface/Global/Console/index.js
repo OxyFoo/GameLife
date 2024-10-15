@@ -112,9 +112,9 @@ class Console extends ConsoleBack {
                         appearance='uniform'
                         color='main1'
                         fontColor='white'
-                        onPress={this.refreshInternalData}
+                        onPress={this.refreshAppData}
                     >
-                        Refresh internal data
+                        Refresh app data
                     </Button>
 
                     <Button

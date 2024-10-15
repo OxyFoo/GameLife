@@ -1,4 +1,4 @@
-import { IInternalData } from 'Types/Interface/IInternalData';
+import { IAppData } from 'Types/Interface/IAppData';
 
 /**
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
@@ -58,8 +58,8 @@ class Item {
     Buffs = [];
 }
 
-/** @extends {IInternalData<Item[]>} */
-class Items extends IInternalData {
+/** @extends {IAppData<Item[]>} */
+class Items extends IAppData {
     /** @type {Array<Item>} */
     items = [];
 

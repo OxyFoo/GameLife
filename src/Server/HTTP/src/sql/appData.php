@@ -4,7 +4,7 @@
  * @param DataBase $db
  * @return object
  */
-function GetAllInternalData($db) {
+function GetAllAppData($db) {
     $db_all = array();
     $db_all['achievements']   = GetAchievements($db);
     $db_all['contributors']   = GetContributors($db);
@@ -26,7 +26,7 @@ function GetAllInternalData($db) {
  * @param object $reqHashes 3 hashes to compare
  * @param object $appHashes 3 hashes to compare
  */
-function GetNewInternalData($db, $reqHashes, $appHashes) {
+function GetNewAppData($db, $reqHashes, $appHashes) {
     $newTables = array();
 
     if ($reqHashes === null || $reqHashes['skills'] !== $appHashes['skills']) {

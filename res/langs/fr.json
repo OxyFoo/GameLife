@@ -180,7 +180,7 @@
 
     "app": {
         "loading-error-message": {
-            "internaldata-not-loaded": "Les données internes n'ont pas pu être chargées",
+            "appdata-not-loaded": "Les données de l'application n'ont pas pu être chargées",
             "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
             "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
         },

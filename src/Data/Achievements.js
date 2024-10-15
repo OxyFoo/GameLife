@@ -1,11 +1,11 @@
-import { IInternalData } from 'Types/Interface/IInternalData';
+import { IAppData } from 'Types/Interface/IAppData';
 
 /**
  * @typedef {import('Types/Data/Achievements').Achievement} Achievement
  */
 
-/** @extends {IInternalData<Achievement[]>} */
-class Achievements extends IInternalData {
+/** @extends {IAppData<Achievement[]>} */
+class Achievements extends IAppData {
     /** @type {Array<Achievement>} */
     achievements = [];
 

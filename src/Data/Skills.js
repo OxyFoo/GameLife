@@ -1,6 +1,6 @@
 import langManager from 'Managers/LangManager';
 
-import { IInternalData } from 'Types/Interface/IInternalData';
+import { IAppData } from 'Types/Interface/IAppData';
 
 import { GetByKey } from 'Utils/Functions';
 
@@ -12,8 +12,8 @@ import { GetByKey } from 'Utils/Functions';
  * @typedef {{ skills: Skill[], skillIcons: Icon[], skillCategories: Category[] }} DataType
  */
 
-/** @extends {IInternalData<DataType>} */
-class Skills extends IInternalData {
+/** @extends {IAppData<DataType>} */
+class Skills extends IAppData {
     /** @type {Skill[]} */
     skills = [];
 

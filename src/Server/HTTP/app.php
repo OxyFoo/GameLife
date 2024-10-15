@@ -17,7 +17,7 @@ switch ($action) {
     case 'ping':                $commands->Ping();                  break;
     case 'login':               $commands->Login();                 break;
     case 'signin':              $commands->Signin();                break;
-    case 'getInternalData':     $commands->GetInternalData();       break;
+    case 'getAppData':          $commands->GetAppData();            break;
     case 'getUserData':         $commands->GetUserData();           break;
     case 'getUserIntentories':  $commands->GetUserIntentories();    break;
     case 'addUserData':         $commands->AddUserData();           break;
@@ -31,7 +31,7 @@ switch ($action) {
     case 'buyDye':              $commands->BuyDye();                break;
     case 'buyOx':               $commands->BuyOx();                 break;
     case 'sellStuff':           $commands->SellStuff();             break;
-    case 'claimDailyQuest':     $commands->ClaimDailyQuest();      break;
+    case 'claimDailyQuest':     $commands->ClaimDailyQuest();       break;
     case 'claimGlobalNotifs':   $commands->claimGlobalNotifs();     break;
     case 'claimMission':        $commands->claimMission();          break;
     case 'adWatched':           $commands->AdWatched();             break;

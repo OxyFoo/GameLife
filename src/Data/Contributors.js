@@ -1,11 +1,11 @@
-import { IInternalData } from 'Types/Interface/IInternalData';
+import { IAppData } from 'Types/Interface/IAppData';
 
 /**
  * @typedef {import('Types/Data/Contributors').Contributor} Contributor
  */
 
-/** @extends {IInternalData<Contributor[]>} */
-class Contributors extends IInternalData {
+/** @extends {IAppData<Contributor[]>} */
+class Contributors extends IAppData {
     /** @type {Contributor[]} */
     contributors = [];
 

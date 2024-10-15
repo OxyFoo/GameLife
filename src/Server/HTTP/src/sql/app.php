@@ -48,12 +48,12 @@ function GetAppData($db) {
 }
 
 /**
- * Calculate hashes of all internal data
+ * Calculate hashes of all app data
  * @param DataBase $db
  */
 function RefreshHashes($db) {
     // Refresh database hash
-    $db_all = GetAllInternalData($db);
+    $db_all = GetAllAppData($db);
 
     // Get all hashes
     $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillIcons'], $db_all['skillCategories'])));

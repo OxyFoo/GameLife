@@ -13,7 +13,7 @@ import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 
 /**
- * @typedef {import('Class/Missions').MissionsType} MissionsType
+ * @typedef {import('Types/Class/Missions').MissionType} MissionType
  */
 
 class Missions extends BackMissions {
@@ -22,7 +22,7 @@ class Missions extends BackMissions {
         const { style } = this.props;
         const { mission } = this.state;
 
-        if (mission.state === 'claimed') {
+        if (mission === null || mission.state === 'claimed') {
             return null;
         }
 
@@ -112,7 +112,7 @@ class Missions extends BackMissions {
         );
     }
 
-    /** @param {{ item: MissionsType, index: number }} param0 */
+    /** @param {{ item: MissionType, index: number }} param0 */
     rewardListElement = ({ item, index }) => {
         const { step } = this.state;
 
@@ -150,6 +150,8 @@ class Missions extends BackMissions {
             );
         } else if (rewardType === 'chest') {
             return <Image style={styles.rewardImage} source={IMG_CHESTS[rewardValue]} />;
+        } else {
+            return null;
         }
     }
 }

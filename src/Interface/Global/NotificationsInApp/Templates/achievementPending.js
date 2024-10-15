@@ -32,14 +32,11 @@ function NIA_AchievementPending({ notif }) {
     const claimHandle = async () => {
         const langAch = langManager.curr['achievements'];
         setLoading(true);
-        const claimText = await user.achievements.Claim(notif.data.achievementID);
+        const claimRewards = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
 
-        if (claimText === null) {
-            return;
-        }
-
-        if (claimText === false) {
+        // An error occurred
+        if (claimRewards === null) {
             const title = langAch['alert-achievement-error-title'];
             const message = langAch['alert-achievement-error-message'];
             user.interface.notificationsInApp?.Close();
@@ -50,11 +47,19 @@ function NIA_AchievementPending({ notif }) {
             return;
         }
 
+        // Claimed successfully, get the text
+        const rewardText = user.achievements.getRewardsText(claimRewards);
+        const achievementName = langManager.GetText(achievement.Name);
+        let message = langAch['alert-achievement-text'].replace('{}', achievementName);
+        if (rewardText) {
+            message += `\n\n${rewardText}`;
+        }
+
         const title = langAch['alert-achievement-title'];
         user.interface.notificationsInApp?.Close();
         user.interface.popup?.OpenT({
             type: 'ok',
-            data: { title, message: claimText }
+            data: { title, message }
         });
     };
 

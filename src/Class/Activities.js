@@ -1,6 +1,7 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
+import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
 import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
@@ -12,6 +13,8 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  * @typedef {import('Types/Class/Activities').Activity} Activity
  * @typedef {import('Types/Class/Activities').ActivityUnsaved} ActivityUnsaved
+ * @typedef {import('Types/Class/Activities').SaveObject_Local_Activities} SaveObject_Local_Activities
+ * @typedef {import('Types/Class/Activities').SaveObject_Online_Activities} SaveObject_Online_Activities
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
@@ -21,12 +24,6 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
 
 const MAX_HOUR_PER_DAY = 12;
 const HOURS_BEFORE_LIMIT = 48;
-
-/** @type {Array<Activity>} */
-const EMPTY_ACTIVITIES = [];
-
-/** @type {CurrentActivity | null} */
-const INITIAL_ACTIVITY = null;
 
 /** @type {Activity} */
 const DEFAULT_ACTIVITY = {
@@ -40,9 +37,11 @@ const DEFAULT_ACTIVITY = {
     friends: []
 };
 
-class Activities {
+/** @extends {IUserData<SaveObject_Local_Activities, SaveObject_Online_Activities>} */
+class Activities extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
+        super();
         this.user = user;
     }
 
@@ -59,47 +58,48 @@ class Activities {
      * @description Contain all activities, updated when adding, editing or removing
      * @type {DynamicVar<Array<Activity>>}
      */
-    allActivities = new DynamicVar(EMPTY_ACTIVITIES);
+    // eslint-disable-next-line prettier/prettier
+    allActivities = new DynamicVar(/** @type {Array<Activity>} */ ([]));
 
     /** @type {DynamicVar<CurrentActivity | null>} */
-    currentActivity = new DynamicVar(INITIAL_ACTIVITY);
+    // eslint-disable-next-line prettier/prettier
+    currentActivity = new DynamicVar(/** @type {CurrentActivity | null} */ (null));
 
     /** @type {{[name: string]: function}} */
     callbacks = {};
 
-    Clear() {
+    Clear = () => {
         this.activities = [];
         this.UNSAVED_activities = [];
         this.UNSAVED_deletions = [];
         this.currentActivity.Set(null);
         this.allActivities.Set([]);
-    }
+    };
 
-    /**
-     * @param {Object} activities
-     * @param {Array<Activity>} activities.activities
-     * @param {Array<Activity>} activities.unsaved
-     * @param {Array<Activity>} activities.deletions
-     * @param {CurrentActivity} activities.current
-     */
-    Load(activities) {
-        /** @param {string} key */
-        const contains = (key) => activities.hasOwnProperty(key);
-        if (contains('activities')) this.activities = activities['activities'];
-        if (contains('unsaved')) this.UNSAVED_activities = activities['unsaved'];
-        if (contains('deletions')) this.UNSAVED_deletions = activities['deletions'];
-        if (contains('current')) this.currentActivity.Set(activities['current']);
+    /** @param {SaveObject_Local_Activities} data */
+    Load = (data) => {
+        if (typeof data.activities !== 'undefined') {
+            this.activities = data.activities;
+        }
+        if (typeof data.unsaved !== 'undefined') {
+            this.UNSAVED_activities = data.unsaved;
+        }
+        if (typeof data.deletions !== 'undefined') {
+            this.UNSAVED_deletions = data.deletions;
+        }
+        if (typeof data.current !== 'undefined') {
+            this.currentActivity.Set(data.current);
+        }
         this.allActivities.Set(this.Get());
-    }
+    };
 
-    /**
-     * @param {Array<Activity>} activities
-     */
-    LoadOnline(activities) {
-        if (typeof activities !== 'object') return;
+    /** @param {SaveObject_Online_Activities} data */
+    LoadOnline = (data) => {
+        if (typeof data.activities === 'undefined') return;
+
         this.activities = [];
-        for (let i = 0; i < activities.length; i++) {
-            const activity = activities[i];
+        for (let i = 0; i < data.activities.length; i++) {
+            const activity = data.activities[i];
 
             // Check if all keys are present
             const keys = Object.keys(activity);
@@ -125,16 +125,17 @@ class Activities {
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
         this.user.interface.console?.AddLog('info', `${length} activities loaded`);
-    }
-    Save() {
-        const activities = {
+    };
+
+    /** @returns {SaveObject_Local_Activities} */
+    Save = () => {
+        return {
             activities: this.activities,
             unsaved: this.UNSAVED_activities,
             deletions: this.UNSAVED_deletions,
             current: this.currentActivity.Get()
         };
-        return activities;
-    }
+    };
 
     cache_get = {
         id: '',

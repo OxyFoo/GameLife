@@ -125,7 +125,7 @@ class ConsoleBack extends React.Component {
 
     /**
      * Edit text in console, to update state debug
-     * @param {number} index
+     * @param {number | undefined} index
      * @param {ConsoleType | 'same'} type
      * @param {string} text
      * @param {Array<any>} params
@@ -133,7 +133,11 @@ class ConsoleBack extends React.Component {
      */
     EditLog = (index, type, text, ...params) => {
         if (typeof index !== 'number') {
-            throw new Error('Index must be a number');
+            // If undefined don't show error, probably console not mounted
+            if (typeof index !== 'undefined') {
+                console.warn('Index must be a number');
+            }
+            return false;
         }
 
         if (!this.state.enabled || index < 0 || index >= this.messages.length) {

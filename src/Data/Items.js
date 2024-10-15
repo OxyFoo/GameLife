@@ -1,4 +1,4 @@
-import DataClassTemplate from './_Template';
+import { IInternalData } from 'Types/Interface/IInternalData';
 
 /**
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
@@ -58,30 +58,30 @@ class Item {
     Buffs = [];
 }
 
-/** @extends {DataClassTemplate<Item[]>} */
-class Items extends DataClassTemplate {
+/** @extends {IInternalData<Item[]>} */
+class Items extends IInternalData {
     /** @type {Array<Item>} */
     items = [];
 
-    Clear() {
+    Clear = () => {
         this.items = [];
-    }
+    };
 
     /** @param {Array<Item>} items */
-    Load(items) {
+    Load = (items) => {
         if (typeof items === 'object') {
             this.items = items;
         }
-    }
+    };
 
-    Save() {
+    Save = () => {
         return this.items;
-    }
+    };
 
     /** @returns {Array<Item>} */
-    Get() {
+    Get = () => {
         return this.items;
-    }
+    };
 
     /**
      * @param {Slot | false} slot

@@ -107,6 +107,7 @@ class EditorAvatarBack extends React.Component {
             this.props.refParent.refPage.current.GotoY(0);
         }
 
+        // TODO: Update deprecated handlers
         user.interface.SetCustomBackHandler(this.CloseEditor);
     };
     CloseEditor = () => {
@@ -114,6 +115,8 @@ class EditorAvatarBack extends React.Component {
         this.props.onChangeState(false);
 
         SpringAnimation(this.state.editorAnim, 0).start();
+
+        // TODO: Update deprecated handlers
         user.interface.ResetCustomBackHandler();
         return false;
     };

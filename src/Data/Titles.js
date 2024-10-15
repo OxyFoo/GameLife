@@ -1,28 +1,29 @@
-import DataClassTemplate from './_Template';
+import { IInternalData } from 'Types/Interface/IInternalData';
 
 /**
  * @typedef {import('Types/Data/Titles').Title} Title
  */
 
-/** @extends {DataClassTemplate<Title[]>} */
-class Titles extends DataClassTemplate {
+/** @extends {IInternalData<Title[]>} */
+class Titles extends IInternalData {
     /** @type {Title[]} */
     titles = [];
 
-    Clear() {
+    Clear = () => {
         this.titles = [];
-    }
+    };
 
     /** @param {Title[]} titles */
-    Load(titles) {
+    Load = (titles) => {
         if (typeof titles === 'object') {
             this.titles = titles;
         }
-    }
+    };
 
-    Save() {
+    /** @returns {Title[]} */
+    Save = () => {
         return this.titles;
-    }
+    };
 
     /** @returns {Title[]} */
     Get = () => {

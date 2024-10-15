@@ -1,20 +1,25 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
+import { IUserData } from 'Types/Interface/IUserData';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/TCP/Request').ZapGPTState} ZapGPTState
+ * @typedef {import('Types/TCP/GameLife/Request').ZapGPTState} ZapGPTState
+ * @typedef {import('Types/Class/Informations').SaveObject_Local_Informations} SaveObject_Local_Informations
  */
 
 const DAYS_USERNAME_CHANGE = 30;
 const DAYS_BIRTHTIME_CHANGE = 365;
 
-class Informations {
+/** @extends {IUserData<SaveObject_Local_Informations>} */
+class Informations extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
+        super();
+
         this.user = user;
     }
 
@@ -47,7 +52,7 @@ class Informations {
     achievementSelfFriend = false;
     purchasedCount = 0;
 
-    Clear() {
+    Clear = () => {
         this.username = new DynamicVar('');
         this.usernameTime = null;
         this.title = new DynamicVar(0);
@@ -62,30 +67,57 @@ class Informations {
         this.zapGPT = { remaining: 0, total: 0 };
         this.achievementSelfFriend = false;
         this.purchasedCount = 0;
-    }
+    };
 
-    Load(informations) {
-        const contains = /** @param {string} key */ (key) => informations.hasOwnProperty(key);
-        if (contains('username')) this.username.Set(informations['username']);
-        if (contains('usernameTime')) this.usernameTime = informations['usernameTime'];
-        if (contains('title')) this.title.Set(informations['title']);
-        if (contains('UNSAVED_title')) this.UNSAVED_title = informations['UNSAVED_title'];
-        if (contains('birthTime')) this.birthTime = informations['birthTime'];
-        if (contains('lastBirthTime')) this.lastBirthTime = informations['lastBirthTime'];
-        if (contains('UNSAVED_birthTime')) this.UNSAVED_birthTime = informations['UNSAVED_birthTime'];
-        if (contains('xp')) this.xp = informations['xp'];
-        if (contains('ox')) this.ox.Set(parseInt(informations['ox'], 10));
-        if (contains('adRemaining')) this.adRemaining = informations['adRemaining'];
-        if (contains('adTotalWatched')) this.adTotalWatched = informations['adTotalWatched'];
-        if (contains('achievementSelfFriend')) this.achievementSelfFriend = informations['achievementSelfFriend'];
-        if (contains('purchasedCount')) this.purchasedCount = informations['purchasedCount'];
-    }
+    /** @param {SaveObject_Local_Informations} data */
+    Load = (data) => {
+        if (data.username) {
+            this.username.Set(data.username);
+        }
+        if (data.usernameTime) {
+            this.usernameTime = data.usernameTime;
+        }
+        if (data.titleID) {
+            this.title.Set(data.titleID);
+        }
+        if (data.UNSAVED_title) {
+            this.UNSAVED_title = data.UNSAVED_title;
+        }
+        if (data.birthTime) {
+            this.birthTime = data.birthTime;
+        }
+        if (data.lastBirthTime) {
+            this.lastBirthTime = data.lastBirthTime;
+        }
+        if (data.UNSAVED_birthTime) {
+            this.UNSAVED_birthTime = data.UNSAVED_birthTime;
+        }
+        if (data.xp) {
+            this.xp = data.xp;
+        }
+        if (data.ox) {
+            this.ox.Set(data.ox);
+        }
+        if (data.adRemaining) {
+            this.adRemaining = data.adRemaining;
+        }
+        if (data.adTotalWatched) {
+            this.adTotalWatched = data.adTotalWatched;
+        }
+        if (data.achievementSelfFriend) {
+            this.achievementSelfFriend = data.achievementSelfFriend;
+        }
+        if (data.purchasedCount) {
+            this.purchasedCount = data.purchasedCount;
+        }
+    };
 
-    Save() {
-        const informations = {
+    /** @returns {SaveObject_Local_Informations} */
+    Save = () => {
+        return {
             username: this.username.Get(),
             usernameTime: this.usernameTime,
-            title: this.title.Get(),
+            titleID: this.title.Get(),
             UNSAVED_title: this.UNSAVED_title,
             birthTime: this.birthTime,
             lastBirthTime: this.lastBirthTime,
@@ -97,8 +129,7 @@ class Informations {
             achievementSelfFriend: this.achievementSelfFriend,
             purchasedCount: this.purchasedCount
         };
-        return informations;
-    }
+    };
 
     IsUnsaved = () => {
         return this.UNSAVED_title !== null || this.UNSAVED_birthTime !== null;

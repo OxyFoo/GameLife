@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
  *
  * @typedef {import('Interface/OldComponents/Container').default} Container
  * @typedef {import('Types/Features/UserOnline').Friend} Friend
- * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
  */
 
 const MultiplayerPanelProps = {

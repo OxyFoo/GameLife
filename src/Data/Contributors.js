@@ -1,32 +1,32 @@
-import DataClassTemplate from './_Template';
+import { IInternalData } from 'Types/Interface/IInternalData';
 
 /**
  * @typedef {import('Types/Data/Contributors').Contributor} Contributor
  */
 
-/** @extends {DataClassTemplate<Contributor[]>} */
-class Contributors extends DataClassTemplate {
+/** @extends {IInternalData<Contributor[]>} */
+class Contributors extends IInternalData {
     /** @type {Contributor[]} */
     contributors = [];
 
-    Clear() {
+    Clear = () => {
         this.contributors = [];
-    }
+    };
 
     /** @param {Contributor[]} contributors */
-    Load(contributors) {
+    Load = (contributors) => {
         if (typeof contributors === 'object') {
             this.contributors = contributors;
         }
-    }
+    };
 
-    Save() {
+    Save = () => {
         return this.contributors;
-    }
+    };
 
-    Get() {
+    Get = () => {
         return this.contributors;
-    }
+    };
 }
 
 export default Contributors;

@@ -1,4 +1,3 @@
-import { Request_Async } from 'Utils/Request';
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 import Achievements from 'Data/Achievements';
@@ -10,9 +9,23 @@ import Titles from 'Data/Titles';
 
 /**
  * @typedef {import('Managers/UserManager').default} User
+ *
+ * @typedef {import('Types/Data/index').DataHashes} DataHashes
+ * @typedef {import('Types/Data/index').DataTypes} DataTypes
  */
 
 class DataManager {
+    /** @type {DataHashes} */
+    #tableHashes = {
+        achievements: 0,
+        contributors: 0,
+        quotes: 0,
+        skills: 0,
+        skillIcons: 0,
+        skillCategories: 0,
+        titles: 0
+    };
+
     constructor() {
         this.achievements = new Achievements();
         this.contributors = new Contributors();
@@ -41,7 +54,7 @@ class DataManager {
         const contributors = this.contributors.contributors.length > 0;
         const items = this.items.Get().length > 0;
         const quotes = this.quotes.Get().length > 0;
-        const skills = this.skills.Get().length > 0;
+        const skills = this.skills.Get().skills.length > 0;
         const titles = this.titles.Get().length > 0;
         return achievements && contributors && items && quotes && skills && titles;
     }
@@ -53,19 +66,32 @@ class DataManager {
      */
     async LocalSave(user) {
         const debugIndex = user.interface.console?.AddLog('info', 'Internal data: local saving...');
+
+        // Save hashes
+        const savedHashes = await DataStorage.Save(STORAGE.INTERNAL_HASHES, this.#tableHashes);
+        if (!savedHashes) {
+            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: local save failed');
+            return false;
+        }
+
+        // Save internal data
+        /** @type {DataTypes} */
         const internalData = {
             achievements: this.achievements.Save(),
             contributors: this.contributors.Save(),
-            items: this.items.Save(),
+            //items: this.items.Save(), // TODO: Reimplement items
             quotes: this.quotes.Save(),
-            skills: this.skills.Save(),
+            ...this.skills.Save(),
             titles: this.titles.Save()
         };
+
         const saved = await DataStorage.Save(STORAGE.INTERNAL, internalData);
-        if (debugIndex) {
-            if (saved) user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local save success');
-            else user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: local save failed');
+        if (saved) {
+            user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local save success');
+        } else {
+            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: local save failed');
         }
+
         return saved;
     }
 
@@ -76,23 +102,39 @@ class DataManager {
      */
     async LocalLoad(user) {
         const debugIndex = user.interface.console?.AddLog('info', 'Internal data: local loading...');
-        const internalData = await DataStorage.Load(STORAGE.INTERNAL);
-        if (internalData !== null) {
-            this.achievements.Load(internalData['achievements']);
-            this.contributors.Load(internalData['contributors']);
-            this.items.Load(internalData['items']);
-            this.quotes.Load(internalData['quotes']);
-            this.skills.Load(internalData['skills']);
-            this.titles.Load(internalData['titles']);
-            if (debugIndex) {
-                user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local load success');
-            }
-        } else {
-            if (debugIndex) {
-                user.interface.console?.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
-            }
+
+        // Load hashes
+        /** @type {DataHashes | null} */
+        const hashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES);
+        if (hashes === null) {
+            user.interface.console?.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
+            return false;
         }
-        return internalData !== null;
+
+        this.#tableHashes = hashes;
+
+        // Load internal data
+        /** @type {DataTypes | null} */
+        const internalData = await DataStorage.Load(STORAGE.INTERNAL);
+        if (internalData === null) {
+            user.interface.console?.EditLog(debugIndex, 'warn', 'Internal data: local load failed');
+            return false;
+        }
+
+        // Load data
+        this.achievements.Load(internalData.achievements);
+        this.contributors.Load(internalData.contributors);
+        //this.items.Load(internalData.items); // TODO: Reimplement items
+        this.quotes.Load(internalData.quotes);
+        this.skills.Load({
+            skills: internalData.skills,
+            skillIcons: internalData.skillIcons,
+            skillCategories: internalData.skillCategories
+        });
+        this.titles.Load(internalData.titles);
+
+        user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: local load success');
+        return true;
     }
 
     /**
@@ -101,56 +143,66 @@ class DataManager {
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
     async OnlineLoad(user) {
-        await this.LocalLoad(user);
-
         const debugIndex = user.interface.console?.AddLog('info', 'Internal data: online loading...');
-        const appHashes = await DataStorage.Load(STORAGE.INTERNAL_HASHES);
-        const data = {
-            action: 'getInternalData',
-            hashes: appHashes
-        };
-        const reqInternalData = await Request_Async(data);
 
-        if (reqInternalData.status === 200) {
-            const status = reqInternalData.content['status'];
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'get-internal-data',
+            tableHashes: this.#tableHashes
+        });
 
-            if (status === 'ok') {
-                const reqMusicLinks = reqInternalData.content['music-links'];
-                if (typeof reqMusicLinks === 'object') {
-                    user.settings.LoadMusicLinks(reqMusicLinks);
-                }
-
-                const reqIAP = reqInternalData.content['iap'];
-                if (typeof reqIAP === 'object') {
-                    user.shop.LoadIAPs(reqIAP);
-                }
-
-                const priceFactor = reqInternalData.content['priceFactor'];
-                if (typeof priceFactor === 'number') {
-                    user.shop.priceFactor = priceFactor;
-                }
-
-                const reqTables = reqInternalData.content['tables'];
-                if (reqTables.hasOwnProperty('achievements')) this.achievements.Load(reqTables['achievements']);
-                if (reqTables.hasOwnProperty('contributors')) this.contributors.Load(reqTables['contributors']);
-                if (reqTables.hasOwnProperty('items')) this.items.Load(reqTables['items']);
-                if (reqTables.hasOwnProperty('quotes')) this.quotes.Load(reqTables['quotes']);
-                if (reqTables.hasOwnProperty('skills')) this.skills.Load(reqTables);
-                if (reqTables.hasOwnProperty('titles')) this.titles.Load(reqTables['titles']);
-
-                const reqHashes = reqInternalData.content['hashes'];
-                await DataStorage.Save(STORAGE.INTERNAL_HASHES, reqHashes);
-                if (debugIndex) {
-                    user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: online load success');
-                }
-                await this.LocalSave(user);
-                return true;
-            }
+        // Check errors
+        if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
+            user.interface.console?.EditLog(
+                debugIndex,
+                'error',
+                `[DataManager] Server connection failed (${response})`
+            );
+            return false;
         }
-        if (debugIndex) {
-            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: online load failed');
+
+        // Check if the response is valid
+        if (response.status !== 'get-internal-data' || response.data === null || response.hashes === null) {
+            user.interface.console?.EditLog(debugIndex, 'error', 'Internal data: invalid response');
+            return false;
         }
-        return false;
+
+        // Load hashes
+        this.#tableHashes = response.hashes;
+
+        // Load data
+        if (response.data.achievements !== null) {
+            this.achievements.Load(response.data.achievements);
+        }
+        if (response.data.contributors !== null) {
+            this.contributors.Load(response.data.contributors);
+        }
+        // if (response.data.items !== null) {
+        //     this.items.Load(response.data.items);
+        // }
+        if (response.data.quotes !== null) {
+            this.quotes.Load(response.data.quotes);
+        }
+        if (
+            response.data.skills !== null &&
+            response.data.skillIcons !== null &&
+            response.data.skillCategories !== null
+        ) {
+            this.skills.Load({
+                skills: response.data.skills,
+                skillIcons: response.data.skillIcons,
+                skillCategories: response.data.skillCategories
+            });
+        }
+        if (response.data.titles !== null) {
+            this.titles.Load(response.data.titles);
+        }
+
+        // TODO: Load links => user.settings.LoadMusicLinks(reqMusicLinks);
+        // TODO: Load IAPs => user.shop.LoadIAPs(reqIAP);
+        // TODO: Load price factor => user.shop.priceFactor = priceFactor;
+
+        user.interface.console?.EditLog(debugIndex, 'same', 'Internal data: online load success');
+        return true;
     }
 }
 

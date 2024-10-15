@@ -43,7 +43,7 @@ class Ad {
     /** @type {T | null} */
     ad = null;
 
-    /** @type {() => void | null} */
+    /** @type {(() => void) | null} */
     unsubscriber = null;
 
     /**
@@ -70,7 +70,7 @@ class Admob {
 
     LoadAds = () => {
         if (Platform.OS !== 'ios' && Platform.OS !== 'android') {
-            this.user.interface.console.AddLog('error', `Ad error: Device unknown (${Platform.OS})`);
+            this.user.interface.console?.AddLog('error', `Ad error: Device unknown (${Platform.OS})`);
             return;
         }
 
@@ -176,7 +176,7 @@ class Admob {
                 const response = await this.user.server.Request('adWatched');
                 if (response === null) break;
 
-                this.user.interface.console.AddLog('info', 'Ad watched', response);
+                this.user.interface.console?.AddLog('info', 'Ad watched', response);
                 if (response['status'] === 'ok') {
                     this.user.informations.ox.Set(parseInt(response['ox']));
                     this.user.informations.DecrementAdRemaining();

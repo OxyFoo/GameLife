@@ -4,7 +4,7 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */

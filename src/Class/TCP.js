@@ -5,9 +5,9 @@ import { RandomString } from 'Utils/Functions';
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  *
- * @typedef {import('Types/TCP/Request').ConnectionState} ConnectionState
- * @typedef {import('Types/TCP/Request').TCPServerRequest} ReceiveRequest
- * @typedef {import('Types/TCP/Request').TCPClientRequest} TCPClientRequest
+ * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} ReceiveRequest
+ * @typedef {import('Types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
  */
 
 const TCP_SETTINGS = {

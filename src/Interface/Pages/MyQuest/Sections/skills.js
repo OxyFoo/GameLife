@@ -124,7 +124,7 @@ class SectionSkill extends React.Component {
                     color='transparent'
                     onPress={() => this.handleUnselectSkill(skill.ID)}
                 >
-                    <Icon containerStyle={styles.skillsIconContainer} size={16} icon='close' color='main1' />
+                    <Icon containerStyle={styles.skillIconsContainer} size={16} icon='close' color='main1' />
                 </Button>
             </View>
         );
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         justifyContent: 'center'
     },
-    skillsIconContainer: {
+    skillIconsContainer: {
         width: 24,
         height: 24,
         padding: 0,

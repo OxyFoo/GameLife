@@ -1,26 +1,18 @@
+import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Class/Inventory').Stuff} Stuff
  *
- * @typedef {import('Managers/LangManager').Lang} Lang
- * @typedef {keyof Lang['missions']['content']} MissionKeys
- *
- * @typedef {Object} MissionsType
- * @property {MissionKeys} name
- * @property {'ox' | 'chest'} rewardType
- * @property {number} rewardValue Ox amount or chest rarity
- *
- * @typedef {Object} MissionsItem
- * @property {MissionKeys} name
- * @property {'pending' | 'completed' | 'claimed'} state
+ * @typedef {import('Types/Class/Missions').MissionKeys} MissionKeys
+ * @typedef {import('Types/Class/Missions').MissionType} MissionType
+ * @typedef {import('Types/Class/Missions').MissionItem} MissionItem
+ * @typedef {import('Types/Class/Missions').SaveObject_Local_Missions} SaveObject_Local_Missions
+ * @typedef {import('Types/Class/Missions').SaveObject_Online_Missions} SaveObject_Online_Missions
  */
 
-/** @type {Array<MissionsItem>} */
-const INIT_MISSIONS = [];
-
-/** @type {Array<MissionsType>} */
+/** @type {Array<MissionType>} */
 const MISSIONS = [
     { name: 'mission1', rewardType: 'ox', rewardValue: 20 },
     { name: 'mission2', rewardType: 'ox', rewardValue: 30 },
@@ -29,14 +21,18 @@ const MISSIONS = [
     { name: 'mission5', rewardType: 'chest', rewardValue: 1 }
 ];
 
-class Missions {
+/** @extends {IUserData<SaveObject_Local_Missions>} */
+class Missions extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
+        super();
+
         this.user = user;
     }
 
-    /** @type {DynamicVar<Array<MissionsItem>>} */
-    missions = new DynamicVar(INIT_MISSIONS);
+    /** @type {DynamicVar<Array<MissionItem>>} */
+    // eslint-disable-next-line prettier/prettier
+    missions = new DynamicVar(/** @type {Array<MissionItem>} */ ([]));
 
     /**
      * Set to true if missions are edited
@@ -45,17 +41,31 @@ class Missions {
      */
     missionsEdited = false;
 
-    Clear() {
+    Clear = () => {
         this.missions.Set([]);
         this.missionsEdited = false;
-    }
+    };
 
-    /** @param {Array<MissionsItem>} newMissions */
-    LoadOnline(newMissions) {
-        if (typeof newMissions !== 'object') return;
+    /** @param {SaveObject_Local_Missions} data */
+    Load = (data) => {
+        if (typeof data.missions !== 'undefined') {
+            this.missions.Set(data.missions);
+        }
+    };
+
+    /** @returns {SaveObject_Local_Missions} */
+    Save = () => {
+        return {
+            missions: this.missions.Get()
+        };
+    };
+
+    /** @param {SaveObject_Online_Missions} data */
+    LoadOnline = (data) => {
+        if (typeof data.missions === 'undefined') return;
 
         const currMissions = this.missions.Get();
-        for (const newMission of newMissions) {
+        for (const newMission of data.missions) {
             const currMission = currMissions.find((mission) => mission.name === newMission.name);
             if (!currMission) {
                 currMissions.push(newMission);
@@ -65,38 +75,23 @@ class Missions {
         }
 
         this.missions.Set(currMissions);
-    }
-
-    /**
-     * @param {Object} data
-     * @param {Array<MissionsItem>} data.missions
-     */
-    Load(data) {
-        /** @param {string} key */
-        const contains = (key) => data.hasOwnProperty(key);
-        if (contains('missions')) this.missions.Set(data['missions']);
-    }
-
-    Save() {
-        const data = {
-            missions: this.missions.Get()
-        };
-        return data;
-    }
+    };
 
     IsUnsaved = () => {
         return this.missionsEdited;
     };
 
     GetUnsaved = () => {
-        return this.missions.Get();
+        return {
+            missions: this.missions.Get()
+        };
     };
 
     Purge = () => {
         this.missionsEdited = false;
     };
 
-    /** @returns {{ mission: MissionsItem | null, index: number }} Mission item or null if no mission is available */
+    /** @returns {{ mission: MissionItem | null, index: number }} Mission item or null if no mission is available */
     GetCurrentMission = () => {
         const names = MISSIONS.map((mission) => mission.name);
         const missions = this.missions.Get();
@@ -139,7 +134,7 @@ class Missions {
 
     /**
      * @param {MissionKeys} name
-     * @param {MissionsItem['state']} state
+     * @param {MissionItem['state']} state
      */
     SetMissionState = (name, state) => {
         if (MISSIONS.findIndex((mission) => mission.name === name) === -1) {
@@ -181,6 +176,8 @@ class Missions {
      * @returns {Promise<boolean>} True if mission was claimed
      */
     ClaimMission = async (name) => {
+        // const result = await this.user.server2.tcp.SendAndWait({ action: 'claim-achievement', achievementID: name });
+        // TODO !!!!
         const rewards = await this.user.server.ClaimMission(name);
         if (rewards === false) {
             return false;

@@ -42,8 +42,9 @@ class DataStorage {
     }
 
     /**
+     * @template {object} T
      * @param {string} storageKey Storage key
-     * @returns {Promise<object?>} Data (JSON object) or null if an error occurred
+     * @returns {Promise<T | null>} Data (JSON object) or null if an error occurred
      */
     static async Load(storageKey) {
         let json = null;

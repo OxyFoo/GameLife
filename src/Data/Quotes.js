@@ -1,4 +1,4 @@
-import DataClassTemplate from './_Template';
+import { IInternalData } from 'Types/Interface/IInternalData';
 
 import { Random } from 'Utils/Functions';
 
@@ -6,29 +6,29 @@ import { Random } from 'Utils/Functions';
  * @typedef {import('Types/Data/Quotes').Quote} Quote
  */
 
-/** @extends {DataClassTemplate<Quote[]>} */
-class Quotes extends DataClassTemplate {
+/** @extends {IInternalData<Quote[]>} */
+class Quotes extends IInternalData {
     /** @type {Quote[]} */
     quotes = [];
 
-    Clear() {
+    Clear = () => {
         this.quotes = [];
-    }
+    };
 
     /** @param {Quote[]} quotes */
-    Load(quotes) {
+    Load = (quotes) => {
         if (typeof quotes === 'object') {
             this.quotes = quotes;
         }
-    }
+    };
 
-    Save() {
+    Save = () => {
         return this.quotes;
-    }
+    };
 
-    Get() {
+    Get = () => {
         return this.quotes;
-    }
+    };
 
     /** @returns {Quote|null} */
     GetRandomQuote() {

@@ -8,9 +8,9 @@ import { TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
- * 
+ *
  * @typedef {import('Interface/Pages/Home').default} Home
- * @typedef {import('Class/Missions').MissionsItem} MissionsItem
+ * @typedef {import('Types/Class/Missions').MissionItem} MissionItem
  */
 
 const MissionsProps = {
@@ -25,7 +25,7 @@ class BackMissions extends React.Component {
     state = {
         step: 0,
 
-        /** @type {MissionsItem} */
+        /** @type {MissionItem | null} */
         mission: null,
 
         animReward: new Animated.Value(0)
@@ -45,16 +45,20 @@ class BackMissions extends React.Component {
     }
 
     componentWillUnmount() {
-        user.missions.missions.RemoveListener(this.listener);
+        if (this.listener) {
+            user.missions.missions.RemoveListener(this.listener);
+        }
     }
 
     handleMissionsUpdate = () => {
         const { index, mission } = user.missions.GetCurrentMission();
         this.setState({ step: index, mission });
-    }
+    };
 
     handleNextMission = async () => {
         const { mission } = this.state;
+
+        if (mission === null) return;
 
         // Open mission guide
         if (mission.state === 'pending') {

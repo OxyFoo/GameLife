@@ -11,15 +11,15 @@ function GetAllInternalData($db) {
     $db_all['items']          = GetItems($db);
     $db_all['quotes']         = GetQuotes($db);
     $db_all['skills']         = GetSkills($db);
-    $db_all['skillsIcon']     = GetSkillsIcon($db);
-    $db_all['skillsCategory'] = GetSkillsCategory($db);
+    $db_all['skillIcons']     = GetSkillIcons($db);
+    $db_all['skillCategories'] = GetSkillCategories($db);
     $db_all['titles']         = GetTitles($db);
     return $db_all;
 }
 
 /**
  * Hashes names :
- *     - skills : skills, skillsIcon, skillsCategory
+ *     - skills : skills, skillIcons, skillCategories
  *     - equips : achievements, titles, items
  *     - apptxt : contributors, quotes
  * @param DataBase $db
@@ -31,8 +31,8 @@ function GetNewInternalData($db, $reqHashes, $appHashes) {
 
     if ($reqHashes === null || $reqHashes['skills'] !== $appHashes['skills']) {
         $newTables['skills']         = GetSkills($db);
-        $newTables['skillsIcon']     = GetSkillsIcon($db);
-        $newTables['skillsCategory'] = GetSkillsCategory($db);
+        $newTables['skillIcons']     = GetSkillIcons($db);
+        $newTables['skillCategories'] = GetSkillCategories($db);
     }
     if ($reqHashes === null || $reqHashes['equips'] !== $appHashes['equips']) {
         $newTables['achievements'] = GetAchievements($db);
@@ -133,7 +133,7 @@ function GetQuotes($db) {
 function GetSkills($db) {
     // Pre-sorte skills for french users
     $skills = $db->QueryPrepare('Skills', 'SELECT * FROM TABLE ORDER BY Name COLLATE utf8mb4_unicode_ci');
-    $categories = $db->QueryPrepare('SkillsCategory', 'SELECT * FROM TABLE');
+    $categories = $db->QueryPrepare('SkillCategories', 'SELECT * FROM TABLE');
 
     $skills_safe = array();
     if ($skills !== null && $categories !== null) {
@@ -203,20 +203,20 @@ function GetSkills($db) {
 /**
  * @param DataBase $db
  */
-function GetSkillsIcon($db) {
-    $skillsIcon = $db->QueryPrepare('SkillsIcon', 'SELECT * FROM TABLE');
-    if ($skillsIcon === null) return array();
-    for ($i = 0; $i < count($skillsIcon); $i++) {
-        $skillsIcon[$i]['ID'] = intval($skillsIcon[$i]['ID']);
+function GetSkillIcons($db) {
+    $skillIcons = $db->QueryPrepare('SkillIcons', 'SELECT * FROM TABLE');
+    if ($skillIcons === null) return array();
+    for ($i = 0; $i < count($skillIcons); $i++) {
+        $skillIcons[$i]['ID'] = intval($skillIcons[$i]['ID']);
     }
-    return $skillsIcon;
+    return $skillIcons;
 }
 
 /**
  * @param DataBase $db
  */
-function GetSkillsCategory($db) {
-    $categories = $db->QueryPrepare('SkillsCategory', 'SELECT * FROM TABLE');
+function GetSkillCategories($db) {
+    $categories = $db->QueryPrepare('SkillCategories', 'SELECT * FROM TABLE');
     if ($categories === null) return array();
     for ($i = 0; $i < count($categories); $i++) {
         $categories[$i]['ID'] = intval($categories[$i]['ID']);

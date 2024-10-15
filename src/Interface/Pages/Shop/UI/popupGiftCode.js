@@ -48,7 +48,8 @@ async function checkCode(code) {
     }
 
     // Success
-    const rewards = dataManager.achievements.parseReward(gift);
+    // TODO: Already parsed
+    const rewards = /** @type {import('Data/Achievements').Reward[]} */ ([]); //dataManager.achievements.parseReward(gift);
     const title = lang['reward-success-title'];
     let text = lang['reward-success-text'] + '\n\n';
         text += user.achievements.getRewardsText(rewards);

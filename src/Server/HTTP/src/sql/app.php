@@ -56,7 +56,7 @@ function RefreshHashes($db) {
     $db_all = GetAllInternalData($db);
 
     // Get all hashes
-    $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillsIcon'], $db_all['skillsCategory'])));
+    $hashSkills = md5(json_encode(array($db_all['skills'], $db_all['skillIcons'], $db_all['skillCategories'])));
     $hashEquips = md5(json_encode(array($db_all['achievements'], $db_all['titles'], $db_all['items'])));
     $hashApptxt = md5(json_encode(array($db_all['contributors'], $db_all['quotes'])));
     $newHashes = array(

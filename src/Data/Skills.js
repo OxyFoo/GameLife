@@ -1,15 +1,19 @@
 import langManager from 'Managers/LangManager';
 
+import { IInternalData } from 'Types/Interface/IInternalData';
+
 import { GetByKey } from 'Utils/Functions';
 
 /**
  * @typedef {import('Types/Data/Skills').Skill} Skill
  * @typedef {import('Types/Data/SkillIcons').SkillIcon} Icon
  * @typedef {import('Types/Data/SkillCategories').SkillCategory} Category
+ *
+ * @typedef {{ skills: Skill[], skillIcons: Icon[], skillCategories: Category[] }} DataType
  */
 
-/** @extends {DataClassTemplate<{ skills: Skill[], skillsIcon: Icon[], skillsCategory: Category[] }>} */
-class Skills {
+/** @extends {IInternalData<DataType>} */
+class Skills extends IInternalData {
     /** @type {Skill[]} */
     skills = [];
 
@@ -19,45 +23,46 @@ class Skills {
     /** @type {Category[]} */
     categories = [];
 
-    Clear() {
+    Clear = () => {
         this.skills = [];
         this.icons = [];
         this.categories = [];
-    }
+    };
 
     /**
      * @param {Object} data
      * @param {Skill[]} data.skills
-     * @param {Icon[]} data.skillsIcon
-     * @param {Category[]} data.skillsCategory
+     * @param {Icon[]} data.skillIcons
+     * @param {Category[]} data.skillCategories
      */
-    Load(data) {
-        if (typeof data === 'object') {
-            if (data.hasOwnProperty('skills')) this.skills = data.skills;
-            if (data.hasOwnProperty('skillsIcon')) this.icons = data.skillsIcon;
-            if (data.hasOwnProperty('skillsCategory')) this.categories = data.skillsCategory;
-        }
-    }
+    Load = (data) => {
+        if (typeof data.skills !== 'undefined') this.skills = data.skills;
+        if (typeof data.skillIcons !== 'undefined') this.icons = data.skillIcons;
+        if (typeof data.skillCategories !== 'undefined') this.categories = data.skillCategories;
+    };
 
-    Save() {
+    /** @returns {DataType} */
+    Save = () => {
         return {
             skills: this.skills,
-            skillsIcon: this.icons,
-            skillsCategory: this.categories
+            skillIcons: this.icons,
+            skillCategories: this.categories
         };
-    }
+    };
 
-    /**
-     * @returns {Array<Skill>}
-     */
+    /** @returns {DataType} */
     Get = () => {
-        return this.skills
-            .filter((skill) => skill.Enabled)
-            .sort((a, b) => {
-                const nameA = langManager.GetText(a.Name).toLowerCase();
-                const nameB = langManager.GetText(b.Name).toLowerCase();
-                return nameA.localeCompare(nameB);
-            });
+        return {
+            skills: this.skills
+                .filter((skill) => skill.Enabled)
+                .sort((a, b) => {
+                    const nameA = langManager.GetText(a.Name).toLowerCase();
+                    const nameB = langManager.GetText(b.Name).toLowerCase();
+                    return nameA.localeCompare(nameB);
+                }),
+            skillIcons: this.icons,
+            skillCategories: this.categories
+        };
     };
 
     /**
@@ -76,7 +81,7 @@ class Skills {
      * @param {number} ID
      * @returns {Skill[]} Return skills by category
      */
-    GetByCategory = (ID) => this.Get().filter((skill) => skill.CategoryID === ID);
+    GetByCategory = (ID) => this.Get().skills.filter((skill) => skill.CategoryID === ID);
 
     /**
      * Return XML of logo by ID

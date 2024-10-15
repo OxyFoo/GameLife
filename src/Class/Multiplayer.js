@@ -8,7 +8,7 @@ const FRIENDS_LIMIT = 10;
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Features/UserOnline').Friend} Friend
  * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<*>} NotificationInApp
- * @typedef {import('Types/TCP/Request').TCPServerRequest} ReceiveRequest
+ * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} ReceiveRequest
  */
 
 /** @type {Array<Friend>} */

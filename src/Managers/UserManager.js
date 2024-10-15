@@ -86,6 +86,15 @@ class UserManager {
     /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
 
+    /**
+     * @param {string} key
+     * @returns {key is keyof Stats}
+     */
+    KeyIsStats(key) {
+        // @ts-ignore
+        return this.statsKey.includes(key);
+    }
+
     StartTimers() {
         // Save all data every 5 minutes
         const save = this.server.IsConnected() ? this.OnlineSave : this.LocalSave;

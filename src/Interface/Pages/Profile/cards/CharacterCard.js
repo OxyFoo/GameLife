@@ -6,9 +6,9 @@ import themeManager from 'Managers/ThemeManager';
 import { Character, Frame } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Inventory').Sexes} Sexes
- * @typedef {import('Class/Inventory').Stuff} Stuff
- * @typedef {import('Class/Inventory').CharactersName} CharactersName
+ * @typedef {import('Types/Class/Inventory').Stuff} Stuff
+ * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
+ * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  */
 
 const CharacterCardProps = {
@@ -24,14 +24,12 @@ const CharacterCardProps = {
     /** @type {boolean} */
     isSelected: false,
 
-    /**
-     * @param {Sexes} sexe
-     * @param {string} skin
-     */
-    onPress: (sexe, skin) => {}
+    /** @type {(sexe: Sexes, skin: string) => void} */
+    onPress: () => {}
 };
 
 class CharacterCard extends React.PureComponent {
+    /** @param {CharacterCardProps} props */
     constructor(props) {
         super(props);
 
@@ -49,7 +47,7 @@ class CharacterCard extends React.PureComponent {
     onPress = () => {
         const { characterSexe, characterName } = this.props;
         this.props.onPress(characterSexe, characterName);
-    }
+    };
 
     render() {
         const { isSelected } = this.props;
@@ -63,14 +61,10 @@ class CharacterCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', { opacity: .5} )}
+                    underlayColor={themeManager.GetColor('main1', { opacity: 0.5 })}
                     touchSoundDisabled={true}
                 >
-                    <Frame
-                        characters={[ this.character ]}
-                        onlyItems={false}
-                        loadingTime={800}
-                    />
+                    <Frame characters={[this.character]} onlyItems={false} loadingTime={800} />
                 </TouchableHighlight>
             </View>
         );
@@ -84,7 +78,7 @@ const styles = StyleSheet.create({
     card: {
         width: '30%',
         aspectRatio: 1,
-        margin: 6,
+        margin: 6
     },
     content: {
         width: '100%',

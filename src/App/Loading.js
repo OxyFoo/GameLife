@@ -122,15 +122,39 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load local user data
     await user.LocalLoad();
 
-    // Load internal data
-    await user.server2.LoadInternalData();
+    //await dataManager.LocalLoad(user);
+    console.log(
+        'Data before loading:',
+        dataManager.achievements.Get().length +
+            dataManager.skills.Get().skills.length +
+            dataManager.skills.Get().skillIcons.length +
+            dataManager.skills.Get().skillCategories.length +
+            dataManager.titles.Get().length +
+            dataManager.quotes.Get().length +
+            dataManager.contributors.Get().length,
+        'items'
+    );
 
-    // Loading: Internal data
-    // if (online) {
-    //     await dataManager.OnlineLoad(user);
-    // } else {
-    //     await dataManager.LocalLoad(user);
-    // }
+    // Load internal data
+    await dataManager.LocalLoad(user);
+    if (user.server2.IsAuthenticated()) {
+        const _t = performance.now();
+        await dataManager.OnlineLoad(user);
+        console.log(
+            'Online load in',
+            performance.now() - _t,
+            'ms for',
+            dataManager.achievements.Get().length +
+                dataManager.skills.Get().skills.length +
+                dataManager.skills.Get().skillIcons.length +
+                dataManager.skills.Get().skillCategories.length +
+                dataManager.titles.Get().length +
+                dataManager.quotes.Get().length +
+                dataManager.contributors.Get().length,
+            'items'
+        );
+        await dataManager.LocalSave(user);
+    }
 
     // Check if internal data are loaded
     // const dataLoaded = dataManager.DataAreLoaded();
@@ -148,6 +172,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     nextStep();
+
+    const achievement = dataManager.achievements.GetByID(3);
+    if (achievement !== null) {
+        console.log(achievement.Condition);
+    }
 
     console.log('Connected with email:', email);
     return;

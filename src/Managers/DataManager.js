@@ -1,17 +1,17 @@
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
-import Achievements from 'Data/Achievements';
-import Contributors from 'Data/Contributors';
-import Items from 'Data/Items';
-import Quotes from 'Data/Quotes';
-import Skills from 'Data/Skills';
-import Titles from 'Data/Titles';
+import Achievements from 'Data/App/Achievements';
+import Contributors from 'Data/App/Contributors';
+import Items from 'Data/App/Items';
+import Quotes from 'Data/App/Quotes';
+import Skills from 'Data/App/Skills';
+import Titles from 'Data/App/Titles';
 
 /**
  * @typedef {import('Managers/UserManager').default} User
  *
- * @typedef {import('Types/Data/index').DataHashes} DataHashes
- * @typedef {import('Types/Data/index').DataTypes} DataTypes
+ * @typedef {import('Types/Data/App/index').DataHashes} DataHashes
+ * @typedef {import('Types/Data/App/index').DataTypes} DataTypes
  */
 
 class DataManager {

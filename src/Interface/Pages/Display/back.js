@@ -9,7 +9,7 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('Ressources/Icons').IconsName} IconsName
- * @typedef {import('Data/Quotes').Quote} Quote
+ * @typedef {import('Data/App/Quotes').Quote} Quote
  *
  * @typedef {Object} BackDisplayPropsType
  * @property {Object} args

@@ -10,7 +10,7 @@ import { Text, Button } from 'Interface/Components';
 /**
  * @typedef {import('./back').default} BackShopDyes
  * @typedef {import('./back').BuyableDye} BuyableDye
- * @typedef {import('Data/Items').Item} Item
+ * @typedef {import('Data/App/Items').Item} Item
  */
 
 /**

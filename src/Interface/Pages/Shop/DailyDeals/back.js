@@ -9,10 +9,10 @@ import themeManager from 'Managers/ThemeManager';
 import { Character } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/Items').Item} Item
- * @typedef {import('Data/Items').StuffID} StuffID
- * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
- * 
+ * @typedef {import('Data/App/Items').Item} Item
+ * @typedef {import('Data/App/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
+ *
  * @typedef BuyableItem
  * @property {string | number} ID
  * @property {string} Name

@@ -1,5 +1,5 @@
 import THEMES from 'Ressources/themes';
-import { Rarity } from 'Data/Items';
+import { Rarity } from 'Data/App/Items';
 import { MinMax } from 'Utils/Functions';
 
 /**
@@ -127,10 +127,7 @@ class ThemeManager {
                 break;
 
             case Rarity.legendary:
-                colors = [
-                    this.GetColor('legendary1'),
-                    this.GetColor('legendary2')
-                ];
+                colors = [this.GetColor('legendary1'), this.GetColor('legendary2')];
                 break;
 
             case Rarity.event:
@@ -154,12 +151,9 @@ class ThemeManager {
         G = MinMax(0, Math.round(G * (1 + percent / 100)), 255);
         B = MinMax(0, Math.round(B * (1 + percent / 100)), 255);
 
-        const RR =
-            R.toString(16).length === 1 ? `0${R.toString(16)}` : R.toString(16);
-        const GG =
-            G.toString(16).length === 1 ? `0${G.toString(16)}` : G.toString(16);
-        const BB =
-            B.toString(16).length === 1 ? `0${B.toString(16)}` : B.toString(16);
+        const RR = R.toString(16).length === 1 ? `0${R.toString(16)}` : R.toString(16);
+        const GG = G.toString(16).length === 1 ? `0${G.toString(16)}` : G.toString(16);
+        const BB = B.toString(16).length === 1 ? `0${B.toString(16)}` : B.toString(16);
 
         return `#${RR}${GG}${BB}`;
     }

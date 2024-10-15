@@ -8,8 +8,8 @@ import { IUserData } from 'Types/Interface/IUserData';
  * @typedef {import('Types/Class/Inventory').SaveObject_Local_Inventory} SaveObject_Local_Inventory
  * @typedef {import('Types/Class/Inventory').SaveObject_Online_Inventory} SaveObject_Online_Inventory
  *
- * @typedef {import('Data/Items').Slot} Slot
- * @typedef {import('Data/Titles').Title} Title
+ * @typedef {import('Data/App/Items').Slot} Slot
+ * @typedef {import('Data/App/Titles').Title} Title
  */
 
 /** @extends {IUserData<SaveObject_Local_Inventory, SaveObject_Local_Inventory, SaveObject_Online_Inventory>} */

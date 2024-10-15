@@ -1,4 +1,4 @@
-import Achievements from 'Class/Achievements';
+import Achievements from 'Data/User/Achievements';
 import Activities from 'Class/Activities';
 import Admob from 'Class/Admob';
 import Consent from 'Class/Consent';

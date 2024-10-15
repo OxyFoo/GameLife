@@ -5,7 +5,7 @@ import { MinMax, Sum } from 'Utils/Functions';
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Managers/UserManager').Stats} Stats
- * @typedef {import('Types/Data/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
  * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
  * @typedef {import('Types/Class/Activities').Activity} Activity

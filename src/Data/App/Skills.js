@@ -5,9 +5,9 @@ import { IAppData } from 'Types/Interface/IAppData';
 import { GetByKey } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/Skills').Skill} Skill
- * @typedef {import('Types/Data/SkillIcons').SkillIcon} Icon
- * @typedef {import('Types/Data/SkillCategories').SkillCategory} Category
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/SkillIcons').SkillIcon} Icon
+ * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} Category
  *
  * @typedef {{ skills: Skill[], skillIcons: Icon[], skillCategories: Category[] }} DataType
  */

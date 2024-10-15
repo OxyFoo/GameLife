@@ -1,7 +1,7 @@
 import { IAppData } from 'Types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/Contributors').Contributor} Contributor
+ * @typedef {import('Types/Data/App/Contributors').Contributor} Contributor
  */
 
 /** @extends {IAppData<Contributor[]>} */

@@ -16,8 +16,8 @@ const AvatarProps = {
 
 /**
  * @typedef {import('Class/Inventory').Stuff} Stuff
- * @typedef {import('Data/Items').Slot} Slot
- * @typedef {import('Data/Items').SkinSlot} SkinSlot
+ * @typedef {import('Data/App/Items').Slot} Slot
+ * @typedef {import('Data/App/Items').SkinSlot} SkinSlot
  * @typedef {Slot | SkinSlot} AvatarSlot
  */
 

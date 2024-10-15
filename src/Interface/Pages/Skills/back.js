@@ -13,9 +13,8 @@ import { FormatForSearch } from 'Utils/String';
 /**
  * @typedef {import('react-native').FlatList} FlatList
  *
- * @typedef {import('Types/Data/Skills').Skill} Skill
- * @typedef {import('Types/Data/Skills').Category} Category
- * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  */
 
 class BackSkills extends PageBase {
@@ -82,7 +81,7 @@ class BackSkills extends PageBase {
         const now = GetGlobalTime();
         const usersActivities = user.activities.Get().filter((activity) => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map((activity) => activity.skillID);
-        const allSkills = dataManager.skills.Get().filter((skill) => usersActivitiesID.includes(skill.ID));
+        const allSkills = dataManager.skills.Get().skills.filter((skill) => usersActivitiesID.includes(skill.ID));
         return allSkills.map(this.upgradeSkill);
     };
 

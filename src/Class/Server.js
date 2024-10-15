@@ -12,11 +12,11 @@ const { versionName } = require('../../package.json');
  * @typedef {import('Managers/LangManager').Lang} Lang
  *
  * @typedef {import('Class/Shop').Chest} Chest
- * @typedef {import('Data/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').StuffID} StuffID
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/TCP/Request').ServerStatus} ServerStatus
- * @typedef {import('Types/TCP/Request').LoginStatus} LoginStatus
- * @typedef {import('Types/TCP/Request').SigninStatus} SigninStatus
+ * @typedef {import('Types/TCP/GameLife/Request').ServerStatus} ServerStatus
+ * @typedef {import('Types/TCP/GameLife/Request').LoginStatus} LoginStatus
+ * @typedef {import('Types/TCP/GameLife/Request').SigninStatus} SigninStatus
  *
  * @typedef {'ping'|'login'|'signin'|'getUserData'|'getUserIntentories'|'addUserData'|'addAchievements'|'claimAchievement'|'claimMission'|'setUsername'|'getDailyDeals'|'buyDailyDeals'|'buyRandomChest'|'buyTargetedChest'|'buyDye'|'buyOx'|'sellStuff'|'claimDailyQuest'|'claimGlobalNotifs'|'adWatched'|'report'|'getDate'|'giftCode'|'getDevices'|'disconnect'|'deleteAccount'} RequestTypes
  * @typedef {'activity'|'suggest'|'bug'|'message'|'error'} ReportTypes

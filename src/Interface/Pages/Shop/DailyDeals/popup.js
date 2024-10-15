@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/Items').Item} Item
+ * @typedef {import('Data/App/Items').Item} Item
  */
 
 /**

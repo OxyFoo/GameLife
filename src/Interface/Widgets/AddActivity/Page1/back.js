@@ -16,7 +16,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
  * @typedef {import('Types/Class/Activities').Activity} Activity
- * @typedef {import('Types/Data/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('../types').ItemSkill} ItemSkill
  * @typedef {import('../types').ItemCategory} ItemCategory
@@ -87,7 +87,7 @@ class BackActivityPage1 extends React.Component {
         this.allCategoriesItems = dataManager.skills.categories.map(CategoryToItem);
 
         // Define all skills
-        this.allSkillsItems = dataManager.skills.Get().map((skill) => SkillToItem(skill, this.selectSkill));
+        this.allSkillsItems = dataManager.skills.Get().skills.map((skill) => SkillToItem(skill, this.selectSkill));
 
         // Get recent skills
         this.allRecentSkillsItems = GetRecentSkills(this.selectSkill);

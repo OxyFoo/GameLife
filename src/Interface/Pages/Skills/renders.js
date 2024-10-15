@@ -11,15 +11,15 @@ import { Text, IconCheckable, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('./index').default} SkillsPage
- * @typedef {import('Types/Data/Skills').Category} Category
- * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} SkillCategory
+ * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  */
 
 /**
  * @this {SkillsPage}
- * @param {Category | null} value
+ * @param {SkillCategory | null} value
  * @param {number} _index
- * @param {Array<Category | null>} _array
+ * @param {Array<SkillCategory | null>} _array
  * @returns {JSX.Element | null}
  */
 function renderCategory(value, _index, _array) {

@@ -5,9 +5,8 @@ import langManager from 'Managers/LangManager';
 import { GetLocalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Types/Data/Skills').Skill} Skill
- * @typedef {import('Types/Data/Skills').Category} Category
- * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} SkillCategory
  *
  * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory
@@ -26,7 +25,7 @@ const SkillToItem = (skill = null, callback = () => {}) => ({
 });
 
 /**
- * @param {Category} category
+ * @param {SkillCategory} category
  * @returns {ItemCategory}
  */
 const CategoryToItem = (category) => ({

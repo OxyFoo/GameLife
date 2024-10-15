@@ -5,9 +5,9 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Types/Features/UserOnline').Friend} Friend
- * @typedef {import('Class/Achievements').Achievement} Achievement
+ * @typedef {import('Data/User/Achievements').Achievement} Achievement
  */
 
 const AchievementsGroupProps = {
@@ -22,7 +22,7 @@ class AchievementsGroupBack extends React.Component {
     state = {
         /** @type {Array<Achievement>} */
         lastAchievements: []
-    }
+    };
 
     /** @param {AchievementsGroupProps} props */
     constructor(props) {
@@ -51,7 +51,7 @@ class AchievementsGroupBack extends React.Component {
         this.setState({
             lastAchievements: user.achievements.GetLast()
         });
-    }
+    };
 
     openAchievements = () => {
         if (this.props.friend === null) {
@@ -61,7 +61,7 @@ class AchievementsGroupBack extends React.Component {
                 friendID: this.props.friend.accountID
             });
         }
-    }
+    };
     onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
 }
 

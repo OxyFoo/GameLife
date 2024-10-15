@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
 import {
-    initConnection, endConnection,
-    requestPurchase, PurchaseStateAndroid,
+    initConnection,
+    endConnection,
+    requestPurchase,
+    PurchaseStateAndroid,
     flushFailedPurchasesCachedAsPendingAndroid,
-    getProducts, finishTransaction,
-    purchaseUpdatedListener, purchaseErrorListener,
+    getProducts,
+    finishTransaction,
+    purchaseUpdatedListener,
+    purchaseErrorListener,
     ErrorCode,
     clearProductsIOS
 } from 'react-native-iap';
@@ -20,11 +24,11 @@ import { Character } from 'Interface/Components';
  * @typedef {import('react-native-iap').Product} Product
  * @typedef {import('react-native-iap').Purchase} Purchase
  * @typedef {import('react-native-iap').PurchaseError} PurchaseError
- * 
- * @typedef {import('Data/Items').Item} Item
- * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
+ *
+ * @typedef {import('Data/App/Items').Item} Item
+ * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  * @typedef {import('Managers/LangManager').Lang} Lang
- * 
+ *
  * @typedef BuyableItem
  * @property {string | number} ID
  * @property {string} Name
@@ -35,7 +39,7 @@ import { Character } from 'Interface/Components';
  * @property {Character} Character Character to display item
  * @property {CharacterContainerSize} Size Item size in pixels for the character
  * @property {() => void} OnPress
- * 
+ *
  * @typedef IAPItem
  * @property {string} ID
  * @property {string} Name

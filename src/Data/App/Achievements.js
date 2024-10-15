@@ -1,7 +1,7 @@
 import { IAppData } from 'Types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/Achievements').Achievement} Achievement
+ * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
  */
 
 /** @extends {IAppData<Achievement[]>} */

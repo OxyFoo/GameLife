@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').View} View
  * @typedef {import('Class/Shop').Chest} Chest
- * @typedef {import('Data/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').StuffID} StuffID
  *
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals

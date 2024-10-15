@@ -7,8 +7,8 @@
 | `res` | Contient toutes les ressources, les icones, les fonts, les fichiers langues etc |
 | `src` | Contient tous les codes sources pour la compilation de l'application |
 | `src > App` | Contient le script principal, qui gère le chargement de l'application |
-| `src > Class` | Toutes les classes utilisées par le UserManager, correspondantes aux données côté utilisateur |
-| `src > Data` | Toutes les classes utilisées dans les "App data" correspondantes aux données côté base de donnée |
+| `src > Class` | Toutes les classes utilisées par le UserManager, correspondantes aux données locales côté client |
+| `src > Data` | Toutes données utilisées en tant que donnée d'application "AppData" ou que données utilisateur "UserData" |
 | `src > Interface` | Les pages de l'app (front + back) ainsi que les composants et les widgets (ensemble de composants) |
 | `src > Managers` | Classes qui gèrent toute une partie de l'app |
 | `src > HTTP` | Contient tous les fichiers serveurs HTTP, responsables de tous les échanges de données entre le serveur et l'application |

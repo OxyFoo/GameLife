@@ -10,9 +10,9 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/Achievements').Reward} Reward
- * @typedef {import('Types/Data/Achievements').Condition} Condition
- * @typedef {import('Types/Data/Achievements').Achievement} Achievement
+ * @typedef {import('Types/Data/App/Achievements').Reward} Reward
+ * @typedef {import('Types/Data/App/Achievements').Condition} Condition
+ * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * @typedef {import('Types/Class/Achievements').AchievementItem} AchievementItem
  * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending

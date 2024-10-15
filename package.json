@@ -12,7 +12,9 @@
     "test": "jest",
     "lint": "eslint .",
     "server": "cd src/Server/TCP && npm start",
-    "podi": "cd ios && pod install"
+    "podi": "cd ios && pod install",
+    "prestart": "npx tsc -b src/Types/tsconfig.gamelife.json",
+    "poststart": "find src/Types/ -type f \\( -name \"*.js\" -o -name \"*.d.ts\" -o -name \"*.tsbuildinfo\" \\) -delete"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",

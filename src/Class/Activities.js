@@ -8,8 +8,8 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/Skills').Skill} Skill
- * @typedef {import('Types/Data/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  * @typedef {import('Types/Class/Activities').Activity} Activity
  * @typedef {import('Types/Class/Activities').ActivityUnsaved} ActivityUnsaved

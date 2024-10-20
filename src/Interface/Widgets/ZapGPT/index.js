@@ -13,7 +13,7 @@ import { GetDate, TimeToFormatString } from 'Utils/Time';
 import { renderNoRemaining, renderNotBuyed, renderNotConnected } from './render';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('react-native').ListRenderItemInfo<Activity>} ListRenderItemInfo
  */
 

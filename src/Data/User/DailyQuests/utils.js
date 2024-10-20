@@ -4,7 +4,7 @@ import { GetGlobalTime, GetMidnightTime } from 'Utils/Time';
 
 /**
  * @typedef {import('./index').default} DailyQuest
- * 
+ *
  * @typedef {(preSelectionCount: number, worstStatsQuantity: number) => number[]} GetActivitiesIdOfDayType
  * @typedef {(skillsIDs: number[]) => number} GetDailyProgressType
  */
@@ -14,13 +14,14 @@ import { GetGlobalTime, GetMidnightTime } from 'Utils/Time';
  * @type {GetActivitiesIdOfDayType}
  */
 function GetActivitiesIdOfDay(preSelectionCount, worstStatsQuantity) {
-    const currentDay = (new Date()).getDay();
+    const currentDay = new Date().getDay();
+
     let selectedStats = [];
 
     // During week: we select the worst stats
     if (currentDay >= 1 && currentDay <= 5) {
         selectedStats = this.user.statsKey
-            .map(key => ({ key, value: this.user.stats[key] }))
+            .map((key) => ({ key, value: this.user.stats[key] }))
             .sort((a, b) => a.value.totalXP - b.value.totalXP)
             .slice(0, worstStatsQuantity);
     }
@@ -28,32 +29,26 @@ function GetActivitiesIdOfDay(preSelectionCount, worstStatsQuantity) {
     // During the weekend: we select the best stats
     else {
         selectedStats = this.user.statsKey
-            .map(key => ({ key, value: this.user.stats[key] }))
+            .map((key) => ({ key, value: this.user.stats[key] }))
             .sort((a, b) => b.value.totalXP - a.value.totalXP)
             .slice(0, worstStatsQuantity);
     }
 
-    const preSelectedSkillsIDs = dataManager
-        .skills.Get()
-        .filter(skill => skill.XP > 0)
+    const preSelectedSkillsIDs = dataManager.skills
+        .Get()
+        .skills.filter((skill) => skill.XP > 0)
         .sort((skillA, skillB) => {
-            const aStats = selectedStats
-                .map(stat => skillA.Stats[stat.key])
-                .reduce((a, b) => a + b, 0);
-            const bStats = selectedStats
-                .map(stat => skillB.Stats[stat.key])
-                .reduce((a, b) => a + b, 0);
+            const aStats = selectedStats.map((stat) => skillA.Stats[stat.key]).reduce((a, b) => a + b, 0);
+            const bStats = selectedStats.map((stat) => skillB.Stats[stat.key]).reduce((a, b) => a + b, 0);
             return bStats - aStats;
         })
-        .map(skill => ({
+        .map((skill) => ({
             ID: skill.ID,
             name: skill.Name.fr,
-            value: selectedStats
-                .map(s => skill.Stats[s.key])
-                .reduce((a, b) => a + b, 0)
+            value: selectedStats.map((s) => skill.Stats[s.key]).reduce((a, b) => a + b, 0)
         }))
         .slice(0, preSelectionCount)
-        .map(skill => skill.ID);
+        .map((skill) => skill.ID);
 
     return preSelectedSkillsIDs;
 }

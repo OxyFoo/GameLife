@@ -6,17 +6,16 @@ import { GetActivitiesIdOfDay, GetDailyProgress } from './utils';
 import DynamicVar from 'Utils/DynamicVar';
 import { DateFormat } from 'Utils/Date';
 import { Range, Round } from 'Utils/Functions';
-import { DAY_TIME, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * 
+ *
  * @typedef {import('./claim').ClaimAllType} ClaimAllType
  * @typedef {import('./claim').ClaimRewardType} ClaimRewardType
  * @typedef {import('./utils').GetActivitiesIdOfDayType} GetActivitiesIdOfDayType
  * @typedef {import('./utils').GetDailyProgressType} GetDailyProgressType
  * @typedef {import('./actions').RefreshSkillSelectionType} RefreshSkillSelectionType
- * 
+ *
  * @typedef {Object} ClaimType
  * @property {string} start First day YYYY-MM-DD
  * @property {number} daysCount
@@ -30,10 +29,10 @@ class DailyQuest {
 
         /** @type {number} Quantity of worst stats to consider to select skills */
         worstStatsQuantity: 3,
-    
+
         /** @type {number} Number of skills to select */
         preSelectionCount: 30,
-    
+
         /** @type {number} Number of skills to display */
         skillsSelectionCount: 3
     };
@@ -43,7 +42,8 @@ class DailyQuest {
         this.user = user;
 
         /** @type {DynamicVar<Array<ClaimType>>} */
-        this.claimsList = new DynamicVar([]);
+        // eslint-disable-next-line prettier/prettier
+        this.claimsList = new DynamicVar(/** @type {Array<ClaimType>} */ ([]));
 
         /** @type {boolean} */
         this.SAVED_claimsList = true;
@@ -87,13 +87,15 @@ class DailyQuest {
         // TODO: Wait loading
         UpdateSetup.call(this);
         UpdateActivities.call(this, this.tmpRemaining);
-    }
+    };
 
     // TODO: Implement this method
     onUnmount = () => {
-        clearTimeout(this.timeout);
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
         this.user.activities.allActivities.RemoveListener(this.listener);
-    }
+    };
 
     Clear() {
         this.claimsList.Set([]);
@@ -118,7 +120,7 @@ class DailyQuest {
         }
     }
     LoadOnline(data) {
-        if (typeof(data) !== 'object') return;
+        if (typeof data !== 'object') return;
         const contains = (key) => data.hasOwnProperty(key);
         if (contains('data')) this.claimsList.Set(data['data']);
     }
@@ -137,22 +139,22 @@ class DailyQuest {
 
     IsUnsaved = () => {
         return !this.SAVED_claimsList;
-    }
+    };
     GetUnsaved = () => {
         return {
             data: this.claimsList.Get()
         };
-    }
+    };
     Purge = () => {
         this.SAVED_claimsList = true;
-    }
+    };
 
     GetCurrentClaimIndex = () => {
         const claimsList = this.claimsList.Get();
-        let index = claimsList.findIndex(claimList => claimList.daysCount !== claimList.claimed.length);
+        let index = claimsList.findIndex((claimList) => claimList.daysCount !== claimList.claimed.length);
         if (index === -1 && claimsList.length > 0) index = claimsList.length - 1;
         return index;
-    }
+    };
 
     /** @param {ClaimType} claimList */
     IsCurrentList(claimList) {
@@ -176,7 +178,7 @@ class DailyQuest {
         if (!this.IsCurrentList(lastClaimList)) return null;
 
         return lastClaimList;
-    }
+    };
 
     /**
      * @param {number[]} preSelectedSkillsIDs
@@ -184,7 +186,7 @@ class DailyQuest {
      * @returns {number[]}
      */
     GetSelectedSkillsIDs = (preSelectedSkillsIDs, skillsIndexes) => {
-        const skillsID = skillsIndexes.map(index => {
+        const skillsID = skillsIndexes.map((index) => {
             const newIndex = Round((index + 1) * this.seed) % preSelectedSkillsIDs.length;
             const ID = preSelectedSkillsIDs[newIndex];
             return ID;
@@ -200,7 +202,7 @@ class DailyQuest {
         }
 
         return skillsID;
-    }
+    };
 
     /** @type {ClaimAllType} */
     ClaimAll = ClaimAll.bind(this);

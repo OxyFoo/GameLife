@@ -2,10 +2,10 @@ import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 
 /**
  * @typedef {import('./index').default} DailyQuest
- * @typedef {import('Class/Inventory').Stuff} Stuff
- * 
+ * @typedef {import('Data/User/Inventory').Stuff} Stuff
+ *
  * @typedef {'success' | 'already-claiming' | 'error'} ClaimResult
- * 
+ *
  * @typedef {() => Promise<ClaimResult>} ClaimAllType
  * @typedef {(claimListStart: string, dayIndexes: Array<number>) => Promise<ClaimResult>} ClaimRewardType
  */
@@ -48,21 +48,22 @@ async function ClaimReward(claimListStart, dayIndexes) {
 
     this.claiming = true;
 
+    // TODO: Implement "server2"
     const data = {
-        'claimListStart': claimListStart,
-        'dayIndexes': dayIndexes,
-        'dataToken': this.user.server.dataToken
+        claimListStart: claimListStart,
+        dayIndexes: dayIndexes,
+        dataToken: this.user.server.dataToken
     };
     const response = await this.user.server.Request('claimDailyQuest', data);
     if (response === null) {
-        this.user.interface.console.AddLog('error', 'Claim error:', response);
+        this.user.interface.console?.AddLog('error', 'Claim error:', response);
         this.claiming = false;
         return 'error';
     }
 
     // Update Ox amount
     if (!response.hasOwnProperty('ox') || !response.hasOwnProperty('newItems')) {
-        this.user.interface.console.AddLog('error', 'Claim error: Incorrect response');
+        this.user.interface.console?.AddLog('error', 'Claim error: Incorrect response');
         this.claiming = false;
         return 'error';
     }
@@ -78,16 +79,14 @@ async function ClaimReward(claimListStart, dayIndexes) {
 
     // Update claims list
     const claimsList = this.claimsList.Get();
-    const claimListIndex = claimsList.findIndex(claim => claim.start === claimListStart);
+    const claimListIndex = claimsList.findIndex((claim) => claim.start === claimListStart);
     if (claimListIndex === -1) {
-        this.user.interface.console.AddLog('error', 'Claim error: Claim list not found');
+        this.user.interface.console?.AddLog('error', 'Claim error: Claim list not found');
         this.claiming = false;
         return 'error';
     }
 
-    claimsList[claimListIndex].claimed.push(
-        ...dayIndexes.map(dayIndex => dayIndex + 1)
-    );
+    claimsList[claimListIndex].claimed.push(...dayIndexes.map((dayIndex) => dayIndex + 1));
     this.claimsList.Set(claimsList);
     this.SAVED_claimsList = false;
 
@@ -95,11 +94,11 @@ async function ClaimReward(claimListStart, dayIndexes) {
     await this.user.LocalSave();
 
     // Go to chest page
-    const dayChestClaim = dayIndexes
-        .filter(dayIndex => DAILY_QUEST_REWARDS[dayIndex]
-        .find(reward => reward.type === 'chest'));
+    const dayChestClaim = dayIndexes.filter((dayIndex) =>
+        DAILY_QUEST_REWARDS[dayIndex].find((reward) => reward.type === 'chest')
+    );
     if (dayChestClaim.length !== newItems.length) {
-        this.user.interface.console.AddLog('error', 'Claim error: No chest reward (days & reward mismatch)');
+        this.user.interface.console?.AddLog('error', 'Claim error: No chest reward (days & reward mismatch)');
         this.claiming = false;
         return 'error';
     }
@@ -119,24 +118,26 @@ async function ClaimReward(claimListStart, dayIndexes) {
  */
 function openChestPage(claimsDays, rewards) {
     const dayIndex = claimsDays[0];
-    const rewardIndex = DAILY_QUEST_REWARDS[dayIndex].findIndex(reward => reward.type === 'chest');
-    const args = {
-        itemID: rewards[0]['ItemID'],
-        chestRarity: DAILY_QUEST_REWARDS[dayIndex][rewardIndex].value,
-        callback: () => {
-            // Go to the next reward if there is one
-            if (claimsDays.length > 1 && rewards.length > 1) {
-                claimsDays.shift();
-                rewards.shift();
-                return openChestPage.call(this, claimsDays, rewards);
-            }
+    const rewardIndex = DAILY_QUEST_REWARDS[dayIndex].findIndex((reward) => reward.type === 'chest');
+    this.user.interface.popup?.Close();
+    this.user.interface.ChangePage('chestreward', {
+        args: {
+            itemID: rewards[0]['ItemID'],
+            chestRarity: DAILY_QUEST_REWARDS[dayIndex][rewardIndex].value,
+            callback: () => {
+                // Go to the next reward if there is one
+                if (claimsDays.length > 1 && rewards.length > 1) {
+                    claimsDays.shift();
+                    rewards.shift();
+                    return openChestPage.call(this, claimsDays, rewards);
+                }
 
-            // Go back to the previous page
-            return this.user.interface.BackHandle();
-        }
-    };
-    this.user.interface.popup.Close();
-    this.user.interface.ChangePage('chestreward', args, true, true);
+                // Go back to the previous page
+                return this.user.interface.BackHandle();
+            }
+        },
+        storeInHistory: false
+    });
 }
 
 export { ClaimAll, ClaimReward };

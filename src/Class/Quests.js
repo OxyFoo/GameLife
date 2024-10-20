@@ -1,5 +1,8 @@
-import MyQuests from './Quests/MyQuests';
-import DailyQuest from './Quests/DailyQuest';
+// TODO
+// Supprimer ce fichier et charger chaque type de quête indépendemment
+
+import MyQuests from '../Data/User/Quests';
+import DailyQuest from '../Data/User/DailyQuests';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager

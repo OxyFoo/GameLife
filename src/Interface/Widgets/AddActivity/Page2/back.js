@@ -4,10 +4,10 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { DEFAULT_ACTIVITY } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 
 /**
- * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2PropsType
  * @property {Activity} activity

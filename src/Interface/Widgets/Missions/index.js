@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import BackMissions from './back';
-import { MISSIONS } from 'Class/Missions';
+import { MISSIONS } from 'Data/User/Missions';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -13,7 +13,7 @@ import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 
 /**
- * @typedef {import('Types/Class/Missions').MissionType} MissionType
+ * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
  */
 
 class Missions extends BackMissions {

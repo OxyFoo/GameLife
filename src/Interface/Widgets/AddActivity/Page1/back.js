@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { DEFAULT_ACTIVITY } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -15,7 +15,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  * @typedef {import('../types').ItemSkill} ItemSkill

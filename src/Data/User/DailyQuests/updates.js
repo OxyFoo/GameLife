@@ -16,15 +16,9 @@ function UpdateSetup() {
     this.seed = GetRandomIntByDay(1, this.config.preSelectionCount - 1);
 
     /** @type {Array<number>} Worst skills ID */
-    this.worstSkillsID = this.GetActivitiesIdOfDay(
-        this.config.preSelectionCount,
-        this.config.worstStatsQuantity
-    );
+    this.worstSkillsID = this.GetActivitiesIdOfDay(this.config.preSelectionCount, this.config.worstStatsQuantity);
 
-    const newSelectedSkillsID = this.GetSelectedSkillsIDs(
-        this.worstSkillsID,
-        this.selectedIndexes
-    );
+    const newSelectedSkillsID = this.GetSelectedSkillsIDs(this.worstSkillsID, this.selectedIndexes);
 
     this.today.Set({
         refreshesRemaining: this.config.refresh_count_per_day,
@@ -46,16 +40,8 @@ function UpdateSetup() {
 function UpdateActivities(newRefreshQuantity = null) {
     const { refreshesRemaining } = this.today.Get();
 
-    const newProgression = this.GetDailyProgress(
-        this.GetSelectedSkillsIDs(
-            this.worstSkillsID,
-            this.selectedIndexes
-        )
-    );
-    const newSelectedSkillsID = this.GetSelectedSkillsIDs(
-        this.worstSkillsID,
-        this.selectedIndexes
-    );
+    const newProgression = this.GetDailyProgress(this.GetSelectedSkillsIDs(this.worstSkillsID, this.selectedIndexes));
+    const newSelectedSkillsID = this.GetSelectedSkillsIDs(this.worstSkillsID, this.selectedIndexes);
     let newRefreshesRemaining = refreshesRemaining;
     if (newRefreshQuantity !== null) {
         newRefreshesRemaining = MinMax(0, newRefreshQuantity, this.config.refresh_count_per_day);

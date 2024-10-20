@@ -14,7 +14,7 @@ import { DeepCopy } from 'Utils/Object';
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * @typedef {import('Class/Todoes').Todo} Todo
+ * @typedef {import('Data/User/Todoes').Todo} Todo
  *
  * @typedef {'new' | 'edit' | 'remove'} States
  */

@@ -6,8 +6,9 @@ import { RandomString } from 'Utils/Functions';
  * @typedef {import('Managers/UserManager').default} UserManager
  *
  * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
- * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} ReceiveRequest
+ * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
  * @typedef {import('Types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ *
  */
 
 const TCP_SETTINGS = {
@@ -40,9 +41,15 @@ class TCP {
 
     /**
      * @description Callback => If True is returned, the callback will be removed
-     * @type {Record<string, (data: ReceiveRequest) => boolean | Promise<boolean>>}
+     * @type {Record<string, (data: TCPServerRequest) => boolean | Promise<boolean>>}
      */
     #callbacks = {};
+
+    /**
+     * @description Callback => If True is returned, the callback will be removed
+     * @type {Partial<{ [key in TCPServerRequest['status']]: (data: Extract<TCPServerRequest, { 'status': key }>) => boolean | Promise<boolean> }>}
+     */
+    #callbacksActions = {};
 
     /**
      * @param {number} [timeout] in milliseconds
@@ -97,7 +104,7 @@ class TCP {
 
     /** @param {MessageEvent} event */
     #onMessage = async (event) => {
-        /** @type {ReceiveRequest} */
+        /** @type {TCPServerRequest} */
         const data = JSON.parse(event.data);
 
         // Callbacks
@@ -114,12 +121,13 @@ class TCP {
         }
 
         // Callbacks from status
-        if (data.status in this.#callbacks) {
-            const callback = this.#callbacks[data.status];
+        if (data.status in this.#callbacksActions) {
+            const callback = this.#callbacksActions[data.status];
             if (typeof callback === 'function') {
+                // @ts-ignore
                 const removeCallback = await callback(data);
                 if (removeCallback) {
-                    delete this.#callbacks[data.status];
+                    delete this.#callbacksActions[data.status];
                 }
                 return;
             }
@@ -166,9 +174,9 @@ class TCP {
 
     /**
      * @param {TCPClientRequest} message
-     * @param {(data: ReceiveRequest) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
+     * @param {(data: TCPServerRequest) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
      * @param {number} [timeout] in milliseconds
-     * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
+     * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
     SendAndWait = async (message, callback = undefined, timeout = 10000, useCallbackID = true) => {
         let ID;
@@ -186,14 +194,15 @@ class TCP {
         if (this.Send({ ...message, callbackID: ID })) {
             return this.WaitForCallback(ID, callback, timeout);
         }
+
         return 'not-sent';
     };
 
     /**
      * @param {string} callbackID The callback ID to wait for (or the action if useCallbackID is false)
-     * @param {(data: ReceiveRequest) => boolean | Promise<boolean>} callback The callback to call when the response is received, return true to remove the callback and send the response to the promise
+     * @param {(data: TCPServerRequest) => boolean | Promise<boolean>} callback The callback to call when the response is received, return true to remove the callback and send the response to the promise
      * @param {number} [timeout] in milliseconds, -1 to disable
-     * @returns {Promise<'timeout' | 'interrupted' | ReceiveRequest>} The result of the callback or 'timeout' if it took too long
+     * @returns {Promise<'timeout' | 'interrupted' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
     WaitForCallback = (callbackID, callback = () => true, timeout = 10000) => {
         return new Promise((resolve, _reject) => {
@@ -227,6 +236,60 @@ class TCP {
                     resolve(data); // Send the response to the promise
                     return true; // Remove the callback
                 }
+                resetTimeout(); // Reset the timer
+                return false; // Keep the callback
+            };
+        });
+    };
+
+    /**
+     * @template {TCPServerRequest['status']} T
+     * @param {T} action The action to wait for
+     * @param {(data: Extract<TCPServerRequest, { 'status': T }>) => boolean | Promise<boolean>} callback The callback to call when the response is received, return true to remove the callback and send the response to the promise
+     * @param {number} [timeout] in milliseconds, -1 to disable
+     * @returns {Promise<'timeout' | 'interrupted' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
+     */
+    WaitForAction = (action, callback, timeout = -1) => {
+        return new Promise((resolve, _reject) => {
+            if (action in this.#callbacksActions) {
+                resolve('alreadyExist');
+                return;
+            }
+
+            // Init the timeout timer
+            /** @type {NodeJS.Timeout | null} */
+            let timer = null;
+            if (timeout !== -1) {
+                timer = setTimeout(() => {
+                    resolve('timeout');
+                }, timeout);
+            }
+
+            // Reset the timeout timer
+            const resetTimeout = () => {
+                if (timeout === -1 || timer === null) {
+                    return;
+                }
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    resolve('timeout');
+                }, timeout);
+            };
+
+            // Set the callback
+
+            this.#callbacksActions[action] = async (/** @type {TCPServerRequest} */ data) => {
+                if (timer !== null) {
+                    clearTimeout(timer);
+                }
+
+                // @ts-ignore
+                const finished = await callback(data); // Result from caller
+                if (finished) {
+                    resolve(data); // Send the response to the promise
+                    return true; // Remove the callback
+                }
+
                 resetTimeout(); // Reset the timer
                 return false; // Keep the callback
             };

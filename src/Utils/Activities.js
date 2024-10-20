@@ -7,7 +7,7 @@ import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 

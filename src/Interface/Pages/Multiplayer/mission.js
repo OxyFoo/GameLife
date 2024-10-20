@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 import { Sleep } from 'Utils/Functions';
 
 /**
- * @typedef {import('Class/Missions').MissionKeys} MissionKeys
+ * @typedef {import('Data/User/Missions').MissionKeys} MissionKeys
  */
 
 /**

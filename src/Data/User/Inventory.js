@@ -3,13 +3,12 @@ import { IUserData } from 'Types/Interface/IUserData';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Class/Inventory').Stuff} Stuff
- * @typedef {import('Types/Class/Inventory').AvatarObject} AvatarObject
- * @typedef {import('Types/Class/Inventory').SaveObject_Local_Inventory} SaveObject_Local_Inventory
- * @typedef {import('Types/Class/Inventory').SaveObject_Online_Inventory} SaveObject_Online_Inventory
- *
  * @typedef {import('Data/App/Items').Slot} Slot
  * @typedef {import('Data/App/Titles').Title} Title
+ * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('Types/Data/User/Inventory').AvatarObject} AvatarObject
+ * @typedef {import('Types/Data/User/Inventory').SaveObject_Local_Inventory} SaveObject_Local_Inventory
+ * @typedef {import('Types/Data/User/Inventory').SaveObject_Online_Inventory} SaveObject_Online_Inventory
  */
 
 /** @extends {IUserData<SaveObject_Local_Inventory, SaveObject_Local_Inventory, SaveObject_Online_Inventory>} */

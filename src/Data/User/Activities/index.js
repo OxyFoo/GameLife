@@ -2,6 +2,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from 'Types/Interface/IUserData';
+import { GetActivityIndex, TimeIsFree } from './utils';
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
 import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
@@ -11,10 +12,9 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
- * @typedef {import('Types/Class/Activities').Activity} Activity
- * @typedef {import('Types/Class/Activities').ActivityUnsaved} ActivityUnsaved
- * @typedef {import('Types/Class/Activities').SaveObject_Local_Activities} SaveObject_Local_Activities
- * @typedef {import('Types/Class/Activities').SaveObject_Online_Activities} SaveObject_Online_Activities
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').ActivityUnsaved} ActivityUnsaved
+ * @typedef {import('Types/Data/User/Activities').SaveObject_Local_Activities} SaveObject_Local_Activities
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
@@ -37,11 +37,12 @@ const DEFAULT_ACTIVITY = {
     friends: []
 };
 
-/** @extends {IUserData<SaveObject_Local_Activities, SaveObject_Online_Activities>} */
+/** @extends {IUserData<SaveObject_Local_Activities>} */
 class Activities extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
         super();
+
         this.user = user;
     }
 
@@ -65,8 +66,17 @@ class Activities extends IUserData {
     // eslint-disable-next-line prettier/prettier
     currentActivity = new DynamicVar(/** @type {CurrentActivity | null} */ (null));
 
-    /** @type {{[name: string]: function}} */
-    callbacks = {};
+    #cache_get = {
+        id: '',
+        /** @type {Array<Activity>} */
+        activities: []
+    };
+
+    #cache_get_useful = {
+        id: '',
+        /** @type {Array<Activity>} */
+        activities: []
+    };
 
     Clear = () => {
         this.activities = [];
@@ -75,6 +85,29 @@ class Activities extends IUserData {
         this.currentActivity.Set(null);
         this.allActivities.Set([]);
     };
+
+    /**
+     * Return all activities (save and unsaved) sorted by start time (ascending)
+     * @returns {Array<Activity>}
+     */
+    Get = () => {
+        const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
+        if (id !== this.#cache_get.id) {
+            const activities = [...this.activities, ...this.UNSAVED_activities];
+            this.#cache_get.id = id;
+            this.#cache_get.activities = SortByKey(activities, 'startTime');
+        }
+        return this.#cache_get.activities;
+    };
+
+    /**
+     * Return the list of activities for the skill
+     * @param {number} skillID Skill ID
+     * @returns {Array<Activity>} List of activities
+     */
+    GetBySkillID(skillID) {
+        return this.Get().filter((activity) => activity.skillID === skillID);
+    }
 
     /** @param {SaveObject_Local_Activities} data */
     Load = (data) => {
@@ -93,40 +126,6 @@ class Activities extends IUserData {
         this.allActivities.Set(this.Get());
     };
 
-    /** @param {SaveObject_Online_Activities} data */
-    LoadOnline = (data) => {
-        if (typeof data.activities === 'undefined') return;
-
-        this.activities = [];
-        for (let i = 0; i < data.activities.length; i++) {
-            const activity = data.activities[i];
-
-            // Check if all keys are present
-            const keys = Object.keys(activity);
-            const keysActivity = Object.keys(DEFAULT_ACTIVITY);
-            if (!keys.every((key) => keysActivity.includes(key))) {
-                continue;
-            }
-
-            this.Add(
-                {
-                    skillID: activity['skillID'],
-                    startTime: activity['startTime'],
-                    duration: activity['duration'],
-                    comment: activity['comment'],
-                    timezone: activity['timezone'],
-                    addedType: activity['addedType'],
-                    addedTime: activity['addedTime'],
-                    friends: activity['friends']
-                },
-                true
-            );
-        }
-        this.allActivities.Set(this.Get());
-        const length = this.activities.length;
-        this.user.interface.console?.AddLog('info', `${length} activities loaded`);
-    };
-
     /** @returns {SaveObject_Local_Activities} */
     Save = () => {
         return {
@@ -137,89 +136,101 @@ class Activities extends IUserData {
         };
     };
 
-    cache_get = {
-        id: '',
-        /** @type {Array<Activity>} */
-        activities: []
-    };
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-activities' });
 
-    /**
-     * Return all activities (save and unsaved) sorted by start time (ascending)
-     * @returns {Array<Activity>}
-     */
-    Get() {
-        const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
-        if (id !== this.cache_get.id) {
-            const activities = [...this.activities, ...this.UNSAVED_activities];
-            this.cache_get.id = id;
-            this.cache_get.activities = SortByKey(activities, 'startTime');
+        // Check if failed
+        if (
+            response === 'timeout' ||
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response.status !== 'get-activities'
+        ) {
+            this.user.interface.console?.AddLog('error', 'Failed to load activities');
+            return false;
         }
-        return this.cache_get.activities;
-    }
+
+        // Add activities
+        for (let i = 0; i < response.activities.length; i++) {
+            this.Add(response.activities[i]);
+        }
+
+        // Update and print message
+        this.allActivities.Set(this.Get());
+        const length = this.activities.length;
+        this.user.interface.console?.AddLog('info', `${length} activities loaded`);
+        return true;
+    };
+
+    SaveOnline = async () => {
+        if (!this.isUnsaved()) {
+            return true;
+        }
+
+        const unsaved = this.getUnsaved();
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'save-activities', activities: unsaved });
+
+        // Check if failed
+        if (
+            response === 'timeout' ||
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response.status !== 'save-activities' ||
+            response.result !== 'ok'
+        ) {
+            this.user.interface.console?.AddLog('error', 'Failed to save activities');
+            return false;
+        }
+
+        // Update and print message
+        this.purge();
+        this.allActivities.Set(this.Get());
+        const length = this.activities.length;
+        this.user.interface.console?.AddLog('info', `${length} activities saved`);
+        return true;
+    };
+
+    /** @private */
+    isUnsaved = () => {
+        return this.UNSAVED_activities.length > 0 || this.UNSAVED_deletions.length > 0;
+    };
 
     /**
-     * Return the list of activities for the skill
-     * @param {number} skillID Skill ID
-     * @returns {Array<Activity>} List of activities
+     * @private
+     * @returns {Array<ActivityUnsaved>} List of unsaved activities
      */
-    GetBySkillID(skillID) {
-        return this.Get().filter((activity) => activity.skillID === skillID);
-    }
-
-    IsUnsaved = () => {
-        return this.UNSAVED_activities.length || this.UNSAVED_deletions.length;
-    };
-    /** @returns {Array<ActivityUnsaved>} List of unsaved activities */
-    GetUnsaved = () => {
+    getUnsaved = () => {
         /** @type {Array<ActivityUnsaved>} */
         let unsaved = [];
+
         for (let a in this.UNSAVED_activities) {
             const activity = this.UNSAVED_activities[a];
-            unsaved.push({
-                type: 'add',
-                skillID: activity.skillID,
-                startTime: activity.startTime,
-                duration: activity.duration,
-                comment: activity.comment,
-                timezone: activity.timezone,
-                addedType: activity.addedType,
-                addedTime: activity.addedTime,
-                friends: activity.friends
-            });
+            unsaved.push({ type: 'add', ...activity });
         }
+
         for (let a in this.UNSAVED_deletions) {
             const activity = this.UNSAVED_deletions[a];
-            unsaved.push({
-                type: 'rem',
-                skillID: activity.skillID,
-                startTime: activity.startTime,
-                duration: activity.duration,
-                comment: '',
-                timezone: activity.timezone,
-                addedType: activity.addedType,
-                addedTime: activity.addedTime,
-                friends: activity.friends
-            });
+            unsaved.push({ type: 'rem', ...activity });
         }
+
         return unsaved;
     };
-    Purge = () => {
+
+    /** @private */
+    purge = () => {
         this.activities.push(...this.UNSAVED_activities);
         this.UNSAVED_activities = [];
 
+        // Apply deletions
         for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = this.getIndex(this.activities, this.UNSAVED_deletions[i]);
+            const index = GetActivityIndex(this.activities, this.UNSAVED_deletions[i]);
             if (index !== null) {
                 this.activities.splice(index, 1);
             }
         }
-        this.UNSAVED_deletions = [];
-    };
 
-    cache_get_useful = {
-        id: '',
-        /** @type {Array<Activity>} */
-        activities: []
+        // Reset temp deletions
+        this.UNSAVED_deletions = [];
     };
 
     RefreshActivities = () => {
@@ -227,13 +238,24 @@ class Activities extends IUserData {
     };
 
     /**
+     * @param {number} time Time in seconds (unix timestamp, UTC)
+     * @param {number} duration Duration in minutes
+     * @param {Array<Activity>} [activities]
+     * @param {Array<Activity>} [exceptActivities] Activities to exclude from check
+     * @returns {boolean} True if time is free
+     */
+    TimeIsFree(time, duration, activities = this.Get(), exceptActivities = []) {
+        return TimeIsFree(time, duration, activities, exceptActivities);
+    }
+
+    /**
      * @description Get activities that have brought xp
      * @returns {Array<Activity>}
      */
     GetUseful = () => {
         const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
-        if (id === this.cache_get_useful.id) {
-            return this.cache_get_useful.activities;
+        if (id === this.#cache_get_useful.id) {
+            return this.#cache_get_useful.activities;
         }
 
         const activities = this.user.activities.Get().filter(this.DoesGrantXP);
@@ -262,8 +284,8 @@ class Activities extends IUserData {
             usefulActivities.push(activity);
         }
 
-        this.cache_get_useful.id = id;
-        this.cache_get_useful.activities = usefulActivities;
+        this.#cache_get_useful.id = id;
+        this.#cache_get_useful.activities = usefulActivities;
 
         return usefulActivities;
     };
@@ -292,7 +314,12 @@ class Activities extends IUserData {
         });
 
         /** @type {EnrichedSkill[]} */
-        let enrichedSkills = dataManager.skills.Get().filter(filter).map(getInfos).sort(sortByXP).slice(0, number);
+        let enrichedSkills = dataManager.skills
+            .Get()
+            .skills.filter(filter)
+            .map(getInfos)
+            .sort(sortByXP)
+            .slice(0, number);
 
         return enrichedSkills;
     }
@@ -331,9 +358,8 @@ class Activities extends IUserData {
         }
 
         // Check if not exists
-        const indexActivity = this.getIndex(this.activities, newActivity);
-        const indexUnsaved = this.getIndex(this.UNSAVED_activities, newActivity);
-        const indexDeletion = this.getIndex(this.UNSAVED_deletions, newActivity);
+        const indexActivity = GetActivityIndex(this.activities, newActivity);
+        const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, newActivity);
 
         // Activity already exists
         if (indexActivity !== null || indexUnsaved !== null) {
@@ -346,6 +372,7 @@ class Activities extends IUserData {
         }
 
         // Remove from deletions if exists
+        const indexDeletion = GetActivityIndex(this.UNSAVED_deletions, newActivity);
         if (indexDeletion !== null) {
             this.UNSAVED_deletions.splice(indexDeletion, 1);
         }
@@ -374,9 +401,9 @@ class Activities extends IUserData {
             return { status: 'tooEarly', activity: null };
         }
 
-        const indexActivity = this.getIndex(this.activities, activity);
-        const indexUnsaved = this.getIndex(this.UNSAVED_activities, activity);
-        const indexDeletion = this.getIndex(this.UNSAVED_deletions, activity);
+        const indexActivity = GetActivityIndex(this.activities, activity);
+        const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, activity);
+        const indexDeletion = GetActivityIndex(this.UNSAVED_deletions, activity);
 
         // Activity does not exist
         if (indexActivity === null && indexUnsaved === null) {
@@ -384,7 +411,7 @@ class Activities extends IUserData {
         }
 
         // Activity is not free
-        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, [activity])) {
+        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.Get(), [activity])) {
             return { status: 'notFree', activity: null };
         }
 
@@ -428,9 +455,9 @@ class Activities extends IUserData {
      * @returns {RemoveStatus}
      */
     Remove(activity) {
-        const indexActivity = this.getIndex(this.activities, activity);
-        const indexUnsaved = this.getIndex(this.UNSAVED_activities, activity);
-        const indexDeletion = this.getIndex(this.UNSAVED_deletions, activity);
+        const indexActivity = GetActivityIndex(this.activities, activity);
+        const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, activity);
+        const indexDeletion = GetActivityIndex(this.UNSAVED_deletions, activity);
         let deleted = null;
 
         if (indexActivity !== null) {
@@ -454,34 +481,8 @@ class Activities extends IUserData {
         return 'notExist';
     }
 
+    // TODO: Don't take timezone into account here
     /**
-     * @param {Array<Activity>} arr
-     * @param {Activity} activity
-     * @returns {number | null} Index of activity or null if not found
-     */
-    getIndex(arr, activity) {
-        for (let i = 0; i < arr.length; i++) {
-            const equals = this.areEquals(arr[i], activity);
-            if (equals) return i;
-        }
-        return null;
-    }
-
-    /**
-     * Compare two activities
-     * @param {Activity} activity1
-     * @param {Activity} activity2
-     * @returns {boolean}
-     */
-    areEquals(activity1, activity2) {
-        const sameSkillID = activity1.skillID === activity2.skillID;
-        const sameStartTime = activity1.startTime === activity2.startTime;
-        const sameDuration = activity1.duration === activity2.duration;
-        return sameSkillID && sameStartTime && sameDuration;
-    }
-
-    /**
-     * TODO: Don't take timezone into account here
      * Get activities in a specific date
      * @param {number} time Time in seconds to define day (auto define of midnights)
      * @param {Activity[]} activities
@@ -524,45 +525,6 @@ class Activities extends IUserData {
             return 'isNotPast';
         }
         return 'grant';
-    }
-
-    /**
-     * @param {number} time Time in seconds (unix timestamp, UTC)
-     * @param {number} duration Duration in minutes
-     * @param {Array<Activity>} exceptActivities Activities to exclude from check
-     * @returns {boolean} True if time is free
-     */
-    TimeIsFree(time, duration, exceptActivities = []) {
-        let output = true;
-        const startTime = time;
-        const endTime = time + duration * 60;
-
-        const activities = this.Get();
-        for (let a = 0; a < activities.length; a++) {
-            const activity = activities[a];
-
-            let except = false;
-            for (let exceptActivity of exceptActivities) {
-                if (this.areEquals(activity, exceptActivity)) {
-                    except = true;
-                    break;
-                }
-            }
-            if (except) continue;
-
-            const compareStartTime = activity.startTime;
-            const compareEndTime = activity.startTime + activity.duration * 60;
-
-            const startDuringActivity = startTime >= compareStartTime && startTime < compareEndTime;
-            const endDuringActivity = endTime > compareStartTime && endTime <= compareEndTime;
-            const aroundActivity = startTime <= compareStartTime && endTime >= compareEndTime;
-
-            if (startDuringActivity || endDuringActivity || aroundActivity) {
-                output = false;
-                break;
-            }
-        }
-        return output;
     }
 }
 

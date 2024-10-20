@@ -8,7 +8,7 @@ import { MinMax, Sum } from 'Utils/Functions';
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
  * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
- * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  */
 
 /**

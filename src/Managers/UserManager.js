@@ -1,18 +1,18 @@
 import Achievements from 'Data/User/Achievements';
-import Activities from 'Class/Activities';
+import Activities from 'Data/User/Activities/index';
 import Admob from 'Class/Admob';
 import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import Informations from 'Class/Informations';
-import Inventory from 'Class/Inventory';
-import Missions from 'Class/Missions';
+import Inventory from 'Data/User/Inventory';
+import Missions from 'Data/User/Missions';
 import Multiplayer from 'Class/Multiplayer';
 import Quests from 'Class/Quests';
 import Server from 'Class/Server';
 import Server2 from 'Class/Server2';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
-import Todoes from 'Class/Todoes';
+import Todoes from 'Data/User/Todoes';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 import TCP from 'Class/TCP';
@@ -291,12 +291,6 @@ class UserManager {
         let data = {};
         let saved = false;
 
-        if (this.activities.IsUnsaved()) {
-            data['activities'] = this.activities.GetUnsaved();
-            data['xp'] = this.xp;
-            data['stats'] = Object.fromEntries(Object.entries(this.stats).map(([key, value]) => [key, value.totalXP]));
-        }
-
         if (this.quests.IsUnsaved()) {
             data['quests'] = this.quests.GetUnsaved();
         }
@@ -326,7 +320,6 @@ class UserManager {
             const debugIndex = this.interface.console?.AddLog('info', 'User data: online saving...');
             saved = await this.server.SaveUserData(data);
             if (saved) {
-                this.activities.Purge();
                 this.informations.Purge();
                 this.quests.Purge();
                 this.todoes.Purge();

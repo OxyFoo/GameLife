@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { DEFAULT_ACTIVITY } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { StartActivityNow } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2StartNowPropsType
  * @property {Activity} activity

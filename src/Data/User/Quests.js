@@ -769,8 +769,8 @@ class MyQuests {
         return streak;
     }
 
+    // TODO: Implement this
     /**
-     * TODO: Implement this
      * @param {MyQuest} quest
      * @returns {number} Streak
      */
@@ -778,8 +778,8 @@ class MyQuests {
         return -1;
     }
 
+    // TODO: Implement this
     /**
-     * TODO: Implement this
      * @param {MyQuest} quest
      * @returns {number} Streak
      */

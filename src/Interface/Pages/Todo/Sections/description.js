@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 import { InputText, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Todoes').Todo} Todo
+ * @typedef {import('Data/User/Todoes').Todo} Todo
  *
  * @typedef {Object} SectionDescriptionPropsType
  * @property {Todo | null} todo

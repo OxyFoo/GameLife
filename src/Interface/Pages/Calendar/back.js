@@ -14,8 +14,8 @@ import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
  * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Class/Activities').Skill} Skill
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Skill} Skill
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  *
  * @typedef {object} DayDataType
  * @property {number} day

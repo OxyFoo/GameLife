@@ -9,7 +9,7 @@ import { GetDate } from 'Utils/Time';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  *
  * @typedef {object} ActivityTimelineItem
  * @property {number} startTime

@@ -19,7 +19,9 @@ class SettingsNotifications extends BackSettings {
 
                 <Text style={styles.title}>[Ads]</Text>
 
-                {/** TODO: Force show consent popup on iOS */}
+                {
+                    // TODO: Force show consent popup on iOS
+                }
                 <View style={styles.inline}>
                     <Button
                         //style={styles.margin}

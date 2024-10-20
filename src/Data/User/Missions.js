@@ -3,13 +3,13 @@ import DynamicVar from 'Utils/DynamicVar';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Data/User/Inventory').Stuff} Stuff
  *
- * @typedef {import('Types/Class/Missions').MissionKeys} MissionKeys
- * @typedef {import('Types/Class/Missions').MissionType} MissionType
- * @typedef {import('Types/Class/Missions').MissionItem} MissionItem
- * @typedef {import('Types/Class/Missions').SaveObject_Local_Missions} SaveObject_Local_Missions
- * @typedef {import('Types/Class/Missions').SaveObject_Online_Missions} SaveObject_Online_Missions
+ * @typedef {import('Types/Data/User/Missions').MissionKeys} MissionKeys
+ * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
+ * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
+ * @typedef {import('Types/Data/User/Missions').SaveObject_Local_Missions} SaveObject_Local_Missions
+ * @typedef {import('Types/Data/User/Missions').SaveObject_Online_Missions} SaveObject_Online_Missions
  */
 
 /** @type {Array<MissionType>} */

@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import { ParsePlural } from 'Utils/String';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('Class/TCP').ConnectionState} ConnectionState
  */
 

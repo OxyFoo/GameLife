@@ -5,7 +5,7 @@ import { DAYS } from 'Utils/Date';
 import { DAY_TIME, GetGlobalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  */
 
 class DayType {

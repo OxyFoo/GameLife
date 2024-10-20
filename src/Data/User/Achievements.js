@@ -14,18 +14,17 @@ import { GetGlobalTime } from 'Utils/Time';
  * @typedef {import('Types/Data/App/Achievements').Condition} Condition
  * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- * @typedef {import('Types/Class/Achievements').AchievementItem} AchievementItem
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
- *
- * @typedef {import('Types/Class/Achievements').SaveObject_Local_Achievements} SaveObject_Local_Achievements
- * @typedef {import('Types/Class/Achievements').SaveObject_Online_Achievements} SaveObject_Online_Achievements
+ * @typedef {import('Types/Data/User/Achievements').AchievementItem} AchievementItem
+ * @typedef {import('Types/Data/User/Achievements').SaveObject_Local_Achievements} SaveObject_Local_Achievements
+ * @typedef {import('Types/Data/User/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
-/** @extends {IUserData<SaveObject_Local_Achievements, SaveObject_Online_Achievements>} */
+/** @extends {IUserData<SaveObject_Local_Achievements>} */
 class Achievements extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
         super();
+
         this.user = user;
     }
 
@@ -45,14 +44,15 @@ class Achievements extends IUserData {
         this.achievements.Set([]);
     };
 
-    /** @param {SaveObject_Local_Achievements} data */
-    Load = (data) => {
-        this.achievements.Set(data.solved);
+    Get = () => {
+        return this.achievements.Get();
     };
 
-    /** @param {SaveObject_Online_Achievements} data */
-    LoadOnline = (data) => {
-        this.achievements.Set(data.solved);
+    /** @param {SaveObject_Local_Achievements} data */
+    Load = (data) => {
+        if (typeof data.solved !== 'undefined') {
+            this.achievements.Set(data.solved);
+        }
     };
 
     /** @returns {SaveObject_Local_Achievements} */
@@ -60,6 +60,24 @@ class Achievements extends IUserData {
         return {
             solved: this.achievements.Get()
         };
+    };
+
+    LoadOnline = async () => {
+        const result = await this.user.server2.tcp.SendAndWait({ action: 'get-achievements' });
+
+        // Check if result is valid
+        if (
+            result === 'interrupted' ||
+            result === 'not-sent' ||
+            result === 'timeout' ||
+            result.status !== 'get-achievements'
+        ) {
+            this.user.interface.console?.AddLog('error', 'Achievements: Error while get achievements');
+            return false;
+        }
+
+        this.achievements.Set(result.achievements);
+        return true;
     };
 
     GetSolved() {
@@ -551,7 +569,10 @@ class Achievements extends IUserData {
                 return;
             }
 
-            this.LoadOnline({ solved: newAchievements.achievements });
+            // Load new achievements
+            this.achievements.Set(newAchievements.achievements);
+
+            // Save user data
             this.user.LocalSave();
         }
 

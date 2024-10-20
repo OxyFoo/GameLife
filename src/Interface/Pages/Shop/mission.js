@@ -2,7 +2,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Class/Missions').MissionKeys} MissionKeys
+ * @typedef {import('Data/User/Missions').MissionKeys} MissionKeys
  */
 
 /**

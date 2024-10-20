@@ -211,8 +211,8 @@ class BackFlowEngine extends React.Component {
     // @ts-ignore
     GetPageName = (pageName) => (this.availablePages.includes(pageName) ? pageName : null);
 
+    // TODO: Remove
     /**
-     * TODO: Remove
      * @description Custom back button handler
      * @type {(() => boolean) | null} Return true if back is handled
      * @private
@@ -239,8 +239,8 @@ class BackFlowEngine extends React.Component {
         return true;
     };
 
+    // TODO: Remove
     /**
-     * TODO: Remove
      * @param {() => boolean} handle
      * @returns {boolean} True if handle is set
      * @public
@@ -254,8 +254,8 @@ class BackFlowEngine extends React.Component {
         return true;
     };
 
+    // TODO: Remove
     /**
-     * TODO: Remove
      * @public
      * @deprecated
      */

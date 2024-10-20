@@ -9,7 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Character, Frame } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Interface/OldComponents/Character/Frame').BodyView} BodyView
  */
 

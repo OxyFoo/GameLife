@@ -17,7 +17,7 @@ import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 // TODO: Finish avatars
 
 /**
- * @typedef {import('Class/Inventory').Stuff} Stuff
+ * @typedef {import('Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').Slot} Slot
  * @typedef {import('Data/App/Items').SkinSlot} SkinSlot

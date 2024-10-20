@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DEFAULT_ACTIVITY } from 'Class/Activities';
+import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime } from 'Utils/Time';
 import {
@@ -13,7 +13,7 @@ import {
 } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Class/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *

@@ -9,7 +9,7 @@ import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  *
  * @typedef {Object} BackActivityPropsType
  * @property {number | null} time Start time of activity, If null current time will be used

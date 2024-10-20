@@ -39,7 +39,9 @@ class Settings extends BackSettings {
                     onSelect={this.onChangeLang}
                 />
 
-                {/* TODO: Finish themes */}
+                {
+                    // TODO: Finish themes
+                }
                 {/*
                 <Text style={{ textAlign: 'left', marginBottom: 6 }}>{lang['input-theme']}</Text>
                 <SwitchText
@@ -108,7 +110,9 @@ class Settings extends BackSettings {
                     {lang['input-disconnect-all']}
                 </Button>
 
-                {/* TODO: Add this button in multiplayer page ? */}
+                {
+                    // TODO: Add this button in multiplayer page ?
+                }
                 {/* Reconnect TCP */}
                 {/* {user.server.IsConnected() &&
                     this.state.serverTCPState !== 'connected' &&
@@ -118,7 +122,9 @@ class Settings extends BackSettings {
                         </Button>
                     )} */}
 
-                {/* TODO: Restart tutorial (keep or remove ?) */}
+                {
+                    // TODO: Restart tutorial (keep or remove ?)
+                }
                 {/* <Button style={styles.margin} onPress={this.restartTuto}>
                     {lang['input-tuto-again']}
                 </Button> */}

@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 import { TwoDigit } from './Functions';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  */
 
 const DAYS = {

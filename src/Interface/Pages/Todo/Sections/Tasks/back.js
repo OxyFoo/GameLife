@@ -12,8 +12,8 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Class/Todoes').Todo} Todo
- * @typedef {import('Class/Todoes').Task} Task
+ * @typedef {import('Data/User/Todoes').Todo} Todo
+ * @typedef {import('Data/User/Todoes').Task} Task
  *
  * @typedef {Object} SectionTasksPropsType
  * @property {StylePropView} style

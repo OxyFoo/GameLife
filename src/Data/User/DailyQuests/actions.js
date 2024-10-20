@@ -2,7 +2,7 @@ import { UpdateActivities } from './updates';
 
 /**
  * @typedef {import('./index').default} DailyQuest
- * 
+ *
  * @typedef {(index: number) => void} RefreshSkillSelectionType
  */
 
@@ -15,7 +15,7 @@ function RefreshSkillSelection(index) {
     const refreshesRemaining = this.today.Get().refreshesRemaining;
 
     if (refreshesRemaining <= 0) {
-        this.user.interface.console.AddLog('error', '[DailyQuest] You have no more refreshes remaining');
+        this.user.interface.console?.AddLog('error', '[DailyQuest] You have no more refreshes remaining');
         return;
     }
 

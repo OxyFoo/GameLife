@@ -10,7 +10,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
  * @typedef {import('Interface/Pages/Home').default} Home
- * @typedef {import('Types/Class/Missions').MissionItem} MissionItem
+ * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
  */
 
 const MissionsProps = {

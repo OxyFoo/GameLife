@@ -14,7 +14,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Data/User/Todoes').Todo} Todo
+ * @typedef {import('Types/Data/User/Todo').Todo} Todo
  *
  * @typedef {Object} TodoPropsType
  * @property {StyleProp} style

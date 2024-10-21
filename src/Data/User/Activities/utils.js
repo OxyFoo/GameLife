@@ -1,5 +1,5 @@
 /**
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activity').Activity} Activity
  */
 
 /**

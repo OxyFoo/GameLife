@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skill').EnrichedSkill} EnrichedSkill
  */
 
 const SkillsGroupProps = {

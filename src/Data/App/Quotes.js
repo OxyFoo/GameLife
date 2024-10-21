@@ -3,7 +3,7 @@ import { IAppData } from 'Types/Interface/IAppData';
 import { Random } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/App/Quotes').Quote} Quote
+ * @typedef {import('Types/Data/App/Quote').Quote} Quote
  */
 
 /** @extends {IAppData<Quote[]>} */

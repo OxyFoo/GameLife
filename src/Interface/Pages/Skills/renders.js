@@ -11,8 +11,8 @@ import { Text, IconCheckable, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('./index').default} SkillsPage
- * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} SkillCategory
- * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/SkillCategory').SkillCategory} SkillCategory
+ * @typedef {import('Types/Data/App/Skill').EnrichedSkill} EnrichedSkill
  */
 
 /**

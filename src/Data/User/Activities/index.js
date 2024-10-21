@@ -9,12 +9,12 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skill').Skill} Skill
+ * @typedef {import('Types/Data/App/Skill').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
- * @typedef {import('Types/Data/User/Activities').ActivityUnsaved} ActivityUnsaved
- * @typedef {import('Types/Data/User/Activities').SaveObject_Local_Activities} SaveObject_Local_Activities
+ * @typedef {import('Types/Data/User/Activity').Activity} Activity
+ * @typedef {import('Types/Data/User/Activity').ActivityUnsaved} ActivityUnsaved
+ * @typedef {import('Types/Data/User/Activity').SaveObject_Local_Activities} SaveObject_Local_Activities
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
@@ -146,7 +146,7 @@ class Activities extends IUserData {
             response === 'not-sent' ||
             response.status !== 'get-activities'
         ) {
-            this.user.interface.console?.AddLog('error', 'Failed to load activities');
+            this.user.interface.console?.AddLog('error', '[Activities] Failed to load activities');
             return false;
         }
 
@@ -158,7 +158,7 @@ class Activities extends IUserData {
         // Update and print message
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
-        this.user.interface.console?.AddLog('info', `${length} activities loaded`);
+        this.user.interface.console?.AddLog('info', `[Activities] ${length} activities loaded`);
         return true;
     };
 
@@ -178,7 +178,7 @@ class Activities extends IUserData {
             response.status !== 'save-activities' ||
             response.result !== 'ok'
         ) {
-            this.user.interface.console?.AddLog('error', 'Failed to save activities');
+            this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
             return false;
         }
 
@@ -186,7 +186,7 @@ class Activities extends IUserData {
         this.purge();
         this.allActivities.Set(this.Get());
         const length = this.activities.length;
-        this.user.interface.console?.AddLog('info', `${length} activities saved`);
+        this.user.interface.console?.AddLog('info', `[Activities] ${length} activities saved`);
         return true;
     };
 

@@ -9,7 +9,7 @@ import { Text, Button, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Data/User/Todoes').Task} Task
+ * @typedef {import('Types/Data/User/Todo').Task} Task
  */
 
 class SectionTasks extends BackSectionTasks {

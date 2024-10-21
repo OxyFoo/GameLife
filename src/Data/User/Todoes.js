@@ -1,42 +1,23 @@
+import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- *
- * @typedef {object} Task
- * @property {boolean} checked
- * @property {string} title
+ * @typedef {import('Types/Data/User/Todo').Todo} Todo
+ * @typedef {import('Types/Data/User/Todo').Task} Task
+ * @typedef {import('Types/Data/User/Todo').TodoUnsaved} TodoUnsaved
+ * @typedef {import('Types/Data/User/Todo').SaveObject_Todo} SaveObject_Quests
  */
 
 const MAX_TODOES = 10;
 
-class Todo {
-    /** @type {number} Time in seconds or 0 if unchecked */
-    checked = 0;
-
-    /** @type {string} Todo title with max 128 characters */
-    title = '';
-
-    /** @type {string} Todo description with max 2048 characters */
-    description = '';
-
-    /** @type {number} Timestamp in seconds */
-    created = 0;
-
-    /** @type {number} Timestamp in seconds, 0 if disabled */
-    deadline = 0;
-
-    /** @type {Array<Task>} Tasks informations */
-    tasks = [];
-}
-
-/** @type {Array<Todo>} */
-const EMPTY_TODO_LIST = [];
-
-class Todoes {
+/** @extends {IUserData<SaveObject_Quests>} */
+class Todoes extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
+        super();
+
         this.user = user;
     }
 
@@ -64,68 +45,36 @@ class Todoes {
     /**
      * @type {boolean} True if todoes sort is saved
      */
-    SAVED_sort = true;
+    sortSaved = true;
 
     /**
      * @description All todoes (saved and unsaved)
      * @type {DynamicVar<Array<Todo>>}
      */
-    allTodoes = new DynamicVar(EMPTY_TODO_LIST);
+    // eslint-disable-next-line prettier/prettier
+    allTodoes = new DynamicVar(/** @type {Array<Todo>} */ ([]));
 
-    Clear() {
+    Clear = () => {
         this.SAVED_todoes = [];
         this.UNSAVED_additions = [];
         this.UNSAVED_deletions = [];
         this.sort = [];
-        this.SAVED_sort = true;
+        this.sortSaved = true;
         this.allTodoes.Set([]);
-    }
-
-    Load(data) {
-        const contains = /** @param {string} key */ (key) => data.hasOwnProperty(key);
-        if (contains('todoes')) this.SAVED_todoes = data['todoes'];
-        if (contains('additions')) this.UNSAVED_additions = data['additions'];
-        if (contains('deletions')) this.UNSAVED_deletions = data['deletions'];
-        if (contains('sort')) this.sort = data['sort'];
-        if (contains('sortSaved')) this.SAVED_sort = data['sortSaved'];
-        this.allTodoes.Set(this.Get());
-    }
-
-    LoadOnline(data) {
-        if (typeof data !== 'object') return;
-        const contains = /** @param {string} key */ (key) => data.hasOwnProperty(key);
-
-        if (contains('data')) {
-            this.SAVED_todoes = data['data'].map((todo) => Object.assign(new Todo(), todo));
-            this.user.interface.console?.AddLog('info', `${this.SAVED_todoes.length} todoes loaded`);
-            this.allTodoes.Set(this.Get());
-        }
-        if (contains('sort')) this.sort = data['sort'];
-    }
-
-    Save() {
-        const todoes = {
-            todoes: this.SAVED_todoes,
-            additions: this.UNSAVED_additions,
-            deletions: this.UNSAVED_deletions,
-            sort: this.sort,
-            sortSaved: this.SAVED_sort
-        };
-        return todoes;
-    }
+    };
 
     /**
      * Return all todoes (save and unsaved) sorted by start time (ascending)
      * @returns {Array<Todo>}
      */
-    Get() {
+    Get = () => {
         let todoes = [...this.SAVED_todoes, ...this.UNSAVED_additions];
 
         // Add new todoes title at the top
         for (const todo of todoes) {
             if (!this.sort.includes(todo.created)) {
                 this.sort.splice(0, 0, todo.created);
-                this.SAVED_sort = false;
+                this.sortSaved = false;
             }
         }
 
@@ -134,7 +83,7 @@ class Todoes {
             if (todoes.findIndex((todo) => todo.created === created) !== -1) {
                 return true;
             }
-            this.SAVED_sort = false;
+            this.sortSaved = false;
             return false;
         });
 
@@ -142,10 +91,93 @@ class Todoes {
         return this.sort
             .map((created) => todoes.find((todo) => todo.created === created) || null)
             .filter((todo) => todo !== null);
-    }
+    };
 
-    IsUnsaved = () => {
-        if (this.SAVED_sort === false) {
+    /** @param {SaveObject_Quests} data */
+    Load = (data) => {
+        if (typeof data.todoes !== 'undefined') {
+            this.SAVED_todoes = data.todoes;
+        }
+        if (typeof data.additions !== 'undefined') {
+            this.UNSAVED_additions = data.additions;
+        }
+        if (typeof data.deletions !== 'undefined') {
+            this.UNSAVED_deletions = data.deletions;
+        }
+        if (typeof data.sort !== 'undefined') {
+            this.sort = data.sort;
+        }
+        if (typeof data.sortSaved !== 'undefined') {
+            this.sortSaved = data.sortSaved;
+        }
+        this.allTodoes.Set(this.Get());
+    };
+
+    /** @returns {SaveObject_Quests} */
+    Save = () => {
+        return {
+            todoes: this.SAVED_todoes,
+            additions: this.UNSAVED_additions,
+            deletions: this.UNSAVED_deletions,
+            sort: this.sort,
+            sortSaved: this.sortSaved
+        };
+    };
+
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-todo' });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-todo'
+        ) {
+            this.user.interface.console?.AddLog('error', '[Todo] Failed to load todo');
+            return false;
+        }
+
+        this.SAVED_todoes = response.todo;
+        this.sort = response.sort;
+        this.user.interface.console?.AddLog('info', `[Todo] Loaded ${this.SAVED_todoes.length} todoes`);
+        this.allTodoes.Set(this.Get());
+        return true;
+    };
+
+    SaveOnline = async () => {
+        if (!this.isUnsaved()) {
+            return true;
+        }
+
+        const unsavedData = this.getUnsaved();
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'save-todo',
+            newTodo: unsavedData.newTodo,
+            newSort: unsavedData.sort
+        });
+
+        // Check if failed
+        if (
+            response === 'timeout' ||
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response.status !== 'save-todo' ||
+            response.result !== 'ok'
+        ) {
+            this.user.interface.console?.AddLog('error', '[Todo] Failed to save todo');
+            return false;
+        }
+
+        // Update and print message
+        this.purge();
+        this.allTodoes.Set(this.Get());
+        const length = this.allTodoes.Get().length;
+        this.user.interface.console?.AddLog('info', `[Todo] Saved ${length} todo`);
+        return true;
+    };
+
+    isUnsaved = () => {
+        if (this.sortSaved === false) {
             return true;
         }
         if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
@@ -154,8 +186,9 @@ class Todoes {
         return false;
     };
 
-    GetUnsaved = () => {
-        const data = {};
+    getUnsaved = () => {
+        let newTodo;
+        let sort;
 
         if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
             let unsaved = [];
@@ -167,17 +200,17 @@ class Todoes {
                 const todo = this.UNSAVED_deletions[a];
                 unsaved.push({ action: 'rem', ...todo });
             }
-            data['content'] = unsaved;
+            newTodo = unsaved;
         }
 
-        if (this.SAVED_sort === false) {
-            data['sort'] = this.sort;
+        if (this.sortSaved === false) {
+            sort = this.sort;
         }
 
-        return data;
+        return { newTodo, sort };
     };
 
-    Purge = () => {
+    purge = () => {
         this.SAVED_todoes.push(...this.UNSAVED_additions);
         this.UNSAVED_additions = [];
 
@@ -204,13 +237,14 @@ class Todoes {
      * @returns {boolean}
      */
     Add(title, description, deadline, tasks) {
-        const newTodo = new Todo();
-        newTodo.checked = 0;
-        newTodo.title = title;
-        newTodo.description = description;
-        newTodo.created = GetGlobalTime();
-        newTodo.deadline = deadline;
-        newTodo.tasks = tasks.filter((st) => !!st.title);
+        const newTodo = /** @type {Todo} */ {
+            checked: 0,
+            title: title,
+            description: description,
+            created: GetGlobalTime(),
+            deadline: deadline,
+            tasks: tasks.filter((st) => !!st.title)
+        };
 
         // Check if not exist
         const indexSaved = this.GetIndex(this.SAVED_todoes, newTodo);
@@ -241,13 +275,14 @@ class Todoes {
      * @returns {boolean}
      */
     Edit(oldTodo, title, description, deadline, tasks) {
-        const newTodo = new Todo();
-        newTodo.checked = 0;
-        newTodo.title = title;
-        newTodo.description = description;
-        newTodo.created = oldTodo.created;
-        newTodo.deadline = deadline;
-        newTodo.tasks = tasks.filter((st) => !!st.title);
+        const newTodo = /** @type {Todo} */ {
+            checked: 0,
+            title: title,
+            description: description,
+            created: oldTodo.created,
+            deadline: deadline,
+            tasks: tasks.filter((st) => !!st.title)
+        };
 
         // Check if not exist
         const indexSaved = this.GetIndex(this.SAVED_todoes, newTodo);
@@ -316,20 +351,20 @@ class Todoes {
         if (!this.sort.includes(todo.created)) {
             this.user.interface.console?.AddLog(
                 'warn',
-                `Todoes - move failed: todo not found (${todo.title} ${newIndex})`
+                `[Todo] Move failed: todo not found (${todo.title} ${newIndex})`
             );
             return false;
         }
         if (newIndex < 0 || newIndex > this.sort.length) {
             this.user.interface.console?.AddLog(
                 'warn',
-                `Todoes - move failed: index out of range (${todo.title} ${newIndex})`
+                `[Todo] Move failed: index out of range (${todo.title} ${newIndex})`
             );
             return false;
         }
         const oldIndex = this.sort.indexOf(todo.created);
         if (oldIndex === newIndex) {
-            this.user.interface.console?.AddLog('warn', `Todoes - move failed: same index (${todo.title} ${newIndex})`);
+            this.user.interface.console?.AddLog('warn', `[Todo] Move failed: same index (${todo.title} ${newIndex})`);
             return false;
         }
         this.sort.splice(oldIndex, 1);
@@ -355,7 +390,7 @@ class Todoes {
         if (selectedTodo === null) {
             this.user.interface.console?.AddLog(
                 'warn',
-                `Todoes - check failed: todo not found (${todo.title} ${checkedTime})`
+                `[Todo] Check failed: todo not found (${todo.title} ${checkedTime})`
             );
             return false;
         }
@@ -386,5 +421,4 @@ class Todoes {
     }
 }
 
-export { Todo };
 export default Todoes;

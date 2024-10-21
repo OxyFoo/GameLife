@@ -13,7 +13,7 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Data/User/Todoes').Todo} Todo
+ * @typedef {import('Types/Data/User/Todo').Todo} Todo
  *
  * @typedef {Object} TodoListPropsType
  * @property {StyleProp} style Style of todoes container

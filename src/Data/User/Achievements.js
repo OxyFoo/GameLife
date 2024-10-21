@@ -10,12 +10,12 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Achievements').Reward} Reward
- * @typedef {import('Types/Data/App/Achievements').Condition} Condition
- * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
+ * @typedef {import('Types/Data/App/Achievement').Reward} Reward
+ * @typedef {import('Types/Data/App/Achievement').Condition} Condition
+ * @typedef {import('Types/Data/App/Achievement').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- * @typedef {import('Types/Data/User/Achievements').AchievementItem} AchievementItem
- * @typedef {import('Types/Data/User/Achievements').SaveObject_Local_Achievements} SaveObject_Local_Achievements
+ * @typedef {import('Types/Data/User/Achievement').AchievementItem} AchievementItem
+ * @typedef {import('Types/Data/User/Achievement').SaveObject_Local_Achievements} SaveObject_Local_Achievements
  * @typedef {import('Types/Data/User/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
@@ -72,7 +72,7 @@ class Achievements extends IUserData {
             result === 'timeout' ||
             result.status !== 'get-achievements'
         ) {
-            this.user.interface.console?.AddLog('error', 'Achievements: Error while get achievements');
+            this.user.interface.console?.AddLog('error', '[Achievements] Error while get achievements');
             return false;
         }
 
@@ -128,7 +128,7 @@ class Achievements extends IUserData {
         if (achievement === null) {
             this.user.interface.console?.AddLog(
                 'error',
-                `Achievements: Error while get achievement (ID: ${achievementID})`
+                `[Achievements] Error while get achievement (ID: ${achievementID})`
             );
             return;
         }
@@ -200,7 +200,7 @@ class Achievements extends IUserData {
         switch (Comparator.Type) {
             case 'Battery':
                 if (valueNum === null) {
-                    this.user.interface.console?.AddLog('error', 'Achievements: Battery condition with number value');
+                    this.user.interface.console?.AddLog('error', '[Achievements] Battery condition with number value');
                     break;
                 }
 
@@ -221,7 +221,7 @@ class Achievements extends IUserData {
                 if (skill === null || valueStr === null) {
                     this.user.interface.console?.AddLog(
                         'error',
-                        `Achievements: Error while get skill (ID: ${Comparator.Value})`
+                        `[Achievements] Error while get skill (ID: ${Comparator.Value})`
                     );
                     break;
                 }
@@ -232,7 +232,10 @@ class Achievements extends IUserData {
 
             case 'St':
                 if (valueStr === null || Value === null || typeof Value !== 'string' || !this.user.KeyIsStats(Value)) {
-                    this.user.interface.console?.AddLog('error', 'Achievements: Statistic condition with string value');
+                    this.user.interface.console?.AddLog(
+                        'error',
+                        '[Achievements] Statistic condition with string value'
+                    );
                     break;
                 }
 
@@ -242,7 +245,7 @@ class Achievements extends IUserData {
 
             case 'Ca':
                 if (valueStr === null || valueNum === null) {
-                    this.user.interface.console?.AddLog('error', 'Achievements: Category condition with number value');
+                    this.user.interface.console?.AddLog('error', '[Achievements] Category condition with number value');
                     break;
                 }
 
@@ -250,7 +253,7 @@ class Achievements extends IUserData {
                 if (category === null) {
                     this.user.interface.console?.AddLog(
                         'error',
-                        `Achievements: Error while get category (ID: ${valueNum})`
+                        `[Achievements] Error while get category (ID: ${valueNum})`
                     );
                     break;
                 }
@@ -263,7 +266,7 @@ class Achievements extends IUserData {
                 if (valueStr === null || Comparator.Value === null) {
                     this.user.interface.console?.AddLog(
                         'error',
-                        'Achievements: Highest category condition with number value'
+                        '[Achievements] Highest category condition with number value'
                     );
                     break;
                 }
@@ -275,7 +278,7 @@ class Achievements extends IUserData {
                 if (valueStr === null) {
                     this.user.interface.console?.AddLog(
                         'error',
-                        'Achievements: Item count condition with string value'
+                        '[Achievements] Item count condition with string value'
                     );
                     break;
                 }
@@ -285,7 +288,7 @@ class Achievements extends IUserData {
 
             case 'Ad':
                 if (valueStr === null) {
-                    this.user.interface.console?.AddLog('error', 'Achievements: Ad condition with string value');
+                    this.user.interface.console?.AddLog('error', '[Achievements] Ad condition with string value');
                     break;
                 }
 
@@ -296,7 +299,7 @@ class Achievements extends IUserData {
                 if (valueStr === null) {
                     this.user.interface.console?.AddLog(
                         'error',
-                        'Achievements: Self friend condition with string value'
+                        '[Achievements] Self friend condition with string value'
                     );
                     break;
                 }
@@ -337,7 +340,7 @@ class Achievements extends IUserData {
                     if (title === null) {
                         this.user.interface.console?.AddLog(
                             'error',
-                            'Achievements: Error while get title ( ID:',
+                            '[Achievements] Error while get title ( ID:',
                             titleID,
                             ')'
                         );
@@ -363,7 +366,7 @@ class Achievements extends IUserData {
                     if (item === null) {
                         this.user.interface.console?.AddLog(
                             'error',
-                            `Achievements: Error while get item (ID: ${valueStr})`
+                            `[Achievements] Error while get item (ID: ${valueStr})`
                         );
                         continue;
                     }
@@ -427,7 +430,7 @@ class Achievements extends IUserData {
                 case 'Sk': // Skill level
                     const skillID = Condition.Comparator.Value;
                     if (skillID === null) {
-                        this.user.interface.console?.AddLog('error', 'Achievements: Skill condition without skill ID');
+                        this.user.interface.console?.AddLog('error', '[Achievements] Skill condition without skill ID');
                         break;
                     }
 
@@ -435,7 +438,7 @@ class Achievements extends IUserData {
                     if (skill === null) {
                         this.user.interface.console?.AddLog(
                             'error',
-                            `Achievements: Error while get skill (ID: ${skillID})`
+                            `[Achievements] Error while get skill (ID: ${skillID})`
                         );
                         break;
                     }
@@ -464,7 +467,7 @@ class Achievements extends IUserData {
                 //     ) {
                 //         this.user.interface.console?.AddLog(
                 //             'error',
-                //             'Achievements: Statistic condition without valid key'
+                //             '[Achievements] Statistic condition without valid key'
                 //         );
                 //         break;
                 //     }
@@ -492,7 +495,7 @@ class Achievements extends IUserData {
                     if (Condition.Comparator.Value === null) {
                         this.user.interface.console?.AddLog(
                             'error',
-                            'Achievements: Category condition without category ID'
+                            '[Achievements] Category condition without category ID'
                         );
                         break;
                     }
@@ -563,7 +566,7 @@ class Achievements extends IUserData {
             ) {
                 this.user.interface.console?.AddLog(
                     'error',
-                    `Achievements: Error while add achievements (IDs: ${achievementsSolved.join(', ')})`
+                    `[Achievements] Error while add achievements (IDs: ${achievementsSolved.join(', ')})`
                 );
                 this.loading = false;
                 return;
@@ -592,7 +595,7 @@ class Achievements extends IUserData {
         if (achievement === null) {
             this.user.interface.console?.AddLog(
                 'error',
-                'Achievements: Error while get achievement ( ID:',
+                '[Achievements] Error while get achievement ( ID:',
                 achievementID,
                 ')'
             );
@@ -616,17 +619,23 @@ class Achievements extends IUserData {
         ) {
             this.user.interface.console?.AddLog(
                 'error',
-                `Achievements: Error while claim achievement (ID: ${achievementID})`
+                `[Achievements] Error while claim achievement (ID: ${achievementID})`
             );
             this.claimAchievementLoading = false;
             return null;
         }
 
         // Add achievement to solved & get rewards
-        await this.user.LocalSave();
+        const loaded = await this.user.LocalSave();
+        if (!loaded) {
+            this.user.interface.console?.AddLog(
+                'error',
+                `[Achievements] Error while load user achievements after claim achievement (ID: ${achievementID})`
+            );
+        }
 
-        // TODO: Load user achievements directly
-        //await this.user.OnlineLoad('inventories');
+        // Load user achievements directly
+        await this.LoadOnline();
 
         this.claimAchievementLoading = false;
         return result.rewards;

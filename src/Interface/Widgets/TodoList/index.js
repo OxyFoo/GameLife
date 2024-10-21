@@ -10,7 +10,7 @@ import langManager from 'Managers/LangManager';
 import { Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/User/Todoes').Todo} Todo
+ * @typedef {import('Types/Data/User/Todo').Todo} Todo
  */
 
 class TodoList extends BackTodoList {

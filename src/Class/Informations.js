@@ -7,7 +7,7 @@ import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/TCP/GameLife/Request').ZapGPTState} ZapGPTState
+ * @typedef {import('Types/Class/ZapGPT').ZapGPTState} ZapGPTState
  * @typedef {import('Types/Class/Informations').SaveObject_Local_Informations} SaveObject_Local_Informations
  */
 

@@ -295,10 +295,6 @@ class UserManager {
             data['quests'] = this.quests.GetUnsaved();
         }
 
-        if (this.todoes.IsUnsaved()) {
-            data['todoes'] = this.todoes.GetUnsaved();
-        }
-
         if (this.inventory.IsUnsaved()) {
             data['avatar'] = this.inventory.GetUnsaved();
         }
@@ -322,7 +318,6 @@ class UserManager {
             if (saved) {
                 this.informations.Purge();
                 this.quests.Purge();
-                this.todoes.Purge();
                 this.inventory.Purge();
                 this.missions.Purge();
                 if (debugIndex) {
@@ -371,7 +366,6 @@ class UserManager {
             if (contains('activities')) this.activities.LoadOnline(data['activities']);
             if (contains('quests')) this.quests.LoadOnline(data['quests']);
             if (contains('shop')) this.shop.LoadOnline(data['shop']);
-            if (contains('todoes')) this.todoes.LoadOnline(data['todoes']);
             if (contains('dataToken')) {
                 this.server.dataToken = data['dataToken'];
                 this.interface.console?.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');

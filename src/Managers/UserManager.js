@@ -335,7 +335,72 @@ class UserManager {
         return saved;
     };
 
-    /** @param {'normal' | 'force' | 'inventories'} [type] */
+    async SaveOnline() {
+        if (!this.server2.IsAuthenticated()) {
+            return false;
+        }
+
+        const debugIndex = this.interface.console?.AddLog('info', '[UserData] Online saving...');
+
+        await this.activities.SaveOnline();
+
+        if (debugIndex) {
+            this.interface.console?.EditLog(debugIndex, 'same', '[UserData] Online save success');
+        }
+
+        return true;
+    }
+
+    async LoadOnline() {
+        if (!this.server2.IsAuthenticated()) {
+            return false;
+        }
+
+        const debugIndex = this.interface.console?.AddLog('info', '[UserData] Online loading...');
+        const response = await this.server2.tcp.SendAndWait({
+            action: 'get-user-data',
+            tokenData: this.settings.dataToken
+        });
+
+        // Check if response is valid
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-user-data' ||
+            response.result !== 'ok' ||
+            response.data === null
+        ) {
+            if (debugIndex) {
+                this.interface.console?.EditLog(debugIndex, 'error', '[UserData] Online load failed');
+            }
+            return false;
+        }
+
+        // Load data
+        const { Username, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, DataToken } = response.data;
+
+        // TODO: Load in informations class & load other classes
+        this.informations.username.Set(Username);
+        this.informations.usernameTime = LastChangeUsername;
+        this.informations.title.Set(Title);
+        this.informations.ox.Set(Ox);
+        this.informations.birthTime = Birthtime;
+        this.informations.lastBirthTime = LastChangeBirth;
+        this.settings.dataToken = DataToken;
+
+        if (debugIndex) {
+            this.interface.console?.EditLog(debugIndex, 'same', '[UserData] Online load success');
+        }
+
+        this.RefreshStats(true);
+        return true;
+    }
+
+    /**
+     * @deprecated
+     * @param {'normal' | 'force' | 'inventories'} [type]
+     */
     async OnlineLoad(type = 'normal') {
         if (!this.server.IsConnected()) return false;
         const debugIndex = this.interface.console?.AddLog('info', 'User data: online loading...');

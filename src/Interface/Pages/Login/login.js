@@ -21,7 +21,6 @@ async function Login(email) {
     // Logged in
     if (status === 'ok') {
         user.settings.email = email;
-        user.settings.connected = true;
         await user.settings.Save();
         user.interface.ChangePage('loading', { storeInHistory: false });
     }

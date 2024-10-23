@@ -62,7 +62,7 @@ class BackWaitmail extends PageBase {
     };
 
     WaitingMailConfirmation = async () => {
-        const response = await user.server2.tcp.SendAndWait(
+        const response = await user.server2.tcp.SendAndWaitWithoutCallback(
             { action: 'wait-mail', email: user.settings.email },
             (data) => {
                 // Mail confirmed
@@ -85,11 +85,15 @@ class BackWaitmail extends PageBase {
 
                 return false;
             },
-            -1,
-            false
+            -1
         );
 
-        if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
+        if (
+            response === 'timeout' ||
+            response === 'not-sent' ||
+            response === 'interrupted' ||
+            response === 'alreadyExist'
+        ) {
             user.interface.console?.AddLog('error', `Server connection failed (${response})`);
             user.interface.popup?.OpenT({
                 type: 'ok',
@@ -126,7 +130,6 @@ class BackWaitmail extends PageBase {
 
         // Connected
         if (response.result === 'confirmed') {
-            user.settings.connected = true;
             user.settings.token = response.token;
             await user.settings.Save();
             user.interface.ChangePage('loading', { storeInHistory: false });

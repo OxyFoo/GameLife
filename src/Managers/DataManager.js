@@ -52,7 +52,7 @@ class DataManager {
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
         const contributors = this.contributors.contributors.length > 0;
-        const items = this.items.Get().length > 0;
+        const items = this.items.Get().length > 0 || true; // TODO: Reimplement items
         const quotes = this.quotes.Get().length > 0;
         const skills = this.skills.Get().skills.length > 0;
         const titles = this.titles.Get().length > 0;

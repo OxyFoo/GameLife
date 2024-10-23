@@ -14,7 +14,7 @@ import { Text, Button } from 'Interface/Components';
 import IMG_MUSIC from 'Ressources/logo/music/music';
 
 /**
- * @typedef {import('Class/Settings').MusicLinks} MusicLinks
+ * @typedef {import('Types/Global/Links').MusicLinksKeys} MusicLinksKeys
  */
 
 class ActivityTimer extends BackActivityTimer {
@@ -28,8 +28,8 @@ class ActivityTimer extends BackActivityTimer {
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
 
-        /** @type {(keyof MusicLinks)[]} */ // @ts-ignore
-        const musicKeys = Object.keys(user.settings.musicLinks);
+        // eslint-disable-next-line prettier/prettier
+        const musicKeys = /** @type {MusicLinksKeys[]} */ (Object.keys(user.settings.musicLinks));
 
         return (
             <View style={styles.content}>
@@ -63,9 +63,9 @@ class ActivityTimer extends BackActivityTimer {
     }
 
     /**
-     * @param {keyof MusicLinks} musicKey
+     * @param {MusicLinksKeys} musicKey
      * @param {number} _index
-     * @param {(keyof MusicLinks)[]} _array
+     * @param {MusicLinksKeys[]} _array
      * @returns {React.JSX.Element}
      */
     renderMusic = (musicKey, _index, _array) => {

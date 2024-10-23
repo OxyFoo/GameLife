@@ -9,7 +9,7 @@ import { SpringAnimation } from 'Utils/Animations';
 import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('Class/Settings').MusicLinks} MusicLinks
+ * @typedef {import('Types/Global/Links').MusicLinksKeys} MusicLinksKeys
  */
 
 class BackActivityTimer extends PageBase {
@@ -40,7 +40,7 @@ class BackActivityTimer extends PageBase {
             return { [key]: animation };
         });
 
-        /** @type {Record<keyof MusicLinks, Animated.Value>} */
+        /** @type {Record<MusicLinksKeys, Animated.Value>} */
         this.animations = Object.assign({}, ...transformedLinksArray);
     }
 
@@ -175,7 +175,7 @@ class BackActivityTimer extends PageBase {
         }
     };
 
-    /** @param {keyof MusicLinks} musicKey */
+    /** @param {MusicLinksKeys} musicKey */
     openURL = (musicKey) => {
         const url = user.settings.musicLinks[musicKey];
         Linking.openURL(url).catch((err) => user.interface.console?.AddLog('error', "Couldn't load page", err));

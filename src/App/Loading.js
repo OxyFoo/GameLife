@@ -54,7 +54,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connection to the server failed and not logged (no offline mode), go to the wait internet page
-    if ((status === 'not-connected' || !user.server2.IsTrusted()) && !user.server2.IsLogged()) {
+    if ((status === 'not-connected' || !user.server2.IsConnected()) && !user.server2.IsLogged()) {
         fe.ChangePage('waitinternet', {
             storeInHistory: false,
             transition: 'fromBottom'
@@ -63,7 +63,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connection to the server is OK but not logged, go to the login page
-    if (user.settings.email === '') {
+    if (email === '') {
         fe.ChangePage('login', { storeInHistory: false });
         return;
     }
@@ -73,7 +73,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
      * @type {LoginResponse} Default: false (offline)
      */
     let loggedState = false;
-    if (user.server2.IsTrusted() && email !== '') {
+    if (user.server2.IsConnected() && email !== '') {
         loggedState = await user.server2.Login(email);
     }
 
@@ -123,17 +123,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     await user.LocalLoad();
 
     //await dataManager.LocalLoad(user);
-    console.log(
-        'Data before loading:',
-        dataManager.achievements.Get().length +
-            dataManager.skills.Get().skills.length +
-            dataManager.skills.Get().skillIcons.length +
-            dataManager.skills.Get().skillCategories.length +
-            dataManager.titles.Get().length +
-            dataManager.quotes.Get().length +
-            dataManager.contributors.Get().length,
-        'items'
-    );
 
     // Load app data
     await dataManager.LocalLoad(user);
@@ -157,12 +146,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Check if app data are loaded
-    // const dataLoaded = dataManager.DataAreLoaded();
-    // if (!dataLoaded) {
-    //     user.interface.console?.AddLog('error', 'App data not loaded');
-    //     callbackError('appdata-not-loaded');
-    //     return;
-    // }
+    const dataLoaded = dataManager.DataAreLoaded();
+    if (!dataLoaded) {
+        user.interface.console?.AddLog('error', 'App data not loaded');
+        callbackError('appdata-not-loaded');
+        return;
+    }
 
     // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
@@ -173,18 +162,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     nextStep();
 
-    const achievement = dataManager.achievements.GetByID(3);
-    if (achievement !== null) {
-        console.log(achievement.Condition);
-    }
-
     console.log('Connected with email:', email);
-    return;
+    // return;
 
     // Loading: User data online
     if (user.server2.IsLogged()) {
-        await user.OnlineSave();
-        await user.OnlineLoad();
+        await user.SaveOnline();
+        await user.LoadOnline();
     }
 
     // Check if user data are loaded
@@ -198,14 +182,14 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.quests.dailyquest.Init();
 
     // Loading: User character
-    user.character = new Character(
-        'player',
-        user.inventory.avatar.sexe,
-        user.inventory.avatar.skin,
-        user.inventory.avatar.skinColor
-    );
-    user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.interface.userHeader?.ShowAvatar(true);
+    // user.character = new Character(
+    //     'player',
+    //     user.inventory.avatar.sexe,
+    //     user.inventory.avatar.skin,
+    //     user.inventory.avatar.skinColor
+    // );
+    // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
+    // user.interface.userHeader?.ShowAvatar(true);
 
     // Loading: Notifications
     //await Notifications.DisableAll().then(() => {

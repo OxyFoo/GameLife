@@ -178,21 +178,30 @@ class TCP {
      * @param {number} [timeout] in milliseconds
      * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
-    SendAndWait = async (message, callback = undefined, timeout = 10000, useCallbackID = true) => {
+    SendAndWait = async (message, callback = undefined, timeout = 10000) => {
+        // Define random callback ID
         let ID;
-
-        if (useCallbackID) {
-            // Define random callback ID
-            while (!ID || ID in this.#callbacks) {
-                ID = RandomString(8);
-            }
-        } else {
-            // Use the action as callback ID
-            ID = message.action;
+        while (!ID || ID in this.#callbacks) {
+            ID = RandomString(8);
         }
 
         if (this.Send({ ...message, callbackID: ID })) {
             return this.WaitForCallback(ID, callback, timeout);
+        }
+
+        return 'not-sent';
+    };
+
+    /**
+     * @template {TCPClientRequest} T
+     * @param {T} message
+     * @param {(data: Extract<TCPServerRequest, { 'status': T['action'] }>) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
+     * @param {number} [timeout] in milliseconds
+     * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
+     */
+    SendAndWaitWithoutCallback = async (message, callback = undefined, timeout = 10000) => {
+        if (this.Send({ ...message })) {
+            return this.WaitForAction(message.action, callback, timeout);
         }
 
         return 'not-sent';
@@ -249,7 +258,7 @@ class TCP {
      * @param {number} [timeout] in milliseconds, -1 to disable
      * @returns {Promise<'timeout' | 'interrupted' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
-    WaitForAction = (action, callback, timeout = -1) => {
+    WaitForAction = (action, callback = () => true, timeout = 10000) => {
         return new Promise((resolve, _reject) => {
             if (action in this.#callbacksActions) {
                 resolve('alreadyExist');

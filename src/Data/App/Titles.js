@@ -1,7 +1,7 @@
 import { IAppData } from 'Types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/App/Titles').Title} Title
+ * @typedef {import('Types/Data/App/Title').Title} Title
  */
 
 /** @extends {IAppData<Title[]>} */

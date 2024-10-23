@@ -30,14 +30,9 @@ class Server {
     };
 
     /**
-     * Client is connected to the server
+     * Client is connected to the server and device is authenticated to the server
      */
-    IsConnected = () => this.tcp.IsConnected() && this.tcp.state.Get() === 'connected';
-
-    /**
-     * Client is authenticated to the server
-     */
-    IsTrusted = () => this.IsConnected() && this.#isTrusted;
+    IsConnected = () => this.tcp.IsConnected() && this.tcp.state.Get() === 'connected' && this.#isTrusted;
 
     /**
      * User is logged to an account \
@@ -48,7 +43,7 @@ class Server {
     /**
      * User is logged to an account and device is authenticated to the server
      */
-    IsAuthenticated = () => this.IsTrusted() && this.#user.settings.token !== '';
+    IsAuthenticated = () => this.IsConnected() && this.IsLogged();
 
     /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'error'>} */
     Connect = async () => {

@@ -19,7 +19,7 @@ import { Range, Round } from 'Utils/Functions';
  * @typedef {Object} ClaimType
  * @property {string} start First day YYYY-MM-DD
  * @property {number} daysCount
- * @property {Array<number>} claimed
+ * @property {number[]} claimed
  */
 
 class DailyQuest {
@@ -41,9 +41,9 @@ class DailyQuest {
     constructor(user) {
         this.user = user;
 
-        /** @type {DynamicVar<Array<ClaimType>>} */
+        /** @type {DynamicVar<ClaimType[]>} */
         // eslint-disable-next-line prettier/prettier
-        this.claimsList = new DynamicVar(/** @type {Array<ClaimType>} */ ([]));
+        this.claimsList = new DynamicVar(/** @type {ClaimType[]} */ ([]));
 
         /** @type {boolean} */
         this.SAVED_claimsList = true;
@@ -54,7 +54,7 @@ class DailyQuest {
         this.tmpRemaining = this.config.refresh_count_per_day;
 
         this.today = new DynamicVar({
-            /** @type {Array<number>} */
+            /** @type {number[]} */
             selectedSkillsID: [],
 
             refreshesRemaining: 0,
@@ -69,10 +69,10 @@ class DailyQuest {
         /** @type {number} */
         this.seed = 0;
 
-        /** @type {Array<number>} Worst skills ID */
+        /** @type {number[]} Worst skills ID */
         this.worstSkillsID = [];
 
-        /** @type {Array<number>} Indexes of current selected skills */
+        /** @type {number[]} Indexes of current selected skills */
         this.selectedIndexes = Range(this.config.skillsSelectionCount);
 
         /** @type {NodeJS.Timeout | null} Update the current activity time to tomorrow */

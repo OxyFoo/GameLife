@@ -19,29 +19,25 @@ class BackNotificationsInApp extends React.Component {
         animBell: new Animated.Value(1),
         animOpenCount: new Animated.Value(0),
 
-        notificationsCount: user.multiplayer.notifications.Get().length + user.achievements.GetNotifications().length
+        notificationsCount: user.notificationsInApp.Get().length
     };
 
     /** @type {Symbol | null} */
-    listenerNotifications = null;
-
-    /** @type {Symbol | null} */
-    listenerAchievements = null;
+    listener = null;
 
     /** @type {NodeJS.Timeout | null} */
     timeoutShowedCount = null;
 
     componentDidMount() {
-        this.listenerNotifications = user.multiplayer.notifications.AddListener(this.onNotificationsCountChange);
-        this.listenerAchievements = user.achievements.achievements.AddListener(this.onNotificationsCountChange);
+        this.listener = user.notificationsInApp.notifications.AddListener((notifications) => {
+            this.setState({ notificationsCount: notifications.length });
+        });
     }
 
     componentWillUnmount() {
         if (this.timeoutShowedCount) {
             clearTimeout(this.timeoutShowedCount);
         }
-        user.multiplayer.notifications.RemoveListener(this.listenerNotifications);
-        user.achievements.achievements.RemoveListener(this.listenerAchievements);
     }
 
     /**
@@ -67,18 +63,12 @@ class BackNotificationsInApp extends React.Component {
     };
 
     openNotificationsHandler = () => {
-        user.interface.notificationsInApp.Open();
+        user.interface.notificationsInApp?.Open();
 
         // Bell animation
         TimingAnimation(this.state.animBell, 1, 500).start(() => {
             TimingAnimation(this.state.animBell, 0, 0).start();
         });
-    };
-
-    onNotificationsCountChange = () => {
-        const notifMultiCount = user.multiplayer.notifications.Get().length;
-        const notifAchievementCount = user.achievements.GetNotifications().length;
-        this.setState({ notificationsCount: notifMultiCount + notifAchievementCount });
     };
 }
 

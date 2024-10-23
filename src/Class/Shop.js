@@ -59,14 +59,14 @@ class Shop {
         /** @type {string} Today date */
         day: '',
 
-        /** @type {Array<string>} List of items ID */
+        /** @type {string[]} List of items ID */
         items: [],
 
-        /** @type {Array<number>} List of inventory items ID */
+        /** @type {number[]} List of inventory items ID */
         dyes: []
     };
 
-    /** @type {Array<string>} */
+    /** @type {string[]} */
     IAP_IDs = [];
 
     /** @type {number} Price factor, applied to all Ox prices in shop */

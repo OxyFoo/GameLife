@@ -10,16 +10,16 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Achievement').Reward} Reward
- * @typedef {import('Types/Data/App/Achievement').Condition} Condition
- * @typedef {import('Types/Data/App/Achievement').Achievement} Achievement
+ * @typedef {import('Types/Data/App/Achievements').Reward} Reward
+ * @typedef {import('Types/Data/App/Achievements').Condition} Condition
+ * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- * @typedef {import('Types/Data/User/Achievement').AchievementItem} AchievementItem
- * @typedef {import('Types/Data/User/Achievement').SaveObject_Local_Achievements} SaveObject_Local_Achievements
- * @typedef {import('Types/Data/User/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
+ * @typedef {import('Types/Data/User/Achievements').AchievementItem} AchievementItem
+ * @typedef {import('Types/Data/User/Achievements').SaveObject_Achievements} SaveObject_Achievements
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
-/** @extends {IUserData<SaveObject_Local_Achievements>} */
+/** @extends {IUserData<SaveObject_Achievements>} */
 class Achievements extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
@@ -31,8 +31,8 @@ class Achievements extends IUserData {
     /** @type {boolean} Prevent multiple checks at the same time */
     loading = false;
 
-    /** @type {DynamicVar<Array<AchievementItem>>} Actual solved achievements */ // prettier-ignore
-    achievements = new DynamicVar(/** @type {Array<AchievementItem>} */ ([]));
+    /** @type {DynamicVar<AchievementItem[]>} Actual solved achievements */ // prettier-ignore
+    achievements = new DynamicVar(/** @type {AchievementItem[]} */ ([]));
 
     /**
      * @private
@@ -48,14 +48,14 @@ class Achievements extends IUserData {
         return this.achievements.Get();
     };
 
-    /** @param {SaveObject_Local_Achievements} data */
+    /** @param {Partial<SaveObject_Achievements>} data */
     Load = (data) => {
         if (typeof data.solved !== 'undefined') {
             this.achievements.Set(data.solved);
         }
     };
 
-    /** @returns {SaveObject_Local_Achievements} */
+    /** @returns {SaveObject_Achievements} */
     Save = () => {
         return {
             solved: this.achievements.Get()
@@ -105,8 +105,8 @@ class Achievements extends IUserData {
     /**
      * Get last achievements
      * @param {number} [last=3] Number of achievements to return
-     * @param {Array<AchievementItem>} [achievementItems=this.GetSolved()] List of achievements to get
-     * @returns {Array<Achievement>}
+     * @param {AchievementItem[]} [achievementItems=this.GetSolved()] List of achievements to get
+     * @returns {Achievement[]}
      */
     GetLast(last = 3, achievementItems = this.GetSolved()) {
         return achievementItems
@@ -313,7 +313,7 @@ class Achievements extends IUserData {
 
     /**
      * Return rewards text with correct langage
-     * @param {Array<Reward> | null} rewards
+     * @param {Reward[] | null} rewards
      * @returns {string}
      */
     getRewardsText = (rewards) => {
@@ -641,7 +641,7 @@ class Achievements extends IUserData {
         return result.rewards;
     };
 
-    /** @returns {Array<NotificationInAppAchievementPending>} */
+    /** @returns {NotificationInAppAchievementPending[]} */
     GetNotifications = () => {
         const achievements = this.GetPending();
         return achievements.map((achievement) => {

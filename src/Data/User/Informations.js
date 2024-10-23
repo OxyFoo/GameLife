@@ -8,13 +8,13 @@ import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Class/ZapGPT').ZapGPTState} ZapGPTState
- * @typedef {import('Types/Class/Informations').SaveObject_Local_Informations} SaveObject_Local_Informations
+ * @typedef {import('Types/Data/User/Informations').SaveObject_UserInformations} SaveObject_UserInformations
  */
 
 const DAYS_USERNAME_CHANGE = 30;
 const DAYS_BIRTHTIME_CHANGE = 365;
 
-/** @extends {IUserData<SaveObject_Local_Informations>} */
+/** @extends {IUserData<SaveObject_UserInformations>} */
 class Informations extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
@@ -69,50 +69,24 @@ class Informations extends IUserData {
         this.purchasedCount = 0;
     };
 
-    /** @param {SaveObject_Local_Informations} data */
+    /** @param {Partial<SaveObject_UserInformations>} data */
     Load = (data) => {
-        if (data.username) {
-            this.username.Set(data.username);
-        }
-        if (data.usernameTime) {
-            this.usernameTime = data.usernameTime;
-        }
-        if (data.titleID) {
-            this.title.Set(data.titleID);
-        }
-        if (data.UNSAVED_title) {
-            this.UNSAVED_title = data.UNSAVED_title;
-        }
-        if (data.birthTime) {
-            this.birthTime = data.birthTime;
-        }
-        if (data.lastBirthTime) {
-            this.lastBirthTime = data.lastBirthTime;
-        }
-        if (data.UNSAVED_birthTime) {
-            this.UNSAVED_birthTime = data.UNSAVED_birthTime;
-        }
-        if (data.xp) {
-            this.xp = data.xp;
-        }
-        if (data.ox) {
-            this.ox.Set(data.ox);
-        }
-        if (data.adRemaining) {
-            this.adRemaining = data.adRemaining;
-        }
-        if (data.adTotalWatched) {
-            this.adTotalWatched = data.adTotalWatched;
-        }
-        if (data.achievementSelfFriend) {
-            this.achievementSelfFriend = data.achievementSelfFriend;
-        }
-        if (data.purchasedCount) {
-            this.purchasedCount = data.purchasedCount;
-        }
+        if (typeof data.username !== 'undefined') this.username.Set(data.username);
+        if (typeof data.usernameTime !== 'undefined') this.usernameTime = data.usernameTime;
+        if (typeof data.titleID !== 'undefined') this.title.Set(data.titleID);
+        if (typeof data.UNSAVED_title !== 'undefined') this.UNSAVED_title = data.UNSAVED_title;
+        if (typeof data.birthTime !== 'undefined') this.birthTime = data.birthTime;
+        if (typeof data.lastBirthTime !== 'undefined') this.lastBirthTime = data.lastBirthTime;
+        if (typeof data.UNSAVED_birthTime !== 'undefined') this.UNSAVED_birthTime = data.UNSAVED_birthTime;
+        if (typeof data.xp !== 'undefined') this.xp = data.xp;
+        if (typeof data.ox !== 'undefined') this.ox.Set(data.ox);
+        if (typeof data.adRemaining !== 'undefined') this.adRemaining = data.adRemaining;
+        if (typeof data.adTotalWatched !== 'undefined') this.adTotalWatched = data.adTotalWatched;
+        if (typeof data.achievementSelfFriend !== 'undefined') this.achievementSelfFriend = data.achievementSelfFriend;
+        if (typeof data.purchasedCount !== 'undefined') this.purchasedCount = data.purchasedCount;
     };
 
-    /** @returns {SaveObject_Local_Informations} */
+    /** @returns {SaveObject_UserInformations} */
     Save = () => {
         return {
             username: this.username.Get(),
@@ -129,6 +103,38 @@ class Informations extends IUserData {
             achievementSelfFriend: this.achievementSelfFriend,
             purchasedCount: this.purchasedCount
         };
+    };
+
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'get-user-data',
+            tokenData: this.user.settings.dataToken
+        });
+
+        // Check if response is valid
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-user-data' ||
+            response.result !== 'ok' ||
+            response.data === null
+        ) {
+            return false;
+        }
+
+        // Load data
+        const { Username, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, DataToken } = response.data;
+
+        this.username.Set(Username);
+        this.usernameTime = LastChangeUsername;
+        this.title.Set(Title);
+        this.ox.Set(Ox);
+        this.birthTime = Birthtime;
+        this.lastBirthTime = LastChangeBirth;
+        this.user.settings.dataToken = DataToken; // TODO: Remove ?
+
+        return true;
     };
 
     IsUnsaved = () => {

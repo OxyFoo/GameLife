@@ -114,7 +114,7 @@ class DataManager {
         this.#tableHashes = hashes;
 
         // Load app data
-        /** @type {DataTypes | null} */
+        /** @type {Partial<DataTypes> | null} */
         const appData = await DataStorage.Load(STORAGE.APPDATA);
         if (appData === null) {
             user.interface.console?.EditLog(debugIndex, 'warn', 'App data: local load failed');

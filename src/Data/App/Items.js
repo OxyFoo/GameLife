@@ -52,7 +52,7 @@ class Item {
     Value = 0;
 
     /**
-     * @type {Array<Buff>}
+     * @type {Buff[]}
      * @deprecated
      */
     Buffs = [];
@@ -60,16 +60,16 @@ class Item {
 
 /** @extends {IAppData<Item[]>} */
 class Items extends IAppData {
-    /** @type {Array<Item>} */
+    /** @type {Item[]} */
     items = [];
 
     Clear = () => {
         this.items = [];
     };
 
-    /** @param {Array<Item>} items */
+    /** @param {Item[] | undefined} items */
     Load = (items) => {
-        if (typeof items === 'object') {
+        if (typeof items !== 'undefined') {
             this.items = items;
         }
     };
@@ -78,14 +78,14 @@ class Items extends IAppData {
         return this.items;
     };
 
-    /** @returns {Array<Item>} */
+    /** @returns {Item[]} */
     Get = () => {
         return this.items;
     };
 
     /**
      * @param {Slot | false} slot
-     * @returns {Array<Item>}
+     * @returns {Item[]}
      */
     GetBuyable(slot = false) {
         /** @param {Slot} s */
@@ -95,8 +95,8 @@ class Items extends IAppData {
 
     /**
      * @param {StuffID} itemID Item ID
-     * @param {Array<Item>} items List of items to get dyables items
-     * @returns {Array<Item>} List of dyables items for the given item
+     * @param {Item[]} items List of items to get dyables items
+     * @returns {Item[]} List of dyables items for the given item
      */
     GetDyables(itemID, items = this.items) {
         const itemMainID = itemID.split('-')[0];

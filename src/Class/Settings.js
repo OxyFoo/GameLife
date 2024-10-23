@@ -9,7 +9,7 @@ import DataStorage, { STORAGE } from 'Utils/DataStorage';
  * @typedef {import('Types/Class/Settings').SaveObject_Settings} SaveObject_Settings
  */
 
-/** @type {NonNullable<SaveObject_Settings['musicLinks']>} */
+/** @type {SaveObject_Settings['musicLinks']} */
 const DEFAULT_MUSIC_LINKS = {
     spotify: 'https://open.spotify.com/playlist/2qMPv8Re0IW2FzBGjS7HCG',
     applemusic: 'https://music.apple.com/fr/playlist/zapnmusic-for-work/pl.u-JPAZEomsDXLGvEb',

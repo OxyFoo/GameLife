@@ -13,7 +13,7 @@ import { Round } from 'Utils/Functions';
 import { GetLocalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Types/Data/App/Skill').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  * @typedef {import('Managers/UserManager').Stats} Stats
  * @typedef {import('react-native').ListRenderItem<keyof Stats>} ListRenderItemStat

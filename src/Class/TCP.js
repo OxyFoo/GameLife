@@ -94,7 +94,6 @@ class TCP {
             this.socket?.close();
         }
         this.socket = null;
-        this.#user.multiplayer.notifications.Set([]);
     };
 
     /** @param {Event} _event */

@@ -1,25 +1,23 @@
 import { IAppData } from 'Types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/App/Achievement').Achievement} Achievement
+ * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
  */
 
 /** @extends {IAppData<Achievement[]>} */
 class Achievements extends IAppData {
-    /** @type {Array<Achievement>} */
+    /** @type {Achievement[]} */
     achievements = [];
 
     Clear = () => {
         this.achievements = [];
     };
 
-    /** @param {Array<Achievement>} achievements */
+    /** @param {Achievement[] | undefined} achievements */
     Load = (achievements) => {
-        if (typeof achievements !== 'object') {
-            return;
+        if (typeof achievements !== 'undefined') {
+            this.achievements = achievements;
         }
-
-        this.achievements = achievements;
     };
 
     Save = () => {
@@ -38,8 +36,8 @@ class Achievements extends IAppData {
 
     /**
      * Returns all achievements that are visible, with solved first
-     * @param {Array<number>} solvedIDs
-     * @returns {Array<Achievement>}
+     * @param {number[]} solvedIDs
+     * @returns {Achievement[]}
      */
     GetAll = (solvedIDs) => {
         let achievements = [];

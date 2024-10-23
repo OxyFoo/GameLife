@@ -1,21 +1,26 @@
-import Achievements from 'Data/User/Achievements';
-import Activities from 'Data/User/Activities/index';
 import Admob from 'Class/Admob';
 import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
-import Informations from 'Class/Informations';
-import Inventory from 'Data/User/Inventory';
-import Missions from 'Data/User/Missions';
 import Multiplayer from 'Class/Multiplayer';
+import NotificationsInApp from 'Class/NotificationsInApp';
 import Quests from 'Class/Quests';
-import Server from 'Class/Server';
 import Server2 from 'Class/Server2';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
-import Todoes from 'Data/User/Todoes';
+import Achievements from 'Data/User/Achievements';
+import Activities from 'Data/User/Activities/index';
+import Informations from 'Data/User/Informations';
+import Inventory from 'Data/User/Inventory';
+import Missions from 'Data/User/Missions';
+import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
+
+////////////////
+// Deprecated //
+import Server from 'Class/Server';
 import TCP from 'Class/TCP';
+////////////////
 
 /**
  * @typedef {import('Interface/Components').Character} Character
@@ -42,20 +47,24 @@ class UserManager {
          */
         this.statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
 
-        this.achievements = new Achievements(this);
-        this.activities = new Activities(this);
+        // Classes
         this.admob = new Admob(this);
         this.consent = new Consent(this);
         this.experience = new Experience(this);
-        this.informations = new Informations(this);
-        this.inventory = new Inventory(this);
-        this.missions = new Missions(this);
         this.multiplayer = new Multiplayer(this);
+        this.notificationsInApp = new NotificationsInApp(this);
         this.quests = new Quests(this);
         this.server2 = new Server2(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this);
-        this.todoes = new Todoes(this);
+        this.informations = new Informations(this);
+
+        // Data
+        this.achievements = new Achievements(this);
+        this.activities = new Activities(this);
+        this.inventory = new Inventory(this);
+        this.missions = new Missions(this);
+        this.todos = new Todos(this);
 
         /** @deprecated TODO: Remove */
         this.server = new Server(this);
@@ -132,11 +141,12 @@ class UserManager {
         this.informations.Clear();
         this.inventory.Clear();
         this.missions.Clear();
+        this.notificationsInApp.Clear();
         this.quests.Clear();
         this.server.Clear();
         this.settings.Clear();
         this.shop.Clear();
-        this.todoes.Clear();
+        this.todos.Clear();
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -239,7 +249,7 @@ class UserManager {
             missions: this.missions.Save(),
             quests: this.quests.Save(),
             shop: this.shop.Save(),
-            todoes: this.todoes.Save()
+            todoes: this.todos.Save()
         };
 
         const debugIndex = this.interface.console?.AddLog('info', 'User data: local saving...');
@@ -269,7 +279,7 @@ class UserManager {
             if (contains('missions')) this.missions.Load(data['missions']);
             if (contains('quests')) this.quests.Load(data['quests']);
             if (contains('shop')) this.shop.Load(data['shop']);
-            if (contains('todoes')) this.todoes.Load(data['todoes']);
+            if (contains('todoes')) this.todos.Load(data['todoes']);
 
             if (debugIndex) {
                 this.interface.console?.EditLog(debugIndex, 'same', 'User data: local load success');
@@ -342,6 +352,8 @@ class UserManager {
 
         const debugIndex = this.interface.console?.AddLog('info', '[UserData] Online saving...');
 
+        this.notificationsInApp.StartListening();
+
         await this.activities.SaveOnline();
 
         if (debugIndex) {
@@ -357,37 +369,16 @@ class UserManager {
         }
 
         const debugIndex = this.interface.console?.AddLog('info', '[UserData] Online loading...');
-        const response = await this.server2.tcp.SendAndWait({
-            action: 'get-user-data',
-            tokenData: this.settings.dataToken
-        });
 
-        // Check if response is valid
-        if (
-            response === 'interrupted' ||
-            response === 'not-sent' ||
-            response === 'timeout' ||
-            response.status !== 'get-user-data' ||
-            response.result !== 'ok' ||
-            response.data === null
-        ) {
+        let success = true;
+        success &&= await this.informations.LoadOnline();
+
+        if (!success) {
             if (debugIndex) {
                 this.interface.console?.EditLog(debugIndex, 'error', '[UserData] Online load failed');
             }
             return false;
         }
-
-        // Load data
-        const { Username, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, DataToken } = response.data;
-
-        // TODO: Load in informations class & load other classes
-        this.informations.username.Set(Username);
-        this.informations.usernameTime = LastChangeUsername;
-        this.informations.title.Set(Title);
-        this.informations.ox.Set(Ox);
-        this.informations.birthTime = Birthtime;
-        this.informations.lastBirthTime = LastChangeBirth;
-        this.settings.dataToken = DataToken;
 
         if (debugIndex) {
             this.interface.console?.EditLog(debugIndex, 'same', '[UserData] Online load success');

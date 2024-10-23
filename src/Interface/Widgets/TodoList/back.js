@@ -13,7 +13,7 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Data/User/Todo').Todo} Todo
+ * @typedef {import('Types/Data/User/Todos').Todo} Todo
  *
  * @typedef {Object} TodoListPropsType
  * @property {StyleProp} style Style of todoes container
@@ -49,16 +49,16 @@ class BackTodoList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state.todoes = user.todoes.Get();
-        this.listenerTodo = user.todoes.allTodoes.AddListener(this.refreshTodoes);
+        this.state.todoes = user.todos.Get();
+        this.listenerTodo = user.todos.allTodoes.AddListener(this.refreshTodoes);
     }
 
     refreshTodoes = () => {
-        this.setState({ todoes: user.todoes.Get() });
+        this.setState({ todoes: user.todos.Get() });
     };
 
     componentWillUnmount() {
-        user.todoes.allTodoes.RemoveListener(this.listenerTodo);
+        user.todos.allTodoes.RemoveListener(this.listenerTodo);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -79,9 +79,9 @@ class BackTodoList extends React.Component {
     /** @param {Todo} todo */
     onTodoCheck = (todo) => {
         if (todo.checked !== 0) {
-            user.todoes.Uncheck(todo);
+            user.todos.Uncheck(todo);
         } else {
-            user.todoes.Check(todo, GetGlobalTime());
+            user.todos.Check(todo, GetGlobalTime());
         }
         user.GlobalSave();
     };
@@ -93,13 +93,13 @@ class BackTodoList extends React.Component {
     onTodoRemove = (todo, callbackRemove) => {
         // Remove todo
         callbackRemove((cancel) => {
-            const success = user.todoes.Remove(todo) === 'removed';
+            const success = user.todos.Remove(todo) === 'removed';
             if (!success) {
                 cancel();
                 return;
             }
 
-            this.setState({ todoes: [...user.todoes.Get()] });
+            this.setState({ todoes: [...user.todos.Get()] });
             user.GlobalSave();
         });
     };
@@ -109,7 +109,7 @@ class BackTodoList extends React.Component {
         this.props.changeScrollable(false);
         this.setState({ draggedItem: item });
 
-        this.selectedIndex = user.todoes.Get().indexOf(item);
+        this.selectedIndex = user.todos.Get().indexOf(item);
         const initY = this.selectedIndex * this.itemHeight;
         this.state.mouseY.setValue(initY);
     };
@@ -117,7 +117,7 @@ class BackTodoList extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [...user.todoes.sort];
+        this.initialSort = [...user.todos.sort];
         this.firstPageY = pageY;
     };
 
@@ -138,8 +138,8 @@ class BackTodoList extends React.Component {
 
         // Change todo order when dragging
         const index = Math.floor((newY + this.itemHeight / 2) / this.itemHeight);
-        const currIndex = user.todoes.sort.indexOf(draggedItem.created);
-        index !== currIndex && user.todoes.Move(draggedItem, index);
+        const currIndex = user.todos.sort.indexOf(draggedItem.created);
+        index !== currIndex && user.todos.Move(draggedItem, index);
     };
 
     /** @param {GestureResponderEvent} _event */
@@ -149,10 +149,7 @@ class BackTodoList extends React.Component {
         this.setState({ draggedItem: null });
 
         // Save changes if todoes order changed (and not just a todo check)
-        if (
-            this.initialSort.join() !== user.todoes.sort.join() &&
-            this.initialSort.length === user.todoes.sort.length
-        ) {
+        if (this.initialSort.join() !== user.todos.sort.join() && this.initialSort.length === user.todos.sort.length) {
             user.GlobalSave();
         }
     };

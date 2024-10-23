@@ -4,16 +4,16 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/User/Todo').Todo} Todo
- * @typedef {import('Types/Data/User/Todo').Task} Task
- * @typedef {import('Types/Data/User/Todo').TodoUnsaved} TodoUnsaved
- * @typedef {import('Types/Data/User/Todo').SaveObject_Todo} SaveObject_Quests
+ * @typedef {import('Types/Data/User/Todos').Todo} Todo
+ * @typedef {import('Types/Data/User/Todos').Task} Task
+ * @typedef {import('Types/Data/User/Todos').TodoUnsaved} TodoUnsaved
+ * @typedef {import('Types/Data/User/Todos').SaveObject_Todos} SaveObject_Todos
  */
 
 const MAX_TODOES = 10;
 
-/** @extends {IUserData<SaveObject_Quests>} */
-class Todoes extends IUserData {
+/** @extends {IUserData<SaveObject_Todos>} */
+class Todos extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
         super();
@@ -22,23 +22,23 @@ class Todoes extends IUserData {
     }
 
     /**
-     * @type {Array<Todo>}
+     * @type {Todo[]}
      */
     SAVED_todoes = [];
 
     /**
-     * @type {Array<Todo>}
+     * @type {Todo[]}
      */
     UNSAVED_additions = [];
 
     /**
-     * @type {Array<Todo>}
+     * @type {Todo[]}
      */
     UNSAVED_deletions = [];
 
     /**
      * Sorted todoes using titles
-     * @type {Array<number>}
+     * @type {number[]}
      */
     sort = [];
 
@@ -49,10 +49,10 @@ class Todoes extends IUserData {
 
     /**
      * @description All todoes (saved and unsaved)
-     * @type {DynamicVar<Array<Todo>>}
+     * @type {DynamicVar<Todo[]>}
      */
     // eslint-disable-next-line prettier/prettier
-    allTodoes = new DynamicVar(/** @type {Array<Todo>} */ ([]));
+    allTodoes = new DynamicVar(/** @type {Todo[]} */ ([]));
 
     Clear = () => {
         this.SAVED_todoes = [];
@@ -65,7 +65,7 @@ class Todoes extends IUserData {
 
     /**
      * Return all todoes (save and unsaved) sorted by start time (ascending)
-     * @returns {Array<Todo>}
+     * @returns {Todo[]}
      */
     Get = () => {
         let todoes = [...this.SAVED_todoes, ...this.UNSAVED_additions];
@@ -93,27 +93,17 @@ class Todoes extends IUserData {
             .filter((todo) => todo !== null);
     };
 
-    /** @param {SaveObject_Quests} data */
+    /** @param {Partial<SaveObject_Todos>} data */
     Load = (data) => {
-        if (typeof data.todoes !== 'undefined') {
-            this.SAVED_todoes = data.todoes;
-        }
-        if (typeof data.additions !== 'undefined') {
-            this.UNSAVED_additions = data.additions;
-        }
-        if (typeof data.deletions !== 'undefined') {
-            this.UNSAVED_deletions = data.deletions;
-        }
-        if (typeof data.sort !== 'undefined') {
-            this.sort = data.sort;
-        }
-        if (typeof data.sortSaved !== 'undefined') {
-            this.sortSaved = data.sortSaved;
-        }
+        if (typeof data.todoes !== 'undefined') this.SAVED_todoes = data.todoes;
+        if (typeof data.additions !== 'undefined') this.UNSAVED_additions = data.additions;
+        if (typeof data.deletions !== 'undefined') this.UNSAVED_deletions = data.deletions;
+        if (typeof data.sort !== 'undefined') this.sort = data.sort;
+        if (typeof data.sortSaved !== 'undefined') this.sortSaved = data.sortSaved;
         this.allTodoes.Set(this.Get());
     };
 
-    /** @returns {SaveObject_Quests} */
+    /** @returns {SaveObject_Todos} */
     Save = () => {
         return {
             todoes: this.SAVED_todoes,
@@ -191,14 +181,15 @@ class Todoes extends IUserData {
         let sort;
 
         if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
+            /** @type {TodoUnsaved[]} */
             let unsaved = [];
             for (let a in this.UNSAVED_additions) {
                 const todo = this.UNSAVED_additions[a];
-                unsaved.push({ action: 'add', ...todo });
+                unsaved.push({ type: 'add', ...todo });
             }
             for (let a in this.UNSAVED_deletions) {
                 const todo = this.UNSAVED_deletions[a];
-                unsaved.push({ action: 'rem', ...todo });
+                unsaved.push({ type: 'rem', ...todo });
             }
             newTodo = unsaved;
         }
@@ -233,7 +224,7 @@ class Todoes extends IUserData {
      * @param {string} title Title of the todo
      * @param {string} description Description of the todo
      * @param {number} deadline Unix timestamp in seconds
-     * @param {Array<Task>} tasks Tasks informations
+     * @param {Task[]} tasks Tasks informations
      * @returns {boolean}
      */
     Add(title, description, deadline, tasks) {
@@ -271,7 +262,7 @@ class Todoes extends IUserData {
      * @param {string} title Title of the todo
      * @param {string} description Description of the todo
      * @param {number} deadline Unix timestamp in seconds
-     * @param {Array<Task>} tasks Tasks informations
+     * @param {Task[]} tasks Tasks informations
      * @returns {boolean}
      */
     Edit(oldTodo, title, description, deadline, tasks) {
@@ -410,7 +401,7 @@ class Todoes extends IUserData {
     }
 
     /**
-     * @param {Array<Todo>} arr
+     * @param {Todo[]} arr
      * @param {Todo} todo
      * @returns {number | null} Index of todo or null if not found
      */
@@ -421,4 +412,4 @@ class Todoes extends IUserData {
     }
 }
 
-export default Todoes;
+export default Todos;

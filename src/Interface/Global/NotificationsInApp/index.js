@@ -10,8 +10,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<any>} NotificationInApp
  */
 
 class NotificationsInApp extends React.Component {
@@ -25,10 +24,8 @@ class NotificationsInApp extends React.Component {
         /** @type {'auto' | 'none'} */
         pointerEvent: 'none',
 
-        /** @type {Array<NotificationInAppFriendPending | NotificationInAppAchievementPending>} */
-        notifications: [...user.multiplayer.notifications.Get(), ...user.achievements.GetNotifications()].sort(
-            (a, b) => b.timestamp - a.timestamp
-        )
+        /** @type {Array<NotificationInApp>} */
+        notifications: user.notificationsInApp.Get()
     };
 
     /**
@@ -40,12 +37,10 @@ class NotificationsInApp extends React.Component {
     /** @type {Symbol | null} */
     listener = null;
 
-    /** @type {Symbol | null} */
-    listenerAchievements = null;
-
     componentDidMount() {
-        this.listener = user.multiplayer.notifications.AddListener(this.onUpdate);
-        this.listenerAchievements = user.achievements.achievements.AddListener(this.onUpdate);
+        this.listener = user.notificationsInApp.notifications.AddListener((notifications) => {
+            this.setState({ notifications });
+        });
     }
 
     /**
@@ -59,17 +54,8 @@ class NotificationsInApp extends React.Component {
     }
 
     componentWillUnmount() {
-        user.multiplayer.notifications.RemoveListener(this.listener);
-        user.achievements.achievements.RemoveListener(this.listenerAchievements);
+        user.notificationsInApp.notifications.RemoveListener(this.listener);
     }
-
-    onUpdate = () => {
-        this.setState({
-            notifications: [...user.multiplayer.notifications.Get(), ...user.achievements.GetNotifications()].sort(
-                (a, b) => b.timestamp - a.timestamp
-            )
-        });
-    };
 
     /** @param {GestureResponderEvent} event */
     backgroundPressHandler = (event) => {

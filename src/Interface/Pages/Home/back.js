@@ -105,7 +105,7 @@ class BackHome extends PageBase {
 
     addTodo = () => {
         const lang = langManager.curr['todoes'];
-        if (user.todoes.IsMax()) {
+        if (user.todos.IsMax()) {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {

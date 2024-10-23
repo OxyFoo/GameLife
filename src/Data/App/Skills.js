@@ -5,9 +5,9 @@ import { IAppData } from 'Types/Interface/IAppData';
 import { GetByKey } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/App/Skill').Skill} Skill
- * @typedef {import('Types/Data/App/SkillIcon').SkillIcon} Icon
- * @typedef {import('Types/Data/App/SkillCategory').SkillCategory} Category
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/SkillIcons').SkillIcon} Icon
+ * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} Category
  *
  * @typedef {{ skills: Skill[], skillIcons: Icon[], skillCategories: Category[] }} DataType
  */
@@ -30,12 +30,10 @@ class Skills extends IAppData {
     };
 
     /**
-     * @param {Object} data
-     * @param {Skill[]} data.skills
-     * @param {Icon[]} data.skillIcons
-     * @param {Category[]} data.skillCategories
+     * @param {Partial<DataType> | undefined} data
      */
     Load = (data) => {
+        if (typeof data === 'undefined') return;
         if (typeof data.skills !== 'undefined') this.skills = data.skills;
         if (typeof data.skillIcons !== 'undefined') this.icons = data.skillIcons;
         if (typeof data.skillCategories !== 'undefined') this.categories = data.skillCategories;

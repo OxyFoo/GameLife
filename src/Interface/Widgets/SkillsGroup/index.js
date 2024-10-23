@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text, Icon } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/App/Skill').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  */
 
 class SkillsGroup extends SkillsGroupBack {

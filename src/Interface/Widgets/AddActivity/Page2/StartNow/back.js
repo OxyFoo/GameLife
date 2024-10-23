@@ -4,7 +4,7 @@ import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { StartActivityNow } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Data/User/Activity').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2StartNowPropsType
  * @property {Activity} activity

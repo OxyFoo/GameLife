@@ -13,7 +13,7 @@ import { GetLocalTime } from 'Utils/Time';
 const MAX_SKILLS = 10;
 
 /**
- * @typedef {import('Types/Data/App/Skill').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
  * @typedef {import('Interface/Global/ScreenList').ScreenListItem} ScreenListItem
  *

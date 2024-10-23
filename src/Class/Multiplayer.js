@@ -7,15 +7,11 @@ const FRIENDS_LIMIT = 10;
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Features/UserOnline').Friend} Friend
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<*>} NotificationInApp
  * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} ReceiveRequest
  */
 
-/** @type {Array<Friend>} */
+/** @type {Friend[]} */
 const INIT_FRIENDS = [];
-
-/** @type {Array<NotificationInApp>} */
-const INIT_NOTIFS = [];
 
 class Multiplayer {
     /** @param {UserManager} user */
@@ -23,11 +19,8 @@ class Multiplayer {
         this.user = user;
     }
 
-    /** @type {DynamicVar<Array<Friend>>} */
+    /** @type {DynamicVar<Friend[]>} */
     friends = new DynamicVar(INIT_FRIENDS);
-
-    /** @type {DynamicVar<Array<NotificationInApp>>} */
-    notifications = new DynamicVar(INIT_NOTIFS);
 
     /** @param {number} accountID */
     GetFriendByID = (accountID) => {
@@ -41,10 +34,6 @@ class Multiplayer {
         switch (status) {
             case 'update-friends':
                 this.friends.Set(data.friends);
-                break;
-
-            case 'update-notifications':
-                this.notifications.Set(data.notifications);
                 break;
 
             case 'update-current-activity':

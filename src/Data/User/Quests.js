@@ -12,7 +12,7 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
  *
  * @typedef {object} ScheduleRepeat
  * @property {'week' | 'month'} type
- * @property {Array<number>} repeat
+ * @property {number[]} repeat
  * @property {number} duration In minutes
  *
  * @typedef {object} ScheduleFrequency
@@ -30,7 +30,7 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
  * @property {number} progress Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'filling'
  */
 
-/** @type {Array<MyQuest>} */
+/** @type {MyQuest[]} */
 const EMPTY_QUESTS = [];
 
 class MyQuest {
@@ -50,7 +50,7 @@ class MyQuest {
         duration: 0
     };
 
-    /** @type {Array<number>} Skills ids */
+    /** @type {number[]} Skills ids */
     skills = [];
 
     /** @type {number} Maximum consecutive days */
@@ -65,16 +65,16 @@ class MyQuests {
 
     MAX_QUESTS = 5;
 
-    /** @type {Array<MyQuest>} */
+    /** @type {MyQuest[]} */
     SAVED_quests = [];
 
-    /** @type {Array<MyQuest>} */
+    /** @type {MyQuest[]} */
     UNSAVED_additions = [];
 
-    /** @type {Array<MyQuest>} */
+    /** @type {MyQuest[]} */
     UNSAVED_deletions = [];
 
-    /** @type {Array<number>} Sorted quests using created time */
+    /** @type {number[]} Sorted quests using created time */
     sort = [];
 
     /** @type {boolean} True if quests sort is saved */
@@ -82,7 +82,7 @@ class MyQuests {
 
     /**
      * @description All quests (saved and unsaved)
-     * @type {DynamicVar<Array<MyQuest>>}
+     * @type {DynamicVar<MyQuest[]>}
      */
     allQuests = new DynamicVar(EMPTY_QUESTS);
 
@@ -125,7 +125,7 @@ class MyQuests {
     }
     /**
      * Return all quests (save and unsaved) sorted by start time (ascending)
-     * @returns {Array<MyQuest>}
+     * @returns {MyQuest[]}
      */
     Get() {
         let quests = [...this.SAVED_quests, ...this.UNSAVED_additions];
@@ -197,10 +197,10 @@ class MyQuests {
 
     /**
      * @param {MyQuest} quest
-     * @returns {Array<InputsError>} Null if no error
+     * @returns {InputsError[]} Null if no error
      */
     VerifyInputs = (quest) => {
-        /** @type {Array<InputsError>} */
+        /** @type {InputsError[]} */
         const errors = [];
 
         // Check title
@@ -417,7 +417,7 @@ class MyQuests {
     }
 
     /**
-     * @param {Array<MyQuest>} arr
+     * @param {MyQuest[]} arr
      * @param {MyQuest} quest
      * @returns {number | null} Index of quest or null if not found
      */
@@ -430,7 +430,7 @@ class MyQuests {
     /**
      * @param {MyQuest} quest
      * @param {number} time in seconds
-     * @returns {Array<DayType>} Days of the week
+     * @returns {DayType[]} Days of the week
      */
     GetDays(quest, time = GetLocalTime()) {
         if (quest === null) return [];
@@ -452,7 +452,7 @@ class MyQuests {
     /**
      * @param {MyQuest} quest
      * @param {number} time in seconds
-     * @returns {Array<DayType>} Days of the week
+     * @returns {DayType[]} Days of the week
      * @private
      */
     getDayFromMonthOrWeek(quest, time = GetLocalTime()) {
@@ -463,7 +463,7 @@ class MyQuests {
 
         if (schedule.duration === 0) return []; // Avoid division by 0
 
-        /** @type {Array<DayType>} */
+        /** @type {DayType[]} */
         const days = [];
 
         for (let i = 0; i < 7; i++) {
@@ -512,7 +512,7 @@ class MyQuests {
     /**
      * @param {MyQuest} quest
      * @param {number} time in seconds
-     * @returns {Array<DayType>} Days of the week
+     * @returns {DayType[]} Days of the week
      * @private
      */
     getDayFromFrequencyByMonth(quest, time = GetLocalTime()) {
@@ -523,7 +523,7 @@ class MyQuests {
         const firstDateWeek = currentDate - currentDayIndex;
         const { skills, schedule } = quest;
 
-        /** @type {Array<DayType>} */
+        /** @type {DayType[]} */
         const days = [];
 
         // Avoid division by 0
@@ -589,7 +589,7 @@ class MyQuests {
     /**
      * @param {MyQuest} quest
      * @param {number} time in seconds
-     * @returns {Array<DayType>} Days of the week
+     * @returns {DayType[]} Days of the week
      * @private
      */
     getDayFromFrequencyByWeek(quest, time = GetLocalTime()) {
@@ -598,7 +598,7 @@ class MyQuests {
         const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
         const { skills, schedule } = quest;
 
-        /** @type {Array<DayType>} */
+        /** @type {DayType[]} */
         const days = [];
 
         // Avoid division by 0

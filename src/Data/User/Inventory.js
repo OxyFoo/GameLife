@@ -7,11 +7,11 @@ import { IUserData } from 'Types/Interface/IUserData';
  * @typedef {import('Data/App/Titles').Title} Title
  * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Types/Data/User/Inventory').AvatarObject} AvatarObject
- * @typedef {import('Types/Data/User/Inventory').SaveObject_Local_Inventory} SaveObject_Local_Inventory
- * @typedef {import('Types/Data/User/Inventory').SaveObject_Online_Inventory} SaveObject_Online_Inventory
+ *
+ * @typedef {import('Types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
  */
 
-/** @extends {IUserData<SaveObject_Local_Inventory, SaveObject_Local_Inventory, SaveObject_Online_Inventory>} */
+/** @extends {IUserData<SaveObject_Inventory>} */
 class Inventory extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
@@ -20,12 +20,12 @@ class Inventory extends IUserData {
         this.user = user;
     }
 
-    /** @type {Array<number>} */
+    /** @type {number[]} */
     titleIDs = [];
 
     /**
      * @description Array of owned stuffs
-     * @type {Array<Stuff>}
+     * @type {Stuff[]}
      */
     stuffs = [];
 
@@ -65,14 +65,22 @@ class Inventory extends IUserData {
         this.avatarEdited = false;
     };
 
-    /** @param {SaveObject_Local_Inventory} data */
-    Load = (data) => {
-        if (data.titleIDs) this.titleIDs = data.titleIDs;
-        if (data.stuffs) this.stuffs = data.stuffs;
-        if (data.avatar) this.avatar = data.avatar;
+    Get = () => {
+        return {
+            titleIDs: this.titleIDs,
+            stuffs: this.stuffs,
+            avatar: this.avatar
+        };
     };
 
-    /** @returns {SaveObject_Local_Inventory} */
+    /** @param {Partial<SaveObject_Inventory>} data */
+    Load = (data) => {
+        if (typeof data.titleIDs !== 'undefined') this.titleIDs = data.titleIDs;
+        if (typeof data.stuffs !== 'undefined') this.stuffs = data.stuffs;
+        if (typeof data.avatar !== 'undefined') this.avatar = data.avatar;
+    };
+
+    /** @returns {SaveObject_Inventory} */
     Save = () => {
         return {
             titleIDs: this.titleIDs,
@@ -81,20 +89,28 @@ class Inventory extends IUserData {
         };
     };
 
-    /** @param {SaveObject_Local_Inventory} data */
-    LoadOnline = (data) => {
-        if (typeof data.titleIDs !== 'undefined') {
-            this.titleIDs = data.titleIDs;
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-inventory' });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-inventory' ||
+            response.result !== 'ok' ||
+            response.inventory === null
+        ) {
+            this.user.interface.console?.AddLog('error', 'Failed to load inventory');
+            return false;
         }
-        if (typeof data.stuffs !== 'undefined') {
-            this.stuffs = data.stuffs;
-        }
-        if (typeof data.avatar !== 'undefined') {
-            this.avatar = data.avatar;
-        }
+
+        this.titleIDs = response.inventory.titleIDs;
+        this.stuffs = response.inventory.stuffs;
+        this.avatar = response.inventory.avatar;
 
         this.user.interface.console?.AddLog('info', `${this.titleIDs.length} titles loaded`);
         this.user.interface.console?.AddLog('info', `${this.stuffs.length} stuffs loaded`);
+        return true;
     };
 
     IsUnsaved = () => {
@@ -134,9 +150,9 @@ class Inventory extends IUserData {
         this.user.missions.SetMissionState('mission4', 'completed');
     };
 
-    /** @returns {Array<Title>} */
+    /** @returns {Title[]} */
     GetTitles = () => {
-        /** @type {Array<Title>} */
+        /** @type {Title[]} */
         const titles = [];
         for (const ID of this.titleIDs) {
             const title = dataManager.titles.GetByID(ID);
@@ -153,7 +169,7 @@ class Inventory extends IUserData {
 
     /**
      * @param {Slot} slot
-     * @returns {Array<Stuff>}
+     * @returns {Stuff[]}
      */
     GetStuffsBySlot = (slot) => {
         return this.stuffs.filter((stuff) => {
@@ -163,12 +179,12 @@ class Inventory extends IUserData {
         });
     };
 
-    /** @returns {Array<number>} Get list ID of equipped stuffs */
+    /** @returns {number[]} Get list ID of equipped stuffs */
     GetEquipments = () => {
         return [this.avatar.hair, this.avatar.top, this.avatar.bottom, this.avatar.shoes];
     };
 
-    /** @returns {Array<string>} */
+    /** @returns {string[]} */
     GetEquippedItemsID = () => this.GetEquipments().map((ID) => this.GetStuffByID(ID)?.ItemID || '[Default Item]');
 }
 

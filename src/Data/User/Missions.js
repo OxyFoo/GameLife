@@ -8,11 +8,10 @@ import DynamicVar from 'Utils/DynamicVar';
  * @typedef {import('Types/Data/User/Missions').MissionKeys} MissionKeys
  * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
  * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
- * @typedef {import('Types/Data/User/Missions').SaveObject_Local_Missions} SaveObject_Local_Missions
- * @typedef {import('Types/Data/User/Missions').SaveObject_Online_Missions} SaveObject_Online_Missions
+ * @typedef {import('Types/Data/User/Missions').SaveObject_Missions} SaveObject_Missions
  */
 
-/** @type {Array<MissionType>} */
+/** @type {MissionType[]} */
 const MISSIONS = [
     { name: 'mission1', rewardType: 'ox', rewardValue: 20 },
     { name: 'mission2', rewardType: 'ox', rewardValue: 30 },
@@ -21,7 +20,7 @@ const MISSIONS = [
     { name: 'mission5', rewardType: 'chest', rewardValue: 1 }
 ];
 
-/** @extends {IUserData<SaveObject_Local_Missions>} */
+/** @extends {IUserData<SaveObject_Missions>} */
 class Missions extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
@@ -30,9 +29,9 @@ class Missions extends IUserData {
         this.user = user;
     }
 
-    /** @type {DynamicVar<Array<MissionItem>>} */
+    /** @type {DynamicVar<MissionItem[]>} */
     // eslint-disable-next-line prettier/prettier
-    missions = new DynamicVar(/** @type {Array<MissionItem>} */ ([]));
+    missions = new DynamicVar(/** @type {MissionItem[]} */ ([]));
 
     /**
      * Set to true if missions are edited
@@ -46,26 +45,40 @@ class Missions extends IUserData {
         this.missionsEdited = false;
     };
 
-    /** @param {SaveObject_Local_Missions} data */
+    Get = () => {
+        return this.missions.Get();
+    };
+
+    /** @param {Partial<SaveObject_Missions>} data */
     Load = (data) => {
         if (typeof data.missions !== 'undefined') {
             this.missions.Set(data.missions);
         }
     };
 
-    /** @returns {SaveObject_Local_Missions} */
+    /** @returns {SaveObject_Missions} */
     Save = () => {
         return {
             missions: this.missions.Get()
         };
     };
 
-    /** @param {SaveObject_Online_Missions} data */
-    LoadOnline = (data) => {
-        if (typeof data.missions === 'undefined') return;
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-missions' });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-missions' ||
+            response.result !== 'ok' ||
+            response.missions === null
+        ) {
+            return false;
+        }
 
         const currMissions = this.missions.Get();
-        for (const newMission of data.missions) {
+        for (const newMission of response.missions) {
             const currMission = currMissions.find((mission) => mission.name === newMission.name);
             if (!currMission) {
                 currMissions.push(newMission);
@@ -75,6 +88,7 @@ class Missions extends IUserData {
         }
 
         this.missions.Set(currMissions);
+        return true;
     };
 
     IsUnsaved = () => {
@@ -177,7 +191,7 @@ class Missions extends IUserData {
      */
     ClaimMission = async (name) => {
         // const result = await this.user.server2.tcp.SendAndWait({ action: 'claim-achievement', achievementID: name });
-        // TODO !!!!
+        // TODO: Claim missions
         const rewards = await this.user.server.ClaimMission(name);
         if (rewards === false) {
             return false;

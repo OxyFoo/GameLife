@@ -15,7 +15,7 @@ function UpdateSetup() {
     /** @type {number} */
     this.seed = GetRandomIntByDay(1, this.config.preSelectionCount - 1);
 
-    /** @type {Array<number>} Worst skills ID */
+    /** @type {number[]} Worst skills ID */
     this.worstSkillsID = this.GetActivitiesIdOfDay(this.config.preSelectionCount, this.config.worstStatsQuantity);
 
     const newSelectedSkillsID = this.GetSelectedSkillsIDs(this.worstSkillsID, this.selectedIndexes);

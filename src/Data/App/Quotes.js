@@ -3,7 +3,7 @@ import { IAppData } from 'Types/Interface/IAppData';
 import { Random } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/App/Quote').Quote} Quote
+ * @typedef {import('Types/Data/App/Quotes').Quote} Quote
  */
 
 /** @extends {IAppData<Quote[]>} */
@@ -15,9 +15,9 @@ class Quotes extends IAppData {
         this.quotes = [];
     };
 
-    /** @param {Quote[]} quotes */
+    /** @param {Quote[] | undefined} quotes */
     Load = (quotes) => {
-        if (typeof quotes === 'object') {
+        if (typeof quotes !== 'undefined') {
             this.quotes = quotes;
         }
     };

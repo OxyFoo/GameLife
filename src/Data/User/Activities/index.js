@@ -9,12 +9,12 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Skill').Skill} Skill
- * @typedef {import('Types/Data/App/Skill').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
- * @typedef {import('Types/Data/User/Activity').Activity} Activity
- * @typedef {import('Types/Data/User/Activity').ActivityUnsaved} ActivityUnsaved
- * @typedef {import('Types/Data/User/Activity').SaveObject_Local_Activities} SaveObject_Local_Activities
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').ActivityUnsaved} ActivityUnsaved
+ * @typedef {import('Types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
@@ -37,7 +37,7 @@ const DEFAULT_ACTIVITY = {
     friends: []
 };
 
-/** @extends {IUserData<SaveObject_Local_Activities>} */
+/** @extends {IUserData<SaveObject_Activities>} */
 class Activities extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
@@ -46,21 +46,21 @@ class Activities extends IUserData {
         this.user = user;
     }
 
-    /** @type {Array<Activity>} */
+    /** @type {Activity[]} */
     activities = [];
 
-    /** @type {Array<Activity>} */
+    /** @type {Activity[]} */
     UNSAVED_activities = [];
 
-    /** @type {Array<Activity>} */
+    /** @type {Activity[]} */
     UNSAVED_deletions = [];
 
     /**
      * @description Contain all activities, updated when adding, editing or removing
-     * @type {DynamicVar<Array<Activity>>}
+     * @type {DynamicVar<Activity[]>}
      */
     // eslint-disable-next-line prettier/prettier
-    allActivities = new DynamicVar(/** @type {Array<Activity>} */ ([]));
+    allActivities = new DynamicVar(/** @type {Activity[]} */ ([]));
 
     /** @type {DynamicVar<CurrentActivity | null>} */
     // eslint-disable-next-line prettier/prettier
@@ -68,13 +68,13 @@ class Activities extends IUserData {
 
     #cache_get = {
         id: '',
-        /** @type {Array<Activity>} */
+        /** @type {Activity[]} */
         activities: []
     };
 
     #cache_get_useful = {
         id: '',
-        /** @type {Array<Activity>} */
+        /** @type {Activity[]} */
         activities: []
     };
 
@@ -88,7 +88,7 @@ class Activities extends IUserData {
 
     /**
      * Return all activities (save and unsaved) sorted by start time (ascending)
-     * @returns {Array<Activity>}
+     * @returns {Activity[]}
      */
     Get = () => {
         const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
@@ -103,30 +103,22 @@ class Activities extends IUserData {
     /**
      * Return the list of activities for the skill
      * @param {number} skillID Skill ID
-     * @returns {Array<Activity>} List of activities
+     * @returns {Activity[]} List of activities
      */
     GetBySkillID(skillID) {
         return this.Get().filter((activity) => activity.skillID === skillID);
     }
 
-    /** @param {SaveObject_Local_Activities} data */
+    /** @param {Partial<SaveObject_Activities>} data */
     Load = (data) => {
-        if (typeof data.activities !== 'undefined') {
-            this.activities = data.activities;
-        }
-        if (typeof data.unsaved !== 'undefined') {
-            this.UNSAVED_activities = data.unsaved;
-        }
-        if (typeof data.deletions !== 'undefined') {
-            this.UNSAVED_deletions = data.deletions;
-        }
-        if (typeof data.current !== 'undefined') {
-            this.currentActivity.Set(data.current);
-        }
+        if (typeof data.activities !== 'undefined') this.activities = data.activities;
+        if (typeof data.unsaved !== 'undefined') this.UNSAVED_activities = data.unsaved;
+        if (typeof data.deletions !== 'undefined') this.UNSAVED_deletions = data.deletions;
+        if (typeof data.current !== 'undefined') this.currentActivity.Set(data.current);
         this.allActivities.Set(this.Get());
     };
 
-    /** @returns {SaveObject_Local_Activities} */
+    /** @returns {SaveObject_Activities} */
     Save = () => {
         return {
             activities: this.activities,
@@ -197,10 +189,10 @@ class Activities extends IUserData {
 
     /**
      * @private
-     * @returns {Array<ActivityUnsaved>} List of unsaved activities
+     * @returns {ActivityUnsaved[]} List of unsaved activities
      */
     getUnsaved = () => {
-        /** @type {Array<ActivityUnsaved>} */
+        /** @type {ActivityUnsaved[]} */
         let unsaved = [];
 
         for (let a in this.UNSAVED_activities) {
@@ -240,8 +232,8 @@ class Activities extends IUserData {
     /**
      * @param {number} time Time in seconds (unix timestamp, UTC)
      * @param {number} duration Duration in minutes
-     * @param {Array<Activity>} [activities]
-     * @param {Array<Activity>} [exceptActivities] Activities to exclude from check
+     * @param {Activity[]} [activities]
+     * @param {Activity[]} [exceptActivities] Activities to exclude from check
      * @returns {boolean} True if time is free
      */
     TimeIsFree(time, duration, activities = this.Get(), exceptActivities = []) {
@@ -250,7 +242,7 @@ class Activities extends IUserData {
 
     /**
      * @description Get activities that have brought xp
-     * @returns {Array<Activity>}
+     * @returns {Activity[]}
      */
     GetUseful = () => {
         const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
@@ -292,7 +284,7 @@ class Activities extends IUserData {
 
     /**
      * @param {number} [number=6]
-     * @returns {Array<EnrichedSkill>}
+     * @returns {EnrichedSkill[]}
      */
     GetLastSkills(number = 6) {
         const now = GetGlobalTime();

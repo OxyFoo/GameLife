@@ -1,7 +1,7 @@
 import { IAppData } from 'Types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/App/Contributor').Contributor} Contributor
+ * @typedef {import('Types/Data/App/Contributors').Contributor} Contributor
  */
 
 /** @extends {IAppData<Contributor[]>} */
@@ -13,9 +13,9 @@ class Contributors extends IAppData {
         this.contributors = [];
     };
 
-    /** @param {Contributor[]} contributors */
+    /** @param {Contributor[] | undefined} contributors */
     Load = (contributors) => {
-        if (typeof contributors === 'object') {
+        if (typeof contributors !== 'undefined') {
             this.contributors = contributors;
         }
     };

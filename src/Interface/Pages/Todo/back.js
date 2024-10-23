@@ -14,7 +14,7 @@ import { DeepCopy } from 'Utils/Object';
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * @typedef {import('Types/Data/User/Todo').Todo} Todo
+ * @typedef {import('Types/Data/User/Todos').Todo} Todo
  *
  * @typedef {'new' | 'edit' | 'remove'} States
  */
@@ -202,7 +202,7 @@ class BackTodo extends PageBase {
         let message = null;
 
         const titleIsCurrent = title === todo?.title;
-        const titleUsed = user.todoes.Get().some((t) => t.title === title);
+        const titleUsed = user.todos.Get().some((t) => t.title === title);
 
         if (title.trim().length <= 0) {
             message = lang['error-title-empty'];
@@ -219,7 +219,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const addition = user.todoes.Add(title.trim(), description, deadline, tasks);
+        const addition = user.todos.Add(title.trim(), description, deadline, tasks);
         if (!addition) {
             user.interface.console?.AddLog('warn', 'Todo: Todo already exist, cannot add');
             return;
@@ -242,7 +242,7 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const edition = user.todoes.Edit(todo, title.trim(), description, deadline, tasks);
+        const edition = user.todos.Edit(todo, title.trim(), description, deadline, tasks);
         if (!edition) {
             user.interface.console?.AddLog('warn', 'Todo: Todo not exist, cannot edit');
             return;
@@ -273,7 +273,7 @@ class BackTodo extends PageBase {
                     return;
                 }
 
-                const remove = user.todoes.Remove(todo);
+                const remove = user.todos.Remove(todo);
                 if (remove === 'removed') {
                     user.GlobalSave();
                     user.interface.RemoveCustomBackHandler(this.BackHandler);

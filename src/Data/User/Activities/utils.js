@@ -1,5 +1,5 @@
 /**
- * @typedef {import('Types/Data/User/Activity').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
  */
 
 /**
@@ -17,8 +17,8 @@ function ActivitiesAreEquals(activityA, activityB) {
 /**
  * @param {number} time Time in seconds (unix timestamp, UTC)
  * @param {number} duration Duration in minutes
- * @param {Array<Activity>} activities
- * @param {Array<Activity>} exceptActivities Activities to exclude from check
+ * @param {Activity[]} activities
+ * @param {Activity[]} exceptActivities Activities to exclude from check
  * @returns {boolean} True if time is free
  */
 function TimeIsFree(time, duration, activities, exceptActivities = []) {

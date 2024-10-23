@@ -7,7 +7,7 @@ import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
  * @typedef {'success' | 'already-claiming' | 'error'} ClaimResult
  *
  * @typedef {() => Promise<ClaimResult>} ClaimAllType
- * @typedef {(claimListStart: string, dayIndexes: Array<number>) => Promise<ClaimResult>} ClaimRewardType
+ * @typedef {(claimListStart: string, dayIndexes: number[]) => Promise<ClaimResult>} ClaimRewardType
  */
 
 /**
@@ -71,7 +71,7 @@ async function ClaimReward(claimListStart, dayIndexes) {
     this.user.informations.ox.Set(response['ox']);
 
     // Update inventory
-    /** @type {Array<Stuff>} */
+    /** @type {Stuff[]} */
     const newItems = response['newItems'];
     if (newItems.length > 0) {
         this.user.inventory.stuffs.push(...newItems);
@@ -113,8 +113,8 @@ async function ClaimReward(claimListStart, dayIndexes) {
 
 /**
  * @this {DailyQuest}
- * @param {Array<number>} claimsDays
- * @param {Array<Stuff>} rewards
+ * @param {number[]} claimsDays
+ * @param {Stuff[]} rewards
  */
 function openChestPage(claimsDays, rewards) {
     const dayIndex = claimsDays[0];

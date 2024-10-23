@@ -5,8 +5,8 @@ import langManager from 'Managers/LangManager';
 import { GetLocalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Types/Data/App/Skill').Skill} Skill
- * @typedef {import('Types/Data/App/SkillCategory').SkillCategory} SkillCategory
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} SkillCategory
  *
  * @typedef {{ id: number, value: string, categoryID: number, onPress: () => void }} ItemSkill
  * @typedef {{ id: number, name: string, icon: string }} ItemCategory

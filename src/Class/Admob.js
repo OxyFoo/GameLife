@@ -62,10 +62,10 @@ class Admob {
         this.user = user;
     }
 
-    /** @type {Array<Ad<RewardedAd>>} */
+    /** @type {Ad<RewardedAd>[]} */
     rewardedAds = [];
 
-    /** @type {Array<Ad<InterstitialAd>>} */
+    /** @type {Ad<InterstitialAd>[]} */
     interstitialAds = [];
 
     LoadAds = () => {

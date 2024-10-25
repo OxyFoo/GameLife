@@ -163,7 +163,9 @@ function AddActivity(activity) {
             storeInHistory: false
         });
 
-        user.GlobalSave().then(() => user.RefreshStats(false));
+        user.GlobalSave()
+            .then(() => user.RefreshStats(false))
+            .then(() => user.SaveOnline());
         return true;
     } else if (status === 'notFree') {
         const title = lang['alert-wrongtiming-title'];
@@ -203,15 +205,18 @@ function EditActivity(oldActivity, newActivity, confirm = false) {
     const { status, activity } = user.activities.Edit(oldActivity, newActivity, confirm);
 
     if (status === 'edited' && activity !== null) {
-        user.GlobalSave().then(() => user.RefreshStats(false));
+        user.GlobalSave()
+            .then(() => user.RefreshStats(false))
+            .then(() => user.SaveOnline());
         user.interface.bottomPanel?.Close();
         return true;
     } else if (status === 'needConfirmation') {
-        const title = lang['alert-needconfirmation-title'];
-        const message = lang['alert-needconfirmation-message'];
         user.interface.popup?.OpenT({
             type: 'yesno',
-            data: { title, message },
+            data: {
+                title: lang['alert-needconfirmation-title'],
+                message: lang['alert-needconfirmation-message']
+            },
             callback: (button) => {
                 if (button === 'yes') {
                     EditActivity(oldActivity, newActivity, true);
@@ -264,7 +269,9 @@ function RemoveActivity(activity) {
             const removedStatus = user.activities.Remove(activity);
 
             if (removedStatus === 'removed') {
-                user.GlobalSave().then(() => user.RefreshStats(false));
+                user.GlobalSave()
+                    .then(() => user.RefreshStats(false))
+                    .then(() => user.SaveOnline());
             } else if (removedStatus === 'notExist') {
                 user.interface.popup?.OpenT({
                     type: 'ok',

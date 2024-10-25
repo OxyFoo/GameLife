@@ -372,6 +372,7 @@ class UserManager {
 
         let success = true;
         success &&= await this.informations.LoadOnline();
+        success &&= await this.activities.LoadOnline();
 
         if (!success) {
             if (debugIndex) {

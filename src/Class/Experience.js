@@ -39,7 +39,7 @@ class Experience {
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
-        this.getUsefulActivities = this.user.activities.GetUseful;
+        this.getUsefulActivities = () => this.user.activities.GetUseful();
 
         this.cache = {
             id: '',

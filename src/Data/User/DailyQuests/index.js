@@ -37,6 +37,9 @@ class DailyQuest {
         skillsSelectionCount: 3
     };
 
+    /** @type {Symbol | null} */
+    listener = null;
+
     /** @param {UserManager} user */
     constructor(user) {
         this.user = user;
@@ -77,16 +80,16 @@ class DailyQuest {
 
         /** @type {NodeJS.Timeout | null} Update the current activity time to tomorrow */
         this.timeout = null;
-
-        this.listener = this.user.activities.allActivities.AddListener(() => {
-            UpdateActivities.call(this);
-        });
     }
 
     Init = () => {
         // TODO: Wait loading
         UpdateSetup.call(this);
         UpdateActivities.call(this, this.tmpRemaining);
+
+        this.listener = this.user.activities.allActivities.AddListener(() => {
+            UpdateActivities.call(this);
+        });
     };
 
     // TODO: Implement this method

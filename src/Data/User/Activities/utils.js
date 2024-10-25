@@ -8,10 +8,7 @@
  * @returns {boolean}
  */
 function ActivitiesAreEquals(activityA, activityB) {
-    const sameSkillID = activityA.skillID === activityB.skillID;
-    const sameStartTime = activityA.startTime === activityB.startTime;
-    const sameDuration = activityA.duration === activityB.duration;
-    return sameSkillID && sameStartTime && sameDuration;
+    return activityA.addedTime === activityB.addedTime;
 }
 
 /**

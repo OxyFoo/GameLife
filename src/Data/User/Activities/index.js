@@ -144,7 +144,7 @@ class Activities extends IUserData {
 
         // Add activities
         for (let i = 0; i < response.activities.length; i++) {
-            this.Add(response.activities[i]);
+            this.Add(response.activities[i], true);
         }
 
         // Update and print message
@@ -342,7 +342,7 @@ class Activities extends IUserData {
      */
     Add(newActivity, alreadySaved = false) {
         newActivity.timezone ||= GetTimeZone();
-        newActivity.addedTime ||= GetLocalTime();
+        newActivity.addedTime ||= GetLocalTime(undefined, 3);
 
         // Limit date (< 2020-01-01)
         if (newActivity.startTime < 1577836800) {
@@ -395,7 +395,6 @@ class Activities extends IUserData {
 
         const indexActivity = GetActivityIndex(this.activities, activity);
         const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, activity);
-        const indexDeletion = GetActivityIndex(this.UNSAVED_deletions, activity);
 
         // Activity does not exist
         if (indexActivity === null && indexUnsaved === null) {
@@ -414,7 +413,7 @@ class Activities extends IUserData {
             newActivity.startTime !== activity.startTime ||
             newActivity.duration !== activity.duration
         ) {
-            tempNewActivity.addedTime = GetLocalTime();
+            tempNewActivity.addedTime = GetLocalTime(undefined, 3);
             tempNewActivity.timezone = GetTimeZone();
             if (
                 !confirm &&
@@ -425,16 +424,8 @@ class Activities extends IUserData {
             }
         }
 
-        if (indexDeletion !== null) {
-            this.UNSAVED_deletions.splice(indexDeletion, 1);
-        }
-        if (indexActivity !== null) {
-            this.activities.splice(indexActivity, 1);
-        }
-        if (indexUnsaved !== null) {
-            this.UNSAVED_activities.splice(indexUnsaved, 1);
-        }
-
+        // Remove old activity and add new one
+        this.Remove(activity);
         this.UNSAVED_activities.push(tempNewActivity);
         this.allActivities.Set(this.Get());
 

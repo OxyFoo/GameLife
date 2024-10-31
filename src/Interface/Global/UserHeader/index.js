@@ -46,7 +46,7 @@ class UserHeader extends UserHeaderBack {
     }
 
     renderNotificationsInAppButton = () => {
-        if (!user.server.IsConnected()) {
+        if (this.state.connectedToServer === false) {
             return <Icon style={styles.noWifiIcon} icon='no-wifi' color='border' size={32} />;
         }
         return <NotificationsInAppButton ref={this.refBellButton} style={styles.interactionsButton} />;

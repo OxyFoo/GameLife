@@ -11,7 +11,7 @@ import { Sum } from 'Utils/Functions';
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Managers/UserManager').Stats} Stats
- * @typedef {import('Class/Server').ReportTypes} ReportTypes
+ * @typedef {import('Types/Database/Reports').ReportType} ReportType
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
@@ -133,7 +133,7 @@ class BackReport extends PageBase {
     sendData = async () => {
         const type = this.state.selectedType;
 
-        /** @type {Array<ReportTypes>} */
+        /** @type {ReportType[]} */
         const types = ['activity', 'suggest', 'bug', 'message'];
         if (type < 0 || type >= types.length) {
             user.interface.console?.AddLog(
@@ -199,29 +199,42 @@ class BackReport extends PageBase {
         }
 
         this.setState({ sending: true });
-        const sendSuccessfully = await user.server.SendReport(types[type], dataReport);
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'send-report',
+            type: types[type],
+            report: dataReport
+        });
         this.setState({ sending: false });
 
-        if (sendSuccessfully) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langManager.curr['report']['alert-success-title'],
-                    message: langManager.curr['report']['alert-success-message']
-                },
-                callback: this.back,
-                cancelable: false
-            });
-        } else {
+        // An error occurred while sending the report or adding it to the database failed
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'send-report' ||
+            response.result !== 'ok'
+        ) {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: langManager.curr['report']['alert-error-title'],
                     message: langManager.curr['report']['alert-error-message']
-                }
+                },
+                callback: this.back
             });
             user.interface.console?.AddLog('error', 'Report: Send report failed');
+            return;
         }
+
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: langManager.curr['report']['alert-success-title'],
+                message: langManager.curr['report']['alert-success-message']
+            },
+            callback: this.back,
+            cancelable: false
+        });
     };
 }
 

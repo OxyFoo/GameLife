@@ -55,13 +55,15 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    // Connection to the server failed and not logged (no offline mode), go to the wait internet page
-    if ((status === 'not-connected' || !user.server2.IsConnected()) && !user.server2.IsLogged()) {
-        fe.ChangePage('waitinternet', {
-            storeInHistory: false,
-            transition: 'fromBottom'
-        });
-        return;
+    // Not connected to the server and user not logged, go to the wait internet page
+    if (!user.server2.IsLogged()) {
+        if (status === 'not-connected' || status === 'maintenance' || !user.server2.IsConnected()) {
+            fe.ChangePage('waitinternet', {
+                storeInHistory: false,
+                transition: 'fromBottom'
+            });
+            return;
+        }
     }
 
     // Connection to the server is OK but not logged, go to the login page
@@ -237,24 +239,28 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     user.StartTimers();
 
-    // Maintenance message
-    if (user.server.status === 'maintenance') {
-        const lang = langManager.curr['home'];
-        const title = lang['alert-maintenance-title'];
-        const message = lang['alert-maintenance-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message },
-            cancelable: false
-        });
-    }
-
     // End of initialisation
     const time_end = new Date().getTime();
     const time_text = `Initialisation done in ${time_end - time_start}ms`;
     console.log(time_text);
     user.interface.console?.AddLog('info', time_text);
     user.appIsLoaded = true;
+
+    // Maintenance message
+    if (status === 'maintenance') {
+        const lang = langManager.curr['home'];
+
+        await new Promise((resolve) => {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-maintenance-title'],
+                    message: lang['alert-maintenance-message']
+                },
+                callback: resolve
+            });
+        });
+    }
 
     nextPage();
 }

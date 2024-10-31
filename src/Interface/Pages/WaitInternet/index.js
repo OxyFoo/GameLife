@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackWaitinternet from './back';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar } from 'Interface/Components';
@@ -11,7 +10,7 @@ class Waitinternet extends BackWaitinternet {
     render() {
         let textWait = langManager.curr['wait']['wait-internet-text'];
 
-        if (user.server.status === 'maintenance') {
+        if (this.state.currentStatus === 'maintenance') {
             textWait = langManager.curr['wait']['wait-maintenance-text'];
         }
 

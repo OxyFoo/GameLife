@@ -29,7 +29,8 @@ class UserHeaderBack extends React.Component {
         username: user.informations.username.Get(),
         titleText: user.informations.GetTitleText(),
         animPosY: new Animated.Value(-128),
-        showAvatar: false
+        showAvatar: false,
+        connectedToServer: user.server2.IsAuthenticated()
     };
 
     /** @type {boolean} */
@@ -50,13 +51,18 @@ class UserHeaderBack extends React.Component {
     /** @type {Symbol | null} */
     titleListener = null;
 
+    /** @type {Symbol | null} */
+    serverListener = null;
+
     componentDidMount() {
         this.nameListener = user.informations.username.AddListener(this.update);
         this.titleListener = user.informations.title.AddListener(this.update);
+        this.serverListener = user.server2.tcp.state.AddListener(this.updateServerState);
     }
     componentWillUnmount() {
         user.informations.username.RemoveListener(this.nameListener);
         user.informations.title.RemoveListener(this.titleListener);
+        user.server2.tcp.state.RemoveListener(this.serverListener);
     }
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
@@ -87,6 +93,10 @@ class UserHeaderBack extends React.Component {
             username: user.informations.username.Get(),
             titleText: user.informations.GetTitleText()
         });
+    };
+
+    updateServerState = () => {
+        this.setState({ connectedToServer: user.server2.IsAuthenticated() });
     };
 
     ShowAvatar = (value = false) => this.setState({ showAvatar: value });

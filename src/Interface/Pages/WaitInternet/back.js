@@ -8,7 +8,10 @@ const REFRESH_DELAY_SECONDS = 30;
 
 class BackWaitinternet extends PageBase {
     state = {
-        loading: false
+        loading: false,
+
+        /** @type {'not-connected' | 'maintenance' | 'error'} */
+        currentStatus: 'not-connected'
     };
 
     componentDidMount() {
@@ -21,6 +24,8 @@ class BackWaitinternet extends PageBase {
         const status = await user.server2.Connect();
         if (status === 'success' || status === 'already-connected') {
             user.interface.ChangePage('login', { storeInHistory: false });
+        } else {
+            this.setState({ currentStatus: status });
         }
     };
 

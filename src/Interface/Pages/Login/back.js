@@ -8,6 +8,10 @@ import { Login, Signin } from './login';
 import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
+/**
+ * @typedef {import('Class/TCP').ConnectionState} ConnectionState
+ */
+
 const MAX_EMAIL_LENGTH = 320;
 const MAX_PSEUDO_LENGTH = 32;
 
@@ -45,21 +49,26 @@ class BackLogin extends PageBase {
     }
 
     componentDidMount() {
-        this.listenerServer = user.server2.tcp.state.AddListener((state) => {
-            if (state !== 'connected') {
-                this.fe.ChangePage('waitinternet', {
-                    storeInHistory: false,
-                    transition: 'fromBottom'
-                });
-            }
-        });
+        this.onServerUpdateState(user.server2.tcp.state.Get());
+        this.listenerServer = user.server2.tcp.state.AddListener(this.onServerUpdateState);
     }
+
     componentWillUnmount() {
         user.interface.RemoveCustomBackHandler(this.backToLogin);
         if (this.listenerServer) {
             user.server2.tcp.state.RemoveListener(this.listenerServer);
         }
     }
+
+    /** @param {ConnectionState} state */
+    onServerUpdateState = (state) => {
+        if (state !== 'connected') {
+            this.fe.ChangePage('waitinternet', {
+                storeInHistory: false,
+                transition: 'fromBottom'
+            });
+        }
+    };
 
     /** @param {string} newEmail */
     onChangeEmail = (newEmail) => {

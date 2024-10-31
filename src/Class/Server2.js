@@ -45,7 +45,7 @@ class Server {
      */
     IsAuthenticated = () => this.IsConnected() && this.IsLogged();
 
-    /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'error'>} */
+    /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'maintenance' | 'error'>} */
     Connect = async () => {
         if (this.tcp.IsConnected()) {
             this.#user.interface.console?.AddLog('warn', 'Already logged to the server');
@@ -72,9 +72,15 @@ class Server {
             return 'not-connected';
         }
 
-        if (response.status !== 'connect' || response.result !== 'ok') {
+        if (response.status !== 'connect' || response.result === 'error') {
             this.#user.interface.console?.AddLog('error', 'Server connection failed (invalid response)');
             return 'error';
+        }
+
+        if (response.result === 'maintenance') {
+            this.#user.interface.console?.AddLog('warn', 'Server is in maintenance');
+            this.Disconnect();
+            return 'maintenance';
         }
 
         this.#isTrusted = true;

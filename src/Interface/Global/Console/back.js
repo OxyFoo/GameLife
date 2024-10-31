@@ -114,9 +114,16 @@ class ConsoleBack extends React.Component {
             printLog(text, ...params);
         }
 
-        // If error, send to server
-        if (type === 'error' && !__DEV__ && user.server.online) {
-            user.server.SendReport('error', this.messages.slice(-4));
+        // If error in production, send it to server
+        if (type === 'error' && !__DEV__ && user.server2.IsAuthenticated()) {
+            const errorSended = user.server2.tcp.Send({
+                action: 'send-error',
+                error: JSON.stringify(this.messages.slice(-4))
+            });
+
+            if (!errorSended) {
+                console.error('[Console] Error not sended');
+            }
         }
 
         this.processQueue();

@@ -367,42 +367,6 @@ class Server {
     }
 
     /**
-     * Get daily deals & chests data from server
-     * @typedef {object} ReturnShopContent
-     * @property {Array<StuffID>} dailyDeals
-     * @property {object} chestsStats
-     * @property {object} chestsStats.random
-     * @property {Chest} chestsStats.random.common
-     * @property {Chest} chestsStats.random.rare
-     * @property {Chest} chestsStats.random.epic
-     * @property {Chest} chestsStats.random.legendary
-     * @property {object} chestsStats.target
-     * @property {Chest} chestsStats.target.common
-     * @property {Chest} chestsStats.target.rare
-     * @property {Chest} chestsStats.target.epic
-     * @property {Chest} chestsStats.target.legendary
-     * @returns {Promise<ReturnShopContent>} Return array of item ID
-     * @throws {Error} Request failed
-     */
-    async GetShopContent() {
-        const _data = {
-            dataToken: this.dataToken
-        };
-
-        const response = await this.Request('getDailyDeals', _data);
-        if (response === null) {
-            throw new Error('Request failed');
-        }
-
-        const status = response['status'];
-        if (status !== 'ok') {
-            throw new Error('Request failed');
-        }
-
-        return response;
-    }
-
-    /**
      * Send report
      * @param {ReportTypes} type Type of report to send
      * @param {object} data Data to send

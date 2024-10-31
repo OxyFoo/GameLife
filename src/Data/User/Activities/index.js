@@ -380,6 +380,7 @@ class Activities extends IUserData {
         return { status: 'added', activity: newActivity };
     }
 
+    // TODO: Fix édit (éviter absolument toute forme de conflit, overwrite ou delete)
     /**
      * Edit activity
      * @param {Activity} activity

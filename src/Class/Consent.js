@@ -4,6 +4,7 @@ import mobileAds, { AdsConsent, AdsConsentStatus } from 'react-native-google-mob
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Types/Class/Consent').SaveObject_Consent} SaveObject_Consent
  */
 
 const VERSION = require('../../package.json').version;
@@ -15,30 +16,35 @@ class Consent {
     }
 
     loading = false;
+
+    /** @type {SaveObject_Consent['android_consent']} */
     android_consent = {
         nonPersonalized: true,
         version: ''
     };
+
+    /** @type {SaveObject_Consent['ios_tracking']} */
     ios_tracking = {
         enabled: false,
         version: ''
     };
 
+    /** @param {SaveObject_Consent} adSettings */
     Load(adSettings) {
-        if (adSettings.hasOwnProperty('ad_consent')) {
-            this.android_consent = adSettings['ad_consent'];
+        if (typeof adSettings.android_consent !== 'undefined') {
+            this.android_consent = adSettings.android_consent;
         }
-        if (adSettings.hasOwnProperty('ios_tracking')) {
-            this.ios_tracking = adSettings['ios_tracking'];
+        if (typeof adSettings.ios_tracking !== 'undefined') {
+            this.ios_tracking = adSettings.ios_tracking;
         }
     }
 
+    /** @returns {SaveObject_Consent} */
     Save() {
-        const adSettings = {
-            ad_consent: this.android_consent,
+        return {
+            android_consent: this.android_consent,
             ios_tracking: this.ios_tracking
         };
-        return adSettings;
     }
 
     isPersonalized() {

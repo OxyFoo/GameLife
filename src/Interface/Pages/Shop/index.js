@@ -23,6 +23,7 @@ class Shop extends BackShop {
 
         return (
             <View style={[styles.page, { alignItems: 'center', justifyContent: 'center' }]}>
+                {/* <ShopHeader ref={this.refHeader} style={styles.shopHeader} /> */}
                 <Text style={{ fontSize: 24 }}>{lang['temporary-message']}</Text>
             </View>
         );

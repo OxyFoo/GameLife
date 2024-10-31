@@ -6,7 +6,6 @@ import StartMission from './mission';
 import user from 'Managers/UserManager';
 
 /**
- * @typedef {import('react-native').View} View
  * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Data/App/Items').StuffID} StuffID
  *
@@ -37,9 +36,6 @@ class BackShop extends PageBase {
         targetChestsStats: null
     };
 
-    /** @type {React.RefObject<View>} */
-    refShopHeader = React.createRef();
-
     /** @type {React.RefObject<ShopHeader>} */
     refHeader = React.createRef();
 
@@ -60,27 +56,29 @@ class BackShop extends PageBase {
 
     componentDidMount() {
         this.componentDidFocused(this.props);
-        user.server
-            .GetShopContent()
-            .then((shopInfo) => {
-                this.setState({
-                    loaded: true,
-                    dailyItemsID: shopInfo.dailyDeals,
-                    randomChestsStats: {
-                        common: shopInfo.chestsStats.random.common,
-                        rare: shopInfo.chestsStats.random.rare,
-                        epic: shopInfo.chestsStats.random.epic
-                    },
-                    targetChestsStats: {
-                        common: shopInfo.chestsStats.target.common,
-                        rare: shopInfo.chestsStats.target.rare,
-                        epic: shopInfo.chestsStats.target.epic
-                    }
-                });
-            })
-            .catch((error) => {
-                user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
-            });
+        // TODO: Reimplement get-shop
+        // Old request: getDailyDeals
+        // user.server
+        //     .GetShopContent()
+        //     .then((shopInfo) => {
+        //         this.setState({
+        //             loaded: true,
+        //             dailyItemsID: shopInfo.dailyDeals,
+        //             randomChestsStats: {
+        //                 common: shopInfo.chestsStats.random.common,
+        //                 rare: shopInfo.chestsStats.random.rare,
+        //                 epic: shopInfo.chestsStats.random.epic
+        //             },
+        //             targetChestsStats: {
+        //                 common: shopInfo.chestsStats.target.common,
+        //                 rare: shopInfo.chestsStats.target.rare,
+        //                 epic: shopInfo.chestsStats.target.epic
+        //             }
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
+        //     });
     }
 
     /** @param {any} args */

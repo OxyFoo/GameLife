@@ -1,31 +1,23 @@
 import * as React from 'react';
-import { Platform, Animated, View, Image, StyleSheet } from 'react-native';
+import { Animated, View, Image, StyleSheet } from 'react-native';
 
-import { openPopupCode } from './popupGiftCode';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { OX_AMOUNT } from 'Class/Admob';
 import { Text, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
- * 
- * @typedef {import('Class/Admob').AdEvent} AdEvent
- * @typedef {import('Class/Admob').AdStates} AdStates
- * @typedef {import('Class/Admob').AdTypes} AdTypes
+ *
+ * @typedef {import('Class/Ads').AdEvent} AdEvent
+ * @typedef {import('Class/Ads').AdStates} AdStates
+ * @typedef {import('Class/Ads').AdEventFunction} AdEventFunction
  */
 
-// I hate Apple, RESPECT THE DEVELOPERS PLZZZ
-const ENABLE_GIFT_CODE = Platform.OS === 'android';
-
 const ShopHeaderPropTypes = {
-    /** @type {View | null} */
-    refPage: null,
-
     /** @type {StyleViewProp} */
     style: {}
 };
@@ -35,8 +27,9 @@ class ShopHeader extends React.Component {
         /** @type {AdStates} */
         adState: 'wait',
 
+        oxGain: 0,
         oxAmount: user.informations.ox.Get()
-    }
+    };
 
     /** @type {Symbol | null} */
     oxListener = null;
@@ -45,7 +38,7 @@ class ShopHeader extends React.Component {
     refTuto2 = null;
     refTuto3 = null;
 
-    /** @type {AdTypes | null} */
+    /** @type {AdEvent | null} */
     rewardedShop = null;
 
     componentDidMount() {
@@ -53,11 +46,14 @@ class ShopHeader extends React.Component {
             this.setState({ oxAmount: newOx });
         });
 
-        this.rewardedShop = user.admob.Get('rewarded', 'shop', this.onAdStateChange);
+        this.rewardedShop = user.ads.Get('shop', this.onAdStateChange);
     }
+
     componentWillUnmount() {
         user.informations.ox.RemoveListener(this.oxListener);
-        user.admob.ClearEvents(this.rewardedShop);
+        if (this.rewardedShop) {
+            user.ads.ClearEvents(this.rewardedShop);
+        }
     }
 
     openAd = () => {
@@ -65,72 +61,89 @@ class ShopHeader extends React.Component {
 
         // Check if the user can watch an ad
         if (user.informations.adRemaining <= 0) {
-            const title = lang['alert-aderror-title'];
-            const message = lang['alert-aderror-nomore-message'];
-            user.interface.popup.Open('ok', [ title, message ]);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-aderror-title'],
+                    message: lang['alert-aderror-nomore-message']
+                }
+            });
         }
 
         // Check if ads are loading
         else if (this.state.adState === 'wait') {
-            const title = lang['alert-aderror-loading-title'];
-            const message = lang['alert-aderror-loading-message'];
-            user.interface.popup.Open('ok', [ title, message ]);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-aderror-loading-title'],
+                    message: lang['alert-aderror-loading-message']
+                }
+            });
         }
 
         // Check if the user is connected to the server and if the ad is loaded
-        else if (!user.server.IsConnected() ||
-                !this.rewardedShop || !this.rewardedShop.ad?.loaded) {
-            const title = lang['alert-aderror-title'];
-            const message = lang['alert-aderror-message'];
-            user.interface.popup.Open('ok', [ title, message ]);
+        else if (!user.server2.IsAuthenticated() || !this.rewardedShop || !this.rewardedShop.ad?.loaded) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-aderror-title'],
+                    message: lang['alert-aderror-message']
+                }
+            });
         }
 
         // Show the ad
         else {
             this.rewardedShop.ad.show();
         }
-    }
-    openOxShop = () => {
-        if (!user.server.IsConnected()) return;
-        user.interface.GetCurrentPage()?.refPage?.GotoY(400);
-    }
+    };
 
-    /** @type {AdEvent} */
-    onAdStateChange = (state) => {
+    openOxShop = () => {
+        if (!user.server2.IsAuthenticated()) return;
+
+        // TODO: ???
+        // user.interface.GetCurrentPage()?.refPage?.GotoY(400);
+    };
+
+    /** @type {AdEventFunction} */
+    onAdStateChange = (ad, state) => {
         const lang = langManager.curr['server'];
 
         if (state === 'ready') {
             if (user.informations.adRemaining > 0) {
-                this.setState({ adState: 'ready' });
+                this.setState({ adState: 'ready', oxGain: ad.RewardOx });
             } else {
                 this.setState({ adState: 'notAvailable' });
             }
-        }
-
-        else if (state === 'closed') {
-            const title = lang['alert-adsuccess-title'];
-            const text  = lang['alert-adsuccess-message']
-                            .replace('{}', OX_AMOUNT.toString());
-            user.interface.popup.Open('ok', [ title, text ], undefined, true);
+        } else if (state === 'closed') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-adsuccess-title'],
+                    message: lang['alert-adsuccess-message'].replace('{}', ad.RewardOx.toString())
+                },
+                cancelable: false
+            });
             this.setState({ adState: 'wait' });
-        }
-
-        else {
+        } else {
             this.setState({ adState: state });
         }
-    }
+    };
 
     render() {
         const lang = langManager.curr['shop'];
-        const { refPage, style } = this.props;
-        const { oxAmount, adState } = this.state;
+        const { style } = this.props;
+        const { adState, oxAmount, oxGain } = this.state;
         const oxAmountStr = oxAmount.toString();
 
+        /** @type {ViewStyle} */
         const parentStyle = {
-            backgroundColor: themeManager.GetColor('ground1a'),
-            transform: [{
-                translateY: Animated.subtract(0, refPage?.state?.positionY || 0)
-            }]
+            backgroundColor: themeManager.GetColor('ground1a')
+            // transform: [
+            //     {
+            //         translateY: Animated.subtract(0, refPage?.state?.positionY || 0)
+            //     }
+            // ]
         };
         const oxTextSize = oxAmountStr.length < 3 ? 16 : 16 + 2 - oxAmountStr.length;
         const oxIconSize = oxAmountStr.length < 3 ? 20 : oxAmountStr.length < 5 ? 18 : 16;
@@ -138,44 +151,34 @@ class ShopHeader extends React.Component {
         return (
             <Animated.View style={[styles.parent, parentStyle, style]}>
                 <View style={styles.content}>
-                    {ENABLE_GIFT_CODE && (
-                        <Button.Badge
-                            ref={ref => this.refTuto1 = ref}
-                            style={styles.badge}
-                            icon='gift'
-                            onPress={openPopupCode}
-                            disabled={!user.server.IsConnected()}
-                        >
-                            <Text fontSize={16} color='main1'>{lang['button-header-code']}</Text>
-                        </Button.Badge>
-                    )}
-
-                    <Button.Badge
-                        ref={ref => this.refTuto2 = ref}
+                    <Button
+                        ref={this.refTuto2}
                         style={styles.badge}
-                        icon='media'
-                        badgeJustifyContent='space-around'
+                        //icon='media'
+                        //badgeJustifyContent='space-around'
                         onPress={this.openAd}
                         loading={adState === 'wait'}
-                        disabled={!(user.server.IsConnected() && adState === 'ready')}
+                        disabled={!(user.server2.IsAuthenticated() && adState === 'ready')}
                     >
                         <Text fontSize={16} color='main1'>
-                            {lang['button-header-ad'].replace('{}', OX_AMOUNT.toString())}
+                            {lang['button-header-ad'].replace('{}', oxGain.toString())}
                         </Text>
                         <Image style={styles.ox} source={IMG_OX} />
-                    </Button.Badge>
+                    </Button>
 
-                    <Button.Badge
-                        ref={ref => this.refTuto3 = ref}
+                    <Button
+                        ref={this.refTuto3}
                         style={styles.badge}
-                        icon='addSquare'
-                        badgeJustifyContent='space-around'
+                        //icon='addSquare'
+                        //badgeJustifyContent='space-around'
                         onPress={this.openOxShop}
-                        disabled={!user.server.IsConnected()}
+                        disabled={!user.server2.IsAuthenticated()}
                     >
-                        <Text fontSize={oxTextSize} color='main1'>{oxAmountStr}</Text>
+                        <Text fontSize={oxTextSize} color='main1'>
+                            {oxAmountStr}
+                        </Text>
                         <Image style={[styles.ox, { width: oxIconSize }]} source={IMG_OX} />
-                    </Button.Badge>
+                    </Button>
                 </View>
             </Animated.View>
         );
@@ -196,12 +199,12 @@ const styles = StyleSheet.create({
     content: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: ENABLE_GIFT_CODE ? 'space-between' : 'space-evenly',
+        justifyContent: 'space-evenly',
 
         marginHorizontal: 24
     },
     badge: {
-        width: '32%',
+        width: '32%'
     },
     ox: {
         width: 20,

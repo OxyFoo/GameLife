@@ -3,12 +3,14 @@ import { RefreshSkillSelection } from './actions';
 import { UpdateActivities, UpdateSetup } from './updates';
 import { GetActivitiesIdOfDay, GetDailyProgress } from './utils';
 
+import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { DateFormat } from 'Utils/Date';
 import { Range, Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Types/Data/User/DailyQuest').SaveObject_DailyQuest} SaveObject_DailyQuest
  *
  * @typedef {import('./claim').ClaimAllType} ClaimAllType
  * @typedef {import('./claim').ClaimRewardType} ClaimRewardType
@@ -22,7 +24,8 @@ import { Range, Round } from 'Utils/Functions';
  * @property {number[]} claimed
  */
 
-class DailyQuest {
+/** @extends {IUserData<SaveObject_DailyQuest>} */
+class DailyQuest extends IUserData {
     config = {
         refresh_count_per_day: 5,
         activity_minutes_per_day: 15,
@@ -42,6 +45,8 @@ class DailyQuest {
 
     /** @param {UserManager} user */
     constructor(user) {
+        super();
+
         this.user = user;
 
         /** @type {DynamicVar<ClaimType[]>} */
@@ -100,7 +105,7 @@ class DailyQuest {
         this.user.activities.allActivities.RemoveListener(this.listener);
     };
 
-    Clear() {
+    Clear = () => {
         this.claimsList.Set([]);
         this.today.Set({
             selectedSkillsID: [],
@@ -109,26 +114,24 @@ class DailyQuest {
             claimed: false
         });
         this.SAVED_claimsList = true;
-    }
-    Load(data) {
-        const contains = (key) => data.hasOwnProperty(key);
-        if (contains('claimsList')) this.claimsList.Set(data['claimsList']);
-        if (contains('SAVED_claimsList')) this.SAVED_claimsList = data['SAVED_claimsList'];
-        if (contains('selectedIndex')) {
-            const { date, indexes, remaining } = data['selectedIndex'];
+    };
+
+    /** @param {Partial<SaveObject_DailyQuest>} data */
+    Load = (data) => {
+        if (typeof data.claimsList !== 'undefined') this.claimsList.Set(data.claimsList);
+        if (typeof data.SAVED_claimsList !== 'undefined') this.SAVED_claimsList = data.SAVED_claimsList;
+        if (typeof data.selectedIndex !== 'undefined') {
+            const { date, indexes, remaining } = data.selectedIndex;
             if (date === DateFormat(new Date(), 'YYYY-MM-DD')) {
                 this.selectedIndexes = indexes;
                 this.tmpRemaining = remaining;
             }
         }
-    }
-    LoadOnline(data) {
-        if (typeof data !== 'object') return;
-        const contains = (key) => data.hasOwnProperty(key);
-        if (contains('data')) this.claimsList.Set(data['data']);
-    }
-    Save() {
-        const quests = {
+    };
+
+    /** @returns {SaveObject_DailyQuest} */
+    Save = () => {
+        return {
             claimsList: this.claimsList.Get(),
             SAVED_claimsList: this.SAVED_claimsList,
             selectedIndex: {
@@ -137,8 +140,24 @@ class DailyQuest {
                 remaining: this.today.Get().refreshesRemaining
             }
         };
-        return quests;
-    }
+    };
+
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-daily-quest' });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-daily-quest' ||
+            typeof response.dailyQuests === 'undefined'
+        ) {
+            return false;
+        }
+
+        this.claimsList.Set(response.dailyQuests);
+        return true;
+    };
 
     IsUnsaved = () => {
         return !this.SAVED_claimsList;

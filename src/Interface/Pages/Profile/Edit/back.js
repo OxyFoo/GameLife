@@ -54,7 +54,7 @@ class BackProfileEditor extends React.PureComponent {
     handleChangeUsername = async () => {
         const lang = langManager.curr['profile'];
 
-        if (!user.server.IsConnected()) {
+        if (!user.server2.IsAuthenticated()) {
             this.OpenNowifiPopup();
             return;
         }
@@ -202,7 +202,7 @@ class BackProfileEditor extends React.PureComponent {
 
         if (state === 'ok') {
             this.setState({ username });
-        } else if (state === 'alreadyUsed') {
+        } else if (state === 'usernameIsAlreadyUsed') {
             const title = lang['alert-alreadyUsed-title'];
             const message = lang['alert-alreadyUsed-message'];
             user.interface.popup?.OpenT({
@@ -211,7 +211,7 @@ class BackProfileEditor extends React.PureComponent {
                 callback: this.openChangeUsernamePopup,
                 priority: true
             });
-        } else if (state === 'alreadyChanged') {
+        } else if (state === 'usernameIsAlreadyChanged') {
             const info = user.informations.GetInfoToChangeUsername();
             const title = lang['alert-alreadyChanged-title'];
             const message = lang['alert-alreadyChanged-message'].replace('{}', info.remain.toString());
@@ -220,7 +220,7 @@ class BackProfileEditor extends React.PureComponent {
                 data: { title, message },
                 priority: true
             });
-        } else if (state === 'incorrect') {
+        } else if (state === 'invalidUsername') {
             const title = lang['alert-incorrect-title'];
             const message = lang['alert-incorrect-message'];
             user.interface.popup?.OpenT({

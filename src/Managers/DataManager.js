@@ -1,6 +1,7 @@
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 import Achievements from 'Data/App/Achievements';
+import Ads from 'Data/App/Ads';
 import Contributors from 'Data/App/Contributors';
 import Items from 'Data/App/Items';
 import Quotes from 'Data/App/Quotes';
@@ -18,6 +19,7 @@ class DataManager {
     /** @type {DataHashes} */
     #tableHashes = {
         achievements: 0,
+        ads: 0,
         contributors: 0,
         quotes: 0,
         skills: 0,
@@ -28,6 +30,7 @@ class DataManager {
 
     constructor() {
         this.achievements = new Achievements();
+        this.ads = new Ads();
         this.contributors = new Contributors();
         this.items = new Items();
         this.quotes = new Quotes();
@@ -37,6 +40,7 @@ class DataManager {
 
     Clear() {
         this.achievements.Clear();
+        this.ads.Clear();
         this.contributors.Clear();
         this.items.Clear();
         this.quotes.Clear();
@@ -51,12 +55,13 @@ class DataManager {
      */
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
+        const ads = this.ads.ads.length > 0;
         const contributors = this.contributors.contributors.length > 0;
         const items = this.items.Get().length > 0 || true; // TODO: Reimplement items
         const quotes = this.quotes.Get().length > 0;
         const skills = this.skills.Get().skills.length > 0;
         const titles = this.titles.Get().length > 0;
-        return achievements && contributors && items && quotes && skills && titles;
+        return achievements && ads && contributors && items && quotes && skills && titles;
     }
 
     /**
@@ -78,6 +83,7 @@ class DataManager {
         /** @type {DataTypes} */
         const appData = {
             achievements: this.achievements.Save(),
+            ads: this.ads.Save(),
             contributors: this.contributors.Save(),
             //items: this.items.Save(), // TODO: Reimplement items
             quotes: this.quotes.Save(),
@@ -123,6 +129,7 @@ class DataManager {
 
         // Load data
         this.achievements.Load(appData.achievements);
+        this.ads.Load(appData.ads);
         this.contributors.Load(appData.contributors);
         //this.items.Load(appData.items); // TODO: Reimplement items
         this.quotes.Load(appData.quotes);
@@ -172,6 +179,9 @@ class DataManager {
         // Load data
         if (response.data.achievements !== null) {
             this.achievements.Load(response.data.achievements);
+        }
+        if (response.data.ads !== null) {
+            this.ads.Load(response.data.ads);
         }
         if (response.data.contributors !== null) {
             this.contributors.Load(response.data.contributors);

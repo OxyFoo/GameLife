@@ -204,13 +204,17 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     //    return;
     //});
 
+    // Load admob
+    await user.consent.ShowTrackingPopup();
+
+    // Load ads
+    const ads = dataManager.ads.Get();
+    user.ads.LoadAds(ads);
+
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
-        user.interface.console?.AddLog('info', 'No more ads available');
+        user.interface.console?.AddLog('warn', 'No more ads available');
     }
-
-    // Load admob
-    //await user.consent.ShowTrackingPopup().then(user.admob.LoadAds);
 
     // Render default pages
     //await user.interface.LoadDefaultPages();

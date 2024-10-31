@@ -1,4 +1,4 @@
-import Admob from 'Class/Admob';
+import Ads from 'Class/Ads';
 import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import Multiplayer from 'Class/Multiplayer';
@@ -9,6 +9,7 @@ import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
 import Achievements from 'Data/User/Achievements';
 import Activities from 'Data/User/Activities/index';
+import DailyQuest from 'Data/User/DailyQuests';
 import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
@@ -48,12 +49,11 @@ class UserManager {
         this.statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
 
         // Classes
-        this.admob = new Admob(this);
+        this.ads = new Ads(this);
         this.consent = new Consent(this);
         this.experience = new Experience(this);
         this.multiplayer = new Multiplayer(this);
         this.notificationsInApp = new NotificationsInApp(this);
-        this.quests = new Quests(this);
         this.server2 = new Server2(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this);
@@ -62,13 +62,16 @@ class UserManager {
         // Data
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
+        this.dailyQuest = new DailyQuest(this);
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
         this.todos = new Todos(this);
 
-        /** @deprecated TODO: Remove */
+        /** @deprecated */ // TODO: Remove
+        this.quests = new Quests(this);
+        /** @deprecated */ // TODO: Remove
         this.server = new Server(this);
-        /** @deprecated TODO: Remove */
+        /** @deprecated */ // TODO: Remove
         this.tcp = new TCP(this);
 
         /** @type {Stats} */
@@ -136,17 +139,23 @@ class UserManager {
         this.stats = this.experience.GetEmptyExperience();
         this.tempMailSent = null;
 
-        this.achievements.Clear();
-        this.activities.Clear();
-        this.informations.Clear();
-        this.inventory.Clear();
-        this.missions.Clear();
         this.notificationsInApp.Clear();
-        this.quests.Clear();
-        this.server.Clear();
+        this.server2;
         this.settings.Clear();
         this.shop.Clear();
+        this.informations.Clear();
+
+        this.achievements.Clear();
+        this.activities.Clear();
+        this.dailyQuest.Clear();
+        this.inventory.Clear();
+        this.missions.Clear();
         this.todos.Clear();
+
+        // TODO: Remove old classes
+        this.quests.Clear();
+        this.server.Clear();
+
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -189,6 +198,7 @@ class UserManager {
 
         return success;
     }
+
     async Unmount() {
         this.CleanTimers();
         this.server2.Disconnect();

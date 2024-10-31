@@ -9,6 +9,7 @@ import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Class/ZapGPT').ZapGPTState} ZapGPTState
  * @typedef {import('Types/Data/User/Informations').SaveObject_UserInformations} SaveObject_UserInformations
+ * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestSetUsername} ServerRequestSetUsername
  */
 
 const DAYS_USERNAME_CHANGE = 30;
@@ -145,17 +146,32 @@ class Informations extends IUserData {
         this.UNSAVED_birthTime = null;
     };
 
-    /** @param {string} username */
+    /**
+     * @param {string} username
+     * @returns {Promise<ServerRequestSetUsername['result'] | null>}
+     */
     SetUsername = async (username) => {
-        const request = await this.user.server.SaveUsername(username);
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'set-username',
+            username: username
+        });
 
-        if (request === 'ok') {
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'set-username'
+        ) {
+            return null;
+        }
+
+        if (response.result === 'ok') {
             this.username.Set(username);
             this.usernameTime = GetGlobalTime();
             this.user.LocalSave();
         }
 
-        return request;
+        return response.result;
     };
 
     GetTitleText = () => {

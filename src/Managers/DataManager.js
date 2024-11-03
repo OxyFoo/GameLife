@@ -55,13 +55,15 @@ class DataManager {
      */
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
-        const ads = this.ads.ads.length > 0;
         const contributors = this.contributors.contributors.length > 0;
         const items = this.items.Get().length > 0 || true; // TODO: Reimplement items
         const quotes = this.quotes.Get().length > 0;
-        const skills = this.skills.Get().skills.length > 0;
+        const _skills = this.skills.Get();
+        const skills = _skills.skills.length > 0;
+        const skillIcons = _skills.skillIcons.length > 0;
+        const skillCategories = _skills.skillCategories.length > 0;
         const titles = this.titles.Get().length > 0;
-        return achievements && ads && contributors && items && quotes && skills && titles;
+        return achievements && contributors && items && quotes && skills && skillIcons && skillCategories && titles;
     }
 
     /**
@@ -213,6 +215,20 @@ class DataManager {
 
         user.interface.console?.EditLog(debugIndex, 'same', 'App data: online load success');
         return true;
+    }
+
+    CountAll() {
+        return (
+            this.achievements.Get().length +
+            this.ads.Get().length +
+            this.contributors.Get().length +
+            this.items.Get().length +
+            this.quotes.Get().length +
+            this.skills.Get().skills.length +
+            this.skills.Get().skillIcons.length +
+            this.skills.Get().skillCategories.length +
+            this.titles.Get().length
+        );
     }
 }
 

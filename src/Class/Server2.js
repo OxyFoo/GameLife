@@ -48,7 +48,6 @@ class Server {
     /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'maintenance' | 'error'>} */
     Connect = async () => {
         if (this.tcp.IsConnected()) {
-            this.#user.interface.console?.AddLog('warn', 'Already logged to the server');
             return 'already-connected';
         }
 

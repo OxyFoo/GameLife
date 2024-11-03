@@ -23,7 +23,7 @@ import { CheckDate } from 'Utils/DateCheck';
  * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
  */
 async function Initialisation(fe, nextStep, nextPage, callbackError) {
-    const time_start = new Date().getTime();
+    const time_start = performance.now();
 
     // TODO: Remove
     user.interface.console?.Enable();
@@ -33,10 +33,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const email = user.settings.email;
 
     // Connect to the server TCP
-    const t1 = performance.now();
+    const time_connect_start = performance.now();
     const status = await user.server2.Connect();
-    const t2 = performance.now();
-    user.interface.console?.AddLog('info', `Connect to the server in ${Round(t2 - t1, 2)}ms (${status})`);
+    const time_connect_end = performance.now();
+    const time_connect = Round(time_connect_end - time_connect_start, 2);
+    user.interface.console?.AddLog('info', `Connect to the server in ${time_connect}ms (${status})`);
 
     // An error occured, go to the error page
     if (status === 'error') {
@@ -122,6 +123,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // 1. User is connected
     nextStep();
+    const t1 = performance.now();
 
     // Load local user data
     await user.LocalLoad();
@@ -131,21 +133,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load app data
     await dataManager.LocalLoad(user);
     if (user.server2.IsAuthenticated()) {
-        const _t = performance.now();
+        const time_appdata_start = performance.now();
         await dataManager.OnlineLoad(user);
-        console.log(
-            'Online load in',
-            performance.now() - _t,
-            'ms for',
-            dataManager.achievements.Get().length +
-                dataManager.skills.Get().skills.length +
-                dataManager.skills.Get().skillIcons.length +
-                dataManager.skills.Get().skillCategories.length +
-                dataManager.titles.Get().length +
-                dataManager.quotes.Get().length +
-                dataManager.contributors.Get().length,
-            'items'
-        );
+        const time_appdata_end = performance.now();
+        const time_appdata = Round(time_appdata_end - time_appdata_start, 2);
+        user.interface.console?.AddLog('info', `Online load in ${time_appdata} ms for ${dataManager.CountAll()} items`);
         await dataManager.LocalSave(user);
     }
 
@@ -165,9 +157,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     nextStep();
-
-    console.log('Connected with email:', email);
-    // return;
+    const t2 = performance.now();
 
     // Loading: User data online
     if (user.server2.IsLogged()) {
@@ -240,11 +230,16 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.StartTimers();
 
     // End of initialisation
-    const time_end = new Date().getTime();
-    const time_text = `Initialisation done in ${time_end - time_start}ms`;
+    const time_end = performance.now();
+    const time_total = Round(time_end - time_start);
+    const time_ratio_1 = Round((t1 - time_start) / time_total, 2);
+    const time_ratio_2 = Round((t2 - t1) / time_total, 2);
+    const time_ratio_3 = Round((time_end - t2) / time_total, 2);
+    const time_text = `Initialisation done in ${time_total}ms (${time_ratio_1}/${time_ratio_2}/${time_ratio_3})`;
     console.log(time_text);
     user.interface.console?.AddLog('info', time_text);
     user.appIsLoaded = true;
+    user.server2.tcp.Send({ action: 'send-statistics', stats: { LoadingTimeMs: time_total }, anonymous: false });
 
     // Maintenance message
     if (status === 'maintenance') {

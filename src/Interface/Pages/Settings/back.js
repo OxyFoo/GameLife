@@ -89,7 +89,7 @@ class BackSettings extends PageBase {
                 message: lang['alert-disconnect-message']
             },
             callback: async (button) => {
-                if (button === 'yes' && !(await user.Disconnect(true))) {
+                if (button === 'yes' && !(await user.Disconnect())) {
                     user.interface.popup?.OpenT({
                         type: 'ok',
                         data: {
@@ -105,10 +105,46 @@ class BackSettings extends PageBase {
     disconnectAll = async () => {
         const lang = langManager.curr['settings'];
 
-        this.setState({ devicesLoading: true });
+        // Not connected to the server
+        if (!user.server2.IsAuthenticated()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-disconnecterror-title'],
+                    message: lang['alert-disconnecterror-message']
+                }
+            });
+            return;
+        }
 
-        const devices = await user.GetDevices();
-        const textDevices = devices === null ? 'Error' : '- ' + devices.join(' - \n- ') + ' -\n';
+        this.setState({ devicesLoading: true });
+        const devicesStatus = await user.server2.tcp.SendAndWait({ action: 'get-devices' });
+        this.setState({ devicesLoading: false });
+
+        // Error while getting devices
+        if (
+            devicesStatus === 'interrupted' ||
+            devicesStatus === 'not-sent' ||
+            devicesStatus === 'timeout' ||
+            devicesStatus.status !== 'get-devices'
+        ) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-disconnecterror-title'],
+                    message: lang['alert-disconnecterror-message']
+                }
+            });
+            return;
+        }
+
+        // Format devices list
+        const { devices } = devicesStatus;
+        const textDevices =
+            typeof devices === 'undefined' || devices.length === 0
+                ? 'Error'
+                : devices.map((device) => `- ${device.deviceName} -\n`).join('');
+
         user.interface.popup?.OpenT({
             type: 'yesno',
             data: {
@@ -116,7 +152,7 @@ class BackSettings extends PageBase {
                 message: lang['alert-disconnectall-message'].replace('{}', textDevices)
             },
             callback: async (button) => {
-                if (button === 'yes' && !(await user.Disconnect(true, true))) {
+                if (button === 'yes' && !(await user.Disconnect(true))) {
                     user.interface.popup?.OpenT({
                         type: 'ok',
                         data: {
@@ -167,33 +203,18 @@ class BackSettings extends PageBase {
             return;
         }
 
-        this.setState({ sendingMail: true });
-
-        const data = {
-            email: user.settings.email,
-            lang: langManager.currentLangageKey
-        };
-
         // Send mail
-        const result = await user.server.Request('deleteAccount', data);
-        if (result === null) return;
+        this.setState({ sendingMail: true });
+        const response = await user.server2.tcp.SendAndWait({ action: 'delete-account' });
 
-        if (result['status'] === 'ok') {
-            // Mail sent
-            const title = langManager.curr['settings']['alert-deletedmailsent-title'];
-            const message = langManager.curr['settings']['alert-deletedmailsent-message'];
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: { title, message },
-                callback: () => {
-                    this.setState({ sendingMail: false }, () => {
-                        user.Disconnect(true);
-                    });
-                }
-            });
-            user.tempMailSent = GetGlobalTime();
-        } else {
-            // Mail sent failed
+        // Mail sent failed
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'delete-account' ||
+            response.result !== 'ok'
+        ) {
             const title = langManager.curr['settings']['alert-deletedfailed-title'];
             const message = langManager.curr['settings']['alert-deletedfailed-message'];
             user.interface.popup?.OpenT({
@@ -203,7 +224,22 @@ class BackSettings extends PageBase {
                     this.setState({ sendingMail: false });
                 }
             });
+            return;
         }
+
+        // Mail sent
+        const title = langManager.curr['settings']['alert-deletedmailsent-title'];
+        const message = langManager.curr['settings']['alert-deletedmailsent-message'];
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: { title, message },
+            callback: () => {
+                this.setState({ sendingMail: false }, () => {
+                    user.Disconnect();
+                });
+            }
+        });
+        user.tempMailSent = GetGlobalTime();
     };
 }
 

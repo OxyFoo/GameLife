@@ -156,6 +156,7 @@ class UserManager {
         this.quests.Clear();
         this.server.Clear();
 
+        this.CleanTimers();
         await this.settings.Save();
 
         await DataStorage.ClearAll();
@@ -167,36 +168,32 @@ class UserManager {
         }
     }
 
-    /** @returns {Promise<Array<string> | null>} */
-    async GetDevices() {
-        const result = await this.server.Request('getDevices');
-        if (result === null || result['status'] !== 'ok') {
-            return null;
-        }
-        return result['devices'];
-    }
-
     /**
-     * @param {boolean} [forceClear=false] Clear data even if disconnect failed
      * @param {boolean} [allDevices=false] Disconnect all devices
      * @returns {Promise<boolean>}
      */
-    async Disconnect(forceClear = false, allDevices = false) {
+    async Disconnect(allDevices = false) {
         const result = await this.server2.tcp.SendAndWait({ action: 'disconnect', allDevices });
-        const success =
-            result === 'timeout' ||
-            result === 'not-sent' ||
-            result === 'interrupted' ||
-            result.status !== 'disconnect' ||
-            result.result !== 'ok';
 
-        if (success || forceClear) {
-            await this.Clear();
-            this.CleanTimers();
-            this.interface.ChangePage('login', { storeInHistory: false });
+        // Error occurred
+        if (result === 'interrupted' || result === 'timeout') {
+            this.interface.console?.AddLog('error', `Disconnecting failed (${result})`);
+            return false;
         }
 
-        return success;
+        // Not connected to the server, disconnect locally
+        if (result === 'not-sent' || result.status !== 'disconnect') {
+            this.interface.console?.AddLog('warn', 'Not connected to the server, disconnecting locally');
+        }
+
+        await this.Clear();
+        if (this.server2.IsConnected()) {
+            this.interface.ChangePage('login', { storeInHistory: false });
+        } else {
+            this.interface.ChangePage('waitinternet', { storeInHistory: false });
+        }
+
+        return true;
     }
 
     async Unmount() {

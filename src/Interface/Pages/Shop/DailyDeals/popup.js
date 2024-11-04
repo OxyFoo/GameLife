@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/App/Items').Item} Item
+ * @typedef {import('Types/Data/App/Items').Item} Item
  */
 
 /**
@@ -17,40 +17,30 @@ import { Text, Button } from 'Interface/Components';
  */
 function renderItemPopup(item, refreshCallback = () => {}) {
     const lang = langManager.curr['shop']['dailyDeals'];
-    let [ loading, setLoading ] = React.useState(false);
+    let [loading, setLoading] = React.useState(false);
 
     const price = Math.round(item.Value * user.shop.priceFactor);
     const itemName = langManager.GetText(item.Name);
     const itemDescription = langManager.GetText(item.Description);
-    const buttonText = lang['popup-item-button']
-                        .replace('{}', price.toString());
+    const buttonText = lang['popup-item-button'].replace('{}', price.toString());
 
     const buy = async () => {
         if (this.state.buying) return;
-        setLoading(true); this.setState({ buying: true });
+        setLoading(true);
+        this.setState({ buying: true });
         await buyDailyDeals.call(this, item);
-        setLoading(false); this.setState({ buying: false });
+        setLoading(false);
+        this.setState({ buying: false });
         refreshCallback();
     };
 
     return (
         <View style={styles.itemPopup}>
-            <Text style={styles.itemPopupTitle}>
-                {itemName}
-            </Text>
+            <Text style={styles.itemPopupTitle}>{itemName}</Text>
 
-            {itemDescription !== '' && (
-                <Text style={styles.itemPopupText}>
-                    {itemDescription}
-                </Text>
-            )}
+            {itemDescription !== '' && <Text style={styles.itemPopupText}>{itemDescription}</Text>}
 
-            <Button
-                style={styles.itemPopupButton}
-                color='main1'
-                onPress={buy}
-                loading={loading}
-            >
+            <Button style={styles.itemPopupButton} color='main1' onPress={buy} loading={loading}>
                 {buttonText}
             </Button>
         </View>
@@ -58,7 +48,7 @@ function renderItemPopup(item, refreshCallback = () => {}) {
 }
 
 /** @param {Item} item */
-const buyDailyDeals = async(item) => {
+const buyDailyDeals = async (item) => {
     const lang = langManager.curr['shop'];
 
     // Check Ox Amount
@@ -66,7 +56,7 @@ const buyDailyDeals = async(item) => {
     if (user.informations.ox.Get() < price) {
         const title = lang['popup-notenoughox-title'];
         const text = lang['popup-notenoughox-message'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
+        user.interface.popup.ForceOpen('ok', [title, text]);
         return;
     }
 
@@ -78,7 +68,7 @@ const buyDailyDeals = async(item) => {
     if (response['status'] !== 'ok') {
         const title = lang['reward-failed-title'];
         const text = lang['reward-failed-message'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
+        user.interface.popup.ForceOpen('ok', [title, text]);
         return;
     }
 
@@ -94,10 +84,8 @@ const buyDailyDeals = async(item) => {
     // Show success message
     const itemName = langManager.GetText(item.Name);
     const title = lang['dailyDeals']['popup-buysuccess-title'];
-    const text = lang['dailyDeals']['popup-buysuccess-text']
-                .replace('{}', itemName)
-                .replace('{}', price.toString());
-    user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
-}
+    const text = lang['dailyDeals']['popup-buysuccess-text'].replace('{}', itemName).replace('{}', price.toString());
+    user.interface.popup.ForceOpen('ok', [title, text], undefined, false);
+};
 
 export { renderItemPopup };

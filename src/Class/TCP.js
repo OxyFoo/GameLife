@@ -163,7 +163,6 @@ class TCP {
         }
 
         if (this.socket === null) {
-            this.#user.interface.console?.AddLog('warn', 'Send socket: Not connected.');
             return false;
         }
 

@@ -96,7 +96,10 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
                 title: langManager.curr['login']['alert-deletedaccount-title'],
                 message: langManager.curr['login']['alert-deletedaccount-message']
             },
-            callback: () => user.Disconnect(true),
+            callback: async () => {
+                await user.Clear();
+                user.interface.ChangePage('login', { storeInHistory: false });
+            },
             cancelable: false
         });
         return;
@@ -110,7 +113,10 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
                 title: langManager.curr['login']['alert-error-title'],
                 message: langManager.curr['login']['alert-error-message'] // TODO: Add error code ?
             },
-            callback: () => user.Disconnect(true),
+            callback: async () => {
+                await user.Clear();
+                user.interface.ChangePage('login', { storeInHistory: false });
+            },
             cancelable: false
         });
         return;

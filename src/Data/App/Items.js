@@ -1,10 +1,12 @@
 import { IAppData } from 'Types/Interface/IAppData';
 
 /**
+ * // TODO: Replace StuffID with ItemID in Types/Data/App/Items.js
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  *
- * @typedef {'skin' | 'skinColor'} SkinSlot
- * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
+ * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('Types/Data/App/Items').ItemSlot} Slot
+ *
  * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
  *
  * @typedef {object} Buff
@@ -31,32 +33,6 @@ const itemContainerSize = {
     bottom: { x: 200, y: 320, width: 600, height: 400 },
     shoes: { x: 300, y: 600, width: 400, height: 400 }
 };
-
-class Item {
-    /** @type {StuffID} */
-    ID = 'hair_01';
-
-    /** @type {Slot} */
-    Slot = 'hair';
-
-    Name = { fr: '', en: '' };
-    Description = { fr: '', en: '' };
-
-    /** @type {number} */
-    Rarity = Rarity.common;
-
-    /** @type {number} 0 = Not buyable, 1 = Buyable */
-    Buyable = 0;
-
-    /** @type {number} */
-    Value = 0;
-
-    /**
-     * @type {Buff[]}
-     * @deprecated
-     */
-    Buffs = [];
-}
 
 /** @extends {IAppData<Item[]>} */
 class Items extends IAppData {
@@ -116,5 +92,5 @@ class Items extends IAppData {
     GetContainerSize = (slot) => itemContainerSize[slot];
 }
 
-export { Item, Rarity };
+export { Rarity };
 export default Items;

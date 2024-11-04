@@ -21,6 +21,7 @@ class DataManager {
         achievements: 0,
         ads: 0,
         contributors: 0,
+        items: 0,
         quotes: 0,
         skills: 0,
         skillIcons: 0,
@@ -56,7 +57,7 @@ class DataManager {
     DataAreLoaded() {
         const achievements = this.achievements.achievements.length > 0;
         const contributors = this.contributors.contributors.length > 0;
-        const items = this.items.Get().length > 0 || true; // TODO: Reimplement items
+        const items = this.items.Get().length > 0;
         const quotes = this.quotes.Get().length > 0;
         const _skills = this.skills.Get();
         const skills = _skills.skills.length > 0;
@@ -87,7 +88,7 @@ class DataManager {
             achievements: this.achievements.Save(),
             ads: this.ads.Save(),
             contributors: this.contributors.Save(),
-            //items: this.items.Save(), // TODO: Reimplement items
+            items: this.items.Save(),
             quotes: this.quotes.Save(),
             ...this.skills.Save(),
             titles: this.titles.Save()
@@ -133,7 +134,7 @@ class DataManager {
         this.achievements.Load(appData.achievements);
         this.ads.Load(appData.ads);
         this.contributors.Load(appData.contributors);
-        //this.items.Load(appData.items); // TODO: Reimplement items
+        this.items.Load(appData.items);
         this.quotes.Load(appData.quotes);
         this.skills.Load({
             skills: appData.skills,
@@ -188,9 +189,9 @@ class DataManager {
         if (response.data.contributors !== null) {
             this.contributors.Load(response.data.contributors);
         }
-        // if (response.data.items !== null) {
-        //     this.items.Load(response.data.items);
-        // }
+        if (response.data.items !== null) {
+            this.items.Load(response.data.items);
+        }
         if (response.data.quotes !== null) {
             this.quotes.Load(response.data.quotes);
         }

@@ -25,7 +25,7 @@ import { Character } from 'Interface/Components';
  * @typedef {import('react-native-iap').Purchase} Purchase
  * @typedef {import('react-native-iap').PurchaseError} PurchaseError
  *
- * @typedef {import('Data/App/Items').Item} Item
+ * @typedef {import('Types/Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  * @typedef {import('Managers/LangManager').Lang} Lang
  *
@@ -55,7 +55,7 @@ class BackShopIAP extends React.Component {
 
         /** @type {Array<IAPItem>} */
         iapItems: []
-    }
+    };
 
     purchaseUpdateSubscription = null;
     purchaseErrorSubscription = null;
@@ -78,7 +78,11 @@ class BackShopIAP extends React.Component {
             })
             .catch((exception) => {
                 // Nothing to do here
-                user.interface.console.AddLog('error', '[IAP] Error flushing failed purchases cached as pending', exception);
+                user.interface.console.AddLog(
+                    'error',
+                    '[IAP] Error flushing failed purchases cached as pending',
+                    exception
+                );
             });
     }
 
@@ -99,11 +103,10 @@ class BackShopIAP extends React.Component {
     LoadIAP = async () => {
         const allIAP = await getProducts({
             skus: user.shop.IAP_IDs
-        })
-            .catch((error) => {
-                user.interface.console.AddLog('error', '[IAP] Error fetching products', error);
-                return /** @type {Array<Product>} */ ([]);
-            });
+        }).catch((error) => {
+            user.interface.console?.AddLog('error', '[IAP] Error fetching products', error);
+            return /** @type {Array<Product>} */ [];
+        });
 
         if (allIAP === null || allIAP.length === 0) {
             return;
@@ -131,7 +134,7 @@ class BackShopIAP extends React.Component {
             .sort((a, b) => a.ID.localeCompare(b.ID));
 
         this.setState({ iapItems });
-    }
+    };
 
     /** @param {Purchase} purchase */
     purchaseDidUpdate = async (purchase) => {
@@ -139,7 +142,7 @@ class BackShopIAP extends React.Component {
             // If purchase is pending, we should just wait
             if (purchase.purchaseStateAndroid === PurchaseStateAndroid.PENDING) {
                 const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
-                user.interface.popup.Open('ok', [ title, message ], undefined, true);
+                user.interface.popup.Open('ok', [title, message], undefined, true);
                 return;
             }
 
@@ -163,19 +166,23 @@ class BackShopIAP extends React.Component {
             return;
         }
 
-        // Wait if reward application is not loaded or 
+        // Wait if reward application is not loaded or
         while (user.appIsLoaded === false || user.interface.GetCurrentPageName() === 'chestreward') {
             await Sleep(200);
         }
 
         // Show reward
-        user.interface.ChangePage('chestreward', {
-            chestRarity: 'ox',
-            oxCount: addedOx,
-            callback: () => {
-                user.interface.BackHandle();
-            }
-        }, true);
+        user.interface.ChangePage(
+            'chestreward',
+            {
+                chestRarity: 'ox',
+                oxCount: addedOx,
+                callback: () => {
+                    user.interface.BackHandle();
+                }
+            },
+            true
+        );
 
         // Finish transaction
         finishTransaction({
@@ -184,7 +191,7 @@ class BackShopIAP extends React.Component {
             // Is consumable (can be purchased again)
             isConsumable: true
         });
-    }
+    };
 
     /** @param {PurchaseError} error */
     purchaseDidError = (error) => {
@@ -193,7 +200,7 @@ class BackShopIAP extends React.Component {
         }
 
         this.handleError('purchase-error', 'Error purchasing item', error);
-    }
+    };
 
     /** @param {string} sku Product ID */
     purchase = (sku) => {
@@ -209,7 +216,7 @@ class BackShopIAP extends React.Component {
         } else {
             this.handleError('wrong-platform', 'Platform not supported', Platform.OS);
         }
-    }
+    };
 
     /**
      * @param {Purchase} purchase
@@ -234,7 +241,7 @@ class BackShopIAP extends React.Component {
         user.informations.purchasedCount++;
         user.informations.ox.Set(result.ox);
         return result.addedOx;
-    }
+    };
 
     /**
      * Show error in console & open a popup
@@ -245,8 +252,8 @@ class BackShopIAP extends React.Component {
     handleError = (errorKey, errorName, error) => {
         user.interface.console.AddLog('error', `[IAP] ${errorName}:`, error);
         const { title, message } = langManager.curr['shop']['popup-purchase'][errorKey];
-        user.interface.popup.Open('ok', [ title, message ], undefined, true);
-    }
+        user.interface.popup.Open('ok', [title, message], undefined, true);
+    };
 }
 
 export default BackShopIAP;

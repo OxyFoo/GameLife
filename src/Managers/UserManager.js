@@ -108,10 +108,6 @@ class UserManager {
     }
 
     StartTimers() {
-        // Save all data every 5 minutes
-        const save = this.server.IsConnected() ? this.OnlineSave : this.LocalSave;
-        this.intervalSave = setInterval(save, 5 * 60 * 1000);
-
         // Check achievements every 20 seconds
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
 
@@ -127,7 +123,6 @@ class UserManager {
     }
 
     CleanTimers() {
-        clearInterval(this.intervalSave);
         clearInterval(this.intervalAchievements);
         clearTimeout(this.timeoutActivities);
         clearInterval(this.intervalActivities);
@@ -140,7 +135,8 @@ class UserManager {
         this.tempMailSent = null;
 
         this.notificationsInApp.Clear();
-        this.server2;
+        // TODO: Clear server2 ?
+        //this.server2.Clear(); ?
         this.settings.Clear();
         this.shop.Clear();
         this.informations.Clear();
@@ -201,14 +197,14 @@ class UserManager {
         this.server2.Disconnect();
         await this.settings.Save();
         await this.LocalSave();
-        await this.OnlineSave();
+        await this.SaveOnline();
         this.server.Clear();
     }
 
     async RefreshStats(onlineSave = true) {
-        if (this.server.IsConnected() && onlineSave) {
+        if (this.server2.IsAuthenticated() && onlineSave) {
             this.activities.RemoveDeletedSkillsActivities();
-            await this.OnlineSave();
+            await this.SaveOnline();
         }
 
         const { stats, xpInfo } = this.experience.GetExperience();
@@ -232,7 +228,7 @@ class UserManager {
         const localSaved = await this.LocalSave();
         if (!localSaved) success = false;
 
-        const onlineSaved = localSaved && (await this.OnlineSave());
+        const onlineSaved = localSaved && (await this.SaveOnline());
         if (!onlineSaved) success = false;
 
         this.globalSaving = false;
@@ -242,6 +238,7 @@ class UserManager {
     /**
      * Load local user data
      * @returns {Promise<boolean>}
+     * @deprecated
      */
     LocalSave = async () => {
         const data = {
@@ -268,6 +265,9 @@ class UserManager {
         return saved;
     };
 
+    /**
+     * @deprecated
+     */
     async LocalLoad() {
         const debugIndex = this.interface.console?.AddLog('info', 'User data: local loading...');
         let data = await DataStorage.Load(STORAGE.USER);
@@ -301,7 +301,10 @@ class UserManager {
         return data !== null;
     }
 
-    /** @returns {Promise<boolean>} True if data is saved */
+    /**
+     * @returns {Promise<boolean>} True if data is saved
+     * @deprecated
+     */
     OnlineSave = async () => {
         if (!this.server.IsConnected()) return false;
 
@@ -397,8 +400,8 @@ class UserManager {
     }
 
     /**
-     * @deprecated
      * @param {'normal' | 'force' | 'inventories'} [type]
+     * @deprecated
      */
     async OnlineLoad(type = 'normal') {
         if (!this.server.IsConnected()) return false;

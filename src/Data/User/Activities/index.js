@@ -47,13 +47,16 @@ class Activities extends IUserData {
     }
 
     /** @type {Activity[]} */
-    activities = [];
+    #activities = [];
 
     /** @type {Activity[]} */
-    UNSAVED_activities = [];
+    #UNSAVED_activities = [];
 
     /** @type {Activity[]} */
-    UNSAVED_deletions = [];
+    #UNSAVED_deletions = [];
+
+    /** @type {number} Unix timestamp in seconds */
+    lastUpdate = 0;
 
     /**
      * @description Contain all activities, updated when adding, editing or removing
@@ -79,9 +82,9 @@ class Activities extends IUserData {
     };
 
     Clear = () => {
-        this.activities = [];
-        this.UNSAVED_activities = [];
-        this.UNSAVED_deletions = [];
+        this.#activities = [];
+        this.#UNSAVED_activities = [];
+        this.#UNSAVED_deletions = [];
         this.currentActivity.Set(null);
         this.allActivities.Set([]);
     };
@@ -91,9 +94,11 @@ class Activities extends IUserData {
      * @returns {Activity[]}
      */
     Get = () => {
-        const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
+        const id = `${this.#activities.length}-${this.#UNSAVED_activities.length}`;
         if (id !== this.#cache_get.id) {
-            const activities = [...this.activities, ...this.UNSAVED_activities];
+            const activities = [...this.#activities, ...this.#UNSAVED_activities].filter(
+                (activity) => GetActivityIndex(this.#UNSAVED_deletions, activity) === null
+            );
             this.#cache_get.id = id;
             this.#cache_get.activities = SortByKey(activities, 'startTime');
         }
@@ -111,46 +116,60 @@ class Activities extends IUserData {
 
     /** @param {Partial<SaveObject_Activities>} data */
     Load = (data) => {
-        if (typeof data.activities !== 'undefined') this.activities = data.activities;
-        if (typeof data.unsaved !== 'undefined') this.UNSAVED_activities = data.unsaved;
-        if (typeof data.deletions !== 'undefined') this.UNSAVED_deletions = data.deletions;
+        if (typeof data.activities !== 'undefined') this.#activities = data.activities;
+        if (typeof data.unsaved !== 'undefined') this.#UNSAVED_activities = data.unsaved;
+        if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
         if (typeof data.current !== 'undefined') this.currentActivity.Set(data.current);
+        if (typeof data.lastUpdate !== 'undefined') this.lastUpdate = data.lastUpdate;
         this.allActivities.Set(this.Get());
     };
 
     /** @returns {SaveObject_Activities} */
     Save = () => {
         return {
-            activities: this.activities,
-            unsaved: this.UNSAVED_activities,
-            deletions: this.UNSAVED_deletions,
-            current: this.currentActivity.Get()
+            activities: this.#activities,
+            unsaved: this.#UNSAVED_activities,
+            deletions: this.#UNSAVED_deletions,
+            current: this.currentActivity.Get(),
+            lastUpdate: this.lastUpdate
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-activities' });
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'get-activities',
+            lastUpdate: this.lastUpdate
+        });
 
         // Check if failed
         if (
             response === 'timeout' ||
             response === 'interrupted' ||
             response === 'not-sent' ||
-            response.status !== 'get-activities'
+            response.status !== 'get-activities' ||
+            response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', '[Activities] Failed to load activities');
             return false;
         }
 
-        // Add activities
-        for (let i = 0; i < response.activities.length; i++) {
-            this.Add(response.activities[i], true);
+        if (response.result === 'already-up-to-date') {
+            this.user.interface.console?.AddLog('info', '[Activities] Already up to date');
+            return true;
         }
+
+        // Add activities
+        this.#activities = [];
+        for (let i = 0; i < response.result.activities.length; i++) {
+            this.Add(response.result.activities[i], true);
+        }
+
+        // Update last update
+        this.lastUpdate = response.result.lastUpdate;
 
         // Update and print message
         this.allActivities.Set(this.Get());
-        const length = this.activities.length;
-        this.user.interface.console?.AddLog('info', `[Activities] ${length} activities loaded`);
+        this.user.interface.console?.AddLog('info', `[Activities] ${this.#activities.length} activities loaded`);
         return true;
     };
 
@@ -160,31 +179,54 @@ class Activities extends IUserData {
         }
 
         const unsaved = this.getUnsaved();
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'save-activities', activities: unsaved });
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'save-activities',
+            activities: unsaved,
+            lastUpdate: this.lastUpdate
+        });
 
         // Check if failed
         if (
             response === 'timeout' ||
             response === 'interrupted' ||
             response === 'not-sent' ||
-            response.status !== 'save-activities' ||
-            response.result !== 'ok'
+            response.status !== 'save-activities'
         ) {
             this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
             return false;
         }
 
+        // Check if failed or need to reload
+        if (response.result !== 'ok') {
+            if (response.result === 'wrong-last-update') {
+                this.user.interface.console?.AddLog(
+                    'error',
+                    '[Activities] Failed to save activities (wrong last update), reloading'
+                );
+                await this.LoadOnline();
+                return false;
+            }
+
+            this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
+            return false;
+        }
+
+        // Update last update if success
+        if (typeof response.lastUpdate !== 'undefined') {
+            this.lastUpdate = response.lastUpdate;
+        }
+
         // Update and print message
         this.purge();
         this.allActivities.Set(this.Get());
-        const length = this.activities.length;
-        this.user.interface.console?.AddLog('info', `[Activities] ${length} activities saved`);
+        this.user.interface.console?.AddLog('info', `[Activities] ${this.#activities.length} activities saved`);
+
         return true;
     };
 
     /** @private */
     isUnsaved = () => {
-        return this.UNSAVED_activities.length > 0 || this.UNSAVED_deletions.length > 0;
+        return this.#UNSAVED_activities.length > 0 || this.#UNSAVED_deletions.length > 0;
     };
 
     /**
@@ -195,13 +237,13 @@ class Activities extends IUserData {
         /** @type {ActivityUnsaved[]} */
         let unsaved = [];
 
-        for (let a in this.UNSAVED_activities) {
-            const activity = this.UNSAVED_activities[a];
+        for (let a in this.#UNSAVED_activities) {
+            const activity = this.#UNSAVED_activities[a];
             unsaved.push({ type: 'add', ...activity });
         }
 
-        for (let a in this.UNSAVED_deletions) {
-            const activity = this.UNSAVED_deletions[a];
+        for (let a in this.#UNSAVED_deletions) {
+            const activity = this.#UNSAVED_deletions[a];
             unsaved.push({ type: 'rem', ...activity });
         }
 
@@ -210,19 +252,19 @@ class Activities extends IUserData {
 
     /** @private */
     purge = () => {
-        this.activities.push(...this.UNSAVED_activities);
-        this.UNSAVED_activities = [];
+        this.#activities.push(...this.#UNSAVED_activities);
+        this.#UNSAVED_activities = [];
 
         // Apply deletions
-        for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = GetActivityIndex(this.activities, this.UNSAVED_deletions[i]);
+        for (let i = this.#UNSAVED_deletions.length - 1; i >= 0; i--) {
+            const index = GetActivityIndex(this.#activities, this.#UNSAVED_deletions[i]);
             if (index !== null) {
-                this.activities.splice(index, 1);
+                this.#activities.splice(index, 1);
             }
         }
 
         // Reset temp deletions
-        this.UNSAVED_deletions = [];
+        this.#UNSAVED_deletions = [];
     };
 
     RefreshActivities = () => {
@@ -245,7 +287,7 @@ class Activities extends IUserData {
      * @returns {Activity[]}
      */
     GetUseful = () => {
-        const id = `${this.activities.length}-${this.UNSAVED_activities.length}`;
+        const id = `${this.#activities.length}-${this.#UNSAVED_activities.length}`;
         if (id === this.#cache_get_useful.id) {
             return this.#cache_get_useful.activities;
         }
@@ -318,7 +360,7 @@ class Activities extends IUserData {
 
     /** @returns {boolean} True if an activity was removed */
     RemoveDeletedSkillsActivities() {
-        let activities = [...this.activities, ...this.UNSAVED_activities];
+        let activities = [...this.#activities, ...this.#UNSAVED_activities];
         let deletions = [];
         for (let a in activities) {
             let activity = activities[a];
@@ -350,8 +392,8 @@ class Activities extends IUserData {
         }
 
         // Check if not exists
-        const indexActivity = GetActivityIndex(this.activities, newActivity);
-        const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, newActivity);
+        const indexActivity = GetActivityIndex(this.#activities, newActivity);
+        const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, newActivity);
 
         // Activity already exists
         if (indexActivity !== null || indexUnsaved !== null) {
@@ -364,23 +406,23 @@ class Activities extends IUserData {
         }
 
         // Remove from deletions if exists
-        const indexDeletion = GetActivityIndex(this.UNSAVED_deletions, newActivity);
+        const indexDeletion = GetActivityIndex(this.#UNSAVED_deletions, newActivity);
         if (indexDeletion !== null) {
-            this.UNSAVED_deletions.splice(indexDeletion, 1);
+            this.#UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
         // Add activity
         if (alreadySaved) {
-            this.activities.push(newActivity);
+            this.#activities.push(newActivity);
         } else {
-            this.UNSAVED_activities.push(newActivity);
+            this.#UNSAVED_activities.push(newActivity);
             this.allActivities.Set(this.Get());
         }
 
         return { status: 'added', activity: newActivity };
     }
 
-    // TODO: Fix édit (éviter absolument toute forme de conflit, overwrite ou delete)
+    // TODO: Finish edit activity
     /**
      * Edit activity
      * @param {Activity} activity
@@ -394,8 +436,8 @@ class Activities extends IUserData {
             return { status: 'tooEarly', activity: null };
         }
 
-        const indexActivity = GetActivityIndex(this.activities, activity);
-        const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, activity);
+        const indexActivity = GetActivityIndex(this.#activities, activity);
+        const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, newActivity);
 
         // Activity does not exist
         if (indexActivity === null && indexUnsaved === null) {
@@ -408,29 +450,59 @@ class Activities extends IUserData {
         }
 
         // If edit is important and more than 48h after start time, add to deletions
-        const tempNewActivity = { ...newActivity };
-        if (
-            newActivity.skillID !== activity.skillID ||
-            newActivity.startTime !== activity.startTime ||
-            newActivity.duration !== activity.duration
-        ) {
-            tempNewActivity.addedTime = GetLocalTime(undefined, 3);
-            tempNewActivity.timezone = GetTimeZone();
-            if (
-                !confirm &&
-                this.GetExperienceStatus(activity) === 'grant' &&
-                this.GetExperienceStatus(tempNewActivity) === 'beforeLimit'
-            ) {
-                return { status: 'needConfirmation', activity: null };
-            }
-        }
+        // const tempNewActivity = { ...newActivity };
+        // if (
+        //     newActivity.skillID !== activity.skillID ||
+        //     newActivity.startTime !== activity.startTime ||
+        //     newActivity.duration !== activity.duration
+        // ) {
+        //     tempNewActivity.addedTime = GetLocalTime(undefined, 3);
+        //     tempNewActivity.timezone = GetTimeZone();
+        //     if (
+        //         !confirm &&
+        //         this.GetExperienceStatus(activity) === 'grant' &&
+        //         this.GetExperienceStatus(tempNewActivity) === 'beforeLimit'
+        //     ) {
+        //         return { status: 'needConfirmation', activity: null };
+        //     }
+        // }
 
         // Remove old activity and add new one
-        this.Remove(activity);
-        this.UNSAVED_activities.push(tempNewActivity);
+        // this.Remove(activity);
+        // this.#UNSAVED_activities.push(tempNewActivity);
+        // this.allActivities.Set(this.Get());
+
+        // If edit is important and more than 48h after start time, ask for confirmation
+        const tempNewActivity = { ...newActivity };
+        if (
+            !confirm &&
+            (newActivity.skillID !== activity.skillID ||
+                newActivity.startTime !== activity.startTime ||
+                newActivity.duration !== activity.duration) &&
+            this.GetExperienceStatus(activity) === 'grant' &&
+            this.GetExperienceStatus(tempNewActivity) === 'beforeLimit'
+        ) {
+            return { status: 'needConfirmation', activity: null };
+        }
+
+        // Remove from deletions if exists
+        const indexDeletion = GetActivityIndex(this.#UNSAVED_deletions, newActivity);
+        if (indexDeletion !== null) {
+            this.#UNSAVED_deletions.splice(indexDeletion, 1);
+        }
+
+        // Remove old activity (add to unsaved deletions) and add new one (add to unsaved activities)
+        if (indexActivity !== null) {
+            this.#UNSAVED_deletions.push(activity);
+        }
+        if (indexUnsaved !== null) {
+            this.#UNSAVED_activities.splice(indexUnsaved, 1);
+        }
+
+        this.#UNSAVED_activities.push(newActivity);
         this.allActivities.Set(this.Get());
 
-        return { status: 'edited', activity: tempNewActivity };
+        return { status: 'edited', activity: newActivity };
     }
 
     /**
@@ -439,25 +511,28 @@ class Activities extends IUserData {
      * @returns {RemoveStatus}
      */
     Remove(activity) {
-        const indexActivity = GetActivityIndex(this.activities, activity);
-        const indexUnsaved = GetActivityIndex(this.UNSAVED_activities, activity);
-        const indexDeletion = GetActivityIndex(this.UNSAVED_deletions, activity);
-        let deleted = null;
+        let removed = false;
 
+        const indexActivity = GetActivityIndex(this.#activities, activity);
+        const indexDeletion = GetActivityIndex(this.#UNSAVED_deletions, activity);
+
+        // Activity in saved activities and not already deleted, add to deletions
         if (indexActivity !== null) {
-            deleted = this.activities.splice(indexActivity, 1)[0];
             if (indexDeletion === null) {
-                this.UNSAVED_deletions.push(deleted);
-            }
-        }
-        if (indexUnsaved !== null) {
-            deleted = this.UNSAVED_activities.splice(indexUnsaved, 1)[0];
-            if (indexDeletion === null) {
-                this.UNSAVED_deletions.push(deleted);
+                this.#UNSAVED_deletions.push(activity);
+                removed = true;
             }
         }
 
-        if (deleted !== null) {
+        // Activity in unsaved activities, remove it
+        const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, activity);
+        if (indexUnsaved !== null) {
+            this.#UNSAVED_activities.splice(indexUnsaved, 1)[0];
+            removed = true;
+        }
+
+        if (removed) {
+            // Update all activities
             this.allActivities.Set(this.Get());
             return 'removed';
         }

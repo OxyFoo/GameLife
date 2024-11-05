@@ -16,15 +16,15 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('Data/User/Quests').InputsError} InputsError
  *
  * @typedef {'add' | 'save' | 'remove'} States
  */
 
-const BackMyQuestProps = {
+const BackQuestProps = {
     args: {
-        /** @type {MyQuest | null} */
+        /** @type {Quest | null} */
         quest: null
     }
 };
@@ -34,7 +34,7 @@ class BackQuest extends PageBase {
         /** @type {States} */
         action: 'add',
 
-        /** @type {MyQuest} */
+        /** @type {Quest} */
         tempQuest: {
             title: '',
             comment: '',
@@ -56,7 +56,7 @@ class BackQuest extends PageBase {
         errors: []
     };
 
-    /** @type {MyQuest | null} */
+    /** @type {Quest | null} */
     selectedQuest = null;
 
     /** @type {React.RefObject<ScrollView>} */
@@ -65,12 +65,12 @@ class BackQuest extends PageBase {
     /** @type {number} Position of the scroll (0-1) */
     scrollRatio = 0;
 
-    /** @param {BackMyQuestProps} props */
+    /** @param {BackQuestProps} props */
     constructor(props) {
         super(props);
 
         if (props.args?.quest) {
-            /** @type {MyQuest | null} */
+            /** @type {Quest | null} */
             const quest = props.args.quest || null;
             this.selectedQuest = quest;
 
@@ -108,7 +108,7 @@ class BackQuest extends PageBase {
         this.scrollRatio = y / (height - layoutHeight);
     };
 
-    /** @param {MyQuest} quest */
+    /** @param {Quest} quest */
     IsEdited = (quest) => {
         if (this.selectedQuest === null) {
             return false;
@@ -131,11 +131,11 @@ class BackQuest extends PageBase {
         return JSON.stringify(oldQuest) !== JSON.stringify(newQuest);
     };
 
-    /** @param {MyQuest} quest */
+    /** @param {Quest} quest */
     onChangeQuest = (quest) => {
         const { action, animEditButton } = this.state;
 
-        const errors = user.quests.myquests.VerifyInputs(quest);
+        const errors = user.quests.VerifyInputs(quest);
 
         if (action === 'save' || action === 'remove') {
             const edited = this.IsEdited(quest);
@@ -170,7 +170,7 @@ class BackQuest extends PageBase {
         // Don't show popup or quest not edited => leave
         if (action === 'remove') {
             user.interface.RemoveCustomBackHandler(this.BackHandler);
-            user.interface.ChangePage('myqueststats', {
+            user.interface.ChangePage('queststats', {
                 args: { quest: this.selectedQuest, showAnimations: false },
                 storeInHistory: false,
                 transition: 'fromLeft'
@@ -193,7 +193,7 @@ class BackQuest extends PageBase {
             callback: (btn) => {
                 if (btn === 'yes') {
                     user.interface.RemoveCustomBackHandler(this.BackHandler);
-                    user.interface.ChangePage('myqueststats', {
+                    user.interface.ChangePage('queststats', {
                         args: { quest: this.selectedQuest, showAnimations: false },
                         storeInHistory: false,
                         transition: 'fromLeft'
@@ -214,7 +214,7 @@ class BackQuest extends PageBase {
 
     AddQuest = () => {
         const { tempQuest } = this.state;
-        const addStatus = user.quests.myquests.Add(tempQuest);
+        const addStatus = user.quests.Add(tempQuest);
 
         if (addStatus === 'added') {
             // Update mission
@@ -222,7 +222,7 @@ class BackQuest extends PageBase {
 
             user.GlobalSave();
             user.interface.RemoveCustomBackHandler(this.BackHandler);
-            user.interface.ChangePage('myqueststats', {
+            user.interface.ChangePage('queststats', {
                 args: { quest: tempQuest, showAnimations: false },
                 storeInHistory: false,
                 transition: 'fromLeft'
@@ -244,7 +244,7 @@ class BackQuest extends PageBase {
             return;
         }
 
-        const addition = user.quests.myquests.Edit(tempQuest);
+        const addition = user.quests.Edit(tempQuest);
 
         if (addition === 'edited') {
             // Update mission
@@ -252,7 +252,7 @@ class BackQuest extends PageBase {
 
             user.GlobalSave();
             user.interface.RemoveCustomBackHandler(this.BackHandler);
-            user.interface.ChangePage('myqueststats', {
+            user.interface.ChangePage('queststats', {
                 args: { quest: tempQuest, showAnimations: false },
                 storeInHistory: false,
                 transition: 'fromLeft'
@@ -280,7 +280,7 @@ class BackQuest extends PageBase {
             },
             callback: (btn) => {
                 if (btn === 'yes' && this.selectedQuest !== null) {
-                    const remove = user.quests.myquests.Remove(this.selectedQuest);
+                    const remove = user.quests.Remove(this.selectedQuest);
                     if (remove === 'removed') {
                         user.GlobalSave();
                         user.interface.RemoveCustomBackHandler(this.BackHandler);
@@ -294,7 +294,7 @@ class BackQuest extends PageBase {
     };
 }
 
-BackQuest.defaultProps = BackMyQuestProps;
-BackQuest.prototype.props = BackMyQuestProps;
+BackQuest.defaultProps = BackQuestProps;
+BackQuest.prototype.props = BackQuestProps;
 
 export default BackQuest;

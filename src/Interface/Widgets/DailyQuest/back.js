@@ -19,7 +19,7 @@ const DailyQuestProps = {
 
 class DailyQuestBack extends React.Component {
     state = {
-        dailyQuest: user.quests.dailyquest.today.Get(),
+        dailyQuest: user.dailyQuest.today.Get(),
 
         claimIndex: -1,
         claimDay: 0,
@@ -38,35 +38,35 @@ class DailyQuestBack extends React.Component {
     componentDidMount() {
         this.updateClaimList();
 
-        this.dailyQuestListener = user.quests.dailyquest.today.AddListener((dailyQuest) => {
+        this.dailyQuestListener = user.dailyQuest.today.AddListener((dailyQuest) => {
             this.setState({ dailyQuest });
         });
-        this.claimListsListener = user.quests.dailyquest.claimsList.AddListener(this.updateClaimList);
+        this.claimListsListener = user.dailyQuest.claimsList.AddListener(this.updateClaimList);
     }
 
     componentWillUnmount() {
-        user.quests.dailyquest.today.RemoveListener(this.dailyQuestListener);
-        user.quests.dailyquest.claimsList.RemoveListener(this.claimListsListener);
+        user.dailyQuest.today.RemoveListener(this.dailyQuestListener);
+        user.dailyQuest.claimsList.RemoveListener(this.claimListsListener);
     }
 
     updateClaimList = () => {
         let claimDay = 0;
         let claimDate = null;
 
-        const claimIndex = user.quests.dailyquest.GetCurrentClaimIndex();
-        const claimLists = user.quests.dailyquest.claimsList.Get();
+        const claimIndex = user.dailyQuest.GetCurrentClaimIndex();
+        const claimLists = user.dailyQuest.claimsList.Get();
         const claimList = claimLists[claimIndex];
         if (claimIndex !== -1) {
             for (claimDay = 0; claimDay < claimList.daysCount; claimDay++) {
                 if (!claimList.claimed.includes(claimDay + 1)) break;
             }
-            if (!user.quests.dailyquest.IsCurrentList(claimList)) {
+            if (!user.dailyQuest.IsCurrentList(claimList)) {
                 claimDate = DateFormat(new Date(claimList.start + 'T00:00:00'), 'DD/MM/YYYY');
             }
         }
 
         this.setState({
-            dailyQuest: user.quests.dailyquest.today.Get(),
+            dailyQuest: user.dailyQuest.today.Get(),
             claimIndex,
             claimDay,
             claimDate

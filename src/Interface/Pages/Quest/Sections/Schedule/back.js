@@ -7,17 +7,16 @@ import { Range } from 'Utils/Functions';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Interface/Components/ComboBox/back').ComboBoxItem} ComboBoxItem
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('Class/Quests/MyQuests').RepeatModes} RepeatModes
- * @typedef {import('Class/Quests/MyQuests').FrequencyRepeatModes} FrequencyRepeatModes
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('Types/Data/User/Quests').FrequencyRepeatModes} FrequencyRepeatModes
  *
  * @typedef {Object} SectionSchedulePropsType
  * @property {StyleProp} style
- * @property {MyQuest | null} quest
- * @property {(quest: MyQuest) => void} onChangeQuest
+ * @property {Quest | null} quest
+ * @property {(quest: Quest) => void} onChangeQuest
  */
 
-/** @type {RepeatModes[]} */
+/** @type {('frequency' | RepeatModes)[]} */
 const TYPES = ['frequency', 'week', 'month'];
 
 /** @type {FrequencyRepeatModes[]} */

@@ -51,8 +51,8 @@ class BackActivityTimer extends PageBase {
             this.setState({ currentActivity });
         });
 
-        if (user.tcp.IsConnected() && this.state.currentActivity !== null) {
-            user.tcp.Send({
+        if (user.server2.IsAuthenticated() && this.state.currentActivity !== null) {
+            user.server2.tcp.Send({
                 action: 'start-activity',
                 activity: this.state.currentActivity
             });
@@ -66,12 +66,12 @@ class BackActivityTimer extends PageBase {
 
         // Clear if activity is finished
         if (this.finished === true) {
-            if (user.tcp.IsConnected()) {
-                user.tcp.Send({ action: 'stop-activity' });
+            if (user.server2.IsAuthenticated()) {
+                user.server2.tcp.Send({ action: 'stop-activity' });
             }
 
             user.activities.currentActivity.Set(null);
-            user.LocalSave();
+            user.SaveLocal();
         }
     }
 

@@ -6,11 +6,11 @@ import user from 'Managers/UserManager';
 import { AddActivity } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} BackQuestPropsType
  * @property {Object} args
- * @property {MyQuest | null} args.quest
+ * @property {Quest | null} args.quest
  * @property {boolean | undefined} [args.showAnimations]
  */
 
@@ -30,13 +30,13 @@ class BackQuest extends PageBase {
         const quest = props.args.quest;
         if (quest === null) {
             user.interface.BackHandle();
-            user.interface.console?.AddLog('error', 'MyQuest: Quest not found');
+            user.interface.console?.AddLog('error', 'Quest: Quest not found');
             return;
         }
 
-        /** @type {MyQuest} */
+        /** @type {Quest} */
         this.selectedQuest = quest;
-        this.activitiesTimeText = user.quests.myquests.GetQuestTimeText(this.selectedQuest);
+        this.activitiesTimeText = user.quests.GetQuestTimeText(this.selectedQuest);
         this.showAnimations = props.args.showAnimations ?? BackQuestProps.args.showAnimations;
     }
 
@@ -53,7 +53,7 @@ class BackQuest extends PageBase {
         if (this.selectedQuest === null) return;
         const quest = this.selectedQuest;
 
-        user.interface.ChangePage('myquest', { args: { quest }, storeInHistory: false });
+        user.interface.ChangePage('quest', { args: { quest }, storeInHistory: false });
     };
 
     onBackPress = () => {

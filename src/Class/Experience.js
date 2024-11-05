@@ -1,5 +1,6 @@
 import dataManager from 'Managers/DataManager';
 
+import { IUserClass } from 'Types/Interface/IUserClass';
 import { MinMax, Sum } from 'Utils/Functions';
 
 /**
@@ -35,9 +36,11 @@ const XPOptions = {
     }
 };
 
-class Experience {
+class Experience extends IUserClass {
     /** @param {UserManager} user */
     constructor(user) {
+        super('experience');
+
         this.user = user;
         this.getUsefulActivities = () => this.user.activities.GetUseful();
 

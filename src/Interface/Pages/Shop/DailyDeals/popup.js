@@ -76,7 +76,7 @@ const buyDailyDeals = async (item) => {
     user.inventory.LoadOnline({ stuffs: response['stuffs'] });
     user.informations.ox.Set(parseInt(response['ox']));
     user.shop.buyToday.items.push(item.ID);
-    user.LocalSave();
+    user.SaveLocal();
 
     // Update mission
     user.missions.SetMissionState('mission3', 'completed');

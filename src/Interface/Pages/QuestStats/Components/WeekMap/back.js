@@ -11,8 +11,8 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('Class/Quests/MyQuests').DayType} DayType
+ * @typedef {import('Data/User/Quests').DayType} DayType
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} DayObject
  * @property {DayType} day
@@ -21,7 +21,7 @@ import { MinMax } from 'Utils/Functions';
  *
  * @typedef {Object} WeekMapBackPropsType
  * @property {StyleProp} style
- * @property {MyQuest | null} quest
+ * @property {Quest | null} quest
  * @property {boolean} showAnimations
  */
 
@@ -51,11 +51,11 @@ class WeekMapBack extends React.Component {
 
         if (props.quest === null) {
             user.interface.BackHandle();
-            user.interface.console?.AddLog('error', 'MyQuest: Quest not found');
+            user.interface.console?.AddLog('error', 'Quest: Quest not found');
             return;
         }
 
-        this.state.days = user.quests.myquests.GetDays(props.quest).map((day) => ({
+        this.state.days = user.quests.GetDays(props.quest).map((day) => ({
             day,
             animBorder: new Animated.Value(0),
             animBackground: new Animated.Value(0)

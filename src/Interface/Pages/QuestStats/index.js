@@ -15,7 +15,8 @@ import themeManager from 'Managers/ThemeManager';
 import { Button, StreakChart, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
-class MyQuestStats extends BackQuest {
+// TODO: Unused ?
+class QuestStats extends BackQuest {
     render() {
         if (this.selectedQuest === null) {
             return null;
@@ -24,7 +25,7 @@ class MyQuestStats extends BackQuest {
         const lang = langManager.curr['quest-stats'];
         const { maximumStreak } = this.selectedQuest;
 
-        const currentStreak = user.quests.myquests.GetStreak(this.selectedQuest);
+        const currentStreak = user.quests.GetStreak(this.selectedQuest);
         const maxStreak = Math.max(10, maximumStreak);
 
         const skillsName = this.selectedQuest.skills
@@ -43,7 +44,7 @@ class MyQuestStats extends BackQuest {
                         //onSecondaryIconPress={StartHelp.bind(this)}
                     />
 
-                    {/* MyQuest info: Title + skills + duration + edit button */}
+                    {/* Quest info: Title + skills + duration + edit button */}
                     <LinearGradient
                         style={styles.questHeader}
                         colors={[
@@ -112,4 +113,4 @@ class MyQuestStats extends BackQuest {
     }
 }
 
-export default MyQuestStats;
+export default QuestStats;

@@ -14,8 +14,8 @@ import Text from '../Text';
  * @typedef {import('./back').UpdatingData} UpdatingData
  * @typedef {import('react-native').ListRenderItem<UpdatingData>} ListRenderItem
  *
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('react-native').ListRenderItem<MyQuest>} FlatListMyQuestProps
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('react-native').ListRenderItem<Quest>} FlatListQuestProps
  *
  */
 
@@ -134,9 +134,10 @@ class PieChart extends BackPieChart {
         );
     }
 
-    /** @type {FlatListMyQuestProps} */
-    renderMyQuest = ({ item: quest }) => {
-        const daysQuest = user.quests.myquests.GetDays(quest);
+    // TODO: Unused ?
+    /** @type {FlatListQuestProps} */
+    renderQuest = ({ item: quest }) => {
+        const daysQuest = user.quests.GetDays(quest);
         const questToday = daysQuest.find((day) => day.isToday);
 
         if (!questToday) {
@@ -144,7 +145,7 @@ class PieChart extends BackPieChart {
         }
 
         return (
-            <Text style={styles.myQuestsText} fontSize={14}>
+            <Text style={styles.QuestsText} fontSize={14}>
                 {`- ${quest.title}: ${questToday.progress}%`}
             </Text>
         );

@@ -36,7 +36,7 @@ function StartActivityNow(skillID) {
         timezone: GetTimeZone(),
         friendsIDs: []
     });
-    user.LocalSave();
+    user.SaveLocal();
     user.interface.ChangePage('activitytimer', { storeInHistory: false });
 }
 

@@ -114,7 +114,7 @@ class BackLoading extends PageBase {
             if (!user.settings.testMessageReaded) {
                 user.settings.testMessageReaded = true;
             }
-            await user.settings.Save();
+            await user.settings.IndependentSave();
         }
 
         // Go to home or activity timer

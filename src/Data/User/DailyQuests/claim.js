@@ -51,8 +51,8 @@ async function ClaimReward(claimListStart, dayIndexes) {
     // TODO: Implement "server2"
     const data = {
         claimListStart: claimListStart,
-        dayIndexes: dayIndexes,
-        dataToken: this.user.server.dataToken
+        dayIndexes: dayIndexes
+        //dataToken: this.user.server.dataToken
     };
     const response = await this.user.server.Request('claimDailyQuest', data);
     if (response === null) {
@@ -91,7 +91,7 @@ async function ClaimReward(claimListStart, dayIndexes) {
     this.SAVED_claimsList = false;
 
     // Save inventory
-    await this.user.LocalSave();
+    await this.user.SaveLocal();
 
     // Go to chest page
     const dayChestClaim = dayIndexes.filter((dayIndex) =>

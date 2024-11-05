@@ -239,7 +239,7 @@ class Notifications {
             return null;
             const now = GetGlobalTime();
             const day = 24 * 60 * 60;
-            const quests = user.quests.myquests.Get();
+            const quests = user.quests.Get();
             let halftime = {}, tomorrow = {}, today = {};
 
             for (let i = 0; i < quests.length; i++) {

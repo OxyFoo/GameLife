@@ -8,7 +8,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Text, Icon, Button } from 'Interface/Components';
 
-class MyQuestButton extends QuestButtonBack {
+class QuestButton extends QuestButtonBack {
     render() {
         const { timeText, streakCount } = this.state;
         const { style, quest, onLayout, enableQuickAdd } = this.props;
@@ -60,4 +60,4 @@ class MyQuestButton extends QuestButtonBack {
     }
 }
 
-export { MyQuestButton };
+export { QuestButton };

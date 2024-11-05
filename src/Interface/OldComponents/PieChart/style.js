@@ -49,10 +49,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    myquestsFlatlist: {
+    questsFlatlist: {
         width: '100%'
     },
-    myQuestsText: {
+    QuestsText: {
         width: '100%',
         textAlign: 'left'
     }

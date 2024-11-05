@@ -45,7 +45,7 @@ class DailyQuest extends IUserData {
 
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('dailyQuest');
 
         this.user = user;
 

@@ -3,19 +3,19 @@ import { View, FlatList } from 'react-native';
 
 import styles from './style';
 import BackQuestsList from './back';
-import { MyQuestButton } from './Button';
+import { QuestButton } from './Button';
 
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('react-native').ListRenderItem<MyQuest>} ListRenderItemMyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('react-native').ListRenderItem<Quest>} ListRenderItemQuest
  */
 
-class MyQuestsList extends BackQuestsList {
-    static Button = MyQuestButton;
+class QuestsList extends BackQuestsList {
+    static Button = QuestButton;
 
     render() {
         const { style } = this.props;
@@ -34,20 +34,20 @@ class MyQuestsList extends BackQuestsList {
         );
     }
 
-    /** @type {ListRenderItemMyQuest} */
+    /** @type {ListRenderItemQuest} */
     renderItem = ({ item }) => {
-        return <MyQuestButton style={styles.questItem} quest={item} enableQuickAdd />;
+        return <QuestButton style={styles.questItem} quest={item} enableQuickAdd />;
     };
 
     renderFooter = () => {
         const lang = langManager.curr['quests'];
 
         return (
-            <Button style={styles.buttonOpenQuest} appearance='outline' onPress={this.openMyQuests}>
+            <Button style={styles.buttonOpenQuest} appearance='outline' onPress={this.openQuests}>
                 {lang['button-all-quests']}
             </Button>
         );
     };
 }
 
-export { MyQuestsList };
+export { QuestsList };

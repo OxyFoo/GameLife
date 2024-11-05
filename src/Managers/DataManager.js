@@ -47,7 +47,7 @@ class DataManager {
         this.quotes.Clear();
         this.skills.Clear();
         this.titles.Clear();
-        DataStorage.Save(STORAGE.APPDATA, null);
+        DataStorage.Save(STORAGE.APP_DATA, null);
         DataStorage.Save(STORAGE.APPDATA_HASHES, null);
     }
 
@@ -94,7 +94,7 @@ class DataManager {
             titles: this.titles.Save()
         };
 
-        const saved = await DataStorage.Save(STORAGE.APPDATA, appData);
+        const saved = await DataStorage.Save(STORAGE.APP_DATA, appData);
         if (saved) {
             user.interface.console?.EditLog(debugIndex, 'same', 'App data: local save success');
         } else {
@@ -124,7 +124,7 @@ class DataManager {
 
         // Load app data
         /** @type {Partial<DataTypes> | null} */
-        const appData = await DataStorage.Load(STORAGE.APPDATA);
+        const appData = await DataStorage.Load(STORAGE.APP_DATA);
         if (appData === null) {
             user.interface.console?.EditLog(debugIndex, 'warn', 'App data: local load failed');
             return false;

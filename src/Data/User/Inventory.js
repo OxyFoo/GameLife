@@ -15,7 +15,7 @@ import { IUserData } from 'Types/Interface/IUserData';
 class Inventory extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('inventory');
 
         this.user = user;
     }

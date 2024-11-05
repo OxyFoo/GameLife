@@ -9,12 +9,12 @@ import { DAY_TIME, GetGlobalTime, GetYearTime } from 'Utils/Time';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  * @typedef {import('Interface/Components/HeatMap').HeatMapDataType} HeatMapDataType
  *
  * @typedef {Object} YearHeatMapPropsType
  * @property {StyleProp} style
- * @property {MyQuest | null} quest
+ * @property {Quest | null} quest
  */
 
 /** @type {YearHeatMapPropsType} */
@@ -151,7 +151,7 @@ class YearHeatMapBack extends React.Component {
             clearTimeout(this.saveTimeout);
         }
         this.saveTimeout = setTimeout(() => {
-            user.settings.Save();
+            user.settings.IndependentSave();
         }, 3 * 1000);
 
         user.settings.questHeatMapIndex = index;

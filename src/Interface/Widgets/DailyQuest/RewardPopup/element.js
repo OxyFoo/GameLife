@@ -45,7 +45,7 @@ const RenderItem = (props) => {
     let status = 'none';
 
     if (props.claimIndex !== -1) {
-        const allClaimLists = user.quests.dailyquest.claimsList.Get();
+        const allClaimLists = user.dailyQuest.claimsList.Get();
         const claimList = allClaimLists[props.claimIndex];
 
         if (loading) {
@@ -80,8 +80,8 @@ const RenderItem = (props) => {
         if (loading || props.claimIndex === -1) return;
 
         setLoading(true);
-        const claimList = user.quests.dailyquest.claimsList.Get()[props.claimIndex];
-        const result = await user.quests.dailyquest.ClaimReward(claimList.start, [props.index]);
+        const claimList = user.dailyQuest.claimsList.Get()[props.claimIndex];
+        const result = await user.dailyQuest.ClaimReward(claimList.start, [props.index]);
         setLoading(false);
 
         if (result === 'error') {

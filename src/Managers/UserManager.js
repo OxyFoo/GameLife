@@ -3,7 +3,6 @@ import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import Multiplayer from 'Class/Multiplayer';
 import NotificationsInApp from 'Class/NotificationsInApp';
-import Quests from 'Class/Quests';
 import Server2 from 'Class/Server2';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
@@ -13,6 +12,7 @@ import DailyQuest from 'Data/User/DailyQuests';
 import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
+import Quests from 'Data/User/Quests';
 import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
@@ -38,7 +38,15 @@ import TCP from 'Class/TCP';
  * @property {XPInfo} dex
  */
 
-const DEBUG_DATA = false;
+/**
+ * @template T
+ * @typedef {import('Types/Interface/IUserData').IUserData<T>} IUserData
+ */
+
+/**
+ * @template T
+ * @typedef {import('Types/Interface/IUserClass').IUserClass<T>} IUserClass
+ */
 
 class UserManager {
     constructor() {
@@ -65,10 +73,33 @@ class UserManager {
         this.dailyQuest = new DailyQuest(this);
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
+        this.quests = new Quests(this);
         this.todos = new Todos(this);
 
-        /** @deprecated */ // TODO: Remove
-        this.quests = new Quests(this);
+        /** @type {IUserClass<*>[]} */
+        this.CLASS = [
+            this.ads,
+            this.consent,
+            this.experience,
+            this.multiplayer,
+            this.notificationsInApp,
+            this.server2,
+            this.settings,
+            this.shop,
+            this.informations
+        ];
+
+        /** @type {IUserData<*>[]} */
+        this.DATA = [
+            this.achievements,
+            this.activities,
+            this.informations,
+            this.inventory,
+            this.missions,
+            this.quests,
+            this.todos
+        ];
+
         /** @deprecated */ // TODO: Remove
         this.server = new Server(this);
         /** @deprecated */ // TODO: Remove
@@ -87,8 +118,6 @@ class UserManager {
 
     /** @type {Character | null} */
     character = null;
-
-    xp = 0;
 
     appIsLoaded = false;
 
@@ -130,7 +159,6 @@ class UserManager {
 
     async Clear(keepOnboardingState = true) {
         const onboarding = this.settings.onboardingWatched;
-        this.xp = 0;
         this.stats = this.experience.GetEmptyExperience();
         this.tempMailSent = null;
 
@@ -141,26 +169,19 @@ class UserManager {
         this.shop.Clear();
         this.informations.Clear();
 
-        this.achievements.Clear();
-        this.activities.Clear();
-        this.dailyQuest.Clear();
-        this.inventory.Clear();
-        this.missions.Clear();
-        this.todos.Clear();
-
-        // TODO: Remove old classes
-        this.quests.Clear();
-        this.server.Clear();
+        for (const data of this.DATA) {
+            data.Clear();
+        }
 
         this.CleanTimers();
-        await this.settings.Save();
+        await this.settings.IndependentSave();
 
         await DataStorage.ClearAll();
-        await this.LocalSave();
+        await this.SaveLocal();
 
         if (keepOnboardingState) {
             this.settings.onboardingWatched = onboarding;
-            await this.settings.Save();
+            await this.settings.IndependentSave();
         }
     }
 
@@ -195,10 +216,9 @@ class UserManager {
     async Unmount() {
         this.CleanTimers();
         this.server2.Disconnect();
-        await this.settings.Save();
-        await this.LocalSave();
+        await this.settings.IndependentSave();
+        await this.SaveLocal();
         await this.SaveOnline();
-        this.server.Clear();
     }
 
     async RefreshStats(onlineSave = true) {
@@ -207,12 +227,8 @@ class UserManager {
             await this.SaveOnline();
         }
 
-        const { stats, xpInfo } = this.experience.GetExperience();
+        const { stats } = this.experience.GetExperience();
         this.stats = stats;
-        this.xp = xpInfo.totalXP;
-
-        // TODO: needed ?
-        //this.interface.forceUpdate();
     }
 
     /**
@@ -225,7 +241,7 @@ class UserManager {
 
         let success = true;
 
-        const localSaved = await this.LocalSave();
+        const localSaved = await this.SaveLocal();
         if (!localSaved) success = false;
 
         const onlineSaved = localSaved && (await this.SaveOnline());
@@ -238,122 +254,73 @@ class UserManager {
     /**
      * Load local user data
      * @returns {Promise<boolean>}
-     * @deprecated
      */
-    LocalSave = async () => {
-        const data = {
-            xp: this.xp,
+    SaveLocal = async () => {
+        /** @type {Record<IUserClass<*>['key'], IUserClass<*>['Save']>} */
+        const userClass = {};
+        for (const data of this.CLASS) {
+            userClass[data.key] = data.Save();
+        }
 
-            dataToken: this.server.dataToken,
-            achievements: this.achievements.Save(),
-            activities: this.activities.Save(),
-            consent: this.consent.Save(),
-            informations: this.informations.Save(),
-            inventory: this.inventory.Save(),
-            missions: this.missions.Save(),
-            quests: this.quests.Save(),
-            shop: this.shop.Save(),
-            todoes: this.todos.Save()
-        };
+        /** @type {Record<IUserData<*>['key'], IUserData<*>['Save']>} */
+        const userData = {};
+        for (const data of this.DATA) {
+            userData[data.key] = data.Save();
+        }
 
         const debugIndex = this.interface.console?.AddLog('info', 'User data: local saving...');
-        const saved = await DataStorage.Save(STORAGE.USER, data);
+        const savedData = await DataStorage.Save(STORAGE.USER_DATA, userData);
+        const savedClass = await DataStorage.Save(STORAGE.USER_CLASS, userClass);
         if (debugIndex) {
-            if (saved) this.interface.console?.EditLog(debugIndex, 'same', 'User data: local save');
-            else this.interface.console?.EditLog(debugIndex, 'error', 'User data: local save failed');
+            if (savedData && savedClass) {
+                this.interface.console?.EditLog(debugIndex, 'same', 'User data: local save');
+            } else {
+                this.interface.console?.EditLog(
+                    debugIndex,
+                    'error',
+                    `User data: local save failed (${savedData}, ${savedClass})`
+                );
+            }
         }
-        return saved;
+
+        return savedData && savedClass;
     };
 
-    /**
-     * @deprecated
-     */
-    async LocalLoad() {
+    async LoadLocal() {
         const debugIndex = this.interface.console?.AddLog('info', 'User data: local loading...');
-        let data = await DataStorage.Load(STORAGE.USER);
 
-        if (data !== null) {
-            /** @param {string} key */
-            const contains = (key) => data.hasOwnProperty(key);
+        /** @type {Record<IUserClass<*>['key'], IUserClass<*>['Save']> | null} */
+        const userClass = await DataStorage.Load(STORAGE.USER_CLASS);
 
-            if (contains('xp')) this.xp = data['xp'];
-            if (contains('dataToken')) this.server.dataToken = data['dataToken'];
-            if (contains('achievements')) this.achievements.Load(data['achievements']);
-            if (contains('activities')) this.activities.Load(data['activities']);
-            if (contains('consent')) this.consent.Load(data['consent']);
-            if (contains('informations')) this.informations.Load(data['informations']);
-            if (contains('inventory')) this.inventory.Load(data['inventory']);
-            if (contains('missions')) this.missions.Load(data['missions']);
-            if (contains('quests')) this.quests.Load(data['quests']);
-            if (contains('shop')) this.shop.Load(data['shop']);
-            if (contains('todoes')) this.todos.Load(data['todoes']);
+        /** @type {Record<IUserData<*>['key'], IUserData<*>['Save']> | null} */
+        const userData = await DataStorage.Load(STORAGE.USER_DATA);
 
-            if (debugIndex) {
-                this.interface.console?.EditLog(debugIndex, 'same', 'User data: local load success');
-            }
-        } else {
+        if (userData === null || userClass === null) {
             if (debugIndex) {
                 this.interface.console?.EditLog(debugIndex, 'warn', 'User data: local load failed');
             }
+            return false;
+        }
+
+        for (const uClass of this.CLASS) {
+            if (uClass.key in userClass) {
+                uClass.Load(userClass[uClass.key]);
+            }
+        }
+
+        for (const uData of this.DATA) {
+            if (uData.key in uData) {
+                uData.Load(userData[uData.key]);
+            }
+        }
+
+        if (debugIndex) {
+            this.interface.console?.EditLog(debugIndex, 'same', 'User data: local load success');
         }
 
         this.RefreshStats(true);
-        return data !== null;
+        return true;
     }
-
-    /**
-     * @returns {Promise<boolean>} True if data is saved
-     * @deprecated
-     */
-    OnlineSave = async () => {
-        if (!this.server.IsConnected()) return false;
-
-        let data = {};
-        let saved = false;
-
-        if (this.quests.IsUnsaved()) {
-            data['quests'] = this.quests.GetUnsaved();
-        }
-
-        if (this.inventory.IsUnsaved()) {
-            data['avatar'] = this.inventory.GetUnsaved();
-        }
-
-        if (this.missions.IsUnsaved()) {
-            data['missions'] = this.missions.GetUnsaved();
-        }
-
-        if (this.informations.IsUnsaved()) {
-            if (this.informations.UNSAVED_title !== null) {
-                data['titleID'] = this.informations.UNSAVED_title;
-            }
-            if (this.informations.UNSAVED_birthTime !== null) {
-                data['birthTime'] = this.informations.UNSAVED_birthTime;
-            }
-        }
-
-        if (Object.keys(data).length) {
-            const debugIndex = this.interface.console?.AddLog('info', 'User data: online saving...');
-            saved = await this.server.SaveUserData(data);
-            if (saved) {
-                this.informations.Purge();
-                this.quests.Purge();
-                this.inventory.Purge();
-                this.missions.Purge();
-                if (debugIndex) {
-                    this.interface.console?.EditLog(debugIndex, 'same', 'User data: online save success');
-                }
-                await this.LocalSave();
-            } else {
-                if (debugIndex) {
-                    this.interface.console?.EditLog(debugIndex, 'error', 'User data: online save failed');
-                }
-            }
-            if (DEBUG_DATA) console.log('User data online save:', data);
-        }
-
-        return saved;
-    };
 
     async SaveOnline() {
         if (!this.server2.IsAuthenticated()) {
@@ -364,7 +331,14 @@ class UserManager {
 
         this.notificationsInApp.StartListening();
 
-        await this.activities.SaveOnline();
+        let success = true;
+
+        for (const data of this.DATA) {
+            const savingSuccess = await data.SaveOnline();
+            if (success && !savingSuccess) {
+                success = false;
+            }
+        }
 
         if (debugIndex) {
             this.interface.console?.EditLog(debugIndex, 'same', '[UserData] Online save success');
@@ -381,8 +355,13 @@ class UserManager {
         const debugIndex = this.interface.console?.AddLog('info', '[UserData] Online loading...');
 
         let success = true;
-        success &&= await this.informations.LoadOnline();
-        success &&= await this.activities.LoadOnline();
+
+        for (const data of this.DATA) {
+            const loadingSuccess = await data.LoadOnline();
+            if (success && !loadingSuccess) {
+                success = false;
+            }
+        }
 
         if (!success) {
             if (debugIndex) {
@@ -397,58 +376,6 @@ class UserManager {
 
         this.RefreshStats(true);
         return true;
-    }
-
-    /**
-     * @param {'normal' | 'force' | 'inventories'} [type]
-     * @deprecated
-     */
-    async OnlineLoad(type = 'normal') {
-        if (!this.server.IsConnected()) return false;
-        const debugIndex = this.interface.console?.AddLog('info', 'User data: online loading...');
-
-        let data = null;
-        if (type === 'normal' || type === 'force') {
-            data = await this.server.LoadUserData(type === 'force');
-        } else if (type === 'inventories') {
-            data = await this.server.LoadUserInventories();
-        }
-
-        if (DEBUG_DATA) console.log('User data online load:', data);
-
-        if (data !== null) {
-            const contains = (/** @type {string} */ key) => data.hasOwnProperty(key);
-            if (contains('username')) this.informations.username.Set(data['username']);
-            if (contains('usernameTime')) this.informations.usernameTime = data['usernameTime'];
-            if (contains('title')) this.informations.title.Set(data['title']);
-            if (contains('birthtime')) this.informations.birthTime = data['birthtime'];
-            if (contains('lastbirthtime')) this.informations.lastBirthTime = data['lastbirthtime'];
-            if (contains('ox')) this.informations.ox.Set(parseInt(data['ox']));
-            if (contains('adRemaining')) this.informations.adRemaining = data['adRemaining'];
-            if (contains('adTotalWatched')) this.informations.adTotalWatched = data['adTotalWatched'];
-            if (contains('purchasedCount')) this.informations.purchasedCount = data['purchasedCount'];
-            if (contains('inventory')) this.inventory.LoadOnline(data['inventory']);
-            if (contains('missions')) this.missions.LoadOnline(data['missions']);
-            if (contains('achievements')) this.achievements.LoadOnline(data['achievements']);
-            if (contains('activities')) this.activities.LoadOnline(data['activities']);
-            if (contains('quests')) this.quests.LoadOnline(data['quests']);
-            if (contains('shop')) this.shop.LoadOnline(data['shop']);
-            if (contains('dataToken')) {
-                this.server.dataToken = data['dataToken'];
-                this.interface.console?.AddLog('info', 'User data: new data token (' + this.server.dataToken + ')');
-            }
-
-            if (debugIndex) {
-                this.interface.console?.EditLog(debugIndex, 'same', 'User data: online load success');
-            }
-        } else {
-            if (debugIndex) {
-                this.interface.console?.EditLog(debugIndex, 'error', 'User data: online load failed');
-            }
-        }
-
-        this.RefreshStats(true);
-        return data !== null;
     }
 }
 

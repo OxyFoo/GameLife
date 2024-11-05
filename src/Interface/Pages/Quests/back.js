@@ -14,22 +14,22 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  */
 
-const BackMyQuestsProps = {
+const BackQuestsProps = {
     args: {
-        /** @type {MyQuest | null} */
+        /** @type {Quest | null} */
         quest: null
     }
 };
 
 class BackNewPage extends PageBase {
     state = {
-        /** @type {Array<MyQuest>} */
-        quests: user.quests.myquests.Get(),
+        /** @type {Array<Quest>} */
+        quests: user.quests.Get(),
 
-        /** @type {MyQuest | null} Used to manage selected quest */
+        /** @type {Quest | null} Used to manage selected quest */
         draggedItem: null,
 
         mouseY: new Animated.Value(0),
@@ -49,25 +49,25 @@ class BackNewPage extends PageBase {
     itemHeight = 46;
 
     componentDidMount() {
-        this.listenerQuest = user.quests.myquests.allQuests.AddListener(this.refreshQuests);
+        this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
     }
 
     componentWillUnmount() {
-        user.quests.myquests.allQuests.RemoveListener(this.listenerQuest);
+        user.quests.allQuests.RemoveListener(this.listenerQuest);
     }
 
     refreshQuests = () => {
-        const quests = user.quests.myquests.Get();
+        const quests = user.quests.Get();
         this.setState({ quests });
     };
 
-    /** @param {BackMyQuestsProps} args */
+    /** @param {BackQuestsProps} args */
     componentDidFocused = (args) => {
         //StartTutorial.call(this, args?.tuto);
         //StartMission.call(this, args?.missionName);
     };
 
-    /** @param {MyQuest} item */
+    /** @param {Quest} item */
     keyExtractor = (item) => 'quest-' + item.title + JSON.stringify(item.skills) + JSON.stringify(item.schedule);
 
     /**
@@ -75,7 +75,7 @@ class BackNewPage extends PageBase {
      * Max 10 quests
      */
     addQuest = () => {
-        if (user.quests.myquests.IsMax()) {
+        if (user.quests.IsMax()) {
             const title = langManager.curr['quests']['alert-questslimit-title'];
             const message = langManager.curr['quests']['alert-questslimit-message'];
             user.interface.popup?.OpenT({
@@ -84,7 +84,7 @@ class BackNewPage extends PageBase {
             });
             return;
         }
-        user.interface.ChangePage('myquest', { storeInHistory: false });
+        user.interface.ChangePage('quest', { storeInHistory: false });
     };
 
     onBackPress = () => {
@@ -103,11 +103,11 @@ class BackNewPage extends PageBase {
         this.itemHeight = height + styles.questItem.marginBottom;
     };
 
-    /** @param {MyQuest} item */
+    /** @param {Quest} item */
     onDrag = (item) => {
         this.setState({ draggedItem: item, scrollable: false });
 
-        this.selectedIndex = user.quests.myquests.Get().indexOf(item);
+        this.selectedIndex = user.quests.Get().indexOf(item);
         const initY = this.selectedIndex * this.itemHeight;
         TimingAnimation(this.state.mouseY, initY, 0).start();
     };
@@ -115,7 +115,7 @@ class BackNewPage extends PageBase {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [...user.quests.myquests.sort];
+        this.initialSort = [...user.quests.sort];
         this.firstPageY = pageY;
     };
 
@@ -136,9 +136,9 @@ class BackNewPage extends PageBase {
 
         // Change quest order when dragging
         const index = Math.floor((newY + this.itemHeight / 2) / this.itemHeight);
-        const currIndex = user.quests.myquests.sort.indexOf(draggedItem.created);
-        if (index !== currIndex && user.quests.myquests.Move(draggedItem, index)) {
-            this.setState({ quests: user.quests.myquests.Get() });
+        const currIndex = user.quests.sort.indexOf(draggedItem.created);
+        if (index !== currIndex && user.quests.Move(draggedItem, index)) {
+            this.setState({ quests: user.quests.Get() });
         }
     };
 
@@ -149,15 +149,15 @@ class BackNewPage extends PageBase {
 
         // Save changes if quests order changed
         if (
-            this.initialSort.join() !== user.quests.myquests.sort.join() &&
-            this.initialSort.length === user.quests.myquests.sort.length
+            this.initialSort.join() !== user.quests.sort.join() &&
+            this.initialSort.length === user.quests.sort.length
         ) {
             user.GlobalSave();
         }
     };
 }
 
-BackNewPage.defaultProps = BackMyQuestsProps;
-BackNewPage.prototype.props = BackMyQuestsProps;
+BackNewPage.defaultProps = BackQuestsProps;
+BackNewPage.prototype.props = BackQuestsProps;
 
 export default BackNewPage;

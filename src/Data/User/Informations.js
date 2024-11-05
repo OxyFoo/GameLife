@@ -19,7 +19,7 @@ const DAYS_BIRTHTIME_CHANGE = 365;
 class Informations extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('informations');
 
         this.user = user;
     }
@@ -125,7 +125,7 @@ class Informations extends IUserData {
         }
 
         // Load data
-        const { Username, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, DataToken } = response.data;
+        const { Username, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth } = response.data;
 
         this.username.Set(Username);
         this.usernameTime = LastChangeUsername;
@@ -133,7 +133,6 @@ class Informations extends IUserData {
         this.ox.Set(Ox);
         this.birthTime = Birthtime;
         this.lastBirthTime = LastChangeBirth;
-        this.user.settings.dataToken = DataToken; // TODO: Remove ?
 
         return true;
     };
@@ -168,7 +167,7 @@ class Informations extends IUserData {
         if (response.result === 'ok') {
             this.username.Set(username);
             this.usernameTime = GetGlobalTime();
-            this.user.LocalSave();
+            this.user.SaveLocal();
         }
 
         return response.result;
@@ -183,7 +182,7 @@ class Informations extends IUserData {
     SetTitle = (ID) => {
         this.title.Set(ID);
         this.UNSAVED_title = ID;
-        this.user.LocalSave();
+        this.user.SaveLocal();
     };
 
     /**
@@ -193,7 +192,7 @@ class Informations extends IUserData {
         this.adRemaining--;
         this.adTotalWatched++;
         this.user.interface.console?.AddLog('info', 'Remaining ad:', this.adRemaining);
-        this.user.LocalSave();
+        this.user.SaveLocal();
 
         if (this.adRemaining <= 0) {
             const title = langManager.curr['server']['alert-adempty-title'];
@@ -216,7 +215,7 @@ class Informations extends IUserData {
         this.birthTime = birthTime;
         this.UNSAVED_birthTime = birthTime;
         this.lastBirthTime = GetGlobalTime();
-        this.user.LocalSave();
+        this.user.SaveLocal();
     };
 
     GetInfoToChangeUsername() {

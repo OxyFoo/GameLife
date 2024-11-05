@@ -24,7 +24,7 @@ const MISSIONS = [
 class Missions extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('missions');
 
         this.user = user;
     }
@@ -182,7 +182,7 @@ class Missions extends IUserData {
         this.missions.Set(missions);
         this.missionsEdited = true;
 
-        this.user.OnlineSave();
+        this.user.SaveOnline();
     };
 
     /**
@@ -201,12 +201,12 @@ class Missions extends IUserData {
         if (rewards.hasOwnProperty('ox')) {
             const newOx = rewards['ox'];
             this.user.informations.ox.Set(newOx);
-            this.user.LocalSave();
+            this.user.SaveLocal();
         } else if (rewards.hasOwnProperty('item')) {
             /** @type {Stuff} */
             const stuff = rewards['item'];
             this.user.inventory.stuffs.push(stuff);
-            this.user.LocalSave();
+            this.user.SaveLocal();
 
             const missionIndex = MISSIONS.findIndex((mission) => mission.name === name);
             const rarity = MISSIONS[missionIndex].rewardValue;

@@ -16,7 +16,7 @@ const MAX_TODOES = 10;
 class Todos extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('todos');
 
         this.user = user;
     }

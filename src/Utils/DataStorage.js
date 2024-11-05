@@ -4,8 +4,9 @@ import { StrIsJSON } from './String';
 
 const STORAGE_KEYS = {
     LOGIN: '@data/login',
-    USER: '@data/user',
-    APPDATA: '@data/app',
+    USER_CLASS: '@data/user-class',
+    USER_DATA: '@data/user-data',
+    APP_DATA: '@data/app',
 
     APPDATA_HASHES: '@settings/appdata_hashes',
     DATE: '@tools/date'

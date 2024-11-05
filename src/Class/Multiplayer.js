@@ -1,5 +1,6 @@
 import langManager from 'Managers/LangManager';
 
+import { IUserClass } from 'Types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
 
 const FRIENDS_LIMIT = 10;
@@ -13,9 +14,11 @@ const FRIENDS_LIMIT = 10;
 /** @type {Friend[]} */
 const INIT_FRIENDS = [];
 
-class Multiplayer {
+class Multiplayer extends IUserClass {
     /** @param {UserManager} user */
     constructor(user) {
+        super('multiplayer');
+
         this.user = user;
     }
 

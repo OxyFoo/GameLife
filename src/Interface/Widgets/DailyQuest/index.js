@@ -76,7 +76,7 @@ class DailyQuest extends DailyQuestBack {
             progression
         } = this.state.dailyQuest;
 
-        const { refreshCount, activityMinutes } = user.quests.dailyquest.config.dailySettings;
+        const { refreshCount, activityMinutes } = user.dailyQuest.config.dailySettings;
 
         // Daily quest is finished
         if (progression >= activityMinutes) {
@@ -161,7 +161,7 @@ class DailyQuest extends DailyQuestBack {
                     appearance='outline'
                     icon='retry'
                     iconSize={18}
-                    onPress={() => user.quests.dailyquest.RefreshSkillSelection(index)}
+                    onPress={() => user.dailyQuest.RefreshSkillSelection(index)}
                     enabled={refreshesRemaining > 0}
                 />
             </View>

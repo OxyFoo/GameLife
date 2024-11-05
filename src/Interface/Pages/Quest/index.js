@@ -17,7 +17,7 @@ import { WithInterpolation } from 'Utils/Animations';
 
 /**
  * @typedef {import('Managers/LangManager').Lang} Lang
- * @typedef {import('Class/Quests/MyQuests').InputsError} InputsError
+ * @typedef {import('Data/User/Quests').InputsError} InputsError
  */
 
 class Quest extends BackQuest {

@@ -41,7 +41,7 @@ const DEFAULT_ACTIVITY = {
 class Activities extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('activities');
 
         this.user = user;
     }
@@ -56,7 +56,7 @@ class Activities extends IUserData {
     #UNSAVED_deletions = [];
 
     /** @type {number} Unix timestamp in seconds */
-    lastUpdate = 0;
+    token = 0;
 
     /**
      * @description Contain all activities, updated when adding, editing or removing
@@ -120,7 +120,7 @@ class Activities extends IUserData {
         if (typeof data.unsaved !== 'undefined') this.#UNSAVED_activities = data.unsaved;
         if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
         if (typeof data.current !== 'undefined') this.currentActivity.Set(data.current);
-        if (typeof data.lastUpdate !== 'undefined') this.lastUpdate = data.lastUpdate;
+        if (typeof data.token !== 'undefined') this.token = data.token;
         this.allActivities.Set(this.Get());
     };
 
@@ -131,14 +131,14 @@ class Activities extends IUserData {
             unsaved: this.#UNSAVED_activities,
             deletions: this.#UNSAVED_deletions,
             current: this.currentActivity.Get(),
-            lastUpdate: this.lastUpdate
+            token: this.token
         };
     };
 
     LoadOnline = async () => {
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'get-activities',
-            lastUpdate: this.lastUpdate
+            token: this.token
         });
 
         // Check if failed
@@ -165,7 +165,7 @@ class Activities extends IUserData {
         }
 
         // Update last update
-        this.lastUpdate = response.result.lastUpdate;
+        this.token = response.result.token;
 
         // Update and print message
         this.allActivities.Set(this.Get());
@@ -182,7 +182,7 @@ class Activities extends IUserData {
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-activities',
             activities: unsaved,
-            lastUpdate: this.lastUpdate
+            token: this.token
         });
 
         // Check if failed
@@ -212,8 +212,8 @@ class Activities extends IUserData {
         }
 
         // Update last update if success
-        if (typeof response.lastUpdate !== 'undefined') {
-            this.lastUpdate = response.lastUpdate;
+        if (typeof response.token !== 'undefined') {
+            this.token = response.token;
         }
 
         // Update and print message

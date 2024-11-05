@@ -1,25 +1,18 @@
 import langManager from 'Managers/LangManager';
 
+import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { Sum } from 'Utils/Functions';
 import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {'week' | 'month' | 'frequency'} RepeatModes
- * @typedef {'week' | 'month'} FrequencyRepeatModes
+ *
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('Types/Data/User/Quests').QuestUnsaved} QuestUnsaved
+ * @typedef {import('Types/Data/User/Quests').SaveObject_Quests} SaveObject_Quests
+ *
  * @typedef {'title-empty' | 'title-exists' | 'skills-empty' | 'schedule-empty'} InputsError
- *
- * @typedef {object} ScheduleRepeat
- * @property {'week' | 'month'} type
- * @property {number[]} repeat
- * @property {number} duration In minutes
- *
- * @typedef {object} ScheduleFrequency
- * @property {'frequency'} type
- * @property {FrequencyRepeatModes} frequencyMode
- * @property {number} quantity
- * @property {number} duration In minutes
  *
  * @typedef {'past' | 'filling' | 'future' | 'disabled'} DayClockStates
  *
@@ -30,49 +23,25 @@ import { DAY_TIME, GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
  * @property {number} progress Value between 0 and 1 (can be over 1 if more than 100%), Only used if state is 'past' or 'filling'
  */
 
-/** @type {MyQuest[]} */
-const EMPTY_QUESTS = [];
-
-class MyQuest {
-    /** @type {string} Quest title with max 128 characters */
-    title = '';
-
-    /** @type {string} Quest description with max 2048 characters */
-    comment = '';
-
-    /** @type {number} Timestamp in seconds */
-    created = 0;
-
-    /** @type {ScheduleRepeat | ScheduleFrequency} */
-    schedule = {
-        type: 'week',
-        repeat: [],
-        duration: 0
-    };
-
-    /** @type {number[]} Skills ids */
-    skills = [];
-
-    /** @type {number} Maximum consecutive days */
-    maximumStreak = 0;
-}
-
-class MyQuests {
+/** @extends {IUserData<SaveObject_Quests>} */
+class Quests extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
+        super('quests');
+
         this.user = user;
     }
 
     MAX_QUESTS = 5;
 
-    /** @type {MyQuest[]} */
-    SAVED_quests = [];
+    /** @type {Quest[]} */
+    #SAVED_quests = [];
 
-    /** @type {MyQuest[]} */
-    UNSAVED_additions = [];
+    /** @type {Quest[]} */
+    #UNSAVED_additions = [];
 
-    /** @type {MyQuest[]} */
-    UNSAVED_deletions = [];
+    /** @type {Quest[]} */
+    #UNSAVED_deletions = [];
 
     /** @type {number[]} Sorted quests using created time */
     sort = [];
@@ -82,53 +51,29 @@ class MyQuests {
 
     /**
      * @description All quests (saved and unsaved)
-     * @type {DynamicVar<MyQuest[]>}
+     * @type {DynamicVar<Quest[]>}
      */
-    allQuests = new DynamicVar(EMPTY_QUESTS);
+    // eslint-disable-next-line prettier/prettier
+    allQuests = new DynamicVar(/** @type {Quest[]} */ ([]));
 
-    Clear() {
-        this.SAVED_quests = [];
-        this.UNSAVED_additions = [];
-        this.UNSAVED_deletions = [];
+    /** @type {number} */
+    token = 0;
+
+    Clear = () => {
+        this.#SAVED_quests = [];
+        this.#UNSAVED_additions = [];
+        this.#UNSAVED_deletions = [];
         this.sort = [];
         this.SAVED_sort = true;
         this.allQuests.Set([]);
-    }
-    Load(data) {
-        const contains = (key = '') => data.hasOwnProperty(key);
-        if (contains('quests')) this.SAVED_quests = data['quests'];
-        if (contains('additions')) this.UNSAVED_additions = data['additions'];
-        if (contains('deletions')) this.UNSAVED_deletions = data['deletions'];
-        if (contains('sort')) this.sort = data['sort'];
-        if (contains('sortSaved')) this.SAVED_sort = data['sortSaved'];
-        this.allQuests.Set(this.Get());
-    }
-    LoadOnline(data) {
-        if (typeof data !== 'object') return;
-        const contains = (key = '') => data.hasOwnProperty(key);
-        if (contains('data')) {
-            this.SAVED_quests = data['data'].map((quest) => Object.assign(new MyQuest(), quest));
-            this.user.interface.console?.AddLog('info', `${this.SAVED_quests.length} quests loaded`);
-            this.allQuests.Set(this.Get());
-        }
-        if (contains('sort')) this.sort = data['sort'];
-    }
-    Save() {
-        const quests = {
-            quests: this.SAVED_quests,
-            additions: this.UNSAVED_additions,
-            deletions: this.UNSAVED_deletions,
-            sort: this.sort,
-            sortSaved: this.SAVED_sort
-        };
-        return quests;
-    }
+    };
+
     /**
      * Return all quests (save and unsaved) sorted by start time (ascending)
-     * @returns {MyQuest[]}
+     * @returns {Quest[]}
      */
-    Get() {
-        let quests = [...this.SAVED_quests, ...this.UNSAVED_additions];
+    Get = () => {
+        let quests = [...this.#SAVED_quests, ...this.#UNSAVED_additions];
 
         // Add new quests at the top (use created time as index)
         quests.forEach((quest) => {
@@ -146,30 +91,148 @@ class MyQuests {
             return false;
         });
 
-        return this.sort.map((created) => quests.find((quest) => quest.created === created));
-    }
+        /** @type {Quest[]} */
+        const sortedQuests = [];
 
-    IsUnsaved = () => {
+        // Sort quests
+        this.sort.forEach((created) => {
+            const quest = quests.find((q) => q.created === created);
+            if (quest) {
+                sortedQuests.push(quest);
+            }
+        });
+
+        return sortedQuests;
+    };
+
+    /** @param {Partial<SaveObject_Quests>} data */
+    Load = (data) => {
+        if (typeof data.quests !== 'undefined') this.#SAVED_quests = data.quests;
+        if (typeof data.unsavedAdditions !== 'undefined') this.#UNSAVED_additions = data.unsavedAdditions;
+        if (typeof data.unsavedDeletions !== 'undefined') this.#UNSAVED_deletions = data.unsavedDeletions;
+        if (typeof data.sort !== 'undefined') this.sort = data.sort;
+        if (typeof data.sortIsSaved !== 'undefined') this.SAVED_sort = data.sortIsSaved;
+        if (typeof data.token !== 'undefined') this.token = data.token;
+
+        this.allQuests.Set(this.Get());
+    };
+
+    /** @returns {SaveObject_Quests} */
+    Save = () => {
+        return {
+            quests: this.#SAVED_quests,
+            unsavedAdditions: this.#UNSAVED_additions,
+            unsavedDeletions: this.#UNSAVED_deletions,
+            sort: this.sort,
+            sortIsSaved: this.SAVED_sort,
+            token: this.token
+        };
+    };
+
+    LoadOnline = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-quests', token: this.token });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-quests' ||
+            response.result === 'error'
+        ) {
+            this.user.interface.console?.AddLog('warn', `[Quests] LoadOnline: ${response}`);
+            return false;
+        }
+
+        if (response.result === 'already-up-to-date') {
+            return true;
+        }
+
+        this.#SAVED_quests = response.result.quests;
+        this.sort = response.result.sort;
+        this.token = response.result.token;
+
+        this.allQuests.Set(this.Get());
+        this.user.interface.console?.AddLog('info', `[Quests] ${response.result.quests.length} quests loaded`);
+        return true;
+    };
+
+    SaveOnline = async () => {
+        if (this.isUnsaved() === false) {
+            return true;
+        }
+
+        const unsaved = this.getUnsaved();
+        if (typeof unsaved.data === 'undefined' || unsaved.data.length <= 0) {
+            return true;
+        }
+
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'save-quests',
+            quests: unsaved.data,
+            sort: unsaved.sort,
+            token: this.token
+        });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'save-quests' ||
+            response.result === 'error'
+        ) {
+            this.user.interface.console?.AddLog('warn', `[Quests] SaveOnline: ${response}`);
+            return false;
+        }
+
+        if (response.result !== 'ok') {
+            if (response.result === 'wrong-last-update') {
+                this.user.interface.console?.AddLog('warn', `[Quests] SaveOnline: ${response.result}`);
+                await this.LoadOnline();
+                return false;
+            }
+
+            this.user.interface.console?.AddLog('warn', `[Quests] SaveOnline: ${response.result}`);
+            return false;
+        }
+
+        if (typeof response.token !== 'undefined') {
+            this.token = response.token;
+        }
+
+        this.purge();
+        this.allQuests.Set(this.Get());
+        this.user.interface.console?.AddLog('info', `[Quests] ${unsaved.data.length} quests saved`);
+        return true;
+    };
+
+    /** @private */
+    isUnsaved = () => {
         if (this.SAVED_sort === false) {
             return true;
         }
-        if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
+        if (this.#UNSAVED_additions.length || this.#UNSAVED_deletions.length) {
             return true;
         }
         return false;
     };
-    GetUnsaved = () => {
+
+    /**
+     * @private
+     * @returns {{ data?: QuestUnsaved[], sort?: number[] }}
+     */
+    getUnsaved = () => {
         const data = {};
 
-        if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
+        if (this.#UNSAVED_additions.length || this.#UNSAVED_deletions.length) {
+            /** @type {QuestUnsaved[]} */
             let unsaved = [];
-            for (let a in this.UNSAVED_additions) {
-                const quest = this.UNSAVED_additions[a];
-                unsaved.push({ action: 'add', ...quest });
+            for (let a in this.#UNSAVED_additions) {
+                const quest = this.#UNSAVED_additions[a];
+                unsaved.push({ type: 'add', ...quest });
             }
-            for (let a in this.UNSAVED_deletions) {
-                const quest = this.UNSAVED_deletions[a];
-                unsaved.push({ action: 'rem', ...quest });
+            for (let a in this.#UNSAVED_deletions) {
+                const quest = this.#UNSAVED_deletions[a];
+                unsaved.push({ type: 'rem', ...quest });
             }
             data['data'] = unsaved;
         }
@@ -177,26 +240,29 @@ class MyQuests {
         if (this.SAVED_sort === false) {
             data['sort'] = this.sort;
         }
+
         return data;
     };
-    Purge = () => {
-        this.SAVED_quests.push(...this.UNSAVED_additions);
-        this.UNSAVED_additions = [];
 
-        for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = this.GetIndex(this.SAVED_quests, this.UNSAVED_deletions[i]);
+    /** @private */
+    purge = () => {
+        this.#SAVED_quests.push(...this.#UNSAVED_additions);
+        this.#UNSAVED_additions = [];
+
+        for (let i = this.#UNSAVED_deletions.length - 1; i >= 0; i--) {
+            const index = this.GetIndex(this.#SAVED_quests, this.#UNSAVED_deletions[i]);
             if (index !== null) {
-                this.SAVED_quests.splice(index, 1);
+                this.#SAVED_quests.splice(index, 1);
             }
         }
-        this.UNSAVED_deletions = [];
+        this.#UNSAVED_deletions = [];
         this.SAVED_sort = true;
     };
 
     IsMax = () => this.Get().length >= this.MAX_QUESTS;
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {InputsError[]} Null if no error
      */
     VerifyInputs = (quest) => {
@@ -227,7 +293,7 @@ class MyQuests {
     };
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {string} Time text
      */
     GetQuestTimeText = (quest) => {
@@ -275,7 +341,7 @@ class MyQuests {
 
     /**
      * Add quest
-     * @param {MyQuest} quest Auto define created time if equal to 0
+     * @param {Quest} quest Auto define created time if equal to 0
      * @returns {'added' | 'already-added' | InputsError}
      */
     Add(quest) {
@@ -289,9 +355,9 @@ class MyQuests {
         }
 
         // Check where the quest is
-        const indexQuest = this.GetIndex(this.SAVED_quests, quest);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, quest);
+        const indexQuest = this.GetIndex(this.#SAVED_quests, quest);
+        const indexUnsaved = this.GetIndex(this.#UNSAVED_additions, quest);
+        const indexDeletion = this.GetIndex(this.#UNSAVED_deletions, quest);
 
         // Quest already exist
         if (indexQuest !== null || indexUnsaved !== null) {
@@ -300,18 +366,18 @@ class MyQuests {
 
         // Quest was deleted, remove it from deletion list
         if (indexDeletion !== null) {
-            this.UNSAVED_deletions.splice(indexDeletion, 1);
+            this.#UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
         // Quest not exist, add it
-        this.UNSAVED_additions.push(quest);
+        this.#UNSAVED_additions.push(quest);
         this.allQuests.Set(this.Get());
         return 'added';
     }
 
     /**
      * Add quest
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {'edited' | 'not-exists' | InputsError}
      */
     Edit(quest) {
@@ -321,9 +387,9 @@ class MyQuests {
         }
 
         // Check where the quest is
-        const indexQuest = this.GetIndex(this.SAVED_quests, quest);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, quest);
+        const indexQuest = this.GetIndex(this.#SAVED_quests, quest);
+        const indexUnsaved = this.GetIndex(this.#UNSAVED_additions, quest);
+        const indexDeletion = this.GetIndex(this.#UNSAVED_deletions, quest);
 
         // Quest not exist
         if (indexQuest === null && indexUnsaved === null) {
@@ -332,43 +398,43 @@ class MyQuests {
 
         // Quest was deleted, remove it from deletion list
         if (indexDeletion !== null) {
-            this.UNSAVED_deletions.splice(indexDeletion, 1);
+            this.#UNSAVED_deletions.splice(indexDeletion, 1);
         }
 
         if (indexQuest !== null) {
-            this.SAVED_quests.splice(indexQuest, 1, quest);
+            this.#SAVED_quests.splice(indexQuest, 1, quest);
         }
         if (indexUnsaved !== null) {
-            this.UNSAVED_additions.splice(indexUnsaved, 1, quest);
+            this.#UNSAVED_additions.splice(indexUnsaved, 1, quest);
         }
 
         // Add edited quests as new quest to save
-        this.UNSAVED_additions.push(quest);
+        this.#UNSAVED_additions.push(quest);
         this.allQuests.Set(this.Get());
         return 'edited';
     }
 
     /**
      * Remove quest
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {'removed' | 'notExist'}
      */
     Remove(quest) {
-        const indexQuest = this.GetIndex(this.SAVED_quests, quest);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, quest);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, quest);
+        const indexQuest = this.GetIndex(this.#SAVED_quests, quest);
+        const indexUnsaved = this.GetIndex(this.#UNSAVED_additions, quest);
+        const indexDeletion = this.GetIndex(this.#UNSAVED_deletions, quest);
         let deleted = null;
 
         if (indexQuest !== null) {
-            deleted = this.SAVED_quests.splice(indexQuest, 1)[0];
+            deleted = this.#SAVED_quests.splice(indexQuest, 1)[0];
             if (indexDeletion === null) {
-                this.UNSAVED_deletions.push(deleted);
+                this.#UNSAVED_deletions.push(deleted);
             }
         }
         if (indexUnsaved !== null) {
-            deleted = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
+            deleted = this.#UNSAVED_additions.splice(indexUnsaved, 1)[0];
             if (indexDeletion === null) {
-                this.UNSAVED_deletions.push(deleted);
+                this.#UNSAVED_deletions.push(deleted);
             }
         }
 
@@ -382,7 +448,7 @@ class MyQuests {
 
     /**
      * Change sort order of quests titles
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @param {number} newIndex
      * @returns {boolean} Success of the operation
      */
@@ -417,8 +483,8 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest[]} arr
-     * @param {MyQuest} quest
+     * @param {Quest[]} arr
+     * @param {Quest} quest
      * @returns {number | null} Index of quest or null if not found
      */
     GetIndex(arr, quest) {
@@ -428,7 +494,7 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @param {number} time in seconds
      * @returns {DayType[]} Days of the week
      */
@@ -450,7 +516,7 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @param {number} time in seconds
      * @returns {DayType[]} Days of the week
      * @private
@@ -510,7 +576,7 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @param {number} time in seconds
      * @returns {DayType[]} Days of the week
      * @private
@@ -587,7 +653,7 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @param {number} time in seconds
      * @returns {DayType[]} Days of the week
      * @private
@@ -658,7 +724,7 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {number} Streak
      */
     GetStreak(quest) {
@@ -685,7 +751,7 @@ class MyQuests {
     }
 
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {number} Streak
      */
     getStreakFromMonthOrWeek(quest) {
@@ -771,7 +837,7 @@ class MyQuests {
 
     // TODO: Implement this
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {number} Streak
      */
     getStreakFromFrequencyByMonth(quest) {
@@ -780,7 +846,7 @@ class MyQuests {
 
     // TODO: Implement this
     /**
-     * @param {MyQuest} quest
+     * @param {Quest} quest
      * @returns {number} Streak
      */
     getStreakFromFrequencyByWeek(quest) {
@@ -788,5 +854,4 @@ class MyQuests {
     }
 }
 
-export { MyQuest };
-export default MyQuests;
+export default Quests;

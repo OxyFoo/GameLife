@@ -1,3 +1,4 @@
+import { IUserClass } from 'Types/Interface/IUserClass';
 import TCP from './TCP';
 
 import { GetDeviceIdentifiers } from 'Utils/Device';
@@ -7,7 +8,7 @@ import { GetDeviceIdentifiers } from 'Utils/Device';
  * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestLogin} ServerRequestLogin
  */
 
-class Server {
+class Server2 extends IUserClass {
     /** @type {UserManager} */
     #user;
     #listenerTCP;
@@ -15,6 +16,8 @@ class Server {
 
     /** @param {UserManager} user */
     constructor(user) {
+        super('server2');
+
         this.#user = user;
         this.tcp = new TCP(user);
         this.#listenerTCP = this.tcp.state.AddListener((state) => {
@@ -111,7 +114,7 @@ class Server {
         this.isBanned = response.banned ?? false;
         if (typeof response.token === 'string') {
             this.#user.settings.token = response.token;
-            await this.#user.settings.Save();
+            await this.#user.settings.IndependentSave();
         }
         return response.result;
     };
@@ -140,4 +143,4 @@ class Server {
     };
 }
 
-export default Server;
+export default Server2;

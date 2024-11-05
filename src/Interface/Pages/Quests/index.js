@@ -6,11 +6,11 @@ import BackQuests from './back';
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
-import { PageHeader, MyQuestsList } from 'Interface/Widgets';
+import { PageHeader, QuestsList } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('react-native').ListRenderItem<MyQuest>} ListRenderItemMyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('react-native').ListRenderItem<Quest>} ListRenderItemQuest
  */
 
 class Quests extends BackQuests {
@@ -29,7 +29,7 @@ class Quests extends BackQuests {
                 <View>
                     {draggedItem && (
                         <Animated.View style={[styles.selection, translate]}>
-                            <MyQuestsList.Button style={styles.selectionQuest} quest={draggedItem} />
+                            <QuestsList.Button style={styles.selectionQuest} quest={draggedItem} />
                         </Animated.View>
                     )}
 
@@ -51,7 +51,7 @@ class Quests extends BackQuests {
         );
     }
 
-    /** @type {ListRenderItemMyQuest} */
+    /** @type {ListRenderItemQuest} */
     renderItem = ({ item }) => {
         const { draggedItem } = this.state;
 
@@ -61,7 +61,7 @@ class Quests extends BackQuests {
         }
 
         return (
-            <MyQuestsList.Button
+            <QuestsList.Button
                 style={[styles.questItem, styleOpacity]}
                 onLayout={this.onLayoutItem}
                 quest={item}

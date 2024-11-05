@@ -8,12 +8,12 @@ import { InputText } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} SectionCommentPropsType
  * @property {StyleProp} style
- * @property {MyQuest | null} quest
- * @property {(quest: MyQuest) => void} onChangeQuest
+ * @property {Quest | null} quest
+ * @property {(quest: Quest) => void} onChangeQuest
  */
 
 /** @type {SectionCommentPropsType} */

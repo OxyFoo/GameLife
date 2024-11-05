@@ -18,20 +18,20 @@ let timeout;
 function RenderPopup(_props) {
     const lang = langManager.curr['daily-quest'];
 
-    const claimsList = user.quests.dailyquest.claimsList.Get();
-    const [claimIndex, setClaimIndex] = React.useState(user.quests.dailyquest.GetCurrentClaimIndex());
+    const claimsList = user.dailyQuest.claimsList.Get();
+    const [claimIndex, setClaimIndex] = React.useState(user.dailyQuest.GetCurrentClaimIndex());
     const [claimCount, setClaimCount] = React.useState(0);
 
     React.useEffect(() => {
-        const listener = user.quests.dailyquest.claimsList.AddListener((_claimsList) => {
+        const listener = user.dailyQuest.claimsList.AddListener((_claimsList) => {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
-                setClaimIndex(user.quests.dailyquest.GetCurrentClaimIndex());
+                setClaimIndex(user.dailyQuest.GetCurrentClaimIndex());
             }, 1000);
         });
 
         return () => {
-            user.quests.dailyquest.claimsList.RemoveListener(listener);
+            user.dailyQuest.claimsList.RemoveListener(listener);
         };
     }, []);
 
@@ -47,7 +47,7 @@ function RenderPopup(_props) {
     let isCurrentStreak = false;
     if (claimsList.length > 0) {
         const currentClaimList = claimsList[claimIndex];
-        isCurrentStreak = user.quests.dailyquest.IsCurrentList(currentClaimList);
+        isCurrentStreak = user.dailyQuest.IsCurrentList(currentClaimList);
         if (!isCurrentStreak) {
             claimDate = DateFormat(new Date(currentClaimList.start + 'T00:00:00'), 'DD/MM/YYYY');
         }
@@ -81,7 +81,7 @@ function RenderPopup(_props) {
 
             {claimCount > 3 && (
                 <View style={styles.claimAllView}>
-                    <Button style={styles.claimAllButton} color='background' onPress={user.quests.dailyquest.ClaimAll}>
+                    <Button style={styles.claimAllButton} color='background' onPress={user.dailyQuest.ClaimAll}>
                         {lang['popup']['claim-all']}
                     </Button>
                 </View>

@@ -23,7 +23,7 @@ class BackSettingsNotifications extends PageBase {
         else Notifications.Morning.Disable();
         this.setState({ switchMorningNotifs: enabled });
         user.settings.morningNotifications = enabled;
-        user.settings.Save();
+        user.settings.IndependentSave();
     };
 
     /** @param {boolean} enabled */
@@ -32,7 +32,7 @@ class BackSettingsNotifications extends PageBase {
         else Notifications.Evening.Disable();
         this.setState({ switchEveningNotifs: enabled });
         user.settings.eveningNotifications = enabled;
-        user.settings.Save();
+        user.settings.IndependentSave();
     };
 }
 

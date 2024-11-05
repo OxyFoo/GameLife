@@ -9,11 +9,11 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
 const MAX_DURATION_MINUTES = 12 * 60;
 
 /**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} DurationPropsType
- * @property {MyQuest | null} quest
- * @property {(quest: MyQuest) => void} onChangeQuest/
+ * @property {Quest | null} quest
+ * @property {(quest: Quest) => void} onChangeQuest/
  */
 
 /** @type {DurationPropsType} */

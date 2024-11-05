@@ -85,7 +85,7 @@ const buyDye = async (item) => {
     user.inventory.LoadOnline(response['inventory']);
     user.informations.ox.Set(parseInt(response['ox']));
     user.shop.buyToday.dyes.push(item.ItemBefore.InventoryID);
-    user.LocalSave();
+    user.SaveLocal();
 
     // Update mission
     user.missions.SetMissionState('mission3', 'completed');

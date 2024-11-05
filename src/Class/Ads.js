@@ -2,6 +2,8 @@ import { Platform } from 'react-native';
 import { TestIds } from 'react-native-google-mobile-ads';
 import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 'react-native-google-mobile-ads';
 
+import { IUserClass } from 'Types/Interface/IUserClass';
+
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Data/App/Ads').Ad} Ad
@@ -30,12 +32,14 @@ class AdEvent {
     unsubscriber = null;
 }
 
-class Ads {
+class Ads extends IUserClass {
     /** @type {AdEvent[]} */
     adEvents = [];
 
     /** @param {UserManager} user */
     constructor(user) {
+        super('ads');
+
         this.user = user;
     }
 
@@ -87,7 +91,7 @@ class Ads {
      * @param {AdEventFunction} callback
      * @returns {AdEvent | null}
      */
-    Get(adName, callback) {
+    Get = (adName, callback) => {
         // Get ad index
         const adEvent = this.adEvents.find((a) => a.meta.Name === adName);
         if (adEvent === undefined) {
@@ -122,7 +126,7 @@ class Ads {
         }
 
         return adEvent;
-    }
+    };
 
     /**
      * @param {AdEventType | RewardedAdEventType} type

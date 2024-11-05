@@ -1,6 +1,7 @@
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { IUserClass } from 'Types/Interface/IUserClass';
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 /**
@@ -17,9 +18,12 @@ const DEFAULT_MUSIC_LINKS = {
     deezer: 'https://deezer.page.link/huyVFejy9ce3m7YY8'
 };
 
-class Settings {
+/** @extends {IUserClass<SaveObject_Settings>} */
+class Settings extends IUserClass {
     /** @param {UserManager} user */
     constructor(user) {
+        super('settings');
+
         this.user = user;
     }
 
@@ -47,7 +51,7 @@ class Settings {
         this.eveningNotifications = true;
     };
 
-    Load = async () => {
+    IndependentLoad = async () => {
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local loading...');
 
         /** @type {SaveObject_Settings | null} */
@@ -81,7 +85,7 @@ class Settings {
         }
     };
 
-    async Save() {
+    async IndependentSave() {
         /** @type {Required<SaveObject_Settings>} */
         const settings = {
             lang: langManager.currentLangageKey,

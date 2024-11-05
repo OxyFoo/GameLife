@@ -21,7 +21,7 @@ async function Login(email) {
     // Logged in
     if (status === 'ok') {
         user.settings.email = email;
-        await user.settings.Save();
+        await user.settings.IndependentSave();
         user.interface.ChangePage('loading', { storeInHistory: false });
     }
 
@@ -33,7 +33,7 @@ async function Login(email) {
     // New device or mail unconfirmed
     else if (status === 'waitMailConfirmation') {
         user.settings.email = email;
-        await user.settings.Save();
+        await user.settings.IndependentSave();
         user.interface.ChangePage('waitmail', { storeInHistory: false });
     }
 

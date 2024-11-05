@@ -15,10 +15,10 @@ function StartMission(missionName) {
 
         user.interface.screenTuto.ShowTutorial([
             {
-                component: this.refMyQuestsList.current,
+                component: this.refQuestsList.current,
                 text: lang['texts']['2'],
                 execAfter: () => {
-                    user.interface.ChangePage('myquest', { missionName }, true);
+                    user.interface.ChangePage('quest', { missionName }, true);
                     return false;
                 }
             }

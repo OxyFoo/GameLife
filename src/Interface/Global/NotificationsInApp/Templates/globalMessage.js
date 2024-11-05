@@ -156,7 +156,7 @@ async function handleClaim(notif) {
     }
 
     // Save inventory
-    user.LocalSave();
+    user.SaveLocal();
     handleRead(notif);
 }
 

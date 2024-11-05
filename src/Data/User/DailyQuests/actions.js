@@ -23,7 +23,7 @@ function RefreshSkillSelection(index) {
     this.selectedIndexes[index] = maxValue + 1;
 
     UpdateActivities.call(this, refreshesRemaining - 1);
-    this.user.LocalSave();
+    this.user.SaveLocal();
 }
 
 export { RefreshSkillSelection };

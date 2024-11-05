@@ -27,7 +27,7 @@ class BackOnboarding extends PageBase {
 
         user.settings.onboardingWatched = true;
 
-        const saved = await user.settings.Save();
+        const saved = await user.settings.IndependentSave();
         if (!saved) {
             const lang = langManager.curr['app'];
             user.interface.ChangePage('display', {

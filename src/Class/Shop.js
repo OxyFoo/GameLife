@@ -1,4 +1,5 @@
 import langManager from 'Managers/LangManager';
+import { IUserClass } from 'Types/Interface/IUserClass';
 
 import { DateFormat } from 'Utils/Date';
 
@@ -8,6 +9,8 @@ import { DateFormat } from 'Utils/Date';
  *
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
+ *
+ * @typedef {import('Types/Class/Shop').SaveObject_Shop} SaveObject_Shop
  *
  * @typedef Chest
  * @property {number} priceOriginal
@@ -49,9 +52,12 @@ import { DateFormat } from 'Utils/Date';
  * @property {() => void} OnPress
  */
 
-class Shop {
+/** @extends {IUserClass<SaveObject_Shop>} */
+class Shop extends IUserClass {
     /** @param {UserManager} user */
     constructor(user) {
+        super('shop');
+
         this.user = user;
     }
 
@@ -72,14 +78,15 @@ class Shop {
     /** @type {number} Price factor, applied to all Ox prices in shop */
     priceFactor = 1;
 
-    Clear() {
+    Clear = () => {
         this.buyToday = {
             day: '',
             items: [],
             dyes: []
         };
-    }
+    };
 
+    // TODO: Reimplement shop
     /**
      * @param {Object} inventory
      * @param {this['buyToday']} inventory.buyToday
@@ -92,34 +99,42 @@ class Shop {
             const today = DateFormat(new Date(), 'DD/MM/YYYY');
             this.buyToday = inventory['buyToday'];
             this.buyToday.day = today;
-            this.user.LocalSave();
+            this.user.SaveLocal();
         }
     }
 
     /**
-     * @param {Object} data
-     * @param {this['buyToday']} data.buyToday
+     * @param {Partial<SaveObject_Shop>} data
      */
-    Load(data) {
-        /** @param {string} key */
-        const contains = (key) => data.hasOwnProperty(key);
-        if (contains('buyToday')) this.buyToday = data['buyToday'];
+    Load = (data) => {
+        if (typeof data.day !== 'undefined') {
+            this.buyToday.day = data.day;
+        }
+        if (typeof data.items !== 'undefined') {
+            this.buyToday.items = data.items;
+        }
+        if (typeof data.dyes !== 'undefined') {
+            this.buyToday.dyes = data.dyes;
+        }
 
+        // If today is different, reset
         const today = DateFormat(new Date(), 'DD/MM/YYYY');
         if (today !== this.buyToday.day) {
             this.buyToday.day = today;
             this.buyToday.items = [];
             this.buyToday.dyes = [];
-            this.user.LocalSave();
+            this.user.SaveLocal();
         }
-    }
+    };
 
-    Save() {
-        const data = {
-            buyToday: this.buyToday
+    /** @returns {SaveObject_Shop} */
+    Save = () => {
+        return {
+            day: this.buyToday.day,
+            items: this.buyToday.items,
+            dyes: this.buyToday.dyes
         };
-        return data;
-    }
+    };
 
     /** @param {string[]} iaps */
     LoadIAPs(iaps) {
@@ -172,7 +187,7 @@ class Shop {
         this.user.inventory.stuffs.push(newItem);
 
         // Save inventory
-        this.user.LocalSave();
+        this.user.SaveLocal();
 
         // Update mission
         this.user.missions.SetMissionState('mission3', 'completed');
@@ -235,7 +250,7 @@ class Shop {
         this.user.inventory.stuffs.push(newItem);
 
         // Save inventory
-        this.user.LocalSave();
+        this.user.SaveLocal();
 
         // Update mission
         this.user.missions.SetMissionState('mission3', 'completed');

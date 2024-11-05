@@ -9,13 +9,13 @@ import { AddActivity } from 'Interface/Widgets';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} QuestPropsType
  * @property {StyleProp} style
- * @property {MyQuest | null} quest
+ * @property {Quest | null} quest
  * @property {boolean} enableQuickAdd
- * @property {(quest: MyQuest) => void} onDrag Icon to drag => onTouchStart event (quest only)
+ * @property {(quest: Quest) => void} onDrag Icon to drag => onTouchStart event (quest only)
  * @property {(event: LayoutChangeEvent) => void} onLayout
  */
 
@@ -39,8 +39,8 @@ class QuestButtonBack extends React.Component {
         super(props);
 
         if (props.quest !== null) {
-            this.state.timeText = user.quests.myquests.GetQuestTimeText(props.quest);
-            this.state.streakCount = user.quests.myquests.GetStreak(props.quest);
+            this.state.timeText = user.quests.GetQuestTimeText(props.quest);
+            this.state.streakCount = user.quests.GetStreak(props.quest);
         }
     }
 
@@ -56,8 +56,8 @@ class QuestButtonBack extends React.Component {
             if (quest === null) return;
 
             this.setState({
-                timeText: user.quests.myquests.GetQuestTimeText(quest),
-                streakCount: user.quests.myquests.GetStreak(quest)
+                timeText: user.quests.GetQuestTimeText(quest),
+                streakCount: user.quests.GetStreak(quest)
             });
         });
     }
@@ -89,7 +89,7 @@ class QuestButtonBack extends React.Component {
         const { quest } = this.props;
         if (quest === null) return;
 
-        user.interface.ChangePage('myqueststats', { args: { quest }, storeInHistory: false });
+        user.interface.ChangePage('queststats', { args: { quest }, storeInHistory: false });
     };
 
     openQuickAddActivity = () => {

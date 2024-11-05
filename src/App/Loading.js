@@ -29,7 +29,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.interface.console?.Enable();
 
     // Load important data
-    await user.settings.Load();
+    await user.settings.IndependentLoad();
     const email = user.settings.email;
 
     // Connect to the server TCP
@@ -132,7 +132,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const t1 = performance.now();
 
     // Load local user data
-    await user.LocalLoad();
+    await user.LoadLocal();
 
     //await dataManager.LocalLoad(user);
 
@@ -179,7 +179,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Load quests
-    user.quests.dailyquest.Init();
+    user.dailyQuest.Init();
 
     // Loading: User character
     // user.character = new Character(

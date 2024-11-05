@@ -1,3 +1,4 @@
+import { IUserClass } from 'Types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
 
 /**
@@ -5,13 +6,15 @@ import DynamicVar from 'Utils/DynamicVar';
  * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<*>} NotificationInApp
  */
 
-class NotificationsInApp {
+class NotificationsInApp extends IUserClass {
     /** @type {DynamicVar<NotificationInApp[]>} */
     // eslint-disable-next-line prettier/prettier
     notifications = new DynamicVar(/** @type {NotificationInApp[]} */ ([]));
 
     /** @param {UserManager} user */
     constructor(user) {
+        super('notifications-in-app');
+
         this.user = user;
     }
 

@@ -1,5 +1,5 @@
 export { AddActivity } from './Widgets/AddActivity';
-export { MyQuestsList } from './Widgets/MyQuestsList';
+export { QuestsList } from './Widgets/QuestsList';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';
 export { TodoList } from './Widgets/TodoList';

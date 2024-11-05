@@ -2,6 +2,8 @@ import { Platform } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import mobileAds, { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
 
+import { IUserClass } from 'Types/Interface/IUserClass';
+
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Class/Consent').SaveObject_Consent} SaveObject_Consent
@@ -9,9 +11,12 @@ import mobileAds, { AdsConsent, AdsConsentStatus } from 'react-native-google-mob
 
 const VERSION = require('../../package.json').version;
 
-class Consent {
+/** @extends {IUserClass<SaveObject_Consent>} */
+class Consent extends IUserClass {
     /** @param {UserManager} user */
     constructor(user) {
+        super('consent');
+
         this.user = user;
     }
 
@@ -29,23 +34,23 @@ class Consent {
         version: ''
     };
 
-    /** @param {SaveObject_Consent} adSettings */
-    Load(adSettings) {
+    /** @param {Partial<SaveObject_Consent>} adSettings */
+    Load = (adSettings) => {
         if (typeof adSettings.android_consent !== 'undefined') {
             this.android_consent = adSettings.android_consent;
         }
         if (typeof adSettings.ios_tracking !== 'undefined') {
             this.ios_tracking = adSettings.ios_tracking;
         }
-    }
+    };
 
     /** @returns {SaveObject_Consent} */
-    Save() {
+    Save = () => {
         return {
             android_consent: this.android_consent,
             ios_tracking: this.ios_tracking
         };
-    }
+    };
 
     isPersonalized() {
         if (Platform.OS === 'android') {
@@ -76,7 +81,7 @@ class Consent {
             await this.__trackingTransparencyPopup(force).catch(ConsoleError);
         }
 
-        await this.user.LocalSave();
+        await this.user.SaveLocal();
         this.loading = false;
     }
 

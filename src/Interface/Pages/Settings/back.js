@@ -24,7 +24,7 @@ class BackSettings extends PageBase {
         devicesLoading: false,
 
         /** @param {ConnectionState} state */
-        serverTCPState: user.tcp.state.Get()
+        serverTCPState: user.server2.tcp.state.Get()
     };
 
     /** @type {ComboBoxItem[]} */
@@ -37,11 +37,11 @@ class BackSettings extends PageBase {
     listenerTCP = null;
 
     componentDidMount() {
-        this.listenerTCP = user.tcp.state.AddListener(this.onTCPStateChange);
+        this.listenerTCP = user.server2.tcp.state.AddListener(this.onTCPStateChange);
     }
 
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerTCP);
+        user.server2.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {ConnectionState} state */
@@ -62,7 +62,7 @@ class BackSettings extends PageBase {
 
         const key = langManager.IsLangAvailable(lang.key);
         langManager.SetLangage(key);
-        user.settings.Save();
+        user.settings.IndependentSave();
     };
 
     /** @param {number} themeIndex */
@@ -71,7 +71,7 @@ class BackSettings extends PageBase {
         const themes = ['Main', 'Light'];
         const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
-            user.settings.Save();
+            user.settings.IndependentSave();
         }
     };
 
@@ -168,7 +168,7 @@ class BackSettings extends PageBase {
     };
 
     reconnectTCP = () => {
-        user.tcp.Connect();
+        user.server2.tcp.Connect();
         this.setState({ serverTCPState: 'idle' });
     };
 

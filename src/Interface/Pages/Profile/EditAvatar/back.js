@@ -230,7 +230,7 @@ class EditorAvatarBack extends React.Component {
 
         user.inventory.Equip(slotSelected, stuffSelected.ID);
         user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-        user.OnlineSave();
+        user.SaveOnline();
 
         this.forceUpdate();
         this.refFrame.forceUpdate();

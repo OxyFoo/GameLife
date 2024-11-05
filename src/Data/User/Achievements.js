@@ -23,7 +23,7 @@ import { GetGlobalTime } from 'Utils/Time';
 class Achievements extends IUserData {
     /** @param {UserManager} user */
     constructor(user) {
-        super();
+        super('achievements');
 
         this.user = user;
     }
@@ -576,7 +576,7 @@ class Achievements extends IUserData {
             this.achievements.Set(newAchievements.achievements);
 
             // Save user data
-            this.user.LocalSave();
+            this.user.SaveLocal();
         }
 
         this.loading = false;
@@ -626,7 +626,7 @@ class Achievements extends IUserData {
         }
 
         // Add achievement to solved & get rewards
-        const loaded = await this.user.LocalSave();
+        const loaded = await this.user.SaveLocal();
         if (!loaded) {
             this.user.interface.console?.AddLog(
                 'error',

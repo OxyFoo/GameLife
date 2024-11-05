@@ -34,7 +34,7 @@ class BackWaitmail extends PageBase {
 
     onBack = () => {
         user.settings.email = '';
-        user.settings.Save();
+        user.settings.IndependentSave();
         user.interface.ChangePage('login', { storeInHistory: false });
     };
 
@@ -106,7 +106,7 @@ class BackWaitmail extends PageBase {
             });
 
             user.settings.email = '';
-            user.settings.Save();
+            user.settings.IndependentSave();
             return;
         }
 
@@ -124,14 +124,14 @@ class BackWaitmail extends PageBase {
             });
 
             user.settings.email = '';
-            user.settings.Save();
+            user.settings.IndependentSave();
             return;
         }
 
         // Connected
         if (response.result === 'confirmed') {
             user.settings.token = response.token;
-            await user.settings.Save();
+            await user.settings.IndependentSave();
             user.interface.ChangePage('loading', { storeInHistory: false });
             return;
         }

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
 
-    // MyQuest info
+    // Quest info
     questHeader: {
         flexDirection: 'row',
         alignItems: 'center',

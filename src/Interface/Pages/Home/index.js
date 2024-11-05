@@ -6,7 +6,7 @@ import BackHome from './back';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
-import { TodayPieChart, Missions, DailyQuest, MyQuestsList, TodoList } from 'Interface/Widgets';
+import { TodayPieChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -68,7 +68,7 @@ class Home extends BackHome {
                         onPress={this.addQuest}
                     />
                 </Title>
-                <MyQuestsList />
+                <QuestsList />
 
                 {/* My todoes */}
                 <Title title={lang['section-my-todoes']}>

@@ -90,7 +90,7 @@ class BackHome extends PageBase {
      */
     addQuest = () => {
         const lang = langManager.curr['quests'];
-        if (user.quests.myquests.IsMax()) {
+        if (user.quests.IsMax()) {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
@@ -100,7 +100,7 @@ class BackHome extends PageBase {
             });
             return;
         }
-        user.interface.ChangePage('myquest', { storeInHistory: false });
+        user.interface.ChangePage('quest', { storeInHistory: false });
     };
 
     addTodo = () => {

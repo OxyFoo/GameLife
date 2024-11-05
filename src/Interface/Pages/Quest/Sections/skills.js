@@ -14,12 +14,12 @@ const MAX_SKILLS = 10;
 
 /**
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
+ * @typedef {import('Types/Data/User/Quests').Quest} Quest
  * @typedef {import('Interface/Global/ScreenList').ScreenListItem} ScreenListItem
  *
  * @typedef {Object} SectionSkillPropsType
- * @property {MyQuest | null} quest
- * @property {(quest: MyQuest) => void} onChangeQuest
+ * @property {Quest | null} quest
+ * @property {(quest: Quest) => void} onChangeQuest
  */
 
 /**

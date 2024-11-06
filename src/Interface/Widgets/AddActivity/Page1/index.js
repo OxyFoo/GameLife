@@ -99,29 +99,14 @@ class AddActivityPage1 extends BackActivityPage1 {
                     onLayout={this.onLayoutFlatlist}
                     onContentSizeChange={this.onContentSizeChange}
                     data={skills}
-                    keyExtractor={(item) => `act-skill-${item.id}`}
+                    keyExtractor={this.keyExtractor}
                     renderItem={this.renderSkill}
                     ListEmptyComponent={this.renderEmptyList}
-                    initialNumToRender={15}
-                    maxToRenderPerBatch={10}
-                    windowSize={500}
-                    getItemLayout={(_data, index) => ({
-                        length: this.state.buttonHeight,
-                        offset: this.state.buttonHeight * index,
-                        index
-                    })}
-                    onScroll={Animated.event(
-                        [
-                            {
-                                nativeEvent: {
-                                    contentOffset: {
-                                        y: this.state.animScroll
-                                    }
-                                }
-                            }
-                        ],
-                        { useNativeDriver: true }
-                    )}
+                    initialNumToRender={10}
+                    maxToRenderPerBatch={5}
+                    windowSize={10}
+                    getItemLayout={this.getItemLayout}
+                    onScroll={this.handleScroll}
                     scrollEnabled={false}
                 />
             </View>
@@ -167,7 +152,8 @@ class AddActivityPage1 extends BackActivityPage1 {
         return (
             <Button
                 style={styles.activityElement}
-                styleAnimation={this.getAnimationStyles(index)}
+                // TODO: Opti l'animation (trop de rendus)
+                //styleAnimation={this.getAnimationStyles(index)}
                 appearance='outline'
                 borderColor='secondary'
                 fontColor='primary'

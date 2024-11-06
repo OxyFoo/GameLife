@@ -118,6 +118,22 @@ class BackActivityPage1 extends React.Component {
         };
     }
 
+    /** @param {ItemSkill} item */
+    keyExtractor = (item) => `act-skill-${item.id}`;
+
+    handleScroll = Animated.event(
+        [
+            {
+                nativeEvent: {
+                    contentOffset: {
+                        y: this.state.animScroll
+                    }
+                }
+            }
+        ],
+        { useNativeDriver: true }
+    );
+
     /**
      * @param {string} textSearch
      * @param {number | null} categoryID
@@ -196,6 +212,13 @@ class BackActivityPage1 extends React.Component {
             user.interface.bottomPanel?.mover.onContentSizeChange?.(0, this.state.skills.length * (height + margin));
         }
     };
+
+    /** @type {FlatList['props']['getItemLayout']} */
+    getItemLayout = (_data, index) => ({
+        length: this.state.buttonHeight,
+        offset: this.state.buttonHeight * index,
+        index
+    });
 
     openSearch = () => {
         this.refSearchInput.current?.refInput.current?.focus();

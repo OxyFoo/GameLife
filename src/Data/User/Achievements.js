@@ -40,6 +40,8 @@ class Achievements extends IUserData {
      */
     claimAchievementLoading = false;
 
+    token = 0;
+
     Clear = () => {
         this.achievements.Set([]);
     };
@@ -53,30 +55,42 @@ class Achievements extends IUserData {
         if (typeof data.solved !== 'undefined') {
             this.achievements.Set(data.solved);
         }
+        if (typeof data.token !== 'undefined') {
+            this.token = data.token;
+        }
     };
 
     /** @returns {SaveObject_Achievements} */
     Save = () => {
         return {
-            solved: this.achievements.Get()
+            solved: this.achievements.Get(),
+            token: this.token
         };
     };
 
     LoadOnline = async () => {
-        const result = await this.user.server2.tcp.SendAndWait({ action: 'get-achievements' });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-achievements', token: this.token });
 
         // Check if result is valid
         if (
-            result === 'interrupted' ||
-            result === 'not-sent' ||
-            result === 'timeout' ||
-            result.status !== 'get-achievements'
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-achievements' ||
+            response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog('error', '[Achievements] Error while get achievements');
+            this.user.interface.console?.AddLog('error', `[Achievements] Error while get achievements (${response})`);
             return false;
         }
 
-        this.achievements.Set(result.achievements);
+        if (response.result === 'already-up-to-date') {
+            return true;
+        }
+
+        // Update token & achievements
+        this.token = response.result.token;
+        this.achievements.Set(response.result.achievements);
+
         return true;
     };
 
@@ -551,18 +565,18 @@ class Achievements extends IUserData {
         }
 
         if (achievementsSolved.length > 0) {
-            const newAchievements = await this.user.server2.tcp.SendAndWait({
+            const response = await this.user.server2.tcp.SendAndWait({
                 action: 'add-achievement',
-                achievementIDs: achievementsSolved
+                achievementIDs: achievementsSolved,
+                token: this.token
             });
 
             if (
-                newAchievements === 'not-sent' ||
-                newAchievements === 'timeout' ||
-                newAchievements === 'interrupted' ||
-                newAchievements.status !== 'add-achievement' ||
-                newAchievements.result !== 'ok' ||
-                !newAchievements.achievements
+                response === 'not-sent' ||
+                response === 'timeout' ||
+                response === 'interrupted' ||
+                response.status !== 'add-achievement' ||
+                response.result === 'error'
             ) {
                 this.user.interface.console?.AddLog(
                     'error',
@@ -572,8 +586,9 @@ class Achievements extends IUserData {
                 return;
             }
 
-            // Load new achievements
-            this.achievements.Set(newAchievements.achievements);
+            // Load new token & achievements
+            this.token = response.result.token;
+            this.achievements.Set(response.result.achievements);
 
             // Save user data
             this.user.SaveLocal();
@@ -604,18 +619,18 @@ class Achievements extends IUserData {
         }
 
         // Claim request
-        const result = await this.user.server2.tcp.SendAndWait({
+        const response = await this.user.server2.tcp.SendAndWait({
             action: 'claim-achievement',
-            achievementID
+            achievementID,
+            token: this.token
         });
 
         if (
-            result === 'not-sent' ||
-            result === 'timeout' ||
-            result === 'interrupted' ||
-            result.status !== 'claim-achievement' ||
-            result.result !== 'ok' ||
-            !result.rewards
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response === 'interrupted' ||
+            response.status !== 'claim-achievement' ||
+            response.result === 'error'
         ) {
             this.user.interface.console?.AddLog(
                 'error',
@@ -638,7 +653,7 @@ class Achievements extends IUserData {
         await this.LoadOnline();
 
         this.claimAchievementLoading = false;
-        return result.rewards;
+        return response.result.rewards;
     };
 
     /** @returns {NotificationInAppAchievementPending[]} */

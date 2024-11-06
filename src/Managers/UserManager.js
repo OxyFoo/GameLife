@@ -309,7 +309,7 @@ class UserManager {
         }
 
         for (const uData of this.DATA) {
-            if (uData.key in uData) {
+            if (uData.key in userData) {
                 uData.Load(userData[uData.key]);
             }
         }

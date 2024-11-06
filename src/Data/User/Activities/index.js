@@ -154,7 +154,6 @@ class Activities extends IUserData {
         }
 
         if (response.result === 'already-up-to-date') {
-            this.user.interface.console?.AddLog('info', '[Activities] Already up to date');
             return true;
         }
 

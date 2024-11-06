@@ -54,6 +54,8 @@ class Todos extends IUserData {
     // eslint-disable-next-line prettier/prettier
     allTodoes = new DynamicVar(/** @type {Todo[]} */ ([]));
 
+    token = 0;
+
     Clear = () => {
         this.SAVED_todoes = [];
         this.UNSAVED_additions = [];
@@ -100,6 +102,7 @@ class Todos extends IUserData {
         if (typeof data.deletions !== 'undefined') this.UNSAVED_deletions = data.deletions;
         if (typeof data.sort !== 'undefined') this.sort = data.sort;
         if (typeof data.sortSaved !== 'undefined') this.sortSaved = data.sortSaved;
+        if (typeof data.token !== 'undefined') this.token = data.token;
         this.allTodoes.Set(this.Get());
     };
 
@@ -110,25 +113,32 @@ class Todos extends IUserData {
             additions: this.UNSAVED_additions,
             deletions: this.UNSAVED_deletions,
             sort: this.sort,
-            sortSaved: this.sortSaved
+            sortSaved: this.sortSaved,
+            token: this.token
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-todo' });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-todo', token: this.token });
 
         if (
             response === 'interrupted' ||
             response === 'not-sent' ||
             response === 'timeout' ||
-            response.status !== 'get-todo'
+            response.status !== 'get-todo' ||
+            response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', '[Todo] Failed to load todo');
             return false;
         }
 
-        this.SAVED_todoes = response.todo;
-        this.sort = response.sort;
+        if (response.result === 'already-up-to-date') {
+            return true;
+        }
+
+        this.SAVED_todoes = response.result.todo;
+        this.sort = response.result.sort;
+        this.token = response.result.token;
         this.user.interface.console?.AddLog('info', `[Todo] Loaded ${this.SAVED_todoes.length} todoes`);
         this.allTodoes.Set(this.Get());
         return true;
@@ -143,7 +153,8 @@ class Todos extends IUserData {
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-todo',
             newTodo: unsavedData.newTodo,
-            newSort: unsavedData.sort
+            newSort: unsavedData.sort,
+            token: this.token
         });
 
         // Check if failed
@@ -152,15 +163,21 @@ class Todos extends IUserData {
             response === 'interrupted' ||
             response === 'not-sent' ||
             response.status !== 'save-todo' ||
-            response.result !== 'ok'
+            response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', '[Todo] Failed to save todo');
+            return false;
+        }
+
+        if (response.result === 'wrong-todo' || response.result === 'not-up-to-date') {
+            this.user.interface.console?.AddLog('error', `[Todo] Failed to save todo: ${response.result}`);
             return false;
         }
 
         // Update and print message
         this.purge();
         this.allTodoes.Set(this.Get());
+        this.token = response.result.token;
         const length = this.allTodoes.Get().length;
         this.user.interface.console?.AddLog('info', `[Todo] Saved ${length} todo`);
         return true;

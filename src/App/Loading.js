@@ -169,6 +169,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     if (user.server2.IsLogged()) {
         await user.SaveOnline();
         await user.LoadOnline();
+        await user.SaveLocal();
     }
 
     // Check if user data are loaded

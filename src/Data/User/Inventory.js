@@ -90,6 +90,9 @@ class Inventory extends IUserData {
     };
 
     LoadOnline = async () => {
+        // TODO: Reimplement inventory
+        return true;
+
         const response = await this.user.server2.tcp.SendAndWait({ action: 'get-inventory' });
 
         if (
@@ -100,7 +103,7 @@ class Inventory extends IUserData {
             response.result !== 'ok' ||
             response.inventory === null
         ) {
-            this.user.interface.console?.AddLog('error', 'Failed to load inventory');
+            this.user.interface.console?.AddLog('error', `[Inventory] Failed to load inventory (${response})`);
             return false;
         }
 

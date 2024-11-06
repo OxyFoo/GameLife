@@ -40,6 +40,8 @@ class Missions extends IUserData {
      */
     missionsEdited = false;
 
+    token = 0;
+
     Clear = () => {
         this.missions.Set([]);
         this.missionsEdited = false;
@@ -54,31 +56,38 @@ class Missions extends IUserData {
         if (typeof data.missions !== 'undefined') {
             this.missions.Set(data.missions);
         }
+        if (typeof data.token !== 'undefined') {
+            this.token = data.token;
+        }
     };
 
     /** @returns {SaveObject_Missions} */
     Save = () => {
         return {
-            missions: this.missions.Get()
+            missions: this.missions.Get(),
+            token: this.token
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-missions' });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-missions', token: this.token });
 
         if (
             response === 'interrupted' ||
             response === 'not-sent' ||
             response === 'timeout' ||
             response.status !== 'get-missions' ||
-            response.result !== 'ok' ||
-            response.missions === null
+            response.result === 'error'
         ) {
             return false;
         }
 
+        if (response.result === 'already-up-to-date') {
+            return true;
+        }
+
         const currMissions = this.missions.Get();
-        for (const newMission of response.missions) {
+        for (const newMission of response.result.missions) {
             const currMission = currMissions.find((mission) => mission.name === newMission.name);
             if (!currMission) {
                 currMissions.push(newMission);
@@ -87,6 +96,7 @@ class Missions extends IUserData {
             }
         }
 
+        this.token = response.result.token;
         this.missions.Set(currMissions);
         return true;
     };
@@ -192,6 +202,8 @@ class Missions extends IUserData {
     ClaimMission = async (name) => {
         // const result = await this.user.server2.tcp.SendAndWait({ action: 'claim-achievement', achievementID: name });
         // TODO: Claim missions
+        return false;
+
         const rewards = await this.user.server.ClaimMission(name);
         if (rewards === false) {
             return false;

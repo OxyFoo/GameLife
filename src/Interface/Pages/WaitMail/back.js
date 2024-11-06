@@ -11,6 +11,8 @@ class BackWaitmail extends PageBase {
     /** @type {number} */
     secondsRemainingToShowSentMessage = 0;
 
+    controller = new AbortController();
+
     componentDidMount() {
         this.WaitingMailConfirmation();
         this.tick = setInterval(this.onTick, 1000);
@@ -26,6 +28,7 @@ class BackWaitmail extends PageBase {
     }
 
     componentWillUnmount() {
+        this.controller.abort();
         clearInterval(this.tick);
         if (this.listenerServer) {
             user.server2.tcp.state.RemoveListener(this.listenerServer);
@@ -85,15 +88,15 @@ class BackWaitmail extends PageBase {
 
                 return false;
             },
-            -1
+            -1,
+            this.controller.signal
         );
 
-        if (
-            response === 'timeout' ||
-            response === 'not-sent' ||
-            response === 'interrupted' ||
-            response === 'alreadyExist'
-        ) {
+        if (response === 'interrupted') {
+            return;
+        }
+
+        if (response === 'timeout' || response === 'not-sent' || response === 'alreadyExist') {
             user.interface.console?.AddLog('error', `Server connection failed (${response})`);
             user.interface.popup?.OpenT({
                 type: 'ok',

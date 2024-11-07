@@ -400,7 +400,7 @@ class Activities extends IUserData {
         }
 
         // Activity is not free
-        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration)) {
+        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.#activities)) {
             return { status: 'notFree', activity: null };
         }
 

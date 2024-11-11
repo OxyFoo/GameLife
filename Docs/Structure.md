@@ -27,21 +27,6 @@
 
 
 
-## Serveurs
-### TCP (NodeJS - VPS)
-- Multijoueur
-- Notifications (amis)
-
-### HTTP (PHP - Apache2)
-- App data
-- Inventaires
-- Pubs
-- Shop
-- Notifications (succès)
-- Tout le reste
-
-
-
 ## Succès
 ### Conditions
 Syntaxe : ``` COMPARATEUR OPERATEUR COMPARANT ```\
@@ -68,45 +53,11 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` Battery LT 0.05 ```
 
 ### Récompenses (& GiftCodes Rewards)
 Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```\
-Exemple : ``` Title 8 ``` ou ``` OX 20,Item top_08 ```
+Exemple : ``` Title 8 ``` ou ``` OX 20,Item top_08:1 ```
 <pre>
 Séparés par des virgules, sans espaces
 * Types
     - Title + ID
-    - Item + ID
+    - Item + ID:COUNT
     - OX + Quantité
-</pre>
-
-
-
-## News
-* Template exemple
-<pre>
-[
-    {
-        "ID": 0,
-        "Content": {
-            "fr": "Vide",
-            "en": "Empty"
-        },
-        "Icon": null,
-        "ButtonText": null,
-        "ButtonEvent": null,
-        "TextAlign": "auto"
-    },
-    {
-        "ID": 1,
-        "Content": {
-            "fr": "Test - Texte en français",
-            "en": "Test - Text in english"
-        },
-        "Icon": "cdsiuchdsidcsuhscd___ICONe_en_xml_base64",
-        "ButtonText": {
-            "fr": "Ouvir le shop",
-            "en": "Open shop"
-        },
-        "ButtonEvent": "shop",
-        "TextAlign": "right"
-    }
-]
 </pre>

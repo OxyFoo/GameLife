@@ -13,11 +13,11 @@ import DynamicVar from 'Utils/DynamicVar';
 
 /** @type {MissionType[]} */
 const MISSIONS = [
-    { name: 'mission1', rewardType: 'ox', rewardValue: 20 },
-    { name: 'mission2', rewardType: 'ox', rewardValue: 30 },
-    { name: 'mission3', rewardType: 'ox', rewardValue: 10 },
-    { name: 'mission4', rewardType: 'ox', rewardValue: 50 },
-    { name: 'mission5', rewardType: 'chest', rewardValue: 1 }
+    { name: 'mission1', rewardType: 'ox', amount: 20 },
+    { name: 'mission2', rewardType: 'ox', amount: 30 },
+    { name: 'mission3', rewardType: 'ox', amount: 10 },
+    { name: 'mission4', rewardType: 'ox', amount: 50 },
+    { name: 'mission5', rewardType: 'chest', rarity: 'rare' }
 ];
 
 /** @extends {IUserData<SaveObject_Missions>} */
@@ -101,6 +101,35 @@ class Missions extends IUserData {
         return true;
     };
 
+    SaveOnline = async () => {
+        const missions = this.missions.Get();
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'save-missions',
+            missions,
+            token: this.token
+        });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'save-missions' ||
+            response.result === 'error' ||
+            response.result === 'wrong-missions'
+        ) {
+            return false;
+        }
+
+        if (response.result === 'wrong-last-update') {
+            // TODO
+            // Error ?
+            return false;
+        }
+
+        this.token = response.result.token;
+        return true;
+    };
+
     IsUnsaved = () => {
         return this.missionsEdited;
     };
@@ -161,6 +190,7 @@ class Missions extends IUserData {
      * @param {MissionItem['state']} state
      */
     SetMissionState = (name, state) => {
+        // Check if mission exists
         if (MISSIONS.findIndex((mission) => mission.name === name) === -1) {
             this.user.interface.console?.AddLog('error', `Mission ${name} not found`);
             return;
@@ -168,8 +198,10 @@ class Missions extends IUserData {
 
         const missions = this.missions.Get();
 
+        // Check if mission is already in the list
         const mission = missions.find((m) => m.name === name);
         if (!mission) {
+            // Add mission to the list (can't be claimed before being added)
             if (state === 'pending' || state === 'completed') {
                 missions.push({ name, state });
                 this.missions.Set(missions);
@@ -192,7 +224,7 @@ class Missions extends IUserData {
         this.missions.Set(missions);
         this.missionsEdited = true;
 
-        this.user.SaveOnline();
+        this.SaveOnline();
     };
 
     /**

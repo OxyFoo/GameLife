@@ -16,10 +16,10 @@ class ChestReward extends BackChestReward {
         const langM = langManager.curr['modal'];
 
         // Default chest image
-        let chestImage = IMG_CHESTS[0];
+        let chestImage = IMG_CHESTS.common;
         if (this.chestRarity === 'ox') {
             chestImage = IMG_CHEST_OX;
-        } else if (this.chestRarity > 0 && this.chestRarity < IMG_CHESTS.length) {
+        } else {
             chestImage = IMG_CHESTS[this.chestRarity];
         }
 

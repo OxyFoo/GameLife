@@ -9,7 +9,7 @@ import langManager from 'Managers/LangManager';
 import { Button, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievements
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievements
  */
 
 /**
@@ -31,6 +31,8 @@ function NIA_AchievementPending({ notif }) {
 
     const claimHandle = async () => {
         const langAch = langManager.curr['achievements'];
+
+        // Claim the achievement
         setLoading(true);
         const claimRewards = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
@@ -48,14 +50,17 @@ function NIA_AchievementPending({ notif }) {
         }
 
         // Claimed successfully, get the text
-        const rewardText = user.achievements.getRewardsText(claimRewards);
+        const rewardText = user.rewards.GetText(achievement.Rewards);
         const achievementName = langManager.GetText(achievement.Name);
+
+        // Get popup content
+        const title = langAch['alert-achievement-title'];
         let message = langAch['alert-achievement-text'].replace('{}', achievementName);
         if (rewardText) {
             message += `\n\n${rewardText}`;
         }
 
-        const title = langAch['alert-achievement-title'];
+        // Show popup
         user.interface.notificationsInApp?.Close();
         user.interface.popup?.OpenT({
             type: 'ok',

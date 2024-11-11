@@ -18,14 +18,6 @@ import { IAppData } from 'Types/Interface/IAppData';
  * @property {number} dex
  */
 
-const Rarity = {
-    common: 0,
-    rare: 1,
-    epic: 2,
-    legendary: 3,
-    event: 4
-};
-
 const itemContainerSize = {
     default: { x: 0, y: 0, width: 1000, height: 1000 },
     hair: { x: 100, y: -50, width: 700, height: 550 },
@@ -92,5 +84,4 @@ class Items extends IAppData {
     GetContainerSize = (slot) => itemContainerSize[slot];
 }
 
-export { Rarity };
 export default Items;

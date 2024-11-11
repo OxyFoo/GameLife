@@ -166,7 +166,7 @@ class BackShopIAP extends React.Component {
             return;
         }
 
-        // Wait if reward application is not loaded or
+        // Wait if reward application is not loaded or already on reward page
         while (user.appIsLoaded === false || user.interface.GetCurrentPageName() === 'chestreward') {
             await Sleep(200);
         }

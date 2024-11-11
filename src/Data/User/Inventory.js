@@ -1,5 +1,6 @@
 import dataManager from 'Managers/DataManager';
 import { IUserData } from 'Types/Interface/IUserData';
+import DynamicVar from 'Utils/DynamicVar';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -20,11 +21,15 @@ class Inventory extends IUserData {
         this.user = user;
     }
 
-    /** @type {number[]} */
-    titleIDs = [];
+    /**
+     * @description List of title IDs owned by the user
+     * @type {DynamicVar<number[]>}
+     */
+    // eslint-disable-next-line prettier/prettier
+    titleIDs = new DynamicVar(/** @type {number[]} */ ([]));
 
     /**
-     * @description Array of owned stuffs
+     * @description List of stuffs owned by the user
      * @type {Stuff[]}
      */
     stuffs = [];
@@ -52,7 +57,7 @@ class Inventory extends IUserData {
 
     Clear = () => {
         this.stuffs = [];
-        this.titleIDs = [];
+        this.titleIDs.Set([]);
         this.avatar = {
             sexe: 'MALE',
             skin: 'skin_01',
@@ -67,7 +72,7 @@ class Inventory extends IUserData {
 
     Get = () => {
         return {
-            titleIDs: this.titleIDs,
+            titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
             avatar: this.avatar
         };
@@ -75,7 +80,7 @@ class Inventory extends IUserData {
 
     /** @param {Partial<SaveObject_Inventory>} data */
     Load = (data) => {
-        if (typeof data.titleIDs !== 'undefined') this.titleIDs = data.titleIDs;
+        if (typeof data.titleIDs !== 'undefined') this.titleIDs.Set(data.titleIDs);
         if (typeof data.stuffs !== 'undefined') this.stuffs = data.stuffs;
         if (typeof data.avatar !== 'undefined') this.avatar = data.avatar;
     };
@@ -83,7 +88,7 @@ class Inventory extends IUserData {
     /** @returns {SaveObject_Inventory} */
     Save = () => {
         return {
-            titleIDs: this.titleIDs,
+            titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
             avatar: this.avatar
         };
@@ -157,11 +162,25 @@ class Inventory extends IUserData {
     GetTitles = () => {
         /** @type {Title[]} */
         const titles = [];
-        for (const ID of this.titleIDs) {
+        for (const ID of this.titleIDs.Get()) {
             const title = dataManager.titles.GetByID(ID);
             if (title !== null) titles.push(title);
         }
         return titles;
+    };
+
+    /**
+     * @param {number} titleID
+     * @returns {boolean}
+     */
+    AddTitle = (titleID) => {
+        const ownedTitles = this.titleIDs.Get();
+        if (ownedTitles.includes(titleID)) {
+            return false;
+        }
+
+        this.titleIDs.Set([...ownedTitles, titleID]);
+        return true;
     };
 
     /**

@@ -357,24 +357,6 @@ class Activities extends IUserData {
         return enrichedSkills;
     }
 
-    /** @returns {boolean} True if an activity was removed */
-    RemoveDeletedSkillsActivities() {
-        let activities = [...this.#activities, ...this.#UNSAVED_activities];
-        let deletions = [];
-        for (let a in activities) {
-            let activity = activities[a];
-            const skill = dataManager.skills.GetByID(activity.skillID);
-            if (skill === null) deletions.push(activity);
-        }
-
-        let removed = false;
-        deletions.map((activity) => {
-            const state = this.Remove(activity);
-            removed ||= state === 'removed';
-        });
-        return removed;
-    }
-
     /**
      * Add activity, return status & Activity if added or edited successfully, null otherwise
      * @param {Activity} newActivity Auto define timezone & addedTime if 0

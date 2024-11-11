@@ -12,9 +12,10 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Data/App/Items').StuffID} StuffID
+ * @typedef {import('Class/Rewards').Rarities} Rarities
  *
  * @typedef {Object} ChestRewardProps
- * @property {number} chestRarity
+ * @property {Rarities} chestRarity
  * @property {StuffID} itemID
  * @property {() => void} callback
  *
@@ -29,7 +30,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 const BackChestRewardProps = {
     /** @type {ChestRewardArgs} */
     args: {
-        chestRarity: 0,
+        chestRarity: 'common',
         itemID: 'bottom_01',
         callback: () => {}
     }
@@ -70,6 +71,7 @@ class BackChestReward extends PageBase {
             throw new Error('[ChestReward] User character is null');
         }
 
+        /** @type {ChestRewardArgs['chestRarity']} */
         this.chestRarity = props.args.chestRarity;
 
         if (props.args.chestRarity === 'ox') {

@@ -1,5 +1,4 @@
 import THEMES from 'Ressources/themes';
-import { Rarity } from 'Data/App/Items';
 import { MinMax } from 'Utils/Functions';
 
 /**
@@ -8,6 +7,7 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {keyof typeof THEMES[ThemeName]['Color']} ThemeColor
  * @typedef {keyof typeof THEMES[ThemeName]['Text']} ThemeText
  * @typedef {keyof typeof THEMES[ThemeName]['Rarity']} ThemeRarity
+ * @typedef {import('Types/Global/Rarities').Rarities} Rarities
  */
 
 class ThemeManager {
@@ -107,31 +107,27 @@ class ThemeManager {
     }
 
     /**
-     * @param {number} rarity 0 to 4 (common, rare, epic, legendary, event)
+     * @param {Rarities} rarity 0 to 4 (common, rare, epic, legendary, event)
      * @returns {string[]}
      */
     GetRariryColors = (rarity) => {
         /** @type {string[]} */
         let colors = [];
         switch (rarity) {
-            case Rarity.common:
+            case 'common':
                 colors = [this.GetColor('common1'), this.GetColor('common2')];
                 break;
 
-            case Rarity.rare:
+            case 'rare':
                 colors = [this.GetColor('rare1'), this.GetColor('rare2')];
                 break;
 
-            case Rarity.epic:
+            case 'epic':
                 colors = [this.GetColor('epic1'), this.GetColor('epic2')];
                 break;
 
-            case Rarity.legendary:
+            case 'legendary':
                 colors = [this.GetColor('legendary1'), this.GetColor('legendary2')];
-                break;
-
-            case Rarity.event:
-                colors = [this.GetColor('event1'), this.GetColor('event2')];
                 break;
         }
         return colors;

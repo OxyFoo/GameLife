@@ -3,6 +3,7 @@ import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import Multiplayer from 'Class/Multiplayer';
 import NotificationsInApp from 'Class/NotificationsInApp';
+import Rewards from 'Class/Rewards';
 import Server2 from 'Class/Server2';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
@@ -17,10 +18,10 @@ import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
+// TODO
 ////////////////
 // Deprecated //
 import Server from 'Class/Server';
-import TCP from 'Class/TCP';
 ////////////////
 
 /**
@@ -62,6 +63,7 @@ class UserManager {
         this.experience = new Experience(this);
         this.multiplayer = new Multiplayer(this);
         this.notificationsInApp = new NotificationsInApp(this);
+        this.rewards = new Rewards(this);
         this.server2 = new Server2(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this);
@@ -102,8 +104,6 @@ class UserManager {
 
         /** @deprecated */ // TODO: Remove
         this.server = new Server(this);
-        /** @deprecated */ // TODO: Remove
-        this.tcp = new TCP(this);
 
         /** @type {Stats} */
         this.stats = this.experience.GetEmptyExperience();
@@ -223,7 +223,6 @@ class UserManager {
 
     async RefreshStats(onlineSave = true) {
         if (this.server2.IsAuthenticated() && onlineSave) {
-            this.activities.RemoveDeletedSkillsActivities();
             await this.SaveOnline();
         }
 

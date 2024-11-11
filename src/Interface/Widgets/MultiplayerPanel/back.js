@@ -32,15 +32,15 @@ class BackMultiplayerPanel extends React.Component {
     refContainer = React.createRef();
 
     componentDidMount() {
-        this.updateState(user.tcp.state.Get());
+        this.updateState(user.server2.tcp.state.Get());
         this.updateFriends(user.multiplayer.friends.Get());
-        this.listenerState = user.tcp.state.AddListener(this.updateState);
+        this.listenerState = user.server2.tcp.state.AddListener(this.updateState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
         if (this.listenerState) {
-            user.tcp.state.RemoveListener(this.listenerState);
+            user.server2.tcp.state.RemoveListener(this.listenerState);
         }
         if (this.listenerFriends) {
             user.multiplayer.friends.RemoveListener(this.listenerFriends);
@@ -69,7 +69,7 @@ class BackMultiplayerPanel extends React.Component {
     Reconnect = () => {
         console.log('Reconnect');
         this.setState({ state: 'idle' });
-        user.tcp.Connect();
+        user.server2.tcp.Connect();
     };
 }
 

@@ -28,7 +28,7 @@ class BackLeaderboard extends PageBase {
         playersData: [],
         search: '',
         sortIndex: 0
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -57,12 +57,12 @@ class BackLeaderboard extends PageBase {
             },
 
             activities: {
-                firstTime: !!activities.length ? activities[0].startTime : 0,
+                firstTime: activities.length ? activities[0].startTime : 0,
                 length: activities.length,
                 totalDuration: activities.reduce((acc, activity) => acc + activity.duration, 0)
             },
 
-            stats: Object.assign({}, ...user.statsKey.map(i => ({[i]: experience.stats[i].totalXP}))),
+            stats: Object.assign({}, ...user.statsKey.map((i) => ({ [i]: experience.stats[i].totalXP }))),
 
             // Unused
             currentActivity: null,
@@ -70,8 +70,9 @@ class BackLeaderboard extends PageBase {
             status: null
         };
 
-        const friendsData = user.multiplayer.friends.Get()
-            .filter(friend => friend.friendshipState === 'accepted')
+        const friendsData = user.multiplayer.friends
+            .Get()
+            .filter((friend) => friend.friendshipState === 'accepted')
             .map((friend, index) => {
                 return {
                     ...friend,
@@ -88,33 +89,33 @@ class BackLeaderboard extends PageBase {
     }
 
     componentDidMount() {
-        this.listenerTCP = user.tcp.state.AddListener(this.Back);
+        this.listenerTCP = user.server2.tcp.state.AddListener(this.Back);
     }
 
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerTCP);
+        user.server2.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     onChangeSearch = (search) => {
         this.setState({ search: search }, this.refreshRanking);
-    }
+    };
     onSwitchSort = () => {
         const sortLength = Object.keys(this.sortList).length;
         const newIndex = (this.state.sortIndex + 1) % sortLength;
         this.setState({ sortIndex: newIndex }, this.refreshRanking);
-    }
+    };
 
     refreshRanking = (applyState = true) => {
         const lang = langManager.curr['leaderboard'];
         const langLvl = langManager.curr['level'];
         const langStats = langManager.curr['statistics'];
         const { search, sortIndex } = this.state;
-        let newRanking = [ ...this.globalPlayersData ];
+        let newRanking = [...this.globalPlayersData];
 
         // Sort by XP
         if (sortIndex === 0) {
             newRanking.sort((a, b) => b.xp - a.xp);
-            
+
             // Define label & ranks
             newRanking.forEach((player, index) => {
                 const statExp = user.experience.getXPDict(player.xp);
@@ -132,9 +133,7 @@ class BackLeaderboard extends PageBase {
                 player.label = `${player.activities.length} ${lang['label-activities']}`;
                 player.rank = index + 1;
             });
-        }
-
-        else if (sortIndex >= 2 && sortIndex <= 1 + user.statsKey.length) {
+        } else if (sortIndex >= 2 && sortIndex <= 1 + user.statsKey.length) {
             const statKey = user.statsKey[sortIndex - 2];
             newRanking.sort((a, b) => b.stats[statKey] - a.stats[statKey]);
 
@@ -154,8 +153,8 @@ class BackLeaderboard extends PageBase {
         // Search filter
         if (search !== '') {
             const searchLower = search.toLowerCase();
-            newRanking = newRanking.filter(user => {
-                return user.username.toLowerCase().includes(searchLower);
+            newRanking = newRanking.filter((profile) => {
+                return profile.username.toLowerCase().includes(searchLower);
             });
         }
 
@@ -164,11 +163,11 @@ class BackLeaderboard extends PageBase {
         }
 
         return { playersData: newRanking };
-    }
+    };
 
     Back = () => {
         user.interface.BackHandle();
-    }
+    };
 }
 
 export default BackLeaderboard;

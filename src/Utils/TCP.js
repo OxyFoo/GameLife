@@ -3,11 +3,11 @@ import DynamicVar from 'Utils/DynamicVar';
 import { RandomString } from 'Utils/Functions';
 
 /**
- * @typedef {import('Managers/UserManager').default} UserManager
- *
  * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
  * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
  * @typedef {import('Types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ *
+ * @typedef {import('Interface/Global').Console['AddLog']} AddLog
  *
  */
 
@@ -21,16 +21,6 @@ const TCP_SETTINGS = {
 const INITIAL_STATE = 'idle';
 
 class TCP {
-    /** @type {UserManager} */
-    #user;
-
-    /**
-     * @param {UserManager} user Used to get the token & print logs
-     */
-    constructor(user) {
-        this.#user = user;
-    }
-
     /** @type {WebSocket | null} */
     socket = null;
 
@@ -50,6 +40,14 @@ class TCP {
      * @type {Partial<{ [key in TCPServerRequest['status']]: (data: Extract<TCPServerRequest, { 'status': key }>) => boolean | Promise<boolean> }>}
      */
     #callbacksActions = {};
+
+    /** @type {AddLog | null} */
+    AddLog = null;
+
+    /** @param {AddLog | null} addLogFunction */
+    constructor(addLogFunction) {
+        this.AddLog = addLogFunction;
+    }
 
     /**
      * @param {number} [timeout] in milliseconds
@@ -141,7 +139,7 @@ class TCP {
 
     /** @param {Event} event */
     #onError = (event) => {
-        this.#user.interface.console?.AddLog('warn', 'TCP server:', event);
+        this.AddLog?.('warn', 'TCP server:', event);
         this.state.Set('error');
         this.Disconnect();
     };
@@ -158,7 +156,7 @@ class TCP {
      */
     Send = (message) => {
         if (typeof message !== 'object') {
-            this.#user.interface.console?.AddLog('warn', 'Send socket: Invalid message type.');
+            this.AddLog?.('warn', 'Send socket: Invalid message type.');
             return false;
         }
 

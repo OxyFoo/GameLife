@@ -10,7 +10,7 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Achievements').Reward} Reward
+ * @typedef {import('Types/Class/Rewards').Reward} Reward
  * @typedef {import('Types/Data/App/Achievements').Condition} Condition
  * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
@@ -163,7 +163,7 @@ class Achievements extends IUserData {
             }
 
             // Add rewards text
-            const rewardText = this.getRewardsText(achievement.Rewards);
+            const rewardText = this.user.rewards.GetText(achievement.Rewards);
             if (rewardText) {
                 lines.push(rewardText);
             }
@@ -322,84 +322,6 @@ class Achievements extends IUserData {
                 break;
         }
 
-        return output;
-    };
-
-    /**
-     * Return rewards text with correct langage
-     * @param {Reward[] | null} rewards
-     * @returns {string}
-     */
-    getRewardsText = (rewards) => {
-        if (rewards === null) return '';
-
-        const lang = langManager.curr['achievements']['rewards'];
-        const lines = [];
-
-        for (let i = 0; i < rewards.length; i++) {
-            const reward = rewards[i];
-            const valueStr = typeof reward.Value === 'string' ? reward.Value : reward.Value?.toString();
-            const valueNum = typeof reward.Value === 'number' ? reward.Value : null;
-
-            switch (reward.Type) {
-                case 'Title':
-                    if (valueNum === null && !valueStr.includes('|')) continue;
-
-                    let titleID = valueNum;
-                    if (titleID === null) {
-                        titleID = parseInt(valueStr.split('|')[0], 10);
-                    }
-
-                    const title = dataManager.titles.GetByID(titleID);
-                    if (title === null) {
-                        this.user.interface.console?.AddLog(
-                            'error',
-                            '[Achievements] Error while get title ( ID:',
-                            titleID,
-                            ')'
-                        );
-                        continue;
-                    }
-
-                    const titleName = langManager.GetText(title.Name);
-                    const titleLine = lang['title'].replace('{}', titleName);
-                    let line = titleLine;
-
-                    // If already have this title
-                    if (valueNum === null) {
-                        const amount = valueStr.split('|')[1];
-                        line += lang['title-conversion'].replace('{}', amount);
-                    }
-
-                    lines.push(line);
-                    break;
-
-                case 'Item':
-                    // eslint-disable-next-line prettier/prettier
-                    const item = dataManager.items.GetByID(/** @type {StuffID} */ (valueStr));
-                    if (item === null) {
-                        this.user.interface.console?.AddLog(
-                            'error',
-                            `[Achievements] Error while get item (ID: ${valueStr})`
-                        );
-                        continue;
-                    }
-
-                    const itemName = langManager.GetText(item.Name);
-                    const itemRarity = langManager.curr['rarities'][item.Rarity];
-                    const itemText = itemName + ' (' + itemRarity + ')';
-                    const itemLine = lang['item'].replace('{}', itemText);
-                    lines.push(itemLine);
-                    break;
-
-                case 'OX':
-                    const oxLine = lang['ox'].replace('{}', valueStr);
-                    lines.push(oxLine);
-                    break;
-            }
-        }
-
-        const output = lines.join('\n');
         return output;
     };
 
@@ -598,11 +520,15 @@ class Achievements extends IUserData {
     };
 
     /**
+     * Get rewards for an achievement and mark it as solved
      * @param {number} achievementID
-     * @returns {Promise<Reward[] | null>} Text to show in popup, false if error, null if already claimed
+     * @returns {Promise<Reward[] | null>} Rewards or null if an error occurred
      */
     Claim = async (achievementID) => {
-        if (this.claimAchievementLoading) return null;
+        // Prevent multiple claims
+        if (this.claimAchievementLoading) {
+            return null;
+        }
         this.claimAchievementLoading = true;
 
         // Get achievement
@@ -610,9 +536,7 @@ class Achievements extends IUserData {
         if (achievement === null) {
             this.user.interface.console?.AddLog(
                 'error',
-                '[Achievements] Error while get achievement ( ID:',
-                achievementID,
-                ')'
+                `[Achievements] Error while get achievement (ID: ${achievementID})`
             );
             this.claimAchievementLoading = false;
             return null;
@@ -625,6 +549,7 @@ class Achievements extends IUserData {
             token: this.token
         });
 
+        // Check if response is valid
         if (
             response === 'not-sent' ||
             response === 'timeout' ||
@@ -639,18 +564,6 @@ class Achievements extends IUserData {
             this.claimAchievementLoading = false;
             return null;
         }
-
-        // Add achievement to solved & get rewards
-        const loaded = await this.user.SaveLocal();
-        if (!loaded) {
-            this.user.interface.console?.AddLog(
-                'error',
-                `[Achievements] Error while load user achievements after claim achievement (ID: ${achievementID})`
-            );
-        }
-
-        // Load user achievements directly
-        await this.LoadOnline();
 
         this.claimAchievementLoading = false;
         return response.result.rewards;

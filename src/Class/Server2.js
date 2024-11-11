@@ -1,6 +1,6 @@
 import { IUserClass } from 'Types/Interface/IUserClass';
-import TCP from './TCP';
 
+import TCP from 'Utils/TCP';
 import { GetDeviceIdentifiers } from 'Utils/Device';
 
 /**
@@ -19,7 +19,7 @@ class Server2 extends IUserClass {
         super('server2');
 
         this.#user = user;
-        this.tcp = new TCP(user);
+        this.tcp = new TCP(user.interface.console?.AddLog || null);
         this.#listenerTCP = this.tcp.state.AddListener((state) => {
             if (this.#isTrusted && state !== 'connected') {
                 this.#isTrusted = false;

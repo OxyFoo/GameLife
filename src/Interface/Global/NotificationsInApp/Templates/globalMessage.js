@@ -7,11 +7,14 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, Text } from 'Interface/Components';
-import IMG_CHESTS, { CHEST_RARITIES } from 'Ressources/items/chests/chests';
+import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
 
+// TODO: Remove & replace by new rarity enum
+const CHEST_RARITIES = ['common', 'rare', 'epic', 'legendary'];
+
 /**
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<'global-message'>} NotificationInApp
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInApp
  */
 
 /**
@@ -23,14 +26,14 @@ async function handleRead(notif, response) {
     const lang = langManager.curr['notifications']['in-app'];
 
     const callbackID = `notif-${notif.data.ID}`;
-    user.tcp.Send({
+    user.server2.tcp.Send({
         action: 'global-message',
         ID: notif.data.ID,
         callbackID: callbackID,
         response: response
     });
 
-    const tcpResponse = await user.tcp.WaitForCallback(callbackID);
+    const tcpResponse = await user.server2.tcp.WaitForCallback(callbackID);
     if (tcpResponse !== 'ok') {
         const title = lang['popup-error-title'];
         const message = lang['popup-error-message'];
@@ -268,6 +271,7 @@ function RenderReward(notif) {
             </View>
         );
     } else if (notif.data.action === 'reward-chest') {
+        // Use new rarity enum
         let rarity = 0;
         if (CHEST_RARITIES.includes(notif.data.data.toString())) {
             rarity = CHEST_RARITIES.indexOf(notif.data.data.toString());

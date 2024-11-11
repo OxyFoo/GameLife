@@ -206,13 +206,12 @@
     },
 
     "rarity-text": "Rareté",
-    "rarities": [
-        "Commun",
-        "Rare",
-        "Épique",
-        "Légendaire",
-        "Événement"
-    ],
+    "rarities": {
+        "common": "Commun",
+        "rare": "Rare",
+        "epic": "Épique",
+        "legendary": "Légendaire"
+    },
 
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",

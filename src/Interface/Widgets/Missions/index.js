@@ -13,6 +13,7 @@ import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 
 /**
+ * @typedef {import('Types/Global/Rarities').Rarities} Rarities
  * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
  */
 
@@ -101,7 +102,7 @@ class Missions extends BackMissions {
                     <View style={styles.columnReward}>
                         <View style={[styles.rewardCard, styleReward]}>
                             <Animated.View style={[styles.rewardItem, styleAnimation]}>
-                                {this.renderReward(stepReward.rewardType, stepReward.rewardValue)}
+                                {this.renderReward(stepReward)}
                             </Animated.View>
                         </View>
 
@@ -124,32 +125,27 @@ class Missions extends BackMissions {
             backgroundColor: themeManager.GetColor(current || active ? 'main1' : 'background')
         };
 
-        return (
-            <View style={[styles.rewardPreview, styleRewardPreview]}>
-                {this.renderReward(item.rewardType, item.rewardValue, true)}
-            </View>
-        );
+        return <View style={[styles.rewardPreview, styleRewardPreview]}>{this.renderReward(item, true)}</View>;
     };
 
     /**
-     * @param {'ox' | 'chest'} rewardType
-     * @param {number} rewardValue Ox amount or chest rarity
+     * @param {MissionType} item
      * @param {boolean} [hideOxText=false]
      */
-    renderReward(rewardType, rewardValue, hideOxText = false) {
-        if (rewardType === 'ox') {
+    renderReward(item, hideOxText = false) {
+        if (item.rewardType === 'ox') {
             return (
                 <>
                     <Image style={styles.rewardImage} source={IMG_OX} />
                     {!hideOxText && (
                         <Text style={styles.rewardValue} fontSize={14}>
-                            {'x' + rewardValue.toString()}
+                            {`x${item.amount}`}
                         </Text>
                     )}
                 </>
             );
-        } else if (rewardType === 'chest') {
-            return <Image style={styles.rewardImage} source={IMG_CHESTS[rewardValue]} />;
+        } else if (item.rewardType === 'chest') {
+            return <Image style={styles.rewardImage} source={IMG_CHESTS[item.rarity]} />;
         } else {
             return null;
         }

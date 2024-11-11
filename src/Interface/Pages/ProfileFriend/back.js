@@ -35,7 +35,7 @@ class BackProfileFriend extends PageBase {
             activitiesLength: 0,
             durationHours: 0
         }
-    }
+    };
 
     /** @param {BackProfileFriendProps} props */
     constructor(props) {
@@ -54,13 +54,18 @@ class BackProfileFriend extends PageBase {
 
         this.state.friend = friend;
         this.state.xpInfo = user.experience.getXPDict(friend.xp, 'user');
-        this.state.statsInfo = Object.assign({}, ...user.statsKey.map(i => ({
-            [i]: user.experience.getXPDict(friend.stats[i], 'stat')
-        })));
+        this.state.statsInfo = Object.assign(
+            {},
+            ...user.statsKey.map((i) => ({
+                [i]: user.experience.getXPDict(friend.stats[i], 'stat')
+            }))
+        );
 
         if (friend.friendshipState === 'accepted') {
             if (friend.activities.firstTime) {
-                this.state.activities.totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
+                this.state.activities.totalDays = Math.floor(
+                    (GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60)
+                );
             }
             this.state.activities.activitiesLength = friend.activities.length;
             this.state.activities.durationHours = Math.floor(friend.activities.totalDuration / 60);
@@ -72,23 +77,18 @@ class BackProfileFriend extends PageBase {
             friend.avatar.Skin,
             friend.avatar.SkinColor
         );
-        const stuff = [
-            friend.avatar.Hair,
-            friend.avatar.Top,
-            friend.avatar.Bottom,
-            friend.avatar.Shoes
-        ];
+        const stuff = [friend.avatar.Hair, friend.avatar.Top, friend.avatar.Bottom, friend.avatar.Shoes];
         character.SetEquipment(stuff);
         this.character = character;
     }
 
     componentDidMount() {
-        this.listenerTCP = user.tcp.state.AddListener(state => state !== 'connected' && this.Back());
+        this.listenerTCP = user.server2.tcp.state.AddListener((state) => state !== 'connected' && this.Back());
         this.listenerFriend = user.multiplayer.friends.AddListener(this.updateFriend);
     }
 
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerTCP);
+        user.server2.tcp.state.RemoveListener(this.listenerTCP);
         user.multiplayer.friends.RemoveListener(this.listenerFriend);
     }
 
@@ -102,7 +102,7 @@ class BackProfileFriend extends PageBase {
             return;
         }
 
-        const newFriend = friends.find(f => f.accountID === friend.accountID) || null;
+        const newFriend = friends.find((f) => f.accountID === friend.accountID) || null;
         if (newFriend === null) {
             this.Back();
             return;
@@ -113,9 +113,12 @@ class BackProfileFriend extends PageBase {
             if (friend.activities.firstTime) {
                 totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
-            const statsInfo = Object.assign({}, ...user.statsKey.map(i => ({
-                [i]: user.experience.getXPDict(friend.stats[i], 'stat')
-            })));
+            const statsInfo = Object.assign(
+                {},
+                ...user.statsKey.map((i) => ({
+                    [i]: user.experience.getXPDict(friend.stats[i], 'stat')
+                }))
+            );
 
             this.setState({
                 friend: newFriend,
@@ -130,12 +133,12 @@ class BackProfileFriend extends PageBase {
         }
 
         this.setState({ friend: newFriend });
-    }
+    };
 
     handleStartNow = () => {
         const skillID = this.state.friend.currentActivity.skillID;
         StartActivityNow(skillID);
-    }
+    };
 
     removeFriendHandler = () => {
         const { friend } = this.state;
@@ -150,8 +153,8 @@ class BackProfileFriend extends PageBase {
         const lang = langManager.curr['profile-friend'];
         const title = lang['alert-removefriend-title'];
         const text = lang['alert-removefriend-text'].replace('{}', friend.username);
-        user.interface.popup.Open('yesno', [ title, text ], callback);
-    }
+        user.interface.popup.Open('yesno', [title, text], callback);
+    };
 
     cancelFriendHandler = () => {
         const { friend } = this.state;
@@ -166,12 +169,12 @@ class BackProfileFriend extends PageBase {
         const lang = langManager.curr['profile-friend'];
         const title = lang['alert-cancelfriend-title'];
         const text = lang['alert-cancelfriend-text'].replace('{}', friend.username);
-        user.interface.popup.Open('yesno', [ title, text ], callback);
-    }
+        user.interface.popup.Open('yesno', [title, text], callback);
+    };
 
     Back = () => {
         user.interface.BackHandle();
-    }
+    };
 }
 
 BackProfileFriend.defaultProps = BackProfileFriendProps;

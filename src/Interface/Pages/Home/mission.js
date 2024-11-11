@@ -11,7 +11,7 @@ function StartMission(missionName) {
         const lang = langManager.curr['missions']['content']['mission5'];
 
         // Not connected to the server (TCP)
-        if (!user.tcp.IsConnected()) {
+        if (!user.server2.tcp.IsConnected()) {
             user.interface.screenTuto.ShowTutorial([
                 {
                     component: null,

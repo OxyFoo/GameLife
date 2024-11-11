@@ -68,7 +68,7 @@ class Multiplayer extends IUserClass {
     /** @param {string} username */
     AddFriend = async (username) => {
         const callbackID = 'add-friend-' + Date.now();
-        const sendSuccess = this.user.tcp.Send({
+        const sendSuccess = this.user.server2.tcp.Send({
             action: 'add-friend',
             username: username,
             callbackID: callbackID
@@ -80,7 +80,7 @@ class Multiplayer extends IUserClass {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitForCallback(callbackID);
+        const result = await this.user.server2.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'not-found') {
@@ -100,7 +100,7 @@ class Multiplayer extends IUserClass {
     /** @param {number} accountID */
     RemoveFriend = async (accountID) => {
         const callbackID = 'remove-friend-' + Date.now();
-        const sendSuccess = this.user.tcp.Send({
+        const sendSuccess = this.user.server2.tcp.Send({
             action: 'remove-friend',
             accountID: accountID,
             callbackID: callbackID
@@ -112,7 +112,7 @@ class Multiplayer extends IUserClass {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitForCallback(callbackID);
+        const result = await this.user.server2.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error') {
@@ -122,7 +122,7 @@ class Multiplayer extends IUserClass {
     /** @param {number} accountID */
     CancelFriend = async (accountID) => {
         const callbackID = 'cancel-friend-' + Date.now();
-        const sendSuccess = this.user.tcp.Send({
+        const sendSuccess = this.user.server2.tcp.Send({
             action: 'cancel-friend',
             accountID: accountID,
             callbackID: callbackID
@@ -134,7 +134,7 @@ class Multiplayer extends IUserClass {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitForCallback(callbackID);
+        const result = await this.user.server2.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error') {
@@ -144,7 +144,7 @@ class Multiplayer extends IUserClass {
     /** @param {number} accountID */
     AcceptFriend = async (accountID) => {
         const callbackID = 'accept-friend-' + Date.now();
-        const sendSuccess = this.user.tcp.Send({
+        const sendSuccess = this.user.server2.tcp.Send({
             action: 'accept-friend',
             accountID: accountID,
             callbackID: callbackID
@@ -156,7 +156,7 @@ class Multiplayer extends IUserClass {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitForCallback(callbackID);
+        const result = await this.user.server2.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error' || result === 'get-friend-error') {
@@ -166,7 +166,7 @@ class Multiplayer extends IUserClass {
     /** @param {number} accountID */
     DeclineFriend = async (accountID) => {
         const callbackID = 'decline-friend-' + Date.now();
-        const sendSuccess = this.user.tcp.Send({
+        const sendSuccess = this.user.server2.tcp.Send({
             action: 'decline-friend',
             accountID: accountID,
             callbackID: callbackID
@@ -178,7 +178,7 @@ class Multiplayer extends IUserClass {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitForCallback(callbackID);
+        const result = await this.user.server2.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error' || result === 'sql-error2') {
@@ -188,7 +188,7 @@ class Multiplayer extends IUserClass {
     /** @param {number} accountID */
     BlockFriend = async (accountID) => {
         const callbackID = 'block-friend-' + Date.now();
-        const sendSuccess = this.user.tcp.Send({
+        const sendSuccess = this.user.server2.tcp.Send({
             action: 'block-friend',
             accountID: accountID,
             callbackID: callbackID
@@ -200,7 +200,7 @@ class Multiplayer extends IUserClass {
         }
 
         const lang = langManager.curr['multiplayer'];
-        const result = await this.user.tcp.WaitForCallback(callbackID);
+        const result = await this.user.server2.tcp.WaitForCallback(callbackID);
         if (result === 'timeout') {
             this.ShowError(lang['alert-timeout']);
         } else if (result === 'sql-error' || result === 'sql-error2') {

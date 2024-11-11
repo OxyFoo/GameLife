@@ -209,6 +209,7 @@ class PopupBack extends React.PureComponent {
         }
 
         // Start end animations
+        this.opened = false;
         Animated.parallel([
             TimingAnimation(current.animOpacity, 0, 200),
             TimingAnimation(current.animScale, 0.9, 200),
@@ -227,7 +228,6 @@ class PopupBack extends React.PureComponent {
                 }),
                 () => {
                     if (this.state.currents.length === 0) {
-                        this.opened = false;
                         this.proccessQueue();
                     }
                 }
@@ -254,7 +254,7 @@ class PopupBack extends React.PureComponent {
         const { pageX, pageY } = e.nativeEvent;
 
         // If popup is not opened
-        if (currents.length === 0) {
+        if (currents.length === 0 || !this.opened) {
             return;
         }
 

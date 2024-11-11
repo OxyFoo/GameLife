@@ -2,7 +2,7 @@ import { GetGlobalTime } from './Time';
 import DataStorage, { STORAGE } from './DataStorage';
 
 /**
- * @typedef {import('Class/TCP').default} TCP
+ * @typedef {import('Utils/TCP').default} TCP
  */
 
 /**

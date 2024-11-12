@@ -54,7 +54,7 @@ class Todos extends IUserData {
     // eslint-disable-next-line prettier/prettier
     allTodoes = new DynamicVar(/** @type {Todo[]} */ ([]));
 
-    token = 0;
+    #token = 0;
 
     Clear = () => {
         this.SAVED_todoes = [];
@@ -63,6 +63,7 @@ class Todos extends IUserData {
         this.sort = [];
         this.sortSaved = true;
         this.allTodoes.Set([]);
+        this.#token = 0;
     };
 
     /**
@@ -102,7 +103,7 @@ class Todos extends IUserData {
         if (typeof data.deletions !== 'undefined') this.UNSAVED_deletions = data.deletions;
         if (typeof data.sort !== 'undefined') this.sort = data.sort;
         if (typeof data.sortSaved !== 'undefined') this.sortSaved = data.sortSaved;
-        if (typeof data.token !== 'undefined') this.token = data.token;
+        if (typeof data.token !== 'undefined') this.#token = data.token;
         this.allTodoes.Set(this.Get());
     };
 
@@ -114,12 +115,12 @@ class Todos extends IUserData {
             deletions: this.UNSAVED_deletions,
             sort: this.sort,
             sortSaved: this.sortSaved,
-            token: this.token
+            token: this.#token
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-todo', token: this.token });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-todo', token: this.#token });
 
         if (
             response === 'interrupted' ||
@@ -138,7 +139,7 @@ class Todos extends IUserData {
 
         this.SAVED_todoes = response.result.todo;
         this.sort = response.result.sort;
-        this.token = response.result.token;
+        this.#token = response.result.token;
         this.user.interface.console?.AddLog('info', `[Todo] Loaded ${this.SAVED_todoes.length} todoes`);
         this.allTodoes.Set(this.Get());
         return true;
@@ -154,7 +155,7 @@ class Todos extends IUserData {
             action: 'save-todo',
             newTodo: unsavedData.newTodo,
             newSort: unsavedData.sort,
-            token: this.token
+            token: this.#token
         });
 
         // Check if failed
@@ -177,7 +178,7 @@ class Todos extends IUserData {
         // Update and print message
         this.purge();
         this.allTodoes.Set(this.Get());
-        this.token = response.result.token;
+        this.#token = response.result.token;
         const length = this.allTodoes.Get().length;
         this.user.interface.console?.AddLog('info', `[Todo] Saved ${length} todo`);
         return true;

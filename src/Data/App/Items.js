@@ -56,9 +56,7 @@ class Items extends IAppData {
      * @returns {Item[]}
      */
     GetBuyable(slot = false) {
-        /** @param {Slot} s */
-        const checkSlot = (s) => slot === false || s === slot;
-        return this.items.filter((i) => i.Buyable && i.Rarity <= 3 && checkSlot(i.Slot));
+        return this.items.filter((i) => i.Buyable && (slot === false || i.Slot === slot));
     }
 
     /**

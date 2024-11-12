@@ -57,7 +57,7 @@ class Quests extends IUserData {
     allQuests = new DynamicVar(/** @type {Quest[]} */ ([]));
 
     /** @type {number} */
-    token = 0;
+    #token = 0;
 
     Clear = () => {
         this.#SAVED_quests = [];
@@ -66,6 +66,7 @@ class Quests extends IUserData {
         this.sort = [];
         this.SAVED_sort = true;
         this.allQuests.Set([]);
+        this.#token = 0;
     };
 
     /**
@@ -112,7 +113,7 @@ class Quests extends IUserData {
         if (typeof data.unsavedDeletions !== 'undefined') this.#UNSAVED_deletions = data.unsavedDeletions;
         if (typeof data.sort !== 'undefined') this.sort = data.sort;
         if (typeof data.sortIsSaved !== 'undefined') this.SAVED_sort = data.sortIsSaved;
-        if (typeof data.token !== 'undefined') this.token = data.token;
+        if (typeof data.token !== 'undefined') this.#token = data.token;
 
         this.allQuests.Set(this.Get());
     };
@@ -125,12 +126,12 @@ class Quests extends IUserData {
             unsavedDeletions: this.#UNSAVED_deletions,
             sort: this.sort,
             sortIsSaved: this.SAVED_sort,
-            token: this.token
+            token: this.#token
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-quests', token: this.token });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-quests', token: this.#token });
 
         if (
             response === 'interrupted' ||
@@ -149,7 +150,7 @@ class Quests extends IUserData {
 
         this.#SAVED_quests = response.result.quests;
         this.sort = response.result.sort;
-        this.token = response.result.token;
+        this.#token = response.result.token;
 
         this.allQuests.Set(this.Get());
         this.user.interface.console?.AddLog('info', `[Quests] ${response.result.quests.length} quests loaded`);
@@ -170,7 +171,7 @@ class Quests extends IUserData {
             action: 'save-quests',
             quests: unsaved.data,
             sort: unsaved.sort,
-            token: this.token
+            token: this.#token
         });
 
         if (
@@ -196,7 +197,7 @@ class Quests extends IUserData {
         }
 
         if (typeof response.token !== 'undefined') {
-            this.token = response.token;
+            this.#token = response.token;
         }
 
         this.purge();

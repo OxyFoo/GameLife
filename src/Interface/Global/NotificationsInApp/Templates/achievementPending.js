@@ -49,16 +49,21 @@ function NIA_AchievementPending({ notif }) {
             return;
         }
 
-        // Claimed successfully, get the text
-        const rewardText = user.rewards.GetText(achievement.Rewards);
-        const achievementName = langManager.GetText(achievement.Name);
+        const executedRewards = await user.rewards.ExecuteRewards(claimRewards);
+        if (!executedRewards) {
+            user.interface.console?.AddLog(
+                'error',
+                `[NIA_AchievementPending] Failed to execute rewards for achievement ${notif.data.achievementID}`
+            );
+            this.claimAchievementLoading = false;
+            return;
+        }
 
         // Get popup content
         const title = langAch['alert-achievement-title'];
-        let message = langAch['alert-achievement-text'].replace('{}', achievementName);
-        if (rewardText) {
-            message += `\n\n${rewardText}`;
-        }
+        const achievementName = langManager.GetText(achievement.Name);
+        const message = langAch['alert-achievement-text'].replace('{}', achievementName);
+        await user.rewards.ShowRewards(title, message, claimRewards);
 
         // Show popup
         user.interface.notificationsInApp?.Close();

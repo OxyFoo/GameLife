@@ -45,7 +45,7 @@ async function handleRead(notif, response) {
     }
 
     // Force update notifications to prevent re-claiming
-    user.interface.notificationsInApp.forceUpdate();
+    user.interface.notificationsInApp?.forceUpdate();
 
     return true;
 }
@@ -56,7 +56,7 @@ async function handleOpenPageOrURL(notif) {
         return handleRead(notif);
     }
 
-    user.interface.notificationsInApp.Close();
+    user.interface.notificationsInApp?.Close();
 
     const pageName = user.interface.GetPageName(notif.data.data);
     if (notif.data.action === 'open-page' && pageName !== null) {
@@ -76,7 +76,7 @@ async function handleRespond(notif) {
 
     const lang = langManager.curr['notifications']['in-app'];
 
-    user.interface.notificationsInApp.Close();
+    user.interface.notificationsInApp?.Close();
     user.interface.screenInput.Open(
         lang['global-message-input'],
         '',
@@ -103,7 +103,7 @@ async function handleRespond(notif) {
 async function handleClaim(notif) {
     const lang = langManager.curr['notifications']['in-app'];
 
-    user.interface.notificationsInApp.Close();
+    user.interface.notificationsInApp?.Close();
 
     // Buy chest
     const data = { notifID: notif.data.ID };

@@ -71,6 +71,8 @@
         "text-hint": "Appuie pour faire la mission",
         "text-claim": "Appuie pour obtenir la récompense",
 
+        "claim-title": "Mission complétée",
+        "claim-text": "Bravo ! Tu as complété la mission, voici ta[-es] récompense[s] :",
         "content": {
             "mission1": {
                 "title": "Faire une activité",
@@ -279,7 +281,9 @@
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "Gain : {} Ox"
+            "ox": "Gain : {} Ox",
+            "chest": "Coffre : {}",
+            "items-in-chest": "Ainsi que les objets suivants..."
         },
 
         "popup-condition-text": "Condition : ",

@@ -55,6 +55,8 @@ class Inventory extends IUserData {
      */
     avatarEdited = false;
 
+    #token = 0;
+
     Clear = () => {
         this.stuffs = [];
         this.titleIDs.Set([]);
@@ -68,6 +70,7 @@ class Inventory extends IUserData {
             shoes: 0
         };
         this.avatarEdited = false;
+        this.#token = 0;
     };
 
     Get = () => {
@@ -83,6 +86,7 @@ class Inventory extends IUserData {
         if (typeof data.titleIDs !== 'undefined') this.titleIDs.Set(data.titleIDs);
         if (typeof data.stuffs !== 'undefined') this.stuffs = data.stuffs;
         if (typeof data.avatar !== 'undefined') this.avatar = data.avatar;
+        if (typeof data.token !== 'undefined') this.#token = data.token;
     };
 
     /** @returns {SaveObject_Inventory} */
@@ -90,33 +94,35 @@ class Inventory extends IUserData {
         return {
             titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
-            avatar: this.avatar
+            avatar: this.avatar,
+            token: this.#token
         };
     };
 
     LoadOnline = async () => {
-        // TODO: Reimplement inventory
-        return true;
-
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-inventory' });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-inventories', token: this.#token });
 
         if (
             response === 'interrupted' ||
             response === 'not-sent' ||
             response === 'timeout' ||
-            response.status !== 'get-inventory' ||
-            response.result !== 'ok' ||
-            response.inventory === null
+            response.status !== 'get-inventories' ||
+            response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', `[Inventory] Failed to load inventory (${response})`);
             return false;
         }
 
-        this.titleIDs = response.inventory.titleIDs;
-        this.stuffs = response.inventory.stuffs;
-        this.avatar = response.inventory.avatar;
+        if (response.result === 'already-up-to-date') {
+            this.user.interface.console?.AddLog('info', '[Inventory] Already up to date');
+            return true;
+        }
 
-        this.user.interface.console?.AddLog('info', `${this.titleIDs.length} titles loaded`);
+        this.titleIDs.Set(response.result.titleIDs);
+        this.stuffs = response.result.stuffs;
+        this.avatar = response.result.avatar;
+
+        this.user.interface.console?.AddLog('info', `${this.titleIDs.Get().length} titles loaded`);
         this.user.interface.console?.AddLog('info', `${this.stuffs.length} stuffs loaded`);
         return true;
     };

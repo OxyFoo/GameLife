@@ -71,6 +71,9 @@
         "text-hint": "Press to do the mission",
         "text-claim": "Press to claim the reward",
 
+        "claim-title": "Claim reward",
+        "claim-text": "You have completed the mission, here is your reward[s]:",
+
         "content": {
             "mission1": {
                 "title": "Make an activity",
@@ -279,7 +282,9 @@
             "title": "New title: {}",
             "title-conversion": " (convert into {} Ox)",
             "item": "New item: {}",
-            "ox": "Earn: {} Ox"
+            "ox": "Earn: {} Ox",
+            "chest": "New chest: {}",
+            "items-in-chest": "As well as the following objects ..."
         },
 
         "popup-condition-text": "Condition: ",

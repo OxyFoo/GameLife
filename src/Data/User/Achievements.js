@@ -44,6 +44,7 @@ class Achievements extends IUserData {
 
     Clear = () => {
         this.achievements.Set([]);
+        this.token = 0;
     };
 
     Get = () => {
@@ -163,7 +164,7 @@ class Achievements extends IUserData {
             }
 
             // Add rewards text
-            const rewardText = this.user.rewards.GetText(achievement.Rewards);
+            const rewardText = this.user.rewards.GetText('not-claim', achievement.Rewards);
             if (rewardText) {
                 lines.push(rewardText);
             }

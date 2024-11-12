@@ -87,6 +87,7 @@ class Activities extends IUserData {
         this.#UNSAVED_deletions = [];
         this.currentActivity.Set(null);
         this.allActivities.Set([]);
+        this.token = 0;
     };
 
     /**

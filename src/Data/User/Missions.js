@@ -1,3 +1,4 @@
+import langManager from 'Managers/LangManager';
 import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 
@@ -5,7 +6,7 @@ import DynamicVar from 'Utils/DynamicVar';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/User/Inventory').Stuff} Stuff
  *
- * @typedef {import('Types/Data/User/Missions').MissionKeys} MissionKeys
+ * @typedef {import('Types/Database/Missions').MissionKeys} MissionKeys
  * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
  * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
  * @typedef {import('Types/Data/User/Missions').SaveObject_Missions} SaveObject_Missions
@@ -38,13 +39,14 @@ class Missions extends IUserData {
      * Used to know if we need to save it
      * @type {boolean}
      */
-    missionsEdited = false;
+    #missionsEdited = false;
 
-    token = 0;
+    #token = 0;
 
     Clear = () => {
         this.missions.Set([]);
-        this.missionsEdited = false;
+        this.#token = 0;
+        this.#missionsEdited = false;
     };
 
     Get = () => {
@@ -57,7 +59,7 @@ class Missions extends IUserData {
             this.missions.Set(data.missions);
         }
         if (typeof data.token !== 'undefined') {
-            this.token = data.token;
+            this.#token = data.token;
         }
     };
 
@@ -65,12 +67,12 @@ class Missions extends IUserData {
     Save = () => {
         return {
             missions: this.missions.Get(),
-            token: this.token
+            token: this.#token
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-missions', token: this.token });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-missions', token: this.#token });
 
         if (
             response === 'interrupted' ||
@@ -96,17 +98,21 @@ class Missions extends IUserData {
             }
         }
 
-        this.token = response.result.token;
+        this.#token = response.result.token;
         this.missions.Set(currMissions);
         return true;
     };
 
     SaveOnline = async () => {
-        const missions = this.missions.Get();
+        if (!this.isUnsaved()) {
+            return true;
+        }
+
+        const missions = this.getUnsaved();
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-missions',
             missions,
-            token: this.token
+            token: this.#token
         });
 
         if (
@@ -121,27 +127,27 @@ class Missions extends IUserData {
         }
 
         if (response.result === 'wrong-last-update') {
-            // TODO
-            // Error ?
+            await this.LoadOnline();
             return false;
         }
 
-        this.token = response.result.token;
+        this.#token = response.result.token;
+
+        this.purge();
+
         return true;
     };
 
-    IsUnsaved = () => {
-        return this.missionsEdited;
+    isUnsaved = () => {
+        return this.#missionsEdited;
     };
 
-    GetUnsaved = () => {
-        return {
-            missions: this.missions.Get()
-        };
+    getUnsaved = () => {
+        return this.missions.Get();
     };
 
-    Purge = () => {
-        this.missionsEdited = false;
+    purge = () => {
+        this.#missionsEdited = false;
     };
 
     /** @returns {{ mission: MissionItem | null, index: number }} Mission item or null if no mission is available */
@@ -171,7 +177,7 @@ class Missions extends IUserData {
             });
 
             this.missions.Set(missions);
-            this.missionsEdited = true;
+            this.#missionsEdited = true;
 
             return {
                 mission: missions[missions.length - 1],
@@ -205,7 +211,7 @@ class Missions extends IUserData {
             if (state === 'pending' || state === 'completed') {
                 missions.push({ name, state });
                 this.missions.Set(missions);
-                this.missionsEdited = true;
+                this.#missionsEdited = true;
             }
             return;
         }
@@ -215,6 +221,7 @@ class Missions extends IUserData {
             return;
         }
 
+        // TODO: Why ?
         // Don't update if mission is claimed
         if (mission.state === 'claimed') {
             return;
@@ -222,7 +229,7 @@ class Missions extends IUserData {
 
         mission.state = state;
         this.missions.Set(missions);
-        this.missionsEdited = true;
+        this.#missionsEdited = true;
 
         this.SaveOnline();
     };
@@ -232,42 +239,51 @@ class Missions extends IUserData {
      * @returns {Promise<boolean>} True if mission was claimed
      */
     ClaimMission = async (name) => {
-        // const result = await this.user.server2.tcp.SendAndWait({ action: 'claim-achievement', achievementID: name });
-        // TODO: Claim missions
-        return false;
+        const savedMissions = await this.SaveOnline();
+        if (!savedMissions) {
+            return false;
+        }
 
-        const rewards = await this.user.server.ClaimMission(name);
-        if (rewards === false) {
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'claim-mission',
+            missionName: name,
+            token: this.#token
+        });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'claim-mission' ||
+            response.result === 'error'
+        ) {
+            return false;
+        }
+
+        if (response.result === 'already-claimed') {
+            return true;
+        }
+
+        if (response.result === 'wrong-last-update') {
+            await this.LoadOnline();
             return false;
         }
 
         // Claim rewards
-        if (rewards.hasOwnProperty('ox')) {
-            const newOx = rewards['ox'];
-            this.user.informations.ox.Set(newOx);
-            this.user.SaveLocal();
-        } else if (rewards.hasOwnProperty('item')) {
-            /** @type {Stuff} */
-            const stuff = rewards['item'];
-            this.user.inventory.stuffs.push(stuff);
-            this.user.SaveLocal();
-
-            const missionIndex = MISSIONS.findIndex((mission) => mission.name === name);
-            const rarity = MISSIONS[missionIndex].rewardValue;
-
-            // Go to chest reward page
-            this.user.interface.ChangePage('chestreward', {
-                args: {
-                    itemID: stuff['ItemID'],
-                    chestRarity: rarity,
-                    callback: this.user.interface.BackHandle
-                },
-                storeInHistory: false
-            });
-        } else {
-            this.user.interface.console?.AddLog('error', 'Unknown reward', rewards);
+        const { rewards, newOx, newToken } = response.result;
+        const rewardsExecuted = await this.user.rewards.ExecuteRewards(rewards, newOx);
+        if (!rewardsExecuted) {
             return false;
         }
+
+        // Update token
+        this.#token = newToken;
+
+        // Show rewards
+        const lang = langManager.curr['missions'];
+        const title = lang['claim-title'];
+        const message = lang['claim-text'];
+        await this.user.rewards.ShowRewards(title, message, rewards);
 
         this.SetMissionState(name, 'claimed');
         return true;

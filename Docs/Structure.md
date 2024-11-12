@@ -53,11 +53,12 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` Battery LT 0.05 ```
 
 ### Récompenses (& GiftCodes Rewards)
 Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```\
-Exemple : ``` Title 8 ``` ou ``` OX 20,Item top_08:1 ```
+Exemple : ``` Title 8 ``` ou ``` OX 20,Item top_08:1,Chest rare ```
 <pre>
 Séparés par des virgules, sans espaces
 * Types
     - Title + ID
-    - Item + ID:COUNT
     - OX + Quantité
+    - Item + ID:COUNT
+    - Chest + Rarity
 </pre>

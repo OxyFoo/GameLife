@@ -14,7 +14,8 @@ import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES }
 
 class BackActivityTimer extends PageBase {
     state = {
-        currentActivity: user.activities.currentActivity.Get()
+        currentActivity: user.activities.currentActivity.Get(),
+        loading: false
     };
 
     /** @type {Symbol | null} */
@@ -133,7 +134,7 @@ class BackActivityTimer extends PageBase {
         return false;
     };
 
-    onPressComplete = () => {
+    onPressComplete = async () => {
         const { currentActivity } = this.state;
 
         if (currentActivity === null) {
@@ -162,7 +163,9 @@ class BackActivityTimer extends PageBase {
 
         this.finished = true;
 
-        AddActivityNow(skillID, startTime, now, friendsIDs, this.Back);
+        this.setState({ loading: true });
+        await AddActivityNow(skillID, startTime, now, friendsIDs, this.Back);
+        this.setState({ loading: false });
     };
 
     Back = () => {

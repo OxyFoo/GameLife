@@ -46,7 +46,9 @@ class BackActivityPage2Add extends React.Component {
         /** @type {'startTime' | 'endTime'} */
         DTPType: 'startTime',
 
-        DTPDate: new Date()
+        DTPDate: new Date(),
+
+        loading: false
     };
 
     /** @param {BackActivityPage2AddPropsType} props */
@@ -58,18 +60,20 @@ class BackActivityPage2Add extends React.Component {
         this.state.selectedMinutes = activity.duration % 60;
     }
 
-    onAddActivity = () => {
+    onAddActivity = async () => {
         const { activity, editActivity } = this.props;
 
         if (activity.skillID === 0) {
             return;
         }
 
+        this.setState({ loading: true });
         if (editActivity === null) {
-            AddActivity(activity);
+            await AddActivity(activity);
         } else {
-            EditActivity(editActivity, activity);
+            await EditActivity(editActivity, activity);
         }
+        this.setState({ loading: false });
     };
 
     onRemoveActivity = () => {

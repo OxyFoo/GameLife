@@ -19,7 +19,7 @@ class Server2 extends IUserClass {
         super('server2');
 
         this.#user = user;
-        this.tcp = new TCP(user.interface.console?.AddLog || null);
+        this.tcp = new TCP();
         this.#listenerTCP = this.tcp.state.AddListener((state) => {
             if (this.#isTrusted && state !== 'connected') {
                 this.#isTrusted = false;

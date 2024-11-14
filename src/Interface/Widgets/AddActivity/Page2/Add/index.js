@@ -17,7 +17,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
         const lang = langManager.curr['activity'];
         const langDatesNames = langManager.curr['dates']['names'];
         const { activity, editActivity } = this.props;
-        const { selectedHours, selectedMinutes, DTPMode, DTPDate } = this.state;
+        const { loading, selectedHours, selectedMinutes, DTPMode, DTPDate } = this.state;
 
         const startDate = GetDate(activity.startTime);
         const textStartDate = DateFormat(startDate, 'DD/MM/YYYY');
@@ -65,7 +65,9 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 <View style={styles.starttime}>
                     {/* Input: End time (by duration) */}
                     <View style={[styles.stButtonLeft, styleBorderColor]}>
+                        {/* Icon: Hourglass */}
                         <Icon icon='hourglass-outline' />
+
                         <View style={styles.stLeftViewParent}>
                             <View style={styles.stViewLeftParent2}>
                                 <View style={styles.stDigitView}>
@@ -123,21 +125,26 @@ class AddActivityPage2Add extends BackActivityPage2Add {
 
                 {/* Button: Add to planner */}
                 {editActivity === null && (
-                    <Button style={styles.addActivityButton} onPress={this.onAddActivity}>
+                    <Button style={styles.addActivityButton} onPress={this.onAddActivity} loading={loading}>
                         {lang['button-add']}
                     </Button>
                 )}
 
                 {/* Button: Edit activity */}
                 {editActivity !== null && this.isEdited() && (
-                    <Button style={styles.addActivityButton} onPress={this.onAddActivity}>
+                    <Button style={styles.addActivityButton} onPress={this.onAddActivity} loading={loading}>
                         {lang['button-edit']}
                     </Button>
                 )}
 
-                {/* Button: Edit activity */}
+                {/* Button: Remove activity */}
                 {editActivity !== null && (
-                    <Button style={styles.addActivityButton} appearance='outline' onPress={this.onRemoveActivity}>
+                    <Button
+                        style={styles.addActivityButton}
+                        appearance='outline'
+                        onPress={this.onRemoveActivity}
+                        loading={loading}
+                    >
                         {lang['button-remove']}
                     </Button>
                 )}

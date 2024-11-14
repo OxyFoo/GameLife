@@ -228,6 +228,7 @@ class UserManager {
 
         const { stats } = this.experience.GetExperience();
         this.stats = stats;
+        await this.SaveLocal();
     }
 
     /**
@@ -240,11 +241,11 @@ class UserManager {
 
         let success = true;
 
+        const onlineSaved = await this.SaveOnline();
+        if (!onlineSaved) success = false;
+
         const localSaved = await this.SaveLocal();
         if (!localSaved) success = false;
-
-        const onlineSaved = localSaved && (await this.SaveOnline());
-        if (!onlineSaved) success = false;
 
         this.globalSaving = false;
         return success;

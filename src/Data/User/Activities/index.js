@@ -13,11 +13,11 @@ import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils
  * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
- * @typedef {import('Types/Data/User/Activities').ActivityUnsaved} ActivityUnsaved
+ * @typedef {import('Types/Data/User/Activities').ActivitySaved} ActivitySaved
  * @typedef {import('Types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
- * @typedef {'added' | 'notFree' | 'tooEarly' | 'alreadyExist'} AddStatus
+ * @typedef {'added' | 'notFree' | 'tooEarly'} AddStatus
  * @typedef {'edited' | 'needConfirmation' | 'notFree' | 'notExist' | 'tooEarly'} EditStatus
  * @typedef {'removed' | 'notExist'} RemoveStatus
  */
@@ -46,24 +46,27 @@ class Activities extends IUserData {
         this.user = user;
     }
 
-    /** @type {Activity[]} */
+    /** @type {ActivitySaved[]} */
     #activities = [];
+
+    /** @type {ActivitySaved[]} */
+    #UNSAVED_editions = [];
 
     /** @type {Activity[]} */
     #UNSAVED_activities = [];
 
-    /** @type {Activity[]} */
+    /** @type {number[]} */
     #UNSAVED_deletions = [];
 
     /** @type {number} Unix timestamp in seconds */
-    token = 0;
+    #token = 0;
 
     /**
      * @description Contain all activities, updated when adding, editing or removing
-     * @type {DynamicVar<Activity[]>}
+     * @type {DynamicVar<(Activity | ActivitySaved)[]>}
      */
     // eslint-disable-next-line prettier/prettier
-    allActivities = new DynamicVar(/** @type {Activity[]} */ ([]));
+    allActivities = new DynamicVar(/** @type {(Activity | ActivitySaved)[]} */ ([]));
 
     /** @type {DynamicVar<CurrentActivity | null>} */
     // eslint-disable-next-line prettier/prettier
@@ -71,7 +74,7 @@ class Activities extends IUserData {
 
     #cache_get = {
         id: '',
-        /** @type {Activity[]} */
+        /** @type {(Activity | ActivitySaved)[]} */
         activities: []
     };
 
@@ -87,22 +90,56 @@ class Activities extends IUserData {
         this.#UNSAVED_deletions = [];
         this.currentActivity.Set(null);
         this.allActivities.Set([]);
-        this.token = 0;
+        this.#token = 0;
     };
 
     /**
      * Return all activities (save and unsaved) sorted by start time (ascending)
-     * @returns {Activity[]}
+     * @returns {(Activity | ActivitySaved)[]}
      */
     Get = () => {
-        const id = `${this.#activities.length}-${this.#UNSAVED_activities.length}`;
+        // Generate cache ID
+        const id = [
+            this.#activities.length,
+            this.#UNSAVED_editions.length,
+            this.#UNSAVED_activities.length,
+            this.#UNSAVED_deletions.length
+        ].join('-');
+
+        // If cache is not up to date, update it
         if (id !== this.#cache_get.id) {
-            const activities = [...this.#activities, ...this.#UNSAVED_activities].filter(
-                (activity) => GetActivityIndex(this.#UNSAVED_deletions, activity) === null
-            );
+            // Get saved activities
+            const savedActivities = [...this.#activities];
+
+            // Apply unsaved editions
+            for (let i = 0; i < this.#UNSAVED_editions.length; i++) {
+                const index = savedActivities.findIndex((activity) => activity.ID === this.#UNSAVED_editions[i].ID);
+                if (index !== -1) {
+                    savedActivities[index] = this.#UNSAVED_editions[i];
+                }
+            }
+
+            // Apply unsaved deletions
+            for (let i = 0; i < this.#UNSAVED_deletions.length; i++) {
+                const index = savedActivities.findIndex((activity) => activity.ID === this.#UNSAVED_deletions[i]);
+                if (index !== -1) {
+                    savedActivities.splice(index, 1);
+                }
+            }
+
+            // Apply unsaved new activities
+            /** @type {(Activity | ActivitySaved)[]} */
+            const newActivities = [...savedActivities];
+            for (let i = 0; i < this.#UNSAVED_activities.length; i++) {
+                newActivities.push(this.#UNSAVED_activities[i]);
+            }
+
+            // Update cache
             this.#cache_get.id = id;
-            this.#cache_get.activities = SortByKey(activities, 'startTime');
+            this.#cache_get.activities = SortByKey(newActivities, 'startTime');
         }
+
+        // Return cache
         return this.#cache_get.activities;
     };
 
@@ -118,10 +155,11 @@ class Activities extends IUserData {
     /** @param {Partial<SaveObject_Activities>} data */
     Load = (data) => {
         if (typeof data.activities !== 'undefined') this.#activities = data.activities;
-        if (typeof data.unsaved !== 'undefined') this.#UNSAVED_activities = data.unsaved;
+        if (typeof data.editions !== 'undefined') this.#UNSAVED_editions = data.editions;
+        if (typeof data.additions !== 'undefined') this.#UNSAVED_activities = data.additions;
         if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
         if (typeof data.current !== 'undefined') this.currentActivity.Set(data.current);
-        if (typeof data.token !== 'undefined') this.token = data.token;
+        if (typeof data.token !== 'undefined') this.#token = data.token;
         this.allActivities.Set(this.Get());
     };
 
@@ -129,17 +167,18 @@ class Activities extends IUserData {
     Save = () => {
         return {
             activities: this.#activities,
-            unsaved: this.#UNSAVED_activities,
+            editions: this.#UNSAVED_editions,
+            additions: this.#UNSAVED_activities,
             deletions: this.#UNSAVED_deletions,
             current: this.currentActivity.Get(),
-            token: this.token
+            token: this.#token
         };
     };
 
     LoadOnline = async () => {
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'get-activities',
-            token: this.token
+            token: this.#token
         });
 
         // Check if failed
@@ -165,7 +204,7 @@ class Activities extends IUserData {
         }
 
         // Update last update
-        this.token = response.result.token;
+        this.#token = response.result.token;
 
         // Update and print message
         this.allActivities.Set(this.Get());
@@ -173,7 +212,8 @@ class Activities extends IUserData {
         return true;
     };
 
-    SaveOnline = async () => {
+    /** @returns {Promise<boolean>} */
+    SaveOnline = async (attempt = 2) => {
         if (!this.isUnsaved()) {
             return true;
         }
@@ -181,8 +221,10 @@ class Activities extends IUserData {
         const unsaved = this.getUnsaved();
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-activities',
-            activities: unsaved,
-            token: this.token
+            activitiesToAdd: unsaved.add,
+            activitiesToEdit: unsaved.edit,
+            activitiesToDelete: unsaved.delete,
+            token: this.#token
         });
 
         // Check if failed
@@ -190,80 +232,89 @@ class Activities extends IUserData {
             response === 'timeout' ||
             response === 'interrupted' ||
             response === 'not-sent' ||
-            response.status !== 'save-activities'
+            response.status !== 'save-activities' ||
+            response.result === 'error' ||
+            response.result === 'wrong-activities'
         ) {
             this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
             return false;
         }
 
         // Check if failed or need to reload
-        if (response.result !== 'ok') {
-            if (response.result === 'wrong-last-update') {
-                this.user.interface.console?.AddLog(
-                    'error',
-                    '[Activities] Failed to save activities (wrong last update), reloading'
-                );
-                await this.LoadOnline();
-                return false;
+        if (response.result === 'wrong-last-update') {
+            this.user.interface.console?.AddLog(
+                'error',
+                '[Activities] Failed to save activities (wrong last update), reloading'
+            );
+            await this.LoadOnline();
+            if (attempt > 0) {
+                return await this.SaveOnline(attempt - 1);
             }
-
-            this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
             return false;
         }
 
         // Update last update if success
-        if (typeof response.token !== 'undefined') {
-            this.token = response.token;
+        if (typeof response.result.token !== 'undefined') {
+            this.#token = response.result.token;
         }
 
         // Update and print message
-        this.purge();
+        this.purge(response.result.newActivities);
         this.allActivities.Set(this.Get());
         this.user.interface.console?.AddLog('info', `[Activities] ${this.#activities.length} activities saved`);
+        this.user.SaveLocal();
 
         return true;
     };
 
     /** @private */
     isUnsaved = () => {
-        return this.#UNSAVED_activities.length > 0 || this.#UNSAVED_deletions.length > 0;
+        return (
+            this.#UNSAVED_activities.length > 0 ||
+            this.#UNSAVED_editions.length > 0 ||
+            this.#UNSAVED_deletions.length > 0
+        );
     };
 
     /**
      * @private
-     * @returns {ActivityUnsaved[]} List of unsaved activities
+     * @returns {{ add: Activity[], edit: ActivitySaved[], delete: number[] }} List of unsaved activities
      */
     getUnsaved = () => {
-        /** @type {ActivityUnsaved[]} */
-        let unsaved = [];
-
-        for (let a in this.#UNSAVED_activities) {
-            const activity = this.#UNSAVED_activities[a];
-            unsaved.push({ type: 'add', ...activity });
-        }
-
-        for (let a in this.#UNSAVED_deletions) {
-            const activity = this.#UNSAVED_deletions[a];
-            unsaved.push({ type: 'rem', ...activity });
-        }
-
-        return unsaved;
+        return {
+            add: this.#UNSAVED_activities,
+            edit: this.#UNSAVED_editions,
+            delete: this.#UNSAVED_deletions
+        };
     };
 
-    /** @private */
-    purge = () => {
-        this.#activities.push(...this.#UNSAVED_activities);
-        this.#UNSAVED_activities = [];
+    /**
+     * @private
+     * @param {ActivitySaved[]} newActivities
+     */
+    purge = (newActivities) => {
+        // Apply editions
+        for (let i = this.#UNSAVED_editions.length - 1; i >= 0; i--) {
+            const index = this.#activities.findIndex((activity) => activity.ID === this.#UNSAVED_editions[i].ID);
+            if (index !== -1) {
+                this.#activities[index] = this.#UNSAVED_editions[i];
+            }
+        }
 
         // Apply deletions
         for (let i = this.#UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = GetActivityIndex(this.#activities, this.#UNSAVED_deletions[i]);
-            if (index !== null) {
+            const index = this.#activities.findIndex((activity) => activity.ID === this.#UNSAVED_deletions[i]);
+            if (index !== -1) {
                 this.#activities.splice(index, 1);
             }
         }
 
-        // Reset temp deletions
+        // Apply new activities
+        this.#activities.push(...newActivities);
+
+        // Clear unsaved
+        this.#UNSAVED_activities = [];
+        this.#UNSAVED_editions = [];
         this.#UNSAVED_deletions = [];
     };
 
@@ -360,26 +411,19 @@ class Activities extends IUserData {
 
     /**
      * Add activity, return status & Activity if added or edited successfully, null otherwise
-     * @param {Activity} newActivity Auto define timezone & addedTime if 0
-     * @param {boolean} [alreadySaved=false] If false, save activity in UNSAVED_activities
+     * @template {true | false} T
+     * @param {T extends false ? Activity : ActivitySaved} newActivity
+     * @param {T} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {{ status: AddStatus, activity: Activity | null }}
      */
-    Add(newActivity, alreadySaved = false) {
+    // eslint-disable-next-line prettier/prettier
+    Add(newActivity, alreadySaved = /** @type {T} */ (false)) {
         newActivity.timezone ||= GetTimeZone();
-        newActivity.addedTime ||= GetLocalTime(undefined, 3);
+        newActivity.addedTime ||= GetLocalTime(undefined);
 
         // Limit date (< 2020-01-01)
         if (newActivity.startTime < 1577836800) {
             return { status: 'tooEarly', activity: null };
-        }
-
-        // Check if not exists
-        const indexActivity = GetActivityIndex(this.#activities, newActivity);
-        const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, newActivity);
-
-        // Activity already exists
-        if (indexActivity !== null || indexUnsaved !== null) {
-            return { status: 'alreadyExist', activity: null };
         }
 
         // Activity is not free
@@ -387,15 +431,11 @@ class Activities extends IUserData {
             return { status: 'notFree', activity: null };
         }
 
-        // Remove from deletions if exists
-        const indexDeletion = GetActivityIndex(this.#UNSAVED_deletions, newActivity);
-        if (indexDeletion !== null) {
-            this.#UNSAVED_deletions.splice(indexDeletion, 1);
-        }
-
         // Add activity
         if (alreadySaved) {
-            this.#activities.push(newActivity);
+            // eslint-disable-next-line prettier/prettier
+            const newSavedActivity = /** @type {ActivitySaved} */ (newActivity);
+            this.#activities.push(newSavedActivity);
         } else {
             this.#UNSAVED_activities.push(newActivity);
             this.allActivities.Set(this.Get());
@@ -404,12 +444,11 @@ class Activities extends IUserData {
         return { status: 'added', activity: newActivity };
     }
 
-    // TODO: Finish edit activity
     /**
      * Edit activity
-     * @param {Activity} activity
+     * @param {Activity | ActivitySaved} activity
      * @param {Activity} newActivity
-     * @param {boolean} [confirm=false] User confirm edit (important, can remove experience)
+     * @param {boolean} [confirm=false] User confirm edit (if important: can remove experience)
      * @returns {{ status: EditStatus, activity: Activity | null }}
      */
     Edit(activity, newActivity, confirm = false) {
@@ -418,42 +457,10 @@ class Activities extends IUserData {
             return { status: 'tooEarly', activity: null };
         }
 
-        const indexActivity = GetActivityIndex(this.#activities, activity);
-        const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, newActivity);
-
-        // Activity does not exist
-        if (indexActivity === null && indexUnsaved === null) {
-            return { status: 'notExist', activity: null };
-        }
-
         // Activity is not free
         if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.Get(), [activity])) {
             return { status: 'notFree', activity: null };
         }
-
-        // If edit is important and more than 48h after start time, add to deletions
-        // const tempNewActivity = { ...newActivity };
-        // if (
-        //     newActivity.skillID !== activity.skillID ||
-        //     newActivity.startTime !== activity.startTime ||
-        //     newActivity.duration !== activity.duration
-        // ) {
-        //     tempNewActivity.addedTime = GetLocalTime(undefined, 3);
-        //     tempNewActivity.timezone = GetTimeZone();
-        //     if (
-        //         !confirm &&
-        //         this.GetExperienceStatus(activity) === 'grant' &&
-        //         this.GetExperienceStatus(tempNewActivity) === 'beforeLimit'
-        //     ) {
-        //         return { status: 'needConfirmation', activity: null };
-        //     }
-        // }
-
-        // Remove old activity and add new one
-        // this.Remove(activity);
-        // this.#UNSAVED_activities.push(tempNewActivity);
-        // this.allActivities.Set(this.Get());
-
         // If edit is important and more than 48h after start time, ask for confirmation
         const tempNewActivity = { ...newActivity };
         if (
@@ -467,56 +474,78 @@ class Activities extends IUserData {
             return { status: 'needConfirmation', activity: null };
         }
 
-        // Remove from deletions if exists
-        const indexDeletion = GetActivityIndex(this.#UNSAVED_deletions, newActivity);
-        if (indexDeletion !== null) {
-            this.#UNSAVED_deletions.splice(indexDeletion, 1);
+        const isSavedActivity = Object.keys(activity).includes('ID');
+
+        // Activity edited is already saved
+        if (isSavedActivity) {
+            // eslint-disable-next-line prettier/prettier
+            const _activity = /** @type {ActivitySaved} */ (activity);
+            // eslint-disable-next-line prettier/prettier
+            const _newActivity = /** @type {ActivitySaved} */ (newActivity);
+
+            // Activity does not exist
+            const indexUnsavedAdd = this.#activities.findIndex((act) => act.ID === _activity.ID);
+            if (indexUnsavedAdd === -1) {
+                return { status: 'notExist', activity: null };
+            }
+
+            const indexUnsavedEdition = this.#UNSAVED_editions.findIndex((act) => act.ID === _activity.ID);
+
+            // Activity not edited yet
+            if (indexUnsavedEdition !== -1) {
+                this.#UNSAVED_editions.push(_newActivity);
+            }
+
+            // Activity already edited, so edit the edition
+            else {
+                this.#UNSAVED_editions[indexUnsavedEdition] = _newActivity;
+            }
+        } else {
+            // Activity edited is not saved
+            // eslint-disable-next-line prettier/prettier
+            const _activity = /** @type {Activity} */ (activity);
+            // eslint-disable-next-line prettier/prettier
+            const _newActivity = /** @type {Activity} */ (newActivity);
+
+            const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, _activity);
+
+            // Activity does not exist
+            if (indexUnsaved === null) {
+                return { status: 'notExist', activity: null };
+            }
+
+            // Edit unsaved activity
+            this.#UNSAVED_activities[indexUnsaved] = _newActivity;
         }
 
-        // Remove old activity (add to unsaved deletions) and add new one (add to unsaved activities)
-        if (indexActivity !== null) {
-            this.#UNSAVED_deletions.push(activity);
-        }
-        if (indexUnsaved !== null) {
-            this.#UNSAVED_activities.splice(indexUnsaved, 1);
-        }
-
-        this.#UNSAVED_activities.push(newActivity);
         this.allActivities.Set(this.Get());
-
         return { status: 'edited', activity: newActivity };
     }
 
     /**
      * Remove activity
-     * @param {Activity} activity
+     * @param {Activity | ActivitySaved} activity
      * @returns {RemoveStatus}
      */
     Remove(activity) {
-        let removed = false;
+        const isSavedActivity = Object.keys(activity).includes('ID');
 
-        const indexActivity = GetActivityIndex(this.#activities, activity);
-        const indexDeletion = GetActivityIndex(this.#UNSAVED_deletions, activity);
-
-        // Activity in saved activities and not already deleted, add to deletions
-        if (indexActivity !== null) {
-            if (indexDeletion === null) {
-                this.#UNSAVED_deletions.push(activity);
-                removed = true;
+        if (isSavedActivity) {
+            // eslint-disable-next-line prettier/prettier
+            const _activity = /** @type {ActivitySaved} */ (activity);
+            const indexActivity = this.#activities.findIndex((act) => act.ID === _activity.ID);
+            if (indexActivity !== -1 && !this.#UNSAVED_deletions.includes(_activity.ID)) {
+                this.#UNSAVED_deletions.push(_activity.ID);
+                this.allActivities.Set(this.Get());
+                return 'removed';
             }
-        }
-
-        // Activity in unsaved activities, remove it
-        const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, activity);
-        if (indexUnsaved !== null) {
-            this.#UNSAVED_activities.splice(indexUnsaved, 1)[0];
-            removed = true;
-        }
-
-        if (removed) {
-            // Update all activities
-            this.allActivities.Set(this.Get());
-            return 'removed';
+        } else {
+            const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, activity);
+            if (indexUnsaved !== null) {
+                this.#UNSAVED_activities.splice(indexUnsaved, 1);
+                this.allActivities.Set(this.Get());
+                return 'removed';
+            }
         }
 
         return 'notExist';

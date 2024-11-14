@@ -208,7 +208,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Load ads
     const ads = dataManager.ads.Get();
-    user.ads.LoadAds(ads);
+    // TODO: Fix ads
+    // user.ads.LoadAds(ads);
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {

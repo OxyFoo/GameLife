@@ -6,7 +6,7 @@ import { GetGlobalTime } from 'Utils/Time';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Data/User/Todos').Todo} Todo
  * @typedef {import('Types/Data/User/Todos').Task} Task
- * @typedef {import('Types/Data/User/Todos').TodoUnsaved} TodoUnsaved
+ * @typedef {import('Types/Data/User/Todos').TodoSaved} TodoSaved
  * @typedef {import('Types/Data/User/Todos').SaveObject_Todos} SaveObject_Todos
  */
 
@@ -21,100 +21,131 @@ class Todos extends IUserData {
         this.user = user;
     }
 
-    /**
-     * @type {Todo[]}
-     */
-    SAVED_todoes = [];
+    /** @type {TodoSaved[]} */
+    #SAVED_todoes = [];
 
-    /**
-     * @type {Todo[]}
-     */
-    UNSAVED_additions = [];
+    /** @type {Todo[]} */
+    #UNSAVED_additions = [];
 
-    /**
-     * @type {Todo[]}
-     */
-    UNSAVED_deletions = [];
+    /** @type {TodoSaved[]} */
+    #UNSAVED_editions = [];
+
+    /** @type {number[]} */
+    #UNSAVED_deletions = [];
 
     /**
      * Sorted todoes using titles
      * @type {number[]}
      */
-    sort = [];
+    #sort = [];
 
     /**
      * @type {boolean} True if todoes sort is saved
      */
-    sortSaved = true;
+    #sortSaved = true;
 
     /**
      * @description All todoes (saved and unsaved)
      * @type {DynamicVar<Todo[]>}
      */
     // eslint-disable-next-line prettier/prettier
-    allTodoes = new DynamicVar(/** @type {Todo[]} */ ([]));
+    todos = new DynamicVar(/** @type {Todo[]} */ ([]));
 
     #token = 0;
 
     Clear = () => {
-        this.SAVED_todoes = [];
-        this.UNSAVED_additions = [];
-        this.UNSAVED_deletions = [];
-        this.sort = [];
-        this.sortSaved = true;
-        this.allTodoes.Set([]);
+        this.#SAVED_todoes = [];
+        this.#UNSAVED_additions = [];
+        this.#UNSAVED_editions = [];
+        this.#UNSAVED_deletions = [];
+        this.#sort = [];
+        this.#sortSaved = true;
         this.#token = 0;
+        this.todos.Set([]);
     };
 
     /**
      * Return all todoes (save and unsaved) sorted by start time (ascending)
-     * @returns {Todo[]}
+     * @returns {(Todo | TodoSaved)[]}
      */
     Get = () => {
-        let todoes = [...this.SAVED_todoes, ...this.UNSAVED_additions];
+        // Saved todoes
+        let todoes = [...this.#SAVED_todoes];
 
-        // Add new todoes title at the top
-        for (const todo of todoes) {
-            if (!this.sort.includes(todo.created)) {
-                this.sort.splice(0, 0, todo.created);
-                this.sortSaved = false;
+        // Apply unsaved editions
+        for (const edition of this.#UNSAVED_editions) {
+            const index = todoes.findIndex((todo) => todo.ID === edition.ID);
+            if (index !== null) {
+                todoes[index] = edition;
             }
         }
 
-        // Remove deleted todoes title
-        this.sort = this.sort.filter((created) => {
-            if (todoes.findIndex((todo) => todo.created === created) !== -1) {
+        // Apply unsaved deletions
+        for (const deletion of this.#UNSAVED_deletions) {
+            const index = todoes.findIndex((todo) => todo.ID === deletion);
+            if (index !== null) {
+                todoes.splice(index, 1);
+            }
+        }
+
+        // Apply unsaved additions
+        /** @type {(Todo | TodoSaved)[]} */
+        const allTodos = [...todoes, ...this.#UNSAVED_additions];
+
+        /** @type {(Todo | TodoSaved)[]} */
+        const sortedTodos = [];
+        for (const created of this.GetSort(allTodos)) {
+            const todo = allTodos.find((t) => t.created === created);
+            if (todo !== undefined) {
+                sortedTodos.push(todo);
+            }
+        }
+
+        return sortedTodos;
+    };
+
+    GetSort = (todos = this.Get()) => {
+        // Sort: Add new todoes title at the top
+        for (const todo of todos) {
+            if (!this.#sort.includes(todo.created)) {
+                this.#sort.splice(0, 0, todo.created);
+                this.#sortSaved = false;
+            }
+        }
+
+        // Sort: Remove deleted todoes title
+        this.#sort = this.#sort.filter((created) => {
+            if (todos.findIndex((todo) => todo.created === created) !== -1) {
                 return true;
             }
-            this.sortSaved = false;
+            this.#sortSaved = false;
             return false;
         });
 
-        // @ts-ignore
-        return this.sort
-            .map((created) => todoes.find((todo) => todo.created === created) || null)
-            .filter((todo) => todo !== null);
+        return this.#sort;
     };
 
     /** @param {Partial<SaveObject_Todos>} data */
     Load = (data) => {
-        if (typeof data.todoes !== 'undefined') this.SAVED_todoes = data.todoes;
-        if (typeof data.additions !== 'undefined') this.UNSAVED_additions = data.additions;
-        if (typeof data.deletions !== 'undefined') this.UNSAVED_deletions = data.deletions;
-        if (typeof data.sort !== 'undefined') this.sort = data.sort;
-        if (typeof data.sortSaved !== 'undefined') this.sortSaved = data.sortSaved;
+        if (typeof data.todoes !== 'undefined') this.#SAVED_todoes = data.todoes;
+        if (typeof data.additions !== 'undefined') this.#UNSAVED_additions = data.additions;
+        if (typeof data.editions !== 'undefined') this.#UNSAVED_editions = data.editions;
+        if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
+        if (typeof data.sort !== 'undefined') this.#sort = data.sort;
+        if (typeof data.sortSaved !== 'undefined') this.#sortSaved = data.sortSaved;
         if (typeof data.token !== 'undefined') this.#token = data.token;
-        this.allTodoes.Set(this.Get());
+        this.todos.Set(this.Get());
     };
 
     /** @returns {SaveObject_Todos} */
     Save = () => {
         return {
-            todoes: this.SAVED_todoes,
-            additions: this.UNSAVED_additions,
-            deletions: this.UNSAVED_deletions,
-            sort: this.sort,
-            sortSaved: this.sortSaved,
+            todoes: this.#SAVED_todoes,
+            additions: this.#UNSAVED_additions,
+            editions: this.#UNSAVED_editions,
+            deletions: this.#UNSAVED_deletions,
+            sort: this.#sort,
+            sortSaved: this.#sortSaved,
             token: this.#token
         };
     };
@@ -137,15 +168,20 @@ class Todos extends IUserData {
             return true;
         }
 
-        this.SAVED_todoes = response.result.todo;
-        this.sort = response.result.sort;
+        this.#SAVED_todoes = response.result.todo;
+        this.#sort = response.result.sort;
         this.#token = response.result.token;
-        this.user.interface.console?.AddLog('info', `[Todo] Loaded ${this.SAVED_todoes.length} todoes`);
-        this.allTodoes.Set(this.Get());
+        this.user.interface.console?.AddLog('info', `[Todo] Loaded ${this.#SAVED_todoes.length} todoes`);
+        this.todos.Set(this.Get());
         return true;
     };
 
-    SaveOnline = async () => {
+    /**
+     * Save todoes online
+     * @param {number} [attempt] Number of attempt left
+     * @returns {Promise<boolean>}
+     */
+    SaveOnline = async (attempt = 1) => {
         if (!this.isUnsaved()) {
             return true;
         }
@@ -153,7 +189,9 @@ class Todos extends IUserData {
         const unsavedData = this.getUnsaved();
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-todo',
-            newTodo: unsavedData.newTodo,
+            todoToAdd: unsavedData.newTodo.todoToAdd,
+            todoToEdit: unsavedData.newTodo.todoToEdit,
+            todoToDelete: unsavedData.newTodo.todoToDelete,
             newSort: unsavedData.sort,
             token: this.#token
         });
@@ -170,67 +208,83 @@ class Todos extends IUserData {
             return false;
         }
 
-        if (response.result === 'wrong-todo' || response.result === 'not-up-to-date') {
+        if (response.result === 'wrong-todo') {
             this.user.interface.console?.AddLog('error', `[Todo] Failed to save todo: ${response.result}`);
             return false;
         }
 
+        if (response.result === 'not-up-to-date') {
+            if (attempt <= 0) {
+                this.user.interface.console?.AddLog(
+                    'error',
+                    `[Todo] Failed to save todo: "not-up-to-date", no more attempt`
+                );
+                return false;
+            }
+
+            this.user.interface.console?.AddLog('error', `[Todo] Failed to save todo: "not-up-to-date", retrying`);
+            await this.LoadOnline();
+            return this.SaveOnline(attempt - 1);
+        }
+
         // Update and print message
-        this.purge();
-        this.allTodoes.Set(this.Get());
+        this.purge(response.result.newTodos);
+        this.todos.Set(this.Get());
         this.#token = response.result.token;
-        const length = this.allTodoes.Get().length;
+        const length = this.todos.Get().length;
         this.user.interface.console?.AddLog('info', `[Todo] Saved ${length} todo`);
         return true;
     };
 
     isUnsaved = () => {
-        if (this.sortSaved === false) {
-            return true;
-        }
-        if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
-            return true;
-        }
-        return false;
+        return (
+            this.#UNSAVED_additions.length > 0 ||
+            this.#UNSAVED_editions.length > 0 ||
+            this.#UNSAVED_deletions.length > 0 ||
+            this.#sortSaved === false
+        );
     };
 
     getUnsaved = () => {
-        let newTodo;
-        let sort;
-
-        if (this.UNSAVED_additions.length || this.UNSAVED_deletions.length) {
-            /** @type {TodoUnsaved[]} */
-            let unsaved = [];
-            for (let a in this.UNSAVED_additions) {
-                const todo = this.UNSAVED_additions[a];
-                unsaved.push({ type: 'add', ...todo });
-            }
-            for (let a in this.UNSAVED_deletions) {
-                const todo = this.UNSAVED_deletions[a];
-                unsaved.push({ type: 'rem', ...todo });
-            }
-            newTodo = unsaved;
-        }
-
-        if (this.sortSaved === false) {
-            sort = this.sort;
-        }
-
-        return { newTodo, sort };
+        return {
+            newTodo: {
+                todoToAdd: this.#UNSAVED_additions,
+                todoToEdit: this.#UNSAVED_editions,
+                todoToDelete: this.#UNSAVED_deletions
+            },
+            sort: this.#sort
+        };
     };
 
-    purge = () => {
-        this.SAVED_todoes.push(...this.UNSAVED_additions);
-        this.UNSAVED_additions = [];
-
-        for (let i = this.UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = this.GetIndex(this.SAVED_todoes, this.UNSAVED_deletions[i]);
+    /**
+     * Apply unsaved editions
+     * @param {TodoSaved[]} newTodoes
+     */
+    purge = (newTodoes) => {
+        // Apply editions
+        for (const edition of this.#UNSAVED_editions) {
+            const index = this.#SAVED_todoes.findIndex((todo) => todo.ID === edition.ID);
             if (index !== null) {
-                this.SAVED_todoes.splice(index, 1);
+                this.#SAVED_todoes[index] = edition;
             }
         }
-        this.UNSAVED_deletions = [];
-        this.SAVED_sort = true;
+
+        // Apply deletions
+        for (const deletion of this.#UNSAVED_deletions) {
+            const index = this.#SAVED_todoes.findIndex((todo) => todo.ID === deletion);
+            if (index !== null) {
+                this.#SAVED_todoes.splice(index, 1);
+            }
+        }
+
+        // Apply additions
+        this.#SAVED_todoes.push(...newTodoes);
+
+        // Clear unsaved
+        this.#UNSAVED_additions = [];
+        this.#UNSAVED_editions = [];
+        this.#UNSAVED_deletions = [];
+        this.sortSaved = true;
     };
 
     IsMax = () => {
@@ -246,7 +300,8 @@ class Todos extends IUserData {
      * @returns {boolean}
      */
     Add(title, description, deadline, tasks) {
-        const newTodo = /** @type {Todo} */ {
+        /** @type {Todo} */
+        const newTodo = {
             checked: 0,
             title: title,
             description: description,
@@ -256,98 +311,115 @@ class Todos extends IUserData {
         };
 
         // Check if not exist
-        const indexSaved = this.GetIndex(this.SAVED_todoes, newTodo);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, newTodo);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, newTodo);
+        const indexSaved = this.GetIndex(this.#SAVED_todoes, newTodo);
+        const indexUnsaved = this.GetIndex(this.#UNSAVED_additions, newTodo);
 
         // Todo already exist
         if (indexSaved !== null || indexUnsaved !== null) {
             return false;
         }
 
-        if (indexDeletion !== null) {
-            this.UNSAVED_deletions.splice(indexDeletion, 1);
-        }
-
         // Todo not exist, add it
-        this.UNSAVED_additions.push(newTodo);
-        this.allTodoes.Set(this.Get());
+        this.#UNSAVED_additions.push(newTodo);
+        this.todos.Set(this.Get());
         return true;
     }
 
     /**
-     * @param {Todo} oldTodo
+     * @param {Todo | TodoSaved} oldTodo
      * @param {string} title Title of the todo
      * @param {string} description Description of the todo
      * @param {number} deadline Unix timestamp in seconds
      * @param {Task[]} tasks Tasks informations
-     * @returns {boolean}
+     * @returns {'not-exist' | 'edited'}
      */
     Edit(oldTodo, title, description, deadline, tasks) {
-        const newTodo = /** @type {Todo} */ {
-            checked: 0,
-            title: title,
-            description: description,
-            created: oldTodo.created,
-            deadline: deadline,
-            tasks: tasks.filter((st) => !!st.title)
-        };
+        const isSavedActivity = Object.keys(oldTodo).includes('ID');
 
-        // Check if not exist
-        const indexSaved = this.GetIndex(this.SAVED_todoes, newTodo);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, newTodo);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, newTodo);
+        if (isSavedActivity) {
+            // eslint-disable-next-line prettier/prettier
+            const _oldTodo = /** @type {TodoSaved} */ (oldTodo);
 
-        // Todo already exist
-        if (indexSaved === null && indexUnsaved === null) {
-            return false;
+            /** @type {TodoSaved} */
+            const newTodo = {
+                ID: _oldTodo.ID,
+                checked: 0,
+                title: title,
+                description: description,
+                created: _oldTodo.created,
+                deadline: deadline,
+                tasks: tasks.filter((st) => !!st.title)
+            };
+
+            // Check if not exist
+            const indexSaved = this.#SAVED_todoes.findIndex((todo) => todo.ID === _oldTodo.ID);
+            if (indexSaved === -1) {
+                return 'not-exist';
+            }
+
+            const indexUnsavedEdition = this.#UNSAVED_editions.findIndex((todo) => todo.ID === _oldTodo.ID);
+
+            // Todo already exist
+            if (indexUnsavedEdition === -1) {
+                this.#UNSAVED_editions.push(newTodo);
+            }
+
+            // Todo not edited yet
+            else {
+                this.#UNSAVED_editions[indexUnsavedEdition] = newTodo;
+            }
+        } else {
+            /** @type {Todo} */
+            const newTodo = {
+                checked: 0,
+                title: title,
+                description: description,
+                created: oldTodo.created,
+                deadline: deadline,
+                tasks: tasks.filter((st) => !!st.title)
+            };
+
+            // Check if not exist
+            const indexUnsaved = this.GetIndex(this.#UNSAVED_additions, oldTodo);
+
+            // Todo already exist
+            if (indexUnsaved === null) {
+                return 'not-exist';
+            }
+
+            this.#UNSAVED_additions[indexUnsaved] = newTodo;
         }
 
-        if (indexDeletion !== null) {
-            this.UNSAVED_deletions.splice(indexDeletion, 1);
-        }
-
-        if (indexSaved !== null) {
-            this.SAVED_todoes.splice(indexSaved, 1);
-        }
-        if (indexUnsaved !== null) {
-            this.UNSAVED_additions.splice(indexUnsaved, 1);
-        }
-        this.UNSAVED_additions.push(newTodo);
-        this.allTodoes.Set(this.Get());
-        return true;
+        this.todos.Set(this.Get());
+        return 'edited';
     }
 
     /**
      * Remove todo
-     * @param {Todo} todo
+     * @param {Todo | TodoSaved} todo
      * @returns {'removed' | 'notExist'}
      */
     Remove(todo) {
-        const indexTodo = this.GetIndex(this.SAVED_todoes, todo);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, todo);
-        const indexDeletion = this.GetIndex(this.UNSAVED_deletions, todo);
-        let deleted = null;
+        const isSavedTodo = Object.keys(todo).includes('ID');
 
-        if (indexTodo !== null) {
-            deleted = this.SAVED_todoes.splice(indexTodo, 1)[0];
-            if (indexDeletion === null) {
-                this.UNSAVED_deletions.push(deleted);
+        if (isSavedTodo) {
+            // eslint-disable-next-line prettier/prettier
+            const _todo = /** @type {TodoSaved} */ (todo);
+            const index = this.GetIndex(this.#SAVED_todoes, todo);
+            if (index === null) {
+                return 'notExist';
             }
-        }
-        if (indexUnsaved !== null) {
-            deleted = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
-            if (indexDeletion === null) {
-                this.UNSAVED_deletions.push(deleted);
+            this.#UNSAVED_deletions.push(_todo.ID);
+        } else {
+            const index = this.GetIndex(this.#UNSAVED_additions, todo);
+            if (index === null) {
+                return 'notExist';
             }
+            this.#UNSAVED_additions.splice(index, 1);
         }
 
-        if (deleted !== null) {
-            this.allTodoes.Set(this.Get());
-            return 'removed';
-        }
-
-        return 'notExist';
+        this.todos.Set(this.Get());
+        return 'removed';
     }
 
     /**
@@ -357,29 +429,29 @@ class Todos extends IUserData {
      * @returns {boolean} Success of the operation
      */
     Move(todo, newIndex) {
-        if (!this.sort.includes(todo.created)) {
+        if (!this.#sort.includes(todo.created)) {
             this.user.interface.console?.AddLog(
                 'warn',
                 `[Todo] Move failed: todo not found (${todo.title} ${newIndex})`
             );
             return false;
         }
-        if (newIndex < 0 || newIndex > this.sort.length) {
+        if (newIndex < 0 || newIndex > this.#sort.length) {
             this.user.interface.console?.AddLog(
                 'warn',
                 `[Todo] Move failed: index out of range (${todo.title} ${newIndex})`
             );
             return false;
         }
-        const oldIndex = this.sort.indexOf(todo.created);
+        const oldIndex = this.#sort.indexOf(todo.created);
         if (oldIndex === newIndex) {
             this.user.interface.console?.AddLog('warn', `[Todo] Move failed: same index (${todo.title} ${newIndex})`);
             return false;
         }
-        this.sort.splice(oldIndex, 1);
-        this.sort.splice(newIndex, 0, todo.created);
+        this.#sort.splice(oldIndex, 1);
+        this.#sort.splice(newIndex, 0, todo.created);
         this.SAVED_sort = false;
-        this.allTodoes.Set(this.Get());
+        this.todos.Set(this.Get());
         return true;
     }
 
@@ -391,11 +463,11 @@ class Todos extends IUserData {
      */
     Check(todo, checkedTime) {
         let selectedTodo = null;
-        const indexTodo = this.GetIndex(this.SAVED_todoes, todo);
-        const indexUnsaved = this.GetIndex(this.UNSAVED_additions, todo);
+        const indexTodo = this.GetIndex(this.#SAVED_todoes, todo);
+        const indexUnsaved = this.GetIndex(this.#UNSAVED_additions, todo);
 
-        if (indexTodo !== null) selectedTodo = this.SAVED_todoes.splice(indexTodo, 1)[0];
-        if (indexUnsaved !== null) selectedTodo = this.UNSAVED_additions.splice(indexUnsaved, 1)[0];
+        if (indexTodo !== null) selectedTodo = this.#SAVED_todoes.splice(indexTodo, 1)[0];
+        if (indexUnsaved !== null) selectedTodo = this.#UNSAVED_additions.splice(indexUnsaved, 1)[0];
         if (selectedTodo === null) {
             this.user.interface.console?.AddLog(
                 'warn',
@@ -405,8 +477,8 @@ class Todos extends IUserData {
         }
 
         selectedTodo.checked = checkedTime;
-        this.UNSAVED_additions.push(selectedTodo);
-        this.allTodoes.Set(this.Get());
+        this.#UNSAVED_additions.push(selectedTodo);
+        this.todos.Set(this.Get());
         return true;
     }
 
@@ -419,8 +491,8 @@ class Todos extends IUserData {
     }
 
     /**
-     * @param {Todo[]} arr
-     * @param {Todo} todo
+     * @param {(Todo | TodoSaved)[]} arr
+     * @param {(Todo | TodoSaved)} todo
      * @returns {number | null} Index of todo or null if not found
      */
     GetIndex(arr, todo) {

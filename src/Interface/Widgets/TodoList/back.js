@@ -50,15 +50,13 @@ class BackTodoList extends React.Component {
         super(props);
 
         this.state.todoes = user.todos.Get();
-        this.listenerTodo = user.todos.allTodoes.AddListener(this.refreshTodoes);
+        this.listenerTodo = user.todos.todos.AddListener((todos) => {
+            this.setState({ todoes: [...todos] });
+        });
     }
 
-    refreshTodoes = () => {
-        this.setState({ todoes: user.todos.Get() });
-    };
-
     componentWillUnmount() {
-        user.todos.allTodoes.RemoveListener(this.listenerTodo);
+        user.todos.todos.RemoveListener(this.listenerTodo);
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -117,7 +115,7 @@ class BackTodoList extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         const { pageY } = event.nativeEvent;
-        this.initialSort = [...user.todos.sort];
+        this.initialSort = [...user.todos.GetSort()];
         this.firstPageY = pageY;
     };
 
@@ -138,7 +136,7 @@ class BackTodoList extends React.Component {
 
         // Change todo order when dragging
         const index = Math.floor((newY + this.itemHeight / 2) / this.itemHeight);
-        const currIndex = user.todos.sort.indexOf(draggedItem.created);
+        const currIndex = user.todos.GetSort().indexOf(draggedItem.created);
         index !== currIndex && user.todos.Move(draggedItem, index);
     };
 
@@ -149,7 +147,8 @@ class BackTodoList extends React.Component {
         this.setState({ draggedItem: null });
 
         // Save changes if todoes order changed (and not just a todo check)
-        if (this.initialSort.join() !== user.todos.sort.join() && this.initialSort.length === user.todos.sort.length) {
+        const sort = user.todos.GetSort();
+        if (this.initialSort.join() !== sort.join() && this.initialSort.length === sort.length) {
             user.GlobalSave();
         }
     };

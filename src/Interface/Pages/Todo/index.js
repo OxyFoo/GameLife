@@ -16,7 +16,7 @@ import { WithInterpolation } from 'Utils/Animations';
 class Todo extends BackTodo {
     render() {
         const lang = langManager.curr['todo'];
-        const { action, tempTodo, error, animEditButton, editButtonHeight, scrollable } = this.state;
+        const { loading, action, tempTodo, error, animEditButton, editButtonHeight, scrollable } = this.state;
         const title = action === 'new' ? lang['title-new'] : lang['title'];
 
         const styleAnimEditButton = {
@@ -55,6 +55,7 @@ class Todo extends BackTodo {
                             appearance='outline'
                             icon='trash'
                             onPress={this.removeTodo}
+                            loading={loading}
                         >
                             {lang['button-remove']}
                         </Button>
@@ -63,7 +64,7 @@ class Todo extends BackTodo {
 
                 {/* Button: Add */}
                 {action === 'new' && (
-                    <Button style={styles.button} onPress={this.addTodo} enabled={error === null}>
+                    <Button style={styles.button} onPress={this.addTodo} enabled={error === null} loading={loading}>
                         {lang['button-add']}
                     </Button>
                 )}
@@ -78,6 +79,7 @@ class Todo extends BackTodo {
                         onLayout={this.onEditButtonLayout}
                         onPress={this.editTodo}
                         enabled={error === null}
+                        loading={loading}
                         pointerEvents={action === 'edit' ? 'auto' : 'none'}
                     >
                         {lang['button-save']}

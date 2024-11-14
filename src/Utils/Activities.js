@@ -46,7 +46,7 @@ function StartActivityNow(skillID) {
  * @param {number} endTime
  * @param {Array<number>} friendsIDs
  * @param {() => void} funcBack
- * @returns {boolean} True if activity was added successfully
+ * @returns {Promise<boolean>} True if activity was added successfully
  */
 function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
     const lang = langManager.curr['activity'];
@@ -70,7 +70,7 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
                 },
                 storeInHistory: false
             });
-            return false;
+            return Promise.resolve(false);
         }
     }
 
@@ -91,9 +91,9 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
 
 /**
  * @param {Activity} activity
- * @returns {boolean} True if activity was added or edited successfully
+ * @returns {Promise<boolean>} True if activity was added or edited successfully
  */
-function AddActivity(activity) {
+async function AddActivity(activity) {
     const lang = langManager.curr['activity'];
 
     const { status } = user.activities.Add({
@@ -126,6 +126,8 @@ function AddActivity(activity) {
                 storeInHistory: false
             });
         }
+
+        await user.RefreshStats();
 
         user.interface.ChangePage('display', {
             args: {
@@ -162,10 +164,6 @@ function AddActivity(activity) {
             },
             storeInHistory: false
         });
-
-        user.GlobalSave()
-            .then(() => user.RefreshStats(false))
-            .then(() => user.SaveOnline());
         return true;
     } else if (status === 'notFree') {
         const title = lang['alert-wrongtiming-title'];
@@ -197,17 +195,15 @@ function AddActivity(activity) {
  * @param {Activity} oldActivity
  * @param {Activity} newActivity
  * @param {boolean} confirm
- * @returns {boolean} True if activity was edited successfully
+ * @returns {Promise<boolean>} True if activity was edited successfully
  */
-function EditActivity(oldActivity, newActivity, confirm = false) {
+async function EditActivity(oldActivity, newActivity, confirm = false) {
     const lang = langManager.curr['activity'];
 
     const { status, activity } = user.activities.Edit(oldActivity, newActivity, confirm);
 
     if (status === 'edited' && activity !== null) {
-        user.GlobalSave()
-            .then(() => user.RefreshStats(false))
-            .then(() => user.SaveOnline());
+        await user.RefreshStats();
         user.interface.bottomPanel?.Close();
         return true;
     } else if (status === 'needConfirmation') {
@@ -269,9 +265,7 @@ function RemoveActivity(activity) {
             const removedStatus = user.activities.Remove(activity);
 
             if (removedStatus === 'removed') {
-                user.GlobalSave()
-                    .then(() => user.RefreshStats(false))
-                    .then(() => user.SaveOnline());
+                user.RefreshStats();
             } else if (removedStatus === 'notExist') {
                 user.interface.popup?.OpenT({
                     type: 'ok',

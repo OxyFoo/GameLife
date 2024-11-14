@@ -77,12 +77,21 @@ class AddActivityPage2 extends BackActivityPage2 {
             return null;
         }
 
+        const XP = Round((skill.XP * activity.duration) / 60, 2);
+        if (XP === 0) {
+            return (
+                <Text fontSize={14} color='main1'>
+                    {lang['title-no-experience']}
+                </Text>
+            );
+        }
+
         // XP not granted
         const activityStatus = user.activities.GetExperienceStatus(activity);
         if (activityStatus === 'beforeLimit') {
             return (
                 <Text fontSize={14} color='main1'>
-                    {lang['title-no-experience']}
+                    {lang['title-before-limit']}
                 </Text>
             );
         } else if (activityStatus === 'isNotPast' && this.props.editActivity !== null) {
@@ -93,7 +102,6 @@ class AddActivityPage2 extends BackActivityPage2 {
             );
         }
 
-        const XP = Round((skill.XP * activity.duration) / 60, 2);
         const usefulStats = user.statsKey.filter((key) => skill.Stats[key] > 0);
 
         return (

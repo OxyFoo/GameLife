@@ -6,9 +6,6 @@ import { RandomString } from 'Utils/Functions';
  * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
  * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
  * @typedef {import('Types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
- *
- * @typedef {import('Interface/Global').Console['AddLog']} AddLog
- *
  */
 
 const TCP_SETTINGS = {
@@ -40,14 +37,6 @@ class TCP {
      * @type {Partial<{ [key in TCPServerRequest['status']]: (data: Extract<TCPServerRequest, { 'status': key }>) => boolean | Promise<boolean> }>}
      */
     #callbacksActions = {};
-
-    /** @type {AddLog | null} */
-    AddLog = null;
-
-    /** @param {AddLog | null} addLogFunction */
-    constructor(addLogFunction) {
-        this.AddLog = addLogFunction;
-    }
 
     /**
      * @param {number} [timeout] in milliseconds
@@ -137,9 +126,8 @@ class TCP {
         // }
     };
 
-    /** @param {Event} event */
-    #onError = (event) => {
-        this.AddLog?.('warn', 'TCP server:', event);
+    /** @param {Event} _event */
+    #onError = (_event) => {
         this.state.Set('error');
         this.Disconnect();
     };
@@ -156,7 +144,6 @@ class TCP {
      */
     Send = (message) => {
         if (typeof message !== 'object') {
-            this.AddLog?.('warn', 'Send socket: Invalid message type.');
             return false;
         }
 

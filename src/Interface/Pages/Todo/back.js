@@ -44,6 +44,7 @@ class BackTodo extends PageBase {
             created: 0
         },
 
+        loading: false,
         scrollable: true,
         editButtonHeight: 0,
         animEditButton: new Animated.Value(0)
@@ -213,7 +214,7 @@ class BackTodo extends PageBase {
         return message;
     };
 
-    addTodo = () => {
+    addTodo = async () => {
         const { title, description, deadline, tasks } = this.state.tempTodo;
         if (this.checkTitleErrors(title)) {
             return;
@@ -225,12 +226,15 @@ class BackTodo extends PageBase {
             return;
         }
 
-        user.GlobalSave();
+        this.setState({ loading: true });
+        await user.GlobalSave();
+        this.setState({ loading: false });
+
         user.interface.RemoveCustomBackHandler(this.BackHandler);
         user.interface.BackHandle();
     };
 
-    editTodo = () => {
+    editTodo = async () => {
         const todo = this.props.args?.todo || null;
         if (todo === null) {
             user.interface.console?.AddLog('warn', 'Todo: Todo already exist, cannot add');
@@ -248,7 +252,10 @@ class BackTodo extends PageBase {
             return;
         }
 
-        user.GlobalSave();
+        this.setState({ loading: true });
+        await user.GlobalSave();
+        this.setState({ loading: false });
+
         user.interface.RemoveCustomBackHandler(this.BackHandler);
         user.interface.BackHandle();
     };
@@ -268,14 +275,17 @@ class BackTodo extends PageBase {
                 title: lang['alert-remtodo-title'],
                 message: lang['alert-remtodo-message']
             },
-            callback: (btn) => {
+            callback: async (btn) => {
                 if (btn !== 'yes') {
                     return;
                 }
 
                 const remove = user.todos.Remove(todo);
                 if (remove === 'removed') {
-                    user.GlobalSave();
+                    this.setState({ loading: true });
+                    await user.GlobalSave();
+                    this.setState({ loading: false });
+
                     user.interface.RemoveCustomBackHandler(this.BackHandler);
                     user.interface.BackHandle();
                 } else if (remove === 'notExist') {

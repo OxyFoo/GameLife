@@ -1,5 +1,6 @@
 /**
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').ActivitySaved} ActivitySaved
  */
 
 /**
@@ -51,8 +52,8 @@ function TimeIsFree(time, duration, activities, exceptActivities = []) {
 }
 
 /**
- * @param {Array<Activity>} arr
- * @param {Activity} activity
+ * @param {(Activity | ActivitySaved)[]} arr
+ * @param {Activity | ActivitySaved} activity
  * @returns {number | null} Index of activity or null if not found
  */
 function GetActivityIndex(arr, activity) {

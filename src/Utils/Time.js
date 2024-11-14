@@ -1,4 +1,4 @@
-import { Round, TwoDigit } from './Functions';
+import { TwoDigit } from './Functions';
 
 const DAY_TIME = 24 * 60 * 60;
 
@@ -17,8 +17,8 @@ function GetGlobalTime(date = new Date()) {
  * @param {Date} [date] (now default)
  * @returns {number} timestamp in seconds
  */
-function GetLocalTime(date = new Date(), decimals = 0) {
-    return Round(date.getTime() / 1000, decimals);
+function GetLocalTime(date = new Date()) {
+    return Math.floor(date.getTime() / 1000);
 }
 
 /**

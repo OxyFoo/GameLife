@@ -20,7 +20,7 @@ import IMG_MUSIC from 'Ressources/logo/music/music';
 class ActivityTimer extends BackActivityTimer {
     render() {
         const lang = langManager.curr['activity'];
-        const { currentActivity } = this.state;
+        const { loading, currentActivity } = this.state;
         if (currentActivity === null) {
             return null;
         }
@@ -48,7 +48,7 @@ class ActivityTimer extends BackActivityTimer {
                         {bt_cancel}
                     </Button>
 
-                    <Button style={styles.button} onPress={this.onPressComplete}>
+                    <Button style={styles.button} onPress={this.onPressComplete} loading={loading}>
                         {bt_complete}
                     </Button>
                 </View>

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingLeft: 24,
+        paddingLeft: 16,
         paddingRight: 6,
         borderWidth: 1,
         borderTopLeftRadius: 8,
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     stLeftViewParent: {
         flex: 1,
         alignItems: 'flex-start',
-        justifyContent: 'center',
-        marginLeft: 6
+        justifyContent: 'center'
+        //marginLeft: 6,
         //backgroundColor: 'orange'
     },
     stViewLeftParent2: {

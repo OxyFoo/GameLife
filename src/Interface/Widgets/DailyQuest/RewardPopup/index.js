@@ -5,9 +5,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import styles from './style';
 import { RenderItemMemo } from './element';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 import { Button, Text } from 'Interface/Components';
 import { DateFormat } from 'Utils/Date';
 
@@ -53,6 +53,8 @@ function RenderPopup(_props) {
         }
     }
 
+    const dailyQuestsRewards = dataManager.dailyQuestsRewards.Get();
+
     return (
         <View style={styles.popup}>
             <LinearGradient
@@ -69,8 +71,8 @@ function RenderPopup(_props) {
             )}
 
             <FlatList
-                data={DAILY_QUEST_REWARDS}
-                keyExtractor={(_item, index) => index.toString()}
+                data={dailyQuestsRewards}
+                keyExtractor={(item) => item.index.toString()}
                 initialNumToRender={10}
                 renderItem={(props) => <RenderItemMemo index={props.index} claimIndex={claimIndex} />}
                 ListHeaderComponent={<View style={styles.separatorFirst} />}

@@ -21,7 +21,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {Todo | null} todo
  * @property {(event: LayoutChangeEvent) => void} onLayout
  * @property {() => void} onDrag Icon to drag => onTouchStart event (todo only)
- * @property {(todo: Todo) => void} onCheck
+ * @property {(todo: Todo) => Promise<void>} onCheck
  * @property {(todo: Todo, callbackRemove: (resolve: (cancel: () => void) => void) => void) => void} onRemove
  */
 
@@ -31,7 +31,7 @@ const TodoProps = {
     onLayout: () => {},
     todo: null,
     onDrag: () => {},
-    onCheck: () => {},
+    onCheck: async () => {},
     onRemove: () => {}
 };
 
@@ -119,12 +119,12 @@ class TodoButtonBack extends React.Component {
         clearTimeout(this.timeoutDrag);
     };
 
-    onCheck = () => {
+    onCheck = async () => {
         if (this.props.todo === null) return;
-        this.props.onCheck(this.props.todo);
+        await this.props.onCheck(this.props.todo);
 
         // Animate delete button
-        const toValue = this.props.todo.checked ? 1 : 0;
+        const toValue = this.props.todo?.checked ? 1 : 0;
         SpringAnimation(this.state.animDeleteButtonX, toValue).start();
     };
 

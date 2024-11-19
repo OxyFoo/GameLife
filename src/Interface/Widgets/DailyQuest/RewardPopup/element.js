@@ -3,12 +3,12 @@ import { View, Image } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 
 import { Text, Icon, Button } from 'Interface/Components';
 import { DateFormat } from 'Utils/Date';
@@ -17,7 +17,7 @@ import { DateFormat } from 'Utils/Date';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Ressources/items/quests/DailyQuest').DailyQuestRewardType} DailyQuestRewardType
+ * @typedef {import('Types/Class/Rewards').RawReward} RawReward
  */
 
 /**
@@ -50,11 +50,11 @@ const RenderItem = (props) => {
 
         if (loading) {
             status = 'loading';
-        } else if (claimList.claimed.includes(currentDay)) {
+        } else if (claimList.claimed.includes(props.index)) {
             status = 'claimed';
-        } else if (currentDay <= claimList.daysCount) {
+        } else if (props.index <= claimList.daysCount) {
             status = 'claiming';
-        } else if (currentDay === claimList.daysCount + 1) {
+        } else if (props.index === claimList.daysCount + 1) {
             // Get today date
             const tmpDateToday = new Date();
             tmpDateToday.setDate(tmpDateToday.getDate() + 1);
@@ -84,12 +84,16 @@ const RenderItem = (props) => {
         const result = await user.dailyQuest.ClaimReward(claimList.start, [props.index]);
         setLoading(false);
 
-        if (result === 'error') {
+        if (result === 'claiming') {
+            return;
+        }
+
+        if (result !== 'success') {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: lang['alert-claim-error-title'],
-                    message: lang['alert-claim-error-message']
+                    message: lang['alert-claim-error-message'].replace('{}', result)
                 },
                 cancelable: false,
                 priority: true
@@ -100,12 +104,18 @@ const RenderItem = (props) => {
         props.handleClaim && props.handleClaim(props.index);
     };
 
+    const dailyRewards = dataManager.dailyQuestsRewards.Get().find((item) => item.index === props.index) ?? null;
+    if (dailyRewards === null) {
+        user.interface.console?.AddLog('error', 'DailyQuest', 'DailyQuest reward not found for index ' + props.index);
+        return <></>;
+    }
+
     return (
         <View style={[styles.item, styleItem, props.style]}>
             <View style={[styles.content, styleOpacity]}>
                 <Text style={styles.itemDay}>{textToday}</Text>
 
-                {DAILY_QUEST_REWARDS[props.index].map((reward, index) => (
+                {dailyRewards.rewards.map((reward, index) => (
                     <RenderReward key={`dailyquest-reward-${index}`} item={reward} />
                 ))}
             </View>
@@ -133,24 +143,24 @@ const RenderItemMemo = React.memo(RenderItem, (prevProps, nextProps) => {
     return true;
 });
 
-/** @param {{ item: DailyQuestRewardType }} props */
+/** @param {{ item: RawReward }} props */
 function RenderReward(props) {
     const styleReward = {
         ...styles.rewardItem,
         backgroundColor: themeManager.GetColor('background')
     };
 
-    if (props.item.type === 'ox') {
+    if (props.item.Type === 'OX') {
         return (
             <View style={styleReward}>
                 <Image style={styles.rewardImage} source={IMG_OX} />
-                <Text style={styles.rewardValue}>{'x' + props.item.value.toString()}</Text>
+                <Text style={styles.rewardValue}>{'x' + props.item.Amount.toString()}</Text>
             </View>
         );
-    } else if (props.item.type === 'chest') {
+    } else if (props.item.Type === 'Chest') {
         return (
             <View style={styleReward}>
-                <Image style={styles.rewardImage} source={IMG_CHESTS[props.item.value]} />
+                <Image style={styles.rewardImage} source={IMG_CHESTS[props.item.ChestRarity]} />
             </View>
         );
     }

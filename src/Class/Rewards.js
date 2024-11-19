@@ -62,11 +62,15 @@ class Rewards extends IUserData {
      * Show rewards informations after claim
      * - Show a popup with the rewards informations if needed (ox, titles)
      * - Show the chest reward page if needed (items, chests)
-     * @param {string} title Title of the popup
-     * @param {string} preMessage Message de la popup à afficher avant les récompenses
      * @param {Reward[]} rewards
+     * @param {'all' | 'only-items' | 'only-popup'} mode Mode to show the rewards\
+     * @param {string} [title] Title of the popup
+     * @param {string} [preMessage] Message de la popup à afficher avant les récompenses
+     * - 'all' to show everything
+     * - 'only-items' to show only items and chests rewards (in Chest Reward page)
+     * - 'only-popup' to show only ox and titles rewards (in a popup)
      */
-    ShowRewards = async (title, preMessage, rewards) => {
+    ShowRewards = async (rewards, mode = 'all', title = '', preMessage = '') => {
         if (rewards.length === 0) return;
 
         const rewardsContainsOxOrTitles = rewards.some((reward) => reward.Type === 'OX' || reward.Type === 'Title');
@@ -78,15 +82,17 @@ class Rewards extends IUserData {
             const message = `${preMessage}\n\n${rewardText}`;
 
             // Show popup
-            this.#user.interface.notificationsInApp?.Close();
+            if (mode === 'all' || mode === 'only-popup') {
+                this.#user.interface.notificationsInApp?.Close();
 
-            await new Promise((resolve) => {
-                this.#user.interface.popup?.OpenT({
-                    type: 'ok',
-                    data: { title, message },
-                    callback: resolve
+                await new Promise((resolve) => {
+                    this.#user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: { title, message },
+                        callback: resolve
+                    });
                 });
-            });
+            }
         }
 
         // Show chest reward page
@@ -100,7 +106,10 @@ class Rewards extends IUserData {
                     rewardsItems.push(reward);
                 }
             }
-            this.#OpenRewardItemsRecursiveChestPage(rewardsItems);
+
+            if (mode === 'all' || mode === 'only-items') {
+                this.#OpenRewardItemsRecursiveChestPage(rewardsItems);
+            }
         }
     };
 
@@ -180,7 +189,7 @@ class Rewards extends IUserData {
                 callback: () => {
                     // Go to the next reward if there is one
                     if (index + 1 < rewards.length) {
-                        return this.#OpenRewardItemsRecursiveChestPage.call(this, rewards, index + 1);
+                        return this.#OpenRewardItemsRecursiveChestPage(rewards, index + 1);
                     }
 
                     // Go back to the previous page

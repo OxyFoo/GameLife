@@ -984,7 +984,6 @@
         "container-tomorrow": "Come back tomorrow",
 
         "label-time": "{0}/{1} min",
-        "label-reroll": "{0}/{1}",
         "label-finished": "Quest for the day made, well done!",
 
         "popup": {
@@ -994,14 +993,10 @@
         },
 
         "alert-claim-error-title": "Error",
-        "alert-claim-error-message": "An error has occurred, please try again later.",
+        "alert-claim-error-message": "An error has occurred, please try again later. ({})",
 
-        "help": {
-            "1": "Here are the daily quests, complete the required activity to earn rewards!",
-            "2": "Every day a list of activities tailored for you is made available.",
-            "3": "Choose an activity from the list and complete it for 15 minutes to validate your quest.",
-            "4": "If you want to see a list of all possible rewards, click on the arrow here!"
-        }
+        "no-internet": "You must be connected to the Internet to do the quest for the day.",
+        "no-quest": "No quest for the day available at the moment."
     },
 
     "wait": {

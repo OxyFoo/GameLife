@@ -47,7 +47,7 @@ class Activities extends IUserData {
     }
 
     /** @type {ActivitySaved[]} */
-    #activities = [];
+    #SAVED_activities = [];
 
     /** @type {ActivitySaved[]} */
     #UNSAVED_editions = [];
@@ -85,7 +85,7 @@ class Activities extends IUserData {
     };
 
     Clear = () => {
-        this.#activities = [];
+        this.#SAVED_activities = [];
         this.#UNSAVED_activities = [];
         this.#UNSAVED_deletions = [];
         this.currentActivity.Set(null);
@@ -100,7 +100,7 @@ class Activities extends IUserData {
     Get = () => {
         // Generate cache ID
         const id = [
-            this.#activities.length,
+            this.#SAVED_activities.length,
             this.#UNSAVED_editions.length,
             this.#UNSAVED_activities.length,
             this.#UNSAVED_deletions.length
@@ -109,19 +109,19 @@ class Activities extends IUserData {
         // If cache is not up to date, update it
         if (id !== this.#cache_get.id) {
             // Get saved activities
-            const savedActivities = [...this.#activities];
+            const savedActivities = [...this.#SAVED_activities];
 
             // Apply unsaved editions
-            for (let i = 0; i < this.#UNSAVED_editions.length; i++) {
-                const index = savedActivities.findIndex((activity) => activity.ID === this.#UNSAVED_editions[i].ID);
+            for (const editActivity of this.#UNSAVED_editions) {
+                const index = savedActivities.findIndex((activity) => activity.ID === editActivity.ID);
                 if (index !== -1) {
-                    savedActivities[index] = this.#UNSAVED_editions[i];
+                    savedActivities[index] = editActivity;
                 }
             }
 
             // Apply unsaved deletions
-            for (let i = 0; i < this.#UNSAVED_deletions.length; i++) {
-                const index = savedActivities.findIndex((activity) => activity.ID === this.#UNSAVED_deletions[i]);
+            for (const activityID of this.#UNSAVED_deletions) {
+                const index = savedActivities.findIndex((activity) => activity.ID === activityID);
                 if (index !== -1) {
                     savedActivities.splice(index, 1);
                 }
@@ -129,10 +129,7 @@ class Activities extends IUserData {
 
             // Apply unsaved new activities
             /** @type {(Activity | ActivitySaved)[]} */
-            const newActivities = [...savedActivities];
-            for (let i = 0; i < this.#UNSAVED_activities.length; i++) {
-                newActivities.push(this.#UNSAVED_activities[i]);
-            }
+            const newActivities = [...savedActivities, ...this.#UNSAVED_activities];
 
             // Update cache
             this.#cache_get.id = id;
@@ -154,7 +151,7 @@ class Activities extends IUserData {
 
     /** @param {Partial<SaveObject_Activities>} data */
     Load = (data) => {
-        if (typeof data.activities !== 'undefined') this.#activities = data.activities;
+        if (typeof data.activities !== 'undefined') this.#SAVED_activities = data.activities;
         if (typeof data.editions !== 'undefined') this.#UNSAVED_editions = data.editions;
         if (typeof data.additions !== 'undefined') this.#UNSAVED_activities = data.additions;
         if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
@@ -166,7 +163,7 @@ class Activities extends IUserData {
     /** @returns {SaveObject_Activities} */
     Save = () => {
         return {
-            activities: this.#activities,
+            activities: this.#SAVED_activities,
             editions: this.#UNSAVED_editions,
             additions: this.#UNSAVED_activities,
             deletions: this.#UNSAVED_deletions,
@@ -198,7 +195,7 @@ class Activities extends IUserData {
         }
 
         // Add activities
-        this.#activities = [];
+        this.#SAVED_activities = [];
         for (let i = 0; i < response.result.activities.length; i++) {
             this.Add(response.result.activities[i], true);
         }
@@ -208,17 +205,17 @@ class Activities extends IUserData {
 
         // Update and print message
         this.allActivities.Set(this.Get());
-        this.user.interface.console?.AddLog('info', `[Activities] ${this.#activities.length} activities loaded`);
+        this.user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities loaded`);
         return true;
     };
 
     /** @returns {Promise<boolean>} */
     SaveOnline = async (attempt = 2) => {
-        if (!this.isUnsaved()) {
+        if (!this.#isUnsaved()) {
             return true;
         }
 
-        const unsaved = this.getUnsaved();
+        const unsaved = this.#getUnsaved();
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-activities',
             activitiesToAdd: unsaved.add,
@@ -233,24 +230,35 @@ class Activities extends IUserData {
             response === 'interrupted' ||
             response === 'not-sent' ||
             response.status !== 'save-activities' ||
-            response.result === 'error' ||
-            response.result === 'wrong-activities'
+            response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
             return false;
         }
 
+        if (response.result === 'wrong-activities') {
+            this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities (wrong activities)');
+            this.Clear();
+            await this.LoadOnline();
+            return false;
+        }
+
         // Check if failed or need to reload
-        if (response.result === 'wrong-last-update') {
+        if (response.result === 'not-up-to-date') {
+            if (attempt <= 0) {
+                this.user.interface.console?.AddLog(
+                    'error',
+                    '[Activities] Failed to save activities (not up to date), no more attempts'
+                );
+                return false;
+            }
+
             this.user.interface.console?.AddLog(
                 'error',
-                '[Activities] Failed to save activities (wrong last update), reloading'
+                '[Activities] Failed to save activities (wrong last update), retrying'
             );
             await this.LoadOnline();
-            if (attempt > 0) {
-                return await this.SaveOnline(attempt - 1);
-            }
-            return false;
+            return this.SaveOnline(attempt - 1);
         }
 
         // Update last update if success
@@ -259,16 +267,15 @@ class Activities extends IUserData {
         }
 
         // Update and print message
-        this.purge(response.result.newActivities);
+        this.#purge(response.result.newActivities);
         this.allActivities.Set(this.Get());
-        this.user.interface.console?.AddLog('info', `[Activities] ${this.#activities.length} activities saved`);
+        this.user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities saved`);
         this.user.SaveLocal();
 
         return true;
     };
 
-    /** @private */
-    isUnsaved = () => {
+    #isUnsaved = () => {
         return (
             this.#UNSAVED_activities.length > 0 ||
             this.#UNSAVED_editions.length > 0 ||
@@ -276,11 +283,8 @@ class Activities extends IUserData {
         );
     };
 
-    /**
-     * @private
-     * @returns {{ add: Activity[], edit: ActivitySaved[], delete: number[] }} List of unsaved activities
-     */
-    getUnsaved = () => {
+    /** @returns {{ add: Activity[], edit: ActivitySaved[], delete: number[] }} List of unsaved activities */
+    #getUnsaved = () => {
         return {
             add: this.#UNSAVED_activities,
             edit: this.#UNSAVED_editions,
@@ -288,29 +292,26 @@ class Activities extends IUserData {
         };
     };
 
-    /**
-     * @private
-     * @param {ActivitySaved[]} newActivities
-     */
-    purge = (newActivities) => {
-        // Apply editions
-        for (let i = this.#UNSAVED_editions.length - 1; i >= 0; i--) {
-            const index = this.#activities.findIndex((activity) => activity.ID === this.#UNSAVED_editions[i].ID);
+    /** @param {ActivitySaved[]} newActivities */
+    #purge = (newActivities) => {
+        // Apply unsaved editions
+        for (const editActivity of this.#UNSAVED_editions) {
+            const index = this.#SAVED_activities.findIndex((activity) => activity.ID === editActivity.ID);
             if (index !== -1) {
-                this.#activities[index] = this.#UNSAVED_editions[i];
+                this.#SAVED_activities[index] = editActivity;
             }
         }
 
-        // Apply deletions
-        for (let i = this.#UNSAVED_deletions.length - 1; i >= 0; i--) {
-            const index = this.#activities.findIndex((activity) => activity.ID === this.#UNSAVED_deletions[i]);
+        // Apply unsaved deletions
+        for (const activityID of this.#UNSAVED_deletions) {
+            const index = this.#SAVED_activities.findIndex((activity) => activity.ID === activityID);
             if (index !== -1) {
-                this.#activities.splice(index, 1);
+                this.#SAVED_activities.splice(index, 1);
             }
         }
 
         // Apply new activities
-        this.#activities.push(...newActivities);
+        this.#SAVED_activities.push(...newActivities);
 
         // Clear unsaved
         this.#UNSAVED_activities = [];
@@ -338,7 +339,7 @@ class Activities extends IUserData {
      * @returns {Activity[]}
      */
     GetUseful = () => {
-        const id = `${this.#activities.length}-${this.#UNSAVED_activities.length}`;
+        const id = `${this.#SAVED_activities.length}-${this.#UNSAVED_activities.length}`;
         if (id === this.#cache_get_useful.id) {
             return this.#cache_get_useful.activities;
         }
@@ -427,7 +428,7 @@ class Activities extends IUserData {
         }
 
         // Activity is not free
-        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.#activities)) {
+        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.#SAVED_activities)) {
             return { status: 'notFree', activity: null };
         }
 
@@ -435,7 +436,7 @@ class Activities extends IUserData {
         if (alreadySaved) {
             // eslint-disable-next-line prettier/prettier
             const newSavedActivity = /** @type {ActivitySaved} */ (newActivity);
-            this.#activities.push(newSavedActivity);
+            this.#SAVED_activities.push(newSavedActivity);
         } else {
             this.#UNSAVED_activities.push(newActivity);
             this.allActivities.Set(this.Get());
@@ -484,7 +485,7 @@ class Activities extends IUserData {
             const _newActivity = /** @type {ActivitySaved} */ (newActivity);
 
             // Activity does not exist
-            const indexUnsavedAdd = this.#activities.findIndex((act) => act.ID === _activity.ID);
+            const indexUnsavedAdd = this.#SAVED_activities.findIndex((act) => act.ID === _activity.ID);
             if (indexUnsavedAdd === -1) {
                 return { status: 'notExist', activity: null };
             }
@@ -533,7 +534,7 @@ class Activities extends IUserData {
         if (isSavedActivity) {
             // eslint-disable-next-line prettier/prettier
             const _activity = /** @type {ActivitySaved} */ (activity);
-            const indexActivity = this.#activities.findIndex((act) => act.ID === _activity.ID);
+            const indexActivity = this.#SAVED_activities.findIndex((act) => act.ID === _activity.ID);
             if (indexActivity !== -1 && !this.#UNSAVED_deletions.includes(_activity.ID)) {
                 this.#UNSAVED_deletions.push(_activity.ID);
                 this.allActivities.Set(this.Get());

@@ -137,14 +137,14 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     //await dataManager.LocalLoad(user);
 
     // Load app data
-    await dataManager.LocalLoad(user);
+    await dataManager.LoadLocal(user);
     if (user.server2.IsAuthenticated()) {
         const time_appdata_start = performance.now();
-        await dataManager.OnlineLoad(user);
+        await dataManager.LoadOnline(user);
         const time_appdata_end = performance.now();
         const time_appdata = Round(time_appdata_end - time_appdata_start, 2);
         user.interface.console?.AddLog('info', `Online load in ${time_appdata} ms for ${dataManager.CountAll()} items`);
-        await dataManager.LocalSave(user);
+        await dataManager.SaveLocal(user);
     }
 
     // Check if app data are loaded

@@ -8,8 +8,6 @@ import { DateFormat } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- *
- * @typedef {import('Interface/Components').Button} Button
  */
 
 const DailyQuestProps = {
@@ -31,9 +29,6 @@ class DailyQuestBack extends React.Component {
 
     /** @type {Symbol | null} */
     claimListsListener = null;
-
-    /** @type {React.RefObject<Button>} */
-    refOpenStreakPopup = React.createRef();
 
     componentDidMount() {
         this.updateClaimList();

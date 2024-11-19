@@ -103,7 +103,8 @@ class Missions extends IUserData {
         return true;
     };
 
-    SaveOnline = async () => {
+    /** @returns {Promise<boolean>} */
+    SaveOnline = async (attempt = 1) => {
         if (!this.isUnsaved()) {
             return true;
         }
@@ -120,15 +121,28 @@ class Missions extends IUserData {
             response === 'not-sent' ||
             response === 'timeout' ||
             response.status !== 'save-missions' ||
-            response.result === 'error' ||
-            response.result === 'wrong-missions'
+            response.result === 'error'
         ) {
+            this.user.interface.console?.AddLog('error', '[Missions] Failed to save missions');
             return false;
         }
 
-        if (response.result === 'wrong-last-update') {
+        if (response.result === 'wrong-missions') {
+            this.user.interface.console?.AddLog('error', '[Missions] Missions are wrong');
+            this.Clear();
             await this.LoadOnline();
             return false;
+        }
+
+        if (response.result === 'not-up-to-date') {
+            if (attempt <= 0) {
+                this.user.interface.console?.AddLog('error', '[Missions] Failed to save missions, no more attempts');
+                return false;
+            }
+
+            this.user.interface.console?.AddLog('error', '[Missions] Missions are not up to date, retrying');
+            await this.LoadOnline();
+            return this.SaveOnline(attempt + 1);
         }
 
         this.#token = response.result.token;
@@ -264,7 +278,7 @@ class Missions extends IUserData {
             return true;
         }
 
-        if (response.result === 'wrong-last-update') {
+        if (response.result === 'not-up-to-date') {
             await this.LoadOnline();
             return false;
         }
@@ -283,7 +297,7 @@ class Missions extends IUserData {
         const lang = langManager.curr['missions'];
         const title = lang['claim-title'];
         const message = lang['claim-text'];
-        await this.user.rewards.ShowRewards(title, message, rewards);
+        await this.user.rewards.ShowRewards(rewards, 'all', title, message);
 
         this.SetMissionState(name, 'claimed');
         return true;

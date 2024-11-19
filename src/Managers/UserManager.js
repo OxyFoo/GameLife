@@ -13,7 +13,7 @@ import DailyQuest from 'Data/User/DailyQuests';
 import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
-import Quests from 'Data/User/Quests';
+import Quests from 'Data/User/Quests/index';
 import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
@@ -95,6 +95,7 @@ class UserManager {
         this.DATA = [
             this.achievements,
             this.activities,
+            this.dailyQuest,
             this.informations,
             this.inventory,
             this.missions,
@@ -219,6 +220,7 @@ class UserManager {
         await this.settings.IndependentSave();
         await this.SaveLocal();
         await this.SaveOnline();
+        this.dailyQuest.onUnmount();
     }
 
     async RefreshStats(onlineSave = true) {

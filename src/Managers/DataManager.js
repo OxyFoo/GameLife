@@ -3,6 +3,7 @@ import DataStorage, { STORAGE } from 'Utils/DataStorage';
 import Achievements from 'Data/App/Achievements';
 import Ads from 'Data/App/Ads';
 import Contributors from 'Data/App/Contributors';
+import DailyQuestsRewards from 'Data/App/DailyQuestsRewards';
 import Items from 'Data/App/Items';
 import Quotes from 'Data/App/Quotes';
 import Skills from 'Data/App/Skills';
@@ -21,6 +22,7 @@ class DataManager {
         achievements: 0,
         ads: 0,
         contributors: 0,
+        dailyQuestsRewards: 0,
         items: 0,
         quotes: 0,
         skills: 0,
@@ -33,6 +35,7 @@ class DataManager {
         this.achievements = new Achievements();
         this.ads = new Ads();
         this.contributors = new Contributors();
+        this.dailyQuestsRewards = new DailyQuestsRewards();
         this.items = new Items();
         this.quotes = new Quotes();
         this.skills = new Skills();
@@ -43,10 +46,25 @@ class DataManager {
         this.achievements.Clear();
         this.ads.Clear();
         this.contributors.Clear();
+        this.dailyQuestsRewards.Clear();
         this.items.Clear();
         this.quotes.Clear();
         this.skills.Clear();
         this.titles.Clear();
+
+        this.#tableHashes = {
+            achievements: 0,
+            ads: 0,
+            contributors: 0,
+            dailyQuestsRewards: 0,
+            items: 0,
+            quotes: 0,
+            skills: 0,
+            skillIcons: 0,
+            skillCategories: 0,
+            titles: 0
+        };
+
         DataStorage.Save(STORAGE.APP_DATA, null);
         DataStorage.Save(STORAGE.APPDATA_HASHES, null);
     }
@@ -55,16 +73,28 @@ class DataManager {
      * @returns {boolean} False if at least one data is empty
      */
     DataAreLoaded() {
-        const achievements = this.achievements.achievements.length > 0;
-        const contributors = this.contributors.contributors.length > 0;
-        const items = this.items.Get().length > 0;
-        const quotes = this.quotes.Get().length > 0;
+        const achievementsAreLoaded = this.achievements.achievements.length > 0;
+        const contributorsAreLoaded = this.contributors.contributors.length > 0;
+        const dailyQuestsRewardsAreLoaded = this.dailyQuestsRewards.Get().length > 0;
+        const itemsAreLoaded = this.items.Get().length > 0;
+        const quotesAreLoaded = this.quotes.Get().length > 0;
         const _skills = this.skills.Get();
-        const skills = _skills.skills.length > 0;
-        const skillIcons = _skills.skillIcons.length > 0;
-        const skillCategories = _skills.skillCategories.length > 0;
-        const titles = this.titles.Get().length > 0;
-        return achievements && contributors && items && quotes && skills && skillIcons && skillCategories && titles;
+        const skillsAreLoaded = _skills.skills.length > 0;
+        const skillIconsAreLoaded = _skills.skillIcons.length > 0;
+        const skillCategoriesAreLoaded = _skills.skillCategories.length > 0;
+        const titlesAreLoaded = this.titles.Get().length > 0;
+
+        return (
+            achievementsAreLoaded &&
+            contributorsAreLoaded &&
+            dailyQuestsRewardsAreLoaded &&
+            itemsAreLoaded &&
+            quotesAreLoaded &&
+            skillsAreLoaded &&
+            skillIconsAreLoaded &&
+            skillCategoriesAreLoaded &&
+            titlesAreLoaded
+        );
     }
 
     /**
@@ -72,7 +102,7 @@ class DataManager {
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully saved
      */
-    async LocalSave(user) {
+    async SaveLocal(user) {
         const debugIndex = user.interface.console?.AddLog('info', 'App data: local saving...');
 
         // Save hashes
@@ -88,6 +118,7 @@ class DataManager {
             achievements: this.achievements.Save(),
             ads: this.ads.Save(),
             contributors: this.contributors.Save(),
+            dailyQuestsRewards: this.dailyQuestsRewards.Save(),
             items: this.items.Save(),
             quotes: this.quotes.Save(),
             ...this.skills.Save(),
@@ -109,7 +140,7 @@ class DataManager {
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
-    async LocalLoad(user) {
+    async LoadLocal(user) {
         const debugIndex = user.interface.console?.AddLog('info', 'App data: local loading...');
 
         // Load hashes
@@ -134,6 +165,7 @@ class DataManager {
         this.achievements.Load(appData.achievements);
         this.ads.Load(appData.ads);
         this.contributors.Load(appData.contributors);
+        this.dailyQuestsRewards.Load(appData.dailyQuestsRewards);
         this.items.Load(appData.items);
         this.quotes.Load(appData.quotes);
         this.skills.Load({
@@ -152,7 +184,7 @@ class DataManager {
      * @param {User} user
      * @returns {Promise<boolean>} True if the data was successfully loaded
      */
-    async OnlineLoad(user) {
+    async LoadOnline(user) {
         const debugIndex = user.interface.console?.AddLog('info', 'App data: online loading...');
 
         const response = await user.server2.tcp.SendAndWait({
@@ -189,6 +221,9 @@ class DataManager {
         if (response.data.contributors !== null) {
             this.contributors.Load(response.data.contributors);
         }
+        if (response.data.dailyQuestsRewards !== null) {
+            this.dailyQuestsRewards.Load(response.data.dailyQuestsRewards);
+        }
         if (response.data.items !== null) {
             this.items.Load(response.data.items);
         }
@@ -223,6 +258,7 @@ class DataManager {
             this.achievements.Get().length +
             this.ads.Get().length +
             this.contributors.Get().length +
+            this.dailyQuestsRewards.Get().length +
             this.items.Get().length +
             this.quotes.Get().length +
             this.skills.Get().skills.length +

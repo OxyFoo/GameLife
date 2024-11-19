@@ -244,7 +244,7 @@ class BackQuest extends PageBase {
             return;
         }
 
-        const addition = user.quests.Edit(tempQuest);
+        const addition = user.quests.Edit(this.selectedQuest, tempQuest);
 
         if (addition === 'edited') {
             // Update mission

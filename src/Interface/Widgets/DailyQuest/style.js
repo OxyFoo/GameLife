@@ -10,16 +10,10 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         paddingHorizontal: 0
     },
-    headerButtonLeft: {
-        width: 'auto',
-        marginRight: 4,
-        paddingHorizontal: 12,
-        borderTopLeftRadius: 8,
-        borderBottomLeftRadius: 0
-    },
     headerButtonRight: {
         width: 'auto',
         marginLeft: 4,
+        paddingVertical: 12,
         paddingHorizontal: 12,
         borderTopRightRadius: 8,
         borderBottomRightRadius: 0
@@ -28,17 +22,18 @@ const styles = StyleSheet.create({
         width: 'auto',
         alignContent: 'center'
     },
-    buttonInfo: {
+    headerTitle: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingLeft: 0,
+        paddingLeft: 16,
+        paddingVertical: 8,
         borderRadius: 0
     },
 
     // Container body
     bodyStyle: {
-        paddingBottom: 6,
+        paddingBottom: 12,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8
     },
@@ -58,6 +53,18 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
 
+    viewCategory: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    titleCategory: {
+        fontSize: 14
+    },
+    iconCategory: {
+        marginRight: 4
+    },
+
     viewProgression: {
         paddingHorizontal: 12
     },
@@ -65,27 +72,8 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
 
-    skillsItems: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 12
-    },
-    skillItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 12
-    },
-    skillButton: {
-        width: 'auto',
-        marginVertical: 2,
-        paddingVertical: 10,
-        paddingHorizontal: 10
-    },
-
     viewFinished: {
-        marginVertical: 6
+        marginTop: 12
     },
     dailyFinished: {
         marginTop: 12,
@@ -100,7 +88,13 @@ const styles = StyleSheet.create({
     containerDateText: {
         marginBottom: 12,
         fontSize: 14
-    }
+    },
+
+    viewNoInternet: {
+        marginTop: 12,
+        paddingHorizontal: 12
+    },
+    textNoInternet: {}
 });
 
 export default styles;

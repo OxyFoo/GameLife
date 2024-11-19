@@ -983,7 +983,6 @@
         "container-tomorrow": "Reviens demain",
 
         "label-time": "{0}/{1} min",
-        "label-reroll": "{0}/{1}",
         "label-finished": "Quête du jour réalisée, bravo !",
 
         "popup": {
@@ -993,14 +992,10 @@
         },
 
         "alert-claim-error-title": "Erreur",
-        "alert-claim-error-message": "Une erreur est survenue, réessaye plus tard.",
+        "alert-claim-error-message": "Une erreur est survenue, réessaye plus tard. ({})",
 
-        "help": {
-            "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",
-            "2": "Chaque jour une liste d'activité faite sur mesure pour toi est mise à ta disposition.",
-            "3": "Choisi une activité parmis celles proposées et fais là pendant 15 minutes pour valider ta quête.",
-            "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
-        }
+        "no-internet": "Tu dois être connecté à internet pour faire la quête du jour.",
+        "no-quest": "Aucune quête du jour disponible pour le moment."
     },
 
     "wait": {

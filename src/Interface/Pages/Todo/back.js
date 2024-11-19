@@ -246,7 +246,13 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const edition = user.todos.Edit(todo, title.trim(), description, deadline, tasks);
+        const edition = user.todos.Edit(todo, {
+            title: title.trim(),
+            description,
+            deadline,
+            tasks
+        });
+
         if (!edition) {
             user.interface.console?.AddLog('warn', 'Todo: Todo not exist, cannot edit');
             return;

@@ -63,7 +63,7 @@ function NIA_AchievementPending({ notif }) {
         const title = langAch['alert-achievement-title'];
         const achievementName = langManager.GetText(achievement.Name);
         const message = langAch['alert-achievement-text'].replace('{}', achievementName);
-        await user.rewards.ShowRewards(title, message, claimRewards);
+        await user.rewards.ShowRewards(claimRewards, 'all', title, message);
 
         // Show popup
         user.interface.notificationsInApp?.Close();

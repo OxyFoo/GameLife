@@ -4,7 +4,6 @@ import { Animated } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 
-import { GetGlobalTime } from 'Utils/Time';
 import { MinMax } from 'Utils/Functions';
 
 /**
@@ -75,13 +74,13 @@ class BackTodoList extends React.Component {
     keyExtractor = (item) => 'todo-' + [item.title, ...item.created.toString(), ...item.deadline.toString()].join('-');
 
     /** @param {Todo} todo */
-    onTodoCheck = (todo) => {
+    onTodoCheck = async (todo) => {
         if (todo.checked !== 0) {
             user.todos.Uncheck(todo);
         } else {
-            user.todos.Check(todo, GetGlobalTime());
+            user.todos.Check(todo);
         }
-        user.GlobalSave();
+        await user.GlobalSave();
     };
 
     /**

@@ -55,7 +55,7 @@ class Home extends BackHome {
                 <TodayPieChart style={styles.todayPieChart} />
 
                 {/* Today missions */}
-                {/* <DailyQuest style={styles.dailyQuests} /> */}
+                <DailyQuest style={styles.dailyQuests} />
 
                 {/* Today quests */}
                 <Title title={lang['section-today-quests']}>

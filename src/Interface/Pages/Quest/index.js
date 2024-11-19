@@ -24,7 +24,7 @@ class Quest extends BackQuest {
     render() {
         const lang = langManager.curr['quest'];
         const { ShowTitle, ShowError } = this;
-        const { action, tempQuest, animEditButton, editButtonHeight, errors } = this.state;
+        const { action, tempQuest, animEditButton, editButtonHeight, errors, loading } = this.state;
 
         const title = this.selectedQuest === null ? lang['title-new'] : lang['title'];
 
@@ -75,7 +75,12 @@ class Quest extends BackQuest {
 
                     {/* Add button */}
                     {action === 'add' && (
-                        <Button style={styles.addButton} onPress={this.AddQuest} enabled={errors.length === 0}>
+                        <Button
+                            style={styles.addButton}
+                            onPress={this.AddQuest}
+                            enabled={errors.length === 0}
+                            loading={loading}
+                        >
                             {lang['button-text']['add']}
                         </Button>
                     )}
@@ -86,6 +91,7 @@ class Quest extends BackQuest {
                             style={[styles.removeButton, styleMarginBottom]}
                             appearance='outline'
                             onPress={this.RemoveQuest}
+                            loading={loading}
                         >
                             {lang['button-text']['remove']}
                         </Button>
@@ -100,6 +106,7 @@ class Quest extends BackQuest {
                         onPress={this.EditQuest}
                         onLayout={this.onEditButtonLayout}
                         enabled={errors.length === 0}
+                        loading={loading}
                         pointerEvents={action === 'save' ? 'auto' : 'none'}
                     >
                         {lang['button-text']['save']}

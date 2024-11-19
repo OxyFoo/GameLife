@@ -208,8 +208,12 @@ class PopupBack extends React.PureComponent {
             return false;
         }
 
+        // If it's last popup, close to default
+        if (currents.length <= 1) {
+            this.opened = false;
+        }
+
         // Start end animations
-        this.opened = false;
         Animated.parallel([
             TimingAnimation(current.animOpacity, 0, 200),
             TimingAnimation(current.animScale, 0.9, 200),

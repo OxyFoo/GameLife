@@ -152,6 +152,7 @@ class BackSkill extends PageBase {
         user.interface.screenList?.Open(lang['history-title'], items, (index) => {
             const activity = this.history[index - 1].activity;
 
+            user.interface.screenList?.Close();
             this.fe.bottomPanel?.Open({
                 content: <AddActivity editActivity={activity} />
             });

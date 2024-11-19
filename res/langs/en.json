@@ -936,6 +936,10 @@
         "alert-remquest-message": "Are you sure you want to delete this quest?",
         "alert-back-title": "Back",
         "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
+        "alert-error-title": "Error",
+        "alert-error-message": "An error occurred, again tried again ({}).",
+        "alert-save-error-title": "Error",
+        "alert-save-error-message": "An error occurred, again tried again.",
 
         "tuto": {
             "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",

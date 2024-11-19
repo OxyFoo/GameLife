@@ -935,6 +935,10 @@
         "alert-remquest-message": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
         "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
+        "alert-error-title": "Erreur",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
+        "alert-save-error-title": "Erreur",
+        "alert-save-error-message": "Une erreur est survenue, réessaye plus tard.",
 
         "tuto": {
             "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",

@@ -88,7 +88,7 @@ function RenderSkillsSearch({ searchInput, callback }) {
     React.useEffect(() => {
         const search = FormatForSearch(searchInput);
         const skills = dataManager.skills.Get();
-        const newSkills = skills
+        const newSkills = skills.skills
             .map((skill) => SkillToItem(skill, (s) => callback(s.ID)))
             .filter((skill) => FormatForSearch(skill.value).includes(search));
         setSkillsItems(newSkills);

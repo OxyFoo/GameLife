@@ -53,7 +53,9 @@ class BackQuest extends PageBase {
         animEditButton: new Animated.Value(0),
 
         /** @type {Array<InputsError>} Error message to display */
-        errors: []
+        errors: [],
+
+        loading: false
     };
 
     /** @type {Quest | null} */
@@ -165,6 +167,7 @@ class BackQuest extends PageBase {
 
     /** @returns {boolean} */
     BackHandler = () => {
+        const lang = langManager.curr['quest'];
         const { action } = this.state;
 
         // Don't show popup or quest not edited => leave
@@ -187,8 +190,8 @@ class BackQuest extends PageBase {
         user.interface.popup?.OpenT({
             type: 'yesno',
             data: {
-                title: langManager.curr['quest']['alert-back-title'],
-                message: langManager.curr['quest']['alert-back-message']
+                title: lang['alert-back-title'],
+                message: lang['alert-back-message']
             },
             callback: (btn) => {
                 if (btn === 'yes') {
@@ -212,31 +215,60 @@ class BackQuest extends PageBase {
         return false;
     };
 
-    AddQuest = () => {
+    AddQuest = async () => {
+        const lang = langManager.curr['quest'];
         const { tempQuest } = this.state;
         const addStatus = user.quests.Add(tempQuest);
 
-        if (addStatus === 'added') {
-            // Update mission
-            user.missions.SetMissionState('mission2', 'completed');
-
-            user.GlobalSave();
-            user.interface.RemoveCustomBackHandler(this.BackHandler);
-            user.interface.ChangePage('queststats', {
-                args: { quest: tempQuest, showAnimations: false },
-                storeInHistory: false,
-                transition: 'fromLeft'
-            });
-        } else if (addStatus === 'already-added') {
+        if (addStatus === 'already-added') {
             user.interface.console?.AddLog('warn', 'Quest: Quest already added');
             user.interface.RemoveCustomBackHandler(this.BackHandler);
             user.interface.BackHandle();
-        } else {
+            return;
+        } else if (addStatus !== 'added') {
             user.interface.console?.AddLog('error', 'Quest: Unknown error');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message'].replace('{}', addStatus)
+                }
+            });
+            return;
         }
+
+        // Update mission
+        user.missions.SetMissionState('mission2', 'completed');
+
+        // Save online
+        this.setState({ loading: true });
+        const saved = await user.quests.SaveOnline();
+        this.setState({ loading: false });
+
+        // If not saved, show error
+        if (!saved) {
+            user.interface.console?.AddLog('error', 'Quest: Error saving');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-save-error-title'],
+                    message: lang['alert-save-error-message']
+                }
+            });
+            return;
+        }
+
+        // Come back to queststats
+        user.interface.RemoveCustomBackHandler(this.BackHandler);
+        user.interface.ChangePage('queststats', {
+            args: { quest: tempQuest, showAnimations: false },
+            storeInHistory: false,
+            transition: 'fromLeft'
+        });
     };
 
-    EditQuest = () => {
+    EditQuest = async () => {
+        const lang = langManager.curr['quest'];
         const { tempQuest } = this.state;
 
         if (this.selectedQuest === null) {
@@ -244,29 +276,52 @@ class BackQuest extends PageBase {
             return;
         }
 
-        const addition = user.quests.Edit(this.selectedQuest, tempQuest);
+        const edition = user.quests.Edit(this.selectedQuest, tempQuest);
 
-        if (addition === 'edited') {
-            // Update mission
-            user.missions.SetMissionState('mission2', 'completed');
-
-            user.GlobalSave();
-            user.interface.RemoveCustomBackHandler(this.BackHandler);
-            user.interface.ChangePage('queststats', {
-                args: { quest: tempQuest, showAnimations: false },
-                storeInHistory: false,
-                transition: 'fromLeft'
-            });
-        } else if (addition === 'not-exists') {
-            user.interface.console?.AddLog('warn', 'Quest: Quest not exist');
-            user.interface.RemoveCustomBackHandler(this.BackHandler);
-            user.interface.BackHandle();
-        } else {
+        if (edition !== 'edited') {
             user.interface.console?.AddLog('error', 'Quest: Unknown error');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message'].replace('{}', edition)
+                }
+            });
+            return;
         }
+
+        // Update mission
+        user.missions.SetMissionState('mission2', 'completed');
+
+        // Save online
+        this.setState({ loading: true });
+        const saved = await user.quests.SaveOnline();
+        this.setState({ loading: false });
+
+        // If not saved, show error
+        if (!saved) {
+            user.interface.console?.AddLog('error', 'Quest: Error saving');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-save-error-title'],
+                    message: lang['alert-save-error-message']
+                }
+            });
+            return;
+        }
+
+        user.interface.RemoveCustomBackHandler(this.BackHandler);
+        user.interface.ChangePage('queststats', {
+            args: { quest: tempQuest, showAnimations: false },
+            storeInHistory: false,
+            transition: 'fromLeft'
+        });
     };
 
     RemoveQuest = () => {
+        const lang = langManager.curr['quest'];
+
         if (this.selectedQuest === null) {
             user.interface.console?.AddLog('error', 'Quest: Selected quest is null');
             return;
@@ -275,20 +330,48 @@ class BackQuest extends PageBase {
         user.interface.popup?.OpenT({
             type: 'yesno',
             data: {
-                title: langManager.curr['quest']['alert-remquest-title'],
-                message: langManager.curr['quest']['alert-remquest-message']
+                title: lang['alert-remquest-title'],
+                message: lang['alert-remquest-message']
             },
-            callback: (btn) => {
-                if (btn === 'yes' && this.selectedQuest !== null) {
-                    const remove = user.quests.Remove(this.selectedQuest);
-                    if (remove === 'removed') {
-                        user.GlobalSave();
-                        user.interface.RemoveCustomBackHandler(this.BackHandler);
-                        user.interface.BackHandle();
-                    } else if (remove === 'notExist') {
-                        user.interface.console?.AddLog('warn', 'Quest: Quest not exist');
-                    }
+            callback: async (btn) => {
+                if (btn !== 'yes' || this.selectedQuest === null) {
+                    return;
                 }
+
+                const remove = user.quests.Remove(this.selectedQuest);
+                if (remove !== 'removed') {
+                    user.interface.console?.AddLog('warn', `Quest: Quest not removed (${remove})`);
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-error-title'],
+                            message: lang['alert-error-message'].replace('{}', remove)
+                        }
+                    });
+                    return;
+                }
+
+                // Save online
+                this.setState({ loading: true });
+                const saved = await user.quests.SaveOnline();
+                this.setState({ loading: false });
+
+                // If not saved, show error
+                if (!saved) {
+                    user.interface.console?.AddLog('error', 'Quest: Error saving');
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-save-error-title'],
+                            message: lang['alert-save-error-message']
+                        }
+                    });
+                    return;
+                }
+
+                // Come back to queststats
+                user.interface.RemoveCustomBackHandler(this.BackHandler);
+                user.interface.BackHandle();
             }
         });
     };

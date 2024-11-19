@@ -7,6 +7,7 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('Types/Data/User/Quests').QuestSaved} QuestSaved
  *
  * @typedef {Object} BackQuestsListPropsType
  * @property {StyleProp} style
@@ -34,20 +35,23 @@ class BackQuestsList extends React.Component {
     listenerQuest = null;
 
     componentDidMount() {
-        this.listenerQuest = user.quests.allQuests.AddListener(this.refreshQuests);
+        this.listenerQuest = user.quests.allQuests.AddListener((newQuests) => {
+            this.setState({ quests: newQuests });
+        });
     }
 
     componentWillUnmount() {
         user.quests.allQuests.RemoveListener(this.listenerQuest);
     }
 
-    refreshQuests = () => {
-        const quests = user.quests.Get();
-        this.setState({ quests });
-    };
+    /**
+     * @param {Quest | QuestSaved} item
+     * @returns {item is QuestSaved}
+     */
+    isSavedQuest = (item) => item.hasOwnProperty('ID');
 
-    /** @param {Quest} item */
-    keyExtractor = (item) => 'quest-' + item.title + JSON.stringify(item.skills) + JSON.stringify(item.schedule);
+    /** @param {Quest | QuestSaved} item */
+    keyExtractor = (item) => (this.isSavedQuest(item) ? `quest-${item.ID}` : `quest-${item.title}`);
 
     openQuests = () => user.interface.ChangePage('quests');
 }

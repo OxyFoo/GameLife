@@ -93,9 +93,16 @@ class Skill extends BackSkill {
                     )}
 
                     {/* History */}
-                    <Button style={styles.historyButton} appearance='uniform' color='main1' onPress={this.showHistory}>
-                        {lang['history-show']}
-                    </Button>
+                    {this.history.length > 0 && (
+                        <Button
+                            style={styles.historyButton}
+                            appearance='uniform'
+                            color='main1'
+                            onPress={this.showHistory}
+                        >
+                            {lang['history-show']}
+                        </Button>
+                    )}
                 </ScrollView>
 
                 {/* Absolute add button */}

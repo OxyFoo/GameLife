@@ -7,10 +7,11 @@ import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('Types/Data/User/Quests').QuestSaved} QuestSaved
  *
  * @typedef {Object} BackQuestPropsType
  * @property {Object} args
- * @property {Quest | null} args.quest
+ * @property {Quest | QuestSaved | null} args.quest
  * @property {boolean | undefined} [args.showAnimations]
  */
 
@@ -34,8 +35,15 @@ class BackQuest extends PageBase {
             return;
         }
 
+        const realQuest = user.quests.Get().find((q) => q.title === quest.title);
+        if (realQuest === undefined) {
+            user.interface.BackHandle();
+            user.interface.console?.AddLog('error', 'Quest: Quest not found');
+            return;
+        }
+
         /** @type {Quest} */
-        this.selectedQuest = quest;
+        this.selectedQuest = realQuest;
         this.activitiesTimeText = user.quests.GetQuestTimeText(this.selectedQuest);
         this.showAnimations = props.args.showAnimations ?? BackQuestProps.args.showAnimations;
     }

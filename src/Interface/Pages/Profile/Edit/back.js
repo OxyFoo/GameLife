@@ -179,7 +179,7 @@ class BackProfileEditor extends React.PureComponent {
     };
 
     dtpClose = () => {
-        this.setState({ stateDTP: null });
+        this.setState({ stateDTP: '' });
     };
 
     openChangeUsernamePopup = () => {

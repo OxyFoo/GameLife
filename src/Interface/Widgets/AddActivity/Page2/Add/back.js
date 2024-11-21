@@ -11,6 +11,7 @@ import {
     RemoveActivity,
     TIME_STEP_MINUTES
 } from 'Utils/Activities';
+import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
@@ -184,9 +185,17 @@ class BackActivityPage2Add extends React.Component {
      * @param {'startTime' | 'endTime'} type
      * @param {number} dateTime
      */
-    showDTP = (mode, type, dateTime) => this.setState({ DTPMode: mode, DTPType: type, DTPDate: GetDate(dateTime) });
+    showDTP = (mode, type, dateTime) => {
+        this.setState({ DTPMode: mode, DTPType: type, DTPDate: GetDate(dateTime) }, () => {
+            user.interface.bottomPanel?.DisableScroll();
+        });
+    };
 
-    hideDTP = () => this.setState({ DTPMode: '' });
+    hideDTP = () => {
+        this.setState({ DTPMode: '' }, () => {
+            user.interface.bottomPanel?.EnableScroll();
+        });
+    };
 
     /** @param {Date} date UTC date */
     onChangeDateTimePicker = (date) => {

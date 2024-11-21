@@ -18,8 +18,6 @@ import { FormatForSearch } from 'Utils/String';
  */
 
 class BackSkills extends PageBase {
-    static feKeepMounted = true;
-
     state = {
         search: '',
         ascending: true,

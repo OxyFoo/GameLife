@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     iconCategory: {
-        marginRight: 4
+        marginRight: 8
     },
 
     viewProgression: {

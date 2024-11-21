@@ -71,7 +71,7 @@ class Quests extends IUserData {
 
     /**
      * Return all quests (save and unsaved) sorted by start time (ascending)
-     * @returns {Quest[]}
+     * @returns {(Quest | QuestSaved)[]}
      */
     Get = () => {
         // Get all saved quests

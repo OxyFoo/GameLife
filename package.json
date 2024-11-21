@@ -34,7 +34,7 @@
     "react-native-google-mobile-ads": "^14.2.5",
     "react-native-iap": "^12.12.2",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-modal-datetime-picker": "^17.1.0",
+    "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-permissions": "^3.10.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-restart": "^0.0.27",

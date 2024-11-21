@@ -111,9 +111,9 @@ class BottomPanelBack extends React.Component {
 
     IsOpened = () => this.state.state === 'opened' || this.state.state === 'opening';
 
-    EnableScroll = () => (this.scrollEnabled = true);
+    EnableScroll = () => (this.mover.scrollEnabled = true);
 
-    DisableScroll = () => (this.scrollEnabled = false);
+    DisableScroll = () => (this.mover.scrollEnabled = false);
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPanel = (event) => {

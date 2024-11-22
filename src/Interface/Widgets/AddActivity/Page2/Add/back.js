@@ -1,5 +1,8 @@
 import React from 'react';
 
+import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+
 import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime } from 'Utils/Time';
@@ -11,7 +14,6 @@ import {
     RemoveActivity,
     TIME_STEP_MINUTES
 } from 'Utils/Activities';
-import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
@@ -69,22 +71,54 @@ class BackActivityPage2Add extends React.Component {
         }
 
         this.setState({ loading: true });
+
+        let success = true;
         if (editActivity === null) {
-            await AddActivity(activity);
+            success = await AddActivity(activity);
         } else {
-            await EditActivity(editActivity, activity);
+            success = await EditActivity(editActivity, activity);
         }
-        this.setState({ loading: false });
+
+        if (!success) {
+            this.setState({ loading: false });
+            return;
+        }
+
+        const saved = await user.activities.SaveOnline();
+        if (!saved) {
+            const lang = langManager.curr['activity'];
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message'].replace('{}', 'save online')
+                }
+            });
+        }
+
+        this.setState({ loading: false }, () => {
+            user.interface.bottomPanel?.Close();
+        });
     };
 
-    onRemoveActivity = () => {
+    onRemoveActivity = async () => {
         const { editActivity } = this.props;
 
         if (editActivity === null) {
             return;
         }
 
-        RemoveActivity(editActivity);
+        this.setState({ loading: true });
+
+        const removed = await RemoveActivity(editActivity);
+        if (!removed) {
+            this.setState({ loading: false });
+            return;
+        }
+
+        this.setState({ loading: false }, () => {
+            user.interface.bottomPanel?.Close();
+        });
     };
 
     isEdited = () => {
@@ -249,6 +283,8 @@ class BackActivityPage2Add extends React.Component {
                 });
             });
         }
+
+        user.interface.bottomPanel?.EnableScroll();
     };
 }
 

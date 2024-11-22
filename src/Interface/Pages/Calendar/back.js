@@ -57,6 +57,8 @@ class BackCalendar extends PageBase {
         /** @type {DayDataType | null} */
         selectedDay: null,
 
+        todayStrDate: '',
+
         /** @type {DayDataType[]} */
         days: Array(TOTAL_DAYS_COUNT)
             .fill(0)
@@ -255,7 +257,32 @@ class BackCalendar extends PageBase {
             EasingAnimation(this.state.animTodayButton, 1, 200).start();
         }
 
-        this.setState({ days, selectedDay, activities });
+        let strDay = selectedDay?.day.toString();
+        let strMonth = langManager.curr['dates']['month'][selectedDay?.month || 0];
+        let strYear = selectedDay?.year.toString();
+
+        if (langManager.currentLangageKey === 'en') {
+            function getOrdinalSuffix(d = 0) {
+                if (d > 3 && d < 21) return 'th';
+                switch (d % 10) {
+                    case 1:
+                        return 'st';
+                    case 2:
+                        return 'nd';
+                    case 3:
+                        return 'rd';
+                    default:
+                        return 'th';
+                }
+            }
+
+            strDay = strMonth;
+            strMonth = selectedDay?.day + getOrdinalSuffix(selectedDay?.day);
+        }
+
+        const todayStrDate = `${strDay} ${strMonth} ${strYear}`;
+
+        this.setState({ days, selectedDay, activities, todayStrDate });
 
         // Scroll to the selected day
         if (scrollToSelection) {

@@ -38,7 +38,7 @@ class App extends React.Component {
             CheckDate(user.server2.tcp);
             //user.tcp.Connect();
         } else if (state === 'background' || state === 'inactive') {
-            (await user.OnlineSave()) || (await user.LocalSave());
+            (await user.SaveOnline()) || (await user.SaveLocal());
         }
     }
 

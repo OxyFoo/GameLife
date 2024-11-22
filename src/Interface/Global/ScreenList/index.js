@@ -52,7 +52,7 @@ class ScreenList extends ScreenListBack {
                         keyExtractor={(item) => `SL-${item?.id}-${item?.value}`}
                         onLayout={this.onLayoutFlatList}
                         onContentSizeChange={this.onContentSizeChange}
-                        initialNumToRender={data.length / 2}
+                        initialNumToRender={10}
                         scrollEnabled={false}
                     />
                 </Animated.View>

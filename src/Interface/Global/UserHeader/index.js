@@ -6,6 +6,7 @@ import UserHeaderBack from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { OnlineView } from 'Interface/Primitives';
 import { Text, Icon, Button, Frame } from 'Interface/Components';
 import { NotificationsInAppButton } from 'Interface/Widgets';
 
@@ -46,10 +47,11 @@ class UserHeader extends UserHeaderBack {
     }
 
     renderNotificationsInAppButton = () => {
-        if (this.state.connectedToServer === false) {
-            return <Icon style={styles.noWifiIcon} icon='no-wifi' color='border' size={32} />;
-        }
-        return <NotificationsInAppButton ref={this.refBellButton} style={styles.interactionsButton} />;
+        return (
+            <OnlineView offlineView={<Icon style={styles.noWifiIcon} icon='no-wifi' color='border' size={32} />}>
+                <NotificationsInAppButton ref={this.refBellButton} style={styles.interactionsButton} />
+            </OnlineView>
+        );
     };
 
     renderInteraction = () => {
@@ -60,20 +62,20 @@ class UserHeader extends UserHeaderBack {
             <Button ref={this.refContainer} style={styles.avatar} onPress={openProfile}>
                 {showAvatar && user.character && (
                     // TODO: Real avatar
-                    // <Frame
-                    //     ref={this.refFrame}
-                    //     characters={[user.character]}
-                    //     size={AVATAR_FRAME_SIZE}
-                    //     delayTime={0}
-                    //     loadingTime={0}
-                    //     bodyView={'topHalf'}
-                    // />
-                    <Image
-                        style={{ width: 48, height: 48 }}
-                        resizeMode='stretch'
-                        source={require('Ressources/items/avatar_min_placeholder.png')}
+                    <Frame
+                        ref={this.refFrame}
+                        characters={[user.character]}
+                        size={AVATAR_FRAME_SIZE}
+                        delayTime={0}
+                        loadingTime={0}
+                        bodyView={'topHalf'}
                     />
                 )}
+                <Image
+                    style={{ width: 48, height: 48 }}
+                    resizeMode='stretch'
+                    source={require('Ressources/items/avatar_min_placeholder.png')}
+                />
             </Button>
         );
     };

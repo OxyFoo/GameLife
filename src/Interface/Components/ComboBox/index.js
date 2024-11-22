@@ -25,7 +25,7 @@ class ComboBox extends ComboBoxBack {
             <>
                 {this.renderElement()}
 
-                <Modal visible={selectionMode} transparent={selectionMode} animationType='fade'>
+                <Modal visible={selectionMode} transparent={true} animationType='fade'>
                     {this.renderOverlay()}
                     {this.renderContent()}
                 </Modal>

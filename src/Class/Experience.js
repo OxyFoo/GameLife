@@ -137,7 +137,7 @@ class Experience extends IUserClass {
         const totalXP = skill.XP * (totalDuration / 60);
 
         const experience = this.getXPDict(totalXP, 'skill');
-        const lastTime = activities.length === 0 ? 0 : activities.at(-1)?.startTime ?? 0;
+        const lastTime = activities.length === 0 ? 0 : (activities.at(-1)?.startTime ?? 0);
         return { ...experience, lastTime };
     }
 

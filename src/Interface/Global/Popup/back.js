@@ -47,6 +47,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {Animated.Value} animScale
  * @property {Animated.Value} animOpacity
  * @property {Animated.ValueXY} animQuitPos
+ * @property {boolean} mounted
  */
 
 class PopupBack extends React.PureComponent {
@@ -83,17 +84,11 @@ class PopupBack extends React.PureComponent {
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),
             cancelable: params?.cancelable ?? true,
-            onLayout: (event) => {
-                const { x, y } = event.nativeEvent.layout;
-                const SCREEN_SIZE = Dimensions.get('screen');
-
-                this.lastLayout = { x, y };
-                newPopup.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
-                SpringAnimation(newPopup.animQuitPos, { x: -x, y }).start();
-            },
+            onLayout: (event) => this.onPopupLayout(event, newPopup),
             animOpacity: new Animated.Value(0),
             animScale: new Animated.Value(0.9),
-            animQuitPos: new Animated.ValueXY({ x: 0, y: 0 })
+            animQuitPos: new Animated.ValueXY({ x: 0, y: 0 }),
+            mounted: false
         };
 
         this.queue.push(newPopup);
@@ -116,17 +111,11 @@ class PopupBack extends React.PureComponent {
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),
             cancelable: params?.cancelable ?? true,
-            onLayout: (event) => {
-                const { x, y } = event.nativeEvent.layout;
-                const SCREEN_SIZE = Dimensions.get('screen');
-
-                this.lastLayout = { x, y };
-                newPopup.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
-                SpringAnimation(newPopup.animQuitPos, { x: -x, y }).start();
-            },
+            onLayout: (event) => this.onPopupLayout(event, newPopup),
             animScale: new Animated.Value(0.9),
             animOpacity: new Animated.Value(0),
-            animQuitPos: new Animated.ValueXY({ x: 0, y: 0 })
+            animQuitPos: new Animated.ValueXY({ x: 0, y: 0 }),
+            mounted: false
         };
 
         this.queue.push(newPopup);
@@ -244,6 +233,34 @@ class PopupBack extends React.PureComponent {
         }
 
         return true;
+    };
+
+    /**
+     * @param {LayoutChangeEvent} event
+     * @param {PopupQueueType<any>} newPopup
+     */
+    onPopupLayout = (event, newPopup) => {
+        const { x, y } = event.nativeEvent.layout;
+
+        // If popup is already in this position do nothing
+        if (this.lastLayout.x === x && this.lastLayout.y === y) {
+            return;
+        }
+
+        // Update last layout
+        this.lastLayout.x = x;
+        this.lastLayout.y = y;
+
+        // If popup is not mounted, set initial position
+        if (!newPopup.mounted) {
+            const SCREEN_SIZE = Dimensions.get('screen');
+
+            newPopup.mounted = true;
+            newPopup.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
+        }
+
+        // Start animation
+        SpringAnimation(newPopup.animQuitPos, { x: -x, y }).start();
     };
 
     /** @param {GestureResponderEvent} e */

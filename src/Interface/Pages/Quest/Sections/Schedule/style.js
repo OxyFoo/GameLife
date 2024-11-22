@@ -40,10 +40,12 @@ const styles = StyleSheet.create({
 
     frequencyContainer: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'center'
     },
     frequencyDigit: {
         width: 80,
+        height: 'auto',
         borderWidth: 1.5
     },
     frequencySeparator: {

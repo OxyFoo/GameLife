@@ -90,24 +90,21 @@ class BackSkill extends PageBase {
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',
             stats: Object.values(skill.Stats),
-            xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            xml: dataManager.skills.GetXmlByLogoID(skill.LogoID || category.LogoID),
             enabled: skill.Enabled,
             totalDuration: totalDuration
         };
 
-        this.__updateHIstory();
+        this.__updateHistory();
     }
 
     componentDidMount() {
         if (this.skill.ID === 0) {
-            // TODO: Clean instant back handle
-            this.timeout = setTimeout(() => {
-                user.interface.BackHandle();
-            }, 100);
+            user.interface.BackHandle();
         }
     }
 
-    __updateHIstory = () => {
+    __updateHistory = () => {
         if (this.skill.ID === 0) return;
         const userActivities = user.activities.GetBySkillID(this.skill.ID);
 

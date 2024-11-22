@@ -493,7 +493,7 @@ class Activities extends IUserData {
             const indexUnsavedEdition = this.#UNSAVED_editions.findIndex((act) => act.ID === _activity.ID);
 
             // Activity not edited yet
-            if (indexUnsavedEdition !== -1) {
+            if (indexUnsavedEdition === -1) {
                 this.#UNSAVED_editions.push(_newActivity);
             }
 

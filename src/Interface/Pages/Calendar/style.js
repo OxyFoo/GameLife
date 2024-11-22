@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
     summaryTitle: {
-        marginBottom: 12,
-        fontSize: 22,
+        marginBottom: 8,
+        fontSize: 18,
         textAlign: 'left'
     },
     summaryHoursContent: {
@@ -49,14 +49,8 @@ const styles = StyleSheet.create({
     activityTitle: {
         flex: 1,
         marginBottom: 12,
-        fontSize: 22,
+        fontSize: 20,
         textAlign: 'left'
-    },
-    activityTitleDate: {
-        flex: 1,
-        marginBottom: 12,
-        fontSize: 22,
-        textAlign: 'right'
     },
     activityItem: {
         paddingVertical: 16,

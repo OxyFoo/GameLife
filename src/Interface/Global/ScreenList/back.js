@@ -3,7 +3,6 @@ import { Animated, Dimensions } from 'react-native';
 
 import user from 'Managers/UserManager';
 
-import { Sleep } from 'Utils/Functions';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
@@ -81,10 +80,6 @@ class ScreenListBack extends React.Component {
                 data: data
             },
             async () => {
-                // TODO: Wait real layout
-                await Sleep(200); // Wait layout
-                this.posY = Math.max(-this.heightPanel, -400);
-                SpringAnimation(this.state.positionY, this.posY).start();
                 this.callback = callback;
                 user.interface.AddCustomBackHandler(this.closeHandler);
             }
@@ -108,6 +103,7 @@ class ScreenListBack extends React.Component {
         this.isClosing = true;
         this.posY = 0;
         this.accY = 0;
+        this.heightFlatlist = 0;
         this.callback = () => {};
 
         TimingAnimation(this.state.anim, 0, 200).start();
@@ -140,7 +136,15 @@ class ScreenListBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayoutFlatList = (event) => {
         const { height } = event.nativeEvent.layout;
-        this.heightFlatlist = height;
+
+        if (height > 0 && this.heightFlatlist === 0) {
+            this.posY = Math.max(-this.heightPanel, -400);
+            SpringAnimation(this.state.positionY, this.posY).start();
+        }
+
+        if (this.heightFlatlist !== height) {
+            this.heightFlatlist = height;
+        }
     };
 
     /**

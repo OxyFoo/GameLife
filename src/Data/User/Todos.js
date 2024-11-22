@@ -182,11 +182,11 @@ class Todos extends IUserData {
      * @returns {Promise<boolean>}
      */
     SaveOnline = async (attempt = 1) => {
-        if (!this.isUnsaved()) {
+        if (!this.#isUnsaved()) {
             return true;
         }
 
-        const unsavedData = this.getUnsaved();
+        const unsavedData = this.#getUnsaved();
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-todo',
             todoToAdd: unsavedData.newTodo.todoToAdd,
@@ -230,7 +230,7 @@ class Todos extends IUserData {
         }
 
         // Update and print message
-        this.purge(response.result.newTodos);
+        this.#purge(response.result.newTodos);
         this.todos.Set(this.Get());
         this.#token = response.result.token;
         const length = this.todos.Get().length;
@@ -238,7 +238,7 @@ class Todos extends IUserData {
         return true;
     };
 
-    isUnsaved = () => {
+    #isUnsaved = () => {
         return (
             this.#UNSAVED_additions.length > 0 ||
             this.#UNSAVED_editions.length > 0 ||
@@ -247,7 +247,7 @@ class Todos extends IUserData {
         );
     };
 
-    getUnsaved = () => {
+    #getUnsaved = () => {
         return {
             newTodo: {
                 todoToAdd: this.#UNSAVED_additions,
@@ -262,7 +262,7 @@ class Todos extends IUserData {
      * Apply unsaved editions
      * @param {TodoSaved[]} newTodoes
      */
-    purge = (newTodoes) => {
+    #purge = (newTodoes) => {
         // Apply editions
         for (const edition of this.#UNSAVED_editions) {
             const index = this.#SAVED_todoes.findIndex((todo) => todo.ID === edition.ID);
@@ -286,7 +286,7 @@ class Todos extends IUserData {
         this.#UNSAVED_additions = [];
         this.#UNSAVED_editions = [];
         this.#UNSAVED_deletions = [];
-        this.sortSaved = true;
+        this.#sortSaved = true;
     };
 
     IsMax = () => {

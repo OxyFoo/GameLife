@@ -201,82 +201,100 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
     const lang = langManager.curr['activity'];
 
     const { status, activity } = user.activities.Edit(oldActivity, newActivity, confirm);
+    console.log(status, activity);
 
-    if (status === 'edited' && activity !== null) {
-        await user.RefreshStats();
-        user.interface.bottomPanel?.Close();
-        return true;
-    } else if (status === 'needConfirmation') {
-        user.interface.popup?.OpenT({
-            type: 'yesno',
-            data: {
-                title: lang['alert-needconfirmation-title'],
-                message: lang['alert-needconfirmation-message']
-            },
-            callback: (button) => {
-                if (button === 'yes') {
-                    EditActivity(oldActivity, newActivity, true);
+    // Manage confirmation
+    if (status === 'needConfirmation') {
+        return new Promise((resolve) => {
+            user.interface.popup?.OpenT({
+                type: 'yesno',
+                data: {
+                    title: lang['alert-needconfirmation-title'],
+                    message: lang['alert-needconfirmation-message']
+                },
+                callback: async (button) => {
+                    if (button === 'yes') {
+                        resolve(EditActivity(oldActivity, newActivity, true));
+                    } else {
+                        resolve(false);
+                    }
                 }
-            }
-        });
-    } else if (status === 'notFree') {
-        const title = lang['alert-wrongtiming-title'];
-        const message = lang['alert-wrongtiming-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
-    } else if (status === 'tooEarly') {
-        const title = lang['alert-alreadyexist-title'];
-        const message = lang['alert-alreadyexist-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
-    } else if (status === 'notExist') {
-        const title = lang['alert-error-title'];
-        const message = lang['alert-error-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
+            });
         });
     }
 
-    return false;
+    // Manage errors
+    else if (status === 'notFree') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-wrongtiming-title'],
+                message: lang['alert-wrongtiming-message']
+            }
+        });
+        return false;
+    } else if (status === 'tooEarly') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-alreadyexist-title'],
+                message: lang['alert-alreadyexist-message']
+            }
+        });
+        return false;
+    } else if (status !== 'edited' || activity === null) {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-error-title'],
+                message: lang['alert-error-message'].replace('{}', status)
+            }
+        });
+        return false;
+    }
+
+    await user.RefreshStats();
+    return true;
 }
 
 /**
  * @param {Activity} activity
+ * @returns {Promise<boolean>} True if activity was removed successfully
  */
-function RemoveActivity(activity) {
+async function RemoveActivity(activity) {
     const lang = langManager.curr['activity'];
 
-    user.interface.popup?.OpenT({
-        type: 'yesno',
-        data: {
-            title: lang['alert-remove-title'],
-            message: lang['alert-remove-message']
-        },
-        callback: (button) => {
-            if (button !== 'yes') {
-                return;
-            }
+    return new Promise((resolve) => {
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-remove-title'],
+                message: lang['alert-remove-message']
+            },
+            callback: (button) => {
+                if (button !== 'yes') {
+                    resolve(false);
+                    return;
+                }
 
-            const removedStatus = user.activities.Remove(activity);
+                const removedStatus = user.activities.Remove(activity);
 
-            if (removedStatus === 'removed') {
+                if (removedStatus === 'notExist' || removedStatus !== 'removed') {
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-error-not-exist-title'],
+                            message: lang['alert-error-not-exist-message']
+                        }
+                    });
+                    resolve(false);
+                    return;
+                }
+
                 user.RefreshStats();
-            } else if (removedStatus === 'notExist') {
-                user.interface.popup?.OpenT({
-                    type: 'ok',
-                    data: {
-                        title: lang['alert-error-not-exist-title'],
-                        message: lang['alert-error-not-exist-message']
-                    }
-                });
+                resolve(true);
             }
-            user.interface.bottomPanel?.Close();
-        }
+        });
     });
 }
 

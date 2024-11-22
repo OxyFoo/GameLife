@@ -67,20 +67,26 @@ class BackSkills extends PageBase {
      * @param {Skill} skill
      * @returns {EnrichedSkill} Skill with Name, Logo & experience
      */
-    upgradeSkill = (skill) => ({
-        ...skill,
-        FullName: langManager.GetText(skill.Name),
-        LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-        Experience: user.experience.GetSkillExperience(skill)
-    });
+    upgradeSkill = (skill) => {
+        const category = dataManager.skills.categories.find((c) => c.ID === skill.CategoryID);
+        return {
+            ...skill,
+            FullName: langManager.GetText(skill.Name),
+            LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID || (category?.LogoID ?? 0)),
+            Experience: user.experience.GetSkillExperience(skill)
+        };
+    };
 
     /** @returns {EnrichedSkill[]} All skills with their Name, Logo & experience */
     getAllSkills = () => {
         const now = GetGlobalTime();
         const usersActivities = user.activities.Get().filter((activity) => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map((activity) => activity.skillID);
-        const allSkills = dataManager.skills.Get().skills.filter((skill) => usersActivitiesID.includes(skill.ID));
-        return allSkills.map(this.upgradeSkill);
+
+        return dataManager.skills
+            .Get()
+            .skills.filter((skill) => usersActivitiesID.includes(skill.ID))
+            .map(this.upgradeSkill);
     };
 
     addActivity = () => {

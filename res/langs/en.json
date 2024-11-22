@@ -344,7 +344,7 @@
         "alert-error-not-exist-title": "Error",
         "alert-error-not-exist-message": "This activity doesn't seem to exist, try again later.",
         "alert-error-title": "Error",
-        "alert-error-message": "An error has occurred, please try again later.",
+        "alert-error-message": "An error has occurred, please try again later ({}).",
 
         "timer-launch": "Launch time:",
         "timer-gain": "Current gains: {}",
@@ -378,7 +378,7 @@
 
     "calendar": {
         "summary-title": "Summary of the day",
-        "activities-title": "Activities of the day",
+        "activities-title": "Activities of {}",
         "add-activity": "Add activity",
         "hour-min": "h",
         "start": "Start of the day",

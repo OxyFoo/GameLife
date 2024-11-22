@@ -73,6 +73,7 @@
 
         "claim-title": "Mission complétée",
         "claim-text": "Bravo ! Tu as complété la mission, voici ta[-es] récompense[s] :",
+
         "content": {
             "mission1": {
                 "title": "Faire une activité",
@@ -343,7 +344,7 @@
         "alert-error-not-exist-title": "Erreur",
         "alert-error-not-exist-message": "Il semblerait que cette activité n'existe pas, réessaye plus tard.",
         "alert-error-title": "Erreur",
-        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains actuel: {}",
@@ -377,7 +378,7 @@
 
     "calendar": {
         "summary-title": "Résumé de la journée",
-        "activities-title": "Activités du jour",
+        "activities-title": "Activités du {}",
         "add-activity": "Ajouter une activité",
         "hour-min": "h",
         "start": "Début de journée",

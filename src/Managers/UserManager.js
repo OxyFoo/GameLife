@@ -26,17 +26,7 @@ import Server from 'Class/Server';
 
 /**
  * @typedef {import('Interface/Components').Character} Character
- * @typedef {import('Managers/PageManager').default} PageManager
  * @typedef {import('Interface/FlowEngine/back').default['_public']} FlowEngine
- * @typedef {import('Class/Experience').XPInfo} XPInfo
- *
- * @typedef {object} Stats
- * @property {XPInfo} int
- * @property {XPInfo} soc
- * @property {XPInfo} for
- * @property {XPInfo} sta
- * @property {XPInfo} agi
- * @property {XPInfo} dex
  */
 
 /**
@@ -51,12 +41,6 @@ import Server from 'Class/Server';
 
 class UserManager {
     constructor() {
-        /**
-         * @readonly
-         * @type {Array<keyof Stats>}
-         */
-        this.statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
-
         // Classes
         this.ads = new Ads(this);
         this.consent = new Consent(this);
@@ -105,9 +89,6 @@ class UserManager {
 
         /** @deprecated */ // TODO: Remove
         this.server = new Server(this);
-
-        /** @type {Stats} */
-        this.stats = this.experience.GetEmptyExperience();
     }
 
     /**
@@ -128,16 +109,9 @@ class UserManager {
     /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
 
-    /**
-     * @param {string} key
-     * @returns {key is keyof Stats}
-     */
-    KeyIsStats(key) {
-        // @ts-ignore
-        return this.statsKey.includes(key);
-    }
-
     StartTimers() {
+        this.experience.Init();
+
         // Check achievements every 20 seconds
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
 
@@ -160,7 +134,6 @@ class UserManager {
 
     async Clear(keepOnboardingState = true) {
         const onboarding = this.settings.onboardingWatched;
-        this.stats = this.experience.GetEmptyExperience();
         this.tempMailSent = null;
 
         this.notificationsInApp.Clear();
@@ -217,20 +190,11 @@ class UserManager {
     async Unmount() {
         this.CleanTimers();
         this.server2.Disconnect();
+        this.experience.Unmount();
         await this.settings.IndependentSave();
         await this.SaveLocal();
         await this.SaveOnline();
         this.dailyQuest.onUnmount();
-    }
-
-    async RefreshStats(onlineSave = true) {
-        if (this.server2.IsAuthenticated() && onlineSave) {
-            await this.SaveOnline();
-        }
-
-        const { stats } = this.experience.GetExperience();
-        this.stats = stats;
-        await this.SaveLocal();
     }
 
     /**
@@ -320,7 +284,6 @@ class UserManager {
             this.interface.console?.EditLog(debugIndex, 'same', 'User data: local load success');
         }
 
-        this.RefreshStats(true);
         return true;
     }
 
@@ -376,7 +339,6 @@ class UserManager {
             this.interface.console?.EditLog(debugIndex, 'same', '[UserData] Online load success');
         }
 
-        this.RefreshStats(true);
         return true;
     }
 }

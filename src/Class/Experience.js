@@ -1,15 +1,23 @@
 import dataManager from 'Managers/DataManager';
 
 import { IUserClass } from 'Types/Interface/IUserClass';
+import DynamicVar from 'Utils/DynamicVar';
 import { MinMax, Sum } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Managers/UserManager').Stats} Stats
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
  * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ *
+ * @typedef {object} Stats
+ * @property {XPInfo} int
+ * @property {XPInfo} soc
+ * @property {XPInfo} for
+ * @property {XPInfo} sta
+ * @property {XPInfo} agi
+ * @property {XPInfo} dex
  */
 
 /**
@@ -37,47 +45,67 @@ const XPOptions = {
 };
 
 class Experience extends IUserClass {
+    /** @type {UserManager} */
+    #user;
+
+    /**
+     * @readonly
+     * @type {Array<keyof Stats>}
+     */
+    statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
+
+    experience = new DynamicVar({
+        stats: this.GetEmptyExperience(),
+        xpInfo: this.getXPDict(0)
+    });
+
+    /** @type {Symbol | null} */
+    #listenerActivities = null;
+
     /** @param {UserManager} user */
     constructor(user) {
         super('experience');
 
-        this.user = user;
-        this.getUsefulActivities = () => this.user.activities.GetUseful();
-
-        this.cache = {
-            id: '',
-            /** @type {{stats: Stats, xpInfo: XPInfo}} */
-            experience: {
-                stats: this.GetEmptyExperience(),
-                xpInfo: this.getXPDict(0)
-            }
-        };
+        this.#user = user;
     }
+
+    Init = () => {
+        this.#listenerActivities = this.#user.activities.allActivities.AddListener(this.UpdateExperience);
+    };
+
+    Clear = () => {
+        this.experience.Set({ stats: this.GetEmptyExperience(), xpInfo: this.getXPDict(0) });
+    };
+
+    Unmount = () => {
+        this.#user.activities.allActivities.RemoveListener(this.#listenerActivities);
+    };
 
     /** @returns {Stats} */
     GetEmptyExperience() {
-        const stats = this.user.statsKey.map((i) => ({ [i]: this.getXPDict() }));
+        const stats = this.statsKey.map((i) => ({ [i]: this.getXPDict() }));
         return Object.assign({}, ...stats);
     }
 
     /**
-     * @returns {{stats: Stats, xpInfo: XPInfo}}
+     * @param {string} key
+     * @returns {key is keyof Stats}
      */
-    GetExperience() {
-        const { statsKey } = this.user;
-        const activities = this.getUsefulActivities();
+    KeyIsStats(key) {
+        // @ts-ignore
+        return this.statsKey.includes(key);
+    }
 
-        if (this.cache.id === activities.length.toString()) {
-            return this.cache.experience;
-        }
+    UpdateExperience = () => {
+        const activities = this.#user.activities.GetUseful();
 
         let XP = 0;
 
         /** @type {Stats} */
-        const stats = Object.assign({}, ...statsKey.map((i) => ({ [i]: null })));
+        const stats = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: null })));
 
         /** @type {{ [key: string]: number }} */
-        const statValues = Object.assign({}, ...statsKey.map((i) => ({ [i]: 0 })));
+        const statValues = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: 0 })));
 
         for (let a in activities) {
             const activity = activities[a];
@@ -92,25 +120,19 @@ class Experience extends IUserClass {
             XP += XP * this.GetExperienceFriendBonus(activity);
 
             // Stats
-            for (let s in statsKey) {
-                const stat = statsKey[s];
+            for (let s in this.statsKey) {
+                const stat = this.statsKey[s];
                 statValues[stat] += skill.Stats[stat];
             }
         }
 
-        for (let k in statsKey) {
-            const key = statsKey[k];
+        for (let k in this.statsKey) {
+            const key = this.statsKey[k];
             stats[key] = this.getXPDict(statValues[key], 'stat');
         }
 
-        this.cache.id = activities.length.toString();
-        this.cache.experience = { stats, xpInfo: this.getXPDict(XP, 'user') };
-
-        return {
-            stats: stats,
-            xpInfo: this.getXPDict(XP, 'user')
-        };
-    }
+        this.experience.Set({ stats, xpInfo: this.getXPDict(XP, 'user') });
+    };
 
     /**
      * @param {Activity} activity
@@ -128,9 +150,9 @@ class Experience extends IUserClass {
      * @returns {EnrichedXPInfo}
      */
     GetSkillExperience(skill) {
-        const activities = this.user.activities.GetBySkillID(skill.ID);
+        const activities = this.#user.activities.GetBySkillID(skill.ID);
         const durations = activities
-            .filter((activity) => this.user.activities.GetExperienceStatus(activity) !== 'isNotPast')
+            .filter((activity) => this.#user.activities.GetExperienceStatus(activity) !== 'isNotPast')
             .map((a) => a.duration);
 
         const totalDuration = Sum(durations);
@@ -148,7 +170,7 @@ class Experience extends IUserClass {
     GetSkillCategoryExperience(categoryID) {
         let totalXP = 0;
 
-        const activities = this.getUsefulActivities();
+        const activities = this.#user.activities.GetUseful();
         for (let a in activities) {
             const activity = activities[a];
             const skill = dataManager.skills.GetByID(activity.skillID);

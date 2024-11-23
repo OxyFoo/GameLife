@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Animated, StyleSheet, Platform } from 'react-native';
 
+import Dots from './dots';
 import SwiperBack from './back';
 import themeManager from 'Managers/ThemeManager';
-
-import Dots from '../../OldComponents/Dots';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -13,49 +12,46 @@ import Dots from '../../OldComponents/Dots';
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  */
 
-/**
- * @deprecated
- * @todo Finish the implementation
- */
 class Swiper extends SwiperBack {
     render() {
-        const { pages, style, onLayout, backgroundColor, borderRadius } = this.props;
-        const { width, animHeight, positionX, positionDots } = this.state;
+        const { pages, style, minHeight: height, onLayout, backgroundColor, borderRadius } = this.props;
+        const { width, positionX, positionDots } = this.state;
 
         if (pages.length === 0) return null;
 
+        /** @type {ViewStyle} */
+        const cardStyle = {
+            backgroundColor: themeManager.GetColor(backgroundColor),
+            borderRadius: borderRadius
+        };
+
         return (
-            <Animated.View
-                style={[
-                    styles.parent,
-                    {
-                        height: animHeight,
-                        backgroundColor: themeManager.GetColor(backgroundColor),
-                        borderRadius: borderRadius
-                    },
-                    style
-                ]}
-                onLayout={onLayout}
-                onTouchStart={this.onTouchStart}
-                onTouchMove={this.onTouchMove}
-                onTouchEnd={this.onTouchEnd}
-                onTouchCancel={this.onTouchEnd}
-            >
+            <Animated.View style={[!height ? styles.parent : styles.parentFixed, style, { maxHeight: height }]}>
                 <Animated.View
-                    style={[
-                        styles.contentContainer,
-                        {
-                            width: `${pages.length * 100}%`,
-                            transform: [
-                                {
-                                    translateX: Animated.subtract(0, Animated.multiply(positionX, width))
-                                }
-                            ]
-                        }
-                    ]}
+                    style={[!height ? styles.container : styles.containerFixed, cardStyle]}
+                    onLayout={onLayout}
+                    onTouchStart={this.onTouchStart}
+                    onTouchMove={this.onTouchMove}
+                    onTouchEnd={this.onTouchEnd}
+                    onTouchCancel={this.onTouchEnd}
                 >
-                    {pages.map(this.renderContent)}
+                    <Animated.View
+                        style={[
+                            styles.contentContainer,
+                            {
+                                width: `${pages.length * 100}%`,
+                                transform: [
+                                    {
+                                        translateX: Animated.subtract(0, Animated.multiply(positionX, width))
+                                    }
+                                ]
+                            }
+                        ]}
+                    >
+                        {pages.map(this.renderContent)}
+                    </Animated.View>
                 </Animated.View>
+
                 <Dots style={styles.dots} pagesLength={pages.length} position={positionDots} />
             </Animated.View>
         );
@@ -72,7 +68,6 @@ class Swiper extends SwiperBack {
             <View
                 key={'page-' + index}
                 style={[
-                    styles.content,
                     {
                         width: `${100 / pages.length}%`,
                         justifyContent: verticalAlign
@@ -88,21 +83,27 @@ class Swiper extends SwiperBack {
 
 const styles = StyleSheet.create({
     parent: {
+        flex: 1,
+        overflow: 'hidden'
+    },
+    parentFixed: {
+        overflow: 'hidden'
+    },
+    container: {
+        flex: 1,
+        marginBottom: 12, // Space at the top of the dots
+        paddingBottom: Platform.OS === 'ios' ? 24 * 3 : 24, // TODO: Why ? Where the bottom space on iOS from ?
+        overflow: 'hidden'
+    },
+    containerFixed: {
+        marginBottom: 12, // Space at the top of the dots
         overflow: 'hidden'
     },
     contentContainer: {
-        position: 'absolute',
         flexDirection: 'row'
     },
-    content: {
-        height: '100%',
-        paddingBottom: 24
-    },
     dots: {
-        position: 'absolute',
-        left: 0,
-        bottom: 6,
-        right: 0
+        marginBottom: 12 // Space at the bottom of the dots
     }
 });
 

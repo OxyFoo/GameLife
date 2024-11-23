@@ -127,8 +127,6 @@ async function AddActivity(activity) {
             });
         }
 
-        await user.RefreshStats();
-
         user.interface.ChangePage('display', {
             args: {
                 icon: 'check-filled',
@@ -253,7 +251,6 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
         return false;
     }
 
-    await user.RefreshStats();
     return true;
 }
 
@@ -291,7 +288,6 @@ async function RemoveActivity(activity) {
                     return;
                 }
 
-                user.RefreshStats();
                 resolve(true);
             }
         });

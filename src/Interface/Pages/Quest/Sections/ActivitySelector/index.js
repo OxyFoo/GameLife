@@ -13,6 +13,7 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
+ * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  *
  * @typedef {Object} ActivitySelectorPropsType
  * @property {(id: number) => void} callback
@@ -37,7 +38,7 @@ class ActivitySelector extends React.Component {
     /** @type {React.RefObject<Swiper>} */
     refSwiper = React.createRef();
 
-    /** @type {React.RefObject<InputText>} */
+    /** @type {React.RefObject<InputTextThin>} */
     refInput = React.createRef();
 
     /** @type {Array<ItemCategory>} */
@@ -129,9 +130,9 @@ class ActivitySelector extends React.Component {
 
                 {/* Search */}
                 <Animated.View style={[styles.searchContainer, styleAnimSearch]}>
-                    <InputText
+                    <InputText.Thin
                         ref={this.refInput}
-                        label={lang['popup-all-categories']}
+                        placeholder={lang['popup-all-categories']}
                         value={search}
                         onChangeText={this.handleSearchInput}
                     />

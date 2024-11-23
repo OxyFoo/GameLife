@@ -28,10 +28,10 @@ class BackReport extends PageBase {
         input_skillcategory: '',
 
         /** @type {{ [key in keyof Stats]: number }} */
-        input_skillstats: Object.assign({}, ...user.statsKey.map((i) => ({ [i]: 0 }))),
+        input_skillstats: Object.assign({}, ...user.experience.statsKey.map((i) => ({ [i]: 0 }))),
 
         /** @type {{ [key in keyof Stats]: number }} */
-        input_skillstats_max: Object.assign({}, ...user.statsKey.map((i) => ({ [i]: MAX_POINTS }))),
+        input_skillstats_max: Object.assign({}, ...user.experience.statsKey.map((i) => ({ [i]: MAX_POINTS }))),
 
         input_skillstats_remain: MAX_POINTS,
 

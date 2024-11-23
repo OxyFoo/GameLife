@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Dimensions } from 'react-native';
+import { Animated } from 'react-native';
 
 import { POPUP_TEMPLATES } from './templates';
 import user from 'Managers/UserManager';
@@ -242,21 +242,16 @@ class PopupBack extends React.PureComponent {
     onPopupLayout = (event, newPopup) => {
         const { x, y } = event.nativeEvent.layout;
 
-        // If popup is already in this position do nothing
-        if (this.lastLayout.x === x && this.lastLayout.y === y) {
-            return;
-        }
-
         // Update last layout
-        this.lastLayout.x = x;
-        this.lastLayout.y = y;
+        if (this.lastLayout.x !== x || this.lastLayout.y !== y) {
+            this.lastLayout.x = x;
+            this.lastLayout.y = y;
+        }
 
         // If popup is not mounted, set initial position
         if (!newPopup.mounted) {
-            const SCREEN_SIZE = Dimensions.get('screen');
-
             newPopup.mounted = true;
-            newPopup.animQuitPos.setValue({ x: -x, y: SCREEN_SIZE.height / 2 });
+            newPopup.animQuitPos.setValue({ x: -x, y: y + 48 });
         }
 
         // Start animation

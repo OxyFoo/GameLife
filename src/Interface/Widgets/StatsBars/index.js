@@ -23,7 +23,7 @@ const StatsBarsProps = {
     simplifiedDisplay: false,
 
     /** @type {Array<number>} Optionnal, add secondary value, same length of user stats */
-    supData: user.statsKey.map(() => 0)
+    supData: user.experience.statsKey.map(() => 0)
 };
 
 class StatsBars extends React.PureComponent {
@@ -31,7 +31,7 @@ class StatsBars extends React.PureComponent {
         const { data, supData, style, simplifiedDisplay } = this.props;
         if (data === null) return null;
 
-        const output = user.statsKey.map((item, i) =>
+        const output = user.experience.statsKey.map((item, i) =>
             statComponent(item, data[item], supData[i], i, simplifiedDisplay, () => {
                 user.interface.popup?.Open({
                     content: <PopupContent stats={data} initStatKey={item} />

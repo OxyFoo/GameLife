@@ -8,8 +8,8 @@ import { GetDate, GetGlobalTime } from 'Utils/Time';
 /**
  * @typedef {import('Data/User/Activities/index').Activity} Activity
  *
- * @typedef {import('Managers/UserManager').XPInfo} XPInfo
- * @typedef {import('Managers/UserManager').Stats} Stats
+ * @typedef {import('Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Class/Experience').Stats} Stats
  * @typedef {{ statKey: keyof Stats; experience: XPInfo }} ExperienceStats
  */
 
@@ -19,10 +19,10 @@ const BackNewPageProps = {
 
 class BackNewPage extends PageBase {
     state = {
-        experience: user.experience.GetExperience(),
+        experience: user.experience.experience.Get(),
 
         /** @type {ExperienceStats[]} */
-        experienceStats: user.statsKey
+        experienceStats: user.experience.statsKey
             .sort(
                 (a, b) =>
                     GetStringLength(langManager.curr['statistics']['names'][b]) -
@@ -30,7 +30,7 @@ class BackNewPage extends PageBase {
             )
             .map((statKey) => ({
                 statKey,
-                experience: user.experience.GetExperience().stats[statKey]
+                experience: user.experience.experience.Get().stats[statKey]
             })),
 
         ...this.getValuesKPI()
@@ -42,7 +42,7 @@ class BackNewPage extends PageBase {
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
-                experience: user.experience.GetExperience(),
+                experience: user.experience.experience.Get(),
                 ...this.getValuesKPI()
             });
         });

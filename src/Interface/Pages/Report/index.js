@@ -76,7 +76,7 @@ class Report extends BackReport {
                         <Text fontSize={18}>{`${lang['type-activity-remain']} ${input_skillstats_remain}`}</Text>
                         <FlatList
                             keyExtractor={(item) => `report-stat-${item}`}
-                            data={user.statsKey}
+                            data={user.experience.statsKey}
                             renderItem={({ item }) => (
                                 <View style={styles.rowDigit}>
                                     <Text>{langStats[item]}</Text>

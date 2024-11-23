@@ -40,7 +40,7 @@ class BackSkill extends PageBase {
         xp: 0,
         next: 1,
         creator: '',
-        stats: user.statsKey.map(() => 0),
+        stats: user.experience.statsKey.map(() => 0),
         xml: '',
         enabled: true,
         totalDuration: 0

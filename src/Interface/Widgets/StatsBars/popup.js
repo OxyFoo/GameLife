@@ -17,7 +17,7 @@ import { Button, Icon, ProgressBar, Swiper, Text } from 'Interface/Components';
  * @param {keyof Stats} props.initStatKey
  * @param {Stats} [props.stats]
  */
-function PopupContent({ initStatKey, stats = user.experience.GetExperience().stats }) {
+function PopupContent({ initStatKey, stats = user.experience.experience.Get().stats }) {
     /** @param {keyof Stats} statKey */
     const statBox = (statKey) => {
         const statName = langManager.curr['statistics']['names'][statKey];
@@ -34,14 +34,14 @@ function PopupContent({ initStatKey, stats = user.experience.GetExperience().sta
 
     /** @type {React.RefObject<Swiper>} */
     const swiperRef = React.createRef();
-    const bars = user.statsKey.map(statBox);
-    const initIndex = user.statsKey.indexOf(initStatKey);
+    const bars = user.experience.statsKey.map(statBox);
+    const initIndex = user.experience.statsKey.indexOf(initStatKey);
 
     return (
         <View style={styles.popupContent}>
             <Swiper
                 ref={swiperRef}
-                style={styles.popupContentSwiper}
+                minHeight={300}
                 verticalAlign='flex-start'
                 pages={bars}
                 enableAutoNext={false}

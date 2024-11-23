@@ -56,7 +56,7 @@ class BackProfileFriend extends PageBase {
         this.state.xpInfo = user.experience.getXPDict(friend.xp, 'user');
         this.state.statsInfo = Object.assign(
             {},
-            ...user.statsKey.map((i) => ({
+            ...user.experience.statsKey.map((i) => ({
                 [i]: user.experience.getXPDict(friend.stats[i], 'stat')
             }))
         );
@@ -115,7 +115,7 @@ class BackProfileFriend extends PageBase {
             }
             const statsInfo = Object.assign(
                 {},
-                ...user.statsKey.map((i) => ({
+                ...user.experience.statsKey.map((i) => ({
                     [i]: user.experience.getXPDict(friend.stats[i], 'stat')
                 }))
             );

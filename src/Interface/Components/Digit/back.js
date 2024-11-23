@@ -138,7 +138,6 @@ class DigitBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
-        event.stopPropagation();
         this.firstX = event.nativeEvent.pageX;
     };
 

@@ -15,7 +15,7 @@ import { GetLocalTime } from 'Utils/Time';
 /**
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
- * @typedef {import('Managers/UserManager').Stats} Stats
+ * @typedef {import('Class/Experience').Stats} Stats
  * @typedef {import('react-native').ListRenderItem<keyof Stats>} ListRenderItemStat
  *
  * @typedef {{ key: string, value: number }} Stat
@@ -54,7 +54,7 @@ class ActivityTimerScore extends React.Component {
         }
 
         this.skill = skill;
-        this.state.data = user.statsKey.filter((stat) => skill.Stats[stat] > 0);
+        this.state.data = user.experience.statsKey.filter((stat) => skill.Stats[stat] > 0);
         this.state.duration = this.getDuration();
     }
 

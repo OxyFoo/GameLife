@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     },
 
     popupContent: {
-        minWidth: '100%',
         padding: 12
     },
     popupContentHeader: {
@@ -36,16 +35,11 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 8
     },
-    popupContentSwiper: {
-        justifyContent: 'flex-start',
-        paddingBottom: -12
-    },
     popupContentStatPage: {
-        marginTop: 6,
-        marginBottom: 24
+        marginTop: 6
     },
     popupContentStat: {
-        padding: 12,
+        paddingVertical: 12,
         paddingHorizontal: 24
     }
 });

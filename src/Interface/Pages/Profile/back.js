@@ -59,8 +59,8 @@ class BackProfile extends PageBase {
 
     getUpdatedExperience() {
         return {
-            experienceUser: user.experience.GetExperience().xpInfo,
-            experienceStats: user.statsKey
+            experienceUser: user.experience.experience.Get().xpInfo,
+            experienceStats: user.experience.statsKey
                 .sort(
                     (a, b) =>
                         GetStringLength(langManager.curr['statistics']['names'][b]) -
@@ -68,7 +68,7 @@ class BackProfile extends PageBase {
                 )
                 .map((statKey) => ({
                     statKey,
-                    experience: user.experience.GetExperience().stats[statKey]
+                    experience: user.experience.experience.Get().stats[statKey]
                 }))
         };
     }

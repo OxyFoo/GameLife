@@ -11,7 +11,7 @@ class BackLeaderboard extends PageBase {
     sortList = {
         XP: langManager.curr['level']['level-small'],
         skills: langManager.curr['leaderboard']['label-activities-small'],
-        ...user.statsKey.reduce((acc, key) => {
+        ...user.experience.statsKey.reduce((acc, key) => {
             acc[key] = langManager.curr['statistics']['names-min'][key];
             return acc;
         }, {})
@@ -34,7 +34,7 @@ class BackLeaderboard extends PageBase {
         super(props);
 
         const activities = user.activities.Get();
-        const experience = user.experience.GetExperience();
+        const experience = user.experience.experience.Get();
 
         /** @type {RankedFriend} */
         const playerData = {
@@ -62,7 +62,7 @@ class BackLeaderboard extends PageBase {
                 totalDuration: activities.reduce((acc, activity) => acc + activity.duration, 0)
             },
 
-            stats: Object.assign({}, ...user.statsKey.map((i) => ({ [i]: experience.stats[i].totalXP }))),
+            stats: Object.assign({}, ...user.experience.statsKey.map((i) => ({ [i]: experience.stats[i].totalXP }))),
 
             // Unused
             currentActivity: null,
@@ -133,8 +133,8 @@ class BackLeaderboard extends PageBase {
                 player.label = `${player.activities.length} ${lang['label-activities']}`;
                 player.rank = index + 1;
             });
-        } else if (sortIndex >= 2 && sortIndex <= 1 + user.statsKey.length) {
-            const statKey = user.statsKey[sortIndex - 2];
+        } else if (sortIndex >= 2 && sortIndex <= 1 + user.experience.statsKey.length) {
+            const statKey = user.experience.statsKey[sortIndex - 2];
             newRanking.sort((a, b) => b.stats[statKey] - a.stats[statKey]);
 
             // Define label & ranks

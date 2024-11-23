@@ -26,7 +26,7 @@ class BackHome extends PageBase {
     static feShowNavBar = true;
 
     state = {
-        experience: user.experience.GetExperience(),
+        experience: user.experience.experience.Get(),
         values: {
             currentLevel: '0',
             currentXP: '0',
@@ -56,7 +56,7 @@ class BackHome extends PageBase {
     }
 
     handleLevelsUpdate = () => {
-        const experience = user.experience.GetExperience();
+        const experience = user.experience.experience.Get();
         const {
             xpInfo: { lvl, xp, next }
         } = experience;

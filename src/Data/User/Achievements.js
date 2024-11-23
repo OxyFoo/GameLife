@@ -202,7 +202,7 @@ class Achievements extends IUserData {
         const { Comparator, Operator, Value } = condition;
 
         const valueNum = typeof Value === 'number' ? Value : null;
-        const valueStr = typeof Value === 'string' ? Value : Value?.toString() ?? null;
+        const valueStr = typeof Value === 'string' ? Value : (Value?.toString() ?? null);
 
         const operators = langManager.curr['achievements']['operators'];
         const condText = langManager.curr['achievements']['conditions'];
@@ -246,7 +246,12 @@ class Achievements extends IUserData {
                 break;
 
             case 'St':
-                if (valueStr === null || Value === null || typeof Value !== 'string' || !this.user.KeyIsStats(Value)) {
+                if (
+                    valueStr === null ||
+                    Value === null ||
+                    typeof Value !== 'string' ||
+                    !this.user.experience.KeyIsStats(Value)
+                ) {
                     this.user.interface.console?.AddLog(
                         'error',
                         '[Achievements] Statistic condition with string value'
@@ -361,7 +366,7 @@ class Achievements extends IUserData {
                     break;
 
                 case 'Level': // Level
-                    value = this.user.experience.GetExperience().xpInfo.lvl;
+                    value = this.user.experience.experience.Get().xpInfo.lvl;
                     break;
 
                 case 'Sk': // Skill level
@@ -562,6 +567,11 @@ class Achievements extends IUserData {
                 'error',
                 `[Achievements] Error while claim achievement (ID: ${achievementID})`
             );
+            this.claimAchievementLoading = false;
+            return null;
+        }
+
+        if (response.result === 'not-up-to-date') {
             this.claimAchievementLoading = false;
             return null;
         }

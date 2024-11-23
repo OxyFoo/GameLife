@@ -9,6 +9,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').DimensionValue} DimensionValue
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
@@ -16,8 +17,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
  *
  * @typedef {Object} SwiperPropsType
  * @property {StyleProp} style
- * @property {"flex-start" | "flex-end" | "center"} verticalAlign
- * @property {number | string | undefined} height If undefined, height equals to max height of pages content
+ * @property {'flex-start' | 'flex-end' | 'center'} verticalAlign
+ * @property {DimensionValue | undefined} minHeight If undefined, height equals to max height of pages content
  * @property {number} borderRadius
  * @property {boolean} enableAutoNext If true, automatically swipe to the next page
  * @property {boolean} disableCircular
@@ -34,7 +35,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SwiperProps = {
     style: {},
     verticalAlign: 'center',
-    height: undefined,
+    minHeight: undefined,
     borderRadius: 8,
     enableAutoNext: true,
     disableCircular: false,
@@ -52,12 +53,9 @@ class SwiperBack extends React.Component {
 
     state = {
         width: 0,
-        animHeight: new Animated.Value(0),
         positionX: new Animated.Value(this.props.initIndex),
         positionDots: new Animated.Value(this.props.initIndex)
     };
-
-    maxHeight = 0;
 
     // Temporary variables
     acc = 0;
@@ -72,14 +70,6 @@ class SwiperBack extends React.Component {
 
     componentDidMount() {
         this.startTimer();
-    }
-
-    /** @param {SwiperProps} nextProps */
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.pages !== this.props.pages) {
-            this.maxHeight = 0;
-        }
-        return true;
     }
 
     componentWillUnmount() {
@@ -146,12 +136,8 @@ class SwiperBack extends React.Component {
 
         if (this.scroll === 'horizontal') {
             event.stopPropagation();
-            console.log('onTouchMove', this.scroll);
         } else if (this.scroll === 'vertical') {
-            console.log('onTouchMove', this.scroll);
             return;
-        } else {
-            console.log('onTouchMove', this.scroll);
         }
 
         // Position
@@ -210,12 +196,10 @@ class SwiperBack extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPage = (event) => {
-        const { width, height } = event.nativeEvent.layout;
+        const { width } = event.nativeEvent.layout;
 
-        if (height > this.maxHeight) {
-            this.maxHeight = height;
+        if (width !== this.state.width) {
             this.setState({ width: width });
-            SpringAnimation(this.state.animHeight, this.maxHeight, false).start();
         }
     };
 }

@@ -6,7 +6,7 @@ import themeManager from 'Managers/ThemeManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
@@ -33,24 +33,29 @@ class Dots extends React.Component {
         const { pagesLength, position, colorActiveDot } = this.props;
 
         // inputRange: [0, 0.5, 1, 1.5, 2], outputRange: [0, 0, 1, 1, 2]
-        let inputRange = [...Array(1 + 2*pagesLength).keys()].map((v, i) => v/2);
-        let outputRange = inputRange.map((v, i) => Math.floor(v));
+        let inputRange = [...Array(1 + 2 * pagesLength).keys()].map((v, _i) => v / 2);
+        let outputRange = inputRange.map((v, _i) => Math.floor(v));
         const interLeft = { inputRange: inputRange, outputRange: outputRange };
 
         //inputRange = [0, .5, 1, 1.5, 2], outputRange = [8, 24, 8, 24, 8]
-        outputRange = [...inputRange].map((_, i) => (_ % 1 == 0) ? 8 : 24);
+        outputRange = [...inputRange].map((_, _i) => (_ % 1 === 0 ? 8 : 24));
         const interWidth = { inputRange: inputRange, outputRange: outputRange };
 
         const left = { left: Animated.multiply(position.interpolate(interLeft), 16) };
         const width = { width: position.interpolate(interWidth) };
         const bg = { backgroundColor: themeManager.GetColor(colorActiveDot) };
         return <Animated.View style={[styles.dot, styles.mainDot, left, width, bg]} />;
-    }
+    };
+
+    /**
+     * @param {number} _
+     * @param {number} index
+     */
     Dot = (_, index) => {
         const { colorDots } = this.props;
         const bg = { backgroundColor: themeManager.GetColor(colorDots) };
-        return <View key={'dot-'+index} style={[styles.dot, bg]} />;
-    }
+        return <View key={'dot-' + index} style={[styles.dot, bg]} />;
+    };
 
     render() {
         return (

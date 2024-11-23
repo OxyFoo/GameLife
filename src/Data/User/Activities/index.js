@@ -339,7 +339,7 @@ class Activities extends IUserData {
      * @returns {Activity[]}
      */
     GetUseful = () => {
-        const id = `${this.#SAVED_activities.length}-${this.#UNSAVED_activities.length}`;
+        const id = `${this.#SAVED_activities.length}-${this.#UNSAVED_activities.length}-${this.#UNSAVED_editions}-${this.#UNSAVED_deletions.length}`;
         if (id === this.#cache_get_useful.id) {
             return this.#cache_get_useful.activities;
         }
@@ -353,7 +353,9 @@ class Activities extends IUserData {
             const activity = activities[i];
 
             const skill = dataManager.skills.GetByID(activity.skillID);
-            if (skill === null) continue;
+            if (skill === null) {
+                continue;
+            }
 
             const midnight = GetMidnightTime(activity.startTime);
             const durationHour = activity.duration / 60;
@@ -365,7 +367,9 @@ class Activities extends IUserData {
 
             // Limit
             if (skill.XP > 0) hoursRemain -= durationHour;
-            if (hoursRemain < 0) continue;
+            if (hoursRemain < 0) {
+                continue;
+            }
 
             usefulActivities.push(activity);
         }

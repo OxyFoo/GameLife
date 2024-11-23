@@ -34,7 +34,9 @@ class AddActivityPage2 extends BackActivityPage2 {
                     </View>
                     <View />
                 </Button>
-                <View style={styles.headerStats}>{this.renderStatsText()}</View>
+                <View style={styles.headerStats}>
+                    <this.renderStatsText />
+                </View>
 
                 <ScrollView
                     ref={user.interface.bottomPanel?.mover.SetScrollView}
@@ -66,7 +68,7 @@ class AddActivityPage2 extends BackActivityPage2 {
         );
     }
 
-    renderStatsText() {
+    renderStatsText = () => {
         const lang = langManager.curr['activity'];
         const langXP = langManager.curr['level'];
         const langStats = langManager.curr['statistics']['names'];
@@ -102,18 +104,24 @@ class AddActivityPage2 extends BackActivityPage2 {
             );
         }
 
-        const usefulStats = user.statsKey.filter((key) => skill.Stats[key] > 0);
+        const usefulStats = user.experience.statsKey.filter((key) => skill.Stats[key] > 0);
 
         return (
             <>
                 <Text fontSize={14} color='main1'>{`+ ${XP} ${langXP['xp']} /`}</Text>
                 {usefulStats.map((stat) => {
                     const statXP = Round((skill.Stats[stat] * activity.duration) / 60, 2);
-                    return <Text fontSize={14} color='main1'>{` + ${statXP} ${langStats[stat]}`}</Text>;
+                    return (
+                        <Text
+                            key={`stat-text-${stat}`}
+                            fontSize={14}
+                            color='main1'
+                        >{` + ${statXP} ${langStats[stat]}`}</Text>
+                    );
                 })}
             </>
         );
-    }
+    };
 }
 
 export { AddActivityPage2 };

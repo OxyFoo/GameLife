@@ -199,7 +199,6 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
     const lang = langManager.curr['activity'];
 
     const { status, activity } = user.activities.Edit(oldActivity, newActivity, confirm);
-    console.log(status, activity);
 
     // Manage confirmation
     if (status === 'needConfirmation') {

@@ -336,11 +336,12 @@ class Activities extends IUserData {
 
     /**
      * @description Get activities that have brought xp
+     * @param {boolean} [forceRefresh=false]
      * @returns {Activity[]}
      */
-    GetUseful = () => {
-        const id = `${this.#SAVED_activities.length}-${this.#UNSAVED_activities.length}-${this.#UNSAVED_editions}-${this.#UNSAVED_deletions.length}`;
-        if (id === this.#cache_get_useful.id) {
+    GetUseful = (forceRefresh = false) => {
+        const id = `${this.#SAVED_activities.length}-${this.#UNSAVED_activities.length}-${this.#UNSAVED_editions.length}-${this.#UNSAVED_deletions.length}`;
+        if (id === this.#cache_get_useful.id && !forceRefresh) {
             return this.#cache_get_useful.activities;
         }
 

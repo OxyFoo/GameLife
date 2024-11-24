@@ -226,6 +226,10 @@ class BackFlowEngine extends React.Component {
      */
     customBackHandlers = [];
 
+    ClearHistory = () => {
+        this.history = [];
+    };
+
     /**
      * @param {() => (boolean | (() => void))} handle Function to handle back button, return true or function (to execute after back handle) if back is handled or false if not
      * @returns {boolean} True if handle is set
@@ -607,6 +611,8 @@ class BackFlowEngine extends React.Component {
         history: this.history,
         size: this.size,
         responsive: this.responsive,
+
+        ClearHistory: this.ClearHistory,
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,
         GetPage: this.GetPage,

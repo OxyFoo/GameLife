@@ -110,26 +110,17 @@ class UserManager {
     tempMailSent = null;
 
     StartTimers() {
-        this.experience.Init();
+        this.experience.Initialize();
+        this.notificationsInApp.Initialize();
 
         // Check achievements every 20 seconds
+        this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
-
-        // Refresh activities at each 5 minutes if needed
-        const timeUntilNext5MinutesInSeconds = 5 * 60 - ((Date.now() / 1000) % (5 * 60));
-        this.timeoutActivities = setTimeout(
-            () => {
-                this.activities.RefreshActivities();
-                this.intervalActivities = setInterval(this.activities.RefreshActivities, 5 * 60 * 1000);
-            },
-            (timeUntilNext5MinutesInSeconds + 1) * 1000
-        );
     }
 
+    // TODO: Merge unmount + cleanTimers & remount all in StartTimers (Mount)
     CleanTimers() {
         clearInterval(this.intervalAchievements);
-        clearTimeout(this.timeoutActivities);
-        clearInterval(this.intervalActivities);
     }
 
     async Clear(keepOnboardingState = true) {
@@ -184,6 +175,8 @@ class UserManager {
             this.interface.ChangePage('waitinternet', { storeInHistory: false });
         }
 
+        this.interface.ClearHistory();
+
         return true;
     }
 
@@ -191,10 +184,11 @@ class UserManager {
         this.CleanTimers();
         this.server2.Disconnect();
         this.experience.Unmount();
+        this.dailyQuest.onUnmount();
+        this.notificationsInApp.Unmount();
         await this.settings.IndependentSave();
         await this.SaveLocal();
         await this.SaveOnline();
-        this.dailyQuest.onUnmount();
     }
 
     /**
@@ -293,8 +287,6 @@ class UserManager {
         }
 
         const debugIndex = this.interface.console?.AddLog('info', '[UserData] Online saving...');
-
-        this.notificationsInApp.StartListening();
 
         let success = true;
 

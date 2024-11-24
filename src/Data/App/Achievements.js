@@ -39,7 +39,7 @@ class Achievements extends IAppData {
      * @param {number[]} solvedIDs
      * @returns {Achievement[]}
      */
-    GetAll = (solvedIDs) => {
+    GetVisibles = (solvedIDs) => {
         let achievements = [];
 
         // Get unlocked

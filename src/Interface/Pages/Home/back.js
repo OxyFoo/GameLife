@@ -10,6 +10,7 @@ import { Round } from 'Utils/Functions';
 import { AddActivity } from 'Interface/Widgets';
 
 /**
+ * @typedef {import('Managers/UserManager').UserManager} UserManager
  * @typedef {import('Interface/Widgets').Missions} Missions
  */
 
@@ -42,8 +43,8 @@ class BackHome extends PageBase {
     listenerActivities = null;
 
     componentDidMount() {
-        this.handleLevelsUpdate();
-        this.listenerActivities = user.activities.allActivities.AddListener(this.handleLevelsUpdate);
+        this.handleLevelsUpdate(user.experience.experience.Get());
+        this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
     }
 
     /** @param {this['props']} props */
@@ -55,8 +56,8 @@ class BackHome extends PageBase {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
     }
 
-    handleLevelsUpdate = () => {
-        const experience = user.experience.experience.Get();
+    /** @param {UserManager['experience']['experience']['var']} experience */
+    handleLevelsUpdate = (experience) => {
         const {
             xpInfo: { lvl, xp, next }
         } = experience;

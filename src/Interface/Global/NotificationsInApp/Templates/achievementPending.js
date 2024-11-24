@@ -34,22 +34,22 @@ function NIA_AchievementPending({ notif }) {
 
         // Claim the achievement
         setLoading(true);
-        const claimRewards = await user.achievements.Claim(notif.data.achievementID);
+        const claimRewardsInfos = await user.achievements.Claim(notif.data.achievementID);
         setLoading(false);
 
         // An error occurred
-        if (claimRewards === null) {
-            const title = langAch['alert-achievement-error-title'];
-            const message = langAch['alert-achievement-error-message'];
-            user.interface.notificationsInApp?.Close();
+        if (claimRewardsInfos === null) {
             user.interface.popup?.OpenT({
                 type: 'ok',
-                data: { title, message }
+                data: {
+                    title: langAch['alert-achievement-error-title'],
+                    message: langAch['alert-achievement-error-message']
+                }
             });
             return;
         }
 
-        const executedRewards = await user.rewards.ExecuteRewards(claimRewards);
+        const executedRewards = await user.rewards.ExecuteRewards(claimRewardsInfos.rewards, claimRewardsInfos.newOx);
         if (!executedRewards) {
             user.interface.console?.AddLog(
                 'error',
@@ -63,14 +63,7 @@ function NIA_AchievementPending({ notif }) {
         const title = langAch['alert-achievement-title'];
         const achievementName = langManager.GetText(achievement.Name);
         const message = langAch['alert-achievement-text'].replace('{}', achievementName);
-        await user.rewards.ShowRewards(claimRewards, 'all', title, message);
-
-        // Show popup
-        user.interface.notificationsInApp?.Close();
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
+        await user.rewards.ShowRewards(claimRewardsInfos.rewards, 'all', title, message);
     };
 
     return (

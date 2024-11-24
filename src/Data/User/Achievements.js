@@ -21,18 +21,18 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /** @extends {IUserData<SaveObject_Achievements>} */
 class Achievements extends IUserData {
+    /** @type {UserManager} */
+    #user;
+
     /** @param {UserManager} user */
     constructor(user) {
         super('achievements');
 
-        this.user = user;
+        this.#user = user;
     }
 
     /** @type {boolean} Prevent multiple checks at the same time */
     loading = false;
-
-    /** @type {DynamicVar<AchievementItem[]>} Actual solved achievements */ // prettier-ignore
-    achievements = new DynamicVar(/** @type {AchievementItem[]} */ ([]));
 
     /**
      * @private
@@ -40,37 +40,59 @@ class Achievements extends IUserData {
      */
     claimAchievementLoading = false;
 
-    token = 0;
+    /** @type {DynamicVar<AchievementItem[]>} Actual solved achievements */ // prettier-ignore
+    achievements = new DynamicVar(/** @type {AchievementItem[]} */ ([]));
+
+    /** @type {AchievementItem[]} */
+    #SAVED_achievements = [];
+
+    /** @type {AchievementItem[]} */
+    #UNSAVED_achievements = [];
+
+    #token = 0;
 
     Clear = () => {
         this.achievements.Set([]);
-        this.token = 0;
+        this.#SAVED_achievements = [];
+        this.#UNSAVED_achievements = [];
+        this.#token = 0;
     };
 
     Get = () => {
-        return this.achievements.Get();
+        return this.achievements.Get().sort((a, b) => b.Date - a.Date);
+    };
+
+    #updateAchievements = () => {
+        const allAchievements = [...this.#SAVED_achievements, ...this.#UNSAVED_achievements];
+        this.achievements.Set(allAchievements.sort((a, b) => b.Date - a.Date));
     };
 
     /** @param {Partial<SaveObject_Achievements>} data */
     Load = (data) => {
         if (typeof data.solved !== 'undefined') {
-            this.achievements.Set(data.solved);
+            this.#SAVED_achievements = data.solved;
+        }
+        if (typeof data.unsaved !== 'undefined') {
+            this.#UNSAVED_achievements = data.unsaved;
         }
         if (typeof data.token !== 'undefined') {
-            this.token = data.token;
+            this.#token = data.token;
         }
+
+        this.#updateAchievements();
     };
 
     /** @returns {SaveObject_Achievements} */
     Save = () => {
         return {
-            solved: this.achievements.Get(),
-            token: this.token
+            solved: this.#SAVED_achievements,
+            unsaved: this.#UNSAVED_achievements,
+            token: this.#token
         };
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-achievements', token: this.token });
+        const response = await this.#user.server2.tcp.SendAndWait({ action: 'get-achievements', token: this.#token });
 
         // Check if result is valid
         if (
@@ -80,7 +102,7 @@ class Achievements extends IUserData {
             response.status !== 'get-achievements' ||
             response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog('error', `[Achievements] Error while get achievements (${response})`);
+            this.#user.interface.console?.AddLog('error', `[Achievements] Error while get achievements (${response})`);
             return false;
         }
 
@@ -89,24 +111,82 @@ class Achievements extends IUserData {
         }
 
         // Update token & achievements
-        this.token = response.result.token;
-        this.achievements.Set(response.result.achievements);
+        this.#token = response.result.token;
+        this.#SAVED_achievements = response.result.achievements;
+        this.#updateAchievements();
 
         return true;
     };
 
+    /** @returns {Promise<boolean>} */
+    SaveOnline = async (attempt = 2) => {
+        if (!this.#isUnsaved()) {
+            return true;
+        }
+
+        const unsaved = this.#getUnsaved();
+        const response = await this.#user.server2.tcp.SendAndWait({
+            action: 'save-achievements',
+            achievementIDs: unsaved.map((a) => a.AchievementID),
+            token: this.#token
+        });
+
+        // Check if result is valid
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'save-achievements' ||
+            response.result === 'error'
+        ) {
+            this.#user.interface.console?.AddLog('error', `[Achievements] Error while add achievements (${response})`);
+            return false;
+        }
+
+        if (response.result === 'wrong-achievements') {
+            this.#user.interface.console?.AddLog('error', '[Achievements] Wrong achievements to save');
+            return false;
+        }
+
+        // Check if achievements are up to date
+        if (response.result === 'not-up-to-date') {
+            if (attempt <= 0) {
+                this.#user.interface.console?.AddLog('error', '[Achievements] Too many attempts to save achievements');
+                return false;
+            }
+
+            this.#user.interface.console?.AddLog('info', '[Achievements] Retry to save achievements');
+            await this.LoadOnline();
+            return this.SaveOnline(attempt - 1);
+        }
+
+        this.#token = response.result.token;
+        this.#purge(response.result.newAchievements);
+
+        return true;
+    };
+
+    #isUnsaved = () => {
+        return this.#UNSAVED_achievements.length > 0;
+    };
+
+    #getUnsaved = () => {
+        return this.#UNSAVED_achievements;
+    };
+
+    /** @param {AchievementItem[]} newAchievements */
+    #purge = (newAchievements) => {
+        this.#SAVED_achievements.push(...newAchievements);
+        this.#UNSAVED_achievements = [];
+        this.#updateAchievements();
+    };
+
     GetSolved() {
-        return this.achievements
-            .Get()
-            .filter((a) => a.State === 'OK')
-            .sort((a, b) => b.Date - a.Date);
+        return this.achievements.Get().filter((a) => a.State === 'OK');
     }
 
     GetPending() {
-        return this.achievements
-            .Get()
-            .filter((a) => a.State === 'PENDING')
-            .sort((a, b) => b.Date - a.Date);
+        return this.achievements.Get().filter((a) => a.State === 'PENDING');
     }
 
     GetSolvedIDs() {
@@ -123,7 +203,7 @@ class Achievements extends IUserData {
      * @param {AchievementItem[]} [achievementItems=this.GetSolved()] List of achievements to get
      * @returns {Achievement[]}
      */
-    GetLast(last = 3, achievementItems = this.GetSolved()) {
+    GetLast(last = 3, achievementItems = this.Get()) {
         return achievementItems
             .slice(0, last)
             .map((achievement) => {
@@ -141,7 +221,7 @@ class Achievements extends IUserData {
         const solvedIndexes = this.GetSolvedIDs();
         const achievement = dataManager.achievements.GetByID(achievementID);
         if (achievement === null) {
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'error',
                 `[Achievements] Error while get achievement (ID: ${achievementID})`
             );
@@ -164,7 +244,7 @@ class Achievements extends IUserData {
             }
 
             // Add rewards text
-            const rewardText = this.user.rewards.GetText('not-claim', achievement.Rewards);
+            const rewardText = this.#user.rewards.GetText('not-claim', achievement.Rewards);
             if (rewardText) {
                 lines.push(rewardText);
             }
@@ -182,7 +262,7 @@ class Achievements extends IUserData {
         lines.push(lang['popup-global-text'].replace('{}', pourcentage.toString()));
 
         // Show popup
-        this.user.interface.popup?.OpenT({
+        this.#user.interface.popup?.OpenT({
             type: 'ok',
             data: {
                 title: langManager.GetText(achievement.Name),
@@ -215,7 +295,7 @@ class Achievements extends IUserData {
         switch (Comparator.Type) {
             case 'Battery':
                 if (valueNum === null) {
-                    this.user.interface.console?.AddLog('error', '[Achievements] Battery condition with number value');
+                    this.#user.interface.console?.AddLog('error', '[Achievements] Battery condition with number value');
                     break;
                 }
 
@@ -234,7 +314,7 @@ class Achievements extends IUserData {
             case 'SkT':
                 const skill = dataManager.skills.GetByID(Comparator.Value || 0);
                 if (skill === null || valueStr === null) {
-                    this.user.interface.console?.AddLog(
+                    this.#user.interface.console?.AddLog(
                         'error',
                         `[Achievements] Error while get skill (ID: ${Comparator.Value})`
                     );
@@ -250,9 +330,9 @@ class Achievements extends IUserData {
                     valueStr === null ||
                     Value === null ||
                     typeof Value !== 'string' ||
-                    !this.user.experience.KeyIsStats(Value)
+                    !this.#user.experience.KeyIsStats(Value)
                 ) {
-                    this.user.interface.console?.AddLog(
+                    this.#user.interface.console?.AddLog(
                         'error',
                         '[Achievements] Statistic condition with string value'
                     );
@@ -265,13 +345,16 @@ class Achievements extends IUserData {
 
             case 'Ca':
                 if (valueStr === null || valueNum === null) {
-                    this.user.interface.console?.AddLog('error', '[Achievements] Category condition with number value');
+                    this.#user.interface.console?.AddLog(
+                        'error',
+                        '[Achievements] Category condition with number value'
+                    );
                     break;
                 }
 
                 const category = dataManager.skills.GetCategoryByID(valueNum);
                 if (category === null) {
-                    this.user.interface.console?.AddLog(
+                    this.#user.interface.console?.AddLog(
                         'error',
                         `[Achievements] Error while get category (ID: ${valueNum})`
                     );
@@ -284,7 +367,7 @@ class Achievements extends IUserData {
 
             case 'HCa':
                 if (valueStr === null || Comparator.Value === null) {
-                    this.user.interface.console?.AddLog(
+                    this.#user.interface.console?.AddLog(
                         'error',
                         '[Achievements] Highest category condition with number value'
                     );
@@ -296,7 +379,7 @@ class Achievements extends IUserData {
 
             case 'ItemCount':
                 if (valueStr === null) {
-                    this.user.interface.console?.AddLog(
+                    this.#user.interface.console?.AddLog(
                         'error',
                         '[Achievements] Item count condition with string value'
                     );
@@ -308,7 +391,7 @@ class Achievements extends IUserData {
 
             case 'Ad':
                 if (valueStr === null) {
-                    this.user.interface.console?.AddLog('error', '[Achievements] Ad condition with string value');
+                    this.#user.interface.console?.AddLog('error', '[Achievements] Ad condition with string value');
                     break;
                 }
 
@@ -317,7 +400,7 @@ class Achievements extends IUserData {
 
             case 'SelfFriend':
                 if (valueStr === null) {
-                    this.user.interface.console?.AddLog(
+                    this.#user.interface.console?.AddLog(
                         'error',
                         '[Achievements] Self friend condition with string value'
                     );
@@ -332,24 +415,28 @@ class Achievements extends IUserData {
     };
 
     CheckAchievements = async () => {
-        if (!this.user.server2.IsAuthenticated() || this.loading) {
+        if (!this.#user.server2.IsAuthenticated() || this.loading) {
             return;
         }
 
         this.loading = true;
 
-        const solvedIDs = this.GetSolvedIDs();
-        const pendingIDs = this.GetPendingIDs();
-        const achievements = dataManager.achievements.GetAll(solvedIDs);
+        const savedIDs = this.#SAVED_achievements.map((a) => a.AchievementID);
+        const unsavedIDs = this.#UNSAVED_achievements.map((a) => a.AchievementID);
+        const allIDs = [...savedIDs, ...unsavedIDs];
+        const achievements = dataManager.achievements.Get().filter((a) => !allIDs.includes(a.ID));
 
-        const achievementsSolved = [];
+        /** @type {number[]} */
+        const newAchievementsIDSolved = [];
+
         for (let a = 0; a < achievements.length; a++) {
             const achievement = achievements[a];
-            const isPending = pendingIDs.includes(achievement.ID);
-            const isSolved = solvedIDs.includes(achievement.ID);
+            const isPending = unsavedIDs.includes(achievement.ID);
+            const isSolved = savedIDs.includes(achievement.ID);
+            const isAlreadyChecked = newAchievementsIDSolved.includes(achievement.ID);
 
             // Skip if already solved or hasn't conditions
-            if (isPending || isSolved || achievement.Condition === null) {
+            if (isPending || isSolved || isAlreadyChecked || achievement.Condition === null) {
                 continue;
             }
 
@@ -366,26 +453,29 @@ class Achievements extends IUserData {
                     break;
 
                 case 'Level': // Level
-                    value = this.user.experience.experience.Get().xpInfo.lvl;
+                    value = this.#user.experience.experience.Get().xpInfo.lvl;
                     break;
 
                 case 'Sk': // Skill level
                     const skillID = Condition.Comparator.Value;
                     if (skillID === null) {
-                        this.user.interface.console?.AddLog('error', '[Achievements] Skill condition without skill ID');
+                        this.#user.interface.console?.AddLog(
+                            'error',
+                            '[Achievements] Skill condition without skill ID'
+                        );
                         break;
                     }
 
                     const skill = dataManager.skills.GetByID(skillID);
                     if (skill === null) {
-                        this.user.interface.console?.AddLog(
+                        this.#user.interface.console?.AddLog(
                             'error',
                             `[Achievements] Error while get skill (ID: ${skillID})`
                         );
                         break;
                     }
 
-                    const experience = this.user.experience.GetSkillExperience(skill);
+                    const experience = this.#user.experience.GetSkillExperience(skill);
                     value = experience.lvl;
                     break;
 
@@ -393,7 +483,7 @@ class Achievements extends IUserData {
                     const skillTimeID = Condition.Comparator.Value;
                     value = 0;
                     const now = GetGlobalTime();
-                    const activities = this.user.activities.Get();
+                    const activities = this.#user.activities.Get();
                     for (const activity in activities) {
                         if (activities[activity].skillID === skillTimeID && activities[activity].startTime < now) {
                             value += activities[activity].duration / 60;
@@ -426,7 +516,7 @@ class Achievements extends IUserData {
 
                     let values = [];
                     for (let c = 0; c < categories.length; c++) {
-                        const categoryXP = this.user.experience.GetSkillCategoryExperience(categories[c].ID);
+                        const categoryXP = this.#user.experience.GetSkillCategoryExperience(categories[c].ID);
                         values.push(categoryXP.lvl);
                     }
                     values.sort();
@@ -435,7 +525,7 @@ class Achievements extends IUserData {
 
                 case 'Ca': // Category level
                     if (Condition.Comparator.Value === null) {
-                        this.user.interface.console?.AddLog(
+                        this.#user.interface.console?.AddLog(
                             'error',
                             '[Achievements] Category condition without category ID'
                         );
@@ -444,26 +534,26 @@ class Achievements extends IUserData {
 
                     const categoryID = categories[Condition.Comparator.Value]?.ID;
                     if (categoryID === undefined) continue;
-                    const categoryXP = this.user.experience.GetSkillCategoryExperience(categoryID);
+                    const categoryXP = this.#user.experience.GetSkillCategoryExperience(categoryID);
                     value = categoryXP.lvl;
                     break;
 
                 case 'ItemCount': // Number of items
-                    value = this.user.inventory.stuffs.length;
+                    value = this.#user.inventory.stuffs.length;
                     break;
 
                 case 'Ad': // Number of watched ads
-                    value = this.user.informations.adTotalWatched;
+                    value = this.#user.informations.adTotalWatched;
                     break;
 
                 case 'Title': // Title unlocked
-                    const titles = this.user.inventory.GetTitles();
+                    const titles = this.#user.inventory.GetTitles();
                     const title = titles.find((t) => t.ID === Condition.Comparator.Value);
                     value = typeof title !== 'undefined' ? 1 : 0;
                     break;
 
                 case 'SelfFriend': // Asking self friend
-                    value = this.user.informations.achievementSelfFriend ? 1 : 0;
+                    value = this.#user.informations.achievementSelfFriend ? 1 : 0;
                     break;
             }
 
@@ -488,38 +578,25 @@ class Achievements extends IUserData {
             }
 
             if (completed) {
-                achievementsSolved.push(achievement.ID);
+                newAchievementsIDSolved.push(achievement.ID);
             }
         }
 
-        if (achievementsSolved.length > 0) {
-            const response = await this.user.server2.tcp.SendAndWait({
-                action: 'add-achievement',
-                achievementIDs: achievementsSolved,
-                token: this.token
+        if (newAchievementsIDSolved.length > 0) {
+            // Save new achievements
+            /** @type {AchievementItem[]} */
+            const newAchievements = newAchievementsIDSolved.map((id) => {
+                return {
+                    AchievementID: id,
+                    Date: GetGlobalTime(),
+                    State: 'PENDING'
+                };
             });
 
-            if (
-                response === 'not-sent' ||
-                response === 'timeout' ||
-                response === 'interrupted' ||
-                response.status !== 'add-achievement' ||
-                response.result === 'error'
-            ) {
-                this.user.interface.console?.AddLog(
-                    'error',
-                    `[Achievements] Error while add achievements (IDs: ${achievementsSolved.join(', ')})`
-                );
-                this.loading = false;
-                return;
-            }
-
-            // Load new token & achievements
-            this.token = response.result.token;
-            this.achievements.Set(response.result.achievements);
-
-            // Save user data
-            this.user.SaveLocal();
+            this.#UNSAVED_achievements.push(...newAchievements);
+            this.#updateAchievements();
+            await this.SaveOnline();
+            await this.#user.SaveLocal();
         }
 
         this.loading = false;
@@ -528,19 +605,28 @@ class Achievements extends IUserData {
     /**
      * Get rewards for an achievement and mark it as solved
      * @param {number} achievementID
-     * @returns {Promise<Reward[] | null>} Rewards or null if an error occurred
+     * @returns {Promise<{ rewards: Reward[], newOx: number } | null>} Rewards or null if an error occurred
      */
     Claim = async (achievementID) => {
         // Prevent multiple claims
-        if (this.claimAchievementLoading) {
+        if (this.claimAchievementLoading || !this.#user.server2.IsAuthenticated()) {
             return null;
         }
+
+        if (this.#SAVED_achievements.find((a) => a.AchievementID === achievementID) === undefined) {
+            this.#user.interface.console?.AddLog(
+                'error',
+                `[Achievements] Claim achievement not found in solved achievements (ID: ${achievementID})`
+            );
+            return null;
+        }
+
         this.claimAchievementLoading = true;
 
         // Get achievement
         const achievement = dataManager.achievements.GetByID(achievementID);
         if (achievement === null) {
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'error',
                 `[Achievements] Error while get achievement (ID: ${achievementID})`
             );
@@ -549,10 +635,10 @@ class Achievements extends IUserData {
         }
 
         // Claim request
-        const response = await this.user.server2.tcp.SendAndWait({
+        const response = await this.#user.server2.tcp.SendAndWait({
             action: 'claim-achievement',
             achievementID,
-            token: this.token
+            token: this.#token
         });
 
         // Check if response is valid
@@ -563,7 +649,7 @@ class Achievements extends IUserData {
             response.status !== 'claim-achievement' ||
             response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'error',
                 `[Achievements] Error while claim achievement (ID: ${achievementID})`
             );
@@ -576,8 +662,29 @@ class Achievements extends IUserData {
             return null;
         }
 
+        // Update token
+        this.#token = response.result.token;
+
+        // Update achievement state
+        const index = this.#SAVED_achievements.findIndex((a) => a.AchievementID === achievementID);
+        if (index === -1) {
+            this.#user.interface.console?.AddLog(
+                'error',
+                `[Achievements] Claim achievement not found in solved achievements (ID: ${achievementID})`
+            );
+            this.claimAchievementLoading = false;
+            return null;
+        }
+
+        this.#SAVED_achievements[index].State = 'OK';
+        this.#updateAchievements();
+        this.#user.SaveLocal();
+
         this.claimAchievementLoading = false;
-        return response.result.rewards;
+        return {
+            rewards: response.result.rewards,
+            newOx: response.result.newOx
+        };
     };
 
     /** @returns {NotificationInAppAchievementPending[]} */

@@ -69,7 +69,8 @@ class Experience extends IUserClass {
         this.#user = user;
     }
 
-    Init = () => {
+    Initialize = () => {
+        this.UpdateExperience();
         this.#listenerActivities = this.#user.activities.allActivities.AddListener(this.UpdateExperience);
     };
 
@@ -97,7 +98,7 @@ class Experience extends IUserClass {
     }
 
     UpdateExperience = () => {
-        const activities = this.#user.activities.GetUseful();
+        const activities = this.#user.activities.GetUseful(true);
 
         let XP = 0;
 

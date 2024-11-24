@@ -19,7 +19,7 @@ class BackNotificationsInApp extends React.Component {
         animBell: new Animated.Value(1),
         animOpenCount: new Animated.Value(0),
 
-        notificationsCount: user.notificationsInApp.Get().length
+        notificationsCount: user.notificationsInApp.notifications.Get().length
     };
 
     /** @type {Symbol | null} */

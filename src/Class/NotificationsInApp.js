@@ -7,32 +7,39 @@ import DynamicVar from 'Utils/DynamicVar';
  */
 
 class NotificationsInApp extends IUserClass {
+    /** @type {UserManager} */
+    #user;
+
     /** @type {DynamicVar<NotificationInApp[]>} */
     // eslint-disable-next-line prettier/prettier
     notifications = new DynamicVar(/** @type {NotificationInApp[]} */ ([]));
+
+    /** @type {Symbol | null} */
+    #listenerAchievements = null;
 
     /** @param {UserManager} user */
     constructor(user) {
         super('notifications-in-app');
 
-        this.user = user;
+        this.#user = user;
     }
+
+    Initialize = () => {
+        this.#loadAllAchievements();
+        this.#listenerAchievements = this.#user.achievements.achievements.AddListener(this.#loadAllAchievements);
+    };
+
+    Unmount = () => {
+        this.#user.achievements.achievements.RemoveListener(this.#listenerAchievements);
+    };
+
+    #loadAllAchievements = () => {
+        const allNotifs = [...this.#user.achievements.GetNotifications()];
+        this.notifications.Set(allNotifs.sort((a, b) => b.timestamp - a.timestamp));
+    };
 
     Clear = () => {
         this.notifications.Set([]);
-    };
-
-    /** @returns {NotificationInApp[]} */
-    Get = () => {
-        const allNotifications = [...this.notifications.Get(), ...this.user.achievements.GetNotifications()];
-        return allNotifications.sort((a, b) => b.timestamp - a.timestamp);
-    };
-
-    StartListening = () => {
-        this.user.server2.tcp.WaitForAction('update-notifications', (data) => {
-            this.notifications.Set(data.notifications);
-            return false;
-        });
     };
 }
 

@@ -73,11 +73,13 @@ class Inventory extends IUserData {
         this.#token = 0;
     };
 
+    /** @returns {SaveObject_Inventory} */
     Get = () => {
         return {
             titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
-            avatar: this.avatar
+            avatar: this.avatar,
+            token: this.#token
         };
     };
 
@@ -121,6 +123,7 @@ class Inventory extends IUserData {
         this.titleIDs.Set(response.result.titleIDs);
         this.stuffs = response.result.stuffs;
         this.avatar = response.result.avatar;
+        this.#token = response.result.token;
 
         this.user.interface.console?.AddLog('info', `${this.titleIDs.Get().length} titles loaded`);
         this.user.interface.console?.AddLog('info', `${this.stuffs.length} stuffs loaded`);

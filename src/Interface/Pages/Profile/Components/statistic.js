@@ -9,7 +9,7 @@ import { Text } from 'Interface/Components';
 import { PopupContent } from 'Interface/Widgets/StatsBars/popup';
 
 /**
- * @typedef {import('Managers/UserManager').Stats} Stats
+ * @typedef {import('Class/Experience').Stats} Stats
  * @typedef {import('Class/Experience').XPInfo} XPInfo
  * @typedef {{ statKey: keyof Stats, experience: XPInfo }} StatsValues
  * @typedef {import('react-native').ListRenderItem<StatsValues>} ListRenderItemKeyStats
@@ -22,6 +22,7 @@ function RenderStatistic({ item }) {
     const title = langStats[item.statKey];
     const value = item.experience.lvl;
     const lvlSize = value < 100 ? 18 : value < 1000 ? 14 : 12;
+    const experience = user.experience.experience.Get();
 
     return (
         <TouchableOpacity
@@ -29,7 +30,7 @@ function RenderStatistic({ item }) {
             activeOpacity={0.6}
             onPress={() =>
                 user.interface.popup?.Open({
-                    content: <PopupContent stats={user.stats} initStatKey={item.statKey} />
+                    content: <PopupContent stats={experience.stats} initStatKey={item.statKey} />
                 })
             }
         >

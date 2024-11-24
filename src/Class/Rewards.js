@@ -83,8 +83,6 @@ class Rewards extends IUserData {
 
             // Show popup
             if (mode === 'all' || mode === 'only-popup') {
-                this.#user.interface.notificationsInApp?.Close();
-
                 await new Promise((resolve) => {
                     this.#user.interface.popup?.OpenT({
                         type: 'ok',

@@ -25,7 +25,7 @@ class NotificationsInApp extends React.Component {
         pointerEvent: 'none',
 
         /** @type {Array<NotificationInApp>} */
-        notifications: user.notificationsInApp.Get()
+        notifications: user.notificationsInApp.notifications.Get()
     };
 
     /**

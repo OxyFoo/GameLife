@@ -414,6 +414,16 @@ class Achievements extends IUserData {
         return output;
     };
 
+    // TODO: Finish achievements progressions
+    /**
+     * Get progress of an achievement
+     * @param {number} _achievementID
+     * @returns {number} Progress of the achievement between 0 and 1
+     */
+    GetProgress = (_achievementID) => {
+        return 0;
+    };
+
     CheckAchievements = async () => {
         if (!this.#user.server2.IsAuthenticated() || this.loading) {
             return;

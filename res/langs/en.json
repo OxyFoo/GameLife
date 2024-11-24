@@ -260,7 +260,8 @@
     },
 
     "achievements": {
-        "friend-title": "Success of {}",
+        "title": "My achievements",
+        "friend-title": "Achievements of {}",
 
         "operators": {
             "LT": "Less than",
@@ -287,6 +288,17 @@
             "items-in-chest": "As well as the following objects ..."
         },
 
+        "condition-text": "Condition: ",
+        "condition-text-hide": "Hidden",
+        "reward-text": "Reward: ",
+        "reward-text-empty": "None",
+        "global-progress-text": "{}% of the players have unlocked this achievement",
+
+        "sort-text": "Sort by: ",
+        "sort-list": [
+            "progresson"
+        ],
+
         "popup-condition-text": "Condition: ",
         "popup-hidden-condition": "Hidden condition",
         "popup-global-text": "{}% of the players have unlocked this achievement",
@@ -294,11 +306,7 @@
         "alert-achievement-title": "Unlocked achievement",
         "alert-achievement-text": "Congratulations! You've unlocked the achievement: {}",
         "alert-achievement-error-title": "Error",
-        "alert-achievement-error-message": "An error has occurred, please try again later.",
-
-        "tuto": {
-            "1": "This is the success page. Discover all the ones you've already achieved, as well as others that are patiently waiting to be revealed."
-        }
+        "alert-achievement-error-message": "An error has occurred, please try again later."
     },
 
     "activity": {
@@ -522,6 +530,8 @@
         "btn-edit-profile": "Change my appearance",
         "btn-skills": "My skills",
         "btn-statistics": "My statistics",
+        "btn-achievements": "My achievements",
+        "btn-friends": "My friends",
 
         "title-profile": "My profile",
         "title-statistics": "My statistics",

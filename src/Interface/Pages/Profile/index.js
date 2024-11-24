@@ -113,12 +113,12 @@ class Profile extends BackProfile {
                         {lang['btn-statistics']}
                     </Button>
 
-                    <Button style={styles.button} appearance='outline-blur'>
-                        [Mes derniers succès]
+                    <Button style={styles.button} appearance='outline-blur' onPress={this.openAchievements}>
+                        {lang['btn-achievements']}
                     </Button>
 
                     <Button style={styles.button} appearance='outline-blur'>
-                        [Mes amis]
+                        {lang['btn-friends']}
                     </Button>
                 </View>
             </ScrollView>

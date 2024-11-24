@@ -1,98 +1,53 @@
 import * as React from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import styles from './style';
+import AchievementCard from './cards';
 import BackAchievements from './back';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import StartHelp from './help';
-import { Icon, Text } from 'Interface/Components';
+import { Text, Button, Icon } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-
-/**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').DimensionValue} DimensionValue
- *
- * @typedef {import('./back').PanelAchievementType} PanelAchievementType
- * @typedef {import('react-native').ListRenderItem<PanelAchievementType>} AchievementListRenderItem
- */
 
 class Achievements extends BackAchievements {
     render() {
         const lang = langManager.curr['achievements'];
-
-        const styleFlatlist = {
-            ...styles.flatlist,
-            top: this.state.headerHeight
-        };
+        const { title, achievements, allAchievementsProgression, ascending } = this.state;
 
         return (
-            <View>
-                <View onLayout={this.onLayout}>
-                    <PageHeader
-                        style={styles.pageHeader}
-                        onBackPress={this.onBackPress}
-                        onSecondaryIconPress={StartHelp.bind(this)}
-                    />
+            <View style={styles.parent}>
+                <PageHeader style={styles.pageHeader} title={title} onBackPress={this.onBackPress} />
 
-                    {/** Title for multiplayer success */}
-                    {this.friend !== null && (
-                        <Text style={styles.achievementsPlayerTitle} fontSize={22}>
-                            {lang['friend-title'].replace('{}', this.friend.username)}
+                <View style={styles.banner}>
+                    <View style={styles.bannerTitleContainer}>
+                        <Icon icon='success' size={28} color='main1' />
+                        <Text style={styles.bannerTitleText} color='main1'>
+                            {allAchievementsProgression}
                         </Text>
-                    )}
+                    </View>
+
+                    <Button
+                        style={styles.bannerSortButton}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={this.onSortPress}
+                    >
+                        <Text style={styles.bannerSortButtonText} color='secondary'>
+                            {lang['sort-text'] + lang['sort-list'][0]}
+                        </Text>
+                        <Icon icon='filter-outline' size={28} color='main1' angle={ascending ? 180 : 0} />
+                    </Button>
                 </View>
 
                 <FlatList
-                    style={styleFlatlist}
-                    numColumns={2}
-                    data={this.achievement}
-                    keyExtractor={(item, i) => `achievement-${item.ID}-${i}`}
-                    renderItem={this.renderAchievement}
+                    style={styles.flatlist}
+                    data={achievements}
+                    keyExtractor={(item) => `achievement-${item.ID}`}
+                    renderItem={(props) => <AchievementCard {...props} />}
                 />
             </View>
         );
     }
-
-    /** @type {AchievementListRenderItem} */
-    renderAchievement = ({ item: achievement }) => {
-        const { ID, Name, isSolved, GlobalPercentage } = achievement;
-
-        /** @type {ViewStyle} */
-        const style = {
-            borderColor: isSolved ? themeManager.GetColor('main1') : '#888888',
-            backgroundColor: themeManager.GetColor('backgroundGrey')
-        };
-
-        /** @type {ViewStyle} */
-        const styleFilling = {
-            // eslint-disable-next-line prettier/prettier
-            width: /** @type {DimensionValue} */ (`${GlobalPercentage}%`),
-            backgroundColor: themeManager.GetColor('main1')
-        };
-
-        return (
-            <TouchableOpacity
-                style={styles.achievementsContainer}
-                onPress={() => this.onAchievementPress(ID)}
-                activeOpacity={0.6}
-            >
-                <View style={[styles.achievementsBox, style]}>
-                    <Text style={styles.title}>{Name}</Text>
-
-                    {/** Global progression */}
-                    <View style={styles.progressBar}>
-                        <Text style={styles.progressionValue} color='secondary' fontSize={10}>
-                            {GlobalPercentage + '%'}
-                        </Text>
-                        <Icon style={styles.progressBarIcon} icon='social' size={12} color='secondary' />
-                        <View style={[styles.progressBarInner, styleFilling]} />
-                    </View>
-                </View>
-            </TouchableOpacity>
-        );
-    };
 }
 
 export default Achievements;

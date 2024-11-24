@@ -260,6 +260,7 @@
     },
 
     "achievements": {
+        "title": "Mes succès",
         "friend-title": "Succès de {}",
 
         "operators": {
@@ -287,6 +288,17 @@
             "items-in-chest": "Ainsi que les objets suivants..."
         },
 
+        "condition-text": "Condition : ",
+        "condition-text-hide": "Cachée",
+        "reward-text": "Récompense : ",
+        "reward-text-empty": "Aucune",
+        "global-progress-text": "{}% des joueurs ont débloqué ce succès",
+
+        "sort-text": "Trier par : ",
+        "sort-list": [
+            "progresson"
+        ],
+
         "popup-condition-text": "Condition : ",
         "popup-hidden-condition": "Condition cachée",
         "popup-global-text": "{}% des joueurs ont débloqué ce succès",
@@ -294,11 +306,7 @@
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
         "alert-achievement-error-title": "Erreur",
-        "alert-achievement-error-message": "Une erreur est survenue, réessaye plus tard.",
-
-        "tuto": {
-            "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
-        }
+        "alert-achievement-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "activity": {
@@ -522,6 +530,8 @@
         "btn-edit-profile": "Modifier mon apparence",
         "btn-skills": "Mes compétences",
         "btn-statistics": "Mes statistiques",
+        "btn-achievements": "Mes succès",
+        "btn-friends": "Mes amis",
 
         "title-profile": "Mon profil",
         "title-statistics": "Mes statistiques",

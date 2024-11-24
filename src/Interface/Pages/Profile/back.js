@@ -97,6 +97,10 @@ class BackProfile extends PageBase {
         user.interface.ChangePage('statistics');
     };
 
+    openAchievements = () => {
+        user.interface.ChangePage('achievements');
+    };
+
     onBack = () => {
         if (this.refAvatar.current !== null && this.refAvatar.current.state.editorOpened) {
             this.refAvatar.current.CloseEditor();

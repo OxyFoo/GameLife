@@ -11,7 +11,6 @@ import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
 
 import { Text, Icon, Button } from 'Interface/Components';
-import { DateFormat } from 'Utils/Date';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -25,7 +24,7 @@ import { DateFormat } from 'Utils/Date';
  * @param {StyleProp} [props.style] Style of the container
  * @param {number} props.index Selected day
  * @param {number} props.claimIndex Index of the claim in the dailyquest.claimsList
- * @param {(index: number) => void} [props.handleClaim] Function called when the user press the button
+ * @param {(index: number) => Promise<void>} [props.handleClaim] Function called when the user press the button
  * @returns {JSX.Element}
  */
 const RenderItem = (props) => {
@@ -41,7 +40,7 @@ const RenderItem = (props) => {
         backgroundColor: themeManager.GetColor('backgroundCard')
     };
 
-    /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claim-tomorrow' | 'claimed'} */
+    /** @type {'none' | 'loading' | 'claiming' | 'claim-tomorrow' | 'claimed'} */
     let status = 'none';
 
     if (props.claimIndex !== -1) {
@@ -52,22 +51,10 @@ const RenderItem = (props) => {
             status = 'loading';
         } else if (claimList.claimed.includes(props.index)) {
             status = 'claimed';
-        } else if (props.index <= claimList.daysCount) {
+        } else if (props.index < claimList.daysCount - 1) {
             status = 'claiming';
-        } else if (props.index === claimList.daysCount + 1) {
-            // Get today date
-            const tmpDateToday = new Date();
-            tmpDateToday.setDate(tmpDateToday.getDate() + 1);
-            const todayStr = DateFormat(tmpDateToday, 'YYYY-MM-DD');
-
-            // Get target date
-            const tmpDate = new Date(claimList.start + 'T00:00:00');
-            tmpDate.setDate(tmpDate.getDate() + claimList.daysCount);
-            const targetDate = DateFormat(tmpDate, 'YYYY-MM-DD');
-
-            if (todayStr === targetDate) {
-                status = 'claim-tomorrow';
-            }
+        } else if (props.index === claimList.daysCount - 1) {
+            status = 'claim-tomorrow';
         }
     }
 
@@ -82,9 +69,9 @@ const RenderItem = (props) => {
         setLoading(true);
         const claimList = user.dailyQuest.claimsList.Get()[props.claimIndex];
         const result = await user.dailyQuest.ClaimReward(claimList.start, [props.index]);
-        setLoading(false);
 
         if (result === 'claiming') {
+            setLoading(false);
             return;
         }
 
@@ -95,13 +82,15 @@ const RenderItem = (props) => {
                     title: lang['alert-claim-error-title'],
                     message: lang['alert-claim-error-message'].replace('{}', result)
                 },
+                callback: () => setLoading(false),
                 cancelable: false,
                 priority: true
             });
             return;
         }
 
-        props.handleClaim && props.handleClaim(props.index);
+        props.handleClaim && (await props.handleClaim(props.index));
+        setLoading(false);
     };
 
     const dailyRewards = dataManager.dailyQuestsRewards.Get().find((item) => item.index === props.index) ?? null;

@@ -52,7 +52,7 @@ class BackActivityPage2 extends React.Component {
         const skillName = langManager.GetText(skill.Name);
         const categoryName = langManager.GetText(category.Name);
         this.activityText = `${categoryName} - ${skillName}`;
-        this.xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
+        this.xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID || category.LogoID);
     }
 
     openSkill = () => {

@@ -53,8 +53,6 @@ function RenderPopup(_props) {
         }
     }
 
-    const dailyQuestsRewards = dataManager.dailyQuestsRewards.Get();
-
     return (
         <View style={styles.popup}>
             <LinearGradient
@@ -71,7 +69,7 @@ function RenderPopup(_props) {
             )}
 
             <FlatList
-                data={dailyQuestsRewards}
+                data={dataManager.dailyQuestsRewards.Get()}
                 keyExtractor={(item) => item.index.toString()}
                 initialNumToRender={10}
                 renderItem={(props) => <RenderItemMemo index={props.index} claimIndex={claimIndex} />}

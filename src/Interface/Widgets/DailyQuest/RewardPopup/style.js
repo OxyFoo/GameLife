@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12
     },
     claimTomorrow: {
-        marginRight: 16,
+        marginRight: 0,
         fontSize: 16
     },
 

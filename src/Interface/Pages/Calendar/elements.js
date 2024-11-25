@@ -42,7 +42,7 @@ const RenderActivity = React.memo(
         const endTime = startTime + activity.duration * 60;
         const startTimeString = TimeToFormatString(startTime);
         const endTimeString = TimeToFormatString(endTime);
-        const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID);
+        const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID || category.LogoID);
         const onPress = () => item.onPress(item);
 
         let activityTime = `${startTimeString} - ${endTimeString}`;

@@ -110,7 +110,8 @@ class UserManager {
     tempMailSent = null;
 
     StartTimers() {
-        this.experience.Initialize();
+        this.experience.onMount();
+        this.dailyQuest.onMount();
         this.notificationsInApp.Initialize();
 
         // Check achievements every 20 seconds
@@ -118,36 +119,27 @@ class UserManager {
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
     }
 
-    // TODO: Merge unmount + cleanTimers & remount all in StartTimers (Mount)
-    CleanTimers() {
-        clearInterval(this.intervalAchievements);
-    }
-
     async Clear(keepOnboardingState = true) {
         const onboarding = this.settings.onboardingWatched;
         this.tempMailSent = null;
 
-        this.notificationsInApp.Clear();
-        // TODO: Clear server2 ?
-        //this.server2.Clear(); ?
-        this.settings.Clear();
-        this.shop.Clear();
-        this.informations.Clear();
+        for (const data of this.CLASS) {
+            data.Clear();
+        }
 
         for (const data of this.DATA) {
             data.Clear();
         }
 
-        this.CleanTimers();
-        await this.settings.IndependentSave();
-
+        await this.onUnmount(true);
         await DataStorage.ClearAll();
         await this.SaveLocal();
 
         if (keepOnboardingState) {
             this.settings.onboardingWatched = onboarding;
-            await this.settings.IndependentSave();
         }
+
+        await this.settings.IndependentSave();
     }
 
     /**
@@ -169,6 +161,7 @@ class UserManager {
         }
 
         await this.Clear();
+
         if (this.server2.IsConnected()) {
             this.interface.ChangePage('login', { storeInHistory: false });
         } else {
@@ -180,15 +173,21 @@ class UserManager {
         return true;
     }
 
-    async Unmount() {
-        this.CleanTimers();
+    async onUnmount(reconnect = false) {
+        clearInterval(this.intervalAchievements);
+
         this.server2.Disconnect();
-        this.experience.Unmount();
+        this.experience.onUnmount();
         this.dailyQuest.onUnmount();
         this.notificationsInApp.Unmount();
+
         await this.settings.IndependentSave();
         await this.SaveLocal();
         await this.SaveOnline();
+
+        if (reconnect) {
+            await this.server2.Connect();
+        }
     }
 
     /**

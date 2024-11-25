@@ -179,9 +179,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    // Load quests
-    user.dailyQuest.Init();
-
     // Loading: User character
     // user.character = new Character(
     //     'player',
@@ -204,16 +201,16 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     //});
 
     // Load admob
-    await user.consent.ShowTrackingPopup();
+    //await user.consent.ShowTrackingPopup();
 
+    // TODO: Fix ads
     // Load ads
     const ads = dataManager.ads.Get();
-    // TODO: Fix ads
-    // user.ads.LoadAds(ads);
+    //user.ads.LoadAds(ads);
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
-        user.interface.console?.AddLog('warn', 'No more ads available');
+        //user.interface.console?.AddLog('warn', 'No more ads available');
     }
 
     // Render default pages

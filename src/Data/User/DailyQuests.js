@@ -53,7 +53,7 @@ class DailyQuest extends IUserData {
         this.user = user;
     }
 
-    Init = () => {
+    onMount = () => {
         this.SetupDailyQuests();
         this.UpdateActivities();
 
@@ -68,6 +68,14 @@ class DailyQuest extends IUserData {
         this.#listenerActivities = this.user.activities.allActivities.AddListener(() => {
             this.UpdateActivities();
         });
+    };
+
+    onUnmount = () => {
+        if (this.#timeout) {
+            clearTimeout(this.#timeout);
+        }
+        this.user.server2.tcp.state.RemoveListener(this.#listenerNetwork);
+        this.user.activities.allActivities.RemoveListener(this.#listenerActivities);
     };
 
     SetupDailyQuests = async () => {
@@ -140,14 +148,6 @@ class DailyQuest extends IUserData {
         }
 
         this.user.SaveLocal();
-    };
-
-    onUnmount = () => {
-        if (this.#timeout) {
-            clearTimeout(this.#timeout);
-        }
-        this.user.server2.tcp.state.RemoveListener(this.#listenerNetwork);
-        this.user.activities.allActivities.RemoveListener(this.#listenerActivities);
     };
 
     Clear = () => {

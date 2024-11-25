@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { View, ScrollView, FlatList } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackNewPage from './back';
-import { RenderStatistic } from './Components/statistic';
 import langManager from 'Managers/LangManager';
 
 import { Text, KPI } from 'Interface/Components';
@@ -12,21 +11,13 @@ import { PageHeader } from 'Interface/Widgets';
 class NewPage extends BackNewPage {
     render() {
         const lang = langManager.curr['profile'];
-        const { experienceStats, playedDays, totalActivityLength, totalActivityTime } = this.state;
+        const { kpis } = this.state;
 
         return (
             <ScrollView style={styles.page}>
                 <PageHeader title={lang['title-statistics']} onBackPress={this.onBack} />
 
-                <FlatList
-                    data={experienceStats}
-                    renderItem={RenderStatistic}
-                    keyExtractor={(item) => `user-stat-${item.statKey}`}
-                    numColumns={2}
-                    scrollEnabled={false}
-                />
-
-                <Text style={styles.sectionTitleGraph} color='secondary'>
+                <Text style={styles.sectionTitle} color='secondary'>
                     {lang['row-text-graph']}
                 </Text>
 
@@ -48,13 +39,25 @@ class NewPage extends BackNewPage {
                 </Text>
 
                 <View style={styles.kpiContainer}>
-                    <KPI style={styles.kpiProfile} title={lang['row-since']} value={playedDays} />
-                    <KPI
-                        style={[styles.kpiProfile, styles.kpiProfileMiddle]}
-                        title={lang['row-activities']}
-                        value={totalActivityLength}
-                    />
-                    <KPI style={styles.kpiProfile} title={lang['row-time']} value={totalActivityTime} />
+                    <View style={styles.kpiRow}>
+                        <KPI style={styles.kpiCard} title={lang['kpi-since']} value={kpis.playedDays} />
+                        <KPI
+                            style={[styles.kpiCard, styles.kpiCardMiddle]}
+                            title={lang['kpi-activities']}
+                            value={kpis.totalActivityLength}
+                        />
+                        <KPI style={styles.kpiCard} title={lang['kpi-time']} value={kpis.totalActivityTimeHours} />
+                    </View>
+
+                    <View style={styles.kpiRow}>
+                        <KPI style={styles.kpiCard} title={lang['kpi-ox']} value={kpis.ox} />
+                        <KPI
+                            style={[styles.kpiCard, styles.kpiCardMiddle]}
+                            title={lang['kpi-inventory']}
+                            value={kpis.inventoryCount}
+                        />
+                        <KPI style={styles.kpiCard} title={lang['kpi-friends']} value={kpis.friendsCount} />
+                    </View>
                 </View>
             </ScrollView>
         );

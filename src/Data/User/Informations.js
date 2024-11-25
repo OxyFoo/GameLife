@@ -125,10 +125,11 @@ class Informations extends IUserData {
         }
 
         // Load data
-        const { Username, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth } = response.data;
+        const { Username, Lang, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth } = response.data;
 
         this.username.Set(Username);
         this.usernameTime = LastChangeUsername;
+        await this.user.settings.SetLang(Lang);
         this.title.Set(Title);
         this.ox.Set(Ox);
         this.birthTime = Birthtime;

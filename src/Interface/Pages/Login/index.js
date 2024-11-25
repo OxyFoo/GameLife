@@ -3,12 +3,13 @@ import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
+import langManager from 'Managers/LangManager';
 
-import { Text, Button, InputText, CheckBox } from 'Interface/Components';
+import { Text, Button, InputText, CheckBox, ComboBox } from 'Interface/Components';
 
 class Login extends BackLogin {
     render() {
-        const { langs } = this;
+        const lang = langManager.curr['login'];
         const {
             signinMode,
             animSignin,
@@ -19,8 +20,11 @@ class Login extends BackLogin {
             cguAccepted,
             errorCgu,
             errorEmail,
-            errorUsername
+            errorUsername,
+            cbSelectedLang
         } = this.state;
+
+        const cguTexts = lang['input-cgu-text'].split('%');
 
         const btnLoginX = Animated.multiply(84, animSignin);
         const btnBackX = Animated.add(-128, Animated.multiply(128, animSignin));
@@ -32,11 +36,11 @@ class Login extends BackLogin {
                     {/* Title */}
                     <View>
                         <Text style={styles.title} color='primary'>
-                            {langs.pageTitle}
+                            {lang['page-title']}
                         </Text>
 
                         <Text style={styles.text} color='secondary'>
-                            {langs.pageText}
+                            {lang['page-text']}
                         </Text>
                     </View>
 
@@ -45,7 +49,7 @@ class Login extends BackLogin {
                         containerStyle={styles.input}
                         type='email'
                         error={!!errorEmail}
-                        label={langs.titleEmail}
+                        label={lang['input-email-title']}
                         value={email}
                         onChangeText={this.onChangeEmail}
                         enabled={!signinMode}
@@ -59,7 +63,7 @@ class Login extends BackLogin {
                         <InputText
                             error={!!errorUsername}
                             type='name'
-                            label={langs.titleUsername}
+                            label={lang['input-username-title']}
                             value={username}
                             onChangeText={this.onChangeUsername}
                             enabled={signinMode}
@@ -85,11 +89,11 @@ class Login extends BackLogin {
                                 fontSize={14}
                                 color='secondary'
                             >
-                                {langs.cguTexts[0]}
+                                {cguTexts[0]}
                                 <Text fontSize={16} color='main1'>
-                                    {langs.cguTexts[1]}
+                                    {cguTexts[1]}
                                 </Text>
-                                {langs.cguTexts[2]}
+                                {cguTexts[2]}
                             </Text>
                         </View>
                         <Text style={styles.error} color={'error'}>
@@ -101,6 +105,17 @@ class Login extends BackLogin {
                 {/* Separator */}
                 <View />
 
+                {/* Language */}
+                <ComboBox
+                    style={styles.cbLang}
+                    inputStyle={styles.cbLangInput}
+                    title=''
+                    data={this.availableLangs}
+                    selectedValue={cbSelectedLang.value}
+                    onSelect={this.onChangeLang}
+                    hideChevron
+                />
+
                 {/* Buttons */}
                 <Button
                     style={styles.buttonLoginSignin}
@@ -108,7 +123,7 @@ class Login extends BackLogin {
                     onPress={signinMode ? this.signin : this.loginOrGoToSignin}
                     loading={loading}
                 >
-                    {signinMode ? langs.btnSignin : langs.btnLogin}
+                    {signinMode ? lang['button-signin-text'] : lang['button-login-text']}
                 </Button>
                 <Button
                     style={styles.buttonBack}

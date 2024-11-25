@@ -44,7 +44,7 @@ class App extends React.Component {
 
     componentWillUnmount() {
         this.appStateSubscription.remove();
-        user.Unmount();
+        user.onUnmount();
     }
 
     render() {

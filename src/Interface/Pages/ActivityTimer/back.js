@@ -51,29 +51,12 @@ class BackActivityTimer extends PageBase {
         this.currentActivityEvent = user.activities.currentActivity.AddListener((currentActivity) => {
             this.setState({ currentActivity });
         });
-
-        if (user.server2.IsAuthenticated() && this.state.currentActivity !== null) {
-            user.server2.tcp.Send({
-                action: 'start-activity',
-                activity: this.state.currentActivity
-            });
-        }
     }
 
     componentWillUnmount() {
         clearInterval(this.timer_tick);
         user.interface.RemoveCustomBackHandler(this.onPressCancel);
         user.activities.currentActivity.RemoveListener(this.currentActivityEvent);
-
-        // Clear if activity is finished
-        if (this.finished === true) {
-            if (user.server2.IsAuthenticated()) {
-                user.server2.tcp.Send({ action: 'stop-activity' });
-            }
-
-            user.activities.currentActivity.Set(null);
-            user.SaveLocal();
-        }
     }
 
     /**
@@ -170,6 +153,10 @@ class BackActivityTimer extends PageBase {
 
     Back = () => {
         clearInterval(this.timer_tick);
+
+        user.activities.currentActivity.Set(null);
+        user.SaveLocal();
+
         if (user.interface.history.length > 1) {
             user.interface.RemoveCustomBackHandler(this.onPressCancel);
             user.interface.BackHandle();

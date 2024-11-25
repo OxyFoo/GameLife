@@ -89,11 +89,13 @@ function AchievementCardContent({ achievement, animation, maxHeight, onContentLa
     const { ID, Name, Progress, GlobalPercentage } = achievement;
 
     const [styleDescription, setStyleDescription] = React.useState({
+        opacity: animation,
         maxHeight: maxHeight === -1 ? undefined : Animated.multiply(animation, maxHeight)
     });
 
     React.useEffect(() => {
         setStyleDescription({
+            opacity: animation,
             maxHeight: maxHeight === -1 ? undefined : Animated.multiply(animation, maxHeight)
         });
     }, [animation, maxHeight]);

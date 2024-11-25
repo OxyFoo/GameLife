@@ -178,7 +178,7 @@ class TCP {
     /**
      * @template {TCPClientRequest} T
      * @param {T} message
-     * @param {(data: Extract<TCPServerRequest, { 'status': T['action'] }>) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
+     * @param {(data: TCPServerRequest) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
      * @param {number} [timeout] in milliseconds
      * @param {AbortSignal} [signal] Optional abort signal to cancel the wait
      * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long

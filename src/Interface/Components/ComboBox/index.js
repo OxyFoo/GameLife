@@ -34,7 +34,7 @@ class ComboBox extends ComboBoxBack {
     }
 
     renderElement = () => {
-        const { style, inputStyle, title, activeColor, enabled, selectedValue } = this.props;
+        const { style, inputStyle, title, activeColor, enabled, selectedValue, hideChevron } = this.props;
         const { anim, selectionMode } = this.state;
 
         const angle = anim.interpolate({
@@ -66,7 +66,7 @@ class ComboBox extends ComboBoxBack {
                 />
 
                 {/* Chevron icon */}
-                {enabled && (
+                {enabled && !hideChevron && (
                     <View style={styles.chevron} pointerEvents='none'>
                         <Animated.View style={{ transform: [{ rotateX: angle }] }}>
                             <Icon icon='chevron' color={selectionMode ? activeColor : 'border'} size={20} angle={-90} />

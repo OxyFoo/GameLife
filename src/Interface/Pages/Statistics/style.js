@@ -13,24 +13,20 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase'
     },
 
-    sectionTitleGraph: {
-        marginTop: 24,
-        marginBottom: 16,
-        fontSize: 16,
-        textAlign: 'left'
-    },
-
     kpiContainer: {
+        marginBottom: 24
+    },
+    kpiRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: 12,
-        marginBottom: 24
+        marginTop: 12
     },
-    kpiProfile: {
-        paddingVertical: 24
+    kpiCard: {
+        minHeight: 90,
+        paddingVertical: 12
     },
-    kpiProfileMiddle: {
+    kpiCardMiddle: {
         marginHorizontal: 12
     }
 });

@@ -1,16 +1,11 @@
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { GetStringLength } from 'Utils/String';
+import { Round } from 'Utils/Functions';
 import { GetDate, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/User/Activities/index').Activity} Activity
- *
- * @typedef {import('Class/Experience').XPInfo} XPInfo
- * @typedef {import('Class/Experience').Stats} Stats
- * @typedef {{ statKey: keyof Stats; experience: XPInfo }} ExperienceStats
  */
 
 const BackNewPageProps = {
@@ -20,20 +15,7 @@ const BackNewPageProps = {
 class BackNewPage extends PageBase {
     state = {
         experience: user.experience.experience.Get(),
-
-        /** @type {ExperienceStats[]} */
-        experienceStats: user.experience.statsKey
-            .sort(
-                (a, b) =>
-                    GetStringLength(langManager.curr['statistics']['names'][b]) -
-                    GetStringLength(langManager.curr['statistics']['names'][a])
-            )
-            .map((statKey) => ({
-                statKey,
-                experience: user.experience.experience.Get().stats[statKey]
-            })),
-
-        ...this.getValuesKPI()
+        kpis: this.getValuesKPI()
     };
 
     /** @type {Symbol | null} */
@@ -43,7 +25,7 @@ class BackNewPage extends PageBase {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
                 experience: user.experience.experience.Get(),
-                ...this.getValuesKPI()
+                kpis: this.getValuesKPI()
             });
         });
     }
@@ -54,10 +36,15 @@ class BackNewPage extends PageBase {
 
     getValuesKPI() {
         const activities = user.activities.Get();
-        const playedDays = this.getTimeFromFirst(activities);
-        const totalActivityLength = activities.length;
-        const totalActivityTime = this.getTotalDuration(activities);
-        return { playedDays, totalActivityLength, totalActivityTime };
+
+        return {
+            playedDays: this.getTimeFromFirst(activities),
+            totalActivityLength: activities.length,
+            totalActivityTimeHours: this.getTotalDuration(activities),
+            ox: user.informations.ox.Get(),
+            inventoryCount: user.inventory.Get().stuffs.length,
+            friendsCount: user.multiplayer.friends.Get().length
+        };
     }
 
     /**
@@ -65,12 +52,9 @@ class BackNewPage extends PageBase {
      * @returns {number} in hours
      */
     getTotalDuration(activities) {
-        let totalDuration = 0;
-        for (let a in activities) {
-            totalDuration += activities[a].duration;
-        }
-        const totalDurationHour = totalDuration / 60;
-        return Math.floor(totalDurationHour);
+        const durations = activities.map((a) => a.duration);
+        const hours = durations.reduce((a, b) => a + b, 0) / 60;
+        return Round(hours, 1);
     }
     /**
      * @param {Array<Activity>} activities

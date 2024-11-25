@@ -56,31 +56,6 @@ class BackSectionTasks extends React.Component {
         }
     }
 
-    /**
-     * @param {SectionTasksPropsType} nextProps
-     * @param {this['state']} nextState
-     */
-    shouldComponentUpdate(nextProps, nextState) {
-        if (
-            nextProps.todo !== this.props.todo ||
-            nextProps.todo?.tasks !== this.props.todo?.tasks ||
-            nextState.tasks !== this.state.tasks ||
-            nextProps.onChangeTodo !== this.props.onChangeTodo ||
-            nextState.draggedItem !== this.state.draggedItem
-        ) {
-            return true;
-        }
-
-        const oldTasks = nextState.tasks.map((t) => Object.values(t).join('-')).join(',');
-        const newTasks = this.state.tasks.map((t) => Object.values(t).join('-')).join(',');
-
-        if (oldTasks !== newTasks) {
-            return true;
-        }
-
-        return false;
-    }
-
     /** @param {SectionTasksPropsType} prevProps */
     componentDidUpdate(prevProps) {
         const { todo } = this.props;
@@ -120,6 +95,7 @@ class BackSectionTasks extends React.Component {
 
         user.interface.screenInput?.Open({
             label: lang['input-task-placeholder'],
+            maxLength: 128,
             callback: (title) => {
                 if (!title || !title.trim()) return;
 
@@ -135,8 +111,9 @@ class BackSectionTasks extends React.Component {
     /** @param {Task} task */
     editTitleTask = (task) => {
         const lang = langManager.curr['todo'];
+        const { draggedItem } = this.state;
         const { todo, onChangeTodo } = this.props;
-        if (todo === null) return;
+        if (todo === null || draggedItem !== null) return;
 
         const index = todo.tasks.indexOf(task);
         if (index === -1) return;
@@ -144,7 +121,7 @@ class BackSectionTasks extends React.Component {
         user.interface.screenInput?.Open({
             label: lang['input-task-placeholder'],
             initialText: task.title,
-            maxLength: 256,
+            maxLength: 128,
             callback: (title) => {
                 if (!title || !title.trim()) return;
 

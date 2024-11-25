@@ -29,6 +29,7 @@ import { GetAbsolutePosition } from 'Utils/UI';
  * @property {boolean} enableSearchBar
  * @property {(item: ComboBoxItem | null) => void} onSelect
  * @property {boolean} enabled
+ * @property {boolean} hideChevron
  */
 
 /** @type {ComboBoxPropsType} */
@@ -42,7 +43,8 @@ const ComboBoxProps = {
     selectedValue: '',
     enableSearchBar: false,
     onSelect: () => {},
-    enabled: true
+    enabled: true,
+    hideChevron: false
 };
 
 class ComboBoxBack extends React.Component {

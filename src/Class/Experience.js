@@ -69,17 +69,17 @@ class Experience extends IUserClass {
         this.#user = user;
     }
 
-    Initialize = () => {
+    onMount = () => {
         this.UpdateExperience();
         this.#listenerActivities = this.#user.activities.allActivities.AddListener(this.UpdateExperience);
     };
 
-    Clear = () => {
-        this.experience.Set({ stats: this.GetEmptyExperience(), xpInfo: this.getXPDict(0) });
+    onUnmount = () => {
+        this.#user.activities.allActivities.RemoveListener(this.#listenerActivities);
     };
 
-    Unmount = () => {
-        this.#user.activities.allActivities.RemoveListener(this.#listenerActivities);
+    Clear = () => {
+        this.experience.Set({ stats: this.GetEmptyExperience(), xpInfo: this.getXPDict(0) });
     };
 
     /** @returns {Stats} */

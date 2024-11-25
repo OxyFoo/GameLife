@@ -39,9 +39,8 @@ class SectionTasks extends BackSectionTasks {
 
                     <FlatList
                         data={tasks}
-                        extraData={draggedItem}
-                        keyExtractor={(item, index) => `task-${item.title}-${index}`}
-                        renderItem={({ item }) => <this.renderTask item={item} onLayout={this.onLayoutItem} />}
+                        keyExtractor={(item) => `task-${item.title}`}
+                        renderItem={this.renderTask}
                         onLayout={this.onLayout}
                         onTouchStart={this.onTouchStart}
                         onTouchMove={this.onTouchMove}
@@ -57,9 +56,8 @@ class SectionTasks extends BackSectionTasks {
     /**
      * @param {Object} props
      * @param {Task} props.item
-     * @param {(event: LayoutChangeEvent) => void} [props.onLayout]
      */
-    renderTask = ({ item, onLayout }) => {
+    renderTask = ({ item }) => {
         const { draggedItem } = this.state;
 
         const styleOpacity = { opacity: 1 };
@@ -70,7 +68,7 @@ class SectionTasks extends BackSectionTasks {
         return (
             <View
                 style={[styles.task, styleOpacity]}
-                onLayout={onLayout}
+                onLayout={this.onLayoutItem}
                 onTouchStart={(e) => this.dragStart(e, item)}
                 onTouchMove={this.dragMove}
                 onTouchEnd={this.dragEnd}

@@ -79,7 +79,7 @@ class ScreenInputBack extends React.Component {
             label: 'Input',
             initialText: '',
             multiline: false,
-            maxLength: params.multiline ?? false ? 1024 : 64,
+            maxLength: (params.multiline ?? false) ? 1024 : 64,
             callback: () => {}
         };
         const mergedParams = { ...defaultParams, ...params };

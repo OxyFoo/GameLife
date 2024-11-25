@@ -1,4 +1,5 @@
 import { IUserClass } from 'Types/Interface/IUserClass';
+import langManager from 'Managers/LangManager';
 
 import TCP from 'Utils/TCP';
 import { GetDeviceIdentifiers } from 'Utils/Device';
@@ -127,7 +128,8 @@ class Server2 extends IUserClass {
         const response = await this.tcp.SendAndWait({
             action: 'signin',
             username,
-            email
+            email,
+            lang: langManager.currentLangageKey
         });
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
             this.#user.interface.console?.AddLog('error', `Server connection failed (${response})`);

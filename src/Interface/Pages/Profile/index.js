@@ -105,7 +105,7 @@ class Profile extends BackProfile {
                         {lang['btn-edit-profile']}
                     </Button>
 
-                    <Button style={styles.button} appearance='outline-blur' onPress={this.openSkills}>
+                    <Button style={styles.button} appearance='outline-blur' icon='default' onPress={this.openSkills}>
                         {lang['btn-skills']}
                     </Button>
 
@@ -113,11 +113,16 @@ class Profile extends BackProfile {
                         {lang['btn-statistics']}
                     </Button>
 
-                    <Button style={styles.button} appearance='outline-blur' onPress={this.openAchievements}>
+                    <Button
+                        style={styles.button}
+                        appearance='outline-blur'
+                        icon='success'
+                        onPress={this.openAchievements}
+                    >
                         {lang['btn-achievements']}
                     </Button>
 
-                    <Button style={styles.button} appearance='outline-blur'>
+                    <Button style={styles.button} appearance='outline-blur' icon='social'>
                         {lang['btn-friends']}
                     </Button>
                 </View>

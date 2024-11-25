@@ -108,7 +108,7 @@ class InputText extends InputTextBack {
 
         return (
             <Animated.View
-                style={[styles.parent, containerStyle, containerStyle2]}
+                style={[styles.parent, containerStyle2, containerStyle]}
                 onLayout={this.onBoxLayout}
                 pointerEvents={enabled ? pointerEvents : 'none'}
             >

@@ -440,8 +440,8 @@
     },
 
     "login": {
-        "page-title": "Bienvenue",
-        "page-text": "Prêt à dominer ton quotidien ? Rejoins notre communauté et prends le contrôle de ton avenir !",
+        "page-title": "Bienvenue !",
+        "page-text": "Chaque jour est une aventure : joue, progresse, et prends le contrôle de ta vie avec GameLife !",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
@@ -518,9 +518,12 @@
         "row-text-graph": "Heures complétées cette semaine",
         "row-title-informations": "Informations",
 
-        "row-since": "jours de jeu",
-        "row-activities": "activités",
-        "row-time": "heures",
+        "kpi-since": "jours de jeu",
+        "kpi-activities": "activités",
+        "kpi-time": "heures d'activités",
+        "kpi-ox": "Ox",
+        "kpi-inventory": "items",
+        "kpi-friends": "amis",
 
         "container-achievements-title": "Derniers succès",
         "container-stats-title": "Statistiques",

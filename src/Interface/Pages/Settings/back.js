@@ -56,13 +56,14 @@ class BackSettings extends PageBase {
     openConsents = () => user.interface.ChangePage('settings_consents', { storeInHistory: false });
 
     /** @param {ComboBoxItem | null} lang */
-    onChangeLang = (lang) => {
+    onChangeLang = async (lang) => {
         if (lang === null || typeof lang.key !== 'string') return;
         this.setState({ cbSelectedLang: lang });
 
         const key = langManager.IsLangAvailable(lang.key);
-        langManager.SetLangage(key);
-        user.settings.IndependentSave();
+        if (key === null) return;
+
+        await user.settings.SetLang(key);
     };
 
     /** @param {number} themeIndex */
@@ -199,6 +200,7 @@ class BackSettings extends PageBase {
      * @private
      */
     DeleteAccount = async (button) => {
+        const lang = langManager.curr['settings'];
         if (button !== 'yes') {
             return;
         }
@@ -215,11 +217,12 @@ class BackSettings extends PageBase {
             response.status !== 'delete-account' ||
             response.result !== 'ok'
         ) {
-            const title = langManager.curr['settings']['alert-deletedfailed-title'];
-            const message = langManager.curr['settings']['alert-deletedfailed-message'];
             user.interface.popup?.OpenT({
                 type: 'ok',
-                data: { title, message },
+                data: {
+                    title: lang['alert-deletedfailed-title'],
+                    message: lang['alert-deletedfailed-message']
+                },
                 callback: () => {
                     this.setState({ sendingMail: false });
                 }
@@ -228,11 +231,12 @@ class BackSettings extends PageBase {
         }
 
         // Mail sent
-        const title = langManager.curr['settings']['alert-deletedmailsent-title'];
-        const message = langManager.curr['settings']['alert-deletedmailsent-message'];
         user.interface.popup?.OpenT({
             type: 'ok',
-            data: { title, message },
+            data: {
+                title: lang['alert-deletedmailsent-title'],
+                message: lang['alert-deletedmailsent-message']
+            },
             callback: () => {
                 this.setState({ sendingMail: false }, () => {
                     user.Disconnect();

@@ -9,7 +9,8 @@ import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Class/TCP').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
 const MAX_EMAIL_LENGTH = 320;
@@ -28,24 +29,24 @@ class BackLogin extends PageBase {
         errorCgu: '',
 
         animSignin: new Animated.Value(0),
-        animSigninBis: new Animated.Value(0)
+        animSigninBis: new Animated.Value(0),
+
+        /** @type {ComboBoxItem} */
+        cbSelectedLang: {
+            key: langManager.currentLangageKey,
+            value: langManager.curr['name']
+        }
     };
 
     /** @param {PageBase['props']} props */
     constructor(props) {
         super(props);
 
-        // Load texts
-        const lang = langManager.curr['login'];
-        this.langs = {
-            pageTitle: lang['page-title'],
-            pageText: lang['page-text'],
-            titleEmail: lang['input-email-title'],
-            titleUsername: lang['input-username-title'],
-            btnLogin: lang['button-login-text'],
-            btnSignin: lang['button-signin-text'],
-            cguTexts: lang['input-cgu-text'].split('%')
-        };
+        /** @type {ComboBoxItem[]} */
+        this.availableLangs = langManager.GetLangsKeys().map((langKey) => ({
+            key: langKey,
+            value: langManager.GetAllLangs()[langKey]['name']
+        }));
     }
 
     componentDidMount() {
@@ -68,6 +69,20 @@ class BackLogin extends PageBase {
                 transition: 'fromBottom'
             });
         }
+    };
+
+    /** @param {ComboBoxItem | null} lang */
+    onChangeLang = async (lang) => {
+        if (lang === null || typeof lang.key !== 'string') return;
+
+        const key = langManager.IsLangAvailable(lang.key);
+        if (key === null) return;
+
+        await user.settings.SetLang(key);
+
+        setTimeout(() => {
+            this.setState({ cbSelectedLang: lang });
+        }, 100);
     };
 
     /** @param {string} newEmail */

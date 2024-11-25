@@ -22,6 +22,17 @@ const styles = StyleSheet.create({
         width: '90%'
     },
 
+    cbLang: {
+        position: 'absolute',
+        top: 24,
+        right: 12,
+        width: 'auto'
+    },
+    cbLangInput: {
+        paddingVertical: 6,
+        paddingHorizontal: 24
+    },
+
     buttonLoginSignin: {
         width: 'auto',
         position: 'absolute',

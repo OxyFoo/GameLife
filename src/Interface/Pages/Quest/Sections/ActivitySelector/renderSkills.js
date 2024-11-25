@@ -37,11 +37,11 @@ function RenderSkill({ item }) {
     const { value, onPress } = item;
 
     const backgroundCard = {
-        backgroundColor: themeManager.GetColor('backgroundInput')
+        backgroundColor: themeManager.GetColor('backgroundCard')
     };
 
     return (
-        <Text style={[styles.activityElement, backgroundCard]} fontSize={22} onPress={onPress}>
+        <Text style={[styles.activityElement, backgroundCard]} fontSize={20} onPress={onPress}>
             {value}
         </Text>
     );

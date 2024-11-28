@@ -999,6 +999,7 @@
         "container-title": "Quest of the day",
         "container-date": "Rewards from {}",
         "container-tomorrow": "Come back tomorrow",
+        "container-todo": "To do",
 
         "label-time": "{0}/{1} min",
         "label-finished": "Quest for the day made, well done!",

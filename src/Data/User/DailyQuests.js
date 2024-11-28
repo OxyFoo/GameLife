@@ -3,6 +3,7 @@ import dataManager from 'Managers/DataManager';
 import { IUserData } from 'Types/Interface/IUserData';
 import { DateFormat } from 'Utils/Date';
 import DynamicVar from 'Utils/DynamicVar';
+import { Random } from 'Utils/Functions';
 import { GetGlobalTime, GetMidnightTime, GetTimeToTomorrow } from 'Utils/Time';
 
 /**
@@ -12,9 +13,24 @@ import { GetGlobalTime, GetMidnightTime, GetTimeToTomorrow } from 'Utils/Time';
  * @typedef {import('Types/Data/User/DailyQuest').SaveObject_DailyQuest} SaveObject_DailyQuest
  *
  * @typedef {'success' | 'claiming' | 'not-up-to-date' | 'wrong-daily-quests' | 'error'} ClaimResult
+ *
+ * @typedef {'none' | 'to-do' | 'to-claim' | 'claim-tomorrow' | 'claimed'} DailyQuestDayStatus
+ *
+ * @typedef {object} DailyQuestDay
+ * @property {number} index
+ * @property {DailyQuestDayStatus} status
+ * @property {import('Class/Rewards').RawReward[]} rewards
  */
 
 const ACTIVITY_MINUTES_PER_DAY = 15;
+
+const DAILYQUEST_MAX_LENGTH = 73;
+
+/** @type {DailyQuestToday} */
+const _INIT_DAILYQUESTS = {
+    selectedCategory: null,
+    progression: 0
+};
 
 /** @extends {IUserData<SaveObject_DailyQuest>} */
 class DailyQuest extends IUserData {
@@ -24,9 +40,8 @@ class DailyQuest extends IUserData {
     /** @type {Symbol | null} */
     #listenerActivities = null;
 
-    /** @type {DynamicVar<DailyQuestToday | null>} */
-    // eslint-disable-next-line prettier/prettier
-    today = new DynamicVar(/** @type {DailyQuestToday | null} */ (null));
+    /** @type {DynamicVar<DailyQuestToday>} */
+    today = new DynamicVar(_INIT_DAILYQUESTS);
 
     /** @type {boolean} Currently claiming (to prevent multiple claims) */
     claiming = false;
@@ -60,7 +75,7 @@ class DailyQuest extends IUserData {
             if (state === 'connected') {
                 this.LoadOnline();
             } else {
-                this.today.Set(null);
+                this.today.Set(_INIT_DAILYQUESTS);
             }
         });
         this.#listenerActivities = this.user.activities.allActivities.AddListener(() => {
@@ -95,33 +110,47 @@ class DailyQuest extends IUserData {
 
         this.today.Set({
             selectedCategory: response.result.categoryID,
-            progression: 0,
-            claimed: false
+            progression: this.GetDailyProgress(response.result.categoryID)
         });
 
         // Update the current activity time to tomorrow
         if (this.#timeout) clearTimeout(this.#timeout);
 
         await this.UpdateActivities();
-        this.#timeout = setTimeout(this.SetupDailyQuests, GetTimeToTomorrow() * 1000);
+        const randomDelta = Random(1, 120);
+        this.#timeout = setTimeout(this.SetupDailyQuests, (GetTimeToTomorrow() + randomDelta) * 1000);
     };
 
     UpdateActivities = async () => {
         const currentQuest = this.today.Get();
 
         // Not initialized yet
-        if (currentQuest === null) {
+        if (currentQuest.selectedCategory === null) {
             return;
         }
 
+        // Check the current progression
+        const currentList = this.GetCurrentList();
         const newProgression = this.GetDailyProgress(currentQuest.selectedCategory);
 
+        // If the current quest is already finished, do nothing
+        if (currentList !== null && this.IsTodayCompleted(currentList)) {
+            return;
+        }
+
+        // If the quest has not started but not completed yet
+        else if (currentList === null && newProgression < ACTIVITY_MINUTES_PER_DAY) {
+            return;
+        }
+
+        // Update the progression
         this.today.Set({
             ...currentQuest,
             progression: newProgression
         });
 
-        if (newProgression < ACTIVITY_MINUTES_PER_DAY && currentQuest.progression >= ACTIVITY_MINUTES_PER_DAY) {
+        // Not enough progression
+        if (newProgression < ACTIVITY_MINUTES_PER_DAY) {
             return;
         }
 
@@ -130,7 +159,7 @@ class DailyQuest extends IUserData {
         const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
 
         // If there is no claim list or the last day is finished, create a new claim list
-        if (claimList === null || claimList.daysCount === 73) {
+        if (claimList === null || claimList.daysCount === DAILYQUEST_MAX_LENGTH) {
             this.#UNSAVED_data.push({
                 start: todayDateStr,
                 daysCount: 1,
@@ -141,21 +170,6 @@ class DailyQuest extends IUserData {
 
         // If the last day is today, increment the days count
         else {
-            const lastDay = new Date(claimList.start + 'T00:00:00');
-            lastDay.setDate(lastDay.getDate() + claimList.daysCount - 1);
-            const lastDayDateStr = DateFormat(lastDay, 'YYYY-MM-DD');
-            lastDay.setDate(lastDay.getDate() + 1);
-            const tomorrowDateStr = DateFormat(lastDay, 'YYYY-MM-DD');
-
-            // Check if the last day is today, if not, do nothing
-            if (todayDateStr !== lastDayDateStr && todayDateStr !== tomorrowDateStr) {
-                this.user.interface.console?.AddLog(
-                    'error',
-                    `[DailyQuest] Last day is not today ${todayDateStr} => ${lastDayDateStr}/${tomorrowDateStr}`
-                );
-                return;
-            }
-
             // Remove the list from SAVED
             this.#SAVED_data = this.#SAVED_data.filter((claim) => claim.start !== claimList.start);
 
@@ -171,11 +185,7 @@ class DailyQuest extends IUserData {
     };
 
     Clear = () => {
-        this.today.Set({
-            selectedCategory: 0,
-            progression: 0,
-            claimed: false
-        });
+        this.today.Set(_INIT_DAILYQUESTS);
         this.claimsList.Set([]);
         this.#SAVED_data = [];
         this.#UNSAVED_data = [];
@@ -288,6 +298,9 @@ class DailyQuest extends IUserData {
         this.claimsList.Set([...this.#SAVED_data]);
     };
 
+    /**
+     * @returns {number} Index of the current claim list or -1 if there is no current claim list
+     */
     GetCurrentClaimIndex = () => {
         const claimsList = this.claimsList.Get();
 
@@ -304,17 +317,34 @@ class DailyQuest extends IUserData {
 
     /** @param {DailyQuestData} claimList */
     IsCurrentList(claimList) {
-        const tmpDate = new Date(claimList.start + 'T00:00:00');
         const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
+        const tmpDate = new Date(claimList.start + 'T00:00:00');
 
         // Check if the last day is today
-        tmpDate.setDate(tmpDate.getDate() + claimList.daysCount);
-        const lastDateWithRewardStr = DateFormat(tmpDate, 'YYYY-MM-DD');
-        tmpDate.setDate(tmpDate.getDate() - 1);
-        const lastDate = DateFormat(tmpDate, 'YYYY-MM-DD');
+        tmpDate.setDate(tmpDate.getDate() + claimList.daysCount - 1);
+        const lastDateStrWithoutComplete = DateFormat(tmpDate, 'YYYY-MM-DD');
+        tmpDate.setDate(tmpDate.getDate() + 1);
+        const lastDateStrWithComplete = DateFormat(tmpDate, 'YYYY-MM-DD');
 
-        return todayDateStr === lastDate || todayDateStr === lastDateWithRewardStr;
+        return todayDateStr === lastDateStrWithComplete || todayDateStr === lastDateStrWithoutComplete;
     }
+
+    /**
+     * Check if the current day is completed (only for the current existing list)
+     * @param {DailyQuestData} claimList
+     * @returns {boolean}
+     */
+    IsTodayCompleted = (claimList) => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowDateStr = DateFormat(tomorrow, 'YYYY-MM-DD');
+
+        const tmpDate = new Date(claimList.start + 'T00:00:00');
+        tmpDate.setDate(tmpDate.getDate() + claimList.daysCount);
+        const lastDateStr = DateFormat(tmpDate, 'YYYY-MM-DD');
+
+        return tomorrowDateStr === lastDateStr;
+    };
 
     GetCurrentList = () => {
         const claimLists = this.claimsList.Get();
@@ -389,11 +419,6 @@ class DailyQuest extends IUserData {
             return 'claiming';
         }
 
-        const currentQuest = this.GetCurrentList();
-        if (currentQuest === null || currentQuest.start !== claimListStart) {
-            return 'error';
-        }
-
         this.claiming = true;
 
         const response = await this.user.server2.tcp.SendAndWait({
@@ -440,6 +465,111 @@ class DailyQuest extends IUserData {
         this.claiming = false;
         this.claimsList.Set([...this.#SAVED_data, ...this.#UNSAVED_data]);
         return 'success';
+    };
+
+    /**
+     * @param {DailyQuestData | null} claimList Null to get the default list
+     * @returns {DailyQuestDay[]}
+     */
+    GetClaimDays = (claimList) => {
+        const today = this.today.Get();
+
+        // If not initialized: return default list
+        if (today === null || claimList === null) {
+            const dailyQuestsRewards = dataManager.dailyQuestsRewards.Get();
+            return dailyQuestsRewards.map((reward, index) => ({
+                index,
+                status: index === 0 ? 'to-do' : index === 1 ? 'claim-tomorrow' : 'none',
+                rewards: reward.rewards
+            }));
+        }
+
+        // Get the start date
+        const tmpDate = new Date(claimList.start + 'T00:00:00');
+        const todayDateStr = DateFormat(new Date(), 'YYYY-MM-DD');
+
+        // Get the rewards
+        const dailyQuestsRewards = dataManager.dailyQuestsRewards.Get();
+
+        /** @type {DailyQuestDay[]} */
+        const days = [];
+
+        /** @type {'before' | 'today' | 'tomorrow' | 'after'} */
+        let daysPosition = 'before';
+
+        for (let i = 0; i < DAILYQUEST_MAX_LENGTH; i++) {
+            const currentDateStr = DateFormat(tmpDate, 'YYYY-MM-DD');
+
+            if (daysPosition === 'before' && currentDateStr === todayDateStr) {
+                daysPosition = 'today';
+            } else if (daysPosition === 'today' /* Assuming the list progresses linearly into future days */) {
+                daysPosition = 'tomorrow';
+            } else if (daysPosition === 'tomorrow' /* Same */) {
+                daysPosition = 'after';
+            }
+
+            const isClaimed = claimList.claimed.includes(i);
+
+            /** @type {DailyQuestDayStatus} */
+            let status = 'none';
+
+            if (daysPosition === 'before') {
+                if (!isClaimed) {
+                    status = 'to-claim';
+                } else {
+                    status = 'claimed';
+                }
+            } else if (daysPosition === 'today') {
+                if (today.progression < ACTIVITY_MINUTES_PER_DAY) {
+                    status = 'to-do';
+                } else if (!isClaimed) {
+                    status = 'to-claim';
+                } else {
+                    status = 'claimed';
+                }
+            } else if (daysPosition === 'tomorrow') {
+                status = 'claim-tomorrow';
+            }
+
+            // Get rewards from app data
+            /** @type {DailyQuestDay['rewards']} */
+            const rewards = dailyQuestsRewards.find((r) => r.index === i)?.rewards ?? [];
+
+            days.push({
+                index: i,
+                status,
+                rewards
+            });
+
+            // Increment the date
+            tmpDate.setDate(tmpDate.getDate() + 1);
+        }
+
+        return days;
+    };
+
+    /**
+     * @param {DailyQuestData} claimList
+     * @returns {number} Streak
+     */
+    GetStreak = (claimList) => {
+        return claimList.claimed.length;
+    };
+
+    /**
+     * @param {DailyQuestData} claimList
+     * @returns {number}
+     */
+    GetLastUnclaimedDayIndex = (claimList) => {
+        let i;
+
+        for (i = 0; i < claimList.daysCount; i++) {
+            if (!claimList.claimed.includes(i)) {
+                break;
+            }
+        }
+
+        return i;
     };
 }
 

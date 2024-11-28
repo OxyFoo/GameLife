@@ -999,6 +999,7 @@
         "container-title": "Quête du jour",
         "container-date": "Récompenses du {}",
         "container-tomorrow": "Reviens demain",
+        "container-todo": "A faire",
 
         "label-time": "{0}/{1} min",
         "label-finished": "Quête du jour réalisée, bravo !",

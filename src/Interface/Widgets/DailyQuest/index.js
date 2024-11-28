@@ -24,11 +24,11 @@ import { OnlineView } from 'Interface/Primitives';
 class DailyQuest extends DailyQuestBack {
     render() {
         const { style } = this.props;
-        const { claimDay } = this.state;
+        const { claimStreak } = this.state;
 
         return (
             <OnlineView offlineView={this.renderNoInternet()}>
-                <this.renderContainer style={style} showStreak={claimDay} onStreakPress={this.openRewardPopup}>
+                <this.renderContainer style={style} showStreak={claimStreak} onStreakPress={this.openRewardPopup}>
                     {this.renderQuest()}
                 </this.renderContainer>
             </OnlineView>
@@ -94,41 +94,53 @@ class DailyQuest extends DailyQuestBack {
     }
 
     renderQuest = () => {
-        const lang = langManager.curr['daily-quest'];
-        const { dailyQuest, claimIndex, claimDay, claimDate } = this.state;
+        const { dailyQuest } = this.state;
+        const { selectedCategory, progression } = dailyQuest;
 
-        const category = dataManager.skills.GetCategoryByID(dailyQuest?.selectedCategory ?? 0);
-
-        // No daily quest or category
-        if (dailyQuest === null || category === null) {
+        if (selectedCategory === null) {
             return this.renderNoQuest();
         }
 
-        const { progression } = dailyQuest;
+        // No daily quest or category
+        const category = dataManager.skills.GetCategoryByID(selectedCategory);
+        if (category === null) {
+            return this.renderNoQuest();
+        }
 
         // Daily quest is finished
         if (progression >= ACTIVITY_MINUTES_PER_DAY) {
-            return (
-                <View style={styles.viewFinished}>
-                    {/* Claim date if not last streak */}
-                    {claimDate !== null && (
-                        <Text style={styles.containerDateText}>{lang['container-date'].replace('{}', claimDate)}</Text>
-                    )}
-
-                    <Text>{lang['label-finished']}</Text>
-                    <RenderItemMemo style={styles.dailyFinished} index={claimDay} claimIndex={claimIndex} />
-                </View>
-            );
+            return this.renderQuestFinished();
         }
 
-        return this.renderProgression(dailyQuest, category);
+        return this.renderQuestProgression(dailyQuest, category);
+    };
+
+    renderQuestFinished = () => {
+        const lang = langManager.curr['daily-quest'];
+        const { claimListIndex, claimDay, claimDate } = this.state;
+
+        if (claimDay === null) {
+            return this.renderNoQuest();
+        }
+
+        return (
+            <View style={styles.viewFinished}>
+                {/* Claim date if not last streak */}
+                {claimDate !== null && (
+                    <Text style={styles.containerDateText}>{lang['container-date'].replace('{}', claimDate)}</Text>
+                )}
+
+                <Text>{lang['label-finished']}</Text>
+                <RenderItemMemo style={styles.dailyFinished} item={claimDay} claimListIndex={claimListIndex} />
+            </View>
+        );
     };
 
     /**
      * @param {DailyQuestToday} dailyQuest
      * @param {SkillCategory} category
      */
-    renderProgression = (dailyQuest, category) => {
+    renderQuestProgression = (dailyQuest, category) => {
         const lang = langManager.curr['daily-quest'];
         const { progression } = dailyQuest;
 
@@ -148,13 +160,7 @@ class DailyQuest extends DailyQuestBack {
                             // @ts-ignore
                             color={category.Color}
                         />
-                        <Text
-                            style={styles.titleCategory}
-                            // @ts-ignore
-                            color={category.Color}
-                        >
-                            {langManager.GetText(category.Name)}
-                        </Text>
+                        <Text style={styles.titleCategory}>{langManager.GetText(category.Name)}</Text>
                     </View>
                     <View style={styles.columnTitle}>
                         <Text style={styles.title}>{titleTime}</Text>
@@ -170,14 +176,11 @@ class DailyQuest extends DailyQuestBack {
 
     renderNoQuest = () => {
         const lang = langManager.curr['daily-quest'];
-        const { style } = this.props;
 
         return (
-            <this.renderContainer style={style} showStreak={null}>
-                <View style={styles.viewNoInternet}>
-                    <Text style={styles.textNoInternet}>{lang['no-quest']}</Text>
-                </View>
-            </this.renderContainer>
+            <View style={styles.viewNoInternet}>
+                <Text style={styles.textNoInternet}>{lang['no-quest']}</Text>
+            </View>
         );
     };
 

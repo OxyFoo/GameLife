@@ -5,7 +5,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import styles from './style';
 import { RenderItemMemo } from './element';
 import user from 'Managers/UserManager';
-import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Button, Text } from 'Interface/Components';
@@ -18,9 +17,14 @@ let timeout;
 function RenderPopup(_props) {
     const lang = langManager.curr['daily-quest'];
 
-    const claimsList = user.dailyQuest.claimsList.Get();
-    const [claimIndex, setClaimIndex] = React.useState(user.dailyQuest.GetCurrentClaimIndex());
+    const _init_claimsList = user.dailyQuest.claimsList.Get();
+    const _init_index = user.dailyQuest.GetCurrentClaimIndex();
+
+    const [claimIndex, setClaimIndex] = React.useState(_init_index);
     const [claimCount, setClaimCount] = React.useState(0);
+    const [claimDays, setClaimDays] = React.useState(
+        user.dailyQuest.GetClaimDays(_init_index === -1 ? null : _init_claimsList[_init_index])
+    );
 
     React.useEffect(() => {
         const listener = user.dailyQuest.claimsList.AddListener((_claimsList) => {
@@ -31,22 +35,29 @@ function RenderPopup(_props) {
         });
 
         return () => {
+            clearTimeout(timeout);
             user.dailyQuest.claimsList.RemoveListener(listener);
         };
     }, []);
 
     React.useEffect(() => {
+        const claimsList = user.dailyQuest.claimsList.Get();
         if (claimIndex !== -1) {
             const claimTotal = claimsList[claimIndex].daysCount;
             const claimedCount = claimsList[claimIndex].claimed.length;
             setClaimCount(claimTotal - claimedCount);
+            setClaimDays(user.dailyQuest.GetClaimDays(claimsList[claimIndex]));
         }
-    }, [claimIndex, claimsList]);
+    }, [claimIndex]);
+
+    if (claimDays === null) {
+        return null;
+    }
 
     let claimDate = null;
     let isCurrentStreak = false;
-    if (claimsList.length > 0) {
-        const currentClaimList = claimsList[claimIndex];
+    if (claimIndex !== -1 && _init_claimsList.length > 0) {
+        const currentClaimList = _init_claimsList[claimIndex];
         isCurrentStreak = user.dailyQuest.IsCurrentList(currentClaimList);
         if (!isCurrentStreak) {
             claimDate = DateFormat(new Date(currentClaimList.start + 'T00:00:00'), 'DD/MM/YYYY');
@@ -69,10 +80,10 @@ function RenderPopup(_props) {
             )}
 
             <FlatList
-                data={dataManager.dailyQuestsRewards.Get()}
+                data={claimDays}
                 keyExtractor={(item) => item.index.toString()}
                 initialNumToRender={10}
-                renderItem={(props) => <RenderItemMemo index={props.index} claimIndex={claimIndex} />}
+                renderItem={(props) => <RenderItemMemo item={props.item} claimListIndex={claimIndex} />}
                 ListHeaderComponent={<View style={styles.separatorFirst} />}
                 ItemSeparatorComponent={RenderSeparator}
                 getItemLayout={(_data, index) => ({ length: 68, offset: 68 * index, index })}

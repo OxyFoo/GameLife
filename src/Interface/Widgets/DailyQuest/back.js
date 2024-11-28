@@ -8,6 +8,8 @@ import { DateFormat } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ *
+ * @typedef {import('Data/User/DailyQuests').DailyQuestDay} DailyQuestDay
  */
 
 const DailyQuestProps = {
@@ -19,8 +21,11 @@ class DailyQuestBack extends React.Component {
     state = {
         dailyQuest: user.dailyQuest.today.Get(),
 
-        claimIndex: -1,
-        claimDay: 0,
+        claimListIndex: -1,
+        /** @type {DailyQuestDay | null} */
+        claimDay: null,
+        claimStreak: 0,
+        /** @type {string | null} */
         claimDate: null
     };
 
@@ -31,11 +36,7 @@ class DailyQuestBack extends React.Component {
     claimListsListener = null;
 
     componentDidMount() {
-        this.updateClaimList();
-
-        this.dailyQuestListener = user.dailyQuest.today.AddListener((dailyQuest) => {
-            this.setState({ dailyQuest });
-        });
+        this.dailyQuestListener = user.dailyQuest.today.AddListener(this.updateClaimList);
         this.claimListsListener = user.dailyQuest.claimsList.AddListener(this.updateClaimList);
     }
 
@@ -45,25 +46,39 @@ class DailyQuestBack extends React.Component {
     }
 
     updateClaimList = () => {
-        let claimDay = 0;
+        const claimListIndex = user.dailyQuest.GetCurrentClaimIndex();
+
+        /** @type {this['state']['claimDay']} */
+        let claimDay = null;
+
+        /** @type {this['state']['claimStreak']} */
+        let claimStreak = 0;
+
+        /** @type {this['state']['claimDate']} */
         let claimDate = null;
 
-        const claimIndex = user.dailyQuest.GetCurrentClaimIndex();
         const claimLists = user.dailyQuest.claimsList.Get();
-        const claimList = claimLists[claimIndex];
-        if (claimIndex !== -1) {
-            for (claimDay = 0; claimDay < claimList.daysCount; claimDay++) {
-                if (!claimList.claimed.includes(claimDay + 1)) break;
-            }
+
+        if (claimListIndex !== -1) {
+            const claimList = claimLists[claimListIndex];
+            const claimDays = user.dailyQuest.GetClaimDays(claimList);
+            const claimDayIndex = user.dailyQuest.GetLastUnclaimedDayIndex(claimList);
+
+            claimDay = claimDays.find((day) => day.index === claimDayIndex) || null;
+            claimStreak = user.dailyQuest.GetStreak(claimList);
             if (!user.dailyQuest.IsCurrentList(claimList)) {
                 claimDate = DateFormat(new Date(claimList.start + 'T00:00:00'), 'DD/MM/YYYY');
             }
+        } else {
+            const claimDays = user.dailyQuest.GetClaimDays(null);
+            claimDay = claimDays[0];
         }
 
         this.setState({
             dailyQuest: user.dailyQuest.today.Get(),
-            claimIndex,
+            claimListIndex,
             claimDay,
+            claimStreak,
             claimDate
         });
     };

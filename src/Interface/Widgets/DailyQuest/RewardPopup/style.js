@@ -88,6 +88,9 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 12
     },
+    claimTodayProgressbar: {
+        marginTop: 4
+    },
     claimTomorrow: {
         marginRight: 0,
         fontSize: 16

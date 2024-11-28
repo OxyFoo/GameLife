@@ -406,6 +406,9 @@ class Server {
      * @returns {Promise<object | null>} Return response from server or null if failed
      */
     async Request(type, data = {}, force = false) {
+        this.user.interface.console?.AddLog('error', '[Server] DEPRECATED SERVER!', { type, data, force });
+        return;
+
         let reqData = { action: type, ...data };
         if (this.token || force) {
             reqData['token'] = this.token;

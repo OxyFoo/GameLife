@@ -64,7 +64,7 @@ class Settings extends IUserClass {
             return;
         }
 
-        if (typeof settings.lang !== 'undefined') this.SetLang(settings.lang);
+        if (typeof settings.lang !== 'undefined') this.SetLang(settings.lang, true);
         if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
         if (typeof settings.email !== 'undefined') this.email = settings.email;
         if (typeof settings.token !== 'undefined') this.token = settings.token;
@@ -107,9 +107,9 @@ class Settings extends IUserClass {
 
         const status = await DataStorage.Save(STORAGE.LOGIN, settings);
 
-        const statusText = status ? 'success' : 'failed';
-        const statusType = status ? 'same' : 'error';
         if (debugIndex) {
+            const statusText = status ? 'success' : 'failed';
+            const statusType = status ? 'same' : 'error';
             this.user.interface.console?.EditLog(debugIndex, statusType, 'Settings data: local save ' + statusText);
         }
 
@@ -119,8 +119,9 @@ class Settings extends IUserClass {
     /**
      * @description Save the language locally and online if possible
      * @param {LangKey} lang
+     * @param {boolean} bypassSave
      */
-    SetLang = async (lang) => {
+    SetLang = async (lang, bypassSave = false) => {
         // Already set
         if (lang === langManager.currentLangageKey) {
             return true;
@@ -128,6 +129,10 @@ class Settings extends IUserClass {
 
         // Update language locally
         langManager.SetLangage(lang);
+
+        if (bypassSave) {
+            return;
+        }
 
         if (!this.user.server2.IsAuthenticated()) {
             return await this.IndependentSave();

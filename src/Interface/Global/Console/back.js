@@ -62,12 +62,19 @@ class ConsoleBack extends React.Component {
         }
     }
 
-    Enable = () => {
+    Enable = async () => {
         if (this.state.enabled) {
             return;
         }
-        this.setState({ enabled: true }, this.processQueue);
+
         TimingAnimation(this.state.animation, 0, 400).start();
+
+        return new Promise((resolve) => {
+            this.setState({ enabled: true }, async () => {
+                await this.processQueue();
+                resolve(null);
+            });
+        });
     };
     Disable = () => {
         if (!this.state.enabled) {

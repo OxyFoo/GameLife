@@ -23,10 +23,13 @@ import { CheckDate } from 'Utils/DateCheck';
  * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
  */
 async function Initialisation(fe, nextStep, nextPage, callbackError) {
-    const time_start = performance.now();
+    if (__DEV__) {
+        await user.interface.console?.Enable();
+    }
 
-    // TODO: Remove
-    user.interface.console?.Enable();
+    user.interface.console?.AddLog('info', 'Initialisation...');
+
+    const time_start = performance.now();
 
     // Load important data
     await user.settings.IndependentLoad();

@@ -17,8 +17,8 @@ class Popup extends PopupBack {
     render() {
         const { currents } = this.state;
 
-        return currents.map((current, i) => (
-            <React.Fragment key={`${i}-${Math.random()}`}>{this.renderPopup(current)}</React.Fragment>
+        return currents.map((current) => (
+            <React.Fragment key={`${current.ID}`}>{this.renderPopup(current)}</React.Fragment>
         ));
     }
 

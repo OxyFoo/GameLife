@@ -80,7 +80,7 @@ class BackProfileEditor extends React.PureComponent {
                 title: lang['alert-usernamewarning-title'],
                 message: lang['alert-usernamewarning-message'].replace('{}', info.total.toString())
             },
-            callback: this.openChangeUsernamePopup,
+            callback: this.openUsernamePopup,
             priority: true
         });
     };
@@ -118,7 +118,7 @@ class BackProfileEditor extends React.PureComponent {
         });
     };
 
-    dtpOpen = () => {
+    handleChangeBirthtime = () => {
         const lang = langManager.curr['profile'];
         const info = user.informations.GetInfoToChangeBirthtime();
 
@@ -136,16 +136,19 @@ class BackProfileEditor extends React.PureComponent {
         }
 
         // Confirmation before changing age
-        const title = lang['alert-birthtimewarning-title'];
-        const message = lang['alert-birthtimewarning-message'].replace('{}', info.total.toString());
         user.interface.popup?.OpenT({
             type: 'ok',
-            data: { title, message },
-            callback: () => {
-                this.setState({ stateDTP: 'date' });
+            data: {
+                title: lang['alert-birthtimewarning-title'],
+                message: lang['alert-birthtimewarning-message'].replace('{}', info.total.toString())
             },
+            callback: this.dtpOpen,
             priority: true
         });
+    };
+
+    dtpOpen = () => {
+        this.setState({ stateDTP: 'date' });
     };
 
     /** @type {DateTimePickerModal['props']['onConfirm']} */
@@ -182,7 +185,7 @@ class BackProfileEditor extends React.PureComponent {
         this.setState({ stateDTP: '' });
     };
 
-    openChangeUsernamePopup = () => {
+    openUsernamePopup = () => {
         const lang = langManager.curr['profile'];
         user.interface.screenInput?.Open({
             label: lang['input-username'],
@@ -208,7 +211,7 @@ class BackProfileEditor extends React.PureComponent {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message },
-                callback: this.openChangeUsernamePopup,
+                callback: this.openUsernamePopup,
                 priority: true
             });
         } else if (state === 'usernameIsAlreadyChanged') {
@@ -226,7 +229,7 @@ class BackProfileEditor extends React.PureComponent {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message },
-                callback: this.openChangeUsernamePopup,
+                callback: this.openUsernamePopup,
                 priority: true
             });
         } else if (state === 'error') {
@@ -235,7 +238,7 @@ class BackProfileEditor extends React.PureComponent {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title, message },
-                callback: this.openChangeUsernamePopup,
+                callback: this.openUsernamePopup,
                 priority: true
             });
         }

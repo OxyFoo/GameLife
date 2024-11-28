@@ -48,7 +48,7 @@ class ProfileEditor extends BackProfileEditor {
 
                 <View style={styles.row}>
                     <Text style={styles.text}>{age}</Text>
-                    <Button style={styles.buttonEdit} onPress={this.dtpOpen} fontSize={12} color='main1'>
+                    <Button style={styles.buttonEdit} onPress={this.handleChangeBirthtime} fontSize={12} color='main1'>
                         {lang['input-edit']}
                     </Button>
                 </View>

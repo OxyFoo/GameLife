@@ -107,10 +107,7 @@ class Informations extends IUserData {
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({
-            action: 'get-user-data',
-            tokenData: this.user.settings.dataToken
-        });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-user-data' });
 
         // Check if response is valid
         if (
@@ -138,15 +135,49 @@ class Informations extends IUserData {
         return true;
     };
 
-    IsUnsaved = () => {
+    SaveOnline = async () => {
+        if (!this.#isUnsaved()) {
+            return true;
+        }
+
+        const unsaved = this.#getUnsaved();
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'set-user-data', ...unsaved });
+
+        // Check if response is valid
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'set-user-data' ||
+            response.result === 'error'
+        ) {
+            this.user.interface.console?.AddLog('error', '[Informations] Failed to save user data online:', response);
+            return false;
+        }
+
+        this.#purge();
+
+        return true;
+    };
+
+    #isUnsaved = () => {
         return this.UNSAVED_title !== null || this.UNSAVED_birthTime !== null;
     };
-    Purge = () => {
+
+    #getUnsaved = () => {
+        return {
+            titleID: this.UNSAVED_title,
+            birthtime: this.UNSAVED_birthTime
+        };
+    };
+
+    #purge = () => {
         this.UNSAVED_title = null;
         this.UNSAVED_birthTime = null;
     };
 
     /**
+     * Online request to change username
      * @param {string} username
      * @returns {Promise<ServerRequestSetUsername['result'] | null>}
      */

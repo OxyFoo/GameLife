@@ -4,6 +4,7 @@ import { Animated } from 'react-native';
 import { POPUP_TEMPLATES } from './templates';
 import user from 'Managers/UserManager';
 
+import { RandomString } from 'Utils/Functions';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
@@ -39,6 +40,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 /**
  * @template {any} T
  * @typedef {Object} PopupQueueType
+ * @property {string} ID
  * @property {React.ReactNode} content
  * @property {boolean} [priority=false] If true, popup will be opened immediately
  * @property {(button: T | 'closed') => void} [callback=() => {}]
@@ -80,6 +82,7 @@ class PopupBack extends React.PureComponent {
     Open = async (params) => {
         /** @type {PopupQueueType<T>} */
         const newPopup = {
+            ID: RandomString(8),
             content: params.content,
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),
@@ -107,6 +110,7 @@ class PopupBack extends React.PureComponent {
 
         /** @type {PopupQueueType<PopupTemplatesProps[T]>} */
         const newPopup = {
+            ID: RandomString(8),
             content: <PopupTemplate data={params.data} close={this.Close} />,
             priority: params?.priority ?? false,
             callback: params?.callback ?? (() => {}),

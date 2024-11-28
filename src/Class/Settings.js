@@ -30,7 +30,6 @@ class Settings extends IUserClass {
 
     email = '';
     token = '';
-    dataToken = '';
     onboardingWatched = false;
     testMessageReaded = false;
     tutoFinished = false;
@@ -44,7 +43,6 @@ class Settings extends IUserClass {
     Clear = () => {
         this.email = '';
         this.token = '';
-        this.dataToken = '';
         this.testMessageReaded = false;
         this.questHeatMapIndex = 0;
 
@@ -68,7 +66,6 @@ class Settings extends IUserClass {
         if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
         if (typeof settings.email !== 'undefined') this.email = settings.email;
         if (typeof settings.token !== 'undefined') this.token = settings.token;
-        if (typeof settings.dataToken !== 'undefined') this.dataToken = settings.dataToken;
         if (typeof settings.onboardingWatched !== 'undefined') this.onboardingWatched = settings.onboardingWatched;
         if (typeof settings.testMessageReaded !== 'undefined') this.testMessageReaded = settings.testMessageReaded;
         if (typeof settings.tutoFinished !== 'undefined') this.tutoFinished = settings.tutoFinished;
@@ -93,7 +90,6 @@ class Settings extends IUserClass {
             theme: themeManager.selectedTheme,
             email: this.email,
             token: this.token,
-            dataToken: this.dataToken,
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,

@@ -41,7 +41,6 @@ class Test extends BackTest {
                 {this.renderInputText()}
                 {this.renderPopups()}
                 {this.renderBottomPanel()}
-                {this.renderBottomList()}
                 {this.renderIcons()}
                 {this.renderSwitches()}
                 {this.renderSwitchText()}
@@ -216,22 +215,6 @@ class Test extends BackTest {
                     icon='planner-outline'
                 >
                     {'Ouvrir un grand BottomPanel'}
-                </Button>
-            </View>
-        );
-    };
-
-    renderBottomList = () => {
-        return (
-            <View>
-                {this.renderTitle('BottomList')}
-                <Button
-                    style={styles.marginBot}
-                    onPress={this.openBottomList}
-                    appearance={this.state.selectedButon}
-                    icon='planner-outline'
-                >
-                    {'Ouvrir une BottomList'}
                 </Button>
             </View>
         );

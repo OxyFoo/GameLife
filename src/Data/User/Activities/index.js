@@ -95,9 +95,10 @@ class Activities extends IUserData {
 
     /**
      * Return all activities (save and unsaved) sorted by start time (ascending)
+     * @param {boolean} [forceRefresh=false]
      * @returns {(Activity | ActivitySaved)[]}
      */
-    Get = () => {
+    Get = (forceRefresh = false) => {
         // Generate cache ID
         const id = [
             this.#SAVED_activities.length,
@@ -107,7 +108,7 @@ class Activities extends IUserData {
         ].join('-');
 
         // If cache is not up to date, update it
-        if (id !== this.#cache_get.id) {
+        if (id !== this.#cache_get.id || forceRefresh) {
             // Get saved activities
             const savedActivities = [...this.#SAVED_activities];
 
@@ -197,14 +198,21 @@ class Activities extends IUserData {
         // Add activities
         this.#SAVED_activities = [];
         for (let i = 0; i < response.result.activities.length; i++) {
-            this.Add(response.result.activities[i], true);
+            const { status } = this.Add(response.result.activities[i], true);
+            if (status !== 'added') {
+                this.user.interface.console?.AddLog(
+                    'error',
+                    `[Activities] Failed to load activity ${response.result.activities[i].ID} (${status})`
+                );
+                return false;
+            }
         }
 
         // Update last update
         this.#token = response.result.token;
 
         // Update and print message
-        this.allActivities.Set(this.Get());
+        this.allActivities.Set(this.Get(true));
         this.user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities loaded`);
         return true;
     };
@@ -425,7 +433,7 @@ class Activities extends IUserData {
     // eslint-disable-next-line prettier/prettier
     Add(newActivity, alreadySaved = /** @type {T} */ (false)) {
         newActivity.timezone ||= GetTimeZone();
-        newActivity.addedTime ||= GetLocalTime(undefined);
+        newActivity.addedTime ||= GetLocalTime();
 
         // Limit date (< 2020-01-01)
         if (newActivity.startTime < 1577836800) {
@@ -458,24 +466,34 @@ class Activities extends IUserData {
      * @returns {{ status: EditStatus, activity: Activity | null }}
      */
     Edit(activity, newActivity, confirm = false) {
+        /** @type {Activity} */
+        const editedActivity = {
+            ...newActivity,
+            timezone: GetTimeZone(),
+            addedTime: GetLocalTime()
+        };
+
         // Limit date (< 2020-01-01)
-        if (newActivity.startTime < 1577836800) {
+        if (editedActivity.startTime < 1577836800) {
             return { status: 'tooEarly', activity: null };
         }
 
         // Activity is not free
-        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.Get(), [activity])) {
+        if (!this.TimeIsFree(editedActivity.startTime, editedActivity.duration, this.Get(), [activity])) {
             return { status: 'notFree', activity: null };
         }
+
+        const bigEdit =
+            editedActivity.skillID !== activity.skillID ||
+            editedActivity.startTime !== activity.startTime ||
+            editedActivity.duration !== activity.duration;
+
         // If edit is important and more than 48h after start time, ask for confirmation
-        const tempNewActivity = { ...newActivity };
         if (
             !confirm &&
-            (newActivity.skillID !== activity.skillID ||
-                newActivity.startTime !== activity.startTime ||
-                newActivity.duration !== activity.duration) &&
+            bigEdit &&
             this.GetExperienceStatus(activity) === 'grant' &&
-            this.GetExperienceStatus(tempNewActivity) === 'beforeLimit'
+            this.GetExperienceStatus(editedActivity) === 'beforeLimit'
         ) {
             return { status: 'needConfirmation', activity: null };
         }
@@ -487,7 +505,7 @@ class Activities extends IUserData {
             // eslint-disable-next-line prettier/prettier
             const _activity = /** @type {ActivitySaved} */ (activity);
             // eslint-disable-next-line prettier/prettier
-            const _newActivity = /** @type {ActivitySaved} */ (newActivity);
+            const _newActivity = /** @type {ActivitySaved} */ (bigEdit ? editedActivity : newActivity);
 
             // Activity does not exist
             const indexUnsavedAdd = this.#SAVED_activities.findIndex((act) => act.ID === _activity.ID);
@@ -511,7 +529,7 @@ class Activities extends IUserData {
             // eslint-disable-next-line prettier/prettier
             const _activity = /** @type {Activity} */ (activity);
             // eslint-disable-next-line prettier/prettier
-            const _newActivity = /** @type {Activity} */ (newActivity);
+            const _newActivity = /** @type {Activity} */ (bigEdit ? editedActivity : newActivity);
 
             const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, _activity);
 
@@ -525,7 +543,7 @@ class Activities extends IUserData {
         }
 
         this.allActivities.Set(this.Get());
-        return { status: 'edited', activity: newActivity };
+        return { status: 'edited', activity: editedActivity };
     }
 
     /**

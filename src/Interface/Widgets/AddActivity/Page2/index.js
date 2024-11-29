@@ -23,13 +23,18 @@ class AddActivityPage2 extends BackActivityPage2 {
                     styleContent={styles.headerButtonContent}
                     appearance='outline'
                     fontColor='primary'
-                    borderColor='main1'
+                    // @ts-ignore
+                    borderColor={this.categoryColor}
                     onPress={unSelectActivity}
                     onLongPress={this.openSkill}
                 >
                     <Icon icon='arrow-left' />
                     <View style={styles.headerButtonActivity}>
-                        <Icon xml={this.xmlIcon} />
+                        <Icon
+                            // @ts-ignore
+                            color={this.categoryColor}
+                            xml={this.xmlIcon}
+                        />
                         <Text style={styles.headerButtonText}>{this.activityText}</Text>
                     </View>
                     <View />

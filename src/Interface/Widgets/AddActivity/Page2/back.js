@@ -33,6 +33,8 @@ class BackActivityPage2 extends React.Component {
     /** @type {string | null} */
     xmlIcon = null;
 
+    categoryColor = 'main1';
+
     /** @param {BackActivityPage2PropsType} props */
     constructor(props) {
         super(props);
@@ -53,6 +55,7 @@ class BackActivityPage2 extends React.Component {
         const categoryName = langManager.GetText(category.Name);
         this.activityText = `${categoryName} - ${skillName}`;
         this.xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID || category.LogoID);
+        this.categoryColor = category.Color;
     }
 
     openSkill = () => {

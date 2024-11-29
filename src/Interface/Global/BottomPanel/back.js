@@ -53,18 +53,22 @@ class BottomPanelBack extends React.Component {
             return;
         }
 
-        this.opened = true;
+        this.opening = true;
         this.mover.scrollEnabled = true;
+
+        // Set default values
+        this.mover.panel.height = 0;
         this.mover.panel.maxPosY = params.maxPosY ?? user.interface.size.height * 0.9;
         this.mover.panel.minPosY = params.minPosY ?? this.mover.panel.maxPosY;
         if (this.mover.panel.minPosY > this.mover.panel.maxPosY) {
             this.mover.panel.minPosY = this.mover.panel.maxPosY;
         }
 
+        // Open animation
         user.interface.navBar?.onOpenBottomPanel();
         TimingAnimation(this.state.animOpacity, 1, 200).start();
         this.setState({ state: 'opening', current: params }, () => {
-            this.opened = false;
+            this.opening = false;
         });
 
         user.interface.AddCustomBackHandler(this._close);
@@ -78,8 +82,9 @@ class BottomPanelBack extends React.Component {
     /**
      * Close the screen list
      * @param {boolean} [triggerNavbarRefresh] Trigger navbar refresh
+     * @returns {Promise<void>}
      */
-    Close = (triggerNavbarRefresh = false) => {
+    Close = async (triggerNavbarRefresh = false) => {
         if (this.state.state !== 'opened') {
             return;
         }
@@ -95,18 +100,20 @@ class BottomPanelBack extends React.Component {
         this.mover.UnsetScrollView();
 
         // Close state to enable click through
-        this.setState({ state: 'closed' }, () => {
-            this.state.current?.onClose?.();
-            user.interface.navBar?.onCloseBottomPanel();
+        return new Promise((resolve) => {
+            this.setState({ state: 'closed' }, () => {
+                this.state.current?.onClose?.();
+                user.interface.navBar?.onCloseBottomPanel();
 
-            setTimeout(() => {
-                // Reset state (wait for the animation to finish)
-                this.setState({ current: null });
-                this.mover.events.isClosing = false;
-            }, 150);
+                setTimeout(() => {
+                    // Reset state (wait for the animation to finish)
+                    this.setState({ current: null }, () => {
+                        resolve();
+                    });
+                    this.mover.events.isClosing = false;
+                }, 150);
+            });
         });
-
-        return;
     };
 
     IsOpened = () => this.state.state === 'opened' || this.state.state === 'opening';
@@ -121,6 +128,7 @@ class BottomPanelBack extends React.Component {
 
         if (this.state.state === 'opening') {
             this.mover.panel.height = height;
+
             this.setState({ state: 'opened' }, () => {
                 const { current } = this.state;
 

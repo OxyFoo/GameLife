@@ -36,6 +36,7 @@ class Waitinternet extends BackWaitinternet {
 const styles = StyleSheet.create({
     page: {
         flex: 1,
+        padding: 32,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-evenly'

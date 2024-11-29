@@ -6,7 +6,7 @@
   "scripts": {
     "start": "react-native start --reset-cache",
     "build": "cd android && ./gradlew bundleRelease",
-    "install-android": "cd android && ./gradlew installRelease",
+    "install-android": "npm run prestart && cd android && ./gradlew installRelease && cd .. && npm run poststart",
     "install-server": "cd src/Server/TCP && npm install",
     "clean": "cd android && ./gradlew clean",
     "test": "jest",

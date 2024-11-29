@@ -26,7 +26,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {(newActivity: Activity) => Promise<void>} changeActivity
  * @property {() => void} unSelectActivity
  * @property {number | null} categoryID
- * @property {Array<number>} listSkillsIDs
+ * @property {number[]} listSkillsIDs
  */
 
 /** @type {BackActivityPage1PropsType} */
@@ -41,7 +41,7 @@ const BackActivityPage1Props = {
 
 class BackActivityPage1 extends React.Component {
     state = {
-        /** @type {Array<ItemSkill>} */
+        /** @type {ItemSkill[]} */
         skills: [],
 
         /** @type {number | null} */
@@ -67,16 +67,16 @@ class BackActivityPage1 extends React.Component {
 
     categoriesNames = dataManager.skills.categories.map((category) => langManager.GetText(category.Name));
 
-    /** @type {Array<number>} Defined with props 'listSkillsIDs' (disable categories) */
+    /** @type {number[]} Defined with props 'listSkillsIDs' (disable categories) */
     preselectedSkillsIDs = [];
 
-    /** @type {Array<ItemSkill>} All skills converted to ItemSkill used as source for the FlatList */
+    /** @type {ItemSkill[]} All skills converted to ItemSkill used as source for the FlatList */
     allSkillsItems = [];
 
-    /** @type {Array<ItemSkill>} Recent skills converted to ItemSkill used as source */
+    /** @type {ItemSkill[]} Recent skills converted to ItemSkill used as source */
     allRecentSkillsItems = [];
 
-    /** @type {Array<ItemCategory | null>} All categories converted to ItemCategory used as source for the FlatList */
+    /** @type {(ItemCategory | null)[]} All categories converted to ItemCategory used as source for the FlatList */
     allCategoriesItems = [];
 
     /** @param {BackActivityPage1PropsType} props */
@@ -118,8 +118,11 @@ class BackActivityPage1 extends React.Component {
         };
     }
 
-    /** @param {ItemSkill} item */
-    keyExtractor = (item) => `act-skill-${item.id}`;
+    /**
+     * @param {ItemSkill} item
+     * @param {number} index
+     */
+    keyExtractor = (item, index) => `act-skill-${item.id}-${index}`;
 
     handleScroll = Animated.event(
         [

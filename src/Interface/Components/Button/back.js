@@ -95,6 +95,7 @@ class ButtonBack extends React.Component {
             this.props.styleAnimation !== nextProps.styleAnimation ||
             this.props.styleContent !== nextProps.styleContent ||
             this.props.appearance !== nextProps.appearance ||
+            this.props.color !== nextProps.color ||
             this.props.fontSize !== nextProps.fontSize ||
             this.props.icon !== nextProps.icon ||
             this.props.iconXml !== nextProps.iconXml ||

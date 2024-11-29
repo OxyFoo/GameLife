@@ -17,6 +17,8 @@ const TCP_SETTINGS = {
 /** @type {ConnectionState} */
 const INITIAL_STATE = 'idle';
 
+const SERVER_TIMEOUT_MS = __DEV__ ? 10000 : 5000;
+
 class TCP {
     /** @type {WebSocket | null} */
     socket = null;
@@ -42,7 +44,7 @@ class TCP {
      * @param {number} [timeout] in milliseconds
      * @returns {Promise<boolean>} Whether the connection was successful, or if it was already connected
      */
-    Connect = async (timeout = 10000) => {
+    Connect = async (timeout = SERVER_TIMEOUT_MS) => {
         const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
         const socket = new WebSocket(url, 'gamelife-client');
         socket.addEventListener('open', this.#onOpen);
@@ -161,7 +163,7 @@ class TCP {
      * @param {number} [timeout] in milliseconds
      * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
-    SendAndWait = async (message, callback = undefined, timeout = 10000) => {
+    SendAndWait = async (message, callback = undefined, timeout = SERVER_TIMEOUT_MS) => {
         // Define random callback ID
         let ID;
         while (!ID || ID in this.#callbacks) {
@@ -183,7 +185,12 @@ class TCP {
      * @param {AbortSignal} [signal] Optional abort signal to cancel the wait
      * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
-    SendAndWaitWithoutCallback = async (message, callback = undefined, timeout = 10000, signal = undefined) => {
+    SendAndWaitWithoutCallback = async (
+        message,
+        callback = undefined,
+        timeout = SERVER_TIMEOUT_MS,
+        signal = undefined
+    ) => {
         if (this.Send({ ...message })) {
             return this.WaitForAction(message.action, callback, timeout, signal);
         }
@@ -197,7 +204,7 @@ class TCP {
      * @param {number} [timeout] in milliseconds, -1 to disable
      * @returns {Promise<'timeout' | 'interrupted' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
-    WaitForCallback = (callbackID, callback = () => true, timeout = 10000) => {
+    WaitForCallback = (callbackID, callback = () => true, timeout = SERVER_TIMEOUT_MS) => {
         return new Promise((resolve, _reject) => {
             // Init the timeout timer
             /** @type {NodeJS.Timeout | null} */
@@ -243,7 +250,7 @@ class TCP {
      * @param {AbortSignal} [signal] Optional abort signal to cancel the wait
      * @returns {Promise<'timeout' | 'interrupted' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
      */
-    WaitForAction = (action, callback = () => true, timeout = 10000, signal = undefined) => {
+    WaitForAction = (action, callback = () => true, timeout = SERVER_TIMEOUT_MS, signal = undefined) => {
         return new Promise((resolve, _reject) => {
             if (action in this.#callbacksActions) {
                 resolve('alreadyExist');

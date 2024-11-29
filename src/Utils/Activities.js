@@ -1,8 +1,11 @@
+import React from 'react';
+
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import Notifications from 'Utils/Notifications';
+// import Notifications from 'Utils/Notifications';
+import { AddActivity as AddActivityView } from 'Interface/Widgets';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
@@ -44,7 +47,7 @@ function StartActivityNow(skillID) {
  * @param {number} skillID
  * @param {number} startTime
  * @param {number} endTime
- * @param {Array<number>} friendsIDs
+ * @param {number[]} friendsIDs
  * @param {() => void} funcBack
  * @returns {Promise<boolean>} True if activity was added successfully
  */
@@ -91,12 +94,12 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
 
 /**
  * @param {Activity} activity
- * @returns {Promise<boolean>} True if activity was added or edited successfully
+ * @returns {Promise<boolean>} True if activity was added successfully
  */
 async function AddActivity(activity) {
     const lang = langManager.curr['activity'];
 
-    const { status } = user.activities.Add({
+    const { status, activity: addedActivity } = user.activities.Add({
         skillID: activity.skillID,
         startTime: activity.startTime,
         duration: activity.duration,
@@ -107,86 +110,101 @@ async function AddActivity(activity) {
         friends: activity.friends
     });
 
-    if (status === 'added') {
-        // Update notifications
-        Notifications.Evening.RemoveToday();
+    // Manage errors
+    if (status === 'notFree') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-wrongtiming-title'],
+                message: lang['alert-wrongtiming-message']
+            }
+        });
+        return false;
+    } else if (status === 'tooEarly') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-tooearly-title'],
+                message: lang['alert-tooearly-message']
+            }
+        });
+        return false;
+    } else if (status !== 'added') {
+        user.interface.console?.AddLog('error', `Utils/Activities.Add Status unknown: ${status}`);
+        return false;
+    }
 
-        // Update missions
-        user.missions.SetMissionState('mission1', 'completed');
+    // TODO: Reenable notifications
+    // Update notifications
+    // Notifications.Evening.RemoveToday();
 
-        const skill = dataManager.skills.GetByID(activity.skillID);
-        if (skill === null) {
-            user.interface.ChangePage('display', {
-                args: {
-                    icon: 'close-filled',
-                    text: lang['display-fail-text'].replace('{}', 'skill not found'),
-                    button: lang['display-fail-button'],
-                    action: Back
-                },
-                storeInHistory: false
-            });
-        }
+    // Update missions
+    user.missions.SetMissionState('mission1', 'completed');
 
+    // Get the skill to display the activity
+    const skill = dataManager.skills.GetByID(activity.skillID);
+
+    // Skill not found
+    if (skill === null) {
         user.interface.ChangePage('display', {
             args: {
-                icon: 'check-filled',
-                text: lang['display-activity-text'],
-                quote: dataManager.quotes.GetRandomQuote(),
-                button: lang['display-activity-button'],
-                //button2: lang['display-activity-button2'],
-                action: async () => {
-                    await Back();
-
-                    // Move the calendar to the new day
-                    const calendar = user.interface.GetPage('calendar');
-                    if (calendar !== null) {
-                        const activityDate = GetDate(activity.startTime);
-                        const day = activityDate.getDate();
-                        const month = activityDate.getMonth();
-                        const year = activityDate.getFullYear();
-                        const newDay = calendar.state.days.find(
-                            (d) => d.day === day && d.month === month && d.year === year
-                        );
-                        if (newDay) {
-                            calendar.onDayPress(newDay);
-                        }
-                    }
-                }
-                //action2: () => {
-                //    // TODO: Back page & reopen the activity panel
-                //    user.interface.ChangePage('activity', {
-                //        arge: { time: newActivity.startTime + newActivity.duration * 60 },
-                //        storeInHistory: false
-                //    });
-                //},
+                icon: 'close-filled',
+                text: lang['display-fail-text'].replace('{}', 'skill not found'),
+                button: lang['display-fail-button'],
+                action: Back
             },
             storeInHistory: false
         });
-        return true;
-    } else if (status === 'notFree') {
-        const title = lang['alert-wrongtiming-title'];
-        const message = lang['alert-wrongtiming-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
-    } else if (status === 'tooEarly') {
-        const title = lang['alert-alreadyexist-title'];
-        const message = lang['alert-alreadyexist-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
-    } else if (status === 'alreadyExist') {
-        const title = lang['alert-tooearly-title'];
-        const message = lang['alert-tooearly-message'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: { title, message }
-        });
+        return false;
     }
 
-    return false;
+    // Display the activity
+    user.interface.ChangePage('display', {
+        args: {
+            icon: 'check-filled',
+            text: lang['display-activity-text'],
+            quote: dataManager.quotes.GetRandomQuote(),
+            button: lang['display-activity-button'],
+            button2: lang['display-activity-button2'],
+            action: async () => {
+                // Go back
+                await Back();
+
+                // Move the calendar to the new day
+                const calendar = user.interface.GetPage('calendar');
+                if (calendar !== null) {
+                    const activityDate = GetDate(activity.startTime);
+                    const day = activityDate.getDate();
+                    const month = activityDate.getMonth();
+                    const year = activityDate.getFullYear();
+                    const newDay = calendar.state.days.find(
+                        (d) => d.day === day && d.month === month && d.year === year
+                    );
+                    if (newDay) {
+                        calendar.onDayPress(newDay);
+                    }
+                }
+            },
+            action2: async () => {
+                // Go back
+                await Back();
+
+                // Get the start time of the next activity
+                let startTime;
+                if (addedActivity) {
+                    startTime = addedActivity.startTime + addedActivity.duration * 60;
+                }
+
+                // Open the add activity view
+                user.interface.bottomPanel?.Open({
+                    content: <AddActivityView time={startTime} />
+                });
+            }
+        },
+        storeInHistory: false
+    });
+
+    return true;
 }
 
 /**
@@ -268,6 +286,7 @@ async function RemoveActivity(activity) {
                 message: lang['alert-remove-message']
             },
             callback: (button) => {
+                // Popup closed
                 if (button !== 'yes') {
                     resolve(false);
                     return;
@@ -275,6 +294,7 @@ async function RemoveActivity(activity) {
 
                 const removedStatus = user.activities.Remove(activity);
 
+                // Manage errors
                 if (removedStatus === 'notExist' || removedStatus !== 'removed') {
                     user.interface.popup?.OpenT({
                         type: 'ok',

@@ -134,24 +134,6 @@ class BackTest extends PageBase {
             }
         });
     };
-
-    openBottomList = () => {
-        this.fe.screenList?.Open(
-            'TEST',
-            Array(100)
-                .fill(0)
-                .map((_, i) => ({ id: i, value: `Test ${i}` })),
-            (id) => {
-                user.interface.popup?.OpenT({
-                    type: 'ok',
-                    data: {
-                        title: 'Test',
-                        message: `Selected item: ${id}`
-                    }
-                });
-            }
-        );
-    };
 }
 
 export default BackTest;

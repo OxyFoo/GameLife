@@ -44,6 +44,7 @@ const RenderActivity = React.memo(
         const endTimeString = TimeToFormatString(endTime);
         const xmlIcon = dataManager.skills.GetXmlByLogoID(skill.LogoID || category.LogoID);
         const onPress = () => item.onPress(item);
+        const onLongPress = () => item.onLongPress(item);
 
         let activityTime = `${startTimeString} - ${endTimeString}`;
         const startDate = GetDate(startTime);
@@ -70,6 +71,7 @@ const RenderActivity = React.memo(
                 appearance='uniform'
                 color='transparent'
                 onPress={onPress}
+                onLongPress={onLongPress}
             >
                 <View style={styles.activityChild}>
                     <Icon

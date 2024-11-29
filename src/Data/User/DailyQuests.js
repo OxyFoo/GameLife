@@ -92,6 +92,10 @@ class DailyQuest extends IUserData {
     };
 
     SetupDailyQuests = async () => {
+        if (!this.user.server2.IsAuthenticated()) {
+            return Promise.resolve();
+        }
+
         const response = await this.user.server2.tcp.SendAndWait({ action: 'get-daily-quest-today' });
 
         if (

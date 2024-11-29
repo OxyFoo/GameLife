@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Animated, View } from 'react-native';
 
-import BackActivityPage1 from './back';
 import styles from './style';
+import BackActivityPage1 from './back';
+import { SkillButton } from './activityButton';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -116,7 +117,7 @@ class AddActivityPage1 extends BackActivityPage1 {
     /**
      * @param {ItemCategory | null} value
      * @param {number} _index
-     * @param {Array<ItemCategory | null>} _array
+     * @param {(ItemCategory | null)[]} _array
      * @returns {JSX.Element | null}
      */
     renderCategory = (value, _index, _array) => {
@@ -150,19 +151,17 @@ class AddActivityPage1 extends BackActivityPage1 {
         const { id, value, onPress } = item;
 
         return (
-            <Button
-                style={styles.activityElement}
-                // TODO: Opti l'animation (trop de rendus)
-                //styleAnimation={this.getAnimationStyles(index)}
-                appearance='outline'
-                borderColor='secondary'
-                fontColor='primary'
-                onLayout={this.onLayoutActivity}
+            <SkillButton
+                // TODO: The button on the index 0 does not apply the animation if it is not rendered after the first frame, why?
+                key={index === 0 ? Math.random().toString() : id.toString()}
+                id={id}
+                index={index}
+                styleAnimation={this.getAnimationStyles(index)}
+                value={value}
                 onPress={onPress}
-                onLongPress={() => this.openSkill(id)}
-            >
-                <Text fontSize={16}>{value}</Text>
-            </Button>
+                onLayout={this.onLayoutActivity}
+                openSkill={this.openSkill}
+            />
         );
     };
 
@@ -179,7 +178,10 @@ class AddActivityPage1 extends BackActivityPage1 {
         );
     };
 
-    /** @param {number} index */
+    /**
+     * @param {number} index
+     * @returns {ViewStyle}
+     */
     getAnimationStyles = (index) => {
         const { flatlistHeight, buttonHeight, animScroll } = this.state;
         const topItemPosY = buttonHeight * index;

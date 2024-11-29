@@ -17,8 +17,10 @@ class Skill extends BackSkill {
         const langTime = langManager.curr['dates']['names'];
         const langLevel = langManager.curr['level'];
 
-        const txtCurrXp = Round(this.skill.xp, 1);
-        const txtNextXP = Round(this.skill.next, 1);
+        const { selectedSkill, history } = this.state;
+
+        const txtCurrXp = Round(selectedSkill.xp, 1);
+        const txtNextXP = Round(selectedSkill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
 
         return (
@@ -37,10 +39,12 @@ class Skill extends BackSkill {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                         >
-                            <Icon style={styles.activityIcon} xml={this.skill.xml} />
+                            <Icon style={styles.activityIcon} xml={selectedSkill.xml} />
                             <View style={styles.activityTextView}>
-                                <Text style={styles.activityText}>{`${this.skill.name} - ${this.skill.category}`}</Text>
-                                {!this.skill.enabled && (
+                                <Text
+                                    style={styles.activityText}
+                                >{`${selectedSkill.name} - ${selectedSkill.category}`}</Text>
+                                {!selectedSkill.enabled && (
                                     <Text style={styles.skillUnallocated} color='warning'>
                                         {lang['text-unallocated']}
                                     </Text>
@@ -49,20 +53,20 @@ class Skill extends BackSkill {
                         </LinearGradient>
 
                         {/* Creator */}
-                        {this.skill.creator !== '' && (
+                        {selectedSkill.creator !== '' && (
                             <Text style={styles.creator} color='secondary'>
-                                {this.skill.creator}
+                                {selectedSkill.creator}
                             </Text>
                         )}
                     </View>
 
                     {/* Level and XP bar */}
                     <View style={styles.levelContainer}>
-                        {this.skill.earnXp > 0 ? (
+                        {selectedSkill.earnXp > 0 ? (
                             <>
-                                <ProgressBar color='main1' value={this.skill.xp} maxValue={this.skill.next} />
+                                <ProgressBar color='main1' value={selectedSkill.xp} maxValue={selectedSkill.next} />
                                 <View style={styles.levelsView}>
-                                    <Text>{this.skill.level}</Text>
+                                    <Text>{selectedSkill.level}</Text>
                                     <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
                                 </View>
                             </>
@@ -76,24 +80,30 @@ class Skill extends BackSkill {
                         {lang['informations-title']}
                     </Text>
                     <View style={styles.kpiContainer}>
+                        <KPI style={styles.kpiLeft} title={langLevel['total']} value={history.length} />
                         <KPI
-                            style={styles.kpiLeft}
+                            style={styles.kpiRight}
                             title={langLevel['total-hour']}
-                            value={this.skill.totalDuration + ' ' + langTime['hours-min']}
+                            value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
                         />
-                        <KPI style={styles.kpiRight} title={langLevel['total']} value={this.skill.totalFloatXp} />
                     </View>
 
                     {/* Skill use chart */}
                     <Text style={styles.title} color='border'>
                         {lang['history-activity']}
                     </Text>
-                    {this.skill.ID !== 0 && (
-                        <SkillChart style={styles.skillChart} skillID={this.skill.ID} chartWidth={300} />
+                    {selectedSkill.ID !== 0 && (
+                        <SkillChart
+                            // TODO : Update the graph more properly
+                            key={`activities-length-${history.length}`}
+                            style={styles.skillChart}
+                            skillID={selectedSkill.ID}
+                            chartWidth={300}
+                        />
                     )}
 
                     {/* History */}
-                    {this.history.length > 0 && (
+                    {history.length > 0 && (
                         <Button
                             style={styles.historyButton}
                             appearance='uniform'
@@ -106,7 +116,7 @@ class Skill extends BackSkill {
                 </ScrollView>
 
                 {/* Absolute add button */}
-                {this.skill.enabled && (
+                {selectedSkill.enabled && (
                     <Button
                         style={styles.addActivity}
                         appearance='uniform'

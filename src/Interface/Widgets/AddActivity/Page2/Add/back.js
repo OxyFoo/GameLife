@@ -102,6 +102,7 @@ class BackActivityPage2Add extends React.Component {
     };
 
     onRemoveActivity = async () => {
+        const lang = langManager.curr['activity'];
         const { editActivity } = this.props;
 
         if (editActivity === null) {
@@ -111,14 +112,38 @@ class BackActivityPage2Add extends React.Component {
         this.setState({ loading: true });
 
         const removed = await RemoveActivity(editActivity);
+
         if (!removed) {
-            this.setState({ loading: false });
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message'].replace('{}', "can't remove activity")
+                },
+                callback: () => {
+                    this.setState({ loading: false });
+                }
+            });
             return;
         }
 
-        this.setState({ loading: false }, () => {
-            user.interface.bottomPanel?.Close();
-        });
+        const results = await Promise.all([user.activities.SaveOnline(), user.interface.bottomPanel?.Close()]);
+
+        const saved = results[0];
+        if (!saved) {
+            await new Promise((resolve) => {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-error-title'],
+                        message: lang['alert-error-message'].replace('{}', 'save online')
+                    },
+                    callback: resolve
+                });
+            });
+        }
+
+        this.setState({ loading: false });
     };
 
     isEdited = () => {

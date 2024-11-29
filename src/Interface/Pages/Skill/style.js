@@ -80,14 +80,17 @@ const styles = StyleSheet.create({
     historyButton: {
         marginBottom: 24
     },
-    historyContainer: {
-        maxHeight: 400,
-        paddingHorizontal: 6
+    historyTitle: {
+        marginTop: 24,
+        marginBottom: 12,
+        fontSize: 24
     },
     historyItem: {
-        width: '50%',
-        padding: 0,
-        marginVertical: 6
+        width: 'auto',
+        marginHorizontal: 24,
+        paddingVertical: 12,
+        paddingHorizontal: 6,
+        marginVertical: 2
     },
 
     // Add activity button

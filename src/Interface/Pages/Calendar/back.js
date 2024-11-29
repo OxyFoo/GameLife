@@ -16,6 +16,7 @@ import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
  *
  * @typedef {import('Data/User/Activities/index').Skill} Skill
  * @typedef {import('Data/User/Activities/index').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').ActivitySaved} ActivitySaved
  *
  * @typedef {object} DayDataType
  * @property {number} day
@@ -30,6 +31,7 @@ import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
  * @property {Skill | null} skill
  * @property {Activity} activity
  * @property {(activity: ActivityDataType) => void} onPress
+ * @property {(activity: ActivityDataType) => void} onLongPress
  */
 
 const TOTAL_DAYS_COUNT = 100;
@@ -93,27 +95,7 @@ class BackCalendar extends PageBase {
     dayListWidth = 0;
 
     componentDidMount() {
-        this.activitiesListener = user.activities.allActivities.AddListener((activities) => {
-            this.refreshActivitiesInBatch();
-
-            const { selectedDay } = this.state;
-            if (!selectedDay) return;
-
-            const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
-            this.setState({
-                /** @type {ActivityDataType[]} */
-                activities: user.activities.GetByTime(GetLocalTime(selectedDate), activities, true).map((activity) => ({
-                    day: selectedDay,
-                    skill: dataManager.skills.GetByID(activity.skillID),
-                    activity,
-                    onPress: this.onActivityPress.bind(this)
-                })),
-                days: this.state.days.map((day) => ({
-                    ...day,
-                    containsActivity: this.batchContainsActivity(GetGlobalTime(new Date(day.year, day.month, day.day)))
-                }))
-            });
-        });
+        this.activitiesListener = user.activities.allActivities.AddListener(this.updateActivities);
 
         const { days } = this.state;
         this.onDayPress(days[days.length / 2], false);
@@ -122,6 +104,31 @@ class BackCalendar extends PageBase {
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
+
+    /** @param {(Activity | ActivitySaved)[]} activities */
+    updateActivities = (activities = user.activities.allActivities.Get()) => {
+        this.refreshActivitiesInBatch();
+
+        const { selectedDay } = this.state;
+        if (!selectedDay) return;
+
+        const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
+
+        this.setState({
+            /** @type {ActivityDataType[]} */
+            activities: user.activities.GetByTime(GetLocalTime(selectedDate), activities, true).map((activity) => ({
+                day: selectedDay,
+                skill: dataManager.skills.GetByID(activity.skillID),
+                activity,
+                onPress: this.onActivityPress.bind(this),
+                onLongPress: this.onActivityLongPress.bind(this)
+            })),
+            days: this.state.days.map((day) => ({
+                ...day,
+                containsActivity: this.batchContainsActivity(GetGlobalTime(new Date(day.year, day.month, day.day)))
+            }))
+        });
+    };
 
     openCalendar = () => {
         user.interface.popup?.OpenT({
@@ -170,7 +177,7 @@ class BackCalendar extends PageBase {
     };
 
     refreshActivitiesInBatch() {
-        this.activitiesInBatch = user.activities
+        this.activitiesInBatch = user.activities.allActivities
             .Get()
             .filter(
                 (activity) => activity.startTime >= this._timeBatchStart && activity.startTime <= this._timeBatchEnd
@@ -207,6 +214,13 @@ class BackCalendar extends PageBase {
         });
     }
 
+    /** @param {ActivityDataType} activityData */
+    onActivityLongPress(activityData) {
+        const { activity } = activityData;
+
+        this.fe.ChangePage('skill', { args: { skillID: activity.skillID } });
+    }
+
     /** @param {number} startTime */
     onAddActivityFromTime(startTime) {
         this.fe.bottomPanel?.Open({
@@ -217,7 +231,7 @@ class BackCalendar extends PageBase {
     /**
      * @param {DayDataType} day
      */
-    onDayPress(day, scrollToSelection = true) {
+    async onDayPress(day, scrollToSelection = true) {
         // Update the selected day
         const { days } = this.state;
 
@@ -231,20 +245,11 @@ class BackCalendar extends PageBase {
                 days[d].selected = false;
             }
         }
+
         if (selectedDay === null) {
+            user.interface.console?.AddLog('warn', 'Selected day not found', day);
             return;
         }
-
-        // Update activities
-        const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
-        const activities = user.activities.GetByTime(GetLocalTime(selectedDate), undefined, true).map(
-            /** @type {ActivityDataType} */ (activity) => ({
-                day: selectedDay,
-                skill: dataManager.skills.GetByID(activity.skillID),
-                activity,
-                onPress: this.onActivityPress.bind(this)
-            })
-        );
 
         const today = new Date();
         const selectedIsToday =
@@ -282,7 +287,7 @@ class BackCalendar extends PageBase {
 
         const todayStrDate = `${strDay} ${strMonth} ${strYear}`;
 
-        this.setState({ days, selectedDay, activities, todayStrDate });
+        this.setState({ selectedDay, todayStrDate }, this.updateActivities);
 
         // Scroll to the selected day
         if (scrollToSelection) {

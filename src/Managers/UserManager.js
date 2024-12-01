@@ -120,7 +120,6 @@ class UserManager {
     }
 
     async Clear(keepOnboardingState = true) {
-        const onboarding = this.settings.onboardingWatched;
         this.tempMailSent = null;
 
         for (const data of this.CLASS) {
@@ -135,8 +134,8 @@ class UserManager {
         await DataStorage.ClearAll();
         await this.SaveLocal();
 
-        if (keepOnboardingState) {
-            this.settings.onboardingWatched = onboarding;
+        if (!keepOnboardingState) {
+            this.settings.onboardingWatched = false;
         }
 
         await this.settings.IndependentSave();

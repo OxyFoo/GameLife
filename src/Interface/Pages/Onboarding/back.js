@@ -1,3 +1,4 @@
+import React from 'react';
 import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
@@ -6,6 +7,7 @@ import langManager from 'Managers/LangManager';
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 /**
+ * @typedef {import('Interface/Components').Swiper} Swiper
  * @typedef {import('Managers/LangManager').LangKey} LangKey
  */
 
@@ -14,21 +16,37 @@ class BackOnboarding extends PageBase {
         selectedLangKey: langManager.currentLangageKey
     };
 
+    /** @type {React.RefObject<Swiper>} */
+    refSwiper = React.createRef();
+
+    componentDidMount() {
+        // Update animations in swiper's pages
+        setImmediate(this.forceUpdate.bind(this));
+    }
+
     /** @param {LangKey} key */
     selectLanguage = (key) => {
-        this.setState({ selectedLangKey: key }, () => {
-            user.settings.SetLang(key);
-        });
+        user.settings.SetLang(key);
+        this.setState({ selectedLangKey: key });
     };
 
     Next = async () => {
-        //const lang = langManager.curr['onboarding'];
-        //lang['page1']    lang['page2']    lang['page3']
-        //lang['page4']    lang['page5']    lang['page6']
+        if (!this.refSwiper.current) return;
 
+        const index = this.refSwiper.current.posX;
+
+        // If the user is not on the last page, go to the next one
+        if (index < 2) {
+            this.refSwiper.current.Next();
+            return;
+        }
+
+        // If the user is on the last page, save the settings and go to the loading page
         user.settings.onboardingWatched = true;
 
         const saved = await user.settings.IndependentSave();
+
+        // If the settings are not saved, display an error message and close the app
         if (!saved) {
             const lang = langManager.curr['app'];
             user.interface.ChangePage('display', {

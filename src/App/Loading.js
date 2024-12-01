@@ -70,6 +70,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         }
     }
 
+    // Show onboarding if not watched
+    const showOnboard = !user.settings.onboardingWatched;
+    if (showOnboard) {
+        fe.ChangePage('onboarding', { storeInHistory: false });
+        return;
+    }
+
     // Connection to the server is OK but not logged, go to the login page
     if (email === '') {
         fe.ChangePage('login', { storeInHistory: false });
@@ -156,13 +163,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         user.interface.console?.AddLog('error', 'App data not loaded');
         callbackError('appdata-not-loaded');
         return;
-    }
-
-    // Show onboarding if not watched
-    const showOnboard = !user.settings.onboardingWatched;
-    if (showOnboard) {
-        //fe.ChangePage('onboarding', { storeInHistory: false });
-        //return;
     }
 
     nextStep();

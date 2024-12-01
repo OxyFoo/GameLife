@@ -236,13 +236,17 @@
 
     "onboarding": {
         "start": "Start",
+        "next": "Next",
         "select-language": "Select your language",
-        "page1": "Hi, welcome to GameLife, I'm Zap, your guide!",
-        "page2": "The aim of this app is simple : turn your life into a game !",
-        "page3": "When you do an activity in the real world, sport, music, homework, you'll note it down in the application.",
-        "page4": " You'll earn experience and rewards, and you'll be able to track your progress over time!",
-        "page5": "Tips : Are you lost? Click on the info button at the top right for help!",
-        "page6": "All you have to do is sign up and off you go!",
+        "page1": {
+            "first": "Welcome to GameLife, where the aim is to improve your skills in real life, by playing it like a game...",
+            "second": "All you have to do is perform your daily actions and record them in GameLife to see your progress!"
+        },
+        "page2": {
+            "first": "Turn every challenge into an adventure: earn experience points and improve your skills with every activity.",
+            "second": "Alone or with your friends, complete quests, unlock achievements and become the hero of your own story!",
+            "second-bis": "Alone or with your friends, complete quests, unlock achievements and become the best version of yourself!"
+        },
         "test-caution-message": "Test version:\n\nRisk of bugs and instability.\nAccounts are independent of the main version.\nData may be deleted.\n\nHelp us improve the app and earn rewards for every bug found!",
         "test-caution-redirect": "Come to the Discord to find out more!",
         "test-caution-button": "I get it"

@@ -236,13 +236,17 @@
 
     "onboarding": {
         "start": "Commencer",
+        "next": "Suivant",
         "select-language": "Choisis ta langue",
-        "page1": "Salut ! Bienvenue dans GameLife, je suis Zap, ton guide !",
-        "page2": "Le but de cette application est simple : transformer ta vie en un jeu !",
-        "page3": "Quand tu feras une activité dans le monde réel, du sport, de la musique, des devoirs, tu le noteras dans l'application.",
-        "page4": "Ça te fera gagner de l'expérience et des récompenses, et tu pourras suivre ta progression dans le temps !",
-        "page5": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
-        "page6": "Tu n'as plus qu'à t'inscrire et c'est parti !",
+        "page1": {
+            "first": "Bienvenue dans GameLife, ici le but est de t'améliorer dans la vraie vie, en la jouant comme un jeu...",
+            "second": "Il te suffit de faire tes actions quotidiennes et de les noter dans GameLife pour voir ta progression !"
+        },
+        "page2": {
+            "first": "Transforme chaque défi en aventure: Gagne des points d’expérience et améliore tes compétences à chaque activité.",
+            "second": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens le héros de ta propre histoire !",
+            "second-bis": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens la meilleure version de toi-même !"
+        },
         "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
         "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
         "test-caution-button": "J'ai compris"

@@ -82,14 +82,6 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
-
-                <Title title={'Page de test'} />
-                <Button
-                    style={{ marginBottom: 24 }}
-                    onPress={() => this.fe.ChangePage('test', { storeInHistory: false })}
-                >
-                    Ouvrir la page des composants
-                </Button>
             </ScrollView>
         );
     }

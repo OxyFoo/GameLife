@@ -16,6 +16,11 @@ const styles = StyleSheet.create({
     absolute: {
         position: 'absolute'
     },
+    absoluteIcon: {
+        position: 'absolute',
+        top: 8,
+        left: 22
+    },
     buttonParent: {
         flex: 1,
         height: '100%'
@@ -34,6 +39,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
+        fontSize: 12
+    },
+    absoluteText: {
+        position: 'absolute',
+        top: 32,
+        left: 0,
+        right: 0,
         fontSize: 12
     },
 

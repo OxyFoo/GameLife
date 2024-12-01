@@ -504,6 +504,16 @@ class BackFlowEngine extends React.Component {
         } else if (!showNavBar && this.navBar.current?.show === true) {
             this.navBar.current?.Hide();
         }
+
+        // Animation selection
+        if (this.navBar.current?.state.animationSelection) {
+            /** @type {(PageNames | null)[]} */
+            const pageList = ['home', 'calendar', null, 'multiplayer', 'shop'];
+            const toIndex = pageList.indexOf(pageName);
+            const newAnimPos = toIndex === -1 ? 2 : toIndex;
+
+            SpringAnimation(this.navBar.current?.state.animationSelection, newAnimPos).start();
+        }
     };
 
     /**

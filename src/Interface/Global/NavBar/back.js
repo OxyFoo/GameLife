@@ -24,8 +24,9 @@ const NavBarProps = {
 class NavBarBack extends React.Component {
     state = {
         height: 100, // Hide navbar before layout is done
-        animation: new Animated.Value(0),
-        animationAddActivity: new Animated.Value(0)
+        animationNavBar: new Animated.Value(0),
+        animationAddActivity: new Animated.Value(0),
+        animationSelection: new Animated.Value(0)
     };
 
     show = false;
@@ -45,7 +46,7 @@ class NavBarBack extends React.Component {
         }
 
         this.show = true;
-        SpringAnimation(this.state.animation, 1).start();
+        SpringAnimation(this.state.animationNavBar, 1).start();
     };
 
     Hide = () => {
@@ -54,7 +55,7 @@ class NavBarBack extends React.Component {
         }
 
         this.show = false;
-        SpringAnimation(this.state.animation, 0).start();
+        SpringAnimation(this.state.animationNavBar, 0).start();
     };
 
     /** @param {LayoutChangeEvent} event */

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
 
 import styles from './style';
 import BottomBarBack from './back';
+import NavButton from './navButton';
+import MidButton from './midButton';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
-
-import { Button, Icon, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -19,13 +18,14 @@ import { Button, Icon, Text } from 'Interface/Components';
 
 class NavBar extends BottomBarBack {
     render() {
-        const { height, animation } = this.state;
+        const lang = langManager.curr['navbar'];
+        const { height, animationNavBar, animationAddActivity, animationSelection } = this.state;
 
         /** @type {StyleViewProp} */
         const animStyle = {
             transform: [
                 {
-                    translateY: animation.interpolate({
+                    translateY: animationNavBar.interpolate({
                         inputRange: [0, 1],
                         outputRange: [height, 0]
                     })
@@ -33,114 +33,57 @@ class NavBar extends BottomBarBack {
             ]
         };
 
-        const NavButton = this.renderButton;
-        const MiddleButton = this.renderMiddleButton;
         return (
             <Animated.View style={[styles.parent, animStyle]} onLayout={this.onLayout}>
-                <NavButton text='home' icon='home-outline' onPress={this.openHome} />
-                <NavButton text='calendar' icon='planner-outline' onPress={this.openCalendar} />
-                <MiddleButton />
-                <NavButton text='multiplayer' icon='multiplayer-outline' onPress={this.openMultiplayer} />
-                <NavButton text='shop' icon='cart-outline' onPress={this.openShop} />
+                <NavButton
+                    ref={this.refButtons['home']}
+                    index={0}
+                    text={lang['home']}
+                    icon='home-outline'
+                    iconSelect='home'
+                    anim={animationSelection}
+                    onPress={this.openHome}
+                />
+
+                <NavButton
+                    ref={this.refButtons['calendar']}
+                    index={1}
+                    text={lang['calendar']}
+                    icon='planner-outline'
+                    iconSelect='planner'
+                    anim={animationSelection}
+                    onPress={this.openCalendar}
+                />
+
+                <MidButton
+                    ref={this.refButtons['addActivity']}
+                    animationNavBar={animationNavBar}
+                    animationAddActivity={animationAddActivity}
+                    onPress={this.openAddActivity}
+                />
+
+                <NavButton
+                    ref={this.refButtons['multiplayer']}
+                    index={3}
+                    text={lang['multiplayer']}
+                    icon='multiplayer-outline'
+                    iconSelect='multiplayer'
+                    anim={animationSelection}
+                    onPress={this.openMultiplayer}
+                />
+
+                <NavButton
+                    ref={this.refButtons['shop']}
+                    index={4}
+                    text={lang['shop']}
+                    icon='cart-outline'
+                    iconSelect='cart'
+                    anim={animationSelection}
+                    onPress={this.openShop}
+                />
             </Animated.View>
         );
     }
-
-    /**
-     * @param {Object} props
-     * @param {Icons} props.icon
-     * @param {keyof Lang['navbar']} props.text
-     * @param {() => void} props.onPress
-     * @returns {JSX.Element}
-     */
-    renderButton = ({ icon, text, onPress }) => {
-        return (
-            <View style={styles.buttonParent}>
-                <Button
-                    ref={this.refButtons[text]}
-                    style={styles.button}
-                    styleContent={styles.buttonContent}
-                    appearance='uniform'
-                    color='transparent'
-                    onPress={onPress}
-                >
-                    <Icon icon={icon} color={'main1'} size={24} />
-                    <Text style={styles.text} color={'main1'}>
-                        {langManager.curr['navbar'][text]}
-                    </Text>
-                </Button>
-            </View>
-        );
-    };
-
-    renderMiddleButton = () => {
-        const { animation, animationAddActivity } = this.state;
-
-        /** @type {StyleViewProp} */
-        const middleButtonStyle = {
-            transform: [
-                {
-                    translateY: animation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [24, -24]
-                    })
-                },
-                {
-                    translateY: animationAddActivity.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 20]
-                    })
-                }
-            ],
-            borderColor: themeManager.GetColor('background')
-        };
-
-        return (
-            <View style={styles.middleParentButton}>
-                <Button
-                    ref={this.refButtons['addActivity']}
-                    style={styles.middleButton}
-                    styleAnimation={middleButtonStyle}
-                    appearance='normal'
-                    onPress={this.openAddActivity}
-                >
-                    <Animated.View
-                        style={{
-                            opacity: Animated.subtract(1, animationAddActivity),
-                            transform: [
-                                {
-                                    rotate: animationAddActivity.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: ['0deg', '90deg']
-                                    })
-                                }
-                            ]
-                        }}
-                    >
-                        <Icon icon='add-outline' color='backgroundDark' size={24} />
-                    </Animated.View>
-                    <Animated.View
-                        style={[
-                            styles.absolute,
-                            {
-                                opacity: animationAddActivity,
-                                transform: [
-                                    {
-                                        rotate: animationAddActivity.interpolate({
-                                            inputRange: [0, 1],
-                                            outputRange: ['90deg', '0deg']
-                                        })
-                                    }
-                                ]
-                            }
-                        ]}
-                    >
-                        <Icon icon='close-outline' color='backgroundDark' size={24} />
-                    </Animated.View>
-                </Button>
-            </View>
-        );
-    };
 }
 
 export { NavBar };

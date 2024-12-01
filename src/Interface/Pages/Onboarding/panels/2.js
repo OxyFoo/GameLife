@@ -15,7 +15,7 @@ const sentence = Math.random() > 0.5 ? 'second' : 'second-bis';
 /**
  * @param {object} props
  * @param {number} props.index
- * @param {Animated.Value} [props.anim]
+ * @param {Animated.Value} props.anim
  * @param {() => void} [props.onNext]
  * @returns {JSX.Element}
  */
@@ -25,7 +25,7 @@ function RenderPage2({ index, anim, onNext }) {
     const inputRange = [index - 1, index, index + 1];
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZap1 = anim && {
+    const styleAnimZap1 = {
         transform: [
             { scale: anim.interpolate({ inputRange, outputRange: [0.8, 1, 0.8] }) },
             { translateX: anim.interpolate({ inputRange, outputRange: [48, 0, -96] }) }
@@ -33,12 +33,12 @@ function RenderPage2({ index, anim, onNext }) {
     };
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZap2 = anim && {
+    const styleAnimZap2 = {
         transform: [{ translateY: anim.interpolate({ inputRange, outputRange: [36, 0, -36] }) }]
     };
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZap1Ball = anim && {
+    const styleAnimZap1Ball = {
         transform: [
             { scale: anim.interpolate({ inputRange, outputRange: [0.8, 1.2, 1.4] }) },
             { rotate: anim.interpolate({ inputRange, outputRange: ['280deg', '360deg', '400deg'] }) },
@@ -48,7 +48,7 @@ function RenderPage2({ index, anim, onNext }) {
     };
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZap1Level = anim && {
+    const styleAnimZap1Level = {
         transform: [
             { scale: anim.interpolate({ inputRange, outputRange: [0.8, 1.2, 1.4] }) },
             { translateY: anim.interpolate({ inputRange, outputRange: [-24, 0, 24] }) }
@@ -56,7 +56,7 @@ function RenderPage2({ index, anim, onNext }) {
     };
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZap2Level = anim && {
+    const styleAnimZap2Level = {
         transform: [
             { scale: anim.interpolate({ inputRange, outputRange: [0.8, 1.2, 1.4] }) },
             { translateY: anim.interpolate({ inputRange, outputRange: [24, 0, -24] }) }

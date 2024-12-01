@@ -12,19 +12,25 @@ class Onboarding extends BackOnboarding {
     render() {
         const { selectedLangKey } = this.state;
 
+        const pages = [
+            <RenderPage0 onNext={this.Next} selectedLangKey={selectedLangKey} selectLanguage={this.selectLanguage} />
+        ];
+
+        const anim = this.refSwiper.current?.state.positionX;
+        if (anim) {
+            pages.push(
+                ...[
+                    <RenderPage1 index={1} anim={anim} onNext={this.Next} />,
+                    <RenderPage2 index={2} anim={anim} onNext={this.Next} />
+                ]
+            );
+        }
+
         return (
             <View style={styles.page}>
                 <Swiper
                     ref={this.refSwiper}
-                    pages={[
-                        <RenderPage0
-                            onNext={this.Next}
-                            selectedLangKey={selectedLangKey}
-                            selectLanguage={this.selectLanguage}
-                        />,
-                        <RenderPage1 index={1} anim={this.refSwiper.current?.state.positionX} onNext={this.Next} />,
-                        <RenderPage2 index={2} anim={this.refSwiper.current?.state.positionX} onNext={this.Next} />
-                    ]}
+                    pages={pages}
                     backgroundColor='transparent'
                     disableCircular
                     enableAutoNext={false}

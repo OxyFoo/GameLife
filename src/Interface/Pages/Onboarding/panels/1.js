@@ -13,7 +13,7 @@ import { Button, Text } from 'Interface/Components';
 /**
  * @param {object} props
  * @param {number} props.index
- * @param {Animated.Value} [props.anim]
+ * @param {Animated.Value} props.anim
  * @param {() => void} [props.onNext]
  * @returns {JSX.Element}
  */
@@ -23,7 +23,7 @@ function RenderPage1({ index, anim, onNext }) {
     const inputRange = [index - 1, index, index + 1];
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZapTriste = anim && {
+    const styleAnimZapTriste = {
         transform: [
             { scale: anim.interpolate({ inputRange, outputRange: [0.8, 1, 0.8] }) },
             { translateX: anim.interpolate({ inputRange, outputRange: [48, 0, -96] }) }
@@ -31,12 +31,12 @@ function RenderPage1({ index, anim, onNext }) {
     };
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZapCool = anim && {
+    const styleAnimZapCool = {
         transform: [{ translateY: anim.interpolate({ inputRange, outputRange: [36, 0, -36] }) }]
     };
 
     /** @type {Animated.WithAnimatedObject<ImageStyle> | undefined} */
-    const styleAnimZapCoolCadres = anim && {
+    const styleAnimZapCoolCadres = {
         transform: [
             { scale: anim.interpolate({ inputRange, outputRange: [0.8, 1.2, 1.4] }) },
             { translateY: anim.interpolate({ inputRange, outputRange: [24, 0, -48] }) }

@@ -4,6 +4,7 @@ import { Animated, Image, View } from 'react-native';
 import styles from './style';
 import UserHeaderBack from './back';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { OnlineView } from 'Interface/Primitives';
@@ -16,7 +17,10 @@ class UserHeader extends UserHeaderBack {
     render() {
         const lang = langManager.curr['home'];
         const { style } = this.props;
-        const { username, titleText, animPosY } = this.state;
+        const { username, titleID, animPosY } = this.state;
+
+        const title = dataManager.titles.GetByID(titleID);
+        const titleText = title === null ? '' : langManager.GetText(title.Name);
 
         const animStyle = { transform: [{ translateY: animPosY }] };
 

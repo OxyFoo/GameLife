@@ -218,7 +218,7 @@ class Activities extends IUserData {
     };
 
     /** @returns {Promise<boolean>} */
-    SaveOnline = async (attempt = 2) => {
+    SaveOnline = async (attempt = 1) => {
         if (!this.#isUnsaved()) {
             return true;
         }
@@ -542,7 +542,7 @@ class Activities extends IUserData {
             this.#UNSAVED_activities[indexUnsaved] = _newActivity;
         }
 
-        this.allActivities.Set(this.Get());
+        this.allActivities.Set(this.Get(true));
         return { status: 'edited', activity: editedActivity };
     }
 

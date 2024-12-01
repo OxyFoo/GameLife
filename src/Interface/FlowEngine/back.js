@@ -13,7 +13,6 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
- * @typedef {import('Interface/Global').ScreenList} ScreenList
  * @typedef {import('Interface/Global').ScreenInput} ScreenInput
  * @typedef {import('Interface/Global').BottomPanel} BottomPanel
  * @typedef {import('Interface/Global').Console} Console
@@ -65,9 +64,6 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 class BackFlowEngine extends React.Component {
     /** @type {React.RefObject<Popup>} */
     popup = React.createRef();
-
-    /** @type {React.RefObject<ScreenList>} */
-    screenList = React.createRef();
 
     /** @type {React.RefObject<ScreenInput>} */
     screenInput = React.createRef();
@@ -151,7 +147,6 @@ class BackFlowEngine extends React.Component {
     componentDidMount() {
         this._public.popup = this.popup.current;
         this._public.console = this.console.current;
-        this._public.screenList = this.screenList.current;
         this._public.screenInput = this.screenInput.current;
         this._public.bottomPanel = this.bottomPanel.current;
         this._public.userHeader = this.userHeader.current;
@@ -589,9 +584,6 @@ class BackFlowEngine extends React.Component {
 
         /** @type {Console | null} */
         console: null,
-
-        /** @type {ScreenList | null} */
-        screenList: null,
 
         /** @type {ScreenInput | null} */
         screenInput: null,

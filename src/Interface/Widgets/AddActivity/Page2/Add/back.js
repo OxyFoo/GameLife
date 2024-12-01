@@ -84,16 +84,18 @@ class BackActivityPage2Add extends React.Component {
             return;
         }
 
-        const saved = await user.activities.SaveOnline();
-        if (!saved) {
-            const lang = langManager.curr['activity'];
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-error-title'],
-                    message: lang['alert-error-message'].replace('{}', 'save online')
-                }
-            });
+        if (user.server2.IsAuthenticated()) {
+            const saved = await user.activities.SaveOnline();
+            if (!saved) {
+                const lang = langManager.curr['activity'];
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-error-title'],
+                        message: lang['alert-error-message'].replace('{}', 'save online')
+                    }
+                });
+            }
         }
 
         this.setState({ loading: false }, () => {
@@ -111,9 +113,9 @@ class BackActivityPage2Add extends React.Component {
 
         this.setState({ loading: true });
 
-        const removed = await RemoveActivity(editActivity);
+        const removedStatus = await RemoveActivity(editActivity);
 
-        if (!removed) {
+        if (removedStatus === 'error') {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
@@ -127,23 +129,27 @@ class BackActivityPage2Add extends React.Component {
             return;
         }
 
-        const results = await Promise.all([user.activities.SaveOnline(), user.interface.bottomPanel?.Close()]);
-
-        const saved = results[0];
-        if (!saved) {
-            await new Promise((resolve) => {
-                user.interface.popup?.OpenT({
-                    type: 'ok',
-                    data: {
-                        title: lang['alert-error-title'],
-                        message: lang['alert-error-message'].replace('{}', 'save online')
-                    },
-                    callback: resolve
+        if (user.server2.IsAuthenticated() && removedStatus === 'removed') {
+            const saved = await user.activities.SaveOnline();
+            if (!saved) {
+                await new Promise((resolve) => {
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-error-title'],
+                            message: lang['alert-error-message'].replace('{}', 'save online')
+                        },
+                        callback: resolve
+                    });
                 });
-            });
+            }
         }
 
-        this.setState({ loading: false });
+        this.setState({ loading: false }, () => {
+            if (removedStatus !== 'cancel') {
+                user.interface.bottomPanel?.Close();
+            }
+        });
     };
 
     isEdited = () => {

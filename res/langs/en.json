@@ -402,7 +402,7 @@
 
         "section-missions": "Discovery missions",
         "section-today-performance": "My activities of the day",
-        "section-today-quests": "My quests of the day",
+        "section-today-quests": "My quests",
         "section-my-todoes": "My to-do list",
 
         "btn-other-skills": "All skills",
@@ -561,6 +561,10 @@
         "alert-incorrect-message": "Your username must be between 4 and 24 characters long, and must not contain any insulting words.",
         "alert-error-title": "Error",
         "alert-error-message": "Change of username impossible",
+        "alert-titleerror-title": "Error",
+        "alert-titleerror-message": "Impossible to select this title, again tried again. ({})",
+        "alert-username-needconfirmation-title": "Confirmation",
+        "alert-username-needconfirmation-message": "Are you sure you want to change your username to \"{}\"?",
         "alert-emptytitle-title": "No title available",
         "alert-emptytitle-message": "You have not titles yet",
         "alert-birthtimewarning-title": "Change of date of birth",
@@ -663,13 +667,17 @@
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-report": "Report",
-        "input-consent": "Consent",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",
         "input-reconnect-tcp": "Reconnect to multiplayer",
         "input-tuto-again": "Review the tutorial",
         "input-delete-account": "Delete my account",
+
+        "consent-ios-title": "Advertising consent",
+        "consent-ios-message": "You can activate or deactivate personalized advertisements in your device settings",
+        "consent-ios-open-settings": "Open settings",
+        "consent-ios-cancel": "Cancel",
 
         "alert-disconnect-title": "Disconnecting",
         "alert-disconnect-message": "Do you want to log out? Data will only be saved locally",
@@ -684,7 +692,11 @@
         "alert-deletedmailtooearly-title": "Mail already sent",
         "alert-deletedmailtooearly-message": "A confirmation e-mail has already been sent to you, so please wait a few minutes before sending another, and don't forget to check your spam.",
         "alert-deletedfailed-title": "Failure",
-        "alert-deletedfailed-message": "The email was not sent, please check your internet connection or try again later."
+        "alert-deletedfailed-message": "The email was not sent, please check your internet connection or try again later.",
+        "alert-consent-not-available-title": "Error",
+        "alert-consent-not-available-message": "The consents are not available in your geographic area.",
+        "alert-consent-error-title": "Error",
+        "alert-consent-error-message": "The consents are not available at the moment, please try again later."
     },
 
     "shop": {
@@ -1020,7 +1032,7 @@
     "wait": {
         "wait-internet-text": "The GameLife server is down.\n\nCheck your Internet connection or try again later!\n\nIf the problem persists, contact us on Discord or by e-mail, which you'll find on our website:",
         "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
-        "wait-email-text": "An email has been sent to you to authorize your device to connect.\n\nThe email may be sent after a few minutes, check your spam.",
+        "wait-email-text": "An email has been sent to you to authorize your device to connect. Accepts it and come back to the application.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-remain": "Mail sent again in {}m{}s",
         "wait-email-send": "Mail sent !"
     },

@@ -84,6 +84,11 @@ class InputText extends InputTextBack {
             color: themeManager.GetColor(textColor)
         };
 
+        /** @type {TextInputProps} */
+        const styleInput = {
+            verticalAlign: props.multiline ? 'top' : 'middle'
+        };
+
         /** @type {ViewStyle} */
         const containerStyle2 = {
             borderColor: hexColor,
@@ -132,7 +137,7 @@ class InputText extends InputTextBack {
                     </>
                 )}
 
-                {/* Title (in center or move into top border if focused or active) */}
+                {/* Label (in center or move into top border if focused or active) */}
                 <Animated.View
                     style={[
                         styles.placeholderParent,
@@ -169,7 +174,7 @@ class InputText extends InputTextBack {
                     {...props}
                     testID={'textInput'}
                     ref={this.refInput}
-                    style={[styles.input, colorStyle, style]}
+                    style={[styles.input, styleInput, colorStyle, style]}
                     selectionColor={'white'}
                     placeholderTextColor={placeholderTextColor || themeManager.GetColor('secondary')}
                     onFocus={this.onFocusIn}

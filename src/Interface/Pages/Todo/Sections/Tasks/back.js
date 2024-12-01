@@ -5,6 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { MinMax } from 'Utils/Functions';
+import { MAX_TASKS } from 'Data/User/Todos';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -82,7 +83,7 @@ class BackSectionTasks extends React.Component {
         const { todo, onChangeTodo } = this.props;
         if (todo === null) return;
 
-        if (todo.tasks.length >= 20) {
+        if (todo.tasks.length >= MAX_TASKS) {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
@@ -176,8 +177,17 @@ class BackSectionTasks extends React.Component {
      * @param {Task} item
      */
     dragStart = (event, item) => {
-        const { draggedItem } = this.state;
-        if (draggedItem !== null) return;
+        const { draggedItem, tasks } = this.state;
+
+        // If there is already an item being dragged, ignore the event
+        if (draggedItem !== null) {
+            return;
+        }
+
+        // If there is only one task, ignore the event
+        if (tasks.length <= 1) {
+            return;
+        }
 
         this.lastY = event.nativeEvent.pageY;
         this.timeoutDrag = setTimeout(() => {

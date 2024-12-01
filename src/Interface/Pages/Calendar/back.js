@@ -317,7 +317,7 @@ class BackCalendar extends PageBase {
         if (!this.hideSummary && y > 150) {
             this.hideSummary = true;
             SpringAnimation(this.state.animSummaryY, -this.summaryHeight, false).start();
-        } else if (this.hideSummary && y <= 50) {
+        } else if (this.hideSummary && y <= 40) {
             this.hideSummary = false;
             SpringAnimation(this.state.animSummaryY, 0, false).start();
         }

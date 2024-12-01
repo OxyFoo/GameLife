@@ -105,6 +105,18 @@ class BackNewPage extends PageBase {
 
     /** @param {Quest} item */
     onDrag = (item) => {
+        const { draggedItem, quests } = this.state;
+
+        // Prevent dragging if already dragging
+        if (draggedItem !== null) {
+            return;
+        }
+
+        // Prevent dragging if only one quest
+        if (quests.length <= 1) {
+            return;
+        }
+
         this.setState({ draggedItem: item, scrollable: false });
 
         this.selectedIndex = user.quests.Get().indexOf(item);

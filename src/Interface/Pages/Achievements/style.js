@@ -55,15 +55,19 @@ const styles = StyleSheet.create({
     },
     achievementContent: {
         flex: 1,
-        paddingVertical: 12,
+        paddingTop: 6,
+        paddingBottom: 12,
         paddingHorizontal: 12
     },
 
     // Card content
     achievementContentTitle: {
-        marginBottom: 4,
+        marginTop: 6,
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    achievementInfoIcon: {
+        marginTop: 1
     },
     achievementTitle: {
         fontSize: 18,
@@ -72,7 +76,6 @@ const styles = StyleSheet.create({
 
     // Card content description / condition / reward (rollable)
     achievementContentDescription: {
-        marginTop: 6,
         overflow: 'hidden'
     },
     achievementDescription: {
@@ -86,7 +89,6 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     achievementGlobalProgression: {
-        marginBottom: 6,
         textAlign: 'left',
         fontSize: 14
     },

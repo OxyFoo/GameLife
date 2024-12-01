@@ -402,7 +402,7 @@
 
         "section-missions": "Missions découverte",
         "section-today-performance": "Mes activités du jour",
-        "section-today-quests": "Mes quêtes du jour",
+        "section-today-quests": "Mes quêtes",
         "section-my-todoes": "Mes listes",
 
         "btn-other-skills": "Toutes les comp.",
@@ -561,6 +561,10 @@
         "alert-incorrect-message": "Ton pseudo doit contenir entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
         "alert-error-title": "Erreur",
         "alert-error-message": "Modification du pseudo impossible",
+        "alert-titleerror-title": "Erreur",
+        "alert-titleerror-message": "Impossible de sélectionner ce titre, réessaye plus tard. ({})",
+        "alert-username-needconfirmation-title": "Confirmation",
+        "alert-username-needconfirmation-message": "Es-tu sûr(e) de vouloir changer ton pseudo en \"{}\" ?",
         "alert-emptytitle-title": "Pas de titres disponibles",
         "alert-emptytitle-message": "Tu n'as pas encore de titre à sélectionner",
         "alert-birthtimewarning-title": "Changement de date de naissance",
@@ -663,13 +667,17 @@
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",
         "input-report": "Report",
-        "input-consent": "Consentement",
         "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",
         "input-reconnect-tcp": "Se reconnecter au multijoueur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
+
+        "consent-ios-title": "Consentement publicitaire",
+        "consent-ios-message": "Tu peux activer ou désactiver les publicités personnalisées dans les paramètres de ton appareil",
+        "consent-ios-open-settings": "Ouvrir les paramètres",
+        "consent-ios-cancel": "Annuler",
 
         "alert-disconnect-title": "Se déconnecter",
         "alert-disconnect-message": "Veux-tu te déconnecter ?",
@@ -684,7 +692,11 @@
         "alert-deletedmailtooearly-title": "Mail déjà envoyé",
         "alert-deletedmailtooearly-message": "Un mail de confirmation t'a déjà été envoyé, patiente quelques minutes avant d'en renvoyer un, oublie pas de vérifier tes spams.",
         "alert-deletedfailed-title": "Échec",
-        "alert-deletedfailed-message": "Le mail n'a pas été envoyé, vérifie ta connexion internet ou réessaye plus tard."
+        "alert-deletedfailed-message": "Le mail n'a pas été envoyé, vérifie ta connexion internet ou réessaye plus tard.",
+        "alert-consent-not-available-title": "Erreur",
+        "alert-consent-not-available-message": "Les consents ne sont pas disponibles dans ta zone géographique.",
+        "alert-consent-error-title": "Erreur",
+        "alert-consent-error-message": "Les consents ne sont pas disponibles pour le moment, réessaye plus tard."
     },
 
     "shop": {
@@ -1020,7 +1032,7 @@
     "wait": {
         "wait-internet-text": "Le serveur de GameLife est inaccessible.\n\nVérifie ta connexion internet ou réessaye plus tard !\n\nSi le problème persiste, contacte-nous sur Discord ou par mail que tu trouveras sur notre site:",
         "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",
-        "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
+        "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte. Accepte le et reviens sur l'application.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-send": "Mail envoyé !"
     },

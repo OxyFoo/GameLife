@@ -6,8 +6,10 @@ import langManager from 'Managers/LangManager';
 
 import { Button, Text } from 'Interface/Components';
 import styles from './style';
+import themeManager from 'Managers/ThemeManager';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('./back').HistoryActivityItem} HistoryActivityItem
  * @typedef {import('react-native').ListRenderItem<HistoryActivityItem>} FlatListRenderItem
  *
@@ -22,12 +24,20 @@ import styles from './style';
 function HistoryView(props) {
     const lang = langManager.curr['skill'];
 
+    /** @type {ViewStyle} */
+    const styleSeparator = {
+        backgroundColor: themeManager.GetColor('white')
+    };
+
     return (
         <View>
             <Text style={styles.historyTitle}>{lang['history-title']}</Text>
 
+            <View style={[styles.historySeparator, styleSeparator]} />
+
             <Animated.FlatList
                 ref={user.interface.bottomPanel?.mover.SetScrollView}
+                style={styles.historyFlatList}
                 onLayout={user.interface.bottomPanel?.mover.onLayoutFlatList}
                 onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
                 data={props.items}

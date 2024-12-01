@@ -241,21 +241,23 @@ class BackQuest extends PageBase {
         user.missions.SetMissionState('mission2', 'completed');
 
         // Save online
-        this.setState({ loading: true });
-        const saved = await user.quests.SaveOnline();
-        this.setState({ loading: false });
+        if (user.server2.IsAuthenticated()) {
+            this.setState({ loading: true });
+            const saved = await user.quests.SaveOnline();
+            this.setState({ loading: false });
 
-        // If not saved, show error
-        if (!saved) {
-            user.interface.console?.AddLog('error', 'Quest: Error saving');
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-save-error-title'],
-                    message: lang['alert-save-error-message']
-                }
-            });
-            return;
+            // If not saved, show error
+            if (!saved) {
+                user.interface.console?.AddLog('error', 'Quest: Error saving');
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-save-error-title'],
+                        message: lang['alert-save-error-message']
+                    }
+                });
+                return;
+            }
         }
 
         // Come back to queststats
@@ -294,21 +296,23 @@ class BackQuest extends PageBase {
         user.missions.SetMissionState('mission2', 'completed');
 
         // Save online
-        this.setState({ loading: true });
-        const saved = await user.quests.SaveOnline();
-        this.setState({ loading: false });
+        if (user.server2.IsAuthenticated()) {
+            this.setState({ loading: true });
+            const saved = await user.quests.SaveOnline();
+            this.setState({ loading: false });
 
-        // If not saved, show error
-        if (!saved) {
-            user.interface.console?.AddLog('error', 'Quest: Error saving');
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-save-error-title'],
-                    message: lang['alert-save-error-message']
-                }
-            });
-            return;
+            // If not saved, show error
+            if (!saved) {
+                user.interface.console?.AddLog('error', 'Quest: Error saving');
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-save-error-title'],
+                        message: lang['alert-save-error-message']
+                    }
+                });
+                return;
+            }
         }
 
         user.interface.RemoveCustomBackHandler(this.BackHandler);
@@ -352,21 +356,23 @@ class BackQuest extends PageBase {
                 }
 
                 // Save online
-                this.setState({ loading: true });
-                const saved = await user.quests.SaveOnline();
-                this.setState({ loading: false });
+                if (user.server2.IsAuthenticated()) {
+                    this.setState({ loading: true });
+                    const saved = await user.quests.SaveOnline();
+                    this.setState({ loading: false });
 
-                // If not saved, show error
-                if (!saved) {
-                    user.interface.console?.AddLog('error', 'Quest: Error saving');
-                    user.interface.popup?.OpenT({
-                        type: 'ok',
-                        data: {
-                            title: lang['alert-save-error-title'],
-                            message: lang['alert-save-error-message']
-                        }
-                    });
-                    return;
+                    // If not saved, show error
+                    if (!saved) {
+                        user.interface.console?.AddLog('error', 'Quest: Error saving');
+                        user.interface.popup?.OpenT({
+                            type: 'ok',
+                            data: {
+                                title: lang['alert-save-error-title'],
+                                message: lang['alert-save-error-message']
+                            }
+                        });
+                        return;
+                    }
                 }
 
                 // Come back to queststats

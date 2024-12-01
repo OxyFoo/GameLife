@@ -40,6 +40,32 @@ const styles = StyleSheet.create({
         width: 'auto',
         paddingVertical: 14,
         marginTop: 12
+    },
+
+    // History
+    titlesContainer: {
+        height: 'auto',
+        maxHeight: '100%'
+    },
+    titlesTitle: {
+        marginTop: 24,
+        marginBottom: 12,
+        fontSize: 24
+    },
+    titlesSeparator: {
+        width: '80%',
+        height: 1,
+        alignSelf: 'center'
+    },
+    titlesFlatList: {
+        maxHeight: '85%'
+    },
+    titlesItem: {
+        width: 'auto',
+        marginHorizontal: 24,
+        paddingVertical: 12,
+        paddingHorizontal: 6,
+        marginVertical: 2
     }
 });
 

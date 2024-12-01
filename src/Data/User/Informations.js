@@ -179,12 +179,14 @@ class Informations extends IUserData {
     /**
      * Online request to change username
      * @param {string} username
+     * @param {boolean} confirmed
      * @returns {Promise<ServerRequestSetUsername['result'] | null>}
      */
-    SetUsername = async (username) => {
+    SetUsername = async (username, confirmed = false) => {
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'set-username',
-            username: username
+            confirmed,
+            username
         });
 
         if (

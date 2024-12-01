@@ -273,7 +273,7 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
 
 /**
  * @param {Activity} activity
- * @returns {Promise<boolean>} True if activity was removed successfully
+ * @returns {Promise<'removed' | 'cancel' | 'error'>} True if activity was removed successfully
  */
 async function RemoveActivity(activity) {
     const lang = langManager.curr['activity'];
@@ -288,7 +288,7 @@ async function RemoveActivity(activity) {
             callback: (button) => {
                 // Popup closed
                 if (button !== 'yes') {
-                    resolve(false);
+                    resolve('cancel');
                     return;
                 }
 
@@ -303,11 +303,11 @@ async function RemoveActivity(activity) {
                             message: lang['alert-error-not-exist-message']
                         }
                     });
-                    resolve(false);
+                    resolve('error');
                     return;
                 }
 
-                resolve(true);
+                resolve('removed');
             }
         });
     });

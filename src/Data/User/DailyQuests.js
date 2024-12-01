@@ -243,7 +243,7 @@ class DailyQuest extends IUserData {
     };
 
     /** @returns {Promise<boolean>} */
-    SaveOnline = async (attempt = 2) => {
+    SaveOnline = async (attempt = 1) => {
         if (!this.#isUnsaved()) return true;
 
         const data = this.#getUnsaved();

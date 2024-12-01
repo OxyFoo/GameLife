@@ -17,6 +17,7 @@ class BackAbout extends PageBase {
         this.contributors = allContributors
             .reverse()
             .map((contrib) => contrib.Name)
+            .filter((name) => !!name)
             .join(', ');
         this.versionText = langManager.curr['about']['text-version'].replace('{}', versionName);
     }

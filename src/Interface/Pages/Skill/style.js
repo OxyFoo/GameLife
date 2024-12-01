@@ -85,6 +85,15 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         fontSize: 24
     },
+    historySeparator: {
+        width: '80%',
+        height: 1,
+        alignSelf: 'center'
+    },
+    historyFlatList: {
+        width: '100%',
+        maxHeight: '85%' // TODO: Calculate the height of parent bottomPanel
+    },
     historyItem: {
         width: 'auto',
         marginHorizontal: 24,

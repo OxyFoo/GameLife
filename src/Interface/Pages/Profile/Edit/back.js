@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import TitlesView from './titles';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
@@ -8,6 +9,10 @@ import { GetAge, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native-modal-datetime-picker').default} DateTimePickerModal
+ *
+ * @typedef {object} TitleItem
+ * @property {number} id
+ * @property {string} text
  */
 
 class BackProfileEditor extends React.PureComponent {
@@ -88,13 +93,22 @@ class BackProfileEditor extends React.PureComponent {
     handleChangeTitle = () => {
         const lang = langManager.curr['profile'];
 
-        const emptyTitle = { id: 0, value: lang['input-title-none'] };
-        const userTitles = user.inventory
-            .GetTitles()
-            .map((title) => ({ id: title.ID, value: langManager.GetText(title.Name) }));
-        const availableTitles = [emptyTitle, ...userTitles];
+        /** @type {TitleItem[]} */
+        const userTitlesItems = [
+            // Option to unselect title
+            {
+                id: 0,
+                text: lang['input-title-none']
+            },
 
-        if (!userTitles.length) {
+            // User titles
+            ...user.inventory.GetTitles().map((title) => ({
+                id: title.ID,
+                text: langManager.GetText(title.Name)
+            }))
+        ];
+
+        if (userTitlesItems.length <= 0) {
             // No titles available
             user.interface.popup?.OpenT({
                 type: 'ok',
@@ -107,14 +121,10 @@ class BackProfileEditor extends React.PureComponent {
             return;
         }
 
-        user.interface.screenList?.Open(lang['input-select-title'], availableTitles, (id) => {
-            user.informations.SetTitle(id);
-
-            const title = dataManager.titles.GetByID(id);
-            if (title === null) return;
-
-            const newTitle = langManager.GetText(title.Name);
-            this.setState({ title: newTitle });
+        user.interface.bottomPanel?.Open({
+            content: <TitlesView items={userTitlesItems} onTitleSelected={this.setTitle} />,
+            maxPosY: user.interface.size.height * 0.6,
+            zIndex: 100
         });
     };
 
@@ -194,54 +204,122 @@ class BackProfileEditor extends React.PureComponent {
         });
     };
 
-    /** @param {string | null} username */
-    onChangeUsername = async (username) => {
+    /**
+     * @param {string | null} username
+     * @param {boolean} [confirmed]
+     */
+    onChangeUsername = async (username, confirmed = false) => {
         const lang = langManager.curr['profile'];
 
         if (username === null) return;
 
         if (!username.length || username === user.informations.username.Get()) return;
-        const state = await user.informations.SetUsername(username);
+        const state = await user.informations.SetUsername(username, confirmed);
 
-        if (state === 'ok') {
-            this.setState({ username });
-        } else if (state === 'usernameIsAlreadyUsed') {
-            const title = lang['alert-alreadyUsed-title'];
-            const message = lang['alert-alreadyUsed-message'];
+        // Manage errors
+        if (state === 'usernameIsAlreadyUsed') {
             user.interface.popup?.OpenT({
                 type: 'ok',
-                data: { title, message },
+                data: {
+                    title: lang['alert-alreadyUsed-title'],
+                    message: lang['alert-alreadyUsed-message']
+                },
                 callback: this.openUsernamePopup,
                 priority: true
             });
+            return;
         } else if (state === 'usernameIsAlreadyChanged') {
             const info = user.informations.GetInfoToChangeUsername();
-            const title = lang['alert-alreadyChanged-title'];
-            const message = lang['alert-alreadyChanged-message'].replace('{}', info.remain.toString());
             user.interface.popup?.OpenT({
                 type: 'ok',
-                data: { title, message },
+                data: {
+                    title: lang['alert-alreadyChanged-title'],
+                    message: lang['alert-alreadyChanged-message'].replace('{}', info.remain.toString())
+                },
                 priority: true
             });
+            return;
         } else if (state === 'invalidUsername') {
-            const title = lang['alert-incorrect-title'];
-            const message = lang['alert-incorrect-message'];
             user.interface.popup?.OpenT({
                 type: 'ok',
-                data: { title, message },
+                data: {
+                    title: lang['alert-incorrect-title'],
+                    message: lang['alert-incorrect-message']
+                },
                 callback: this.openUsernamePopup,
                 priority: true
             });
-        } else if (state === 'error') {
-            const title = lang['alert-error-title'];
-            const message = lang['alert-error-message'];
+            return;
+        } else if (state === 'okButNotConfirmed') {
+            user.interface.popup?.OpenT({
+                type: 'yesno',
+                data: {
+                    title: lang['alert-username-needconfirmation-title'],
+                    message: lang['alert-username-needconfirmation-message'].replace('{}', username)
+                },
+                callback: (bt) => {
+                    if (bt === 'yes') {
+                        this.onChangeUsername(username, true);
+                    }
+                },
+                priority: true
+            });
+            return;
+        } else if (state === 'error' || state !== 'ok') {
             user.interface.popup?.OpenT({
                 type: 'ok',
-                data: { title, message },
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message']
+                },
                 callback: this.openUsernamePopup,
                 priority: true
             });
+            return;
         }
+
+        // Username changed
+        this.setState({ username });
+    };
+
+    /** @param {number} id */
+    setTitle = (id) => {
+        const lang = langManager.curr['profile'];
+
+        // Close bottom panel
+        user.interface.bottomPanel?.Close();
+
+        // Unselect title
+        if (id === 0) {
+            user.informations.SetTitle(0);
+            this.setState({
+                title: lang['value-title-empty']
+            });
+            return;
+        }
+
+        // Select title
+        const title = dataManager.titles.GetByID(id);
+
+        // Title not found
+        if (title === null) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-titleerror-title'],
+                    message: lang['alert-titleerror-message'].replace('{}', `ID: ${id}`)
+                },
+                priority: true
+            });
+            user.interface.console?.AddLog('error', `Title not found: ID ${id}`);
+            return;
+        }
+
+        // Set title
+        user.informations.SetTitle(id);
+        this.setState({
+            title: langManager.GetText(title.Name)
+        });
     };
 
     onClosePress = () => {

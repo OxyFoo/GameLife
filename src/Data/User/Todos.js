@@ -11,6 +11,7 @@ import { GetGlobalTime } from 'Utils/Time';
  */
 
 const MAX_TODOES = 10;
+const MAX_TASKS = 20;
 
 /** @extends {IUserData<SaveObject_Todos>} */
 class Todos extends IUserData {
@@ -457,7 +458,7 @@ class Todos extends IUserData {
         // Update sort
         this.#sort.splice(oldIndex, 1);
         this.#sort.splice(newIndex, 0, todo.created);
-        this.SAVED_sort = false;
+        this.#sortSaved = false;
         this.todos.Set(this.Get());
         return true;
     }
@@ -492,4 +493,5 @@ class Todos extends IUserData {
     }
 }
 
+export { MAX_TODOES, MAX_TASKS };
 export default Todos;

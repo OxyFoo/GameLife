@@ -103,9 +103,9 @@ class AddActivityPage1 extends BackActivityPage1 {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderSkill}
                     ListEmptyComponent={this.renderEmptyList}
-                    initialNumToRender={10}
-                    maxToRenderPerBatch={5}
-                    windowSize={10}
+                    initialNumToRender={20}
+                    maxToRenderPerBatch={20}
+                    windowSize={50}
                     getItemLayout={this.getItemLayout}
                     onScroll={this.handleScroll}
                     scrollEnabled={false}
@@ -152,8 +152,7 @@ class AddActivityPage1 extends BackActivityPage1 {
 
         return (
             <SkillButton
-                // TODO: The button on the index 0 does not apply the animation if it is not rendered after the first frame, why?
-                key={index === 0 ? Math.random().toString() : id.toString()}
+                key={id.toString()}
                 id={id}
                 index={index}
                 styleAnimation={this.getAnimationStyles(index)}

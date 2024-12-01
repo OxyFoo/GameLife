@@ -57,9 +57,9 @@ class ActivitySelector extends React.Component {
 
         // Focus input if searching
         if (!isSearching) {
-            this.refInput.current?.focus?.();
+            this.refInput.current?.refInput.current?.focus?.();
         } else {
-            this.refInput.current?.blur?.();
+            this.refInput.current?.refInput.current?.blur?.();
         }
     };
     /** @param {string} search */

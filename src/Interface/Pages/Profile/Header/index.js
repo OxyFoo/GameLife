@@ -3,13 +3,18 @@ import { View } from 'react-native';
 
 import styles from './style';
 import HeaderBack from './back';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
 import { Text, Icon, Button } from 'Interface/Components';
 
 class Header extends HeaderBack {
     render() {
         const { style } = this.props;
-        const { username, titleText } = this.state;
+        const { username, titleID } = this.state;
+
+        const title = dataManager.titles.GetByID(titleID);
+        const titleText = title === null ? '' : langManager.GetText(title.Name);
 
         return (
             <View style={[styles.container, style]}>

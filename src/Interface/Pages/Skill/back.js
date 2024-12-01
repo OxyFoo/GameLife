@@ -50,6 +50,9 @@ class BackSkill extends PageBase {
         history: []
     };
 
+    /** @type {boolean} Used to avoid multiple comebacks */
+    alreadyComeback = false;
+
     /** @type {Symbol | null} */
     listenerActivity = null;
 
@@ -154,7 +157,8 @@ class BackSkill extends PageBase {
             },
             async () => {
                 // If history is empty, come back
-                if (this.state.history.length === 0) {
+                if (this.state.history.length === 0 && !this.alreadyComeback) {
+                    this.alreadyComeback = true;
                     await user.interface.bottomPanel?.Close();
                     this.onBackPress();
                 }

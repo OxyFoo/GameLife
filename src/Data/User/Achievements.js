@@ -119,7 +119,7 @@ class Achievements extends IUserData {
     };
 
     /** @returns {Promise<boolean>} */
-    SaveOnline = async (attempt = 2) => {
+    SaveOnline = async (attempt = 1) => {
         if (!this.#isUnsaved()) {
             return true;
         }
@@ -417,10 +417,27 @@ class Achievements extends IUserData {
     // TODO: Finish achievements progressions
     /**
      * Get progress of an achievement
-     * @param {number} _achievementID
+     * @param {number} achievementID
      * @returns {number} Progress of the achievement between 0 and 1
      */
-    GetProgress = (_achievementID) => {
+    GetProgress = (achievementID) => {
+        const achievement = dataManager.achievements.GetByID(achievementID);
+        if (achievement === null || achievement.Type !== 'SHOW' || achievement.Condition === null) {
+            return 0;
+        }
+
+        switch (achievement.Condition.Comparator.Type) {
+            case 'Level':
+                const userLvl = this.#user.experience.experience.Get().xpInfo.lvl;
+                const targetLvl = achievement.Condition.Value;
+
+                if (typeof targetLvl !== 'number') {
+                    return 0;
+                }
+
+                return userLvl / targetLvl;
+        }
+
         return 0;
     };
 
@@ -605,7 +622,9 @@ class Achievements extends IUserData {
 
             this.#UNSAVED_achievements.push(...newAchievements);
             this.#updateAchievements();
-            await this.SaveOnline();
+            if (this.#user.server2.IsAuthenticated()) {
+                await this.SaveOnline();
+            }
             await this.#user.SaveLocal();
         }
 

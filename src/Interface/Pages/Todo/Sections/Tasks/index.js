@@ -8,7 +8,9 @@ import langManager from 'Managers/LangManager';
 import { Text, Button, Icon } from 'Interface/Components';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').TextStyle} TextStyle
+ *
  * @typedef {import('Types/Data/User/Todos').Task} Task
  */
 
@@ -18,10 +20,17 @@ class SectionTasks extends BackSectionTasks {
         const { style } = this.props;
         const { tasks, draggedItem, mouseY } = this.state;
 
+        const countCheckedTasks = tasks.reduce((acc, task) => (task.checked ? acc + 1 : acc), 0);
+
         return (
             <View style={style}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>{lang['input-task-title']}</Text>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>{lang['input-task-title']}</Text>
+                        <Text style={styles.tasksChecked} color='secondary'>
+                            {`(${countCheckedTasks}/${tasks.length})`}
+                        </Text>
+                    </View>
                     <Button style={styles.smallButton} appearance='uniform' color='transparent' onPress={this.addTask}>
                         <Icon icon='add' size={26} color='gradient' />
                     </Button>
@@ -60,10 +69,20 @@ class SectionTasks extends BackSectionTasks {
     renderTask = ({ item }) => {
         const { draggedItem } = this.state;
 
-        const styleOpacity = { opacity: 1 };
+        /** @type {ViewStyle} */
+        const styleOpacity = {
+            opacity: 1
+        };
+
+        // If the item is being dragged, reduce its opacity
         if (draggedItem === item) {
             styleOpacity.opacity = 0.25;
         }
+
+        /** @type {TextStyle} */
+        const styleText = {
+            textDecorationLine: item.checked ? 'line-through' : 'none'
+        };
 
         return (
             <View
@@ -90,7 +109,9 @@ class SectionTasks extends BackSectionTasks {
                     activeOpacity={0.6}
                     onPress={() => this.editTitleTask(item)}
                 >
-                    <Text style={styles.taskText}>{item.title}</Text>
+                    <Text style={[styles.taskText, styleText]} color={!item.checked ? 'primary' : 'secondary'}>
+                        {item.title}
+                    </Text>
                 </TouchableOpacity>
 
                 {/* Edit / Trash button */}

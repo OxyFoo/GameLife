@@ -103,6 +103,18 @@ class BackTodoList extends React.Component {
 
     /** @param {Todo} item */
     onDrag = (item) => {
+        const { draggedItem, todoes } = this.state;
+
+        // If already dragging, do nothing
+        if (draggedItem !== null) {
+            return;
+        }
+
+        // If only one todo, do nothing
+        if (todoes.length <= 1) {
+            return;
+        }
+
         this.props.changeScrollable(false);
         this.setState({ draggedItem: item });
 

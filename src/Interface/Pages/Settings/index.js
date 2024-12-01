@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { ScrollView, Platform } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import styles from './style';
 import BackSettings from './back';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -12,7 +11,7 @@ import { PageHeader } from 'Interface/Widgets';
 
 class Settings extends BackSettings {
     render = () => {
-        const { cbSelectedLang, sendingMail, devicesLoading } = this.state;
+        const { cbSelectedLang, sendingMail, devicesLoading, waitingConsentPopup } = this.state;
 
         //const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
@@ -68,14 +67,15 @@ class Settings extends BackSettings {
                     {lang['input-notifications']}
                 </Button>
 
+                {/* Consent popup */}
                 <Button
                     style={styles.margin}
                     appearance='outline'
-                    icon='arrow-left'
                     iconAngle={180}
-                    onPress={this.openConsents}
+                    onPress={this.openConsentPopup}
+                    loading={waitingConsentPopup}
                 >
-                    {lang['input-consent']}
+                    {lang['input-ad-consent']}
                 </Button>
 
                 <Text style={styles.title} color='border'>

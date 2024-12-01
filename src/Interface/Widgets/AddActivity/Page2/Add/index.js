@@ -37,7 +37,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 {/* Add later or already done */}
                 <Text style={styles.title}>{editActivity === null ? lang['title-add'] : lang['title-edit']}</Text>
 
-                {/* Button: Select day */}
+                {/* Select start day & start time */}
                 <View style={styles.plannerContent}>
                     <Button
                         style={styles.plannerButtonLeft}
@@ -62,6 +62,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                     </Button>
                 </View>
 
+                {/* Select end time or duration */}
                 <View style={styles.starttime}>
                     {/* Input: End time (by duration) */}
                     <View style={[styles.stButtonLeft, styleBorderColor]}>

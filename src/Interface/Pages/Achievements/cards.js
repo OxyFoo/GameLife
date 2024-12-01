@@ -9,6 +9,7 @@ import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button, ProgressBar, Icon } from 'Interface/Components';
+import { Round } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -61,6 +62,8 @@ function AchievementCard({ item: achievement }) {
                             achievement={achievement}
                             animation={animation}
                             maxHeight={maxHeight}
+                            isSolved={isSolved}
+                            isOpened={isOpened}
                             onContentLayout={onContentLayout}
                         />
                     }
@@ -70,6 +73,8 @@ function AchievementCard({ item: achievement }) {
                     achievement={achievement}
                     animation={animation}
                     maxHeight={maxHeight}
+                    isSolved={isSolved}
+                    isOpened={isOpened}
                     onContentLayout={onContentLayout}
                 />
             )}
@@ -82,23 +87,34 @@ function AchievementCard({ item: achievement }) {
  * @param {PanelAchievementType} props.achievement
  * @param {Animated.Value} props.animation
  * @param {number} props.maxHeight
+ * @param {boolean} props.isSolved
+ * @param {boolean} props.isOpened
  * @param {(event: LayoutChangeEvent) => void} props.onContentLayout
  */
-function AchievementCardContent({ achievement, animation, maxHeight, onContentLayout }) {
+function AchievementCardContent({ achievement, animation, maxHeight, isSolved, isOpened, onContentLayout }) {
     const lang = langManager.curr['achievements'];
     const { ID, Name, Progress, GlobalPercentage } = achievement;
 
+    const [styleTitle, setStyleTitle] = React.useState({
+        marginBottom: Animated.multiply(animation, 4)
+    });
+
     const [styleDescription, setStyleDescription] = React.useState({
         opacity: animation,
+        marginTop: isOpened ? 2 : 0,
         maxHeight: maxHeight === -1 ? undefined : Animated.multiply(animation, maxHeight)
     });
 
     React.useEffect(() => {
+        setStyleTitle({
+            marginBottom: Animated.multiply(animation, 4)
+        });
         setStyleDescription({
             opacity: animation,
+            marginTop: isOpened ? 2 : 0,
             maxHeight: maxHeight === -1 ? undefined : Animated.multiply(animation, maxHeight)
         });
-    }, [animation, maxHeight]);
+    }, [animation, maxHeight, isOpened]);
 
     const achievementData = dataManager.achievements.GetByID(ID);
     if (achievementData === null) {
@@ -122,13 +138,15 @@ function AchievementCardContent({ achievement, animation, maxHeight, onContentLa
 
     return (
         <View style={styles.achievementContent}>
-            <View style={styles.achievementContentTitle}>
+            {/* Title & info icon */}
+            <Animated.View style={[styles.achievementContentTitle, styleTitle]}>
                 <Text style={styles.achievementTitle}>{Name}</Text>
-                <Animated.View style={styleIcon}>
+                <Animated.View style={[styles.achievementInfoIcon, styleIcon]}>
                     <Icon icon='info-circle-outline' color='gradient' size={22} />
                 </Animated.View>
-            </View>
+            </Animated.View>
 
+            {/* Description, condition, reward */}
             <Animated.View style={[styles.achievementContentDescription, styleDescription]} onLayout={onContentLayout}>
                 <Text style={styles.achievementDescription} color='main1'>
                     {lang['condition-text'] + conditionText}
@@ -141,12 +159,15 @@ function AchievementCardContent({ achievement, animation, maxHeight, onContentLa
                 </Text>
             </Animated.View>
 
-            <View>
-                <Text style={styles.achievementProgressionValue} color='secondary'>
-                    {Progress + '%'}
-                </Text>
-                <ProgressBar height={6} value={Progress} maxValue={1} />
-            </View>
+            {/* Progress bar */}
+            {!isSolved && Progress > 0 && (
+                <View>
+                    <Text style={styles.achievementProgressionValue} color='secondary'>
+                        {`${Round(Progress * 100, 1)}%`}
+                    </Text>
+                    <ProgressBar height={6} value={Progress} maxValue={1} />
+                </View>
+            )}
         </View>
     );
 }

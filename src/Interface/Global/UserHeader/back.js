@@ -27,7 +27,7 @@ class UserHeaderBack extends React.Component {
     state = {
         height: 0,
         username: user.informations.username.Get(),
-        titleText: user.informations.GetTitleText(),
+        titleID: user.informations.title.Get(),
         animPosY: new Animated.Value(-128),
         showAvatar: false
     };
@@ -85,7 +85,7 @@ class UserHeaderBack extends React.Component {
     update = () => {
         this.setState({
             username: user.informations.username.Get(),
-            titleText: user.informations.GetTitleText()
+            titleID: user.informations.title.Get()
         });
     };
 

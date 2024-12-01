@@ -15,7 +15,6 @@ const MAX_SKILLS = 10;
 /**
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Data/User/Quests').Quest} Quest
- * @typedef {import('Interface/Global/ScreenList').ScreenListItem} ScreenListItem
  *
  * @typedef {Object} SectionSkillPropsType
  * @property {Quest | null} quest
@@ -34,25 +33,26 @@ const SectionSkillProps = {
 };
 
 class SectionSkill extends React.Component {
+    // TODO: Unused ?
     OpenCategoriesSelection = () => {
         const title = langManager.curr['quest']['input-panel-category'];
-        /** @type {ScreenListItem[]} */
         const data = dataManager.skills.categories.map((category) => ({
             id: category.ID,
             value: langManager.GetText(category.Name)
         }));
-        user.interface.screenList?.Open(title, data, (id) => {
-            setTimeout(() => {
-                this.OpenSkillSelection(id);
-            }, 100);
-        });
+
+        // TODO: Replace by bottomPanel ? If usefull
+        // user.interface.screenList?.Open(title, data, (id) => {
+        //     setTimeout(() => {
+        //         this.OpenSkillSelection(id);
+        //     }, 100);
+        // });
     };
 
     /** @param {number} categoryID */
     OpenSkillSelection = (categoryID) => {
         const title = langManager.curr['quest']['input-panel-activity'];
 
-        /** @type {ScreenListItem[]} */
         let data = [];
 
         // If category is 'Recent'
@@ -75,7 +75,6 @@ class SectionSkill extends React.Component {
 
         // If it's a category
         else {
-            /** @type {ScreenListItem[]} */
             data = dataManager.skills.GetByCategory(categoryID).map((skill) => ({
                 id: skill.ID,
                 value: langManager.GetText(skill.Name)
@@ -83,13 +82,14 @@ class SectionSkill extends React.Component {
         }
 
         if (data.length !== 0) {
-            user.interface.screenList?.Open(title, data, (id) => {
-                const { quest, onChangeQuest } = this.props;
-                if (quest === null || quest.skills.length >= MAX_SKILLS || quest.skills.includes(id)) {
-                    return;
-                }
-                onChangeQuest({ ...quest, skills: [...quest.skills, id] });
-            });
+            // TODO: Replace by bottomPanel ? If usefull
+            // user.interface.screenList?.Open(title, data, (id) => {
+            //     const { quest, onChangeQuest } = this.props;
+            //     if (quest === null || quest.skills.length >= MAX_SKILLS || quest.skills.includes(id)) {
+            //         return;
+            //     }
+            //     onChangeQuest({ ...quest, skills: [...quest.skills, id] });
+            // });
         }
     };
 

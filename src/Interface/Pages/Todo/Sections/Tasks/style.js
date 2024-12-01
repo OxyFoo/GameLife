@@ -7,9 +7,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 12
     },
+
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     title: {
         textAlign: 'left',
         fontSize: 21
+    },
+    tasksChecked: {
+        textAlign: 'left',
+        fontSize: 16,
+        marginLeft: 4
     },
     smallButton: {
         width: 'auto',

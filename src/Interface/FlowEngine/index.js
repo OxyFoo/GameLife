@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View, KeyboardAvoidingView } from 'react-native';
+import { Animated, View, KeyboardAvoidingView, Platform } from 'react-native';
 
 import styles from './style';
 import BackFlowEngine from './back';
@@ -9,16 +9,8 @@ import themeManager from 'Managers/ThemeManager';
 
 import PAGES from 'Interface/Pages';
 import { DynamicBackground } from 'Interface/Primitives';
-import {
-    BottomPanel,
-    Console,
-    NavBar,
-    NotificationsInApp,
-    Popup,
-    ScreenInput,
-    ScreenList,
-    UserHeader
-} from 'Interface/Global';
+import { BottomPanel, Console, NavBar, NotificationsInApp, Popup, ScreenInput, UserHeader } from 'Interface/Global';
+import { KeyboardSpacerView } from 'Interface/Components';
 
 class FlowEnginePagesRender extends BackFlowEngine {
     render() {
@@ -28,7 +20,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
 
         return (
             <SafeAreaWithResponsive onLayout={this.onLayout}>
-                <KeyboardAvoidingView style={[styles.fullscreen, styleBackground]} behavior={'padding'}>
+                <KeyboardAvoidingView style={[styles.fullscreen, styleBackground]} behavior='padding'>
                     <DynamicBackground opacity={0.15} />
                     {this.renderPages()}
                     <UserHeader ref={this.userHeader} />
@@ -37,7 +29,6 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     <NotificationsInApp ref={this.notificationsInApp} />
                     <Popup ref={this.popup} />
                     <ScreenInput ref={this.screenInput} />
-                    <ScreenList ref={this.screenList} />
                     <Console ref={this.console} />
                 </KeyboardAvoidingView>
             </SafeAreaWithResponsive>
@@ -73,10 +64,10 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     ]}
                     pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
                 >
-                    <View
-                        style={styles.fullscreen}
-                        children={<Page ref={page.ref} args={page.args} flowEngine={this._public} />}
-                    />
+                    <View style={styles.page}>
+                        <Page ref={page.ref} args={page.args} flowEngine={this._public} />
+                        {Platform.OS === 'ios' && <KeyboardSpacerView offset={96} />}
+                    </View>
                 </Animated.View>
             );
         });

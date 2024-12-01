@@ -20,7 +20,7 @@ const UserHeaderProps = {
 class HeaderBack extends React.Component {
     state = {
         username: user.informations.username.Get(),
-        titleText: user.informations.GetTitleText()
+        titleID: user.informations.title.Get()
     };
 
     /** @type {Symbol | null} */
@@ -41,7 +41,7 @@ class HeaderBack extends React.Component {
     update = () => {
         this.setState({
             username: user.informations.username.Get(),
-            titleText: user.informations.GetTitleText()
+            titleID: user.informations.title.Get()
         });
     };
 

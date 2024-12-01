@@ -21,8 +21,7 @@ const styles = StyleSheet.create({
         maxHeight: 256,
         paddingVertical: 16,
         paddingHorizontal: 24,
-        fontSize: 18,
-        verticalAlign: 'middle'
+        fontSize: 18
     },
     counter: {
         position: 'absolute',

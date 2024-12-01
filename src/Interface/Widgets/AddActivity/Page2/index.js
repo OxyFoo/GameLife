@@ -9,7 +9,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { Text, Button, Icon } from 'Interface/Components';
+import { Text, Button, Icon, KeyboardSpacerView } from 'Interface/Components';
 import { Round } from 'Utils/Functions';
 
 class AddActivityPage2 extends BackActivityPage2 {
@@ -68,6 +68,8 @@ class AddActivityPage2 extends BackActivityPage2 {
                         changeActivity={changeActivity}
                         unSelectActivity={unSelectActivity}
                     />
+
+                    <KeyboardSpacerView offset={96} />
                 </ScrollView>
             </View>
         );

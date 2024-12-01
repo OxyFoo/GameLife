@@ -46,8 +46,9 @@ class SectionComment extends React.Component {
                     value={quest.comment}
                     placeholder={lang['input-comment-placeholder']}
                     onChangeText={this.onChangeComment}
-                    multiline={true}
                     maxLength={1024}
+                    numberOfLines={2}
+                    multiline={true}
                     showCounter
                 />
             </View>

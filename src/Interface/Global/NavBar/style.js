@@ -18,8 +18,10 @@ const styles = StyleSheet.create({
     },
     absoluteIcon: {
         position: 'absolute',
-        top: 8,
-        left: 22
+        left: 0,
+        right: 0,
+        bottom: 8 + 12 + 4, // bottom of text + font size + padding
+        alignItems: 'center'
     },
     buttonParent: {
         flex: 1,
@@ -43,9 +45,9 @@ const styles = StyleSheet.create({
     },
     absoluteText: {
         position: 'absolute',
-        top: 32,
         left: 0,
         right: 0,
+        bottom: 8,
         fontSize: 12
     },
 

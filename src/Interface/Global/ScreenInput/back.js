@@ -15,6 +15,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {number} [maxLength] Maximum length of the input
  * @property {boolean} [multiline] If true, the input is multiline
  * @property {(text: string | null) => void} [callback] Callback called when the input is validated or closed, with the text or null
+ * @property {(text: string) => void} [callbackStream] Callback called when the input is changed, with the text
  */
 
 class ScreenInputBack extends React.Component {
@@ -80,7 +81,8 @@ class ScreenInputBack extends React.Component {
             initialText: '',
             multiline: false,
             maxLength: (params.multiline ?? false) ? 1024 : 64,
-            callback: () => {}
+            callback: () => {},
+            callbackStream: () => {}
         };
         const mergedParams = { ...defaultParams, ...params };
 
@@ -140,7 +142,10 @@ class ScreenInputBack extends React.Component {
     };
 
     /** @param {string} text */
-    onChangeText = (text) => this.setState({ text: text });
+    onChangeText = (text) => {
+        this.state.input?.callbackStream?.(text);
+        this.setState({ text: text });
+    };
 
     onValid = () => {
         this.refInput?.current?.blur?.();

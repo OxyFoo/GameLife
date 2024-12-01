@@ -103,7 +103,7 @@ function RenderPage2({ index, anim, onNext }) {
             {/** CTA */}
             <View style={styles.cta}>
                 <Button style={styles.buttonNext} onPress={onNext}>
-                    {lang['next']}
+                    {lang['start']}
                 </Button>
             </View>
         </View>

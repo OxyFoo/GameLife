@@ -47,6 +47,7 @@ class BackSectionTasks extends React.Component {
     selectedIndex = 0;
     containerHeight = 0;
     itemHeight = 46;
+    tempTask = '';
 
     /** @param {SectionTasksPropsType} props */
     constructor(props) {
@@ -88,7 +89,7 @@ class BackSectionTasks extends React.Component {
                 type: 'ok',
                 data: {
                     title: lang['alert-taskslimit-title'],
-                    message: lang['alert-taskslimit-text']
+                    message: lang['alert-taskslimit-text'].replace('{}', MAX_TASKS.toString())
                 }
             });
             return;
@@ -96,15 +97,30 @@ class BackSectionTasks extends React.Component {
 
         user.interface.screenInput?.Open({
             label: lang['input-task-placeholder'],
+            initialText: this.tempTask,
             maxLength: 128,
             callback: (title) => {
-                if (!title || !title.trim()) return;
+                // If input was canceled, return
+                if (title === null) {
+                    return;
+                }
 
-                todo.tasks.push({
+                // If input is empty, return
+                if (!title.length || !title.trim()) {
+                    return;
+                }
+
+                this.tempTask = '';
+
+                todo.tasks.splice(0, 0, {
                     checked: false,
                     title: title.trim()
                 });
+
                 onChangeTodo(todo);
+            },
+            callbackStream: (title) => {
+                this.tempTask = title;
             }
         });
     };

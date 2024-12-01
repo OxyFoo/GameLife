@@ -44,7 +44,7 @@ function RenderPage0({ selectedLangKey, selectLanguage, onNext }) {
             {/** CTA */}
             <View style={styles.cta}>
                 <Button style={styles.buttonNext} color='main1' fontSize={14} onPress={onNext}>
-                    {lang['start']}
+                    {lang['next']}
                 </Button>
             </View>
         </View>

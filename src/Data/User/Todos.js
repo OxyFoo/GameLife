@@ -332,10 +332,12 @@ class Todos extends IUserData {
      * @param {Todo | TodoSaved} oldTodo Old todo, from Get()
      * @param {Partial<Todo | TodoSaved>} newTodo New todo, from oldTodo with changes \
      * `ID` and `created` will be ignored, and `checked` will be set to 0 by default
-     * @returns {'not-exist' | 'edited'}
+     * @returns {'not-exist' | (Todo | TodoSaved)}
      */
     Edit(oldTodo, newTodo) {
         const isSavedActivity = Object.keys(oldTodo).includes('ID');
+
+        let refToNewTodo = oldTodo;
 
         if (isSavedActivity) {
             // eslint-disable-next-line prettier/prettier
@@ -351,6 +353,8 @@ class Todos extends IUserData {
                 deadline: newTodo.deadline ?? _oldTodo.deadline,
                 tasks: newTodo.tasks ? newTodo.tasks.filter((st) => !!st.title) : _oldTodo.tasks
             };
+
+            refToNewTodo = _newTodo;
 
             // Check if not exist
             const indexSaved = this.#SAVED_todoes.findIndex((todo) => todo.ID === _oldTodo.ID);
@@ -380,6 +384,8 @@ class Todos extends IUserData {
                 tasks: newTodo.tasks ? newTodo.tasks.filter((st) => !!st.title) : oldTodo.tasks
             };
 
+            refToNewTodo = _newTodo;
+
             // Check if not exist
             const indexUnsaved = this.#getIndex(this.#UNSAVED_additions, oldTodo);
 
@@ -392,7 +398,7 @@ class Todos extends IUserData {
         }
 
         this.todos.Set(this.Get());
-        return 'edited';
+        return refToNewTodo;
     }
 
     /**
@@ -470,7 +476,7 @@ class Todos extends IUserData {
      * @returns {boolean} Success of the operation
      */
     Check(todo, checkedTime = GetGlobalTime()) {
-        return this.Edit(todo, { checked: checkedTime }) === 'edited';
+        return this.Edit(todo, { checked: checkedTime }) !== 'not-exist';
     }
 
     /**
@@ -478,7 +484,7 @@ class Todos extends IUserData {
      * @returns {boolean} Success of the operation
      */
     Uncheck(todo) {
-        return this.Edit(todo, { checked: 0 }) === 'edited';
+        return this.Edit(todo, { checked: 0 }) !== 'not-exist';
     }
 
     /**

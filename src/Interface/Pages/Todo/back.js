@@ -50,6 +50,9 @@ class BackTodo extends PageBase {
         animEditButton: new Animated.Value(0)
     };
 
+    /** @type {Todo | null} */
+    initTodo = null;
+
     /** @type {React.RefObject<ScrollView>} */
     refScrollView = React.createRef();
 
@@ -62,6 +65,7 @@ class BackTodo extends PageBase {
 
         /** @type {Todo | null} */
         const todo = this.props.args?.todo || null;
+        this.initTodo = DeepCopy(todo);
 
         if (todo !== null) {
             this.state = {
@@ -140,19 +144,18 @@ class BackTodo extends PageBase {
     };
 
     isEdited = () => {
-        const todo = this.props.args?.todo || null;
         const { tempTodo } = this.state;
-        if (todo === null || tempTodo === null) {
+        if (this.initTodo === null || tempTodo === null) {
             return false;
         }
 
-        const oldTasks = todo.tasks.map((t) => Object.values(t).join('-')).join(',');
+        const oldTasks = this.initTodo.tasks.map((t) => Object.values(t).join('-')).join(',');
         const newTasks = tempTodo.tasks.map((t) => Object.values(t).join('-')).join(',');
 
         return (
-            todo.title !== tempTodo.title ||
-            todo.description !== tempTodo.description ||
-            todo.deadline !== tempTodo.deadline ||
+            this.initTodo.title !== tempTodo.title ||
+            this.initTodo.description !== tempTodo.description ||
+            this.initTodo.deadline !== tempTodo.deadline ||
             oldTasks !== newTasks
         );
     };
@@ -168,7 +171,8 @@ class BackTodo extends PageBase {
                 {
                     action: edited ? 'edit' : 'remove',
                     tempTodo: { ...todo },
-                    error: titleError
+                    error: titleError,
+                    loading: false
                 },
                 () => {
                     // If scroll is at the bottom, scroll to the bottom
@@ -193,7 +197,6 @@ class BackTodo extends PageBase {
      */
     checkTitleErrors = (title) => {
         const lang = langManager.curr['todo'];
-        const todo = this.props.args?.todo || null;
 
         if (title.trim().length <= 0) {
             return lang['error-title-empty'];
@@ -202,7 +205,7 @@ class BackTodo extends PageBase {
         /** @type {string | null} */
         let message = null;
 
-        const titleIsCurrent = title === todo?.title;
+        const titleIsCurrent = title === this.initTodo?.title;
         const titleUsed = user.todos.Get().some((t) => t.title === title);
 
         if (title.trim().length <= 0) {
@@ -235,8 +238,9 @@ class BackTodo extends PageBase {
     };
 
     editTodo = async () => {
-        const todo = this.props.args?.todo || null;
-        if (todo === null) {
+        const lang = langManager.curr['todo'];
+
+        if (this.initTodo === null) {
             user.interface.console?.AddLog('warn', 'Todo: Todo already exist, cannot add');
             return;
         }
@@ -246,31 +250,52 @@ class BackTodo extends PageBase {
             return;
         }
 
-        const edition = user.todos.Edit(todo, {
+        const editedTodo = user.todos.Edit(this.initTodo, {
             title: title.trim(),
             description,
             deadline,
             tasks
         });
 
-        if (!edition) {
-            user.interface.console?.AddLog('warn', 'Todo: Todo not exist, cannot edit');
+        // If todo not exist, cannot edit
+        if (editedTodo === 'not-exist') {
+            user.interface.console?.AddLog('warn', `Todo: Todo not exist, cannot edit (${editedTodo})`);
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-todo-notexist-title'],
+                    message: lang['alert-todo-notexist-message'].replace('{}', editedTodo)
+                }
+            });
             return;
         }
 
-        this.setState({ loading: true });
-        await user.GlobalSave();
-        this.setState({ loading: false });
+        if (user.server2.IsAuthenticated()) {
+            this.setState({ loading: true });
+            const saved = await user.todos.SaveOnline();
 
-        user.interface.RemoveCustomBackHandler(this.BackHandler);
-        user.interface.BackHandle();
+            if (!saved) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-todo-savefail-title'],
+                        message: lang['alert-todo-savefail-message']
+                    }
+                });
+                this.setState({ loading: false });
+                return;
+            }
+        }
+
+        // Update the todo in the list
+        this.initTodo = DeepCopy(editedTodo);
+        this.onChangeTodo(editedTodo);
     };
 
     removeTodo = () => {
         const lang = langManager.curr['todo'];
-        const todo = this.props.args?.todo || null;
 
-        if (todo === null) {
+        if (this.initTodo === null) {
             user.interface.console?.AddLog('error', 'Todo: Selected todo is null');
             return;
         }
@@ -282,11 +307,11 @@ class BackTodo extends PageBase {
                 message: lang['alert-remtodo-message']
             },
             callback: async (btn) => {
-                if (btn !== 'yes') {
+                if (btn !== 'yes' || this.initTodo === null) {
                     return;
                 }
 
-                const remove = user.todos.Remove(todo);
+                const remove = user.todos.Remove(this.initTodo);
                 if (remove === 'removed') {
                     this.setState({ loading: true });
                     await user.GlobalSave();

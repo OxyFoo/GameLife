@@ -36,10 +36,8 @@ class Home extends BackHome {
                 </View>
 
                 {/* Today missions */}
-                {/* <Title title={lang['section-missions']} />
-                <View pointerEvents='none'>
-                    <Missions refHome={this} />
-                </View> */}
+                <Title title={lang['section-missions']} />
+                <Missions refHome={this} />
 
                 {/* Today performance */}
                 <Title title={lang['section-today-performance']}>

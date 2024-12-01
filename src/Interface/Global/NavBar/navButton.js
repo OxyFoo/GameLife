@@ -37,6 +37,7 @@ const NavButton = React.forwardRef(
                     color='transparent'
                     onPress={onPress}
                 >
+                    {/* Icon */}
                     <Animated.View
                         style={{
                             opacity: anim.interpolate({

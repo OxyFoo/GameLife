@@ -93,6 +93,19 @@ class ConsoleBack extends React.Component {
      * @returns {number} index of the message
      */
     AddLog = (type, text, ...params) => {
+        // If error in production, send it to server
+        if (type === 'error' && !__DEV__ && user.server2.IsAuthenticated()) {
+            const errorSended = user.server2.tcp.Send({
+                action: 'send-error',
+                error: JSON.stringify(this.messages.slice(-4))
+            });
+
+            if (!errorSended) {
+                console.error('[Console] Error not sended');
+            }
+        }
+
+        // If console is disabled, don't show message
         if (!this.state.enabled) {
             return -1;
         }
@@ -119,18 +132,6 @@ class ConsoleBack extends React.Component {
             (LEVEL_CONSOLE >= 1 && type === 'error')
         ) {
             printLog(text, ...params);
-        }
-
-        // If error in production, send it to server
-        if (type === 'error' && !__DEV__ && user.server2.IsAuthenticated()) {
-            const errorSended = user.server2.tcp.Send({
-                action: 'send-error',
-                error: JSON.stringify(this.messages.slice(-4))
-            });
-
-            if (!errorSended) {
-                console.error('[Console] Error not sended');
-            }
         }
 
         this.processQueue();

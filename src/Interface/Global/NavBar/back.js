@@ -99,7 +99,13 @@ class NavBarBack extends React.Component {
         if (fromIndex === -1 || toIndex === -1) {
             return;
         }
+
         user.interface.ChangePage(page, { transition: fromIndex < toIndex ? 'fromRight' : 'fromLeft' });
+
+        // If bottom panel is opened, close it
+        if (user.interface.bottomPanel?.IsOpened()) {
+            user.interface.bottomPanel?.Close();
+        }
     };
 }
 

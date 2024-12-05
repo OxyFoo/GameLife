@@ -43,14 +43,8 @@ const MidButton = React.forwardRef(
         };
 
         return (
-            <View style={styles.middleParentButton}>
-                <Button
-                    ref={ref}
-                    style={styles.middleButton}
-                    styleAnimation={middleButtonStyle}
-                    appearance='normal'
-                    onPress={onPress}
-                >
+            <Animated.View ref={ref} style={[styles.middleParentButton, middleButtonStyle]}>
+                <Button style={styles.middleButton} appearance='normal' onPress={onPress}>
                     <Animated.View
                         style={{
                             opacity: Animated.subtract(1, animationAddActivity),
@@ -85,7 +79,7 @@ const MidButton = React.forwardRef(
                         <Icon icon='close-outline' color='backgroundDark' size={24} />
                     </Animated.View>
                 </Button>
-            </View>
+            </Animated.View>
         );
     }
 );

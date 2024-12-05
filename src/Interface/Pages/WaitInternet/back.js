@@ -21,7 +21,7 @@ class BackWaitinternet extends PageBase {
         clearInterval(this.interval);
     }
     Loop = async () => {
-        const status = await user.server2.Connect();
+        const status = await user.server2.Connect(true);
         if (status === 'success' || status === 'already-connected') {
             user.interface.ChangePage('login', { storeInHistory: false });
         } else {

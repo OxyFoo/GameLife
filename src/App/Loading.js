@@ -36,8 +36,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const email = user.settings.email;
 
     // Connect to the server TCP
+    const isNewUser = user.settings.email === '';
     const time_connect_start = performance.now();
-    const status = await user.server2.Connect();
+    const status = await user.server2.Connect(isNewUser);
     const time_connect_end = performance.now();
     const time_connect = Round(time_connect_end - time_connect_start, 2);
     user.interface.console?.AddLog('info', `Connect to the server in ${time_connect}ms (${status})`);
@@ -116,12 +117,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // An error occured, go to the error page
-    else if (loggedState === 'error' || loggedState === 'mailNotSent') {
+    else if (loggedState === 'error' || loggedState === 'deviceLimitReached' || loggedState === 'mailNotSent') {
         user.interface.popup?.OpenT({
             type: 'ok',
             data: {
                 title: langManager.curr['login']['alert-error-title'],
-                message: langManager.curr['login']['alert-error-message'] // TODO: Add error code ?
+                message: langManager.curr['login']['alert-error-message'].replace('{}', loggedState)
             },
             callback: async () => {
                 await user.Clear();

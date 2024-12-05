@@ -152,4 +152,4 @@ class Missions extends BackMissions {
     }
 }
 
-export default Missions;
+export { Missions };

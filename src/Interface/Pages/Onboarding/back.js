@@ -27,7 +27,7 @@ class BackOnboarding extends PageBase {
     /** @param {LangKey} key */
     selectLanguage = (key) => {
         user.settings.SetLang(key);
-        this.setState({ selectedLangKey: key });
+        this.setState({ selectedLangKey: key }, this.Next);
     };
 
     Next = async () => {

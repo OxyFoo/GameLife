@@ -91,7 +91,7 @@ class BackMultiplayer extends PageBase {
 
     Reconnect = () => {
         this.setState({ state: 'idle' });
-        user.server2.tcp.Connect();
+        // user.server2.tcp.Connect(); // NOT HERE
     };
 
     Back = () => {

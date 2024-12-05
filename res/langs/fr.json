@@ -461,9 +461,11 @@
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
 
         "alert-error-title": "Erreur",
-        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard. ({})",
         "alert-deletedaccount-title": "Compte supprimé",
         "alert-deletedaccount-message": "Ton compte a été supprimé.",
+        "alert-deviceLimit-title": "Trop d'appareils",
+        "alert-deviceLimit-message": "Tu ne peux pas te connecter avec plus de 3 appareils différents sur le même compte.",
         "alert-limitAccount-title": "Trop de compte",
         "alert-limitAccount-message": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil."
     },

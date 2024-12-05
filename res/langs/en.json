@@ -461,9 +461,11 @@
         "error-signin-disagree": "Please accept the terms and conditions.",
 
         "alert-error-title": "Error",
-        "alert-error-message": "An error has occurred, please try again later.",
+        "alert-error-message": "An error has occurred, please try again later. ({})",
         "alert-deletedaccount-title": "Account deleted",
         "alert-deletedaccount-message": "Your account has been deleted.",
+        "alert-deviceLimit-title": "Too many devices",
+        "alert-deviceLimit-message": "You cannot connect with more than 3 different devices on the same account",
         "alert-limitAccount-title": "Too many accounts",
         "alert-limitAccount-message": "You can't create more than 3 accounts with one device."
     },

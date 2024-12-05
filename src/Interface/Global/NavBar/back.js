@@ -7,6 +7,7 @@ import { AddActivity } from 'Interface/Widgets';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -31,7 +32,7 @@ class NavBarBack extends React.Component {
 
     show = false;
 
-    /** @type {Record<keyof Lang['navbar'] | 'addActivity', React.RefObject<Button>>} */
+    /** @type {Record<keyof Lang['navbar'] | 'addActivity', React.RefObject<View>>} */
     refButtons = {
         home: React.createRef(),
         calendar: React.createRef(),

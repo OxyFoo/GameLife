@@ -9,7 +9,7 @@ class BackWaitmail extends PageBase {
     };
 
     /** @type {number} */
-    secondsRemainingToShowSentMessage = 0;
+    secondsRemainingToShowSentMessage = 5;
 
     controller = new AbortController();
 
@@ -68,22 +68,20 @@ class BackWaitmail extends PageBase {
         const response = await user.server2.tcp.SendAndWaitWithoutCallback(
             { action: 'wait-mail', email: user.settings.email },
             (data) => {
-                // Mail confirmed
-                if (data.status === 'wait-mail') {
-                    if (data.result === 'confirmed') {
-                        return true;
-                    }
+                // Error
+                if (data.status !== 'wait-mail' || data.result === 'confirmed' || data.result === 'error') {
+                    return true;
+                }
 
-                    // Mail sent
-                    if (data.result === 'sent') {
-                        this.secondsRemainingToShowSentMessage = 11;
-                        this.setState({ time: data.remainingTime ?? 0 });
-                    }
+                // Mail sent
+                else if (data.result === 'sent') {
+                    this.secondsRemainingToShowSentMessage = 11;
+                    this.setState({ time: data.remainingTime ?? 0 });
+                }
 
-                    // Update time
-                    if (data.result === 'wait') {
-                        this.setState({ time: data.remainingTime ?? 0 });
-                    }
+                // Update time
+                else if (data.result === 'wait') {
+                    this.setState({ time: data.remainingTime ?? 0 });
                 }
 
                 return false;
@@ -96,13 +94,22 @@ class BackWaitmail extends PageBase {
             return;
         }
 
-        if (response === 'timeout' || response === 'not-sent' || response === 'alreadyExist') {
+        if (
+            response === 'timeout' ||
+            response === 'not-sent' ||
+            response === 'alreadyExist' ||
+            response.status !== 'wait-mail' ||
+            response.result === 'error'
+        ) {
             user.interface.console?.AddLog('error', `Server connection failed (${response})`);
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: langManager.curr['login']['alert-error-title'],
-                    message: langManager.curr['login']['alert-error-message']
+                    message: langManager.curr['login']['alert-error-message'].replace(
+                        '{}',
+                        typeof response === 'object' ? response.status : response
+                    )
                 },
                 callback: () => user.interface.BackHandle(),
                 cancelable: false
@@ -120,7 +127,10 @@ class BackWaitmail extends PageBase {
                 type: 'ok',
                 data: {
                     title: langManager.curr['login']['alert-error-title'],
-                    message: langManager.curr['login']['alert-error-message']
+                    message: langManager.curr['login']['alert-error-message'].replace(
+                        '{}',
+                        typeof response === 'object' ? response.status : response
+                    )
                 },
                 callback: () => user.interface.BackHandle(),
                 cancelable: false

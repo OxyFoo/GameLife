@@ -41,12 +41,18 @@ class TCP {
     #callbacksActions = {};
 
     /**
-     * @param {number} [timeout] in milliseconds
+     * @param {boolean} [connectAsNewUser] Whether to connect as a new user
      * @returns {Promise<boolean>} Whether the connection was successful, or if it was already connected
      */
-    Connect = async (timeout = SERVER_TIMEOUT_MS) => {
+    Connect = async (connectAsNewUser = false) => {
+        if (this.IsConnected()) {
+            return false;
+        }
+
         const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
-        const socket = new WebSocket(url, 'gamelife-client');
+        const protocol = !connectAsNewUser ? 'gamelife-client' : 'gamelife-client-new';
+
+        const socket = new WebSocket(url, protocol);
         socket.addEventListener('open', this.#onOpen);
         socket.addEventListener('message', this.#onMessage);
         socket.addEventListener('error', this.#onError);
@@ -65,7 +71,7 @@ class TCP {
             // Timeout
             const _timeout = setTimeout(() => {
                 finish(false);
-            }, timeout);
+            }, SERVER_TIMEOUT_MS);
 
             // Listen for the connection
             const id = this.state.AddListener((state) => {
@@ -150,6 +156,10 @@ class TCP {
         }
 
         if (this.socket === null) {
+            return false;
+        }
+
+        if (this.socket.readyState !== WebSocket.OPEN) {
             return false;
         }
 

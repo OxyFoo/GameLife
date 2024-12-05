@@ -112,7 +112,7 @@ class ComboBoxBack extends React.Component {
         });
 
         // Open selection
-        GetAbsolutePosition(this.refParent.current).then((rect) => {
+        GetAbsolutePosition(this.refParent).then((rect) => {
             this.setState({ parent: rect, selectionMode: true }, () => {
                 SpringAnimation(this.state.anim, 1).start();
             });

@@ -185,7 +185,7 @@ class UserManager {
         await this.SaveOnline();
 
         if (reconnect) {
-            await this.server2.Connect();
+            await this.server2.Connect(true);
         }
     }
 

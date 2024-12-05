@@ -14,6 +14,7 @@ class Server2 extends IUserClass {
     #user;
     #listenerTCP;
     #isTrusted = false;
+    devMode = false;
 
     /** @param {UserManager} user */
     constructor(user) {
@@ -27,6 +28,12 @@ class Server2 extends IUserClass {
             }
         });
     }
+
+    Clear = () => {
+        this.#isTrusted = false;
+        this.devMode = false;
+        this.isBanned = false;
+    };
 
     Disconnect = () => {
         this.tcp.state.RemoveListener(this.#listenerTCP);
@@ -49,13 +56,16 @@ class Server2 extends IUserClass {
      */
     IsAuthenticated = () => this.IsConnected() && this.IsLogged();
 
-    /** @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'maintenance' | 'error'>} */
-    Connect = async () => {
+    /**
+     * @param {boolean} [connectAsNewUser]
+     * @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'maintenance' | 'error'>}
+     */
+    Connect = async (connectAsNewUser = false) => {
         if (this.tcp.IsConnected()) {
             return 'already-connected';
         }
 
-        const connected = await this.tcp.Connect();
+        const connected = await this.tcp.Connect(connectAsNewUser);
         if (!connected) {
             this.#user.interface.console?.AddLog('error', 'Server connection failed');
             return 'not-connected';
@@ -92,9 +102,13 @@ class Server2 extends IUserClass {
 
     /**
      * @param {string} email
-     * @returns {Promise<ServerRequestLogin['result'] | false>}
-     * - `false` if the connection failed
-     * - `ServerRequestLogin['result']` if the connection succeeded
+     * @returns {Promise<'ok' | 'free' | 'mailNotSent' | 'deviceLimitReached' | 'waitMailConfirmation' | 'error' | false>}
+     * - `false` if the request failed
+     * - `ok` if the login is successful
+     * - `free` if the account does not exist
+     * - `mailNotSent` if the mail was not sent
+     * - `waitMailConfirmation` if the mail was sent but not yet confirmed
+     * - `error` if an error occurred
      */
     Login = async (email) => {
         const response = await this.tcp.SendAndWait({
@@ -112,12 +126,28 @@ class Server2 extends IUserClass {
             return 'error';
         }
 
-        this.isBanned = response.banned ?? false;
-        if (typeof response.token === 'string') {
-            this.#user.settings.token = response.token;
+        if (
+            response.result === 'free' ||
+            response.result === 'mailNotSent' ||
+            response.result === 'deviceLimitReached' ||
+            response.result === 'waitMailConfirmation' ||
+            response.result === 'error'
+        ) {
+            return response.result;
+        }
+
+        this.devMode = response.result.devMode ?? false;
+        this.isBanned = response.result.banned ?? false;
+        if (typeof response.result.token === 'string') {
+            this.#user.settings.token = response.result.token;
             await this.#user.settings.IndependentSave();
         }
-        return response.result;
+
+        if (this.devMode) {
+            await this.#user.interface.console?.Enable();
+        }
+
+        return 'ok';
     };
 
     /**

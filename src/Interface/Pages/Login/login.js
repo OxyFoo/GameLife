@@ -37,6 +37,17 @@ async function Login(email) {
         user.interface.ChangePage('waitmail', { storeInHistory: false });
     }
 
+    // Device limit reached
+    else if (status === 'deviceLimitReached') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-deviceLimit-title'],
+                message: lang['alert-deviceLimit-message']
+            }
+        });
+    }
+
     // Error
     else {
         this.setState({ errorEmail: lang['error-signin-server'] });

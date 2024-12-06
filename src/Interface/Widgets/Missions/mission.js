@@ -5,6 +5,8 @@ import langManager from 'Managers/LangManager';
 
 import { AddActivity } from '../AddActivity';
 import { Sleep } from 'Utils/Functions';
+import { TIME_STEP_MINUTES } from 'Utils/Activities';
+import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/User/Missions').MissionKeys} MissionKeys
@@ -24,6 +26,17 @@ async function StartMission(missionName) {
 
     const langOLD = langManager.curr['missions']['content'][mission.name];
     const lang = langManager.curr['missions']['content'];
+
+    if (missionName !== 'mission1') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: 'PAFINIII',
+                message: "C'est pas fini wsh"
+            }
+        });
+        return;
+    }
 
     if (missionName === 'mission1') {
         /** @type {React.RefObject<AddActivity>} */
@@ -56,7 +69,7 @@ async function StartMission(missionName) {
                         comment: '',
                         duration: 60,
                         friends: [],
-                        startTime: 0,
+                        startTime: RoundTimeTo(TIME_STEP_MINUTES, GetLocalTime(), 'near'),
                         timezone: 0
                     });
                     await Sleep(500);
@@ -86,6 +99,7 @@ async function StartMission(missionName) {
         ]);
 
         if (tutoStatus === 'skipped') {
+            refAddActivity.current?.unSelectActivity();
             await user.interface.bottomPanel?.Close();
         }
     } else if (missionName === 'mission2') {

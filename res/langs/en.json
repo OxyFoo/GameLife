@@ -118,6 +118,11 @@
                     "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
                 }
             }
+        },
+
+        "alerts": {
+            "claim-claim-error-title": "Error",
+            "claim-claim-error-message": "An error occurred when recovering the reward, please again again."
         }
     },
 
@@ -1043,6 +1048,7 @@
         "wait-internet-text": "The GameLife server is down.\n\nCheck your Internet connection or try again later!\n\nIf the problem persists, contact us on Discord or by e-mail, which you'll find on our website:",
         "wait-maintenance-text": "The servers are currently in maintenance, come back later!",
         "wait-email-text": "An email has been sent to you to authorize your device to connect. Accepts it and come back to the application.\n\nThe email may be sent after a few minutes, check your spam.",
+        "wait-email-sending": "Sending email...",
         "wait-email-remain": "Mail sent again in {}m{}s",
         "wait-email-send": "Mail sent !"
     },

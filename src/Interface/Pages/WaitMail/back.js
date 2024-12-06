@@ -8,6 +8,8 @@ class BackWaitmail extends PageBase {
         statusText: ''
     };
 
+    loading = true;
+
     /** @type {number} */
     secondsRemainingToShowSentMessage = 5;
 
@@ -49,10 +51,12 @@ class BackWaitmail extends PageBase {
             this.secondsRemainingToShowSentMessage--;
         }
 
-        let statusText = '';
-        if (this.secondsRemainingToShowSentMessage > 0) {
+        let statusText = '...';
+        if (this.loading && this.secondsRemainingToShowSentMessage > 0) {
+            statusText = langWait['wait-email-sending'];
+        } else if (this.secondsRemainingToShowSentMessage > 0) {
             statusText = langWait['wait-email-send'];
-        } else if (typeof time === 'number') {
+        } else if (typeof time === 'number' && time > 0) {
             const SS = time % 60;
             const MM = (time - SS) / 60;
             statusText = langWait['wait-email-remain'].replace('{}', MM.toString()).replace('{}', SS.toString());
@@ -75,6 +79,7 @@ class BackWaitmail extends PageBase {
 
                 // Mail sent
                 else if (data.result === 'sent') {
+                    this.loading = false;
                     this.secondsRemainingToShowSentMessage = 11;
                     this.setState({ time: data.remainingTime ?? 0 });
                 }
@@ -101,7 +106,10 @@ class BackWaitmail extends PageBase {
             response.status !== 'wait-mail' ||
             response.result === 'error'
         ) {
-            user.interface.console?.AddLog('error', `Server connection failed (${response})`);
+            user.interface.console?.AddLog(
+                'error',
+                `Server connection failed (${typeof response === 'string' ? response : JSON.stringify(response)})`
+            );
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {

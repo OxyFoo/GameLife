@@ -118,6 +118,11 @@
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
             }
+        },
+
+        "alerts": {
+            "claim-claim-error-title": "Erreur",
+            "claim-claim-error-message": "Une erreur est survenue lors de la récupération de la récompense, merci de réessayer plus tard."
         }
     },
 
@@ -1043,6 +1048,7 @@
         "wait-internet-text": "Le serveur de GameLife est inaccessible.\n\nVérifie ta connexion internet ou réessaye plus tard !\n\nSi le problème persiste, contacte-nous sur Discord ou par mail que tu trouveras sur notre site:",
         "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",
         "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte. Accepte le et reviens sur l'application.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
+        "wait-email-sending": "Envoi en cours...",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-send": "Mail envoyé !"
     },

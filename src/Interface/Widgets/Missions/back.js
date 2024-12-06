@@ -3,6 +3,8 @@ import { Animated } from 'react-native';
 
 import StartMission from './mission';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
@@ -53,6 +55,7 @@ class BackMissions extends React.Component {
     };
 
     handleNextMission = async () => {
+        const lang = langManager.curr['missions'];
         const { mission } = this.state;
 
         if (mission === null) return;
@@ -69,8 +72,18 @@ class BackMissions extends React.Component {
             TimingAnimation(this.state.animReward, 1, 300).start();
 
             const timeBefore = Date.now();
+
             const claimed = await user.missions.ClaimMission(mission.name);
-            if (claimed === false) return;
+            if (claimed === false) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alerts']['claim-claim-error-title'],
+                        message: lang['alerts']['claim-claim-error-message']
+                    }
+                });
+            }
+
             const timeAfter = Date.now();
 
             // Stop animation

@@ -1,6 +1,8 @@
 import langManager from 'Managers/LangManager';
+
 import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
+import { ParsePlural } from 'Utils/String';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -260,6 +262,7 @@ class Missions extends IUserData {
     ClaimMission = async (name) => {
         const savedMissions = await this.SaveOnline();
         if (!savedMissions) {
+            this.#user.interface.console?.AddLog('error', '[Missions] Failed to save missions before claiming mission');
             return false;
         }
 
@@ -276,6 +279,10 @@ class Missions extends IUserData {
             response.status !== 'claim-mission' ||
             response.result === 'error'
         ) {
+            this.#user.interface.console?.AddLog(
+                'error',
+                `[Missions] Failed to claim mission (${name}: ${typeof response === 'string' ? response : JSON.stringify(response)})`
+            );
             return false;
         }
 
@@ -301,7 +308,7 @@ class Missions extends IUserData {
         // Show rewards
         const lang = langManager.curr['missions'];
         const title = lang['claim-title'];
-        const message = lang['claim-text'];
+        const message = ParsePlural(lang['claim-text'], rewards.length > 1);
         await this.#user.rewards.ShowRewards(rewards, 'all', title, message);
 
         this.SetMissionState(name, 'claimed');

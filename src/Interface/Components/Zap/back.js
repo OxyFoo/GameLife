@@ -1,29 +1,29 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
 
 import { GetDate } from 'Utils/Time';
 import ZAP_IMAGES from 'Ressources/zap/zap';
 
 /**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').Animated.ValueXY} AnimatedValueXY
+ * @typedef {import('react-native').Animated.WithAnimatedObject<import('react-native').ImageStyle>} StyleAnimProp
+ *
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * 
- * @typedef {'auto' | 'day' | 'night'} ZapColor
+ *
+ * @typedef {'day' | 'night'} ZapColor
  * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
  * @typedef {'face' | 'show'} ZapFace
  * @typedef {'left' | 'right'} ZapOrientation
  */
 
 const ZapProps = {
-    /** @type {StyleProp} */
+    /** @type {StyleAnimProp} */
     style: {},
 
-    /** @type {Animated.ValueXY | null} */
+    /** @type {AnimatedValueXY | null} */
     position: null,
 
-    /** @type {ZapColor} */
+    /** @type {'auto' | ZapColor} */
     color: 'auto',
 
     /** @type {ZapInclinaison} */
@@ -35,33 +35,37 @@ const ZapProps = {
     /** @type {ZapOrientation} */
     orientation: 'right',
 
-    /** @param {LayoutChangeEvent} event */
-    onLayout: (event) => {}
+    /** @type {(event: LayoutChangeEvent) => void} */
+    onLayout: () => {}
 };
 
 class ZapBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         this.props.onLayout(event);
-    }
+    };
 
     getZapImage = () => {
         const { color, inclinaison, face } = this.props;
 
-        let _color = color;
+        /** @type {ZapColor} */
+        let _color = 'day';
+
         if (color === 'auto') {
             const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
-            _color = isNight ? 'night' : 'day';
+            if (isNight) {
+                _color = 'night';
+            }
         }
 
         return ZAP_IMAGES[_color][inclinaison][face];
-    }
+    };
 
     static getHighZapImage = () => {
         const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
         const color = isNight ? 'night' : 'day';
         return ZAP_IMAGES[color]['high'];
-    }
+    };
 }
 
 ZapBack.prototype.props = ZapProps;

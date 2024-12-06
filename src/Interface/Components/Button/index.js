@@ -19,6 +19,7 @@ import { Gradient, Ripple } from 'Interface/Primitives';
 class Button extends ButtonBack {
     render() {
         const {
+            nativeRef,
             appearance,
             style: styleProp,
             styleAnimation,
@@ -50,6 +51,7 @@ class Button extends ButtonBack {
             // @ts-ignore
             <ButtonView
                 {...rest}
+                ref={nativeRef}
                 style={[styles.body, styleProp, styleAnimation]}
                 onTouchStart={this.onTouchStart}
                 onTouchCancel={this.onTouchCancel}
@@ -60,6 +62,7 @@ class Button extends ButtonBack {
                 accessibilityRole='button'
                 accessibilityState={{ disabled: !enabled }}
                 pointerEvents={pointerEvents}
+                collapsable={false}
             >
                 {this.renderBackground()}
                 {this.renderContent()}

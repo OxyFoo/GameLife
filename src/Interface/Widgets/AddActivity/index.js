@@ -13,22 +13,24 @@ class AddActivity extends BackActivity {
 
         return (
             <View style={styles.parent}>
-                {newActivity.skillID === 0 ? (
-                    <AddActivityPage1
-                        activity={newActivity}
-                        changeActivity={this.changeActivity}
-                        unSelectActivity={this.unSelectActivity}
-                        categoryID={categoryID}
-                        listSkillsIDs={listSkillsIDs}
-                    />
-                ) : (
-                    <AddActivityPage2
-                        activity={newActivity}
-                        editActivity={editActivity}
-                        changeActivity={this.changeActivity}
-                        unSelectActivity={this.unSelectActivity}
-                    />
-                )}
+                <AddActivityPage1
+                    nativeRef={this.nativeRefPage1}
+                    show={newActivity.skillID === 0}
+                    activity={newActivity}
+                    changeActivity={this.changeActivity}
+                    unSelectActivity={this.unSelectActivity}
+                    categoryID={categoryID}
+                    listSkillsIDs={listSkillsIDs}
+                />
+                <AddActivityPage2
+                    ref={this.refChild2}
+                    nativeRef={this.nativeRefPage2}
+                    show={newActivity.skillID !== 0}
+                    activity={newActivity}
+                    editActivity={editActivity}
+                    changeActivity={this.changeActivity}
+                    unSelectActivity={this.unSelectActivity}
+                />
             </View>
         );
     }

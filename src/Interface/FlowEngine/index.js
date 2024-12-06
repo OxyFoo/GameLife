@@ -9,7 +9,16 @@ import themeManager from 'Managers/ThemeManager';
 
 import PAGES from 'Interface/Pages';
 import { DynamicBackground } from 'Interface/Primitives';
-import { BottomPanel, Console, NavBar, NotificationsInApp, Popup, ScreenInput, UserHeader } from 'Interface/Global';
+import {
+    BottomPanel,
+    Console,
+    NavBar,
+    NotificationsInApp,
+    Popup,
+    ScreenInput,
+    ScreenTuto,
+    UserHeader
+} from 'Interface/Global';
 import { KeyboardSpacerView } from 'Interface/Components';
 
 class FlowEnginePagesRender extends BackFlowEngine {
@@ -27,6 +36,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     <BottomPanel ref={this.bottomPanel} />
                     <NavBar ref={this.navBar} />
                     <NotificationsInApp ref={this.notificationsInApp} />
+                    <ScreenTuto ref={this.screenTuto} />
                     <Popup ref={this.popup} />
                     <ScreenInput ref={this.screenInput} />
                     <Console ref={this.console} />

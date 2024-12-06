@@ -16,7 +16,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
     render() {
         const lang = langManager.curr['activity'];
         const langDatesNames = langManager.curr['dates']['names'];
-        const { activity, editActivity } = this.props;
+        const { nativeRef, activity, editActivity } = this.props;
         const { loading, selectedHours, selectedMinutes, DTPMode, DTPDate } = this.state;
 
         const startDate = GetDate(activity.startTime);
@@ -33,7 +33,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
         };
 
         return (
-            <>
+            <View ref={nativeRef} collapsable={false}>
                 {/* Add later or already done */}
                 <Text style={styles.title}>{editActivity === null ? lang['title-add'] : lang['title-edit']}</Text>
 
@@ -160,7 +160,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                     minuteInterval={TIME_STEP_MINUTES}
                     is24Hour={true}
                 />
-            </>
+            </View>
         );
     }
 }

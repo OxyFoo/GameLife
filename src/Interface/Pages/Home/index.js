@@ -37,7 +37,7 @@ class Home extends BackHome {
 
                 {/* Today missions */}
                 <Title title={lang['section-missions']} />
-                <Missions refHome={this} />
+                <Missions />
 
                 {/* Today performance */}
                 <Title title={lang['section-today-performance']}>

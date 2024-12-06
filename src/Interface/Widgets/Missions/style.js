@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    // Container
     buttonContainer: {
         paddingVertical: 0,
         paddingHorizontal: 0,
@@ -8,26 +9,23 @@ const styles = StyleSheet.create({
     },
     container: {
         flexDirection: 'row',
+        paddingVertical: 12,
         paddingHorizontal: 12
     },
 
-    columnZap: {
+    // Left: Zap
+    zapContainer: {
         justifyContent: 'center'
     },
-    columnContent: {
-        flex: 1,
-        paddingTop: 8,
-        paddingBottom: 8,
-        marginHorizontal: 8,
-        justifyContent: 'space-between'
-    },
-    columnReward: {
-        justifyContent: 'space-evenly',
-        marginTop: 24
+    zap: {
+        //width: 64,
     },
 
-    zap: {
-        width: 64
+    // Middle: Content
+    columnContent: {
+        flex: 1,
+        marginHorizontal: 8,
+        justifyContent: 'space-between'
     },
     text: {
         textAlign: 'left'
@@ -43,12 +41,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
-    rewardPreview: {
-        width: 18,
-        marginHorizontal: 2,
-        padding: 2,
-        aspectRatio: 1,
-        borderRadius: 100
+    // Right: Reward
+    columnReward: {
+        paddingHorizontal: 8,
+        justifyContent: 'flex-end'
     },
     rewardCard: {
         width: 48,
@@ -65,12 +61,23 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
+    rewardPreview: {
+        width: 18,
+        marginHorizontal: 2,
+        padding: 2,
+        aspectRatio: 1,
+        borderRadius: 100
+    },
     rewardValue: {
         position: 'absolute',
         textAlign: 'right',
         left: -12,
         right: -12,
         bottom: -12
+    },
+    missionStep: {
+        textAlign: 'center',
+        marginTop: 8
     }
 });
 

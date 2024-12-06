@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Animated, BackHandler } from 'react-native';
+import SafeArea from 'react-native-safe-area';
 import RNExitApp from 'react-native-exit-app';
 
 import PageBase from './PageBase';
@@ -14,6 +15,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').ScreenInput} ScreenInput
+ * @typedef {import('Interface/Global').ScreenTuto} ScreenTuto
  * @typedef {import('Interface/Global').BottomPanel} BottomPanel
  * @typedef {import('Interface/Global').Console} Console
  * @typedef {import('Interface/Global').UserHeader} UserHeader
@@ -68,6 +70,9 @@ class BackFlowEngine extends React.Component {
     /** @type {React.RefObject<ScreenInput>} */
     screenInput = React.createRef();
 
+    /** @type {React.RefObject<ScreenTuto>} */
+    screenTuto = React.createRef();
+
     /** @type {React.RefObject<Console>} */
     console = React.createRef();
 
@@ -102,7 +107,13 @@ class BackFlowEngine extends React.Component {
 
     size = {
         width: 0,
-        height: 0
+        height: 0,
+        insets: {
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+        }
     };
 
     /**
@@ -142,10 +153,15 @@ class BackFlowEngine extends React.Component {
             // @ts-ignore
             this.availablePages.push(/** @type {PageNames} */ pageName);
         }
+
+        SafeArea.getSafeAreaInsetsForRootView().then(({ safeAreaInsets }) => {
+            this.size.insets = safeAreaInsets;
+        });
     }
 
     componentDidMount() {
         this._public.popup = this.popup.current;
+        this._public.screenTuto = this.screenTuto.current;
         this._public.console = this.console.current;
         this._public.screenInput = this.screenInput.current;
         this._public.bottomPanel = this.bottomPanel.current;
@@ -597,6 +613,9 @@ class BackFlowEngine extends React.Component {
 
         /** @type {ScreenInput | null} */
         screenInput: null,
+
+        /** @type {ScreenTuto | null} */
+        screenTuto: null,
 
         /** @type {BottomPanel | null} */
         bottomPanel: null,

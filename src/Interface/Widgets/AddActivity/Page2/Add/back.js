@@ -16,11 +16,13 @@ import {
 } from 'Utils/Activities';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *
  * @typedef {Object} BackActivityPage2AddPropsType
+ * @property {React.RefObject<View>} nativeRef
  * @property {Activity} activity
  * @property {Activity | null} editActivity
  * @property {(newActivity: Activity) => Promise<void>} changeActivity
@@ -29,6 +31,7 @@ import {
 
 /** @type {BackActivityPage2AddPropsType} */
 const BackActivityPage2AddProps = {
+    nativeRef: React.createRef(),
     activity: DEFAULT_ACTIVITY,
     editActivity: null,
     changeActivity: async () => {},

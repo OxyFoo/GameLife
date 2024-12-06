@@ -80,9 +80,9 @@
                 "texts": {
                     "1": "Appuie sur ce bouton pour aller dans la page des activités",
                     "2": "Ici tu es dans la page d'ajout d'activité, tu dois entrer des activités que tu as faites dans la vie réelle !",
-                    "3": "Commence par choisir une activité (tu peux utiliser les catégories ou la recherche pour trouver ce que tu veux)",
-                    "4": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
-                    "5": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\""
+                    "3": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
+                    "4": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\"",
+                    "5": "Ajoute une activité que tu as faite aujourd'hui pour compléter cette mission"
                 }
             },
             "mission2": {
@@ -1065,7 +1065,8 @@
 
         "other": {
             "skip": "Passer",
-            "press": "Appuyez"
+            "press": "Appuyez",
+            "next": "Suivant"
         }
     },
 

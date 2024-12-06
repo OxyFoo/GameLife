@@ -28,15 +28,15 @@ class FadeInText extends React.Component {
     render() {
         const { style, styleText, children } = this.props;
 
-        if (typeof(children) !== 'string') {
-            user.interface.console.AddLog('warn', 'FadeInText', 'children is not a string');
+        if (typeof children !== 'string') {
+            user.interface.console?.AddLog('warn', 'FadeInText', 'children is not a string');
             return null;
         }
 
         let index = 0;
         return (
             <View key={`content-${index}-${children}`} style={[styles.content, style]}>
-                {children.split(' ').map((word) => 
+                {children.split(' ').map((word) => (
                     <View key={`word-${index}`} style={styles.word}>
                         {word.split('').map((char) => (
                             <AnimatedChar
@@ -46,13 +46,9 @@ class FadeInText extends React.Component {
                                 style={styleText}
                             />
                         ))}
-                        <AnimatedChar
-                            key={++index}
-                            char={' '}
-                            style={styleText}
-                        />
+                        <AnimatedChar key={++index} char={' '} style={styleText} />
                     </View>
-                )}
+                ))}
             </View>
         );
     }
@@ -61,14 +57,13 @@ class FadeInText extends React.Component {
 FadeInText.prototype.props = FadeInTextProps;
 FadeInText.defaultProps = FadeInTextProps;
 
+/**
+ * @param {object} props
+ * @param {number} [props.index]
+ * @param {string} props.char
+ * @param {StylePropText} props.style
+ */
 const AnimatedChar = ({ index = 0, char, style }) => {
-    // Empty char don't need animation
-    if (char === ' ') {
-        return (
-            <Text style={[styles.character, style]}>{char}</Text>
-        );
-    }
-
     const opacity = useRef(new Animated.Value(0)).current;
     const styleOpacity = { opacity: opacity };
     const styleTranslateY = {
@@ -83,12 +78,20 @@ const AnimatedChar = ({ index = 0, char, style }) => {
     };
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            TimingAnimation(opacity, 1, 350).start();
-        }, 500 + 12 * index);
+        const timeout = setTimeout(
+            () => {
+                TimingAnimation(opacity, 1, 350).start();
+            },
+            500 + 12 * index
+        );
 
         return () => clearTimeout(timeout);
-    }, [ opacity ]);
+    }, [index, opacity]);
+
+    // Empty char don't need animation
+    if (char === ' ') {
+        return <Text style={[styles.character, style]}>{char}</Text>;
+    }
 
     return (
         <Animated.View style={[styleOpacity, styleTranslateY]}>

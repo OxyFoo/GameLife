@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Button } from 'react-native';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedProps
@@ -16,6 +17,7 @@ import { Button } from 'react-native';
  * @typedef {import('Interface/Primitives').Ripple} Ripple
  *
  * @typedef {Object} ButtonPropsType
+ * @property {React.RefObject<View>} nativeRef
  * @property {import('react').ReactNode | string | undefined} children
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
@@ -48,6 +50,7 @@ import { Button } from 'react-native';
 const ButtonProps = {
     ...Button.prototype.props,
 
+    nativeRef: React.createRef(),
     children: undefined,
     style: {},
     styleAnimation: null,

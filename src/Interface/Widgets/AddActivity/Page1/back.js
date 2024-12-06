@@ -12,6 +12,7 @@ import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
@@ -22,6 +23,8 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('../types').ItemCategory} ItemCategory
  *
  * @typedef {Object} BackActivityPage1PropsType
+ * @property {React.RefObject<View>} nativeRef
+ * @property {boolean} show
  * @property {Activity} activity
  * @property {(newActivity: Activity) => Promise<void>} changeActivity
  * @property {() => void} unSelectActivity
@@ -31,6 +34,8 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /** @type {BackActivityPage1PropsType} */
 const BackActivityPage1Props = {
+    nativeRef: React.createRef(),
+    show: false,
     activity: DEFAULT_ACTIVITY,
     changeActivity: async () => {},
     unSelectActivity: () => {},

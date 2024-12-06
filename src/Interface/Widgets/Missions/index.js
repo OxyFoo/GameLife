@@ -65,7 +65,7 @@ class Missions extends BackMissions {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                 >
-                    <View style={styles.columnZap}>
+                    <View style={styles.zapContainer}>
                         <Zap
                             style={styles.zap}
                             inclinaison={mission.state === 'pending' ? 'onFourLegs' : 'onTwoLegs'}
@@ -106,7 +106,7 @@ class Missions extends BackMissions {
                             </Animated.View>
                         </View>
 
-                        <Text fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
+                        <Text style={styles.missionStep} fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
                     </View>
                 </LinearGradient>
             </Button>

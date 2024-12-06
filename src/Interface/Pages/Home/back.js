@@ -10,8 +10,9 @@ import { Round } from 'Utils/Functions';
 import { AddActivity } from 'Interface/Widgets';
 
 /**
+ * @typedef {import('react-native').View} View
+ *
  * @typedef {import('Managers/UserManager').UserManager} UserManager
- * @typedef {import('Interface/Widgets').Missions} Missions
  */
 
 const BackHomeProps = {
@@ -35,9 +36,6 @@ class BackHome extends PageBase {
         },
         scrollable: true
     };
-
-    /** @type {React.RefObject<Missions>} */
-    refMissions = React.createRef();
 
     /** @type {Symbol | null} */
     listenerActivities = null;

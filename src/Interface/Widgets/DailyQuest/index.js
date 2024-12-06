@@ -198,4 +198,4 @@ class DailyQuest extends DailyQuestBack {
     };
 }
 
-export default DailyQuest;
+export { DailyQuest };

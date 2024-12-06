@@ -6,19 +6,16 @@ import user from 'Managers/UserManager';
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
- * @typedef {import('Interface/Pages/Home').default} Home
  * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
  */
 
 const MissionsProps = {
     /** @type {StyleViewProp} */
-    style: {},
-
-    /** @type {Home | null} */
-    refHome: null
+    style: {}
 };
 
 class BackMissions extends React.Component {
@@ -62,7 +59,7 @@ class BackMissions extends React.Component {
 
         // Open mission guide
         if (mission.state === 'pending') {
-            StartMission.call(this, mission.name);
+            StartMission(mission.name);
             return;
         }
 

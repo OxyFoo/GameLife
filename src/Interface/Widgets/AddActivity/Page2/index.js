@@ -14,17 +14,22 @@ import { Round } from 'Utils/Functions';
 
 class AddActivityPage2 extends BackActivityPage2 {
     render() {
-        const { activity, editActivity, changeActivity, unSelectActivity } = this.props;
+        const { show, activity, editActivity, changeActivity, unSelectActivity } = this.props;
+        const { activityText, categoryColor, xmlIcon } = this.state;
+
+        if (!show) {
+            return null;
+        }
 
         return (
-            <View style={styles.parent}>
+            <View ref={this.props.nativeRef} style={styles.parent} collapsable={false}>
                 <Button
                     style={styles.headerButton}
                     styleContent={styles.headerButtonContent}
                     appearance='outline'
                     fontColor='primary'
                     // @ts-ignore
-                    borderColor={this.categoryColor}
+                    borderColor={categoryColor}
                     onPress={unSelectActivity}
                     onLongPress={this.openSkill}
                 >
@@ -32,10 +37,10 @@ class AddActivityPage2 extends BackActivityPage2 {
                     <View style={styles.headerButtonActivity}>
                         <Icon
                             // @ts-ignore
-                            color={this.categoryColor}
-                            xml={this.xmlIcon}
+                            color={categoryColor}
+                            xml={xmlIcon}
                         />
-                        <Text style={styles.headerButtonText}>{this.activityText}</Text>
+                        <Text style={styles.headerButtonText}>{activityText}</Text>
                     </View>
                     <View />
                 </Button>
@@ -51,7 +56,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                 >
                     {editActivity === null && (
                         <>
-                            <AddActivityPage2StartNow activity={activity} />
+                            <AddActivityPage2StartNow nativeRef={this.nativeRefStartNowView} activity={activity} />
 
                             {/* Separator */}
                             <View style={styles.separator}>
@@ -63,6 +68,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                     )}
 
                     <AddActivityPage2Add
+                        nativeRef={this.nativeRefAddView}
                         activity={activity}
                         editActivity={editActivity}
                         changeActivity={changeActivity}

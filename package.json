@@ -38,6 +38,7 @@
     "react-native-permissions": "^3.10.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-restart": "^0.0.27",
+    "react-native-safe-area": "^0.5.1",
     "react-native-shadow-2": "^7.0.6",
     "react-native-svg": "^15.2.0"
   },

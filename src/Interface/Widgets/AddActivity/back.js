@@ -9,7 +9,10 @@ import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('Data/User/Activities/index').Activity} Activity
+ *
+ * @typedef {import('./Page2').AddActivityPage2} AddActivityPage2
  *
  * @typedef {Object} BackActivityPropsType
  * @property {number | null} time Start time of activity, If null current time will be used
@@ -42,6 +45,15 @@ class BackActivity extends React.Component {
             friends: []
         }
     };
+
+    /** @type {React.RefObject<View>} */
+    nativeRefPage1 = React.createRef();
+
+    /** @type {React.RefObject<View>} */
+    nativeRefPage2 = React.createRef();
+
+    /** @type {React.RefObject<AddActivityPage2>} */
+    refChild2 = React.createRef();
 
     /** @param {BackActivityPropsType} props */
     constructor(props) {
@@ -106,7 +118,10 @@ class BackActivity extends React.Component {
      */
     changeActivity = (activity) => {
         return new Promise((resolve) => {
-            this.setState({ newActivity: activity }, resolve);
+            this.setState({ newActivity: activity }, () => {
+                this.refChild2.current?.update(true);
+                resolve();
+            });
         });
     };
 

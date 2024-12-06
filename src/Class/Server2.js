@@ -81,7 +81,7 @@ class Server2 extends IUserClass {
         });
 
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
-            this.#user.interface.console?.AddLog('error', `Server connection failed (${response})`);
+            this.#user.interface.console?.AddLog('error', `[Connect] Server connection failed (${response})`);
             return 'not-connected';
         }
 
@@ -117,12 +117,12 @@ class Server2 extends IUserClass {
             token: this.#user.settings.token
         });
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
-            this.#user.interface.console?.AddLog('error', `Server connection failed (${response})`);
+            this.#user.interface.console?.AddLog('error', `[Login] Server connection failed (${response})`);
             return false;
         }
 
         if (response.status !== 'login') {
-            this.#user.interface.console?.AddLog('error', 'Server connection failed');
+            this.#user.interface.console?.AddLog('error', '[Login] Server connection failed');
             return 'error';
         }
 

@@ -10,6 +10,8 @@ import { Button, Icon, Text } from 'Interface/Components';
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
+let enabled = true;
+
 /**
  * @param {object} props
  * @param {() => void} [props.onNext]
@@ -60,10 +62,26 @@ function RenderPage0({ selectedLangKey, selectLanguage, onNext }) {
  * @returns {JSX.Element}
  */
 function RenderFlag({ langKey, icon, selectedLangKey, selectLanguage }) {
+    // Prevent double click
+    /** @type {null | NodeJS.Timeout} */
+    let timeout = null;
+
     const langs = langManager.GetAllLangs();
     const opacity = selectedLangKey === langKey ? 1 : 0.6;
     const fontSize = selectedLangKey === langKey ? 24 : 18;
-    const onPress = () => selectLanguage(langKey);
+    const onPress = () => {
+        if (!enabled) return;
+
+        enabled = false;
+        selectLanguage(langKey);
+        timeout = setTimeout(() => (enabled = true), 500);
+    };
+
+    React.useEffect(() => {
+        return () => {
+            if (timeout) clearTimeout(timeout);
+        };
+    }, [timeout]);
 
     return (
         <TouchableOpacity style={[styles.flagRow, { opacity }]} onPress={onPress} activeOpacity={0.6}>

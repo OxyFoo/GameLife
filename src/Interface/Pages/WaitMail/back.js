@@ -86,6 +86,8 @@ class BackWaitmail extends PageBase {
 
                 // Update time
                 else if (data.result === 'wait') {
+                    this.loading = false;
+                    this.secondsRemainingToShowSentMessage = 0;
                     this.setState({ time: data.remainingTime ?? 0 });
                 }
 

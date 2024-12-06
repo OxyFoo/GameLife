@@ -286,13 +286,14 @@ class Missions extends IUserData {
             return false;
         }
 
-        if (response.result === 'already-claimed') {
-            return true;
-        }
-
         if (response.result === 'not-up-to-date') {
             await this.LoadOnline();
             return false;
+        }
+
+        if (response.result === 'already-claimed') {
+            this.SetMissionState(name, 'claimed');
+            return true;
         }
 
         // Claim rewards

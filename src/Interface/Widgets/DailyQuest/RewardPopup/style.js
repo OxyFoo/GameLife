@@ -107,9 +107,7 @@ const styles = StyleSheet.create({
     claimAllButton: {
         height: 'auto',
         paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderWidth: 1.5,
-        borderColor: '#B83EFFE3'
+        paddingHorizontal: 16
     }
 });
 

@@ -26,8 +26,6 @@ class TCP {
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar(INITIAL_STATE);
 
-    isTrusted = false;
-
     /**
      * @description Callback => If True is returned, the callback will be removed
      * @type {Record<string, (data: TCPServerRequest) => boolean | Promise<boolean>>}

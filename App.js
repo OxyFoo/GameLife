@@ -36,7 +36,12 @@ class App extends React.Component {
     async componentChangeState(state) {
         if (state === 'active') {
             CheckDate(user.server2.tcp);
-            //user.tcp.Connect();
+
+            // Automatic reconnect on app open
+            if (user.settings.email !== '') {
+                await user.server2.Connect();
+                await user.server2.Login(user.settings.email);
+            }
         } else if (state === 'background' || state === 'inactive') {
             (await user.SaveOnline()) || (await user.SaveLocal());
         }

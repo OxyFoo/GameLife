@@ -21,12 +21,12 @@ const OnlineViewProps = {
  */
 function OnlineView(props = OnlineViewProps) {
     const { children, offlineView, onChangeState } = props;
-    const initialOnlineState = user.server2.tcp.state.Get() === 'connected';
+    const initialOnlineState = user.server2.tcp.state.Get() === 'authenticated';
     const [isOnline, setIsOnline] = React.useState(initialOnlineState);
 
     React.useEffect(() => {
         const listener = user.server2.tcp.state.AddListener(() => {
-            const _isOnline = user.server2.tcp.state.Get() === 'connected';
+            const _isOnline = user.server2.tcp.state.Get() === 'authenticated';
             onChangeState?.(_isOnline);
             setIsOnline(_isOnline);
         });

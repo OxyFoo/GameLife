@@ -4,7 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import DailyQuestBack from './back';
-import { RenderItemMemo } from './RewardPopup/element';
+import { DailyQuestDayItem } from './RewardPopup/element';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
@@ -94,8 +95,8 @@ class DailyQuest extends DailyQuestBack {
     }
 
     renderQuest = () => {
-        const { dailyQuest } = this.state;
-        const { selectedCategory, progression } = dailyQuest;
+        const { dailyQuest, claimList, claimDay } = this.state;
+        const { selectedCategory } = dailyQuest;
 
         if (selectedCategory === null) {
             return this.renderNoQuest();
@@ -108,7 +109,7 @@ class DailyQuest extends DailyQuestBack {
         }
 
         // Daily quest is finished
-        if (progression >= ACTIVITY_MINUTES_PER_DAY) {
+        if ((claimList !== null && user.dailyQuest.IsTodayCompleted(claimList)) || claimDay?.status === 'to-claim') {
             return this.renderQuestFinished();
         }
 
@@ -117,7 +118,7 @@ class DailyQuest extends DailyQuestBack {
 
     renderQuestFinished = () => {
         const lang = langManager.curr['daily-quest'];
-        const { claimListIndex, claimDay, claimDate } = this.state;
+        const { claimList, claimDay, claimDate } = this.state;
 
         if (claimDay === null) {
             return this.renderNoQuest();
@@ -131,7 +132,7 @@ class DailyQuest extends DailyQuestBack {
                 )}
 
                 <Text>{lang['label-finished']}</Text>
-                <RenderItemMemo style={styles.dailyFinished} item={claimDay} claimListIndex={claimListIndex} />
+                <DailyQuestDayItem style={styles.dailyFinished} item={claimDay} claimList={claimList} />
             </View>
         );
     };

@@ -10,6 +10,7 @@ import { DateFormat } from 'Utils/Date';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Data/User/DailyQuests').DailyQuestDay} DailyQuestDay
+ * @typedef {import('Data/User/DailyQuests').DailyQuestData} DailyQuestData
  */
 
 const DailyQuestProps = {
@@ -19,9 +20,10 @@ const DailyQuestProps = {
 
 class DailyQuestBack extends React.Component {
     state = {
-        dailyQuest: user.dailyQuest.today.Get(),
+        dailyQuest: user.dailyQuest.currentQuest.Get(),
 
-        claimListIndex: -1,
+        /** @type {DailyQuestData | null} */
+        claimList: null,
         /** @type {DailyQuestDay | null} */
         claimDay: null,
         claimStreak: 0,
@@ -36,17 +38,20 @@ class DailyQuestBack extends React.Component {
     claimListsListener = null;
 
     componentDidMount() {
-        this.dailyQuestListener = user.dailyQuest.today.AddListener(this.updateClaimList);
+        this.dailyQuestListener = user.dailyQuest.currentQuest.AddListener(this.updateClaimList);
         this.claimListsListener = user.dailyQuest.claimsList.AddListener(this.updateClaimList);
     }
 
     componentWillUnmount() {
-        user.dailyQuest.today.RemoveListener(this.dailyQuestListener);
+        user.dailyQuest.currentQuest.RemoveListener(this.dailyQuestListener);
         user.dailyQuest.claimsList.RemoveListener(this.claimListsListener);
     }
 
     updateClaimList = () => {
+        const dailyQuest = user.dailyQuest.currentQuest.Get();
+        const claimLists = user.dailyQuest.claimsList.Get();
         const claimListIndex = user.dailyQuest.GetCurrentClaimIndex();
+        const claimList = claimListIndex === -1 ? null : claimLists[claimListIndex];
 
         /** @type {this['state']['claimDay']} */
         let claimDay = null;
@@ -57,10 +62,7 @@ class DailyQuestBack extends React.Component {
         /** @type {this['state']['claimDate']} */
         let claimDate = null;
 
-        const claimLists = user.dailyQuest.claimsList.Get();
-
-        if (claimListIndex !== -1) {
-            const claimList = claimLists[claimListIndex];
+        if (claimList !== null) {
             const claimDays = user.dailyQuest.GetClaimDays(claimList);
             const claimDayIndex = user.dailyQuest.GetLastUnclaimedDayIndex(claimList);
 
@@ -75,8 +77,8 @@ class DailyQuestBack extends React.Component {
         }
 
         this.setState({
-            dailyQuest: user.dailyQuest.today.Get(),
-            claimListIndex,
+            dailyQuest,
+            claimList,
             claimDay,
             claimStreak,
             claimDate

@@ -23,7 +23,7 @@ class Server2 extends IUserClass {
         this.#user = user;
         this.tcp = new TCP();
         this.#listenerTCP = this.tcp.state.AddListener((state) => {
-            if (this.#isTrusted && state !== 'connected') {
+            if (this.#isTrusted && state !== 'connected' && state !== 'authenticated') {
                 this.#isTrusted = false;
             }
         });
@@ -43,7 +43,10 @@ class Server2 extends IUserClass {
     /**
      * Client is connected to the server and device is authenticated to the server
      */
-    IsConnected = () => this.tcp.IsConnected() && this.tcp.state.Get() === 'connected' && this.#isTrusted;
+    IsConnected = () =>
+        this.tcp.IsConnected() &&
+        (this.tcp.state.Get() === 'connected' || this.tcp.state.Get() === 'authenticated') &&
+        this.#isTrusted;
 
     /**
      * User is logged to an account \
@@ -145,6 +148,10 @@ class Server2 extends IUserClass {
 
         if (this.devMode) {
             await this.#user.interface.console?.Enable();
+        }
+
+        if (this.tcp.state.Get() === 'connected') {
+            this.tcp.state.Set('authenticated');
         }
 
         return 'ok';

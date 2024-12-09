@@ -5,7 +5,7 @@ import { IUserData } from 'Types/Interface/IUserData';
 import { GetActivityIndex, TimeIsFree } from './utils';
 import DynamicVar from 'Utils/DynamicVar';
 import { SortByKey } from 'Utils/Functions';
-import { GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
+import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -580,7 +580,7 @@ class Activities extends IUserData {
      * Get activities in a specific date
      * @param {number} time Time in seconds to define day (auto define of midnights)
      * @param {Activity[]} activities
-     * @returns {Activity[]} activities
+     * @returns {Activity[]} Activities
      */
     GetByTime(time = GetGlobalTime(), activities = this.Get(), includeOvernightActivities = false) {
         const startTime = GetMidnightTime(time + GetTimeZone() * 3600);
@@ -592,6 +592,18 @@ class Activities extends IUserData {
             );
         }
         return activities.filter((activity) => activity.startTime >= startTime && activity.startTime < endTime);
+    }
+
+    /**
+     * Get activities in a specific day
+     * @param {string} day Ex: '2021-01-01'
+     * @param {Activity[]} activities
+     * @returns {Activity[]} Activities
+     */
+    GetByDay(day, activities = this.Get()) {
+        const todayTime = GetLocalTime(new Date(day + 'T00:00:00'));
+        const midnightTime = todayTime + DAY_TIME;
+        return activities.filter((activity) => activity.startTime >= todayTime && activity.startTime < midnightTime);
     }
 
     /**

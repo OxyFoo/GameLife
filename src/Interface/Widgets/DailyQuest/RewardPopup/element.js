@@ -18,17 +18,18 @@ import { ACTIVITY_MINUTES_PER_DAY } from 'Data/User/DailyQuests';
  *
  * @typedef {import('Types/Class/Rewards').RawReward} RawReward
  * @typedef {import('Data/User/DailyQuests').DailyQuestDay} DailyQuestDay
+ * @typedef {import('Data/User/DailyQuests').DailyQuestData} DailyQuestData
  */
 
 /**
  * @param {Object} props
  * @param {StyleProp} [props.style] Style of the container
  * @param {DailyQuestDay} props.item DailyQuestDay object
- * @param {number} props.claimListIndex Index of the claim in the dailyquest.claimsList
+ * @param {DailyQuestData | null} props.claimList Current claim list or null if not available yet
  * @param {(index: number) => Promise<void>} [props.handleClaim] Function called when the user press the button
  * @returns {JSX.Element}
  */
-const RenderItem = (props) => {
+const DailyQuestDayItem = (props) => {
     const lang = langManager.curr['daily-quest'];
     const langD = langManager.curr['dates']['names'];
 
@@ -37,16 +38,11 @@ const RenderItem = (props) => {
     const { item } = props;
 
     const handleEvent = async () => {
-        if (loading || props.claimListIndex === -1) return;
+        if (loading || props.claimList === null) return;
 
         setLoading(true);
-        const claimList = user.dailyQuest.claimsList.Get()[props.claimListIndex];
+        const { claimList } = props;
         const result = await user.dailyQuest.ClaimReward(claimList.start, [item.index]);
-
-        if (result === 'claiming') {
-            setLoading(false);
-            return;
-        }
 
         if (result !== 'success') {
             user.interface.popup?.OpenT({
@@ -95,7 +91,7 @@ const RenderItem = (props) => {
                         <ProgressBar
                             style={styles.claimTodayProgressbar}
                             height={6}
-                            value={user.dailyQuest.today.Get().progression}
+                            value={user.dailyQuest.currentQuest.Get().progression}
                             maxValue={ACTIVITY_MINUTES_PER_DAY}
                         />
                     </>
@@ -113,16 +109,6 @@ const RenderItem = (props) => {
         </View>
     );
 };
-
-const RenderItemMemo = React.memo(RenderItem, (prevProps, nextProps) => {
-    if (prevProps.item.index !== nextProps.item.index) {
-        return false;
-    }
-    if (prevProps.claimListIndex !== nextProps.claimListIndex) {
-        return false;
-    }
-    return true;
-});
 
 /** @param {{ item: RawReward }} props */
 function RenderReward(props) {
@@ -149,4 +135,4 @@ function RenderReward(props) {
     return null;
 }
 
-export { RenderItemMemo };
+export { DailyQuestDayItem };

@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 12,
         borderWidth: 1,
-        backgroundColor: '#000000A0'
+        backgroundColor: '#000000E0'
     },
     nextButton: {
         position: 'absolute',
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
         top: 24,
         left: 24,
         width: 'auto',
-        paddingVertical: 10
+        paddingVertical: 10,
+        opacity: 0.75
     },
     stepText: {
         position: 'absolute',

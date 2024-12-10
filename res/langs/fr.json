@@ -88,28 +88,11 @@
             "mission2": {
                 "title": "Créer une quête",
                 "texts": {
-                    "1": "Appui ici pour aller dans la page des quêtes",
-                    "2": "Appuie sur le bouton + en haut à droite pour créer une nouvelle quête",
-                    "3": "Remplis les informations demandées, comme le titre, les activités à réaliser, la durée etc"
+                    "1": "Appui ici sur le + à droite pour ajouter une nouvelle quête",
+                    "2": "Voici la page des quêtes, elles servent à te donner des objectifs à réaliser régulièrement"
                 }
             },
             "mission3": {
-                "title": "Acheter un item",
-                "texts": {
-                    "1": "Commence par aller dans le shop",
-                    "2": "Les Ox sont la monnaie du jeu, tu peux les gagner en regardant des pubs, en faisant des quêtes, des succès etc",
-                    "3": "Ici tu peux les échanger contre ce que tu veux, un item précis (parmis 3 proposés, qui changent tous les jours), ou un coffre pour avoir un item aléatoire"
-                }
-            },
-            "mission4": {
-                "title": "Équipper un item",
-                "texts": {
-                    "1": "Commencer par aller dans ton profil",
-                    "2": "Ici tu peux voir ton avatar, clique dessus pour ouvrir ton inventaire",
-                    "3": "Tu peux équiper un item en appuyant dessus, ou le vendre pour gagner des Ox"
-                }
-            },
-            "mission5": {
                 "title": "Demander en ami",
                 "texts": {
                     "1": "Dans ce widget tu peux voir tes amis connectés...",
@@ -121,6 +104,8 @@
         },
 
         "alerts": {
+            "claim-not-connected-title": "Erreur",
+            "claim-not-connected-message": "Tu dois être connecté à internet pour pouvoir récupérer la récompense, merci de réessayer plus tard.",
             "claim-claim-error-title": "Erreur",
             "claim-claim-error-message": "Une erreur est survenue lors de la récupération de la récompense, merci de réessayer plus tard."
         }

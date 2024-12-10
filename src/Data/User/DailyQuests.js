@@ -151,12 +151,9 @@ class DailyQuest extends IUserData {
             return;
         }
 
-        // Not started yet
-        else if (currentList === null) {
-            // Not enough progression
-            if (currentQuest.progression >= ACTIVITY_MINUTES_PER_DAY) {
+        // Not started yet or not enough progression
+        else if (currentList === null && currentQuest.progression >= ACTIVITY_MINUTES_PER_DAY) {
             return;
-            }
         }
 
         // Update the progression

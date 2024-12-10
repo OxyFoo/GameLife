@@ -17,9 +17,8 @@ class Home extends BackHome {
             scrollable
         } = this.state;
 
-        const { Title } = this;
         return (
-            <ScrollView style={styles.page} scrollEnabled={scrollable}>
+            <ScrollView ref={this.refScrollView} style={styles.page} scrollEnabled={scrollable}>
                 {/* Experience */}
                 <ProgressBar
                     style={styles.progressbar}
@@ -40,7 +39,7 @@ class Home extends BackHome {
                 <Missions />
 
                 {/* Today performance */}
-                <Title title={lang['section-today-performance']}>
+                <Title ref={this.refQuestsTitle} title={lang['section-today-performance']}>
                     <Button
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'
@@ -83,15 +82,18 @@ class Home extends BackHome {
             </ScrollView>
         );
     }
+}
 
+const Title = React.forwardRef(
     /**
      * @param {Object} props
      * @param {string} props.title
      * @param {React.ReactNode} [props.children]
+     * @param {React.Ref<View>} ref
      */
-    Title({ title, children }) {
+    ({ title, children }, ref) => {
         return (
-            <View style={styles.sectionContainer}>
+            <View ref={ref} style={styles.sectionContainer} collapsable={false}>
                 <Text style={styles.sectionTitle} color='secondary'>
                     {title}
                 </Text>
@@ -100,6 +102,6 @@ class Home extends BackHome {
             </View>
         );
     }
-}
+);
 
 export default Home;

@@ -147,11 +147,20 @@ class ScreenTutoBack extends React.Component {
             let skip = false;
             await new Promise(async (resolve) => {
                 let showed = false;
-                this.onComponentPress = () => showed && resolve(null);
+                const onBackHandler = () => {
+                    this.onSkipPress();
+                    return true;
+                };
+                this.onComponentPress = () => {
+                    user.interface.RemoveCustomBackHandler(onBackHandler);
+                    showed && resolve(null);
+                };
                 this.onSkipPress = () => {
                     skip = true;
                     resolve(null);
                 };
+
+                user.interface.AddCustomBackHandler(onBackHandler);
                 await this.Show(element);
                 showed = true;
             });

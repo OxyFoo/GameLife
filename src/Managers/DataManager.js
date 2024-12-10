@@ -5,6 +5,7 @@ import Ads from 'Data/App/Ads';
 import Contributors from 'Data/App/Contributors';
 import DailyQuestsRewards from 'Data/App/DailyQuestsRewards';
 import Items from 'Data/App/Items';
+import Missions from 'Data/App/Missions';
 import Quotes from 'Data/App/Quotes';
 import Skills from 'Data/App/Skills';
 import Titles from 'Data/App/Titles';
@@ -24,6 +25,7 @@ class DataManager {
         contributors: 0,
         dailyQuestsRewards: 0,
         items: 0,
+        missions: 0,
         quotes: 0,
         skills: 0,
         skillIcons: 0,
@@ -37,6 +39,7 @@ class DataManager {
         this.contributors = new Contributors();
         this.dailyQuestsRewards = new DailyQuestsRewards();
         this.items = new Items();
+        this.missions = new Missions();
         this.quotes = new Quotes();
         this.skills = new Skills();
         this.titles = new Titles();
@@ -58,6 +61,7 @@ class DataManager {
             contributors: 0,
             dailyQuestsRewards: 0,
             items: 0,
+            missions: 0,
             quotes: 0,
             skills: 0,
             skillIcons: 0,
@@ -120,6 +124,7 @@ class DataManager {
             contributors: this.contributors.Save(),
             dailyQuestsRewards: this.dailyQuestsRewards.Save(),
             items: this.items.Save(),
+            missions: this.missions.Save(),
             quotes: this.quotes.Save(),
             ...this.skills.Save(),
             titles: this.titles.Save()
@@ -167,6 +172,7 @@ class DataManager {
         this.contributors.Load(appData.contributors);
         this.dailyQuestsRewards.Load(appData.dailyQuestsRewards);
         this.items.Load(appData.items);
+        this.missions.Load(appData.missions);
         this.quotes.Load(appData.quotes);
         this.skills.Load({
             skills: appData.skills,
@@ -227,6 +233,9 @@ class DataManager {
         if (response.data.items !== null) {
             this.items.Load(response.data.items);
         }
+        if (response.data.missions !== null) {
+            this.missions.Load(response.data.missions);
+        }
         if (response.data.quotes !== null) {
             this.quotes.Load(response.data.quotes);
         }
@@ -260,6 +269,7 @@ class DataManager {
             this.contributors.Get().length +
             this.dailyQuestsRewards.Get().length +
             this.items.Get().length +
+            this.missions.Get().length +
             this.quotes.Get().length +
             this.skills.Get().skills.length +
             this.skills.Get().skillIcons.length +

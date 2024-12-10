@@ -4,8 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import BackMissions from './back';
-import { MISSIONS } from 'Data/User/Missions';
 import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, Text, Zap } from 'Interface/Components';
@@ -13,8 +13,7 @@ import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 
 /**
- * @typedef {import('Types/Global/Rarities').Rarities} Rarities
- * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
+ * @typedef {import('Types/Data/App/Missions').MissionType} MissionType
  */
 
 class Missions extends BackMissions {
@@ -27,9 +26,10 @@ class Missions extends BackMissions {
             return null;
         }
 
-        const stepLength = MISSIONS.length;
+        const missionsData = dataManager.missions.Get();
+        const stepLength = missionsData.length;
         const step = Math.min(this.state.step, stepLength - 1);
-        const stepReward = MISSIONS[step];
+        const stepReward = missionsData[step];
 
         const styleReward = {
             backgroundColor: themeManager.GetColor('main1')
@@ -76,7 +76,7 @@ class Missions extends BackMissions {
                         {(mission?.state === 'pending' && (
                             <View>
                                 <Text style={styles.text} fontSize={16}>
-                                    {lang['content'][MISSIONS[step].name].title}
+                                    {lang['content'][missionsData[step].name].title}
                                 </Text>
 
                                 <Text style={styles.text} fontSize={14}>
@@ -92,7 +92,7 @@ class Missions extends BackMissions {
                         <FlatList
                             style={styles.flatlist}
                             contentContainerStyle={styles.flatlistContainer}
-                            data={MISSIONS}
+                            data={missionsData}
                             extraData={step}
                             renderItem={this.rewardListElement}
                             horizontal
@@ -133,19 +133,24 @@ class Missions extends BackMissions {
      * @param {boolean} [hideOxText=false]
      */
     renderReward(item, hideOxText = false) {
-        if (item.rewardType === 'ox') {
+        if (item.rewards.length <= 0) {
+            return null;
+        }
+
+        const firstReward = item.rewards[0];
+        if (firstReward.Type === 'OX') {
             return (
                 <>
                     <Image style={styles.rewardImage} source={IMG_OX} />
                     {!hideOxText && (
                         <Text style={styles.rewardValue} fontSize={14}>
-                            {`x${item.amount}`}
+                            {`x${firstReward.Amount}`}
                         </Text>
                     )}
                 </>
             );
-        } else if (item.rewardType === 'chest') {
-            return <Image style={styles.rewardImage} source={IMG_CHESTS[item.rarity]} />;
+        } else if (firstReward.Type === 'Chest') {
+            return <Image style={styles.rewardImage} source={IMG_CHESTS[firstReward.ChestRarity]} />;
         } else {
             return null;
         }

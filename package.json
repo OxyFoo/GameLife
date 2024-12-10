@@ -14,7 +14,8 @@
     "server": "cd src/Server/TCP && npm start",
     "podi": "cd ios && pod install",
     "prestart": "npx tsc -b src/Types/tsconfig.gamelife.json",
-    "poststart": "find src/Types/ -type f \\( -name \"*.js\" -o -name \"*.d.ts\" -o -name \"*.tsbuildinfo\" \\) -delete"
+    "poststart": "find src/Types/ -type f \\( -name \"*.js\" -o -name \"*.d.ts\" -o -name \"*.tsbuildinfo\" \\) -delete",
+    "apple-reset-cache": "rm -rf ~/Library/Developer/Xcode/DerivedData/GameLife-*/Build/Intermediates.noindex/XCBuildData/"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",

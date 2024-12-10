@@ -88,28 +88,11 @@
             "mission2": {
                 "title": "Create a quest",
                 "texts": {
-                    "1": "Support here to go to the quest page",
-                    "2": "Pressing the + button to create a new quest",
-                    "3": "Fill in the requested information, such as the title, activities to be carried out, duration etc"
+                    "1": "Press here on the + right to add a new quest",
+                    "2": "Here is the quest page, they are used to give you goals to achieve regularly"
                 }
             },
             "mission3": {
-                "title": "Buy an item",
-                "texts": {
-                    "1": "Start by going to the shop",
-                    "2": "The Ox are the currency of the game, you can win them by looking at ads, by making quests, successes etc",
-                    "3": "Here you can exchange them for what you want, a specific item (among 3 proposed, which change every day), or a trunk to have a random item"
-                }
-            },
-            "mission4": {
-                "title": "Equip an item",
-                "texts": {
-                    "1": "Start by going to your profile",
-                    "2": "Here you can see your avatar, click on it to open your inventory",
-                    "3": "You can equip an item by pressing on it, or sell it to win ox"
-                }
-            },
-            "mission5": {
                 "title": "Ask for a friend",
                 "texts": {
                     "1": "In this widget you can see your connected friends ...",
@@ -121,6 +104,8 @@
         },
 
         "alerts": {
+            "claim-not-connected-title": "Error",
+            "claim-not-connected-message": "You must be connected to the internet to claim the reward, please connect and try again.",
             "claim-claim-error-title": "Error",
             "claim-claim-error-message": "An error occurred when recovering the reward, please again again."
         }

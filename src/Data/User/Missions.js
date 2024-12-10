@@ -1,3 +1,4 @@
+import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from 'Types/Interface/IUserData';
@@ -9,19 +10,10 @@ import { ParsePlural } from 'Utils/String';
  * @typedef {import('Data/User/Inventory').Stuff} Stuff
  *
  * @typedef {import('Types/Database/Missions').MissionKeys} MissionKeys
- * @typedef {import('Types/Data/User/Missions').MissionType} MissionType
+ * @typedef {import('Types/Data/App/Missions').MissionType} MissionType
  * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
  * @typedef {import('Types/Data/User/Missions').SaveObject_Missions} SaveObject_Missions
  */
-
-/** @type {MissionType[]} */
-const MISSIONS = [
-    { name: 'mission1', rewardType: 'ox', amount: 20 },
-    { name: 'mission2', rewardType: 'ox', amount: 30 },
-    { name: 'mission3', rewardType: 'ox', amount: 10 },
-    { name: 'mission4', rewardType: 'ox', amount: 50 },
-    { name: 'mission5', rewardType: 'chest', rarity: 'rare' }
-];
 
 /** @extends {IUserData<SaveObject_Missions>} */
 class Missions extends IUserData {
@@ -171,8 +163,9 @@ class Missions extends IUserData {
 
     /** @returns {{ mission: MissionItem | null, index: number }} Mission item or null if no mission is available */
     GetCurrentMission = () => {
-        const names = MISSIONS.map((mission) => mission.name);
         const missions = this.missions.Get();
+        const missionsData = dataManager.missions.Get();
+        const names = missionsData.map((m) => m.name);
 
         for (let i = 0; i < names.length; i++) {
             const missionName = names[i];
@@ -216,14 +209,15 @@ class Missions extends IUserData {
      */
     SetMissionState = (name, state) => {
         // Check if mission exists
-        if (MISSIONS.findIndex((mission) => mission.name === name) === -1) {
+        const missionsData = dataManager.missions.Get();
+        const missionNames = missionsData.map((m) => m.name);
+        if (!missionNames.includes(name)) {
             this.#user.interface.console?.AddLog('error', `Mission ${name} not found`);
             return;
         }
 
-        const missions = this.missions.Get();
-
         // Check if mission is already in the list
+        const missions = this.missions.Get();
         const mission = missions.find((m) => m.name === name);
         if (!mission) {
             // Add mission to the list (can't be claimed before being added)
@@ -240,8 +234,8 @@ class Missions extends IUserData {
             return;
         }
 
-        // TODO: Why ?
         // Don't update if mission is claimed
+        // Claim state were update below, in ClaimMission func
         if (mission.state === 'claimed') {
             return;
         }
@@ -257,13 +251,17 @@ class Missions extends IUserData {
 
     /**
      * @param {MissionKeys} name
-     * @returns {Promise<boolean>} True if mission was claimed
+     * @returns {Promise<'claimed' | 'not-connected' | 'error'>} True if mission was claimed
      */
     ClaimMission = async (name) => {
+        if (!this.#user.server2.IsAuthenticated()) {
+            return 'not-connected';
+        }
+
         const savedMissions = await this.SaveOnline();
         if (!savedMissions) {
             this.#user.interface.console?.AddLog('error', '[Missions] Failed to save missions before claiming mission');
-            return false;
+            return 'error';
         }
 
         const response = await this.#user.server2.tcp.SendAndWait({
@@ -283,24 +281,24 @@ class Missions extends IUserData {
                 'error',
                 `[Missions] Failed to claim mission (${name}: ${typeof response === 'string' ? response : JSON.stringify(response)})`
             );
-            return false;
+            return 'error';
         }
 
         if (response.result === 'not-up-to-date') {
             await this.LoadOnline();
-            return false;
+            return 'error';
         }
 
         if (response.result === 'already-claimed') {
             this.SetMissionState(name, 'claimed');
-            return true;
+            return 'claimed';
         }
 
         // Claim rewards
         const { rewards, newOx, newToken } = response.result;
         const rewardsExecuted = await this.#user.rewards.ExecuteRewards(rewards, newOx);
         if (!rewardsExecuted) {
-            return false;
+            return 'error';
         }
 
         // Update token
@@ -313,9 +311,9 @@ class Missions extends IUserData {
         await this.#user.rewards.ShowRewards(rewards, 'all', title, message);
 
         this.SetMissionState(name, 'claimed');
-        return true;
+        await this.#user.SaveLocal();
+        return 'claimed';
     };
 }
 
-export { MISSIONS };
 export default Missions;

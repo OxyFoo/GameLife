@@ -74,7 +74,15 @@ class BackMissions extends React.Component {
             const timeBefore = Date.now();
 
             const claimed = await user.missions.ClaimMission(mission.name);
-            if (claimed === false) {
+            if (claimed === 'not-connected') {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alerts']['claim-not-connected-title'],
+                        message: lang['alerts']['claim-not-connected-message']
+                    }
+                });
+            } else if (claimed === 'error') {
                 user.interface.popup?.OpenT({
                     type: 'ok',
                     data: {

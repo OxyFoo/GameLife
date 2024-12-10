@@ -1,8 +1,6 @@
 import React from 'react';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import StartTutorial from './tuto';
-import StartMission from './mission';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -11,6 +9,7 @@ import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').View} View
+ * @typedef {import('react-native').ScrollView} ScrollView
  *
  * @typedef {import('Managers/UserManager').UserManager} UserManager
  */
@@ -37,6 +36,12 @@ class BackHome extends PageBase {
         scrollable: true
     };
 
+    /** @type {React.RefObject<ScrollView>} */
+    refScrollView = React.createRef();
+
+    /** @type {React.RefObject<View>} */
+    refQuestsTitle = React.createRef();
+
     /** @type {Symbol | null} */
     listenerActivities = null;
 
@@ -44,11 +49,6 @@ class BackHome extends PageBase {
         this.handleLevelsUpdate(user.experience.experience.Get());
         this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
     }
-
-    /** @param {this['props']} props */
-    componentDidFocused = (props) => {
-        //StartTutorial.call(this, props.args.tuto);
-    };
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
@@ -69,8 +69,6 @@ class BackHome extends PageBase {
             }
         });
     };
-
-    StartMission = StartMission.bind(this);
 
     /** @param {boolean} scrollable */
     onChangeScrollable = (scrollable) => {

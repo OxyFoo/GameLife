@@ -11,8 +11,8 @@ import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } f
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
- * @typedef {import('Types/Features/UserOnline').CurrentActivity} CurrentActivity
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('Types/Data/User/Activities').CurrentActivity} CurrentActivity
  * @typedef {import('Types/Data/User/Activities').ActivitySaved} ActivitySaved
  * @typedef {import('Types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
  *

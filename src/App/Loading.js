@@ -1,11 +1,8 @@
-import RNExitApp from 'react-native-exit-app';
-
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import { CheckDate } from 'Utils/DateCheck';
 //import Notifications from 'Utils/Notifications';
 //import { Character } from 'Interface/Components';
 
@@ -221,20 +218,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     //await user.interface.LoadDefaultPages();
 
     nextStep();
-
-    const dateIsOK = await CheckDate(user.server2.tcp);
-    if (dateIsOK === false) {
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: langManager.curr['home']['alert-dateerror-title'],
-                message: langManager.curr['home']['alert-dateerror-text']
-            },
-            callback: RNExitApp.exitApp,
-            cancelable: false
-        });
-        return;
-    }
 
     user.StartTimers();
 

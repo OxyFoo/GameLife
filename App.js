@@ -4,8 +4,6 @@ import { AppState } from 'react-native';
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
 
-import { CheckDate } from './src/Utils/DateCheck';
-
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus
  * @typedef {import('./src/Interface/FlowEngine/back').default} FlowEngineBack
@@ -35,13 +33,7 @@ class App extends React.Component {
     /** @param {AppStateStatus} state */
     async componentChangeState(state) {
         if (state === 'active') {
-            CheckDate(user.server2.tcp);
-
-            // Automatic reconnect on app open
-            if (user.settings.email !== '') {
-                await user.server2.Connect();
-                await user.server2.Login(user.settings.email);
-            }
+            await user.server2.Reconnect();
         } else if (state === 'background' || state === 'inactive') {
             (await user.SaveOnline()) || (await user.SaveLocal());
         }

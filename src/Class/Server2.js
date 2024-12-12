@@ -1,12 +1,14 @@
+import RNExitApp from 'react-native-exit-app';
+
 import { IUserClass } from 'Types/Interface/IUserClass';
 import langManager from 'Managers/LangManager';
 
 import TCP from 'Utils/TCP';
+import { CheckDate } from 'Utils/DateCheck';
 import { GetDeviceIdentifiers } from 'Utils/Device';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestLogin} ServerRequestLogin
  */
 
 class Server2 extends IUserClass {
@@ -84,7 +86,7 @@ class Server2 extends IUserClass {
         });
 
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
-            this.#user.interface.console?.AddLog('error', `[Connect] Server connection failed (${response})`);
+            this.#user.interface.console?.AddLog('error', `[Server2/Connect] Server connection failed (${response})`);
             return 'not-connected';
         }
 
@@ -120,12 +122,12 @@ class Server2 extends IUserClass {
             token: this.#user.settings.token
         });
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
-            this.#user.interface.console?.AddLog('error', `[Login] Server connection failed (${response})`);
+            this.#user.interface.console?.AddLog('error', `[Server2/Login] Server connection failed (${response})`);
             return false;
         }
 
         if (response.status !== 'login') {
-            this.#user.interface.console?.AddLog('error', '[Login] Server connection failed');
+            this.#user.interface.console?.AddLog('error', '[Server2/Login] Server connection failed');
             return 'error';
         }
 
@@ -154,6 +156,21 @@ class Server2 extends IUserClass {
             this.tcp.state.Set('authenticated');
         }
 
+        // Check current date
+        const dateIsOk = await CheckDate(this.tcp);
+        if (dateIsOk === false) {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['home']['alert-dateerror-title'],
+                    message: langManager.curr['home']['alert-dateerror-text']
+                },
+                callback: RNExitApp.exitApp,
+                cancelable: false
+            });
+            return 'error';
+        }
+
         return 'ok';
     };
 
@@ -179,6 +196,26 @@ class Server2 extends IUserClass {
         }
 
         return response.result;
+    };
+
+    Reconnect = async () => {
+        const email = this.#user.settings.email;
+
+        if (!email) {
+            return false;
+        }
+
+        const connected = await this.Connect(false);
+        if (connected !== 'success' && connected !== 'already-connected') {
+            return false;
+        }
+
+        const logged = await this.Login(email);
+        if (logged !== 'ok') {
+            return false;
+        }
+
+        return true;
     };
 }
 

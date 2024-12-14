@@ -463,8 +463,6 @@
     "multiplayer": {
         "connection-loading": "Connection in progress",
         "connection-offline": "Please connect to the internet and restart the application to access this page.",
-        "connection-failed": "The connection to the server failed, please try again later.",
-        "button-retry": "Retry",
 
         "container-title": "Multiplayer",
         "container-content-empty": "No friends connected yet",
@@ -499,6 +497,10 @@
         "alert-timeout": {
             "title": "Timeout",
             "message": "The server is not responding, please try again later."
+        },
+        "alert-too-friends": {
+            "title": "Limit reached",
+            "message": "You have reached the limit of friends you can have!"
         },
         "alert-error": {
             "title": "Error",

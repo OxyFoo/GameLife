@@ -3,11 +3,11 @@ import langManager from 'Managers/LangManager';
 import { IUserClass } from 'Types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
 
-const FRIENDS_LIMIT = 10;
+const FRIENDS_LIMIT = 50;
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} ReceiveRequest
  */
 

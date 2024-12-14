@@ -3,7 +3,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Class/Multiplayer').Friend} Friend
+ * @typedef {import('Data/User/Multiplayer').Friend} Friend
  * @typedef {Friend & { label: string, rank: number }} RankedFriend
  */
 

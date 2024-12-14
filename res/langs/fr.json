@@ -463,8 +463,6 @@
     "multiplayer": {
         "connection-loading": "Connexion en cours",
         "connection-offline": "Connecte toi à internet et redémarre l'application pour accéder à cette page.",
-        "connection-failed": "La connexion au serveur a échouée, réessaye plus tard.",
-        "button-retry": "Réessayer",
 
         "container-title": "Multijoueur",
         "container-content-empty": "Aucun ami connecté pour le moment",
@@ -499,6 +497,10 @@
         "alert-timeout": {
             "title": "Temps écoulé",
             "message": "La connexion au serveur a pris trop de temps, réessaye plus tard."
+        },
+        "alert-too-friends": {
+            "title": "Limite atteinte",
+            "message": "Tu as atteint la limite d'amis que tu peux avoir !"
         },
         "alert-error": {
             "title": "Erreur",

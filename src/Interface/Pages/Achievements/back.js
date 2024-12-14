@@ -7,7 +7,7 @@ import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('Types/Data/App/Achievements').Condition} Condition
- * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
  *
  * @typedef {Object} PanelAchievementType
  * @property {number} ID

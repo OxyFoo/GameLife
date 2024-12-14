@@ -15,6 +15,7 @@ export { Swiper } from './Components/Swiper';
 export { Switch } from './Components/Switch';
 export { SwitchText } from './Components/SwitchText';
 export { Text } from './Components/Text';
+export { UserOnlineElement } from './Components/UserOnlineElement';
 export { Zap } from './Components/Zap';
 
 import Container from './OldComponents/Container';
@@ -27,18 +28,5 @@ import PieChart from './OldComponents/PieChart';
 import SimpleContainer from './OldComponents/SimpleContainer';
 import StreakChart from './OldComponents/StreakChart';
 import OldText from './OldComponents/Text';
-import UserOnlineElement from './OldComponents/UserOnlineElement';
 
-export {
-    Input,
-    Container,
-    Frame,
-    Character,
-    LineChartSvg,
-    PieChart,
-    SimpleContainer,
-    StreakChart,
-    UserOnlineElement,
-    OldIcon,
-    OldText
-};
+export { Input, Container, Frame, Character, LineChartSvg, PieChart, SimpleContainer, StreakChart, OldIcon, OldText };

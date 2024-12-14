@@ -9,7 +9,7 @@ import { Container, Text, UserOnlineElement } from 'Interface/Components';
 
 /**
  * @typedef {import('Ressources/Icons').IconsName} IconsName
- * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('react-native').ListRenderItem<Friend>} ListRenderFriend
  */
 
@@ -57,67 +57,57 @@ class MultiplayerPanel extends BackMultiplayerPanel {
         const { state } = this.state;
 
         // Not connected
-        if (state === 'disconnected')   return this.renderDisconnected();
-        else if (state === 'idle')      return this.renderIdle();
-        else if (state === 'error')     return this.renderError();
+        if (state === 'disconnected') return this.renderDisconnected();
+        else if (state === 'idle') return this.renderIdle();
+        else if (state === 'error') return this.renderError();
 
         return (
             <FlatList
                 data={this.state.friends}
-                keyExtractor={(item, index) => `multi-player-${item.accountID}`}
+                keyExtractor={(item) => `multi-player-${item.accountID}`}
                 ListEmptyComponent={this.renderEmpty}
-                renderItem={({ item, index }) => (
-                    <UserOnlineElement friend={item} />
-                )}
+                renderItem={({ item }) => <UserOnlineElement friend={item} />}
             />
         );
-    }
+    };
 
     renderEmpty = () => {
         const lang = langManager.curr['multiplayer'];
 
         return (
             <View>
-                <Text style={styles.containerText}>
-                    {lang['container-content-empty']}
-                </Text>
+                <Text style={styles.containerText}>{lang['container-content-empty']}</Text>
             </View>
         );
-    }
+    };
 
     renderIdle = () => {
         const lang = langManager.curr['multiplayer'];
 
         return (
             <View>
-                <Text style={styles.containerText}>
-                    {lang['container-content-idle']}
-                </Text>
+                <Text style={styles.containerText}>{lang['container-content-idle']}</Text>
             </View>
         );
-    }
+    };
     renderDisconnected = () => {
         const lang = langManager.curr['multiplayer'];
 
         return (
             <View>
-                <Text style={styles.containerText}>
-                    {lang['container-content-disconnected']}
-                </Text>
+                <Text style={styles.containerText}>{lang['container-content-disconnected']}</Text>
             </View>
         );
-    }
+    };
     renderError = () => {
         const lang = langManager.curr['multiplayer'];
 
         return (
             <View>
-                <Text style={styles.containerText}>
-                    {lang['container-content-error']}
-                </Text>
+                <Text style={styles.containerText}>{lang['container-content-error']}</Text>
             </View>
         );
-    }
+    };
 }
 
 export default MultiplayerPanel;

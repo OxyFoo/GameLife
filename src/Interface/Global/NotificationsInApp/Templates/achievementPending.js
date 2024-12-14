@@ -16,7 +16,7 @@ import { Button, Text } from 'Interface/Components';
  * @param {object} props
  * @param {NotificationInAppAchievements} props.notif
  * @param {number} props.index
- * @returns {React.JSX.Element | null}
+ * @returns {JSX.Element}
  */
 function NIA_AchievementPending({ notif }) {
     const lang = langManager.curr['notifications']['in-app'];
@@ -24,7 +24,7 @@ function NIA_AchievementPending({ notif }) {
 
     const achievement = dataManager.achievements.GetByID(notif.data.achievementID);
     if (achievement === null) {
-        return null;
+        return <></>;
     }
 
     const achievementTitle = langManager.GetText(achievement.Name);

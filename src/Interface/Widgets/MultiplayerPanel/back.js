@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
  * @typedef {import('Interface/OldComponents/Container').default} Container
- * @typedef {import('Types/Features/UserOnline').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
  */
 

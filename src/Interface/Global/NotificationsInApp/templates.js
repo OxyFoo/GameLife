@@ -11,7 +11,8 @@ import { Text, Separator } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Types/Features/NotificationInApp').NotificationInApp<*>} NotificationInApp
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInAppTypes} NotificationInAppTypes
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<NotificationInAppTypes>} NotificationInApp
  */
 
 /**

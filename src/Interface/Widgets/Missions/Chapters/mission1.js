@@ -3,7 +3,7 @@ import React from 'react';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { AddActivity } from '../../AddActivity';
+import { AddActivity } from '../../../PageView/AddActivity';
 import { Sleep } from 'Utils/Functions';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';

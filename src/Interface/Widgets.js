@@ -1,5 +1,5 @@
 export { AchievementsGroup } from './Widgets/AchievementsGroup';
-export { AddActivity } from './Widgets/AddActivity';
+export { AddActivity } from './PageView/AddActivity';
 export { DailyQuest } from './Widgets/DailyQuest';
 export { Missions } from './Widgets/Missions';
 export { QuestsList } from './Widgets/QuestsList';

@@ -18,12 +18,6 @@ import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
-// TODO
-////////////////
-// Deprecated //
-import Server from 'Class/Server';
-////////////////
-
 /**
  * @typedef {import('Interface/Components').Character} Character
  * @typedef {import('Interface/FlowEngine/back').default['_public']} FlowEngine
@@ -86,9 +80,6 @@ class UserManager {
             this.multiplayer,
             this.todos
         ];
-
-        /** @deprecated */ // TODO: Remove
-        this.server = new Server(this);
     }
 
     /**

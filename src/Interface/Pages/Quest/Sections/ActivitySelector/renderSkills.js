@@ -7,12 +7,12 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
-import { GetRecentSkills, SkillToItem } from 'Interface/Widgets/AddActivity/types';
+import { GetRecentSkills, SkillToItem } from 'Interface/PageView/AddActivity/types';
 import { FormatForSearch } from 'Utils/String';
 
 /**
- * @typedef {import('Interface/Widgets/AddActivity/types').ItemSkill} ItemSkill
- * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
+ * @typedef {import('Interface/PageView/AddActivity/types').ItemSkill} ItemSkill
+ * @typedef {import('Interface/PageView/AddActivity/types').ItemCategory} ItemCategory
  */
 
 /** @type {ItemSkill[]} */

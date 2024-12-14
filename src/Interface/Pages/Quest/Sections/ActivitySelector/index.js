@@ -8,11 +8,11 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, IconCheckable, Swiper, Button, Icon, InputText } from 'Interface/Components';
-import { CategoryToItem, GetRecentSkills } from 'Interface/Widgets/AddActivity/types';
+import { CategoryToItem, GetRecentSkills } from 'Interface/PageView/AddActivity/types';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Interface/Widgets/AddActivity/types').ItemCategory} ItemCategory
+ * @typedef {import('Interface/PageView/AddActivity/types').ItemCategory} ItemCategory
  * @typedef {import('Interface/Components/InputText/Thin').InputTextThin} InputTextThin
  *
  * @typedef {Object} ActivitySelectorPropsType

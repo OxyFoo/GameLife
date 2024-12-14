@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    page: {
+        marginBottom: 6,
+        paddingTop: 24,
+        paddingHorizontal: 24
+    },
+
     // User Header
     header: {
         width: '100%',
@@ -62,6 +68,9 @@ const styles = StyleSheet.create({
     kpiProfile: {
         paddingHorizontal: 2
     },
+    kpiProfileMiddle: {
+        marginHorizontal: 12
+    },
 
     // Avatar
     avatarContainer: {
@@ -74,6 +83,10 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         backgroundColor: '#FFFFFF',
         overflow: 'hidden'
+    },
+    avatarPlaceholder: {
+        width: '100%',
+        height: '100%'
     }
 });
 

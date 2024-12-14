@@ -2,6 +2,7 @@ export { ActivityTimeline } from './Components/ActivityTimeline';
 export { Button } from './Components/Button';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
+export { Container } from './Components/Container';
 export { Digit } from './Components/Digit';
 export { HeatMap } from './Components/HeatMap';
 export { Icon } from './Components/Icon';
@@ -18,7 +19,6 @@ export { Text } from './Components/Text';
 export { UserOnlineElement } from './Components/UserOnlineElement';
 export { Zap } from './Components/Zap';
 
-import Container from './OldComponents/Container';
 import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import Input from './OldComponents/Input';
@@ -29,4 +29,4 @@ import SimpleContainer from './OldComponents/SimpleContainer';
 import StreakChart from './OldComponents/StreakChart';
 import OldText from './OldComponents/Text';
 
-export { Input, Container, Frame, Character, LineChartSvg, PieChart, SimpleContainer, StreakChart, OldIcon, OldText };
+export { Input, Frame, Character, LineChartSvg, PieChart, SimpleContainer, StreakChart, OldIcon, OldText };

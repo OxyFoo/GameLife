@@ -1,15 +1,19 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 
 import styles from './style';
 import BackProfileFriend from './back';
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Container, Text, Button, XPBar, Frame, KPI } from 'Interface/Components';
-import { PageHeader, AchievementsGroup, StatsBars } from 'Interface/Widgets';
+import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
+import { AchievementsGroup, StatsBars } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
+
+// TODO: Replace this with a real avatar
+// @ts-ignore
+const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
 
 class ProfileFriend extends BackProfileFriend {
     render() {
@@ -26,16 +30,21 @@ class ProfileFriend extends BackProfileFriend {
         const title = friend.title !== 0 ? dataManager.titles.GetByID(friend.title) : null;
         const titleText = title === null ? null : langManager.GetText(title.Name);
 
-        const backgroundKpi = {
-            backgroundColor: themeManager.GetColor('backgroundCard')
-        };
-
         return (
-            <View>
-                <PageHeader
-                    style={{ marginBottom: 12 }}
-                    onBackPress={this.Back}
-                />
+            <ScrollView
+                ref={user.interface.bottomPanel?.mover.SetScrollView}
+                style={styles.page}
+                onLayout={user.interface.bottomPanel?.mover.onLayoutFlatList}
+                onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
+                scrollEnabled={false}
+            >
+                {/** Avatar */}
+                <View style={styles.avatarContainer}>
+                    <View style={styles.avatar}>
+                        {/* <Frame characters={[this.character]} loadingTime={300} /> */}
+                        <Image style={styles.avatarPlaceholder} resizeMode='stretch' source={AVATAR_MIN_PLACEHOLDER} />
+                    </View>
+                </View>
 
                 {/** User Header */}
                 <View style={styles.header}>
@@ -60,14 +69,7 @@ class ProfileFriend extends BackProfileFriend {
                         <Text>{langManager.curr['level']['level'] + ' ' + xpInfo.lvl}</Text>
                         <Text>{Round(xpInfo.xp) + '/' + xpInfo.next}</Text>
                     </View>
-                    <XPBar value={xpInfo.xp} maxValue={xpInfo.next} />
-                </View>
-
-                {/** Avatar */}
-                <View style={styles.avatarContainer}>
-                    <View style={styles.avatar}>
-                        <Frame characters={[ this.character ]} loadingTime={300} />
-                    </View>
+                    <ProgressBar value={xpInfo.xp} maxValue={xpInfo.next} />
                 </View>
 
                 {/** Current activity */}
@@ -77,19 +79,20 @@ class ProfileFriend extends BackProfileFriend {
                 {friend.friendshipState === 'accepted' && (
                     <View style={styles.kpiContainer}>
                         <KPI
+                            style={styles.kpiProfile}
                             title={lang['row-since']}
-                            value={activities.totalDays}
-                            unit={langDates['day-min']}
-                            style={[styles.kpiProfile, backgroundKpi]} />
+                            value={`${activities.totalDays} ${langDates['day-min']}`}
+                        />
                         <KPI
+                            style={[styles.kpiProfile, styles.kpiProfileMiddle]}
                             title={lang['row-activities']}
                             value={activities.activitiesLength}
-                            style={[styles.kpiProfile, backgroundKpi]} />
+                        />
                         <KPI
+                            style={styles.kpiProfile}
                             title={lang['row-time']}
-                            value={activities.durationHours}
-                            unit={langDates['hours-min']}
-                            style={[styles.kpiProfile, backgroundKpi]}/>
+                            value={`${activities.durationHours} ${langDates['hours-min']}`}
+                        />
                     </View>
                 )}
 
@@ -100,6 +103,7 @@ class ProfileFriend extends BackProfileFriend {
                         style={styles.topSpace}
                         type='rollable'
                         opened={false}
+                        backgroundColor='dataBigKpi'
                     >
                         <StatsBars data={statsInfo} />
                     </Container>
@@ -110,18 +114,17 @@ class ProfileFriend extends BackProfileFriend {
                     <Container
                         style={styles.topSpace}
                         text={lang['container-achievements-title']}
-                        type='static'
+                        type='rollable'
                         opened={true}
-                        color='main1'
-                        backgroundColor='backgroundCard'
+                        backgroundColor='dataBigKpi'
                     >
                         <AchievementsGroup friend={friend} />
                     </Container>
                 )}
 
                 {/** Actions */}
-                {this.renderAction()}
-            </View>
+                <View style={styles.botSpace}>{this.renderAction()}</View>
+            </ScrollView>
         );
     }
 
@@ -129,7 +132,7 @@ class ProfileFriend extends BackProfileFriend {
         const lang = langManager.curr['profile-friend'];
         const { friend } = this.state;
 
-        if (friend.friendshipState !== 'accepted' || friend.currentActivity === null) {
+        if (!friend || friend.friendshipState !== 'accepted' || friend.currentActivity === null) {
             return null;
         }
 
@@ -145,26 +148,24 @@ class ProfileFriend extends BackProfileFriend {
             <View style={styles.startNowContainer}>
                 <Text>{titleCurrentActivity}</Text>
                 <Button style={styles.startNowButton} color='main1' onPress={this.handleStartNow}>
-                    <Text fontSize={16}>
-                        {lang['activity-now-start']}
-                    </Text>
+                    <Text fontSize={16}>{lang['activity-now-start']}</Text>
                 </Button>
             </View>
         );
-    }
+    };
 
     renderAction = () => {
         const lang = langManager.curr['profile-friend'];
         const { friend } = this.state;
 
+        if (friend === null) {
+            return null;
+        }
+
         // Remove friend button
         if (friend.friendshipState === 'accepted') {
             return (
-                <Button
-                    style={styles.topSpace}
-                    color='danger'
-                    onPress={this.removeFriendHandler}
-                >
+                <Button style={styles.topSpace} color='danger' onPress={this.removeFriendHandler}>
                     {lang['button-remove']}
                 </Button>
             );
@@ -173,11 +174,7 @@ class ProfileFriend extends BackProfileFriend {
         // Cancel request button
         else if (friend.friendshipState === 'pending') {
             return (
-                <Button
-                    style={styles.topSpace}
-                    color='main1'
-                    onPress={this.cancelFriendHandler}
-                >
+                <Button style={styles.topSpace} color='main1' onPress={this.cancelFriendHandler}>
                     {lang['button-cancel']}
                 </Button>
             );
@@ -185,12 +182,16 @@ class ProfileFriend extends BackProfileFriend {
 
         // Unblock button
         else if (friend.friendshipState === 'blocked') {
-            return null; // TODO
+            return (
+                <Button style={styles.topSpace} color='main1' onPress={this.unblockFriendHandler}>
+                    {lang['button-unblock']}
+                </Button>
+            );
         }
 
         // Default: Add friend button
         return null; // TODO
-    }
+    };
 }
 
 export default ProfileFriend;

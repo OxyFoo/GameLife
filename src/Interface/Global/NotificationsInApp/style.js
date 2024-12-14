@@ -65,9 +65,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     friendPendingBlockButton: {
-        height: 'auto',
+        width: '40%',
         paddingVertical: 8,
         paddingHorizontal: 12
+    },
+    friendPendingBlockButtonContent: {
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
 
     // AchievementPending

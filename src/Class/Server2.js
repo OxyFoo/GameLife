@@ -199,11 +199,17 @@ class Server2 extends IUserClass {
     };
 
     Reconnect = async () => {
+        if (this.IsAuthenticated()) {
+            return;
+        }
+
         const email = this.#user.settings.email;
 
         if (!email) {
             return false;
         }
+
+        this.#user.interface.console?.AddLog('info', 'Reconnecting to the server');
 
         const connected = await this.Connect(false);
         if (connected !== 'success' && connected !== 'already-connected') {

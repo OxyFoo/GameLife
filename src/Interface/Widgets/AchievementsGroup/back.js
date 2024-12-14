@@ -24,6 +24,9 @@ class AchievementsGroupBack extends React.Component {
         lastAchievements: []
     };
 
+    /** @type {Symbol | null} */
+    achievementsListener = null;
+
     /** @param {AchievementsGroupProps} props */
     constructor(props) {
         super(props);
@@ -58,10 +61,14 @@ class AchievementsGroupBack extends React.Component {
             user.interface.ChangePage('achievements');
         } else {
             user.interface.ChangePage('achievements', {
-                friendID: this.props.friend.accountID
+                args: {
+                    friendID: this.props.friend.accountID
+                }
             });
         }
     };
+
+    /** @param {number} ID */
     onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
 }
 

@@ -471,6 +471,9 @@
         "container-content-disconnected": "Disconnected, please try again later.",
         "container-content-error": "An error has occurred, please try again later.",
 
+        "title-top-friends": "Top friends",
+        "title-online-friends": "Online friends",
+
         "category-friend": "Friends",
         "category-friend-pending": "Pending",
 
@@ -505,6 +508,10 @@
         "alert-error": {
             "title": "Error",
             "message": "An error has occurred, please try again later. ({})"
+        },
+        "alert-friend-added": {
+            "title": "Friend request sent",
+            "message": "The friend request has been sent to {}"
         }
     },
 
@@ -594,6 +601,22 @@
         "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} Ox"
     },
 
+    "friends": {
+        "title": "My friends",
+        "title-friends": "My friends",
+        "title-waiting-friends": "Waiting for validation",
+        "title-blocked-friends": "Blocked friends",
+
+        "button-search": "Search for a friend",
+        "button-sort": "Sort by:",
+        "sort-list": [
+            "alphabetical",
+            "level",
+            "activities",
+            "time"
+        ]
+    },
+
     "profile-friend": {
         "row-since": "Since",
         "row-activities": "Number of activities",
@@ -607,10 +630,13 @@
 
         "button-cancel": "Cancel friend request",
         "button-remove": "Remove friend",
+        "button-unblock": "Unblock",
         "alert-cancelfriend-title": "Cancel request",
-        "alert-cancelfriend-text": "Are you sure you want to cancel the friend request to {}?",
+        "alert-cancelfriend-message": "Are you sure you want to cancel the friend request to {}?",
         "alert-removefriend-title": "Remove friend",
-        "alert-removefriend-text": "Are you sure you want to remove {} from your friends?"
+        "alert-removefriend-message": "Are you sure you want to remove {} from your friends?",
+        "alert-unblockfriend-title": "Unblock friend",
+        "alert-unblockfriend-message": "Are you sure you want to unblock {}?"
     },
 
     "report": {

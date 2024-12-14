@@ -9,9 +9,8 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
- * @typedef {import('Interface/OldComponents/Icon').default} Icon
- * @typedef {import('Interface/OldComponents/Icon').Icons} Icons
+ *
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
  */
@@ -36,18 +35,9 @@ const ContainerProps = {
     textcolor: 'primary',
 
     /** @type {ThemeColor} */
-    color: 'main1',
-
-    /** @type {boolean} True to show new UI gradient */
-    colorNextGen: false,
-
-    /** @type {ThemeColor} */
-    rippleColor: undefined,
-
-    /** @type {ThemeColor} */
     backgroundColor: 'backgroundTransparent',
 
-    /** @type {Icons | null} Show the icon on the right side of the text, for static container */
+    /** @type {IconsName | null} Show the icon on the right side of the text, for static container */
     icon: null,
 
     /** @type {number} Size of the icon in pixels */
@@ -63,13 +53,13 @@ const ContainerProps = {
     opened: true,
 
     /** @type {(opened: boolean) => void} */
-    onChangeState: (opened) => {},
+    onChangeState: () => {},
 
     /** @type {(event: GestureResponderEvent) => void} For static container with an icon, event of icon press */
-    onIconPress: (event) => {},
+    onIconPress: () => {},
 
     /** @type {(event: LayoutChangeEvent) => void} event */
-    onLayout: (event) => {}
+    onLayout: () => {}
 };
 
 class ContainerBack extends React.Component {
@@ -80,10 +70,7 @@ class ContainerBack extends React.Component {
         animAngleIcon: new Animated.Value(0),
         animHeightContent: new Animated.Value(0),
         animBorderRadius: new Animated.Value(8)
-    }
-
-    /** @type {React.RefObject<Icon>} */
-    refIcon = React.createRef();
+    };
 
     componentDidMount() {
         if (this.props.opened !== this.state.opened) {
@@ -96,11 +83,11 @@ class ContainerBack extends React.Component {
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
-        const { x, y, width, height } = event.nativeEvent.layout;
+        const { height } = event.nativeEvent.layout;
         if (height > this.state.maxHeight && this.props.type === 'rollable') {
             this.setState({ maxHeight: height });
         }
-    }
+    };
 
     onChangeState = () => {
         const newState = !this.state.opened;
@@ -110,7 +97,7 @@ class ContainerBack extends React.Component {
         TimingAnimation(this.state.animAngleIcon, newState ? 1 : 0, 400, false).start();
         TimingAnimation(this.state.animHeightContent, newState ? 1 : 0, 300, false).start();
         TimingAnimation(this.state.animBorderRadius, newState ? 0 : 8, newState ? 50 : 800, false).start();
-    }
+    };
 }
 
 ContainerBack.prototype.props = ContainerProps;

@@ -471,6 +471,9 @@
         "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",
 
+        "title-top-friends": "Top amis",
+        "title-online-friends": "Amis en ligne",
+
         "category-friend": "Amis",
         "category-friend-pending": "Demandes en attente",
 
@@ -505,6 +508,10 @@
         "alert-error": {
             "title": "Erreur",
             "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        },
+        "alert-friend-added": {
+            "title": "Demande envoyée",
+            "message": "La demande d'ami a bien été envoyée à {}"
         }
     },
 
@@ -594,6 +601,22 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
+    "friends": {
+        "title": "Mes amis",
+        "title-friends": "Mes amis",
+        "title-waiting-friends": "Demandes en attente",
+        "title-blocked-friends": "Amis bloqués",
+
+        "button-search": "Rechercher un ami",
+        "button-sort": "Trier par :",
+        "sort-list": [
+            "ordre alphabétique",
+            "niveau",
+            "activités",
+            "heures"
+        ]
+    },
+
     "profile-friend": {
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
@@ -607,10 +630,13 @@
 
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",
+        "button-unblock": "Débloquer",
         "alert-cancelfriend-title": "Annuler la demande",
-        "alert-cancelfriend-text": "Es-tu sûr(e) de vouloir annuler la demande d'ami pour {} ?",
+        "alert-cancelfriend-message": "Es-tu sûr(e) de vouloir annuler la demande d'ami pour {} ?",
         "alert-removefriend-title": "Supprimer un ami",
-        "alert-removefriend-text": "Es-tu sûr(e) de vouloir supprimer {} de ta liste d'amis ?"
+        "alert-removefriend-message": "Es-tu sûr(e) de vouloir supprimer {} de ta liste d'amis ?",
+        "alert-unblockfriend-title": "Débloquer un ami",
+        "alert-unblockfriend-message": "Es-tu sûr(e) de vouloir débloquer {} ?"
     },
 
     "report": {

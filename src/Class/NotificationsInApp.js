@@ -14,6 +14,9 @@ class NotificationsInApp extends IUserClass {
     // eslint-disable-next-line prettier/prettier
     notifications = new DynamicVar(/** @type {NotificationInApp[]} */ ([]));
 
+    /** @type {NotificationInApp[]} */
+    #tmpNotifications = [];
+
     /** @type {Symbol | null} */
     #listenerAchievements = null;
 
@@ -25,16 +28,22 @@ class NotificationsInApp extends IUserClass {
     }
 
     Initialize = () => {
-        this.#loadAllAchievements();
-        this.#listenerAchievements = this.#user.achievements.achievements.AddListener(this.#loadAllAchievements);
+        this.#updateNotifications();
+        this.#listenerAchievements = this.#user.achievements.achievements.AddListener(this.#updateNotifications);
+        this.#user.server2.tcp.WaitForAction('update-notifications', (response) => {
+            this.#tmpNotifications = response.notifications;
+            this.#updateNotifications();
+            return false;
+        });
     };
 
     Unmount = () => {
         this.#user.achievements.achievements.RemoveListener(this.#listenerAchievements);
     };
 
-    #loadAllAchievements = () => {
-        const allNotifs = [...this.#user.achievements.GetNotifications()];
+    #updateNotifications = () => {
+        const notifsAchievements = this.#user.achievements.GetNotifications();
+        const allNotifs = [...notifsAchievements, ...this.#tmpNotifications];
         this.notifications.Set(allNotifs.sort((a, b) => b.timestamp - a.timestamp));
     };
 

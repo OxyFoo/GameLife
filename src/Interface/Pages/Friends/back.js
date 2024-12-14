@@ -1,93 +1,125 @@
-import React from 'react';
-
 import PageBase from 'Interface/FlowEngine/PageBase';
+
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
+import { FormatForSearch } from 'Utils/String';
 
 /**
- * @typedef {import('react-native').View} View
- *
  * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
  */
 
-class BackMultiplayer extends PageBase {
-    static feShowUserHeader = true;
-    static feShowNavBar = true;
+const BackFriendsProps = {
+    args: {}
+};
 
+class BackFriends extends PageBase {
     state = {
-        /** @type {'authenticated' | 'loading' | 'offline'} */
-        onlineState: 'loading',
-
         /** @type {Friend[]} */
         friends: [],
 
-        /** @type {Friend[]} */
-        bestFriends: [],
+        /** @type {UserOnline[]} */
+        waitingFriends: [],
 
         /** @type {UserOnline[]} */
-        friendsPending: []
+        blockedFriends: [],
+
+        search: '',
+        sortIndex: 0,
+        ascending: false
     };
 
-    /** @type {React.RefObject<View>} */
-    refAddButton = React.createRef();
+    /** @type {Symbol | null} */
+    listenerFriends = null;
 
     componentDidMount() {
-        this.updateOnlineState();
-        this.updateFriends(user.multiplayer.friends.Get());
-        this.listenerState = user.server2.tcp.state.AddListener(this.updateOnlineState);
+        this.updateFriends();
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
-        if (this.listenerState) {
-            user.server2.tcp.state.RemoveListener(this.listenerState);
-        }
         if (this.listenerFriends) {
             user.multiplayer.friends.RemoveListener(this.listenerFriends);
         }
     }
 
-    updateOnlineState = () => {
-        const { onlineState } = this.state;
+    updateFriends = () => {
+        const { search, sortIndex, ascending } = this.state;
 
-        const tcpState = user.server2.tcp.state.Get();
+        const searchText = FormatForSearch(search);
+        const friends = user.multiplayer
+            .GetFriends()
+            .filter((f) => search.length === 0 || FormatForSearch(f.username).includes(searchText))
+            .sort((a, b) => {
+                if (sortIndex === 0) {
+                    return a.username.localeCompare(b.username);
+                } else if (sortIndex === 1) {
+                    return b.xp - a.xp;
+                } else if (sortIndex === 2) {
+                    return b.activities.length - a.activities.length;
+                } else if (sortIndex === 3) {
+                    return b.activities.totalDuration - a.activities.totalDuration;
+                } else {
+                    return 0;
+                }
+            });
 
-        /** @type {this['state']['onlineState']} */
-        const newOnlineState = tcpState === 'authenticated' ? 'authenticated' : 'offline';
+        const waitingFriends = user.multiplayer
+            .GetWaitingFriends()
+            .filter((f) => search.length === 0 || FormatForSearch(f.username).includes(searchText))
+            .sort((a, b) => {
+                if (sortIndex === 0) {
+                    return a.username.localeCompare(b.username);
+                } else if (sortIndex === 1) {
+                    return b.xp - a.xp;
+                } else {
+                    return 0;
+                }
+            });
 
-        if (newOnlineState !== onlineState) {
-            this.setState({ onlineState: newOnlineState });
+        const blockedFriends = user.multiplayer
+            .GetBlockedFriends()
+            .filter((f) => search.length === 0 || FormatForSearch(f.username).includes(searchText))
+            .sort((a, b) => {
+                if (sortIndex === 0) {
+                    return a.username.localeCompare(b.username);
+                } else if (sortIndex === 1) {
+                    return b.xp - a.xp;
+                } else {
+                    return 0;
+                }
+            });
+
+        if (ascending) {
+            friends.reverse();
+            waitingFriends.reverse();
+            blockedFriends.reverse();
         }
+
+        this.setState({ friends, waitingFriends, blockedFriends });
     };
 
-    /** @param {(Friend | UserOnline)[]} friends */
-    updateFriends = (friends) => {
-        const newFriends = friends
-            .filter((friend) => friend.friendshipState === 'accepted')
-            .sort((a, b) => a.username.localeCompare(b.username));
-
-        // Sort by XP
-        const newBestFriends = newFriends.sort((a, b) => b.xp - a.xp).slice(0, 3);
-
-        const newFriendsPending = friends
-            .filter((friend) => friend.friendshipState === 'pending')
-            .sort((a, b) => a.username.localeCompare(b.username));
-
-        this.setState({
-            friends: newFriends,
-            bestFriends: newBestFriends,
-            friendsPending: newFriendsPending
-        });
+    /** @param {string} search */
+    onSearchChange = (search) => {
+        this.setState({ search }, this.updateFriends);
     };
 
-    goToFriends = () => {
-        user.interface.ChangePage('friends');
+    onSortPress = () => {
+        const lang = langManager.curr['friends'];
+        const { sortIndex } = this.state;
+
+        const maxIndex = lang['sort-list'].length;
+        this.setState({ sortIndex: (sortIndex + 1) % maxIndex }, this.updateFriends);
     };
 
-    addFriendHandle = () => {
+    onAscendingPress = () => {
+        const { ascending } = this.state;
+        this.setState({ ascending: !ascending }, this.updateFriends);
+    };
+
+    onAddFriendPress = () => {
         const lang = langManager.curr['multiplayer'];
 
         // Check friends limits
@@ -151,9 +183,12 @@ class BackMultiplayer extends PageBase {
         });
     };
 
-    Back = () => {
+    onBack = () => {
         user.interface.BackHandle();
     };
 }
 
-export default BackMultiplayer;
+BackFriends.defaultProps = BackFriendsProps;
+BackFriends.prototype.props = BackFriendsProps;
+
+export default BackFriends;

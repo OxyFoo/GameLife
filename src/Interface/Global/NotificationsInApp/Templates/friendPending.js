@@ -5,7 +5,7 @@ import styles from '../style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Text, Button } from 'Interface/Components';
+import { Text, Button, Icon } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -20,6 +20,7 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 function NIA_FriendPending({ notif }) {
     const lang = langManager.curr['notifications']['in-app'];
+    const [loading, setLoading] = React.useState(false);
     const [anim] = React.useState(new Animated.Value(0));
     const [askDecline, setAskDecline] = React.useState(false);
 
@@ -32,16 +33,22 @@ function NIA_FriendPending({ notif }) {
         SpringAnimation(anim, 0).start();
     };
 
-    const onAccept = () => {
-        user.multiplayer.AcceptFriend(notif.data.accountID);
+    const onAccept = async () => {
+        setLoading(true);
+        await user.multiplayer.AcceptFriend(notif.data.accountID);
+        setLoading(false);
         goBack();
     };
-    const onDecline = () => {
-        user.multiplayer.DeclineFriend(notif.data.accountID);
+    const onDecline = async () => {
+        setLoading(true);
+        await user.multiplayer.DeclineFriend(notif.data.accountID);
+        setLoading(false);
         goBack();
     };
-    const onBlock = () => {
-        user.multiplayer.BlockFriend(notif.data.accountID);
+    const onBlock = async () => {
+        setLoading(true);
+        await user.multiplayer.BlockFriend(notif.data.accountID);
+        setLoading(false);
         goBack();
     };
 
@@ -57,23 +64,25 @@ function NIA_FriendPending({ notif }) {
                 <View style={styles.friendPendingBlockView}>
                     <Button
                         style={styles.friendPendingBlockButton}
+                        styleContent={styles.friendPendingBlockButtonContent}
                         appearance='uniform'
                         color='danger'
                         onPress={onDecline}
-                        icon='close'
-                        iconSize={16}
+                        loading={loading}
                     >
-                        {lang['friend-pending-decline']}
+                        <Text>{lang['friend-pending-decline']}</Text>
+                        <Icon icon='close' size={24} />
                     </Button>
                     <Button
                         style={styles.friendPendingBlockButton}
+                        styleContent={styles.friendPendingBlockButtonContent}
                         appearance='uniform'
                         color='error'
                         onPress={onBlock}
-                        icon='trash'
-                        iconSize={16}
+                        loading={loading}
                     >
-                        {lang['friend-pending-block']}
+                        <Text>{lang['friend-pending-block']}</Text>
+                        <Icon icon='trash' size={20} />
                     </Button>
                 </View>
             </Animated.View>
@@ -95,6 +104,7 @@ function NIA_FriendPending({ notif }) {
                     onPress={onAccept}
                     icon='check'
                     iconSize={16}
+                    loading={loading}
                 />
                 <Button
                     style={styles.friendPendingButton}
@@ -103,6 +113,7 @@ function NIA_FriendPending({ notif }) {
                     onPress={goToDeclineOrBlock}
                     icon='close'
                     iconSize={16}
+                    loading={loading}
                 />
             </View>
         </Animated.View>

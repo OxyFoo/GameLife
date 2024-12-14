@@ -162,9 +162,6 @@ class Inventory extends IUserData {
 
         // Refresh user character
         this.user.character?.SetEquipment(this.GetEquippedItemsID());
-
-        // Update mission
-        this.user.missions.SetMissionState('mission4', 'completed');
     };
 
     /** @returns {Title[]} */

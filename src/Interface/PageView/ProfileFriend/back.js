@@ -1,27 +1,27 @@
+import React from 'react';
+
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import PageBase from 'Interface/FlowEngine/PageBase';
 import { Character } from 'Interface/Components';
 import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
 
 /**
  * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
  * @typedef {import('Class/Experience').XPInfo} XPInfo
  * @typedef {import('Class/Experience').Stats} Stats
  */
 
 const BackProfileFriendProps = {
-    args: {
-        /** @type {number} */
-        friendID: 0
-    }
+    /** @type {number} */
+    friendID: 0
 };
 
-class BackProfileFriend extends PageBase {
+class BackProfileFriend extends React.Component {
     state = {
-        /** @type {Friend | null} */
+        /** @type {Friend | UserOnline | null} */
         friend: null,
 
         /** @type {XPInfo | null} */
@@ -37,16 +37,22 @@ class BackProfileFriend extends PageBase {
         }
     };
 
+    /** @type {Symbol | null} */
+    listenerTCP = null;
+
+    /** @type {Symbol | null} */
+    listenerFriend = null;
+
     /** @param {BackProfileFriendProps} props */
     constructor(props) {
         super(props);
 
-        if (!props.args.hasOwnProperty('friendID') || !props.args.friendID) {
+        if (!props.hasOwnProperty('friendID') || !props.friendID) {
             this.Back();
             return;
         }
 
-        const friend = user.multiplayer.GetFriendByID(props.args.friendID);
+        const friend = user.multiplayer.GetFriendByID(props.friendID);
         if (friend === null) {
             this.Back();
             return;
@@ -54,12 +60,14 @@ class BackProfileFriend extends PageBase {
 
         this.state.friend = friend;
         this.state.xpInfo = user.experience.getXPDict(friend.xp, 'user');
-        this.state.statsInfo = Object.assign(
-            {},
-            ...user.experience.statsKey.map((i) => ({
-                [i]: user.experience.getXPDict(friend.stats[i], 'stat')
-            }))
-        );
+        if (friend.friendshipState === 'accepted') {
+            this.state.statsInfo = Object.assign(
+                {},
+                ...user.experience.statsKey.map((i) => ({
+                    [i]: user.experience.getXPDict(friend.stats[i], 'stat')
+                }))
+            );
+        }
 
         if (friend.friendshipState === 'accepted') {
             if (friend.activities.firstTime) {
@@ -92,10 +100,8 @@ class BackProfileFriend extends PageBase {
         user.multiplayer.friends.RemoveListener(this.listenerFriend);
     }
 
-    /** @param {Friend[]} friends */
+    /** @param {(Friend | UserOnline)[]} friends */
     updateFriend = (friends) => {
-        user.interface.popup.Close();
-
         const { friend } = this.state;
         if (friend === null) {
             this.Back();
@@ -136,7 +142,12 @@ class BackProfileFriend extends PageBase {
     };
 
     handleStartNow = () => {
-        const skillID = this.state.friend.currentActivity.skillID;
+        const { friend } = this.state;
+        if (!friend || friend.friendshipState !== 'accepted' || friend.currentActivity === null) {
+            return;
+        }
+
+        const skillID = friend.currentActivity.skillID;
         StartActivityNow(skillID);
     };
 
@@ -144,32 +155,85 @@ class BackProfileFriend extends PageBase {
         const { friend } = this.state;
         if (friend === null) return;
 
-        const callback = (button) => {
-            if (button !== 'yes') return;
-            user.multiplayer.RemoveFriend(friend.accountID);
-            this.Back();
-        };
-
         const lang = langManager.curr['profile-friend'];
-        const title = lang['alert-removefriend-title'];
-        const text = lang['alert-removefriend-text'].replace('{}', friend.username);
-        user.interface.popup.Open('yesno', [title, text], callback);
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-removefriend-title'],
+                message: lang['alert-removefriend-message'].replace('{}', friend.username)
+            },
+            callback: (button) => {
+                if (button !== 'yes') return;
+                user.multiplayer.RemoveFriend(friend.accountID);
+                this.Back();
+            }
+        });
     };
 
     cancelFriendHandler = () => {
         const { friend } = this.state;
         if (friend === null) return;
 
-        const callback = (button) => {
-            if (button !== 'yes') return;
-            user.multiplayer.CancelFriend(friend.accountID);
-            this.Back();
-        };
+        const lang = langManager.curr['profile-friend'];
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-cancelfriend-title'],
+                message: lang['alert-cancelfriend-message'].replace('{}', friend.username)
+            },
+            callback: async (button) => {
+                if (button !== 'yes') {
+                    return;
+                }
+
+                const cancelStatus = await user.multiplayer.CancelFriend(friend.accountID);
+
+                if (cancelStatus !== 'ok') {
+                    const langMulti = langManager.curr['multiplayer'];
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: langMulti['alert-error']['title'],
+                            message: langMulti['alert-error']['message'].replace('{}', cancelStatus)
+                        }
+                    });
+                    return;
+                }
+            }
+        });
+    };
+
+    unblockFriendHandler = () => {
+        const { friend } = this.state;
+        if (friend === null) return;
 
         const lang = langManager.curr['profile-friend'];
-        const title = lang['alert-cancelfriend-title'];
-        const text = lang['alert-cancelfriend-text'].replace('{}', friend.username);
-        user.interface.popup.Open('yesno', [title, text], callback);
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-unblockfriend-title'],
+                message: lang['alert-unblockfriend-message'].replace('{}', friend.username)
+            },
+            callback: async (button) => {
+                if (button !== 'yes') {
+                    return;
+                }
+
+                const unblockStatus = await user.multiplayer.UnblockFriend(friend.accountID);
+
+                if (unblockStatus === false) {
+                    const langMulti = langManager.curr['multiplayer'];
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: langMulti['alert-error']['title'],
+                            message: langMulti['alert-error']['message'].replace('{}', 'unblock-failed')
+                        }
+                    });
+                    return;
+                }
+            }
+        });
     };
 
     Back = () => {

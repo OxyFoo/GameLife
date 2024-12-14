@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 0
+    flatList: {
+        marginTop: 12,
+        marginBottom: 64
     },
-    containerText: {
-        fontSize: 16,
-        marginVertical: 12
+    item: {
+        marginBottom: 6
     }
 });
 

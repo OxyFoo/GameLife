@@ -1,7 +1,6 @@
 import Ads from 'Class/Ads';
 import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
-import Multiplayer from 'Class/Multiplayer';
 import NotificationsInApp from 'Class/NotificationsInApp';
 import Rewards from 'Class/Rewards';
 import Server2 from 'Class/Server2';
@@ -14,6 +13,7 @@ import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
 import Quests from 'Data/User/Quests/index';
+import Multiplayer from 'Data/User/Multiplayer';
 import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
@@ -45,7 +45,6 @@ class UserManager {
         this.ads = new Ads(this);
         this.consent = new Consent(this);
         this.experience = new Experience(this);
-        this.multiplayer = new Multiplayer(this);
         this.notificationsInApp = new NotificationsInApp(this);
         this.rewards = new Rewards(this);
         this.server2 = new Server2(this);
@@ -60,6 +59,7 @@ class UserManager {
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
         this.quests = new Quests(this);
+        this.multiplayer = new Multiplayer(this);
         this.todos = new Todos(this);
 
         /** @type {IUserClass<*>[]} */
@@ -67,7 +67,6 @@ class UserManager {
             this.ads,
             this.consent,
             this.experience,
-            this.multiplayer,
             this.notificationsInApp,
             this.server2,
             this.settings,
@@ -84,6 +83,7 @@ class UserManager {
             this.inventory,
             this.missions,
             this.quests,
+            this.multiplayer,
             this.todos
         ];
 

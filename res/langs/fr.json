@@ -95,9 +95,8 @@
             "mission3": {
                 "title": "Demander en ami",
                 "texts": {
-                    "1": "Dans ce widget tu peux voir tes amis connectés...",
-                    "2": "Clique sur ce bouton pour aller dans la page des amis",
-                    "3": "En bas à droite de cette page tu as un bouton pour ajouter un ami",
+                    "1": "Clique sur ce bouton pour aller dans la page des amis",
+                    "2": "En bas à gauche de cette page tu as un bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
             }
@@ -525,7 +524,7 @@
 
         "kpi-since": "jours de jeu",
         "kpi-activities": "activités",
-        "kpi-time": "heures d'activités",
+        "kpi-time": "heures",
         "kpi-ox": "Ox",
         "kpi-inventory": "items",
         "kpi-friends": "amis",

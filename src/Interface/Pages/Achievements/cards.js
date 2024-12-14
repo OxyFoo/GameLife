@@ -93,7 +93,7 @@ function AchievementCard({ item: achievement }) {
  */
 function AchievementCardContent({ achievement, animation, maxHeight, isSolved, isOpened, onContentLayout }) {
     const lang = langManager.curr['achievements'];
-    const { ID, Name, Progress, GlobalPercentage } = achievement;
+    const { ID, Name, Description, Progress, GlobalPercentage } = achievement;
 
     const [styleTitle, setStyleTitle] = React.useState({
         marginBottom: Animated.multiply(animation, 4)
@@ -148,12 +148,26 @@ function AchievementCardContent({ achievement, animation, maxHeight, isSolved, i
 
             {/* Description, condition, reward */}
             <Animated.View style={[styles.achievementContentDescription, styleDescription]} onLayout={onContentLayout}>
-                <Text style={styles.achievementDescription} color='main1'>
-                    {lang['condition-text'] + conditionText}
-                </Text>
-                <Text style={styles.achievementCondition} color='main1'>
+                {/** Description */}
+                {Description.length > 0 && (
+                    <Text style={styles.achievementDescription} color='primary'>
+                        {Description}
+                    </Text>
+                )}
+
+                {/** Condition */}
+                {conditionText !== null && conditionText.length > 0 && (
+                    <Text style={styles.achievementCondition} color='main1'>
+                        {lang['condition-text'] + conditionText}
+                    </Text>
+                )}
+
+                {/** Reward */}
+                <Text style={styles.achievementReward} color='main1'>
                     {lang['reward-text'] + rewardText}
                 </Text>
+
+                {/** Global progression */}
                 <Text style={styles.achievementGlobalProgression} color='secondary'>
                     {lang['global-progress-text'].replace('{}', GlobalPercentage)}
                 </Text>

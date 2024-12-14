@@ -87,20 +87,6 @@ class BackActivityPage2Add extends React.Component {
             return;
         }
 
-        if (user.server2.IsAuthenticated()) {
-            const saved = await user.activities.SaveOnline();
-            if (!saved) {
-                const lang = langManager.curr['activity'];
-                user.interface.popup?.OpenT({
-                    type: 'ok',
-                    data: {
-                        title: lang['alert-error-title'],
-                        message: lang['alert-error-message'].replace('{}', 'save online')
-                    }
-                });
-            }
-        }
-
         this.setState({ loading: false }, () => {
             user.interface.bottomPanel?.Close();
         });

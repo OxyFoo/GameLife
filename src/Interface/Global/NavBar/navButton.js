@@ -28,7 +28,7 @@ const NavButton = React.forwardRef(
         const inputRange = [index - 1, index - 0.5, index, index + 0.5, index + 1];
 
         return (
-            <View ref={ref} style={styles.buttonParent}>
+            <View ref={ref} style={styles.buttonParent} collapsable={false}>
                 <Button
                     style={styles.button}
                     styleContent={styles.buttonContent}

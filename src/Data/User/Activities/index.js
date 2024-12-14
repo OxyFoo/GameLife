@@ -4,7 +4,7 @@ import langManager from 'Managers/LangManager';
 import { IUserData } from 'Types/Interface/IUserData';
 import { GetActivityIndex, TimeIsFree } from './utils';
 import DynamicVar from 'Utils/DynamicVar';
-import { SortByKey } from 'Utils/Functions';
+import { Round, SortByKey } from 'Utils/Functions';
 import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
 /**
@@ -224,11 +224,17 @@ class Activities extends IUserData {
         }
 
         const unsaved = this.#getUnsaved();
+        const experience = this.user.experience.experience.Get();
         const response = await this.user.server2.tcp.SendAndWait({
             action: 'save-activities',
             activitiesToAdd: unsaved.add,
             activitiesToEdit: unsaved.edit,
             activitiesToDelete: unsaved.delete,
+            xp: Round(experience.xpInfo.totalXP, 2),
+            stats: Object.assign(
+                {},
+                ...this.user.experience.statsKey.map((key) => ({ [key]: Round(experience.stats[key].xp, 2) }))
+            ),
             token: this.#token
         });
 

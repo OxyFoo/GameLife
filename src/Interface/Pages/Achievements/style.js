@@ -79,11 +79,17 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     achievementDescription: {
+        marginTop: 6,
+        marginBottom: 6,
+        textAlign: 'left',
+        fontSize: 14
+    },
+    achievementCondition: {
         textAlign: 'left',
         fontSize: 14
     },
 
-    achievementCondition: {
+    achievementReward: {
         marginBottom: 6,
         textAlign: 'left',
         fontSize: 14

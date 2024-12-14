@@ -12,6 +12,7 @@ import { Round } from 'Utils/Functions';
  * @typedef {Object} PanelAchievementType
  * @property {number} ID
  * @property {string} Name
+ * @property {string} Description
  * @property {boolean} isSolved
  * @property {number} Progress Between 0 and 1
  * @property {string} GlobalPercentage
@@ -44,7 +45,13 @@ class BackAchievements extends PageBase {
         this.friend = null;
         if (this.props.args.hasOwnProperty('friendID') && this.props.args.friendID !== null) {
             const friendID = this.props.args.friendID;
-            this.friend = user.multiplayer.GetFriendByID(friendID);
+            const friend = user.multiplayer.GetFriendByID(friendID);
+
+            if (friend?.friendshipState !== 'accepted') {
+                return;
+            }
+
+            this.friend = friend;
 
             // If the friend is not found, we go back
             if (this.friend === null) {
@@ -69,6 +76,7 @@ class BackAchievements extends PageBase {
             .map((achievement) => ({
                 ID: achievement.ID,
                 Name: langManager.GetText(achievement.Name),
+                Description: langManager.GetText(achievement.Description),
                 isSolved: completeAchievements.includes(achievement.ID),
                 Progress: user.achievements.GetProgress(achievement.ID),
                 GlobalPercentage: Round(achievement.UniversalProgressPercentage, 2).toString()

@@ -32,6 +32,7 @@ class Multiplayer extends BackMultiplayer {
                 {/** Bottom buttons: Add friend / Leaderboard */}
                 <Gradient style={styles.leaderboardButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
                     <Button
+                        nativeRef={this.refAddButton}
                         style={styles.leaderboardButton}
                         icon='add'
                         appearance='uniform'
@@ -43,7 +44,6 @@ class Multiplayer extends BackMultiplayer {
 
                 <Gradient style={styles.addFriendButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
                     <Button
-                        nativeRef={this.refAddButton}
                         style={styles.addFriendButton}
                         appearance='uniform'
                         color='transparent'

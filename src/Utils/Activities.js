@@ -158,6 +158,20 @@ async function AddActivity(activity) {
         return false;
     }
 
+    if (user.server2.IsAuthenticated()) {
+        const saved = await user.activities.SaveOnline();
+        if (!saved) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message'].replace('{}', 'save online')
+                }
+            });
+            return false;
+        }
+    }
+
     // Display the activity
     user.interface.ChangePage('display', {
         args: {
@@ -266,6 +280,19 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
             }
         });
         return false;
+    }
+
+    if (user.server2.IsAuthenticated()) {
+        const saved = await user.activities.SaveOnline();
+        if (!saved) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['alert-error-message'].replace('{}', 'save online')
+                }
+            });
+        }
     }
 
     return true;

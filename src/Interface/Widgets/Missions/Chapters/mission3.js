@@ -1,6 +1,8 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Sleep } from 'Utils/Functions';
+
 async function StartMission3() {
     const mission = user.missions.GetCurrentMission().mission;
     if (mission === null || !user.interface.screenTuto || !user.interface.navBar) {
@@ -16,18 +18,35 @@ async function StartMission3() {
     const missionLang = lang['mission3'];
     const missionTexts = missionLang['texts'];
 
+    if (!user.server2.IsAuthenticated()) {
+        user.interface.screenTuto.ShowTutorial([
+            {
+                component: null,
+                text: missionLang['texts']['not-connected']
+            }
+        ]);
+        return;
+    }
+
     user.interface.screenTuto.ShowTutorial([
         {
-            component: user.interface.navBar.refButtons['multiplayer'] ?? null,
+            component: user.interface.navBar.refButtons['multiplayer'],
             text: missionTexts['1'],
-            execAfter: () => {
-                user.interface.ChangePage('multiplayer');
+            execAfter: async () => {
+                await new Promise((resolve) => {
+                    user.interface.ChangePage('multiplayer', { callback: () => resolve(null) });
+                });
+                await Sleep(500);
                 return false;
             }
         },
         {
-            component: null,
-            text: missionTexts['2']
+            component: () => user.interface.GetPage('multiplayer')?.refAddButton ?? null,
+            text: missionTexts['2'],
+            execAfter: () => {
+                user.interface.GetPage('multiplayer')?.addFriendHandle();
+                return true;
+            }
         }
     ]);
 }

@@ -95,9 +95,8 @@
             "mission3": {
                 "title": "Ask for a friend",
                 "texts": {
-                    "1": "In this widget you can see your connected friends ...",
-                    "2": "Click on this button to go to the friends page",
-                    "3": "At the bottom right of this page you have a button to add a friend",
+                    "1": "Click on this button to go to the friends page",
+                    "2": "At the bottom left of this page you have a button to add a friend",
                     "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
                 }
             }
@@ -525,7 +524,7 @@
 
         "kpi-since": "days of play",
         "kpi-activities": "activities",
-        "kpi-time": "activities time",
+        "kpi-time": "hours",
         "kpi-ox": "Ox",
         "kpi-inventory": "items",
         "kpi-friends": "friends",

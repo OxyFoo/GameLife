@@ -204,7 +204,11 @@ class Activities extends IUserData {
                     'error',
                     `[Activities] Failed to load activity ${response.result.activities[i].ID} (${status})`
                 );
-                return false;
+
+                // Not added but remove server side
+                if (!this.#UNSAVED_deletions.includes(response.result.activities[i].ID)) {
+                    this.#UNSAVED_deletions.push(response.result.activities[i].ID);
+                }
             }
         }
 

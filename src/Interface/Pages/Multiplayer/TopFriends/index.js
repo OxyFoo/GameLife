@@ -2,10 +2,12 @@ import * as React from 'react';
 import { View, Image } from 'react-native';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Icon, Text } from 'Interface/Components';
+import { Button, Icon, Text } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
+import ProfileFriend from 'Interface/PageView/ProfileFriend';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -18,6 +20,13 @@ import { Gradient } from 'Interface/Primitives';
 // TODO: Replace this with a real avatar
 // @ts-ignore
 const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
+
+/** @param {Friend | UserOnline} friend */
+const handleFriendPress = (friend) => {
+    user.interface.bottomPanel?.Open({
+        content: <ProfileFriend friendID={friend.accountID} />
+    });
+};
 
 /**
  * @param {Object} param0
@@ -42,8 +51,14 @@ const TopFriends = ({ style, friends }) => {
 
     return (
         <View style={[styles.friendTopContainer, style]}>
-            <View style={styles.friendTop}>
-                <View>
+            <Button
+                style={styles.friendTop}
+                appearance='uniform'
+                color='transparent'
+                onPress={() => handleFriendPress(friends[1])}
+                enabled={username2 !== ''}
+            >
+                <View style={styles.friendTopView}>
                     {/** Avatar */}
                     <View style={[styles.friendTopFrame, styleFrame]}>
                         <Image
@@ -63,44 +78,56 @@ const TopFriends = ({ style, friends }) => {
 
                 {/** Pseudo */}
                 <Text style={styles.frientTopPseudo}>{username2}</Text>
+            </Button>
+
+            <View style={styles.friendTopMiddle}>
+                <Button
+                    style={styles.friendTopMiddleButton}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={() => handleFriendPress(friends[0])}
+                    enabled={username1 !== ''}
+                >
+                    <Gradient style={styles.friendTopMiddleGradient} colors={['#9095FF73', '#9095FF1F']} angle={180}>
+                        <View style={styles.friendTopView}>
+                            {/** Avatar */}
+                            <View style={[styles.friendTopFrame, styleFrame]}>
+                                <Image
+                                    style={styles.friendTopPlaceholder}
+                                    resizeMode='stretch'
+                                    source={AVATAR_MIN_PLACEHOLDER}
+                                />
+                            </View>
+
+                            {/** Rank */}
+                            <View style={styles.frientTopRankContainer}>
+                                <Gradient style={[styles.friendTopRank, styleBgRank]}>
+                                    <Text color='backgroundDark' style={styles.friendTopRankText}>
+                                        1
+                                    </Text>
+                                </Gradient>
+                            </View>
+                        </View>
+
+                        {/** Pseudo */}
+                        <Text style={styles.frientTopPseudo}>{username1}</Text>
+                    </Gradient>
+                </Button>
+
+                {/** Crown */}
+                <View style={styles.frientTopCrownContainer} pointerEvents='none'>
+                    <Icon icon='crown' color='gradient' />
+                </View>
             </View>
 
-            <Gradient
-                style={[styles.friendTop, styles.friendTopMiddle]}
-                colors={['#9095FF73', '#9095FF1F']}
-                angle={180}
+            <Button
+                style={styles.friendTop}
+                appearance='uniform'
+                color='transparent'
+                onPress={() => handleFriendPress(friends[2])}
+                enabled={username3 !== ''}
             >
-                <View>
-                    {/** Avatar */}
-                    <View style={[styles.friendTopFrame, styleFrame]}>
-                        <Image
-                            style={styles.friendTopPlaceholder}
-                            resizeMode='stretch'
-                            source={AVATAR_MIN_PLACEHOLDER}
-                        />
-                    </View>
-
-                    {/** Crown */}
-                    <View style={styles.frientTopCrownContainer}>
-                        <Icon icon='crown' color='gradient' />
-                    </View>
-
-                    {/** Rank */}
-                    <View style={styles.frientTopRankContainer}>
-                        <Gradient style={[styles.friendTopRank, styleBgRank]}>
-                            <Text color='backgroundDark' style={styles.friendTopRankText}>
-                                1
-                            </Text>
-                        </Gradient>
-                    </View>
-                </View>
-
-                {/** Pseudo */}
-                <Text style={styles.frientTopPseudo}>{username1}</Text>
-            </Gradient>
-
-            <View style={styles.friendTop}>
-                <View>
+                <View style={styles.friendTopView}>
                     {/** Avatar */}
                     <View style={[styles.friendTopFrame, styleFrame]}>
                         <Image
@@ -120,7 +147,7 @@ const TopFriends = ({ style, friends }) => {
 
                 {/** Pseudo */}
                 <Text style={styles.frientTopPseudo}>{username3}</Text>
-            </View>
+            </Button>
         </View>
     );
 };

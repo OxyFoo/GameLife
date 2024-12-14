@@ -70,23 +70,6 @@ const styles = StyleSheet.create({
     },
     kpiProfileMiddle: {
         marginHorizontal: 12
-    },
-
-    // Avatar
-    avatarContainer: {
-        width: '100%',
-        alignItems: 'center'
-    },
-    avatar: {
-        width: '80%',
-        aspectRatio: 1,
-        borderRadius: 16,
-        backgroundColor: '#FFFFFF',
-        overflow: 'hidden'
-    },
-    avatarPlaceholder: {
-        width: '100%',
-        height: '100%'
     }
 });
 

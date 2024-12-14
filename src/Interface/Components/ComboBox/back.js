@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
+import user from 'Managers/UserManager';
+
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 import { GetAbsolutePosition } from 'Utils/UI';
@@ -113,6 +115,8 @@ class ComboBoxBack extends React.Component {
 
         // Open selection
         GetAbsolutePosition(this.refParent).then((rect) => {
+            rect.x += user.interface.size.insets.left;
+            rect.y += user.interface.size.insets.top;
             this.setState({ parent: rect, selectionMode: true }, () => {
                 SpringAnimation(this.state.anim, 1).start();
             });

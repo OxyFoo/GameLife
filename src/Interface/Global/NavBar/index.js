@@ -67,7 +67,7 @@ class NavBar extends BottomBarBack {
                     index={3}
                     text={lang['multiplayer']}
                     icon='multiplayer-outline'
-                    iconSelect='multiplayer'
+                    iconSelect='multiplayer-variant'
                     anim={animationSelection}
                     onPress={this.openMultiplayer}
                 />

@@ -174,7 +174,7 @@ function AchievementCardContent({ achievement, animation, maxHeight, isSolved, i
             </Animated.View>
 
             {/* Progress bar */}
-            {!isSolved && Progress > 0 && (
+            {!isSolved && Progress !== null && (
                 <View>
                     <Text style={styles.achievementProgressionValue} color='secondary'>
                         {`${Round(Progress * 100, 1)}%`}

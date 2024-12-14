@@ -7,19 +7,35 @@ const styles = StyleSheet.create({
     },
     friendTop: {
         flex: 1,
+        width: 'auto',
         alignItems: 'center',
+        justifyContent: 'flex-start',
         marginTop: 32,
-        padding: 12
+        paddingVertical: 12,
+        paddingHorizontal: 12
 
         // Debug
         // borderWidth: 1,
         // borderColor: 'white'
     },
     friendTopMiddle: {
-        marginTop: 0,
-        marginHorizontal: 12,
-        paddingTop: 18,
-        borderRadius: 8
+        flex: 1.5,
+        width: 'auto',
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    },
+    friendTopMiddleButton: {
+        width: 'auto',
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    },
+    friendTopMiddleGradient: {
+        flex: 1,
+        paddingVertical: 18,
+        paddingHorizontal: 12,
+        alignItems: 'center',
+        borderRadius: 8,
+        overflow: 'hidden'
     },
     friendTopFrame: {
         width: '90%',
@@ -28,13 +44,19 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         overflow: 'hidden'
     },
+    friendTopView: {
+        //flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     friendTopPlaceholder: {
         width: '100%',
         height: '100%'
     },
     frientTopCrownContainer: {
         position: 'absolute',
-        top: -32,
+        top: -16,
         left: 0,
         right: 0,
         alignItems: 'center'

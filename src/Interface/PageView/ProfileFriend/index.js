@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import styles from './style';
 import BackProfileFriend from './back';
@@ -10,10 +10,6 @@ import langManager from 'Managers/LangManager';
 import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
 import { AchievementsGroup, StatsBars } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
-
-// TODO: Replace this with a real avatar
-// @ts-ignore
-const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
 
 class ProfileFriend extends BackProfileFriend {
     render() {
@@ -38,14 +34,6 @@ class ProfileFriend extends BackProfileFriend {
                 onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
                 scrollEnabled={false}
             >
-                {/** Avatar */}
-                <View style={styles.avatarContainer}>
-                    <View style={styles.avatar}>
-                        {/* <Frame characters={[this.character]} loadingTime={300} /> */}
-                        <Image style={styles.avatarPlaceholder} resizeMode='stretch' source={AVATAR_MIN_PLACEHOLDER} />
-                    </View>
-                </View>
-
                 {/** User Header */}
                 <View style={styles.header}>
                     <View style={styles.content}>

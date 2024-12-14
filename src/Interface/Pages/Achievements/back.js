@@ -14,7 +14,7 @@ import { Round } from 'Utils/Functions';
  * @property {string} Name
  * @property {string} Description
  * @property {boolean} isSolved
- * @property {number} Progress Between 0 and 1
+ * @property {number | null} Progress Between 0 and 1, or null if not applicable
  * @property {string} GlobalPercentage
  */
 
@@ -78,7 +78,7 @@ class BackAchievements extends PageBase {
                 Name: langManager.GetText(achievement.Name),
                 Description: langManager.GetText(achievement.Description),
                 isSolved: completeAchievements.includes(achievement.ID),
-                Progress: user.achievements.GetProgress(achievement.ID),
+                Progress: this.friend === null ? user.achievements.GetProgress(achievement.ID) : null,
                 GlobalPercentage: Round(achievement.UniversalProgressPercentage, 2).toString()
             }))
             .filter((achievement) => {

@@ -3,7 +3,7 @@ import langManager from 'Managers/LangManager';
 
 import { IUserData } from 'Types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
-import { Round } from 'Utils/Functions';
+import { MinMax, Round } from 'Utils/Functions';
 import { IsNotNull } from 'Utils/Types';
 import { GetBattery } from 'Utils/Device';
 import { GetGlobalTime } from 'Utils/Time';
@@ -115,6 +115,10 @@ class Achievements extends IUserData {
         this.#SAVED_achievements = response.result.achievements;
         this.#updateAchievements();
 
+        // Remove pending which are now solved
+        const solvedIDs = this.GetSolvedIDs();
+        this.#UNSAVED_achievements = this.#UNSAVED_achievements.filter((a) => !solvedIDs.includes(a.AchievementID));
+
         return true;
     };
 
@@ -139,7 +143,10 @@ class Achievements extends IUserData {
             response.status !== 'save-achievements' ||
             response.result === 'error'
         ) {
-            this.#user.interface.console?.AddLog('error', `[Achievements] Error while add achievements (${response})`);
+            this.#user.interface.console?.AddLog(
+                'error',
+                `[Achievements] Error while add achievements (${typeof response === 'string' ? response : response.status})`
+            );
             return false;
         }
 
@@ -418,12 +425,12 @@ class Achievements extends IUserData {
     /**
      * Get progress of an achievement
      * @param {number} achievementID
-     * @returns {number} Progress of the achievement between 0 and 1
+     * @returns {number | null} Progress of the achievement between 0 and 1, or null if not applicable
      */
     GetProgress = (achievementID) => {
         const achievement = dataManager.achievements.GetByID(achievementID);
         if (achievement === null || achievement.Type !== 'SHOW' || achievement.Condition === null) {
-            return 0;
+            return null;
         }
 
         switch (achievement.Condition.Comparator.Type) {
@@ -435,10 +442,10 @@ class Achievements extends IUserData {
                     return 0;
                 }
 
-                return userLvl / targetLvl;
+                return MinMax(0, userLvl / targetLvl, 1);
         }
 
-        return 0;
+        return null;
     };
 
     CheckAchievements = async () => {

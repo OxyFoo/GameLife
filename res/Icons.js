@@ -66,6 +66,7 @@ const Icons = {
     'minimize-outline':         require('./icons/minimize-outline').default,
     'minimize':                 require('./icons/minimize').default,
     'multiplayer-outline':      require('./icons/multiplayer-outline').default,
+    'multiplayer-variant':      require('./icons/multiplayer-variant').default,
     'multiplayer':              require('./icons/multiplayer').default,
     'no-wifi':                  require('./icons/nowifi').default,
     'ox':                       require('./icons/ox').default,

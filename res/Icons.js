@@ -93,6 +93,7 @@ const Icons = {
     'trash':                    require('./icons/trash').default,
     'uncheck-outline':          require('./icons/uncheck-outline').default,
     'undo':                     require('./icons/undo').default,
+    'update':                   require('./icons/update').default,
     'user-outline':             require('./icons/user-outline').default,
     'user':                     require('./icons/user').default,
     'users-outline':            require('./icons/users-outline').default,

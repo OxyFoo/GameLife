@@ -54,15 +54,15 @@ class Informations extends IUserData {
     purchasedCount = 0;
 
     Clear = () => {
-        this.username = new DynamicVar('');
+        this.username.Set('');
         this.usernameTime = null;
-        this.title = new DynamicVar(0);
+        this.title.Set(0);
         this.UNSAVED_title = null;
         this.birthTime = null;
         this.lastBirthTime = null;
         this.UNSAVED_birthTime = null;
         this.xp = 0;
-        this.ox = new DynamicVar(0);
+        this.ox.Set(0);
         this.adRemaining = 0;
         this.adTotalWatched = 0;
         this.zapGPT = { remaining: 0, total: 0 };

@@ -108,7 +108,7 @@ class BackProfileEditor extends React.PureComponent {
             }))
         ];
 
-        if (userTitlesItems.length <= 0) {
+        if (userTitlesItems.length <= 1) {
             // No titles available
             user.interface.popup?.OpenT({
                 type: 'ok',

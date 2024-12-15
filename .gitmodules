@@ -1,3 +1,6 @@
 [submodule "src/Types"]
 	path = src/Types
 	url = https://github.com/OxyFoo/GameLife-Types
+[submodule "Tools"]
+	path = Tools
+	url = https://github.com/OxyFoo/GameLife-Tools.git

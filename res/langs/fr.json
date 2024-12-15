@@ -364,17 +364,7 @@
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 
-        "activity-zap-comment": "Ajouté par Zap",
-
-        "tuto": {
-            "1": "Tu peux filtrer les activités par catégorie: {}",
-            "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
-
-            "3": "Tu peux choisir d'ajouter une activité que tu as fait ou que tu comptes faire plus tard, ou alors tu peux lancer un minuteur pour commencer l'activité maintenant",
-            "4": "Tu peux cliquer sur ce composant pour définir le début et la durée de l'activité",
-            "5": "Ici tu peux voir l'expérience que tu vas gagner en faisant cette activité",
-            "6": "Tu peux ajouter un commentaire à ton activité, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        }
+        "activity-zap-comment": "Ajouté par Zap"
     },
 
     "calendar": {
@@ -903,13 +893,7 @@
         "alert-taskslimit-title": "Limite atteinte",
         "alert-taskslimit-text": "Tu ne peux pas avoir plus de {} tâches.",
         "alert-back-title": "Retour",
-        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
-
-        "tuto": {
-            "1": "Ici tu peux définir la date limite de ta tâche.",
-            "2": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
-            "3": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        }
+        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
     "todoes": {
@@ -987,16 +971,7 @@
 
         "current-streak": "Série actuelle",
         "heatmap-title-day": "Jour",
-        "heatmap-title-week": "Semaine",
-
-        "tuto": {
-            "1": "Ici, ce sont les quêtes ! Des missions que tu peux TE donner pour t'aider à te motiver.",
-            "2": "Pour en ajouter une, rien de plus simple, tu cliques sur le bouton ici !",
-            "3": "Sous chaque quête, tu verras des cercles. Ils peuvent avoir plusieurs couleurs, voici leurs significations: ",
-            "4": "Rouge: la quête n'a pas été complétée.  Rose: ça se déroule aujourd'hui.  Violet: les autres jours.",
-            "5": "Ah oui ! Si tu cliques sur une quête, tu peux voir les détails de celle ci !",
-            "6": "Tu attends quoi ? Lance toi ! Si tu as besoin d'aide, tu peux cliquer sur le bouton d'info et je viendrais !"
-        }
+        "heatmap-title-week": "Semaine"
     },
 
     "daily-quest": {

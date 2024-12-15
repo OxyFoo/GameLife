@@ -55,6 +55,10 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 0,
         backgroundColor: '#00000050'
+    },
+    avatarImage: {
+        width: 48,
+        height: 48
     }
 });
 

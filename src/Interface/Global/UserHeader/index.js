@@ -11,6 +11,10 @@ import { OnlineView } from 'Interface/Primitives';
 import { Text, Icon, Button, Frame } from 'Interface/Components';
 import { NotificationsInAppButton } from 'Interface/Widgets';
 
+// TODO: Replace this with a real avatar
+// @ts-ignore
+const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
+
 const AVATAR_FRAME_SIZE = { x: 250, y: 50, width: 400, height: 350 };
 
 class UserHeader extends UserHeaderBack {
@@ -75,11 +79,7 @@ class UserHeader extends UserHeaderBack {
                         bodyView={'topHalf'}
                     />
                 )}
-                <Image
-                    style={{ width: 48, height: 48 }}
-                    resizeMode='stretch'
-                    source={require('Ressources/items/avatar_min_placeholder.png')}
-                />
+                <Image style={styles.avatarImage} resizeMode='stretch' source={AVATAR_MIN_PLACEHOLDER} />
             </Button>
         );
     };

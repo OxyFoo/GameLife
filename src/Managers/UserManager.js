@@ -17,6 +17,7 @@ import Multiplayer from 'Data/User/Multiplayer';
 import Todos from 'Data/User/Todos';
 
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
+import { Sleep } from 'Utils/Functions';
 
 /**
  * @typedef {import('Interface/Components').Character} Character
@@ -121,7 +122,7 @@ class UserManager {
             data.Clear();
         }
 
-        await this.onUnmount(true);
+        await this.onUnmount();
         await DataStorage.ClearAll();
         await this.SaveLocal();
 
@@ -137,6 +138,19 @@ class UserManager {
      * @returns {Promise<boolean>}
      */
     async Disconnect(allDevices = false) {
+        // Offline mode
+        if (!this.server2.IsAuthenticated()) {
+            // Can't disconnect all devices in offline mode
+            if (allDevices) {
+                return false;
+            }
+
+            // Clear data and go to login page
+            await this.Clear();
+            this.interface.ChangePage('waitinternet', { storeInHistory: false });
+            return true;
+        }
+
         const result = await this.server2.tcp.SendAndWait({ action: 'disconnect', allDevices });
 
         // Error occurred
@@ -151,19 +165,21 @@ class UserManager {
         }
 
         await this.Clear();
+        this.server2.Disconnect();
+        await Sleep(500); // Wait for the server to disconnect
+        await this.server2.Connect(true);
 
-        if (this.server2.IsConnected()) {
-            this.interface.ChangePage('login', { storeInHistory: false });
-        } else {
-            this.interface.ChangePage('waitinternet', { storeInHistory: false });
-        }
-
-        this.interface.ClearHistory();
+        this.interface.ChangePage('login', {
+            storeInHistory: false,
+            callback: () => {
+                this.interface.ClearHistory();
+            }
+        });
 
         return true;
     }
 
-    async onUnmount(reconnect = false) {
+    async onUnmount() {
         clearInterval(this.intervalAchievements);
 
         this.server2.Disconnect();
@@ -174,10 +190,6 @@ class UserManager {
         await this.settings.IndependentSave();
         await this.SaveLocal();
         await this.SaveOnline();
-
-        if (reconnect) {
-            await this.server2.Connect(true);
-        }
     }
 
     /**

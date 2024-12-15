@@ -364,17 +364,7 @@
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
 
-        "activity-zap-comment": "Added by Zap",
-
-        "tuto": {
-            "1": "You can filter activities by category: {}",
-            "2": "You can select an activity here to open the activity panel",
-
-            "3": "You can choose to add an activity you've done or plan to do later, or you can set a timer to start the activity now",
-            "4": "You can click on this component to define the start and duration of the activity",
-            "5": "Here you can see the experience you'll gain by doing this activity",
-            "6": "You can add a comment to your activity, for example, to record your feelings or to note important information"
-        }
+        "activity-zap-comment": "Added by Zap"
     },
 
     "calendar": {
@@ -903,13 +893,7 @@
         "alert-taskslimit-title": "Limit reached",
         "alert-taskslimit-text": "You can't add more than {} tasks to this todo",
         "alert-back-title": "Back",
-        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
-
-        "tuto": {
-            "1": "Here you can set the deadline for your todo",
-            "2": "You can also add sub-todoes to your main todo, to organize yourself better.",
-            "3": "Finally, you can add a comment to your todo, for example, to note your feelings or to record important information."
-        }
+        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost."
     },
 
     "todoes": {
@@ -987,16 +971,7 @@
 
         "current-streak": "Current streak",
         "heatmap-title-day": "Day",
-        "heatmap-title-week": "Week",
-
-        "tuto": {
-            "1": "These are the quests! Missions you can give yourself to help motivate you.",
-            "2": "If you want to add one, just click on the button here!",
-            "3": "Under each quest, you'll see circles. They can have several colours, here are their meanings:",
-            "4": "Red: the quest has not been completed.  Pink: it's happening today.  Purple: other days",
-            "5": "Oh yes! If you click on a quest, you can see its details!",
-            "6": "What are you waiting for? Go for it! If you need help, you can click on the info button and I'll come to you!"
-        }
+        "heatmap-title-week": "Week"
     },
 
     "daily-quest": {

@@ -70,10 +70,8 @@ buck-out/
 /**/Pods/
 
 # Credentials
-config.php
 app.json
 google-services.json
-src/Server/TCP/.env
 
 # VSCode
 .vscode/

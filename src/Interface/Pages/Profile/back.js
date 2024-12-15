@@ -1,7 +1,6 @@
 import React from 'react';
 import { Animated } from 'react-native';
 
-import StartTutorial from './tuto';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -47,8 +46,6 @@ class BackProfile extends PageBase {
             this.refAvatar.current?.selectSlot(this.refAvatar.current?.state.slotSelected);
         }
         this.refAvatar.current?.refFrame.forceUpdate();
-
-        //StartTutorial.call(this, args?.tuto);
     };
 
     componentWillUnmount() {
@@ -97,6 +94,10 @@ class BackProfile extends PageBase {
 
     openAchievements = () => {
         user.interface.ChangePage('achievements');
+    };
+
+    openFriends = () => {
+        user.interface.ChangePage('friends');
     };
 
     onBack = () => {

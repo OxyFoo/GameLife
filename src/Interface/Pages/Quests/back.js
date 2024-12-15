@@ -1,8 +1,6 @@
 import { Animated } from 'react-native';
 
 import styles from './style';
-import StartTutorial from './tuto';
-import StartMission from './mission';
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -59,12 +57,6 @@ class BackNewPage extends PageBase {
     refreshQuests = () => {
         const quests = user.quests.Get();
         this.setState({ quests });
-    };
-
-    /** @param {BackQuestsProps} args */
-    componentDidFocused = (args) => {
-        //StartTutorial.call(this, args?.tuto);
-        //StartMission.call(this, args?.missionName);
     };
 
     /** @param {Quest} item */

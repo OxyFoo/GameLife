@@ -578,11 +578,6 @@
         "alert-birthconfirm-title": "Confirmation",
         "alert-birthconfirm-message": "Tu as bien {} ans ?",
 
-        "tuto": {
-            "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
-            "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
-        },
-
         "temporary-avatars": "Cet avatar sera bientôt remplacé ... en mieux !"
     },
 
@@ -816,25 +811,6 @@
                 "title": "Plateforme incorrecte",
                 "message": "Tu ne peux pas acheter cet item sur cette plateforme."
             }
-        },
-
-        "help": {
-            "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
-            "iap1": "Ici, tu peux acheter des Ox contre du vrai argent, ça a plusieurs bénéfices",
-            "iap2": "Tout d'abord, tu aides ce projet à prendre vie et tu contribues à la refonte des avatars et de l'application",
-            "iap3": "Ensuite, tu peux t'acheter des items pour ton avatar. Ils ne sont pas en version définitive ne t'inquiètes pas !",
-            "iap4": "Mais si t'en achètes maintenant, tu pourras les revendre au double du prix quand les nouveaux avatars arriveront !",
-            "iap5": "C'est un moyen pour nous te remercier de nous avoir fait confiance dès le début !",
-            "iap6": "Au passage, en payant, tu gagnes aussi l'accès à ZapGPT qui est un chatbot qui te permet d'ajouter pleins d'activités d'un coup",
-            "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
-            "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
-            "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
-            "randomChests-epic": "Quant au coffre épique, il offre 29% de chance d'obtenir un objet rare, 70% pour un objet épique et 1% pour un objet légendaire; il n'y a aucune chance d'y trouver un objet commun.",
-            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr(e) d'avoir un item de la catégorie que tu as choisie !",
-            "targetedChests-common": "Dans le coffre commun, les chances d'obtenir un objet de rareté commune sont extrêmement élevées à 99%, suivies de 0,9% pour un objet rare et 0,1% pour un objet épique; il est à noter qu'il n'y a aucune chance d'y trouver un objet légendaire.",
-            "targetedChests-rare": "En ouvrant le coffre rare, tu as 27% de chances d'obtenir un objet commun, 70% pour un objet rare, 2,9% pour un objet épique et une mince chance de 0,1% pour un objet légendaire.",
-            "targetedChests-epic": "Quant au coffre épique, celui-ci ne contient pas d'objets communs et offre 30% de chances d'obtenir un objet rare, 65% pour un objet épique, et une probabilité non négligeable de 5% pour un objet légendaire.", 
-            "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
         }
     },
 
@@ -991,25 +967,14 @@
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
         "alert-save-error-title": "Erreur",
-        "alert-save-error-message": "Une erreur est survenue, réessaye plus tard.",
-
-        "tuto": {
-            "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
-            "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        }
+        "alert-save-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "quest-stats": {
         "title": "Ma quête",
         "title-current-week": "Semaine en cours",
         "title-heatmap": "Résultats",
-        "button-add-activity": "Ajouter une activité",
-        "tuto": {
-            "1": "Ici tu peux voir le nom de ta quête et les activités concernées, tu peux cliquer dessus pour la modifier.",
-            "2": "Là c'est la série actuelle, c'est le nombre de jours consécutifs où tu as réalisé ta quête.",
-            "3": "Et ici tu peux voir la réalisation de ta quête par semaine ou par jour sur la dernière année."
-        }
+        "button-add-activity": "Ajouter une activité"
     },
 
     "quests": {
@@ -1066,21 +1031,6 @@
     },
 
     "tuto": {
-        "main": {
-            "home-greetings": "Re-bonjour {} ! Bienvenue dans GameLife, laisse moi te montrer l'application !",
-            "home": "Ici tu es sur le menu, tu y trouveras des infos générales sur GameLife et ton profil.",
-            "home-next": "Clique sur l'icône brillante pour aller sur le calendrier",
-            "calendar": "Là c'est le calendrier, il contient toutes les activités que tu as réalisé.",
-            "calendar-next": "Prochain clic : les quêtes ! (l'icône brillante en bas de l'écran)",
-            "quest" : "Ici c'est la page des quêtes, elles vont t'aider à te motiver et à prendre des habitudes. Tu pourras cliquer sur les 'i' pour avoir plus d'infos !",
-            "quest-next": "Direction : ton avatar ! (l'icône brillante en haut à droite de l'écran)",
-            "avatar" : "Te voilà !! Enfin.. ton avatar plutôt. Tu peux le personnaliser en gagnant ou en achetant des équipements.",
-            "shop" : "Équipement que tu peux acheter ici, dans la boutique ! Tu y trouveras des items pour ton avatar, des coffres et des teintures !",
-            "shop-next" : "Et enfin le plus important, clique sur le gros bouton rose en bas !",
-            "activity": "C'est ici que tu viendras pour ajouter tes activités ! Plus qu'à choisir une activité et à commencer à jouer !",
-            "home-final": "Ton aventure GameLife commence maintenant ! Un monde pleins de défis et de récompenses t'attend, alors n'attends plus et fonce !"
-        },
-
         "other": {
             "skip": "Passer",
             "press": "Appuyez",

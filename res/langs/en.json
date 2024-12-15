@@ -578,11 +578,6 @@
         "alert-birthconfirm-title": "Confirmation",
         "alert-birthconfirm-message": "Are you {} years old?",
 
-        "tuto": {
-            "1": "This is your profile, you can change your personal information here",
-            "2": "This is your avatar, you can click on it to change your appearance"
-        },
-
         "temporary-avatars": "This avatar will soon be replaced ... better!"
     },
 
@@ -816,25 +811,6 @@
                 "title": "Incorrect platform",
                 "message": "You can't buy this item on this platform."
             }
-        },
-
-        "help": {
-            "dailyDeals": "You can spend your Ox here to buy items, which you can equip in your profile - the offers change every day!",
-            "iap1": "Here, you can buy Ox with real money, which has several benefits",
-            "iap2": "First of all, you're helping this project to come to life and you're contributing to the redesign of the avatars and the application",
-            "iap3": "Secondly, you can buy items for your avatar. They're not in their final version, don't worry!",
-            "iap4": "But if you buy them now, you'll be able to resell them at double the price when the new avatars arrive!",
-            "iap5": "This is a way to thank you for trusting us from the start!",
-            "iap6": "By the way, by paying, you also gain access to ZapGPT which is a chatbot which allows you to add lots of activities at once",
-            "randomChests": "In this category you can buy chests in which there is a random item, the rare the chest, the more likely you have a quality item!",
-            "randomChests-common": "For the common chest, there is a strong chance of obtaining an object of common rarity (90%), a probability of 9% for a rare object, 0.99% for an epic object and only 0.01% for alegendary object.",
-            "randomChests-rare": "With regard to the rare chest, the chances of obtaining a common object are 20%, 75% for a rare object, 4.5% for an epic object and 0.5% for a legendary object.",
-            "randomChests-epic": "As for the epic chest, it offers 29% chance of obtaining a rare object, 70% for an epic object and 1% for a legendary object;There is no chance to find a common object there.",
-            "targetedChests": "You can buy targeted chests, in which you are sure you have an item in the category you have chosen!",
-            "targetedChests-common": "In the common chest, the chances of obtaining an object of common rarity are extremely high at 99%, followed by 0.9% for a rare object and 0.1% for an epic object;It should be noted that there is no chance of finding a legendary object there.",
-            "targetedChests-rare": "By opening the rare chest, you have 27% chance of obtaining a common object, 70% for a rare object, 2.9% for an epic object and a thin chance of 0.1% for a legendary object.",
-            "targetedChests-epic": "As for the epic chest, it does not contain common objects and offers 30% chance of obtaining a rare object, 65% for an epic object, and a significant probability of 5% for a legendary object.", 
-            "dyes": "Finally you can modify items that you already have, it costs less than buying new ones!"
         }
     },
 
@@ -991,25 +967,14 @@
         "alert-error-title": "Error",
         "alert-error-message": "An error occurred, again tried again ({}).",
         "alert-save-error-title": "Error",
-        "alert-save-error-message": "An error occurred, again tried again.",
-
-        "tuto": {
-            "1": "Here you can set the deadline for your quest, or its frequency if it's a recurring one",
-            "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
-            "3": "Finally, you can add a comment to your quest, for example, to note your feelings or to record important information."
-        }
+        "alert-save-error-message": "An error occurred, again tried again."
     },
 
     "quest-stats": {
         "title": "My quest",
         "title-current-week": "Current week",
         "title-heatmap": "Results",
-        "button-add-activity": "Add an activity",
-        "tuto": {
-            "1": "Here you define the deadline for your quest, or its frequency if it's a recurring one.",
-            "2": "You can link your quest to an activity, which will allow you to gain experience by completing it.",
-            "3": "Finally, you can add a comment to your quest, for example, to record your feelings or to note important information."
-        }
+        "button-add-activity": "Add an activity"
     },
 
     "quests": {
@@ -1066,21 +1031,6 @@
     },
 
     "tuto": {
-        "main": {
-            "home-greetings": "Hello again {}! Welcome to GameLife, let me show you the application!",
-            "home": "Here you are on the menu, where you'll find general information about GameLife and your profile",
-            "home-next": "Click on the shiny icon to go to the calendar",
-            "calendar": "This is the calendar, it contains all the activities you've done",
-            "calendar-next": "Next click: the quests! (the shiny icon at the bottom of the screen)",
-            "quest": "This is the quests page, which will help to motivate you and get you into the habit of doing things. You can click on the 'i's for more information!",
-            "quest-next": "Direction: your avatar (the shiny icon at the top right of the screen)",
-            "avatar": "There you are! Well, your avatar. You can customise it by earning or buying equipment",
-            "shop": "Equipment you can buy here, in the shop! You'll find items for your avatar, chests and dyes!",
-            "shop-next": "And most importantly, click on the big pink button at the bottom!",
-            "activity": "This is where you can add your activities! All you have to do is choose an activity and start playing!",
-            "home-final": "Your GameLife adventure starts now! A world full of challenges and rewards is waiting for you, so don't wait any longer and go for it!"
-        },
-
         "other": {
             "skip": "Skip",
             "press": "Press",

@@ -10,7 +10,7 @@ import { Sum } from 'Utils/Functions';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Managers/UserManager').Stats} Stats
+ * @typedef {import('Types/Class/Experience').StatsXP} StatsXP
  * @typedef {import('Types/Database/Reports').ReportType} ReportType
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
@@ -27,10 +27,10 @@ class BackReport extends PageBase {
         input_skillname: '',
         input_skillcategory: '',
 
-        /** @type {{ [key in keyof Stats]: number }} */
+        /** @type {StatsXP} */
         input_skillstats: Object.assign({}, ...user.experience.statsKey.map((i) => ({ [i]: 0 }))),
 
-        /** @type {{ [key in keyof Stats]: number }} */
+        /** @type {StatsXP} */
         input_skillstats_max: Object.assign({}, ...user.experience.statsKey.map((i) => ({ [i]: MAX_POINTS }))),
 
         input_skillstats_remain: MAX_POINTS,
@@ -104,7 +104,7 @@ class BackReport extends PageBase {
     };
 
     /**
-     * @param {keyof Stats} stat
+     * @param {keyof StatsXP} stat
      * @param {number} value
      */
     changeDigit = (stat, value) => {
@@ -114,7 +114,7 @@ class BackReport extends PageBase {
         const total = Sum(Object.values(newStats));
         const remain = MAX_POINTS - total;
 
-        /** @type {keyof Stats} */
+        /** @type {keyof StatsXP} */
         let key;
         const newMaxStat = { ...input_skillstats_max };
         for (key in input_skillstats) {

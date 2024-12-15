@@ -4,7 +4,6 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import BackQuest from './back';
-//import StartHelp from './help';
 import WeekMap from './Components/WeekMap';
 import YearHeatMap from './Components/YearHeatMap';
 import user from 'Managers/UserManager';
@@ -37,12 +36,7 @@ class QuestStats extends BackQuest {
         return (
             <>
                 <ScrollView style={styles.page}>
-                    <PageHeader
-                        style={styles.pageHeader}
-                        title={lang['title']}
-                        onBackPress={this.onBackPress}
-                        //onSecondaryIconPress={StartHelp.bind(this)}
-                    />
+                    <PageHeader style={styles.pageHeader} title={lang['title']} onBackPress={this.onBackPress} />
 
                     {/* Quest info: Title + skills + duration + edit button */}
                     <LinearGradient

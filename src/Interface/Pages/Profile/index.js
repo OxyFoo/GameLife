@@ -3,7 +3,6 @@ import { Animated, View, ScrollView, FlatList, Dimensions } from 'react-native';
 
 import styles from './style';
 import BackProfile from './back';
-import StartHelp from './help';
 import { Header } from './Header';
 import EditorAvatar from './EditAvatar';
 import { RenderStatistic } from './Components/statistic';
@@ -122,7 +121,7 @@ class Profile extends BackProfile {
                         {lang['btn-achievements']}
                     </Button>
 
-                    <Button style={styles.button} appearance='outline-blur' icon='social'>
+                    <Button style={styles.button} appearance='outline-blur' icon='social' onPress={this.openFriends}>
                         {lang['btn-friends']}
                     </Button>
                 </View>

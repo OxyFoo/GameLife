@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import StartHelp from './help';
 import BackShop from './back';
 import ShopHeader from './UI/header';
 import Banner from './UI/banner';
@@ -39,7 +38,7 @@ class Shop extends BackShop {
             return this.renderLoading();
         }
 
-        const Help = StartHelp.bind(this);
+        const Help = () => {};
 
         return (
             <View style={styles.page}>

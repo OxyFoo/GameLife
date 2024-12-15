@@ -1,7 +1,6 @@
 import React from 'react';
 import { Animated, Keyboard } from 'react-native';
 
-//import StartMission from './mission';
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -91,7 +90,6 @@ class BackQuest extends PageBase {
     }
 
     componentDidMount() {
-        //StartMission.call(this, this.props.args?.missionName);
         user.interface.AddCustomBackHandler(this.BackHandler);
         this.onChangeQuest(this.state.tempQuest);
     }

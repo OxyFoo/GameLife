@@ -1,8 +1,6 @@
 import React from 'react';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import StartTutorial from './tuto';
-import StartMission from './mission';
 import user from 'Managers/UserManager';
 
 /**
@@ -80,12 +78,6 @@ class BackShop extends PageBase {
         //         user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
         //     });
     }
-
-    /** @param {any} args */
-    componentDidFocused = (args) => {
-        //StartTutorial.call(this, args?.tuto);
-        //StartMission.call(this, args?.missionName);
-    };
 }
 
 export default BackShop;

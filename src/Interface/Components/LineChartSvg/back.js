@@ -30,11 +30,17 @@ class LineChartSvgBack extends React.Component {
         layoutWidth: 0,
         maxValue: 0,
         points: '',
-        yAxisValues: null
-    }
+
+        /** @type {number[]} */
+        yAxisValues: []
+    };
 
     leftMargin = 40;
+
+    /** @type {string | null} */
     firstDate = null;
+
+    /** @type {string | null} */
     lastDate = null;
 
     /**
@@ -62,29 +68,31 @@ class LineChartSvgBack extends React.Component {
     getXCoordinate = (index, arrayLength, layoutWidth) => {
         if (arrayLength === 1) return this.leftMargin * 1.5;
         const spacing = (layoutWidth - this.leftMargin * 1.1) / (arrayLength - 1);
-        return this.leftMargin + (index * spacing);
+        return this.leftMargin + index * spacing;
     };
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         const { width } = event.nativeEvent.layout;
         this.compute(width);
-    }
+    };
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
         let maxValue = 100;
         if (this.props.data.length > 0) {
-            maxValue = Math.max(...this.props.data.map(d => d.value)) * 1.05; 
+            maxValue = Math.max(...this.props.data.map((d) => d.value)) * 1.05;
         }
 
         const yAxisValues = this.getYAxisValues(maxValue);
 
-        const points = this.props.data.map((item, index) => {
-            const x = this.getXCoordinate(index, this.props.data.length, layoutWidth);
-            const y = this.props.graphHeight - this.scaleY(item.value, maxValue); // Calculate the y-coordinate
-            return `${x},${y}`; // Return the coordinate pair for SVG polyline
-        }).join(' ');
+        const points = this.props.data
+            .map((item, index) => {
+                const x = this.getXCoordinate(index, this.props.data.length, layoutWidth);
+                const y = this.props.graphHeight - this.scaleY(item.value, maxValue); // Calculate the y-coordinate
+                return `${x},${y}`; // Return the coordinate pair for SVG polyline
+            })
+            .join(' ');
 
         if (Array.isArray(this.props.data) && this.props.data.length > 1) {
             this.firstDate = this.props.data[0].date;

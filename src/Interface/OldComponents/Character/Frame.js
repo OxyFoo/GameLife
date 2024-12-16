@@ -5,12 +5,12 @@ import Svg from 'react-native-svg';
 import themeManager from 'Managers/ThemeManager';
 import { Sleep } from 'Utils/Functions';
 
-import Icon from '../Icon';
+import { Icon } from '../../Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {'full' | 'topHalf' | 'head'} BodyView
  * @typedef {import('./Character').default} Character
  */
@@ -46,7 +46,7 @@ class Frame extends React.Component {
     _mounted = true;
     state = {
         loaded: false
-    }
+    };
 
     componentDidMount() {
         setTimeout(this.startLoading.bind(this), this.props.delayTime);
@@ -65,7 +65,7 @@ class Frame extends React.Component {
     }
     componentWillUnmount() {
         const { characters } = this.props;
-        characters.forEach(character => character.unmount());
+        characters.forEach((character) => character.unmount());
         this._mounted = false;
     }
 
@@ -80,24 +80,22 @@ class Frame extends React.Component {
 
     /** @param {Array<Character>} characters */
     updateCharacters(characters) {
-        characters.forEach(character => character.parentFrame === null && character.SetFrame(this));
+        characters.forEach((character) => character.parentFrame === null && character.SetFrame(this));
     }
 
     render() {
         const { loaded } = this.state;
         const { style, size, characters, onlyItems, bodyView } = this.props;
-        const viewBox = [ size.x, size.y, size.width, size.height ].join(' ');
+        const viewBox = [size.x, size.y, size.width, size.height].join(' ');
         const loadingColor = { backgroundColor: themeManager.GetColor('backgroundCard') };
         const renderType = onlyItems ? 'onlyItems' : 'all';
 
         return (
             <View style={[styles.canvas, style]}>
-                <Svg viewBox={viewBox}>
-                    {characters.map(charac => charac.body.render(renderType, bodyView))}
-                </Svg>
+                <Svg viewBox={viewBox}>{characters.map((charac) => charac.body.render(renderType, bodyView))}</Svg>
                 {!loaded && (
                     <View style={[styles.loading, loadingColor]}>
-                        <Icon icon='loadingDots' />
+                        <Icon icon='loading-dots' />
                     </View>
                 )}
             </View>

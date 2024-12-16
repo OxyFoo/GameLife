@@ -8,7 +8,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Text from '../Text';
+import { Text } from '../../Components/Text';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData

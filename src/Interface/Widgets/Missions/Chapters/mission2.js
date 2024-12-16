@@ -45,7 +45,10 @@ async function StartMission2() {
             },
             execAfter: async () => {
                 await new Promise((resolve) => {
-                    user.interface.ChangePage('quest', { callback: () => resolve(null) });
+                    user.interface.ChangePage('quest', {
+                        storeInHistory: false,
+                        callback: () => resolve(null)
+                    });
                 });
                 return false;
             }

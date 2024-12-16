@@ -30,12 +30,11 @@ const StreakChartProps = {
 
 class StreakChartBack extends React.Component {
     state = {
-        dottedLine: null,
-        backgroundProgressBar: null,
-        progressBar: null,
-        filledSemiCircle: null,
-        renderTexts: null,
-        strokeDasharray: null
+        dottedLine: '',
+        backgroundProgressBar: '',
+        progressBar: '',
+        filledSemiCircle: '',
+        strokeDasharray: ''
     };
 
     /** @param {StreakChartProps} props */

@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Text, Input, Button, Separator } from 'Interface/Components';
+import { Text, InputText, Button, Separator } from 'Interface/Components';
 import { GetFullDate } from 'Utils/Date';
 import { GetDate, TimeToFormatString } from 'Utils/Time';
 import { renderNoRemaining, renderNotBuyed, renderNotConnected } from './render';
@@ -56,9 +56,9 @@ class ZapGPT extends ZapGPTBack {
                     ))}
                 </View>
 
-                {/* Input */}
+                {/* InputText */}
                 <View style={styles.input}>
-                    <Input
+                    <InputText
                         label={lang['input-label'] + placeholder}
                         text={text}
                         onChangeText={this.onChangeText}

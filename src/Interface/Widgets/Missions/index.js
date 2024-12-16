@@ -11,6 +11,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Button, Text, Zap } from 'Interface/Components';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
+import { Title } from 'Interface/Pages/Home/title';
 
 /**
  * @typedef {import('Types/Data/App/Missions').MissionType} MissionType
@@ -19,6 +20,7 @@ import IMG_CHESTS from 'Ressources/items/chests/chests';
 class Missions extends BackMissions {
     render() {
         const lang = langManager.curr['missions'];
+        const langHome = langManager.curr['home'];
         const { style } = this.props;
         const { mission } = this.state;
 
@@ -50,66 +52,70 @@ class Missions extends BackMissions {
         };
 
         return (
-            <Button
-                style={[styles.buttonContainer, style]}
-                onPress={this.handleNextMission}
-                appearance='uniform'
-                color='transparent'
-            >
-                <LinearGradient
-                    style={styles.container}
-                    colors={[
-                        themeManager.GetColor('main2', { opacity: 0.65 }),
-                        themeManager.GetColor('main2', { opacity: 0.25 })
-                    ]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+            <>
+                <Title title={langHome['section-missions']} />
+
+                <Button
+                    style={[styles.buttonContainer, style]}
+                    onPress={this.handleNextMission}
+                    appearance='uniform'
+                    color='transparent'
                 >
-                    <View style={styles.zapContainer}>
-                        <Zap
-                            style={styles.zap}
-                            inclinaison={mission.state === 'pending' ? 'onFourLegs' : 'onTwoLegs'}
-                        />
-                    </View>
-
-                    <View style={styles.columnContent}>
-                        {(mission?.state === 'pending' && (
-                            <View>
-                                <Text style={styles.text} fontSize={16}>
-                                    {lang['content'][missionsData[step].name].title}
-                                </Text>
-
-                                <Text style={styles.text} fontSize={14}>
-                                    {lang['text-hint']}
-                                </Text>
-                            </View>
-                        )) || (
-                            <Text style={styles.text} fontSize={16}>
-                                {lang['text-claim']}
-                            </Text>
-                        )}
-
-                        <FlatList
-                            style={styles.flatlist}
-                            contentContainerStyle={styles.flatlistContainer}
-                            data={missionsData}
-                            extraData={step}
-                            renderItem={this.rewardListElement}
-                            horizontal
-                        />
-                    </View>
-
-                    <View style={styles.columnReward}>
-                        <View style={[styles.rewardCard, styleReward]}>
-                            <Animated.View style={[styles.rewardItem, styleAnimation]}>
-                                {this.renderReward(stepReward)}
-                            </Animated.View>
+                    <LinearGradient
+                        style={styles.container}
+                        colors={[
+                            themeManager.GetColor('main2', { opacity: 0.65 }),
+                            themeManager.GetColor('main2', { opacity: 0.25 })
+                        ]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                    >
+                        <View style={styles.zapContainer}>
+                            <Zap
+                                style={styles.zap}
+                                inclinaison={mission.state === 'pending' ? 'onFourLegs' : 'onTwoLegs'}
+                            />
                         </View>
 
-                        <Text style={styles.missionStep} fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
-                    </View>
-                </LinearGradient>
-            </Button>
+                        <View style={styles.columnContent}>
+                            {(mission?.state === 'pending' && (
+                                <View>
+                                    <Text style={styles.text} fontSize={16}>
+                                        {lang['content'][missionsData[step].name].title}
+                                    </Text>
+
+                                    <Text style={styles.text} fontSize={14}>
+                                        {lang['text-hint']}
+                                    </Text>
+                                </View>
+                            )) || (
+                                <Text style={styles.text} fontSize={16}>
+                                    {lang['text-claim']}
+                                </Text>
+                            )}
+
+                            <FlatList
+                                style={styles.flatlist}
+                                contentContainerStyle={styles.flatlistContainer}
+                                data={missionsData}
+                                extraData={step}
+                                renderItem={this.rewardListElement}
+                                horizontal
+                            />
+                        </View>
+
+                        <View style={styles.columnReward}>
+                            <View style={[styles.rewardCard, styleReward]}>
+                                <Animated.View style={[styles.rewardItem, styleAnimation]}>
+                                    {this.renderReward(stepReward)}
+                                </Animated.View>
+                            </View>
+
+                            <Text style={styles.missionStep} fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
+                        </View>
+                    </LinearGradient>
+                </Button>
+            </>
         );
     }
 

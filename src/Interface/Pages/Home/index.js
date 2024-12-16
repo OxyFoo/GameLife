@@ -3,6 +3,7 @@ import { View, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackHome from './back';
+import { Title } from './title';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
@@ -35,7 +36,6 @@ class Home extends BackHome {
                 </View>
 
                 {/* Today missions */}
-                <Title title={lang['section-missions']} />
                 <Missions />
 
                 {/* Today performance */}
@@ -83,25 +83,5 @@ class Home extends BackHome {
         );
     }
 }
-
-const Title = React.forwardRef(
-    /**
-     * @param {Object} props
-     * @param {string} props.title
-     * @param {React.ReactNode} [props.children]
-     * @param {React.Ref<View>} ref
-     */
-    ({ title, children }, ref) => {
-        return (
-            <View ref={ref} style={styles.sectionContainer} collapsable={false}>
-                <Text style={styles.sectionTitle} color='secondary'>
-                    {title}
-                </Text>
-
-                {children}
-            </View>
-        );
-    }
-);
 
 export default Home;

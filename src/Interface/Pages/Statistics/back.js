@@ -12,8 +12,9 @@ const BackNewPageProps = {
     args: {}
 };
 
-class BackNewPage extends PageBase {
+class BackStatistics extends PageBase {
     state = {
+        activities: user.activities.Get(),
         experience: user.experience.experience.Get(),
         kpis: this.getValuesKPI()
     };
@@ -24,6 +25,7 @@ class BackNewPage extends PageBase {
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({
+                activities: user.activities.Get(),
                 experience: user.experience.experience.Get(),
                 kpis: this.getValuesKPI()
             });
@@ -48,7 +50,7 @@ class BackNewPage extends PageBase {
     }
 
     /**
-     * @param {Array<Activity>} activities
+     * @param {Activity[]} activities
      * @returns {number} in hours
      */
     getTotalDuration(activities) {
@@ -57,7 +59,7 @@ class BackNewPage extends PageBase {
         return Round(hours, 1);
     }
     /**
-     * @param {Array<Activity>} activities
+     * @param {Activity[]} activities
      * @returns {number} in days
      */
     getTimeFromFirst(activities) {
@@ -74,7 +76,7 @@ class BackNewPage extends PageBase {
     };
 }
 
-BackNewPage.defaultProps = BackNewPageProps;
-BackNewPage.prototype.props = BackNewPageProps;
+BackStatistics.defaultProps = BackNewPageProps;
+BackStatistics.prototype.props = BackNewPageProps;
 
-export default BackNewPage;
+export default BackStatistics;

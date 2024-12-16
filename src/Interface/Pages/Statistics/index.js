@@ -2,16 +2,16 @@ import * as React from 'react';
 import { View, ScrollView } from 'react-native';
 
 import styles from './style';
-import BackNewPage from './back';
+import BackStatistics from './back';
 import langManager from 'Managers/LangManager';
 
 import { Text, KPI } from 'Interface/Components';
-import { PageHeader } from 'Interface/Widgets';
+import { ActivitiesChart, PageHeader } from 'Interface/Widgets';
 
-class NewPage extends BackNewPage {
+class Statistics extends BackStatistics {
     render() {
         const lang = langManager.curr['profile'];
-        const { kpis } = this.state;
+        const { activities, kpis } = this.state;
 
         return (
             <ScrollView style={styles.page}>
@@ -21,18 +21,7 @@ class NewPage extends BackNewPage {
                     {lang['row-text-graph']}
                 </Text>
 
-                {/* [GRAPHIQUE] */}
-                <Text
-                    style={{
-                        fontSize: 21,
-                        textAlign: 'left'
-                    }}
-                    color='error'
-                >
-                    [GRAPHIQUE]
-                </Text>
-                <View style={{ width: '100%', height: 200, backgroundColor: '#CC0029' }} />
-                {/* [/GRAPHIQUE] */}
+                <ActivitiesChart activities={activities} />
 
                 <Text style={styles.sectionTitle} color='secondary'>
                     {lang['row-title-informations']}
@@ -64,4 +53,4 @@ class NewPage extends BackNewPage {
     }
 }
 
-export default NewPage;
+export default Statistics;

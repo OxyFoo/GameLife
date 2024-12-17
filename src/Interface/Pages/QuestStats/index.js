@@ -14,7 +14,6 @@ import themeManager from 'Managers/ThemeManager';
 import { Button, StreakChart, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
-// TODO: Unused ?
 class QuestStats extends BackQuest {
     render() {
         if (this.selectedQuest === null) {
@@ -22,7 +21,7 @@ class QuestStats extends BackQuest {
         }
 
         const lang = langManager.curr['quest-stats'];
-        const { maximumStreak } = this.selectedQuest;
+        const { maximumStreak, schedule } = this.selectedQuest;
 
         const currentStreak = user.quests.GetStreak(this.selectedQuest);
         const maxStreak = Math.max(10, maximumStreak);
@@ -87,10 +86,14 @@ class QuestStats extends BackQuest {
                     </LinearGradient>
 
                     {/* Current week */}
-                    <Text style={styles.title} color='border'>
-                        {lang['title-current-week']}
-                    </Text>
-                    <WeekMap quest={this.selectedQuest} showAnimations={this.showAnimations} />
+                    {(schedule.type === 'week' || schedule.type === 'month') && (
+                        <>
+                            <Text style={styles.title} color='border'>
+                                {lang['title-current-week']}
+                            </Text>
+                            <WeekMap quest={this.selectedQuest} showAnimations={this.showAnimations} />
+                        </>
+                    )}
 
                     {/* Year heatmap */}
                     <Text style={styles.title} color='border'>

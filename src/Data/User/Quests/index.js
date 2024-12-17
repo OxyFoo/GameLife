@@ -9,6 +9,7 @@ import { getStreakFromFrequencyByMonth, getStreakFromFrequencyByWeek, getStreakF
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('Data/User/Activities').Activity} Activity
  *
  * @typedef {import('./days').DayType} DayType
  * @typedef {import('Types/Data/User/Quests').Quest} Quest
@@ -21,11 +22,14 @@ import { getStreakFromFrequencyByMonth, getStreakFromFrequencyByWeek, getStreakF
 
 /** @extends {IUserData<SaveObject_Quests>} */
 class Quests extends IUserData {
+    /** @type {UserManager} */
+    #user;
+
     /** @param {UserManager} user */
     constructor(user) {
         super('quests');
 
-        this.user = user;
+        this.#user = user;
     }
 
     MAX_QUESTS = 5;
@@ -150,7 +154,7 @@ class Quests extends IUserData {
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-quests', token: this.#token });
+        const response = await this.#user.server2.tcp.SendAndWait({ action: 'get-quests', token: this.#token });
 
         if (
             response === 'interrupted' ||
@@ -159,7 +163,7 @@ class Quests extends IUserData {
             response.status !== 'get-quests' ||
             response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog('warn', `[Quests] LoadOnline: ${response}`);
+            this.#user.interface.console?.AddLog('warn', `[Quests] LoadOnline: ${response}`);
             return false;
         }
 
@@ -172,7 +176,7 @@ class Quests extends IUserData {
         this.#token = response.result.token;
 
         this.allQuests.Set(this.Get());
-        this.user.interface.console?.AddLog('info', `[Quests] ${response.result.quests.length} quests loaded`);
+        this.#user.interface.console?.AddLog('info', `[Quests] ${response.result.quests.length} quests loaded`);
         return true;
     };
 
@@ -183,7 +187,7 @@ class Quests extends IUserData {
         }
 
         const unsaved = this.#getUnsaved();
-        const response = await this.user.server2.tcp.SendAndWait({
+        const response = await this.#user.server2.tcp.SendAndWait({
             action: 'save-quests',
             questsToAdd: unsaved.quests.add,
             questsToEdit: unsaved.quests.edit,
@@ -199,12 +203,12 @@ class Quests extends IUserData {
             response.status !== 'save-quests' ||
             response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog('warn', `[Quests] SaveOnline: ${response}`);
+            this.#user.interface.console?.AddLog('warn', `[Quests] SaveOnline: ${response}`);
             return false;
         }
 
         if (response.result === 'wrong-quests') {
-            this.user.interface.console?.AddLog('error', `[Quests] SaveOnline: ${response.result}`, unsaved);
+            this.#user.interface.console?.AddLog('error', `[Quests] SaveOnline: ${response.result}`, unsaved);
             this.Clear();
             await this.LoadOnline();
             return false;
@@ -212,11 +216,11 @@ class Quests extends IUserData {
 
         if (response.result === 'not-up-to-date') {
             if (attempt <= 0) {
-                this.user.interface.console?.AddLog('warn', `[Quests] SaveOnline: "not-up-to-date", no more attempts`);
+                this.#user.interface.console?.AddLog('warn', `[Quests] SaveOnline: "not-up-to-date", no more attempts`);
                 return false;
             }
 
-            this.user.interface.console?.AddLog('warn', `[Quests] SaveOnline: "not-up-to-date", retrying...`);
+            this.#user.interface.console?.AddLog('warn', `[Quests] SaveOnline: "not-up-to-date", retrying...`);
             await this.LoadOnline();
             return this.SaveOnline(attempt - 1);
         }
@@ -225,7 +229,7 @@ class Quests extends IUserData {
         this.allQuests.Set(this.Get());
         this.#token = response.result.token;
 
-        this.user.interface.console?.AddLog('info', `[Quests] ${response.result.newQuests.length} quests saved`);
+        this.#user.interface.console?.AddLog('info', `[Quests] ${response.result.newQuests.length} quests saved`);
         return true;
     };
 
@@ -318,10 +322,10 @@ class Quests extends IUserData {
         if (quest === null) return '';
 
         const totalDuration = Sum(
-            this.user.activities
+            this.#user.activities
                 .GetByTime(GetLocalTime())
                 .filter((activity) => quest.skills.includes(activity.skillID))
-                .filter((activity) => this.user.activities.GetExperienceStatus(activity) === 'grant')
+                .filter((activity) => this.#user.activities.GetExperienceStatus(activity) === 'grant')
                 .map((activity) => activity.duration)
         );
 
@@ -332,7 +336,7 @@ class Quests extends IUserData {
         const goalMinute = quest.schedule.duration % 60;
 
         if (goalHour <= 0 && goalMinute <= 0) {
-            this.user.interface.console?.AddLog('warn', 'Quests - GetQuestTimeText: time is 0');
+            this.#user.interface.console?.AddLog('warn', 'Quests - GetQuestTimeText: time is 0');
             return 'Error';
         }
 
@@ -490,14 +494,14 @@ class Quests extends IUserData {
      */
     Move(quest, newIndex) {
         if (!this.sort.includes(quest.created)) {
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'warn',
                 `Quests - move failed: quest not found (${quest.title} ${newIndex})`
             );
             return false;
         }
         if (newIndex < 0 || newIndex > this.sort.length) {
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'warn',
                 `Quests - move failed: index out of range (${quest.title} ${newIndex})`
             );
@@ -505,7 +509,7 @@ class Quests extends IUserData {
         }
         const oldIndex = this.sort.indexOf(quest.created);
         if (oldIndex === newIndex) {
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'warn',
                 `Quests - move failed: same index (${quest.title} ${newIndex})`
             );
@@ -539,12 +543,12 @@ class Quests extends IUserData {
         const { schedule } = quest;
 
         if (schedule.type === 'week' || schedule.type === 'month') {
-            return getDayFromMonthOrWeek(this.user.activities, quest, time);
+            return getDayFromMonthOrWeek(this.#user.activities, quest, time);
         } else if (schedule.type === 'frequency') {
             if (schedule.frequencyMode === 'month') {
-                return getDayFromFrequencyByMonth(this.user.activities, quest, time);
+                return getDayFromFrequencyByMonth(this.#user.activities, quest, time);
             } else if (schedule.frequencyMode === 'week') {
-                return getDayFromFrequencyByWeek(this.user.activities, quest, time);
+                return getDayFromFrequencyByWeek(this.#user.activities, quest, time);
             }
         }
 
@@ -553,18 +557,31 @@ class Quests extends IUserData {
 
     /**
      * @param {Quest} quest
+     * @returns {Activity[]} Activities that grant experience for the quest
+     */
+    GetQuestActivities = (quest) => {
+        return this.#user.activities
+            .Get()
+            .filter((activity) => quest.skills.includes(activity.skillID))
+            .filter((activity) => this.#user.activities.GetExperienceStatus(activity) === 'grant');
+    };
+
+    /**
+     * @param {Quest} quest
      * @returns {number} Streak
      */
     GetStreak(quest) {
         let streak = 0;
 
+        const questActivities = this.GetQuestActivities(quest);
+
         if (quest.schedule.type === 'week' || quest.schedule.type === 'month') {
-            streak = getStreakFromMonthOrWeek(this.user.activities, quest);
+            streak = getStreakFromMonthOrWeek(questActivities, quest);
         } else if (quest.schedule.type === 'frequency') {
             if (quest.schedule.frequencyMode === 'month') {
-                streak = getStreakFromFrequencyByMonth(quest);
+                streak = getStreakFromFrequencyByMonth(questActivities, quest);
             } else if (quest.schedule.frequencyMode === 'week') {
-                streak = getStreakFromFrequencyByWeek(quest);
+                streak = getStreakFromFrequencyByWeek(questActivities, quest);
             }
         }
 
@@ -572,7 +589,7 @@ class Quests extends IUserData {
             const newQuest = Object.assign({}, quest);
             newQuest.maximumStreak = streak;
             this.Edit(quest, newQuest);
-            this.user.GlobalSave();
+            this.#user.GlobalSave();
         }
 
         return streak;

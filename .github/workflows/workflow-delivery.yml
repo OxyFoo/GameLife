@@ -78,7 +78,7 @@ jobs:
           ref: ${{ github.event.inputs.environment }}
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Update version'
         env:
@@ -136,7 +136,7 @@ jobs:
         with:
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'TODO'
         run: echo "TODO"
@@ -173,7 +173,7 @@ jobs:
         with:
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Get app version & delivery status'
         run: |

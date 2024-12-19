@@ -26,7 +26,7 @@ jobs:
         with:
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Install the Apple certificate and provisioning profile'
         env:
@@ -177,7 +177,7 @@ jobs:
         with:
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Get ipa artifact'
         uses: actions/download-artifact@v4

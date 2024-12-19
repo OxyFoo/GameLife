@@ -34,7 +34,7 @@ jobs:
         with:
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -128,7 +128,7 @@ jobs:
         with:
           submodules: 'recursive'
           persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Get aab artifact'
         uses: actions/download-artifact@v4

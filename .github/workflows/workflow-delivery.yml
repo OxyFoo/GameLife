@@ -54,15 +54,6 @@ on:
         required: false
         default: false
         type: boolean
-      version:
-        description: 'App version (unused yet)'
-        required: false # true
-        type: string
-        default: '1.0.0' # Hardcoder la version + modifier à chaque release ?
-      version2:
-        description: 'iOS Version (unused yet)'
-        required: false # true
-        type: string
 
 jobs:
   tests:

@@ -57,8 +57,14 @@ jobs:
         env:
           ENVFILE: .env.${{ inputs.environment }}
         run: |
+          # Build types
+          npm run prestart
+
           # Build the app
           npm run build
+
+          # Clean types
+          npm run poststart
 
           # Move aab & mapping files to root
           mv android/app/build/outputs/bundle/release/app-release.aab ./${FILE_AAB}

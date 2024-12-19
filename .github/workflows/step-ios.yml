@@ -85,6 +85,9 @@ jobs:
 
       - name: 'Setup & clean build directory'
         run: |
+          # Generate type files
+          npm run prestart
+
           # Go to the ios directory
           cd ios
 

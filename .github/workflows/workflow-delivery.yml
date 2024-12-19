@@ -76,6 +76,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.environment }}
+          submodules: 'recursive'
 
       - name: 'Update version'
         env:
@@ -130,6 +131,8 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       - name: 'TODO'
         run: echo "TODO"
@@ -163,6 +166,8 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       - name: 'Get app version & delivery status'
         run: |

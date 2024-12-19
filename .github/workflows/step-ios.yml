@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       - name: 'Install the Apple certificate and provisioning profile'
         env:
@@ -170,6 +172,8 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       - name: 'Get ipa artifact'
         uses: actions/download-artifact@v4

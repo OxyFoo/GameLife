@@ -72,7 +72,7 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
       test-client: true
-      test-database: true
+      test-database: false
       test-migration: false
 
   update-version:

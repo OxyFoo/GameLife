@@ -34,6 +34,7 @@ jobs:
         with:
           ref: 'dev'
           submodules: 'recursive'
+          persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Update version'

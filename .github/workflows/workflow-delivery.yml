@@ -77,6 +77,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.environment }}
           submodules: 'recursive'
+          persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Update version'
@@ -134,6 +135,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
+          persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'TODO'
@@ -170,6 +172,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
+          persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Get app version & delivery status'

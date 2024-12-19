@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
@@ -7,124 +7,129 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, Frame, Character } from 'Interface/Components';
+import ProfileFriend from 'Interface/PageView/ProfileFriend';
+import { Text, Button, Frame, Character, Icon } from 'Interface/Components';
+import { Gradient } from 'Interface/Primitives';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ *
  * @typedef {import('Class/Experience').XPInfo} XPInfo
- * @typedef {import('Types/UserOnline').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
  */
+
+// TODO: Replace this with a real avatar
+// @ts-ignore
+const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
+
+/** @type {Character | null} */
+// const DEFAULT_CHARACTER = null;
+
+/** @type {string | null} */
+const DEFAULT_TITLE = null;
 
 /**
  * @param {object} param0
- * @param {Friend} param0.friend
+ * @param {StyleViewProp} [param0.style]
+ * @param {(Friend | UserOnline)} param0.friend
  * @returns {JSX.Element}
  */
-function UserOnlineElement({ friend }) {
+function UserOnlineElement({ style, friend }) {
+    const langExp = langManager.curr['level'];
     const lang = langManager.curr['multiplayer'];
-    /** @type {[Character | null, React.Dispatch<React.SetStateAction<Character | null>>]} */
-    const [ character, setCharacter ] = React.useState(/** @type {Character | null} */ (null));
-    const [ friendTitle, setFriendTitle ] = React.useState(/** @type {string | null} */ (null));
-    const [ statusStyle, setStatusStyle ] = React.useState({});
+
+    // const [character, setCharacter] = React.useState(DEFAULT_CHARACTER);
+    const [friendTitle, setFriendTitle] = React.useState(DEFAULT_TITLE);
+    const [statusStyle, setStatusStyle] = React.useState({});
 
     React.useEffect(() => {
-        let friendTitle = null;
+        let newFriendTitle = null;
         if (friend.title !== 0) {
             const friendTitleIndex = dataManager.titles.GetByID(friend.title);
             if (friendTitleIndex !== null) {
-                friendTitle = langManager.GetText(friendTitleIndex.Name);
+                newFriendTitle = langManager.GetText(friendTitleIndex.Name);
             }
         }
-        if (friend.currentActivity !== null) {
+        if (friend.friendshipState === 'accepted' && friend.currentActivity !== null) {
             const skill = dataManager.skills.GetByID(friend.currentActivity.skillID);
             if (skill !== null) {
-                friendTitle = lang['friend-do-activity-now'].replace('{}', langManager.GetText(skill.Name));
+                newFriendTitle = lang['friend-do-activity-now'].replace('{}', langManager.GetText(skill.Name));
             }
         }
 
-        const character = new Character(
-            'character-player-' + friend.accountID.toString(),
-            friend.avatar.Sexe,
-            friend.avatar.Skin,
-            friend.avatar.SkinColor
-        );
-        const stuff = [
-            friend.avatar.Hair,
-            friend.avatar.Top,
-            friend.avatar.Bottom,
-            friend.avatar.Shoes
-        ];
-        character.SetEquipment(stuff);
+        // const newCharacter = new Character(
+        //     'character-player-' + friend.accountID.toString(),
+        //     friend.avatar.Sexe,
+        //     friend.avatar.Skin,
+        //     friend.avatar.SkinColor
+        // );
+        // const stuff = [friend.avatar.Hair, friend.avatar.Top, friend.avatar.Bottom, friend.avatar.Shoes];
+        // newCharacter.SetEquipment(stuff);
 
-        const statusStyle = {};
+        const newStatusStyle = {};
         if (friend.status === 'online') {
-            statusStyle.borderColor = themeManager.GetColor('success');
+            newStatusStyle.borderColor = themeManager.GetColor('success');
         } else if (friend.status === 'offline') {
-            statusStyle.borderColor = themeManager.GetColor('disabled');
+            newStatusStyle.borderColor = themeManager.GetColor('disabled');
         }
 
-        setCharacter(character);
-        setFriendTitle(friendTitle);
-        setStatusStyle(statusStyle);
-    }, [ friend ]);
+        // setCharacter(newCharacter);
+        setFriendTitle(newFriendTitle);
+        setStatusStyle(newStatusStyle);
+    }, [friend, lang]);
 
     const onPress = () => {
-        user.interface.ChangePage('profilefriend', { friendID: friend.accountID });
-    }
+        user.interface.bottomPanel?.Open({
+            content: <ProfileFriend friendID={friend.accountID} />
+        });
+    };
+
+    const friendExperience = user.experience.getXPDict(friend.xp);
 
     return (
-        <Button style={styles.friend} onPress={onPress}>
-            <View style={styles.friendInfo}>
-                <View style={[styles.frameBorder, statusStyle]}>
-                    {character !== null && (
-                        <Frame
-                            style={styles.frame}
-                            characters={[ character ]}
-                            size={{ x: 200, y: 0, width: 500, height: 450 }}
-                            delayTime={0}
-                            loadingTime={0}
-                            bodyView={'topHalf'}
+        <Button style={[styles.friendButton, style]} onPress={onPress} appearance='uniform' color='transparent'>
+            <Gradient style={styles.friendGradient} colors={['#38406573', '#38406526']} angle={100}>
+                <View style={styles.friendInfo}>
+                    <View style={[styles.frameBorder, statusStyle]}>
+                        {/* {character !== null && (
+                            <Frame
+                                style={styles.frame}
+                                characters={[character]}
+                                size={{ x: 200, y: 0, width: 500, height: 450 }}
+                                delayTime={0}
+                                loadingTime={0}
+                                bodyView={'topHalf'}
+                            />
+                        )} */}
+                        <Image
+                            style={styles.friendTopPlaceholder}
+                            resizeMode='stretch'
+                            source={AVATAR_MIN_PLACEHOLDER}
                         />
-                    )}
+                    </View>
+
+                    <View style={styles.friendInfoTitle}>
+                        <Text fontSize={20}>{friend.username}</Text>
+                        {friendTitle !== null && (
+                            <Text style={styles.title} fontSize={16} color='main1'>
+                                {friendTitle}
+                            </Text>
+                        )}
+                    </View>
                 </View>
 
-                <View style={styles.friendInfoTitle}>
-                    <Text fontSize={20}>{friend.username}</Text>
-                    {friendTitle !== null && (
-                        <Text fontSize={14}>{friendTitle}</Text>
-                    )}
+                <View style={styles.details}>
+                    <Text
+                        style={styles.level}
+                        color='secondary'
+                    >{`${langExp['level-small']} ${friendExperience.lvl}`}</Text>
+                    <Icon icon='arrow-square-outline' color='gradient' angle={90} />
                 </View>
-            </View>
-
-            <Level friend={friend} />
+            </Gradient>
         </Button>
     );
 }
 
-/**
- * @param {object} param0
- * @param {Friend} param0.friend
- * @returns {React.JSX.Element | null}
- */
-function Level({ friend }) {
-    const [ friendExperience, setFriendExperience ] = React.useState(/** @type {XPInfo | null} */ (null));
-
-    React.useEffect(() => {
-        const friendExperience = user.experience.getXPDict(friend.xp);
-        setFriendExperience(friendExperience);
-    }, [ friend ]);
-
-    if (friendExperience === null) {
-        return null;
-    }
-
-    const levelStr = friendExperience.lvl.toString();
-    return (
-        <View style={styles.friendDetails}>
-            <Text style={styles.level} fontSize={18 - ((levelStr.length - 1) * 2)}>
-                {levelStr}
-            </Text>
-        </View>
-    );
-}
-
-export default UserOnlineElement;
+export { UserOnlineElement };

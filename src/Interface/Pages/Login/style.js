@@ -1,71 +1,73 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    body: {
-        width: '100%',
+    page: {
         height: '100%',
-        paddingHorizontal: '5%'
+        padding: 32,
+        justifyContent: 'space-evenly'
     },
-    container: {
-        width: '100%',
-        paddingVertical: 24,
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden'
-    },
-    mainImageContainer: {
-        width: '100%',
-        marginTop: '15%',
-
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    mainImage: {
-        height: '80%',
-        aspectRatio: 1
-    },
-    backgroundCircles: {
-        position: 'absolute',
-        top: 0,
-        right: 0
+    form: {
+        alignItems: 'center'
     },
     title: {
-        marginTop: '10%',
         fontSize: 58
-    },
-    smallTitle: {
-        marginTop: '5%',
-        fontSize: 40
     },
     text: {
         margin: 12,
+        marginBottom: 48,
         textAlign: 'center',
-        fontSize: 16
+        fontSize: 18
     },
     input: {
         width: '90%'
     },
-    button: {
+
+    cbLang: {
+        position: 'absolute',
+        top: 24,
+        right: 12,
+        width: 'auto'
+    },
+    cbLangInput: {
+        paddingVertical: 6,
+        paddingHorizontal: 24
+    },
+
+    buttonLoginSignin: {
+        width: 'auto',
         position: 'absolute',
         left: 0,
         right: 0,
         bottom: 0,
         margin: 24
     },
-    backButton: {
+    buttonBack: {
         position: 'absolute',
         width: 64,
         left: 24,
         bottom: 24
     },
+
     cgu: {
-        display: 'flex',
+        width: '90%',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: -8
+        alignItems: 'center'
     },
+    cguTextContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        textAlign: 'left'
+    },
+    cguText: {
+        textAlign: 'left'
+    },
+    cguCheckBox: {
+        width: 28,
+        marginRight: 16,
+        borderWidth: 1.2
+    },
+
     error: {
         margin: 2,
         fontSize: 12

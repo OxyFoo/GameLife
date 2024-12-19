@@ -72,3 +72,5 @@
 # React Native Config
 
 -keep class com.gamelife.BuildConfig { *; }
+
+-dontwarn com.google.android.gms.ads.**

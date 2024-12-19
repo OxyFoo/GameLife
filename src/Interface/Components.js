@@ -1,65 +1,29 @@
-import ActivityTimeline from './Components/ActivityTimeline';
-import Button from './Components/Button';
-import Character from './Components/Character/Character';
-import Checkbox from './Components/Checkbox';
-import ComboBox from './Components/ComboBox';
-import Container from './Components/Container';
-import DayClock from './Components/DayClock';
-import Digit from './Components/Digit';
-import Frame from './Components/Character/Frame';
-import GLLoading from './Components/GLLoading';
-import HeatMap from './Components/HeatMap';
-import Icon from './Components/Icon';
-import IconCheckable from './Components/IconCheckable';
-import Input from './Components/Input';
-import KeyboardSpacerView from './Components/KeyboardSpacerView';
-import KPI from './Components/KPI';
-import LineChartSvg from './Components/LineChartSvg';
-import Page from './Components/Page';
-import PageBase from './Components/Page/PageBase';
-import PieChart from './Components/PieChart';
-import ProgressBar from './Components/ProgressBar';
-import Separator from './Components/Separator';
-import SimpleContainer from './Components/SimpleContainer';
-import StreakChart from './Components/StreakChart';
-import Swiper from './Components/Swiper';
-import Switch from './Components/Switch';
-import Text from './Components/Text';
-import TextSwitch from './Components/TextSwitch';
-import UserOnlineElement from './Components/UserOnlineElement';
-import XPBar from './Components/XPBar';
-import Zap from './Components/Zap';
+export { ActivityTimeline } from './Components/ActivityTimeline';
+export { Button } from './Components/Button';
+export { CheckBox } from './Components/CheckBox';
+export { ComboBox } from './Components/ComboBox';
+export { Container } from './Components/Container';
+export { Digit } from './Components/Digit';
+export { HeatMap } from './Components/HeatMap';
+export { Icon } from './Components/Icon';
+export { IconCheckable } from './Components/IconCheckable';
+export { InputText } from './Components/InputText';
+export { KeyboardSpacerView } from './Components/KeyboardSpacerView';
+export { KPI } from './Components/KPI';
+export { LineChartSvg } from './Components/LineChartSvg';
+export { ProgressBar } from './Components/ProgressBar';
+export { Separator } from './Components/Separator';
+export { Swiper } from './Components/Swiper';
+export { Switch } from './Components/Switch';
+export { SwitchText } from './Components/SwitchText';
+export { Text } from './Components/Text';
+export { UserOnlineElement } from './Components/UserOnlineElement';
+export { Zap } from './Components/Zap';
 
-export {
-    ActivityTimeline,
-    Button,
-    Character,
-    Checkbox,
-    ComboBox,
-    Container,
-    DayClock,
-    Digit,
-    Frame,
-    GLLoading,
-    HeatMap,
-    Icon,
-    IconCheckable,
-    Input,
-    KeyboardSpacerView,
-    KPI,
-    LineChartSvg,
-    Page,
-    PageBase,
-    PieChart,
-    ProgressBar,
-    Separator,
-    SimpleContainer,
-    StreakChart,
-    Swiper,
-    Switch,
-    Text,
-    TextSwitch,
-    UserOnlineElement,
-    XPBar,
-    Zap
-};
+// TODO: Reimplements old components
+import Frame from './OldComponents/Character/Frame';
+import Character from './OldComponents/Character/Character';
+import PieChart from './OldComponents/PieChart';
+import StreakChart from './OldComponents/StreakChart';
+
+export { Frame, Character, PieChart, StreakChart };

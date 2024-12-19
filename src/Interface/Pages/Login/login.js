@@ -9,45 +9,49 @@ import langManager from 'Managers/LangManager';
  * Login, return true if success (& next page loading) or false if error
  * @this {LoginPage}
  * @param {string} email
- * @returns {Promise<boolean>}
+ * @returns {Promise<void>}
  */
 async function Login(email) {
     const lang = langManager.curr['login'];
-    const { status } = await user.server.Connect(email);
+
+    this.setState({ loading: true });
+    const status = await user.server2.Login(email);
+    await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Logged in
     if (status === 'ok') {
         user.settings.email = email;
-        user.settings.connected = true;
-        await user.settings.Save();
-        return true;
+        await user.settings.IndependentSave();
+        user.interface.ChangePage('loading', { storeInHistory: false });
     }
 
     // No account, go to signin
-    if (status === 'free') {
-        this.setSigninMode(true);
-    } 
-
-    // Too many devices
-    else if (status === 'limitDevice') {
-        const title = lang['alert-limitDevice-title'];
-        const text = lang['alert-limitDevice-text'];
-        user.interface.popup.ForceOpen('ok', [ title, text ]);
+    else if (status === 'free') {
+        this.goToSignin();
     }
 
     // New device or mail unconfirmed
-    else if (status === 'waitMailConfirmation' || status === 'newDevice') {
+    else if (status === 'waitMailConfirmation') {
         user.settings.email = email;
-        await user.settings.Save();
-        user.interface.ChangePage('waitmail', { email: email }, true);
+        await user.settings.IndependentSave();
+        user.interface.ChangePage('waitmail', { storeInHistory: false });
+    }
+
+    // Device limit reached
+    else if (status === 'deviceLimitReached') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-deviceLimit-title'],
+                message: lang['alert-deviceLimit-message']
+            }
+        });
     }
 
     // Error
-    else if (status === 'error') {
-        this.checkConnection();
+    else {
+        this.setState({ errorEmail: lang['error-signin-server'] });
     }
-
-    return false;
 }
 
 /**
@@ -55,47 +59,51 @@ async function Login(email) {
  * @this {LoginPage}
  * @param {string} email
  * @param {string} username
- * @returns {Promise<boolean>}
+ * @returns {Promise<void>}
  */
 async function Signin(email, username) {
     const lang = langManager.curr['login'];
-    const signinStatus = await user.server.Signin(email, username);
+    this.setState({ loading: true });
+    const signinStatus = await user.server2.Signin(username, email);
+    await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Signin success
     if (signinStatus === 'ok') {
-        user.settings.email = email;
-        await user.settings.Save();
-        return true;
+        await Login.call(this, email);
+        return;
     }
 
     // Too many devices
     else if (signinStatus === 'limitAccount') {
-        const title = lang['alert-limitAccount-title'];
-        const text = lang['alert-limitAccount-text'];
-        user.interface.popup.Open('ok', [ title, text ]);
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-limitAccount-title'],
+                message: lang['alert-limitAccount-message']
+            }
+        });
     }
 
     // Username already used
-    else if (signinStatus === 'pseudoUsed') {
+    else if (signinStatus === 'usernameAlreadyUsed') {
         this.setState({ errorUsername: lang['error-signin-pseudoUsed'] });
     }
 
     // Username incorrect
-    else if (signinStatus === 'pseudoIncorrect') {
+    else if (signinStatus === 'invalidUsername' || signinStatus === 'usernameIsBlacklisted') {
         this.setState({ errorUsername: lang['error-signin-pseudoIncorrect'] });
     }
 
     // Error
     else {
+        user.interface.console?.AddLog('error', 'Signin error:', signinStatus);
         this.setState({
             username: '',
             errorUsername: '',
             errorEmail: lang['error-signin-server']
         });
-        this.setSigninMode(false);
+        this.backToLogin();
     }
-
-    return false;
 }
 
 export { Login, Signin };

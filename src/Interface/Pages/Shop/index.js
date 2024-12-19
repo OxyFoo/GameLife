@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import BackShop from './back';
 import ShopHeader from './UI/header';
@@ -9,21 +9,26 @@ import ShopDailyDeals from './DailyDeals';
 import ShopRandomChests from './RandomChests';
 import ShopTargetedChests from './TargetedChests';
 import ShopDyes from './Dyes';
-import ShopIAP from './InAppPurchases'
+import ShopIAP from './InAppPurchases';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Page, Text, Icon } from 'Interface/Components';
-import StartHelp from './help';
+import { Text, Icon } from 'Interface/Components';
 
 class Shop extends BackShop {
     render() {
-        const {
-            dailyItemsID,
-            randomChestsStats,
-            targetChestsStats
-        } = this.state;
+        const lang = langManager.curr['shop'];
+
+        return (
+            <View style={[styles.page, { alignItems: 'center', justifyContent: 'center' }]}>
+                {/* <ShopHeader ref={this.refHeader} style={styles.shopHeader} /> */}
+                <Text style={{ fontSize: 24 }}>{lang['temporary-message']}</Text>
+            </View>
+        );
+
+        /*
+        const { dailyItemsID, randomChestsStats, targetChestsStats } = this.state;
 
         if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com') {
             return this.renderForTesters();
@@ -33,21 +38,11 @@ class Shop extends BackShop {
             return this.renderLoading();
         }
 
-        const lang = langManager.curr['shop'];
-        const Help = StartHelp.bind(this);
+        const Help = () => {};
 
         return (
-            <Page
-                ref={this.setRef}
-                style={styles.page}
-                isHomePage
-                canScrollOver
-            >
-                <ShopHeader
-                    ref={this.refHeader}
-                    refPage={this.state.refPage}
-                    style={styles.shopHeader}
-                />
+            <View style={styles.page}>
+                <ShopHeader ref={this.refHeader} refPage={this.refShopHeader} style={styles.shopHeader} />
 
                 <Text style={styles.title}>{lang['banner-header']}</Text>
 
@@ -73,22 +68,18 @@ class Shop extends BackShop {
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
                 <ShopDyes ref={this.refDyes} />
-            </Page>
+            </View>
         );
+        */
     }
 
     renderLoading = () => {
         return (
-            <Page
-                ref={this.setRef}
-                style={styles.pageFill}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.page}>
                 <Text>Loading...</Text>
-            </Page>
+            </View>
         );
-    }
+    };
 
     renderNoInternet = () => {
         const lang = langManager.curr['shop'];
@@ -96,45 +87,32 @@ class Shop extends BackShop {
         const text = lang['internet-offline-text'];
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.noInternetContainer}
-                isHomePage
-                canScrollOver
-            >
+            <View style={styles.noInternetContainer}>
                 <Icon icon='nowifi' size={100} />
                 <Text fontSize={22}>{title}</Text>
                 <Text fontSize={16}>{text}</Text>
-            </Page>
+            </View>
         );
-    }
+    };
 
     renderForTesters = () => {
         const lang = langManager.curr['shop'];
 
         return (
-            <Page
-                ref={this.setRef}
-                style={styles.page}
-                isHomePage
-                canScrollOver
-            >
-                <ShopHeader
-                    ref={this.refHeader}
-                    refPage={this.state.refPage}
-                    style={styles.shopHeader}
-                />
+            <View style={styles.page}>
+                <ShopHeader ref={this.refHeader} refPage={this.state.refPage} style={styles.shopHeader} />
 
                 <Banner title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
-            </Page>
+            </View>
         );
-    }
+    };
 }
 
 const styles = StyleSheet.create({
     page: {
-        paddingHorizontal: 0
+        height: '100%',
+        paddingHorizontal: 24
     },
     pageFill: {
         alignItems: 'center',

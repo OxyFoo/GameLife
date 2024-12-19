@@ -1,3 +1,4 @@
+import { Animated } from 'react-native';
 import mockPermissions from 'react-native-permissions/mock';
 
 jest.mock('@react-native-async-storage/async-storage', () =>
@@ -8,23 +9,23 @@ jest.mock('react-native-device-info', () => ({
     getUniqueIdSync: jest.fn(() => 99),
     getDeviceNameSync: jest.fn(() => 'iPhone 12'),
     getSystemName: jest.fn(() => 'iOS'),
-    getSystemVersion: jest.fn(() => '14.4'),
+    getSystemVersion: jest.fn(() => '14.4')
 }));
 
 jest.mock('react-native-permissions', () => {
-	return mockPermissions;
+    return mockPermissions;
 });
 
 jest.mock('react-native-google-mobile-ads', () => ({
     TurboModuleRegistry: {
-      getEnforcing: () => {
-        return {
-          initialize: jest.fn(),
-          setRequestConfiguration: jest.fn(),
-          openAdInspector: jest.fn(),
-          openDebugMenu: jest.fn(),
-        };
-      },
+        getEnforcing: () => {
+            return {
+                initialize: jest.fn(),
+                setRequestConfiguration: jest.fn(),
+                openAdInspector: jest.fn(),
+                openDebugMenu: jest.fn()
+            };
+        }
     }
 }));
 
@@ -46,3 +47,20 @@ jest.mock('@react-native-community/push-notification-ios', () => ({
     removePendingNotificationRequests: jest.fn(),
     removeAllPendingNotificationRequests: jest.fn()
 }));
+
+jest.mock('react-native-gifted-charts', () => ({
+    LineChart: 'View',
+    BarChart: 'View',
+    PieChart: 'View'
+}));
+
+Animated.timing = () => ({
+    start: () => jest.fn(),
+    reset: () => jest.fn(),
+    stop: () => jest.fn()
+});
+Animated.spring = () => ({
+    start: () => jest.fn(),
+    reset: () => jest.fn(),
+    stop: () => jest.fn()
+});

@@ -1,192 +1,253 @@
-import user from 'Managers/UserManager'
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Sleep } from 'Utils/Functions';
-import { CheckDate } from 'Utils/DateCheck';
-import Notifications from 'Utils/Notifications';
-import { Character } from 'Interface/Components';
+import { Round } from 'Utils/Functions';
+//import Notifications from 'Utils/Notifications';
+//import { Character } from 'Interface/Components';
 
 /**
+ * @typedef {Awaited<ReturnType<import('Managers/DataManager').User['server2']['Login']>>} LoginResponse
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
+ * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  */
 
 /**
  * Intialisation of all data
+ * @param {FlowEnginePublicClass} fe Used to change the page
  * @param {() => void} nextStep Used to change the icon
  * @param {() => void} nextPage Used to go to the next page
  * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
  */
-async function Initialisation(nextStep, nextPage, callbackError) {
-    const time_start = new Date().getTime();
-
-    // Loading: Settings
-    await user.settings.Load();
-
-    // Ping request
-    await user.server.Ping(); // TODO: Set timeout ?
-    if (user.server.IsConnected() === false) {
-        user.interface.console.AddLog('warn', 'Ping request failed, retrying...');
-        await user.server.Ping();
+async function Initialisation(fe, nextStep, nextPage, callbackError) {
+    if (__DEV__) {
+        await user.interface.console?.Enable();
     }
 
-    const online = user.server.IsConnected();
-    if (!online) {
-        user.interface.console.AddLog('warn', 'Not connected to the server, data will be saved locally only');
-    }
+    user.interface.console?.AddLog('info', 'Initialisation...');
 
-    // Set background theme
-    user.interface.SetTheme(themeManager.selectedTheme === 'Main' ? 0 : 1);
+    const time_start = performance.now();
 
-    nextStep();
+    // Load important data
+    await user.settings.IndependentLoad();
+    const email = user.settings.email;
 
-    // Loading: Internal data
-    if (online) await dataManager.OnlineLoad(user);
-    else        await dataManager.LocalLoad(user);
+    // Connect to the server TCP
+    const isNewUser = user.settings.email === '';
+    const time_connect_start = performance.now();
+    const status = await user.server2.Connect(isNewUser);
+    const time_connect_end = performance.now();
+    const time_connect = Round(time_connect_end - time_connect_start, 2);
+    user.interface.console?.AddLog('info', `Connect to the server in ${time_connect}ms (${status})`);
 
-    // Check if internal data are loaded
-    const dataLoaded = dataManager.DataAreLoaded();
-    if (!dataLoaded) {
-        user.interface.console.AddLog('error', 'Internal data not loaded');
-        if (!online) {
-            user.interface.ChangePage('waitinternet', { force: 1 }, true);
-        } else {
-            callbackError('internaldata-not-loaded');
-        }
+    // An error occured, go to the error page
+    if (status === 'error') {
+        fe.ChangePage('display', {
+            args: {
+                icon: 'close-filled',
+                // TODO: Message "Server not reachable" with error code ?
+                text: '[Connection to the server failed]',
+                button: 'Retry',
+                action: () => {
+                    fe.ChangePage('loading', { storeInHistory: false });
+                }
+            },
+            storeInHistory: false
+        });
         return;
+    }
+
+    // Not connected to the server and user not logged, go to the wait internet page
+    if (!user.server2.IsLogged()) {
+        if (status === 'not-connected' || status === 'maintenance' || !user.server2.IsConnected()) {
+            fe.ChangePage('waitinternet', {
+                storeInHistory: false,
+                transition: 'fromBottom'
+            });
+            return;
+        }
     }
 
     // Show onboarding if not watched
     const showOnboard = !user.settings.onboardingWatched;
     if (showOnboard) {
-        user.interface.ChangePage('onboarding', undefined, true);
+        fe.ChangePage('onboarding', { storeInHistory: false });
         return;
     }
 
-    // Redirection: Login page (or wait internet page)
-    const email = user.settings.email;
+    // Connection to the server is OK but not logged, go to the login page
     if (email === '') {
-        if (online) {
-            user.interface.ChangePage('login', undefined, true);
-            return;
-        } else {
-            user.interface.ChangePage('waitinternet', undefined, true);
-            return;
-        }
-    }
-
-    // Redirection: Wait mail page (if needed)
-    const connected = user.settings.connected;
-    if (!connected) {
-        user.interface.ChangePage('waitmail', undefined, true);
+        fe.ChangePage('login', { storeInHistory: false });
         return;
     }
 
-    // Loading: User data
-    await user.LocalLoad();
+    /**
+     * User is logged, check if the token is still valid (online)
+     * @type {LoginResponse} Default: false (offline)
+     */
+    let loggedState = false;
+    if (user.server2.IsConnected() && email !== '') {
+        loggedState = await user.server2.Login(email);
+    }
 
-    // Connect account if online
-    if (online && user.server.token === '') {
-        const email = user.settings.email;
-        const { status } = await user.server.Connect(email);
+    // Try to login but not yet confirmed, go to the wait mail confirmation page
+    if (loggedState === 'waitMailConfirmation') {
+        fe.ChangePage('waitmail', { storeInHistory: false });
+        return;
+    }
 
-        // Too many devices
-        if (status === 'limitDevice') {
-            const title = langManager.curr['login']['alert-deviceRemoved-title'];
-            const text = langManager.curr['login']['alert-deviceRemoved-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
-            return;
-        }
+    // Account not found, probably deleted, go to the login page
+    else if (loggedState === 'free') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: langManager.curr['login']['alert-deletedaccount-title'],
+                message: langManager.curr['login']['alert-deletedaccount-message']
+            },
+            callback: async () => {
+                await user.Clear();
+                user.interface.ChangePage('login', { storeInHistory: false });
+            },
+            cancelable: false
+        });
+        return;
+    }
 
-        // Mail not confirmed
-        else if (status === 'newDevice' || status === 'waitMailConfirmation') {
-            while (!user.interface.ChangePage('waitmail', { email: email }, true)) await Sleep(100);
-            return;
-        }
+    // An error occured, go to the error page
+    else if (loggedState === 'error' || loggedState === 'deviceLimitReached' || loggedState === 'mailNotSent') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: langManager.curr['login']['alert-error-title'],
+                message: langManager.curr['login']['alert-error-message'].replace('{}', loggedState)
+            },
+            callback: async () => {
+                await user.Clear();
+                user.interface.ChangePage('login', { storeInHistory: false });
+            },
+            cancelable: false
+        });
+        return;
+    }
 
-        // Account is deleted
-        else if (status === 'free') {
-            const title = langManager.curr['login']['alert-deletedaccount-title'];
-            const text = langManager.curr['login']['alert-deletedaccount-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ], () => user.Disconnect(true), false);
-            return;
-        }
+    // Offline mode
+    else if (loggedState === false) {
+        user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
+    }
+
+    // 1. User is connected
+    nextStep();
+    const t1 = performance.now();
+
+    // Load local user data
+    await user.LoadLocal();
+
+    //await dataManager.LocalLoad(user);
+
+    // Load app data
+    await dataManager.LoadLocal(user);
+    if (user.server2.IsAuthenticated()) {
+        const time_appdata_start = performance.now();
+        await dataManager.LoadOnline(user);
+        const time_appdata_end = performance.now();
+        const time_appdata = Round(time_appdata_end - time_appdata_start, 2);
+        user.interface.console?.AddLog('info', `Online load in ${time_appdata} ms for ${dataManager.CountAll()} items`);
+        await dataManager.SaveLocal(user);
+    }
+
+    // Check if app data are loaded
+    const dataLoaded = dataManager.DataAreLoaded();
+    if (!dataLoaded) {
+        user.interface.console?.AddLog('error', 'App data not loaded');
+        callbackError('appdata-not-loaded');
+        return;
     }
 
     nextStep();
+    const t2 = performance.now();
 
     // Loading: User data online
-    if (online) {
-        await user.OnlineSave();
-        await user.OnlineLoad();
+    if (user.server2.IsLogged()) {
+        await user.SaveOnline();
+        await user.LoadOnline();
+        await user.SaveLocal();
     }
 
     // Check if user data are loaded
     if (user.informations.username.Get() === '') {
-        user.interface.console.AddLog('error', 'User data not loaded');
+        user.interface.console?.AddLog('error', 'User data not loaded');
         callbackError('userdata-not-loaded');
         return;
     }
 
-    // Load quests
-    user.quests.dailyquest.Init();
-
     // Loading: User character
-    user.character = new Character(
-        'player',
-        user.inventory.avatar.sexe,
-        user.inventory.avatar.skin,
-        user.inventory.avatar.skinColor
-    );
-    user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    user.interface.header.ShowAvatar(true);
+    // user.character = new Character(
+    //     'player',
+    //     user.inventory.avatar.sexe,
+    //     user.inventory.avatar.skin,
+    //     user.inventory.avatar.skinColor
+    // );
+    // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
+    // user.interface.userHeader?.ShowAvatar(true);
 
     // Loading: Notifications
-    Notifications.DisableAll().then(() => {
-        if (user.settings.morningNotifications) {
-            return Notifications.Morning.Enable();
-        }
-        if (user.settings.eveningNotifications) {
-            return Notifications.Evening.Enable();
-        }
-    });
+    //await Notifications.DisableAll().then(() => {
+    //    if (user.settings.morningNotifications) {
+    //        return Notifications.Morning.Enable();
+    //    }
+    //    if (user.settings.eveningNotifications) {
+    //        return Notifications.Evening.Enable();
+    //    }
+    //    return;
+    //});
+
+    // Load admob
+    //await user.consent.ShowTrackingPopup();
+
+    // TODO: Fix ads
+    // Load ads
+    const ads = dataManager.ads.Get();
+    //user.ads.LoadAds(ads);
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
-        user.interface.console.AddLog('info', 'No more ads available');
+        //user.interface.console?.AddLog('warn', 'No more ads available');
     }
-
-    // Connect to the server TCP
-    user.tcp.Connect();
-
-    // Load admob
-    await user.consent.ShowTrackingPopup()
-    .then(user.admob.LoadAds);
 
     // Render default pages
-    await user.interface.LoadDefaultPages();
+    //await user.interface.LoadDefaultPages();
 
     nextStep();
-    await Sleep(500);
 
-    CheckDate();
     user.StartTimers();
 
-    // Maintenance message
-    if (user.server.status === 'maintenance') {
-        const lang = langManager.curr['home'];
-        const title = lang['alert-maintenance-title'];
-        const text = lang['alert-maintenance-text'];
-        user.interface.popup.Open('ok', [ title, text ], undefined, false);
-    }
-
     // End of initialisation
-    const time_end = new Date().getTime();
-    const time_text = `Initialisation done in ${time_end - time_start}ms`;
+    const time_end = performance.now();
+    const time_total = Round(time_end - time_start);
+    const time_ratio_1 = Round((t1 - time_start) / time_total, 2);
+    const time_ratio_2 = Round((t2 - t1) / time_total, 2);
+    const time_ratio_3 = Round((time_end - t2) / time_total, 2);
+    const time_text = `Initialisation done in ${time_total}ms (${time_ratio_1}/${time_ratio_2}/${time_ratio_3})`;
     console.log(time_text);
-    user.interface.console.AddLog('info', time_text);
+    user.interface.console?.AddLog('info', time_text);
     user.appIsLoaded = true;
+    user.server2.tcp.Send({ action: 'send-statistics', stats: { LoadingTimeMs: time_total }, anonymous: false });
+
+    // Maintenance message
+    if (status === 'maintenance') {
+        const lang = langManager.curr['home'];
+
+        await new Promise((resolve) => {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-maintenance-title'],
+                    message: lang['alert-maintenance-message']
+                },
+                callback: resolve
+            });
+        });
+    }
 
     nextPage();
 }

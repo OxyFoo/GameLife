@@ -5,14 +5,40 @@ import styles from './style';
 import ContainerBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import Text from 'Interface/Components/Text';
-import Icon from 'Interface/Components/Icon';
-import Button from 'Interface/Components/Button';
+import { Text } from 'Interface/Components/Text';
+import { Icon } from 'Interface/Components/Icon';
+import { Button } from 'Interface/Components/Button';
+import { Gradient } from 'Interface/Primitives';
+
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
+ */
 
 class Container extends ContainerBack {
+    render() {
+        const children = this.props.children;
+        const contentHeight = Animated.multiply(this.state.animHeightContent, this.state.maxHeight);
+
+        /** @type {StyleViewProp} */
+        const contentStyle = {
+            backgroundColor: themeManager.GetColor(this.props.backgroundColor),
+            opacity: this.state.maxHeight === 0 && this.props.type === 'rollable' ? 0 : 1,
+            maxHeight: this.state.maxHeight === 0 ? 'auto' : contentHeight
+        };
+
+        return (
+            <View style={this.props.style} onLayout={this.props.onLayout}>
+                {this.renderHeader()}
+                <Animated.View style={[styles.content, contentStyle]} onLayout={this.onLayout}>
+                    <View style={[styles.container, this.props.styleContainer]}>{children}</View>
+                </Animated.View>
+            </View>
+        );
+    }
+
     renderHeader = () => {
-        const { type, color, rippleColor, text, textcolor,
-            icon, iconSize, iconAngle, onIconPress } = this.props;
+        const { type, text, textcolor, icon, iconSize, iconAngle, onIconPress } = this.props;
 
         const borderStyle = {
             borderBottomStartRadius: this.state.animBorderRadius,
@@ -25,75 +51,50 @@ class Container extends ContainerBack {
 
         const headerRollable = (
             <Button
-                style={this.props.styleHeader}
+                style={[styles.headerButton, this.props.styleHeader]}
                 styleAnimation={borderStyle}
-                color={color}
-                colorNextGen={this.props.colorNextGen}
+                appearance='uniform'
+                color='transparent'
                 iconAngle={iconAngle}
-                rippleColor={rippleColor}
-                borderRadius={8}
                 onPress={this.onChangeState}
             >
-                <Text containerStyle={styles.textRollableHeader} color={textcolor}>
-                    {text}
-                </Text>
-                <Animated.View style={{ transform: [{ rotateX: this.state.animAngleIcon.interpolate(interDeg) }] }}>
-                    <Icon icon='chevron' size={18} angle={90} />
-                </Animated.View>
+                <Gradient style={styles.headerGradient} colors={['#9095FF73', '#9095FF26']}>
+                    <Text containerStyle={styles.textRollableHeader} color={textcolor}>
+                        {text}
+                    </Text>
+                    <Animated.View style={{ transform: [{ rotateX: this.state.animAngleIcon.interpolate(interDeg) }] }}>
+                        <Icon icon='chevron' size={18} angle={90} />
+                    </Animated.View>
+                </Gradient>
             </Button>
         );
+
         const headerStatic = (
             <Button
-                style={[{ justifyContent: 'space-between' }, this.props.styleHeader]}
+                style={[styles.staticHeader, this.props.styleHeader]}
                 styleAnimation={borderStyle}
-                color={color}
-                colorNextGen={this.props.colorNextGen}
-                rippleColor='transparent'
-                borderRadius={8}
-                pointerEvents='box-none'
+                appearance='uniform'
+                color='transparent'
+                pointerEvents='none'
             >
-                <Text color={textcolor}>
-                    {text}
-                </Text>
-                {icon !== null && (
-                    <Icon
-                        ref={this.refIcon}
-                        containerStyle={styles.iconStaticHeader}
-                        icon={icon}
-                        size={iconSize}
-                        angle={iconAngle}
-                        onPress={onIconPress}
-                    />
-                )}
+                <Gradient style={styles.headerGradient} colors={['#9095FF73', '#9095FF26']}>
+                    <Text color={textcolor}>{text}</Text>
+
+                    {(icon === null && <></>) || (
+                        <Icon
+                            containerStyle={styles.iconStaticHeader}
+                            icon={icon}
+                            size={iconSize}
+                            angle={iconAngle}
+                            onPress={onIconPress}
+                        />
+                    )}
+                </Gradient>
             </Button>
         );
 
         return type === 'rollable' ? headerRollable : headerStatic;
-    }
-
-    render() {
-        const children = this.props.children;
-        const contentHeight = Animated.multiply(this.state.animHeightContent, this.state.maxHeight);
-        const contentStyle = {
-            backgroundColor: themeManager.GetColor(this.props.backgroundColor, { opacity: this.props.colorNextGen ? 0.1 : 1 }),
-            opacity: this.state.maxHeight === 0 && this.props.type === 'rollable' ? 0 : 1,
-            maxHeight: this.state.maxHeight === 0 ? 'auto' : contentHeight
-        };
-
-        return (
-            <View style={this.props.style} onLayout={this.props.onLayout}>
-                {this.renderHeader()}
-                <Animated.View
-                    style={[styles.content, contentStyle]}
-                    onLayout={this.onLayout}
-                >
-                    <View style={[{ padding: 24 }, this.props.styleContainer]}>
-                        {children}
-                    </View>
-                </Animated.View>
-            </View>
-        );
-    }
+    };
 }
 
-export default Container;
+export { Container };

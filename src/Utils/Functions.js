@@ -14,16 +14,16 @@ function TwoDigit(n) {
 function Round(number, decimal = 0) {
     const dec = decimal.toString();
     const n = parseFloat(number + ('e+' + dec));
-    return + (Math.floor(n) + ('e-' + dec));
+    return +(Math.floor(n) + ('e-' + dec));
 }
 
 /**
- * @param {Array} arr
+ * @param {Array<number>} arr
  * @returns {number} Return sum of array
  * @example Sum([1, 2, 3]) => 6
  */
 function Sum(arr) {
-    return arr.reduce((partial_sum, a) => partial_sum + parseInt(a), 0);
+    return arr.reduce((partial_sum, a) => partial_sum + a, 0);
 }
 
 /**
@@ -31,7 +31,7 @@ function Sum(arr) {
  * @returns {boolean} Return true if element is undefined
  */
 function IsUndefined(el) {
-    return typeof(el) === 'undefined';
+    return typeof el === 'undefined';
 }
 
 /**
@@ -41,9 +41,8 @@ function IsUndefined(el) {
  * @returns {number} Return value between min and max
  */
 function MinMax(min, value, max) {
-    let output = null;
-    if (typeof(value) === 'number') {
-        output = value;
+    let output = value;
+    if (typeof value === 'number') {
         if (output < min) output = min;
         else if (output > max) output = max;
     }
@@ -51,34 +50,42 @@ function MinMax(min, value, max) {
 }
 
 /**
- * @param {Array} array
- * @param {string} key Key of array
- * @returns {Array} Return sorted array
+ * Sort array of object by key
+ * @template T
+ * @param {T[]} array
+ * @param {keyof T} key
+ * @returns {T[]} Return sorted array
  */
 function SortByKey(array, key) {
-    const format = (value) => typeof(value) === 'string' ? value.toLowerCase() : value;
-    const compare = (a, b) => format(a[key]) < format(b[key]) ? -1 : 1;
+    /** @param {T[keyof T]} value */
+    const format = (value) => (typeof value === 'string' ? value.toLowerCase() : value);
+    /** @param {T} a @param {T} b */
+    const compare = (a, b) => (format(a[key]) < format(b[key]) ? -1 : 1);
     return array.sort(compare);
 }
 
 /**
  * Return element in array of object by key and value
- * @param {Array} array
- * @param {string} key
- * @param {*} value
- * @returns {object | null} Return object or null if didn't exists
+ * @template T
+ * @param {T[]} array
+ * @param {keyof T} key
+ * @param {T[keyof T]} value
+ * @returns {T | null} Return object or null if didn't exists
  */
 function GetByKey(array, key, value) {
-    for (let i = 0; i < array.length; i++)
-        if (array[i][key] == value)
+    for (let i = 0; i < array.length; i++) {
+        if (array[i][key] === value) {
             return array[i];
+        }
+    }
     return null;
 }
 
 /**
  * Convert array of object to object
- * @param {Array} arr
- * @returns {object} 
+ * @template T
+ * @param {T[]} arr
+ * @returns {Record<string, T>}
  */
 const ArrayToDict = (arr) => arr.reduce((acc, curr) => Object.assign(acc, curr), {});
 
@@ -93,9 +100,10 @@ function Range(length, step = 1) {
     return Array.from({ length: length / step }, (_, i) => i * step);
 }
 
+/** @param {number} ms */
 function Sleep(ms) {
     const T = Math.max(0, ms);
-    return new Promise(resolve => setTimeout(resolve, T));
+    return new Promise((resolve) => setTimeout(resolve, T));
 }
 
 /**
@@ -103,14 +111,33 @@ function Sleep(ms) {
  * @param {number} min
  * @param {number} max
  * @param {number} decimal Number of decimals to keep
- * @returns 
+ * @returns
  */
 function Random(min = 0, max = 1, decimal = 0) {
     const r = Math.random() * (max - min) + min;
     return Round(r, decimal);
 }
 
+function RandomString(length = 8) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
 export {
-    TwoDigit, Round, Sum, Range, SortByKey, GetByKey, ArrayToDict,
-    IsUndefined, MinMax, Sleep, Random
+    TwoDigit,
+    Round,
+    Sum,
+    Range,
+    SortByKey,
+    GetByKey,
+    ArrayToDict,
+    IsUndefined,
+    MinMax,
+    Sleep,
+    Random,
+    RandomString
 };

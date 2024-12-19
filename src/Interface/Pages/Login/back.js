@@ -1,6 +1,6 @@
-import { Animated, Linking, Platform } from 'react-native';
+import { Animated, Linking } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -9,7 +9,8 @@ import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
 const MAX_EMAIL_LENGTH = 320;
@@ -27,125 +28,82 @@ class BackLogin extends PageBase {
         errorUsername: '',
         errorCgu: '',
 
-        mainContentHeight: 0,
-        animImage: new Animated.Value(1),
-        animFocus: new Animated.Value(0),
-        animSignin: new Animated.Value(0)
-    }
+        animSignin: new Animated.Value(0),
+        animSigninBis: new Animated.Value(0),
 
+        /** @type {ComboBoxItem} */
+        cbSelectedLang: {
+            key: langManager.currentLangageKey,
+            value: langManager.curr['name']
+        }
+    };
+
+    /** @param {PageBase['props']} props */
     constructor(props) {
         super(props);
 
-        // Load texts
-        const lang = langManager.curr['login'];
-        this.langs = {
-            pageTitle: lang['page-title'],
-            pageText: lang['page-text'],
-            titleEmail: lang['input-email-title'],
-            titleUsername: lang['input-username-title'],
-            btnLogin: lang['button-login-text'],
-            btnSignin: lang['button-signin-text'],
-            cguTexts: lang['input-cgu-text'].split('%')
-        };
-
-        // Load images
-        this.imageBackground = require('../../../../res/logo/login_circles.png');
-        this.imageMain = require('../../../../res/logo/login_hand.png');
+        /** @type {ComboBoxItem[]} */
+        this.availableLangs = langManager.GetLangsKeys().map((langKey) => ({
+            key: langKey,
+            value: langManager.GetAllLangs()[langKey]['name']
+        }));
     }
-
-    refInputEmail = null;
-    refInputUsername = null;
 
     componentDidMount() {
-        super.componentDidMount();
-        this.checkConnection();
+        this.onServerUpdateState(user.server2.tcp.state.Get());
+        this.listenerServer = user.server2.tcp.state.AddListener(this.onServerUpdateState);
     }
+
     componentWillUnmount() {
-        user.interface.ResetCustomBackHandler();
-    }
-
-    /** @param {LayoutChangeEvent} e */
-    onLayout = (e) => {
-        this.setState({ mainContentHeight: e.nativeEvent.layout.height });
-    }
-
-    onPressImageIn = () => SpringAnimation(this.state.animImage, .9, false).start();
-    onPressImageOut = () => SpringAnimation(this.state.animImage, 1, false).start();
-
-    onFocus = () => {
-        if (Platform.OS === 'ios') {
-            SpringAnimation(this.state.animFocus, 1, false).start();
-        }
-    }
-    onBlur = () => {
-        if (Platform.OS === 'ios') {
-            SpringAnimation(this.state.animFocus, 0, false).start();
+        user.interface.RemoveCustomBackHandler(this.backToLogin);
+        if (this.listenerServer) {
+            user.server2.tcp.state.RemoveListener(this.listenerServer);
         }
     }
 
-    checkConnection = async () => {
-        await user.server.Ping(true);
-        if (!user.server.online) {
-            user.interface.ChangePage('waitinternet');
-        }
-    }
-
-    /**
-     * Set signin mode
-     * @param {boolean} mode
-     * @returns {false}
-     */
-    setSigninMode = (mode = false) => {
-        const { signinMode, animSignin } = this.state;
-        if (mode === signinMode) {
-            return;
-        }
-
-        // Do animation, change state, set custom back handle
-        if (mode) {
-            SpringAnimation(animSignin, 1, false).start();
-            this.setState({ signinMode: true });
-            user.interface.SetCustomBackHandler(() => this.setSigninMode(false));
-        } else {
-            SpringAnimation(animSignin, 0, false).start();
-            this.setState({
-                signinMode: false,
-                username: '',
-                cguAccepted: false,
-                errorUsername: '',
-                errorCgu: '',
+    /** @param {ConnectionState} state */
+    onServerUpdateState = (state) => {
+        if (state !== 'connected') {
+            this.fe.ChangePage('waitinternet', {
+                storeInHistory: false,
+                transition: 'fromBottom'
             });
-            user.interface.ResetCustomBackHandler();
         }
+    };
 
-        SpringAnimation(this.state.animFocus, 0, false).start();
-        if (typeof(this.refInputEmail?.blur) === 'function') {
-            this.refInputEmail?.blur();
-        }
-        if (typeof(this.refInputUsername?.blur) === 'function') {
-            this.refInputUsername?.blur();
-        }
+    /** @param {ComboBoxItem | null} lang */
+    onChangeLang = async (lang) => {
+        if (lang === null || typeof lang.key !== 'string') return;
 
-        return false;
-    }
+        const key = langManager.IsLangAvailable(lang.key);
+        if (key === null) return;
 
+        await user.settings.SetLang(key);
+
+        setTimeout(() => {
+            this.setState({ cbSelectedLang: lang });
+        }, 100);
+    };
+
+    /** @param {string} newEmail */
     onChangeEmail = (newEmail) => {
         const email = newEmail.trim().substring(0, MAX_EMAIL_LENGTH);
         this.setState({ email });
-    }
+    };
 
+    /** @param {string} newUsername */
     onChangeUsername = (newUsername) => {
         const username = newUsername.trim().substring(0, MAX_PSEUDO_LENGTH);
         this.setState({ username });
-    }
+    };
 
     onCGUToggle = () => {
         const { cguAccepted } = this.state;
         this.setState({ cguAccepted: !cguAccepted });
-    }
+    };
 
     onCGURedirect() {
-        const websiteAvailableLang = [ 'fr', 'en' ];
+        const websiteAvailableLang = ['fr', 'en'];
         let langKey = 'fr';
         if (!websiteAvailableLang.includes(langManager.currentLangageKey)) {
             langKey = langManager.currentLangageKey;
@@ -153,71 +111,84 @@ class BackLogin extends PageBase {
         Linking.openURL(`https://${langKey}.oxyfoo.com/legal/terms-of-service`);
     }
 
-    /**
-     * Login or Signin
-     * Do verification before call Login or Signin
-     */
-    onLoginOrSignin = async () => {
+    loginOrGoToSignin = async () => {
         const lang = langManager.curr['login'];
-        const { loading, signinMode } = this.state;
+        const { loading, email, errorEmail } = this.state;
 
-        if (loading) {
+        // Prevent double login
+        if (loading) return;
+
+        // Check email
+        if (!IsEmail(email)) {
+            this.setState({ errorEmail: lang['error-login-nonmail'] });
+            return;
+        }
+        if (errorEmail.length) {
+            this.setState({ errorEmail: '' });
+        }
+
+        // Login
+        return await Login.call(this, email);
+    };
+
+    goToSignin = () => {
+        const { signinMode, animSignin, animSigninBis } = this.state;
+        if (signinMode) {
             return;
         }
 
+        SpringAnimation(animSignin, 1, false).start();
+        setTimeout(SpringAnimation(animSigninBis, 1, false).start, 100);
+
+        this.setState({ signinMode: true });
+        user.interface.AddCustomBackHandler(this.backToLogin);
+    };
+
+    backToLogin = () => {
+        const { signinMode, animSignin, animSigninBis } = this.state;
         if (!signinMode) {
-            const { email, errorEmail } = this.state;
-
-            // Check email
-            if (!IsEmail(email)) {
-                this.setState({ errorEmail: lang['error-login-nonmail'] });
-                return;
-            }
-            if (errorEmail.length) {
-                this.setState({ errorEmail: '' });
-            }
-
-            // Login
-            this.setState({ loading: true });
-            const logged = await Login.call(this, email);
-            if (logged) {
-                user.interface.ChangePage('loading', undefined, true);
-                return;
-            }
+            return false;
         }
 
-        else {
-            const { email, username, errorUsername, cguAccepted, errorCgu } = this.state;
+        setTimeout(SpringAnimation(animSignin, 0, false).start, 100);
+        SpringAnimation(animSigninBis, 0, false).start();
 
-            // Check username
-            if (!username.length) {
-                this.setState({ errorUsername: lang['error-signin-pseudoWrong'] });
-                return;
-            }
-            if (errorUsername.length) {
-                this.setState({ errorUsername: '' });
-            }
+        this.setState({
+            signinMode: false,
+            username: '',
+            cguAccepted: false,
+            errorUsername: '',
+            errorCgu: ''
+        });
+        user.interface.RemoveCustomBackHandler(this.backToLogin);
+        return false;
+    };
 
-            // Check CGU
-            if (!cguAccepted) {
-                this.setState({ errorCgu: lang['error-signin-disagree'] });
-                return;
-            }
-            if (errorCgu.length) {
-                this.setState({ errorCgu: '' });
-            }
+    signin = async () => {
+        const lang = langManager.curr['login'];
+        const { email, username, errorUsername, cguAccepted, errorCgu } = this.state;
 
-            // Signin
-            this.setState({ loading: true });
-            const signed = await Signin.bind(this)(email, username);
-            if (signed) {
-                user.interface.ChangePage('waitmail', { email: email }, true);
-                return;
-            }
+        // Check username
+        if (!username.length) {
+            this.setState({ errorUsername: lang['error-signin-pseudoWrong'] });
+            return;
+        }
+        if (errorUsername.length) {
+            this.setState({ errorUsername: '' });
         }
 
-        this.setState({ loading: false });
-    }
+        // Check CGU
+        if (!cguAccepted) {
+            this.setState({ errorCgu: lang['error-signin-disagree'] });
+            return;
+        }
+        if (errorCgu.length) {
+            this.setState({ errorCgu: '' });
+        }
+
+        // Signin
+        return await Signin.bind(this)(email, username);
+    };
 }
 
 export default BackLogin;

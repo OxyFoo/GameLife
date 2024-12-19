@@ -1,79 +1,139 @@
 import { StyleSheet } from 'react-native';
 
+/**
+ * @param {any} _
+ * @param {number} index
+ * @returns {{ length: number, offset: number, index: number }}
+ */
+const getItemLayout = (_, index) => ({
+    length: 65 + 6,
+    offset: (65 + 6) * index,
+    index
+});
+
 const styles = StyleSheet.create({
     page: {
-        padding: 0
-    },
-    row: {
-        width: '100%',
-        marginTop: 12,
-        paddingHorizontal: '2%',
-        flexDirection: 'row',
-        alignItems: 'center',
+        height: '100%',
+        paddingBottom: 30,
+        flexDirection: 'column',
         justifyContent: 'space-between'
     },
-    weekRow: {
-        flex: 1,
-        paddingTop: 5,
-        marginBottom: 0
+
+    // Summary
+    summary: {
+        paddingBottom: 16,
+        paddingHorizontal: 24
     },
-    title: {
-        fontWeight: 'bold'
+    summaryTitle: {
+        marginBottom: 8,
+        fontSize: 18,
+        textAlign: 'left'
     },
-    months: {
-        minHeight: 260,
-        maxHeight: 260
-    },
-    btnIcon: {
-        aspectRatio: 1,
-        height: 42,
-        paddingHorizontal: 0
+    summaryHoursContent: {
+        marginBottom: 2,
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'space-between'
     },
 
-    mainContent: {
-        position: 'absolute',
-        top: 130,
+    // Activity list
+    activityList: {
+        flex: 1,
+        marginBottom: 12,
+        paddingHorizontal: 24
+    },
+    activityTitleContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    activityTitle: {
+        flex: 1,
+        marginBottom: 12,
+        fontSize: 20,
+        textAlign: 'left'
+    },
+    activityItem: {
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+
+        borderWidth: 1.5,
+        borderRadius: 8
+    },
+    activityItemSmallPadding: {
+        paddingVertical: 10
+    },
+    activityEmptyButton: {
+        width: 'auto',
+        marginTop: 12,
+        marginHorizontal: 24
+    },
+    activityButtonContent: {
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        alignItems: 'center'
+    },
+    activityChild: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    activityTimes: {
+        flexDirection: 'column',
+        alignItems: 'flex-end'
+    },
+    activityName: {
+        marginLeft: 12,
+        textAlign: 'left',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    activityTime: {
+        fontSize: 16
+    },
+    activityUTC: {
+        fontSize: 12
+    },
+
+    // Day list
+    dayList: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+        paddingHorizontal: 24
+    },
+    monthTitle: {
+        fontSize: 18
+    },
+    daysButtonOption: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
+    },
+    dayItem: {
+        width: 65,
+        marginHorizontal: 3,
+        paddingVertical: 16,
+        paddingHorizontal: 0,
+        borderRadius: 8
+    },
+    dayItemActive: {
+        borderWidth: 1
+    },
+    dayContent: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    dayNumber: {
         width: '100%',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-
-        zIndex: 100,
-        elevation: 100
-    },
-    panel: {
-        flex: 1,
-        marginTop: 6,
-        marginBottom: -48,          // Hide empty space during animation
-        paddingBottom: 64 + 48,     // Stop before bottomBar
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16
-    },
-    panelCard: {
-        marginHorizontal: 32
-    },
-    panelCardContainer: {
-        paddingBottom: 64
-    },
-    fadeBottom: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 64 + 48,
-        height: 64,
-        zIndex: 1
-    },
-    date: {
-        marginVertical: 24,
+        fontSize: 20,
         fontWeight: 'bold'
     },
-    fadeBottom2: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 48,
-        zIndex: 1
+    dayName: {
+        fontSize: 16
     }
 });
 
+export { getItemLayout };
 export default styles;

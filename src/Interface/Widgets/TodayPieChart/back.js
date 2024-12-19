@@ -5,15 +5,16 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { GetLocalTime } from 'Utils/Time';
-import { SpringAnimation } from 'Utils/Animations';
 
-/** 
+/**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Interface/Components/PieChart/back').FocusedActivity} FocusedActivity
- * 
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ *
+ * @typedef {import('Interface/OldComponents/PieChart/back').FocusedActivity} FocusedActivity
+ *
  * @typedef {object} UpdatingData
  * @property {number} id
  * @property {string} name
@@ -22,6 +23,9 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {string} color
  * @property {string} gradientCenterColor
  * @property {boolean} focused
+ *
+ * @typedef {object} InputPropsType
+ * @property {StyleProp} style
  */
 
 const InputProps = {
@@ -43,15 +47,18 @@ class TodayPieChartBack extends React.Component {
         /** @type {FocusedActivity | null} */
         focusedActivityFullDay: null,
 
-        switched: user.informations.switchHomeTodayPieChart,
         layoutWidth: 0
-    }
+    };
 
+    /** @type {Symbol | null} */
+    activitiesListener = null;
+
+    /** @param {InputPropsType} props */
     constructor(props) {
         super(props);
         this.state = {
             ...this.state,
-            ...this.computeData(false) 
+            ...this.computeData(false)
         };
     }
 
@@ -77,12 +84,12 @@ class TodayPieChartBack extends React.Component {
 
         // updatingDataFullDay
         const lang = langManager.curr['home'];
-        const updatingDataFullDay = [ ...updatingData ];
+        const updatingDataFullDay = [...updatingData];
 
         // Find the biggest activity
         const focusedActivityFullDay = this.findBiggestActivity(updatingDataFullDay);
         if (focusedActivityFullDay && focusedActivityFullDay.id !== 0) {
-            updatingDataFullDay.find(item => item.id === focusedActivityFullDay.id).focused = true;
+            updatingDataFullDay.find((item) => item.id === focusedActivityFullDay.id).focused = true;
         }
 
         const pourcent = this.convertTimeToPercent(updatingDataFullDay, 24 * 60);
@@ -96,11 +103,10 @@ class TodayPieChartBack extends React.Component {
             focused: false
         });
 
-
         // Find the biggest activity
         const focusedActivity = this.findBiggestActivity(updatingData);
         if (focusedActivity && focusedActivity.id !== 0) {
-            updatingData.find(item => item.id === focusedActivity.id).focused = true;
+            updatingData.find((item) => item.id === focusedActivity.id).focused = true;
         }
 
         // Update the state and return the new state
@@ -116,16 +122,16 @@ class TodayPieChartBack extends React.Component {
         }
 
         return newState;
-    }
+    };
 
     /**
-     * Create and return the init object needed because fuckin reference WON'T WORK 
+     * Create and return the init object needed because fuckin reference WON'T WORK
      * @returns {UpdatingData[]}
      */
     initCategoriesArray = () => {
         const allCategories = dataManager.skills.categories;
         /** @type {UpdatingData[]} */
-        let baseData = []
+        let baseData = [];
 
         for (let i = 1; i < allCategories.length; i++) {
             /** @type {UpdatingData} */
@@ -141,7 +147,7 @@ class TodayPieChartBack extends React.Component {
 
             const category = dataManager.skills.GetCategoryByID(allCategories[i].ID);
             if (category === null) {
-                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found');
+                user.interface.console?.AddLog('error', 'Error in PieChartHome: category not found');
             } else if (category.Name) {
                 newData.name = langManager.GetText(category.Name);
                 newData.color = category.Color;
@@ -152,7 +158,7 @@ class TodayPieChartBack extends React.Component {
         }
 
         return baseData;
-    }
+    };
 
     /**
      * Compute the time spent in each category and update the state
@@ -163,13 +169,19 @@ class TodayPieChartBack extends React.Component {
         for (const activity of allActivitiesOfToday) {
             const category = dataManager.skills.GetByID(activity.skillID);
             if (category === null) {
-                user.interface.console.AddLog('error', 'Error in PieChartHome: category not found in dataManager.skills');
+                user.interface.console?.AddLog(
+                    'error',
+                    'Error in PieChartHome: category not found in dataManager.skills'
+                );
                 continue;
             }
 
-            const index = updatingData.findIndex(item => item.id === category.CategoryID);
+            const index = updatingData.findIndex((item) => item.id === category.CategoryID);
             if (index === -1) {
-                user.interface.console.AddLog('error', 'Error in PieChartHome: categoryID not found in state.updatingData');
+                user.interface.console?.AddLog(
+                    'error',
+                    'Error in PieChartHome: categoryID not found in state.updatingData'
+                );
                 continue;
             }
 
@@ -180,7 +192,7 @@ class TodayPieChartBack extends React.Component {
     /**
      * Find the biggest activity and update the state
      * @param {UpdatingData[]} updatingData
-     * @return {FocusedActivity | null} 
+     * @return {FocusedActivity | null}
      */
     findBiggestActivity = (updatingData) => {
         let maxValue = 0;
@@ -200,18 +212,16 @@ class TodayPieChartBack extends React.Component {
         }
 
         return selected;
-    }
+    };
 
     /**
-     * Compute the time in minutes spent in total in the day 
+     * Compute the time in minutes spent in total in the day
      * @param {UpdatingData[]} updatingData
      * @return {number} In minutes
      */
     computeTotalTime = (updatingData) => {
-        return updatingData
-            .map(item => item.valueMinutes)
-            .reduce((acc, cur) => acc + cur, 0);
-    }
+        return updatingData.map((item) => item.valueMinutes).reduce((acc, cur) => acc + cur, 0);
+    };
 
     /**
      * Convert the time in minutes to a percent of the day
@@ -227,32 +237,24 @@ class TodayPieChartBack extends React.Component {
         let totalPercent = 0;
         for (const item of updatingData) {
             if (item.id > 0 && item.id < 6) {
-                item.value = Math.round(item.valueMinutes / totalMinutes * 100);
+                item.value = Math.round((item.valueMinutes / totalMinutes) * 100);
                 totalPercent += item.value;
             }
         }
 
         return totalPercent;
-    }
-
-    onPress = () => {
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-            user.informations.switchHomeTodayPieChart = this.state.switched;
-            user.LocalSave();
-        }, 3000);
-
-        SpringAnimation(this.state.animSwitch, this.state.switched ? 0 : 1);
-        this.setState({ switched: !this.state.switched });
-    }
+    };
 
     onAddActivityPress = () => {
-        user.interface.ChangePage('activity', undefined, true);
-    }
+        user.interface.bottomPanel?.Open({
+            content: <AddActivity />
+        });
+    };
 
+    /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         this.setState({ layoutWidth: event.nativeEvent.layout.width });
-    }
+    };
 }
 
 TodayPieChartBack.prototype.props = InputProps;

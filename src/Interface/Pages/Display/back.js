@@ -1,6 +1,6 @@
 import { Animated } from 'react-native';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -8,42 +8,67 @@ import { Random } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Data/Quotes').Quote} Quote
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
+ * @typedef {import('Data/App/Quotes').Quote} Quote
+ *
+ * @typedef {Object} BackDisplayPropsType
+ * @property {Object} args
+ * @property {IconsName} args.icon
+ * @property {number} [args.iconWidth]
+ * @property {string} args.text
+ * @property {string} args.button
+ * @property {string} [args.button2]
+ * @property {(() => void) | null} [args.action]
+ * @property {(() => void) | null} [args.action2]
+ * @property {Quote | null} [args.quote]
  */
+
+/** @type {BackDisplayPropsType} */
+const BackDisplayProps = {
+    args: {
+        icon: 'default',
+        iconWidth: 150,
+        text: '',
+        button: '',
+
+        // Optional
+        button2: '',
+        action: null,
+        action2: null,
+        quote: undefined
+    }
+};
 
 class BackDisplay extends PageBase {
     state = {
-        anim: new Animated.Value(.5)
-    }
+        anim: new Animated.Value(0)
+    };
 
+    /** @param {BackDisplayProps} props */
     constructor(props) {
         super(props);
 
-        /**
-         * 
-         * @param {string} key
-         * @param {any} defaultVal
-         * @returns 
-         */
-        const getFromProp = (key, defaultVal = '') => {
-            if (this.props.args.hasOwnProperty(key))
-                return this.props.args[key];
-            return defaultVal;
-        }
-
-        this.icon = getFromProp('icon');
-        this.iconRatio = getFromProp('iconRatio', 0.8);
-        this.text = getFromProp('text');
-        this.button = getFromProp('button');
-        this.button2 = getFromProp('button2');
+        const { iconWidth, action, action2, quote } = { ...BackDisplayProps.args, ...props.args };
         this.quote = null;
-        this.callback = getFromProp('action', user.interface.BackHandle);
-        this.callback2 = getFromProp('action2', user.interface.BackHandle);
+        this.iconWidth = iconWidth;
+        this.callback = () => {
+            if (action) {
+                action();
+            } else {
+                user.interface.BackHandle();
+            }
+        };
+        this.callback2 = () => {
+            if (action2) {
+                action2();
+            } else {
+                user.interface.BackHandle();
+            }
+        };
 
-        /** @type {Quote | null} */
-        const quoteItem = getFromProp('quote', null);
+        const quoteItem = quote;
         const anonymousAuthors = langManager.curr['quote']['anonymous-author-list'];
-        if (quoteItem !== null) {
+        if (quoteItem) {
             this.quote = {
                 text: langManager.GetText(quoteItem.Quote),
                 author: quoteItem.Author || anonymousAuthors[Random(0, anonymousAuthors.length)]
@@ -52,10 +77,11 @@ class BackDisplay extends PageBase {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         SpringAnimation(this.state.anim, 1).start();
     }
 }
+
+BackDisplay.defaultProps = BackDisplayProps;
+BackDisplay.prototype.props = BackDisplayProps;
 
 export default BackDisplay;

@@ -1,119 +1,81 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { View, FlatList } from 'react-native';
 
+import styles from './style';
 import BackSkills from './back';
-import { renderCategory, renderSkill, renderEmpty } from './renders';
-import user from 'Managers/UserManager';
+import { renderCategory, renderSkill } from './renders';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
-import themeManager from 'Managers/ThemeManager';
 
+import { Button, Icon, Text, InputText } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Input, Button } from 'Interface/Components';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class Skills extends BackSkills {
-    backgroundActive = { backgroundColor: themeManager.GetColor('main1') };
-    backgroundCard = { backgroundColor: themeManager.GetColor('backgroundCard') };
-
     render() {
-        const { sortSelectedIndex, search, height, skills, ascending } = this.state;
+        const { sortSelectedIndex, search, skills, ascending } = this.state;
         const lang = langManager.curr['skills'];
-        const sortType = this.sortList[sortSelectedIndex];
 
-        let categories = dataManager.skills.categories;
-        if (categories.length % 6 !== 0) {
-            categories.push(...Array(6 - (categories.length % 6)).fill(0));
-        }
+        const sortType = this.sortList[sortSelectedIndex];
+        const categories = dataManager.skills.categories.slice(1);
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <View style={styles.page}>
+                <PageHeader title={lang['title']} onBackPress={this.handleBack} />
 
-                <View onLayout={this.setheight}>
-                    <PageHeader onBackPress={user.interface.BackHandle} />
+                {/* Categories buttons */}
+                <View style={styles.categoriesContainer}>{categories.map(renderCategory.bind(this))}</View>
 
-                    <View style={styles.row}>
-                        <Input
-                            style={{ width: SCREEN_WIDTH - 80 - 96 }}
-                            label={lang['input-search']}
-                            text={search}
-                            onChangeText={this.onChangeSearch}
-                        />
-                        <Button
-                            style={styles.buttonSortType}
-                            borderRadius={8}
-                            color='backgroundCard'
-                            icon='filter'
-                            onPress={this.onSwitchSort}
-                        >
-                            {sortType}
-                        </Button>
-                    </View>
-
-                    <FlatList
-                        data={categories}
-                        columnWrapperStyle={styles.categoryFlatlist}
-                        renderItem={renderCategory.bind(this)}
-                        numColumns={6}
-                        keyExtractor={(item, index) => 'category-' + index}
+                {/* Category text & Sort button */}
+                <View style={styles.rowSort}>
+                    <InputText.Thin
+                        containerStyle={styles.searchbarInput}
+                        placeholder={lang['input-search']}
+                        icon='rounded-magnifer-outline'
+                        value={search}
+                        onChangeText={this.onChangeSearch}
                     />
+
+                    <Button
+                        style={styles.buttonSortType}
+                        appearance='uniform'
+                        color='transparent'
+                        fontColor='border'
+                        onPress={this.onSwitchSort}
+                    >
+                        {`${lang['input-sort']} ${sortType}`}
+                    </Button>
                 </View>
 
-                <View style={[styles.skillsParent, { top: height }]}>
-                    <FlatList
-                        ref={ref => this.refSkills = ref}
-                        style={styles.skillsFlatlist}
-                        ListEmptyComponent={renderEmpty.bind(this)}
-                        data={skills}
-                        renderItem={renderSkill.bind(this)}
-                        keyExtractor={(item, index) => 'skill-' + index}
-                    />
-                </View>
-
-                <Button
-                    style={styles.buttonSort}
-                    color='main2'
-                    icon='chevron'
-                    iconAngle={ascending ? 90 : -90}
-                    onPress={this.switchOrder}
+                <FlatList
+                    ref={this.refSkills}
+                    style={styles.skillsFlatlist}
+                    data={skills}
+                    keyExtractor={(item) => `skill-${item.ID}`}
+                    renderItem={renderSkill.bind(this)}
+                    ListEmptyComponent={this.renderEmpty}
                 />
-            </Page>
+
+                {/* Ascending/Descending button */}
+                <View style={styles.ascendView}>
+                    <Button style={styles.ascendButton} appearance='uniform' color='main1' onPress={this.switchOrder}>
+                        <Icon icon='filter-outline' color='ground1' angle={ascending ? 0 : 180} size={38} />
+                    </Button>
+                </View>
+            </View>
         );
     }
+
+    renderEmpty = () => {
+        const lang = langManager.curr['skills'];
+        return (
+            <View style={styles.emptyContent}>
+                <Text>{lang['text-empty']}</Text>
+                <Button style={styles.emptyButtonAddActivity} onPress={this.addActivity}>
+                    {lang['text-add']}
+                </Button>
+            </View>
+        );
+    };
 }
-
-const styles = StyleSheet.create({
-    row: {
-        marginBottom: 24,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    buttonSortType: {
-        width: 96,
-        paddingHorizontal: 12
-    },
-
-    categoryFlatlist: {
-        justifyContent: 'space-between'
-    },
-
-    skillsParent: {
-        position: 'absolute',
-        left: 24,
-        right: 24,
-        bottom: 0
-    },
-    skillsFlatlist: {
-        flex: 1
-    },
-    buttonSort: {
-        position: 'absolute',
-        right: 24,
-        bottom: 24,
-        aspectRatio: 1,
-        paddingHorizontal: 0
-    }
-});
 
 export default Skills;

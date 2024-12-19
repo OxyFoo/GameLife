@@ -59,11 +59,11 @@
             "list-empty": "Aucune notification pour le moment",
 
             "popup-responded-title": "Merci",
-            "popup-responded-text": "Merci pour ta réponse !",
+            "popup-responded-message": "Merci pour ta réponse !",
             "popup-claim-ox-title": "Bravo !",
-            "popup-claim-ox-text": "Tu as gagné {} Ox !",
+            "popup-claim-ox-message": "Tu as gagné {} Ox !",
             "popup-error-title": "Erreur",
-            "popup-error-text": "Une erreur est survenue, réessaye plus tard."
+            "popup-error-message": "Une erreur est survenue, réessaye plus tard."
         }
     },
 
@@ -71,60 +71,52 @@
         "text-hint": "Appuie pour faire la mission",
         "text-claim": "Appuie pour obtenir la récompense",
 
+        "claim-title": "Mission complétée",
+        "claim-text": "Bravo ! Tu as complété la mission, voici ta[-es] récompense[s] :",
+
         "content": {
             "mission1": {
                 "title": "Faire une activité",
                 "texts": {
                     "1": "Appuie sur ce bouton pour aller dans la page des activités",
                     "2": "Ici tu es dans la page d'ajout d'activité, tu dois entrer des activités que tu as faites dans la vie réelle !",
-                    "3": "Commence par choisir une activité (tu peux utiliser les catégories ou la recherche pour trouver ce que tu veux)",
-                    "4": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
-                    "5": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\""
+                    "3": "Tu peux ajouter une activité que tu as déjà faite, en notant l'heure et la durée de celle-ci...",
+                    "4": "Ou alors tu peux lancer un minuteur pour commencer l'activité en appuyant sur le bouton \"Commencer maintenant\"",
+                    "5": "Ajoute une activité que tu as faite aujourd'hui pour compléter cette mission"
                 }
             },
             "mission2": {
                 "title": "Créer une quête",
                 "texts": {
-                    "1": "Appui ici pour aller dans la page des quêtes",
-                    "2": "Appuie sur le bouton + en haut à droite pour créer une nouvelle quête",
-                    "3": "Remplis les informations demandées, comme le titre, les activités à réaliser, la durée etc"
+                    "1": "Appui ici sur le + à droite pour ajouter une nouvelle quête",
+                    "2": "Voici la page des quêtes, elles servent à te donner des objectifs à réaliser régulièrement"
                 }
             },
             "mission3": {
-                "title": "Acheter un item",
-                "texts": {
-                    "1": "Commence par aller dans le shop",
-                    "2": "Les Ox sont la monnaie du jeu, tu peux les gagner en regardant des pubs, en faisant des quêtes, des succès etc",
-                    "3": "Ici tu peux les échanger contre ce que tu veux, un item précis (parmis 3 proposés, qui changent tous les jours), ou un coffre pour avoir un item aléatoire"
-                }
-            },
-            "mission4": {
-                "title": "Équipper un item",
-                "texts": {
-                    "1": "Commencer par aller dans ton profil",
-                    "2": "Ici tu peux voir ton avatar, clique dessus pour ouvrir ton inventaire",
-                    "3": "Tu peux équiper un item en appuyant dessus, ou le vendre pour gagner des Ox"
-                }
-            },
-            "mission5": {
                 "title": "Demander en ami",
                 "texts": {
-                    "1": "Dans ce widget tu peux voir tes amis connectés...",
-                    "2": "Clique sur ce bouton pour aller dans la page des amis",
-                    "3": "En bas à droite de cette page tu as un bouton pour ajouter un ami",
+                    "1": "Clique sur ce bouton pour aller dans la page des amis",
+                    "2": "En bas à gauche de cette page tu as un bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
             }
+        },
+
+        "alerts": {
+            "claim-not-connected-title": "Erreur",
+            "claim-not-connected-message": "Tu dois être connecté à internet pour pouvoir récupérer la récompense, merci de réessayer plus tard.",
+            "claim-claim-error-title": "Erreur",
+            "claim-claim-error-message": "Une erreur est survenue lors de la récupération de la récompense, merci de réessayer plus tard."
         }
     },
 
     "level": {
-        "xp": "XP",
+        "xp": "EXP",
         "level": "Niveau",
         "level-small": "Niv",
-        "total": "XP total",
+        "total": "Activités",
         "total-hour": "Heures totales",
-        "average": "En moyenne {} xp/jour",
+        "average": "En moyenne {} exp/jour",
         "me": "Moi"
     },
 
@@ -136,6 +128,8 @@
             "day": "Jour",
             "days": "Jours",
             "never": "Jamais",
+            "week": "Semaine",
+            "month": "Mois",
             "weekly": "Semaine",
             "monthly": "Mois",
             "day-min": "j",
@@ -164,15 +158,32 @@
             "Jeudi",
             "Vendredi",
             "Samedi"
+        ],
+        "days-min": [
+            "Lun.",
+            "Mar.",
+            "Mer.",
+            "Jeu.",
+            "Ven.",
+            "Sam.",
+            "Dim."
         ]
     },
 
     "app": {
         "loading-error-message": {
-            "internaldata-not-loaded": "Les données internes n'ont pas pu être chargées",
-            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées"
+            "appdata-not-loaded": "Les données de l'application n'ont pas pu être chargées",
+            "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
+            "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
         },
-        "loading-error-button": "Quitter"
+        "loading-error-button": "Redémarrer"
+    },
+
+    "navbar": {
+        "home": "Accueil",
+        "calendar": "Calendrier",
+        "multiplayer": "Multijoueur",
+        "shop": "Marché"
     },
 
     "modal": {
@@ -187,17 +198,16 @@
     },
 
     "rarity-text": "Rareté",
-    "rarities": [
-        "Commun",
-        "Rare",
-        "Épique",
-        "Légendaire",
-        "Événement"
-    ],
+    "rarities": {
+        "common": "Commun",
+        "rare": "Rare",
+        "epic": "Épique",
+        "legendary": "Légendaire"
+    },
 
     "server": {
         "alert-tokenexpired-title": "Le token de connexion a expiré",
-        "alert-tokenexpired-text": "L'application va se fermer, redémarre-la.",
+        "alert-tokenexpired-message": "L'application va se fermer, redémarre-la.",
 
         "alert-adsuccess-title": "Bravo",
         "alert-adsuccess-message": "Tu as gagné {} Ox !",
@@ -208,36 +218,42 @@
         "alert-aderror-nomore-message": "Il n'y a plus de pubs disponibles. Réessaye demain !",
 
         "alert-adempty-title": "Plus de pubs",
-        "alert-adempty-text": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
+        "alert-adempty-message": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard."
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "onboarding": {
         "start": "Commencer",
+        "next": "Suivant",
         "select-language": "Choisis ta langue",
-        "page1": "Salut ! Bienvenue dans GameLife, je suis Zap, ton guide !",
-        "page2": "Le but de cette application est simple : transformer ta vie en un jeu !",
-        "page3": "Quand tu feras une activité dans le monde réel, du sport, de la musique, des devoirs, tu le noteras dans l'application.",
-        "page4": "Ça te fera gagner de l'expérience et des récompenses, et tu pourras suivre ta progression dans le temps !",
-        "page5": "Astuce : Si tu es perdu, clique sur le bouton info en haut à droite pour de l'aide !",
-        "page6": "Tu n'as plus qu'à t'inscrire et c'est parti !",
+        "page1": {
+            "first": "Bienvenue dans GameLife, ici le but est de t'améliorer dans la vraie vie, en la jouant comme un jeu...",
+            "second": "Il te suffit de faire tes actions quotidiennes et de les noter dans GameLife pour voir ta progression !"
+        },
+        "page2": {
+            "first": "Transforme chaque défi en aventure: Gagne des points d’expérience et améliore tes compétences à chaque activité.",
+            "second": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens le héros de ta propre histoire !",
+            "second-bis": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens la meilleure version de toi-même !"
+        },
         "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
         "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
         "test-caution-button": "J'ai compris"
     },
 
     "about": {
-        "block-devs": "App créée par",
-        "block-contributors": "Contributeurs",
+        "title": "À propos de GameLife",
+        "block-devs": "App conçue par",
+        "block-contributors": "Contributeurs 2021",
         "block-links": "Liens",
         "text-manager": "Manager",
         "text-developer": "Développeur",
-        "text-version": "Version : {}",
+        "text-version": "Version {}",
         "text-contributors": "Merci à vous !"
     },
 
     "achievements": {
+        "title": "Mes succès",
         "friend-title": "Succès de {}",
 
         "operators": {
@@ -260,8 +276,21 @@
             "title": "Nouveau titre : {}",
             "title-conversion": " (converti en {} Ox)",
             "item": "Nouvel item : {}",
-            "ox": "Gain : {} Ox"
+            "ox": "Gain : {} Ox",
+            "chest": "Coffre : {}",
+            "items-in-chest": "Ainsi que les objets suivants..."
         },
+
+        "condition-text": "Condition : ",
+        "condition-text-hide": "Cachée",
+        "reward-text": "Récompense : ",
+        "reward-text-empty": "Aucune",
+        "global-progress-text": "{}% des joueurs ont débloqué ce succès",
+
+        "sort-text": "Trier par : ",
+        "sort-list": [
+            "progresson"
+        ],
 
         "popup-condition-text": "Condition : ",
         "popup-hidden-condition": "Condition cachée",
@@ -270,16 +299,24 @@
         "alert-achievement-title": "Succès déverouillé",
         "alert-achievement-text": "Félicitations ! Tu as débloqué le succès : {}",
         "alert-achievement-error-title": "Erreur",
-        "alert-achievement-error-text": "Une erreur est survenue, réessaye plus tard.",
-
-        "tuto": {
-            "1": "Voici la page des succès. Découvre tous ceux que tu as déjà obtenus, ainsi que d'autres qui attendent patiemment d'être révélés."
-        }
+        "alert-achievement-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "activity": {
-        "title-category": "Catégorie",
-        "title-activity": "Activité",
+        "title-activity": "Choisir mon activité",
+        "title-category": "Toutes les catégories",
+        "title-preselected": "Activités sélectionnées",
+        "title-start-now": "Démarrer maintenant",
+        "title-add": "Ajouter",
+        "title-edit": "Modifier",
+
+        "button-add": "Ajouter l'activité",
+        "button-edit": "Modifier l'activité",
+        "button-start-now": "GO !",
+        "button-remove": "Supprimer l'activité",
+
+        "placeholder-comment": "Commentaire",
+
         "title-click-me": "(tu peux cliquer !)",
         "title-schedule": "Horaire",
         "title-experience": "Expérience",
@@ -290,24 +327,25 @@
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
-        "swiper-already": "Ajouter",
-        "swiper-now": "Commencer maintenant",
         "swiper-gpt": "ZapGPT",
-        "btn-start": "Commencer",
-        "btn-add": "Ajouter",
-        "btn-remove": "Supprimer",
         "add-commentary": "Ajouter un commentaire",
 
         "alert-remove-title": "Suppression ?",
-        "alert-remove-text": "Es-tu sûr(e) de vouloir supprimer cette activité ?",
+        "alert-remove-message": "Es-tu sûr(e) de vouloir supprimer cette activité ?",
         "alert-wrongtiming-title": "Impossible !",
-        "alert-wrongtiming-text": "L'activité sélectionnée commence ou termine durant une autre.",
+        "alert-wrongtiming-message": "Une seule activité à la fois peut être réalisée. Cela permet d'être plus présent et plus efficace.",
+        "alert-needconfirmation-title": "Confirmation",
+        "alert-needconfirmation-message": "Es-tu sûr(e) de vouloir modifier cette activité ? Son expérience va être supprimé.",
         "alert-alreadyexist-title": "Erreur",
-        "alert-alreadyexist-text": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
+        "alert-alreadyexist-message": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
         "alert-tooearly-title": "Erreur",
-        "alert-tooearly-text": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
+        "alert-tooearly-message": "Tu ne peux pas ajouter une activité qui commence avant l'an 2000.",
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
+        "alert-error-not-exist-title": "Erreur",
+        "alert-error-not-exist-message": "Il semblerait que cette activité n'existe pas, réessaye plus tard.",
+        "alert-error-title": "Erreur",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains actuel: {}",
@@ -316,9 +354,9 @@
         "timer-cancel": "Annuler",
         "timer-music": "La musique de Zap t'aidera à te concentrer !",
         "timeralert-cancel-title": "Annuler l'activité ?",
-        "timeralert-cancel-text": "Veux-tu annuler cette activité ?",
+        "timeralert-cancel-message": "Veux-tu annuler cette activité ?",
         "timeralert-tooshort-title": "Trop tôt",
-        "timeralert-tooshort-text": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
+        "timeralert-tooshort-message": "Tu ne peux pas ajouter une activité de moins de 5 minutes",
 
         "display-activity-text": "Ton activité a bien été créée !",
         "display-activity-button": "Continuer",
@@ -326,20 +364,12 @@
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 
-        "activity-zap-comment": "Ajouté par Zap",
-
-        "tuto": {
-            "1": "Tu peux filtrer les activités par catégorie: {}",
-            "2": "Tu peux sélectionner une activité ici pour ouvrir le panneau des activités",
-
-            "3": "Tu peux choisir d'ajouter une activité que tu as fait ou que tu comptes faire plus tard, ou alors tu peux lancer un minuteur pour commencer l'activité maintenant",
-            "4": "Tu peux cliquer sur ce composant pour définir le début et la durée de l'activité",
-            "5": "Ici tu peux voir l'expérience que tu vas gagner en faisant cette activité",
-            "6": "Tu peux ajouter un commentaire à ton activité, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        }
+        "activity-zap-comment": "Ajouté par Zap"
     },
 
     "calendar": {
+        "summary-title": "Résumé de la journée",
+        "activities-title": "Activités du {}",
         "add-activity": "Ajouter une activité",
         "hour-min": "h",
         "start": "Début de journée",
@@ -351,11 +381,17 @@
     },
 
     "home": {
+        "title-hello": "Bonjour {}",
+
+        "section-missions": "Missions découverte",
+        "section-today-performance": "Mes activités du jour",
+        "section-today-quests": "Mes quêtes",
+        "section-my-todos": "Mes listes",
+
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
 
         "chart-today-recap": "Activités sur 24h",
-        "chart-today-performance": "Performances du jour",
         "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher les graphiques",
         "chart-today-notmuch-button": "Ajouter",
         "chart-total-text": "Total",
@@ -367,13 +403,13 @@
         "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-text": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
         "alert-update-title": "Mise à jour",
-        "alert-update-text": "Une mise à jour de l'application est disponible",
+        "alert-update-message": "Une mise à jour de l'application est disponible",
         "alert-newversion-title": "Attention",
-        "alert-newversion-text": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
+        "alert-newversion-message": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
         "alert-exit-title": "Quitter",
         "alert-exit-text": "Veux-tu vraiment quitter l'application ?",
         "alert-dateerror-title": "Attention",
@@ -387,13 +423,13 @@
     },
 
     "login": {
-        "page-title": "Yo",
-        "page-text": "Bonjour à toi, joueur de ta propre vie, viens rejoindre la communauté des LVL-UP",
+        "page-title": "Bienvenue !",
+        "page-text": "Chaque jour est une aventure : joue, progresse, et prends le contrôle de ta vie avec GameLife !",
 
         "input-email-title": "Adresse email",
         "input-username-title": "Pseudo",
         "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
-        "button-login-text": "Se connecter",
+        "button-login-text": "Suivant",
         "button-signin-text": "S'inscrire",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
@@ -403,21 +439,19 @@
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
 
+        "alert-error-title": "Erreur",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard. ({})",
         "alert-deletedaccount-title": "Compte supprimé",
-        "alert-deletedaccount-text": "Ton compte a été supprimé.",
+        "alert-deletedaccount-message": "Ton compte a été supprimé.",
+        "alert-deviceLimit-title": "Trop d'appareils",
+        "alert-deviceLimit-message": "Tu ne peux pas te connecter avec plus de 3 appareils différents sur le même compte.",
         "alert-limitAccount-title": "Trop de compte",
-        "alert-limitAccount-text": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil.",
-        "alert-limitDevice-title": "Trop d'appareils sur ce compte",
-        "alert-limitDevice-text": "Tu ne peux pas avoir plus de 5 appareils connectés sur un seul compte.",
-        "alert-deviceRemoved-title": "Appareil retiré",
-        "alert-deviceRemoved-text": "Ton appareil a été retiré car tu as déjà le nombre maximum d'appareils sur ce compte."
+        "alert-limitAccount-message": "Tu ne peux pas créer plus de 3 comptes avec un seul appareil."
     },
 
     "multiplayer": {
         "connection-loading": "Connexion en cours",
         "connection-offline": "Connecte toi à internet et redémarre l'application pour accéder à cette page.",
-        "connection-failed": "La connexion au serveur a échouée, réessaye plus tard.",
-        "button-retry": "Réessayer",
 
         "container-title": "Multijoueur",
         "container-content-empty": "Aucun ami connecté pour le moment",
@@ -425,6 +459,9 @@
         "container-content-idle": "Chargement...",
         "container-content-disconnected": "Tu es déconnecté, réessaye plus tard.",
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",
+
+        "title-top-friends": "Top amis",
+        "title-online-friends": "Amis en ligne",
 
         "category-friend": "Amis",
         "category-friend-pending": "Demandes en attente",
@@ -453,9 +490,17 @@
             "title": "Temps écoulé",
             "message": "La connexion au serveur a pris trop de temps, réessaye plus tard."
         },
+        "alert-too-friends": {
+            "title": "Limite atteinte",
+            "message": "Tu as atteint la limite d'amis que tu peux avoir !"
+        },
         "alert-error": {
             "title": "Erreur",
             "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        },
+        "alert-friend-added": {
+            "title": "Demande envoyée",
+            "message": "La demande d'ami a bien été envoyée à {}"
         }
     },
 
@@ -464,50 +509,64 @@
         "value-age-empty": "Date de naissance inconnue",
         "value-title-empty": "Aucun titre sélectionné",
 
-        "row-since": "de jeu",
-        "row-activities": "activités",
-        "row-time": "heures",
+        "row-text-graph": "Heures complétées cette semaine",
+        "row-title-informations": "Informations",
+
+        "kpi-since": "jours de jeu",
+        "kpi-activities": "activités",
+        "kpi-time": "heures",
+        "kpi-ox": "Ox",
+        "kpi-inventory": "items",
+        "kpi-friends": "amis",
 
         "container-achievements-title": "Derniers succès",
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
 
-        "btn-settings": "Paramètres",
+        "coming-soon": "Bientôt\ndisponible",
+        "btn-edit-profile": "Modifier mon apparence",
+        "btn-skills": "Mes compétences",
+        "btn-statistics": "Mes statistiques",
+        "btn-achievements": "Mes succès",
+        "btn-friends": "Mes amis",
+
+        "title-profile": "Mon profil",
+        "title-statistics": "Mes statistiques",
 
         "input-username": "Pseudo",
         "input-select-title": "Sélectionnez un titre",
         "input-title-none": "Aucun titre",
         "input-edit": "Modifier",
 
+        "title-mail": "Adresse mail",
         "edit-title": "Editer le profil",
         "edit-cancel": "Retour",
 
         "alert-nowifi-title": "Pas de connexion",
-        "alert-nowifi-text": "Tu dois être connecté à internet pour pouvoir modifier ton profil, si tu es déjà connecté à internet, essaye de redémarrer l'application",
+        "alert-nowifi-message": "Tu dois être connecté à internet pour pouvoir modifier ton profil, si tu es déjà connecté à internet, essaye de redémarrer l'application",
 
         "alert-usernamewarning-title": "Changement de pseudo",
-        "alert-usernamewarning-text": "Tu ne peux changer de pseudo qu'une seule fois tous les {} jours, choisis-bien !",
+        "alert-usernamewarning-message": "Tu ne peux changer de pseudo qu'une seule fois tous les {} jours, choisis-bien !",
         "alert-alreadyUsed-title": "Pseudo réservé",
-        "alert-alreadyUsed-text": "Ce pseudo est déjà utilisé, choisis-en un autre.",
+        "alert-alreadyUsed-message": "Ce pseudo est déjà utilisé, choisis-en un autre.",
         "alert-alreadyChanged-title": "Pseudo déjà modifié",
-        "alert-alreadyChanged-text": "Tu dois attendre {} jours avant de pouvoir le modifier à nouveau.",
+        "alert-alreadyChanged-message": "Tu dois attendre {} jours avant de pouvoir le modifier à nouveau.",
         "alert-incorrect-title": "Pseudo incorrect",
-        "alert-incorrect-text": "Ton pseudo doit contenir entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
+        "alert-incorrect-message": "Ton pseudo doit contenir entre 4 et 24 caractères, et ne doit pas contenir de mot d'insulte.",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Modification du pseudo impossible",
+        "alert-error-message": "Modification du pseudo impossible",
+        "alert-titleerror-title": "Erreur",
+        "alert-titleerror-message": "Impossible de sélectionner ce titre, réessaye plus tard. ({})",
+        "alert-username-needconfirmation-title": "Confirmation",
+        "alert-username-needconfirmation-message": "Es-tu sûr(e) de vouloir changer ton pseudo en \"{}\" ?",
         "alert-emptytitle-title": "Pas de titres disponibles",
-        "alert-emptytitle-text": "Tu n'as pas encore de titre à sélectionner",
+        "alert-emptytitle-message": "Tu n'as pas encore de titre à sélectionner",
         "alert-birthtimewarning-title": "Changement de date de naissance",
-        "alert-birthtimewarning-text": "Tu ne peux définir une date de naissance qu'une fois tous les {} jours, choisis-bien !",
+        "alert-birthtimewarning-message": "Tu ne peux définir une date de naissance qu'une fois tous les {} jours, choisis-bien !",
         "alert-birthtimewait-title": "Changement de date de naissance",
-        "alert-birthtimewait-text": "Tu dois attendre {} jours avant de pouvoir modifier ta date de naissance à nouveau.",
+        "alert-birthtimewait-message": "Tu dois attendre {} jours avant de pouvoir modifier ta date de naissance à nouveau.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-text": "Tu as bien {} ans ?",
-
-        "tuto": {
-            "1": "Ici c'est ton profil, tu peux y modifier tes informations personnelles",
-            "2": "Là c'est ton avatar, tu peux cliquer dessus pour modifier ton apparence"
-        },
+        "alert-birthconfirm-message": "Tu as bien {} ans ?",
 
         "temporary-avatars": "Cet avatar sera bientôt remplacé ... en mieux !"
     },
@@ -526,6 +585,22 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
+    "friends": {
+        "title": "Mes amis",
+        "title-friends": "Mes amis",
+        "title-waiting-friends": "Demandes en attente",
+        "title-blocked-friends": "Amis bloqués",
+
+        "button-search": "Rechercher un ami",
+        "button-sort": "Trier par :",
+        "sort-list": [
+            "ordre alphabétique",
+            "niveau",
+            "activités",
+            "heures"
+        ]
+    },
+
     "profile-friend": {
         "row-since": "Depuis",
         "row-activities": "Nombre d'activités",
@@ -539,10 +614,13 @@
 
         "button-cancel": "Annuler la demande d'ami",
         "button-remove": "Retirer de la liste d'amis",
+        "button-unblock": "Débloquer",
         "alert-cancelfriend-title": "Annuler la demande",
-        "alert-cancelfriend-text": "Es-tu sûr(e) de vouloir annuler la demande d'ami pour {} ?",
+        "alert-cancelfriend-message": "Es-tu sûr(e) de vouloir annuler la demande d'ami pour {} ?",
         "alert-removefriend-title": "Supprimer un ami",
-        "alert-removefriend-text": "Es-tu sûr(e) de vouloir supprimer {} de ta liste d'amis ?"
+        "alert-removefriend-message": "Es-tu sûr(e) de vouloir supprimer {} de ta liste d'amis ?",
+        "alert-unblockfriend-title": "Débloquer un ami",
+        "alert-unblockfriend-message": "Es-tu sûr(e) de vouloir débloquer {} ?"
     },
 
     "report": {
@@ -571,11 +649,11 @@
         "button-send": "Envoyer",
 
         "alert-notfill-title": "Pas terminé",
-        "alert-notfill-text": "Merci de remplir tous les champs",
+        "alert-notfill-message": "Merci de remplir tous les champs",
         "alert-success-title": "Envoyé",
-        "alert-success-text": "Merci beacoup pour ton retour !",
+        "alert-success-message": "Merci beacoup pour ton retour !",
         "alert-error-title": "Erreur",
-        "alert-error-text": "Une erreur est survenue, réessaye plus tard.",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
 
         "tuto": {
             "bug": "Merci de fournir un maximum de détails sur la nature du bug ainsi que dans les conditions dans lesquelles il est apparu (android/ios ? Connecté à internet ou non ? Marque du smartphone ou émulateur ? etc)"
@@ -583,38 +661,57 @@
     },
 
     "settings": {
+        "title": "Paramètres",
+
+        "section-informations-preferences": "INFORMATIONS ET PRÉFÉRENCES",
+        "section-notifications-consents": "NOTIFICATIONS ET CONSENTEMENT",
+        "section-support-feedback": "SUPPORT ET RETOUR D’EXPÉRIENCE",
+        "section-security-privacy": "SÉCURITÉ ET CONFIDENTIALITÉ",
+
         "input-about": "À propos de nous",
         "input-langage": "Langues",
         "input-theme": "Thèmes",
+        "input-notifications": "Notifications",
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",
         "input-report": "Report",
-        "input-consent": "Consentement de la publicité",
+        "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",
         "input-reconnect-tcp": "Se reconnecter au multijoueur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
 
+        "consent-ios-title": "Consentement publicitaire",
+        "consent-ios-message": "Tu peux activer ou désactiver les publicités personnalisées dans les paramètres de ton appareil",
+        "consent-ios-open-settings": "Ouvrir les paramètres",
+        "consent-ios-cancel": "Annuler",
+
         "alert-disconnect-title": "Se déconnecter",
-        "alert-disconnect-text": "Veux-tu te déconnecter ?",
+        "alert-disconnect-message": "Veux-tu te déconnecter ?",
         "alert-disconnectall-title": "Déconnecter tous les appareils ?",
-        "alert-disconnectall-text": "Veux-tu déconnecter tous les appareils de ton compte ?\n\nAppareils connectés\n{}",
+        "alert-disconnectall-message": "Veux-tu déconnecter tous les appareils de ton compte ?\n\nAppareils connectés\n{}",
         "alert-disconnecterror-title": "Erreur",
-        "alert-disconnecterror-text": "Une erreur est survenue, vérifie ta connexion internet ou réessaye plus tard.",
+        "alert-disconnecterror-message": "Une erreur est survenue, vérifie ta connexion internet ou réessaye plus tard.",
         "alert-deleteaccount-title": "Supprimer le compte",
-        "alert-deleteaccount-text": "Es-tu sûr(e) de vouloir supprimer ton compte ? Un mail de confirmation te sera envoyé.",
+        "alert-deleteaccount-message": "Es-tu sûr(e) de vouloir supprimer ton compte ? Un mail de confirmation te sera envoyé.",
         "alert-deletedmailsent-title": "Mail envoyé",
-        "alert-deletedmailsent-text": "Un mail de confirmation t'a été envoyé, vérifie ta boîte mail.",
+        "alert-deletedmailsent-message": "Un mail de confirmation t'a été envoyé, vérifie ta boîte mail.",
         "alert-deletedmailtooearly-title": "Mail déjà envoyé",
-        "alert-deletedmailtooearly-text": "Un mail de confirmation t'a déjà été envoyé, patiente quelques minutes avant d'en renvoyer un, oublie pas de vérifier tes spams.",
+        "alert-deletedmailtooearly-message": "Un mail de confirmation t'a déjà été envoyé, patiente quelques minutes avant d'en renvoyer un, oublie pas de vérifier tes spams.",
         "alert-deletedfailed-title": "Échec",
-        "alert-deletedfailed-text": "Le mail n'a pas été envoyé, vérifie ta connexion internet ou réessaye plus tard."
+        "alert-deletedfailed-message": "Le mail n'a pas été envoyé, vérifie ta connexion internet ou réessaye plus tard.",
+        "alert-consent-not-available-title": "Erreur",
+        "alert-consent-not-available-message": "Les consents ne sont pas disponibles dans ta zone géographique.",
+        "alert-consent-error-title": "Erreur",
+        "alert-consent-error-message": "Les consents ne sont pas disponibles pour le moment, réessaye plus tard."
     },
 
     "shop": {
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
+
+        "temporary-message": "Le marché est en cours de refonte, il sera bientôt de retour !",
 
         "banner-header": "Réduction sur tous les items avant l'arrivée des nouveaux avatars !",
         "banner-daily": "Deals du jour",
@@ -671,13 +768,13 @@
         "alert-code-button": "Valider",
 
         "popup-notenoughox-title": "Insuffisant",
-        "popup-notenoughox-text": "Tu n'as pas assez d'Ox pour acheter cet item.",
+        "popup-notenoughox-message": "Tu n'as pas assez d'Ox pour acheter cet item.",
 
         "internet-offline-title": "Pas de connexion",
         "internet-offline-text": "Tu dois être connecté à internet !",
 
         "reward-failed-title": "Échec",
-        "reward-failed-text": "Une erreur est survenue, réessaye plus tard.",
+        "reward-failed-message": "Une erreur est survenue, réessaye plus tard.",
         "reward-wrong-title": "Code incorrect",
         "reward-wrong-text": "Le code que tu as entré est incorrect.",
         "reward-success-title": "Code utilisé",
@@ -704,41 +801,28 @@
                 "title": "Plateforme incorrecte",
                 "message": "Tu ne peux pas acheter cet item sur cette plateforme."
             }
-        },
-
-        "help": {
-            "dailyDeals": "Tu peux dépenser tes Ox ici pour acheter des items, que tu pourras équiper dans ton profil, les offres changent tous les jours !",
-            "iap1": "Ici, tu peux acheter des Ox contre du vrai argent, ça a plusieurs bénéfices",
-            "iap2": "Tout d'abord, tu aides ce projet à prendre vie et tu contribues à la refonte des avatars et de l'application",
-            "iap3": "Ensuite, tu peux t'acheter des items pour ton avatar. Ils ne sont pas en version définitive ne t'inquiètes pas !",
-            "iap4": "Mais si t'en achètes maintenant, tu pourras les revendre au double du prix quand les nouveaux avatars arriveront !",
-            "iap5": "C'est un moyen pour nous te remercier de nous avoir fait confiance dès le début !",
-            "iap6": "Au passage, en payant, tu gagnes aussi l'accès à ZapGPT qui est un chatbot qui te permet d'ajouter pleins d'activités d'un coup",
-            "randomChests": "Dans cette catégorie tu peux acheter des coffres dans lequel se trouve un item aléatoire, plus le coffre est rare plus tu as de chances d'avoir un item de qualité !",
-            "randomChests-common": "Pour le coffre commun, il y a une forte chance d'obtenir un objet de rareté commune (90%), une probabilité de 9% pour un objet rare, 0,99% pour un objet épique et seulement 0,01% pour un objet légendaire.",
-            "randomChests-rare": "En ce qui concerne le coffre rare, les chances d'obtenir un objet commun sont de 20%, 75% pour un objet rare, 4,5% pour un objet épique et 0,5% pour un objet légendaire.",
-            "randomChests-epic": "Quant au coffre épique, il offre 29% de chance d'obtenir un objet rare, 70% pour un objet épique et 1% pour un objet légendaire; il n'y a aucune chance d'y trouver un objet commun.",
-            "targetedChests": "Tu peux acheter des coffres ciblés, dans lesquels tu es sûr(e) d'avoir un item de la catégorie que tu as choisie !",
-            "targetedChests-common": "Dans le coffre commun, les chances d'obtenir un objet de rareté commune sont extrêmement élevées à 99%, suivies de 0,9% pour un objet rare et 0,1% pour un objet épique; il est à noter qu'il n'y a aucune chance d'y trouver un objet légendaire.",
-            "targetedChests-rare": "En ouvrant le coffre rare, tu as 27% de chances d'obtenir un objet commun, 70% pour un objet rare, 2,9% pour un objet épique et une mince chance de 0,1% pour un objet légendaire.",
-            "targetedChests-epic": "Quant au coffre épique, celui-ci ne contient pas d'objets communs et offre 30% de chances d'obtenir un objet rare, 65% pour un objet épique, et une probabilité non négligeable de 5% pour un objet légendaire.", 
-            "dyes": "Enfin tu peux modifier des items que t'as déjà, ça coûte moins cher que d'en acheter des nouveaux !"
         }
     },
 
     "skill": {
+        "title": "Compétence",
         "text-author": "Une idée de {}",
         "text-unallocated": "Compétence désafectée",
+        "text-no-xp": "Cette activité ne rapporte pas d'expérience",
         "stats-title": "Statistiques",
+        "informations-title": "Informations",
         "history-title": "Historique",
-        "activity-history": "Historique d'activité",
+        "history-show": "Afficher l'historique",
+        "history-activity": "Historique d'activité",
         "text-add": "Ajouter l'activité"
     },
 
     "skills": {
+        "title": "Mes compétences",
         "input-search": "Rechercher",
+        "input-sort": "Trier par",
         "top-sort-list": [
-            "XP", "A-Z", "DATE"
+            "exp", "a-z", "date"
         ],
         "text-empty": "Ajoute une activité, les compétences associées apparaîtront ici",
         "text-add": "Ajouter une activité"
@@ -747,7 +831,7 @@
     "statistics": {
         "xp": {
             "name": "Expérience",
-            "small": "XP"
+            "small": "EXP"
         },
         "names": {
             "int": "Intelligence",
@@ -769,21 +853,23 @@
             "int": "L’intelligence est une statistique très large, dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et gagnes donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
             "soc": "La compétence sociale est une compétence qui augmente quand tu fais des activités avec d'autres gens. Par exemple, des sports collectif ou des sorties avec des amis.",
             "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
-            "sta": "L’endurance est probablement la statistique que tu peux améliorerer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
+            "sta": "L’endurance est probablement la statistique que tu peux améliorer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
             "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter ton agilité sont des activités comme des étirements ou encore du yoga.",
             "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
         }
     },
 
     "todo": {
-        "title-schedule": "Planification",
-        "title-tasks": "Tâches",
-        "title-commentary": "Commentaire",
+        "title": "Ma liste",
+        "title-new": "Créer ma liste",
 
         "input-title": "Titre",
+        "input-title-placeholder": "Titre de la liste",
         "input-deadline-title": "Date limite",
-        "input-deadline-empty": "Aucune",
-
+        "input-deadline-empty": "Aucune date définie",
+        "input-commentary-title": "Commentaire",
+        "input-commentary-placeholder": "Écris un commentaire ici...",
+        "input-task-title": "Tâches",
         "input-task-placeholder": "Tâche",
 
         "button-commentary": "Ajouter un commentaire",
@@ -797,33 +883,32 @@
         "alert-remcomment-title": "Suppression ?",
         "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
         "alert-remtodo-title": "Suppression ?",
-        "alert-remtodo-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
+        "alert-remtodo-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
+        "alert-todo-notexist-title": "Erreur",
+        "alert-todo-notexist-message": "La todo liste n'a pas pu être supprimée ({})",
+        "alert-todo-savefail-title": "Erreur",
+        "alert-todo-savefail-message": "La todo liste n'a pas pu être sauvegardée, réessaye plus tard.",
         "alert-remtask-title": "Suppression ?",
-        "alert-remtask-text": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
+        "alert-remtask-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
         "alert-taskslimit-title": "Limite atteinte",
-        "alert-taskslimit-text": "Tu ne peux pas avoir plus de 20 tâches.",
+        "alert-taskslimit-text": "Tu ne peux pas avoir plus de {} tâches.",
         "alert-back-title": "Retour",
-        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
-
-        "tuto": {
-            "1": "Ici tu peux définir la date limite de ta tâche.",
-            "2": "Tu peux également ajouter des tâches à ta tâche principale, pour mieux t'organiser.",
-            "3": "Enfin tu peux ajouter un commentaire à ta tâche, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        }
+        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
-    "todoes": {
+    "todos": {
         "container-title": "Todo liste",
-        "todoes-empty-title": "Tu n'as pas encore de tâches",
-        "todoes-empty-button": "En ajouter une",
 
-        "todo-type-deadline": "Avant le:",
+        "todos-empty-text": "Pas de todo liste",
 
-        "alert-todoeslimit-title": "Limite atteinte",
-        "alert-todoeslimit-text": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-todoslimit-title": "Limite atteinte",
+        "alert-todoslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "quest": {
+        "title": "Ma quête",
+        "title-new": "Créer une quête",
+
         "titles": {
             "title": "Titre de la quête",
             "skills": "Sélectionne tes activités",
@@ -832,18 +917,18 @@
             "comment": "Commentaire"
         },
 
-        "input-title": "Titre",
         "input-activity-title": "Aucune activité sélectionnée",
         "input-activity-add": "Ajouter",
+        "input-comment-placeholder": "Commentaire à propos de la quête...",
+        "input-switch-frequency": "Fréquence",
 
         "popup-all-categories": "Toutes les catégories",
 
         "input-panel-activity": "Sélectionne une activité",
         "input-panel-category": "Sélectionne une catégorie",
 
-        "input-comment": "Commentaire",
-
-        "text-hint-select": "Reste appuyé pour sélectionner un colone",
+        "text-hint-select": "Reste appuyé pour sélectionner un colonne",
+        "text-hint-frequency": "À quelle fréquence tu veux faire tes activités",
 
         "input-errors": {
             "title-empty": "Le titre ne peut pas être vide",
@@ -859,54 +944,43 @@
         },
 
         "alert-remquest-title": "Suppression ?",
-        "alert-remquest-text": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
+        "alert-remquest-message": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
         "alert-back-title": "Retour",
-        "alert-back-text": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
-
-        "tuto": {
-            "1": "Ici, définis la date limite de ta quête ou sa fréquence si elle est récurrente.",
-            "2": "Tu as la possibilité de relier ta quête avec une activité, ce qui te permettra de gagner de l'expérience en la réalisant.",
-            "3": "Enfin tu peux ajouter un commentaire à ta quête, par exemple pour noter ton ressenti ou pour noter des informations importantes"
-        }
+        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
+        "alert-error-title": "Erreur",
+        "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
+        "alert-save-error-title": "Erreur",
+        "alert-save-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "quest-stats": {
-        "tuto": {
-            "1": "Ici tu peux voir le nom de ta quête et les activités concernées, tu peux cliquer dessus pour la modifier.",
-            "2": "Là c'est la série actuelle, c'est le nombre de jours consécutifs où tu as réalisé ta quête.",
-            "3": "Et ici tu peux voir la réalisation de ta quête par semaine ou par jour sur la dernière année."
-        }
+        "title": "Ma quête",
+        "title-current-week": "Semaine en cours",
+        "title-heatmap": "Résultats",
+        "button-add-activity": "Ajouter une activité",
+        "warn-message": "Attention : Le calcul de la série n'est pas sûr à 100%. Il est possible d'y voir des erreurs"
     },
 
     "quests": {
         "container-title": "Mes quêtes",
-        "quests-empty-title": "Tu n'as pas encore de quête, ajoutes-en une en cliquant sur le bouton ci-dessous ou sur le + en haut à droite",
-        "quests-empty-button": "En ajouter une",
+        "button-add-quest": "Ajouter une quête",
+        "button-all-quests": "Toutes mes quêtes",
 
         "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-text": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
+        "alert-questslimit-message": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
 
         "current-streak": "Série actuelle",
-        "heatmap-title-weeks": "Réalisation par semaine",
-        "heatmap-title-days": "Réalisation par jour",
-
-        "tuto": {
-            "1": "Ici, ce sont les quêtes ! Des missions que tu peux TE donner pour t'aider à te motiver.",
-            "2": "Pour en ajouter une, rien de plus simple, tu cliques sur le bouton ici !",
-            "3": "Sous chaque quête, tu verras des cercles. Ils peuvent avoir plusieurs couleurs, voici leurs significations: ",
-            "4": "Rouge: la quête n'a pas été complétée.  Rose: ça se déroule aujourd'hui.  Violet: les autres jours.",
-            "5": "Ah oui ! Si tu cliques sur une quête, tu peux voir les détails de celle ci !",
-            "6": "Tu attends quoi ? Lance toi ! Si tu as besoin d'aide, tu peux cliquer sur le bouton d'info et je viendrais !"
-        }
+        "heatmap-title-day": "Jour",
+        "heatmap-title-week": "Semaine"
     },
 
     "daily-quest": {
         "container-title": "Quête du jour",
         "container-date": "Récompenses du {}",
         "container-tomorrow": "Reviens demain",
+        "container-todo": "A faire",
 
         "label-time": "{0}/{1} min",
-        "label-reroll": "{0}/{1}",
         "label-finished": "Quête du jour réalisée, bravo !",
 
         "popup": {
@@ -916,43 +990,26 @@
         },
 
         "alert-claim-error-title": "Erreur",
-        "alert-claim-error-text": "Une erreur est survenue, réessaye plus tard.",
+        "alert-claim-error-message": "Une erreur est survenue, réessaye plus tard. ({})",
 
-        "help": {
-            "1": "Voici les quêtes journalières, fais l'activité imposée pour gagner des récompenses !",
-            "2": "Chaque jour une liste d'activité faite sur mesure pour toi est mise à ta disposition.",
-            "3": "Choisi une activité parmis celles proposées et fais là pendant 15 minutes pour valider ta quête.",
-            "4": "Si tu veux voir la liste de toutes les récompenses possible, tu peux cliquer sur la flèche juste ici !"
-        }
+        "no-internet": "Tu dois être connecté à internet pour faire la quête du jour.",
+        "no-quest": "Aucune quête du jour disponible pour le moment."
     },
 
     "wait": {
         "wait-internet-text": "Le serveur de GameLife est inaccessible.\n\nVérifie ta connexion internet ou réessaye plus tard !\n\nSi le problème persiste, contacte-nous sur Discord ou par mail que tu trouveras sur notre site:",
         "wait-maintenance-text": "Les serveurs sont actuellement en maintenance, reviens plus tard !",
-        "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
+        "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte. Accepte le et reviens sur l'application.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
+        "wait-email-sending": "Envoi en cours...",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-send": "Mail envoyé !"
     },
 
     "tuto": {
-        "main": {
-            "home-greetings": "Re-bonjour {} ! Bienvenue dans GameLife, laisse moi te montrer l'application !",
-            "home": "Ici tu es sur le menu, tu y trouveras des infos générales sur GameLife et ton profil.",
-            "home-next": "Clique sur l'icône brillante pour aller sur le calendrier",
-            "calendar": "Là c'est le calendrier, il contient toutes les activités que tu as réalisé.",
-            "calendar-next": "Prochain clic : les quêtes ! (l'icône brillante en bas de l'écran)",
-            "quest" : "Ici c'est la page des quêtes, elles vont t'aider à te motiver et à prendre des habitudes. Tu pourras cliquer sur les 'i' pour avoir plus d'infos !",
-            "quest-next": "Direction : ton avatar ! (l'icône brillante en haut à droite de l'écran)",
-            "avatar" : "Te voilà !! Enfin.. ton avatar plutôt. Tu peux le personnaliser en gagnant ou en achetant des équipements.",
-            "shop" : "Équipement que tu peux acheter ici, dans la boutique ! Tu y trouveras des items pour ton avatar, des coffres et des teintures !",
-            "shop-next" : "Et enfin le plus important, clique sur le gros bouton rose en bas !",
-            "activity": "C'est ici que tu viendras pour ajouter tes activités ! Plus qu'à choisir une activité et à commencer à jouer !",
-            "home-final": "Ton aventure GameLife commence maintenant ! Un monde pleins de défis et de récompenses t'attend, alors n'attends plus et fonce !"
-        },
-
         "other": {
             "skip": "Passer",
-            "press": "Appuyez"
+            "press": "Appuyez",
+            "next": "Suivant"
         }
     },
 

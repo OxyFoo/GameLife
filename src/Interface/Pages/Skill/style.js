@@ -1,83 +1,115 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    skillContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 24
+    page: {
+        height: '100%',
+        paddingHorizontal: 24
     },
-    pictureContainer: {
-        marginLeft: 6,
-        marginRight: 24,
-        padding: 16,
-        borderWidth: 2,
-        borderColor: '#FFFFFF',
-        borderRadius: 12
+    title: {
+        marginBottom: 12,
+        textAlign: 'left',
+        fontSize: 21
     },
 
-    detailContainer: {
-        flex: 1,
+    // Skill card
+    titleContainer: {
+        marginBottom: 24
+    },
+    gradient: {
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingVertical: 12,
-        justifyContent: 'space-evenly'
+        paddingHorizontal: 24,
+        borderRadius: 8
     },
-    skillTitle: {
-        fontSize: 28,
-        textAlign: 'left'
+    activityIcon: {
+        marginRight: 16
     },
-    skillCategory: {
-        fontSize: 20,
+    activityTextView: {
+        flex: 1
+    },
+    activityText: {
+        fontSize: 16,
         textAlign: 'left'
     },
     skillUnallocated: {
         fontSize: 16,
         textAlign: 'left',
-        opacity: 0.6
+        opacity: 0.7
+    },
+    creator: {
+        marginTop: 6,
+        marginRight: 6,
+        fontSize: 18,
+        textAlign: 'right'
     },
 
+    // XP bar & level
     levelContainer: {
-        paddingHorizontal: 12,
         marginBottom: 24
     },
-    level: {
+    levelsView: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-
-        marginBottom: 6
-    },
-    creator: {
-        marginTop: 12,
-        fontSize: 18,
-        textAlign: 'left'
-    },
-
-    statsContainer: {
-        marginBottom: 24
-    },
-
-    historyContainer: {
-        maxHeight: 400,
+        marginTop: 6,
         paddingHorizontal: 6
     },
-    historyItem: {
-        width: '50%',
-        padding: 0,
-        marginVertical: 6
-    },
 
-    addActivity: {
-        position: 'absolute',
-        width: 50,
-        height: 50,
-        right: 36,
-        bottom: 36
-    },
-
+    // KPIs
     kpiContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginBottom: 24
+    },
+    kpiLeft: {
+        marginRight: 6
+    },
+    kpiRight: {
+        marginLeft: 6
+    },
+
+    // Skill chart
+    skillChart: {
+        marginBottom: 24
+    },
+
+    // History
+    historyButton: {
+        marginBottom: 24
+    },
+    historyTitle: {
+        marginTop: 24,
+        marginBottom: 12,
+        fontSize: 24
+    },
+    historySeparator: {
+        width: '80%',
+        height: 1,
+        alignSelf: 'center'
+    },
+    historyFlatList: {
+        width: '100%',
+        maxHeight: '85%' // TODO: Calculate the height of parent bottomPanel
+    },
+    historyItem: {
+        width: 'auto',
+        marginHorizontal: 24,
+        paddingVertical: 12,
+        paddingHorizontal: 6,
+        marginVertical: 2
+    },
+
+    // Add activity button
+    addActivity: {
+        position: 'absolute',
+        width: 'auto',
+        right: 24,
+        bottom: 24,
+        paddingVertical: 12,
+        paddingHorizontal: 12
     }
 });
 

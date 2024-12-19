@@ -7,142 +7,19 @@ import BackReport from './back';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import { Text, ComboBox, InputText, Button, Digit } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Page, Text, ComboBox, Input, Button, Digit } from 'Interface/Components';
 
 class Report extends BackReport {
-    renderActivity = () => {
-        const langStats = langManager.curr['statistics']['names-min'];
-        const lang = langManager.curr['report'];
-        const text = lang['type-activity-text'];
-        const text_remain = lang['type-activity-remain'] + this.state.remain;
-        const text_name = lang['type-activity-name'];
-        const text_category = lang['type-activity-category'];
-
-        return (
-            <View>
-                <Text style={styles.text}>{text}</Text>
-                <View style={styles.row}>
-                    <View style={styles.column}>
-                        <Input
-                            style={styles.input}
-                            label={text_name}
-                            text={this.state.input_skillname}
-                            onChangeText={this.changeTextInputSkillName}
-                        />
-                        <Input
-                            style={styles.input}
-                            label={text_category}
-                            text={this.state.input_skillcategory}
-                            onChangeText={this.changeTextInputSkillCategory}
-                        />
-                    </View>
-
-                    <View style={styles.column}>
-                        <Text fontSize={18}>{text_remain}</Text>
-                        <FlatList
-                            keyExtractor={(item, i) => 'report-stat-' + i}
-                            data={user.statsKey}
-                            renderItem={({ item }) => (
-                                <View style={styles.rowDigit}>
-                                    <Text>{langStats[item]}</Text>
-                                    <Digit
-                                        name={item}
-                                        minDigitWidth={14}
-                                        initValue={this.stats[item]}
-                                        maxValue={this.state.statsRemain[item]}
-                                        callback={this.changeDigit}
-                                    />
-                                </View>
-                            )}
-                        />
-                    </View>
-                </View>
-            </View>
-        );
-    }
-
-    renderSuggest = () => {
-        const lang = langManager.curr['report'];
-        const text = lang['type-suggest-text'];
-        const label = lang['type-suggest-input'];
-
-        return (
-            <View>
-                <Text style={styles.text}>{text}</Text>
-                <Input
-                    style={{ marginBottom: 24}}
-                    label={label}
-                    text={this.state.input_suggest}
-                    onChangeText={this.changeTextInputSuggest}
-                    multiline
-                />
-            </View>
-        );
-    }
-
-    renderBug = () => {
-        const lang = langManager.curr['report'];
-        const text = lang['type-bug-text'];
-        const input1 = lang['type-bug-input1'];
-        const input2 = lang['type-bug-input2'];
-
-        return (
-            <View>
-                <Text style={[styles.text, { marginBottom: 24 }]}>{text}</Text>
-                <Input
-                    style={{ marginBottom: 24}}
-                    label={input1}
-                    text={this.state.input_bug1}
-                    onChangeText={this.changeTextInputBug1}
-                    multiline
-                />
-                <Input
-                    style={{ marginBottom: 24}}
-                    label={input2}
-                    text={this.state.input_bug2}
-                    onChangeText={this.changeTextInputBug2}
-                    multiline
-                />
-            </View>
-        );
-    }
-
-    renderMessage = () => {
-        const lang = langManager.curr['report'];
-        const text = lang['type-message-text'];
-
-        return (
-            <View>
-                <Text style={[styles.text, { marginBottom: 24 }]}>{text}</Text>
-                <Input
-                    style={{ marginBottom: 24}}
-                    label={lang['type-message-input']}
-                    text={this.state.input_message}
-                    onChangeText={this.changeTextInputMessage}
-                    multiline
-                />
-            </View>
-        );
-    }
-
     render() {
         const lang = langManager.curr['report'];
         const { selectedType, reportHeight, sending } = this.state;
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                onStartShouldSetResponder={this.keyboardDismiss}
-                canScrollOver={false}
-            >
-                <PageHeader
-                    style={{ marginBottom: 24 }}
-                    onBackPress={this.back}
-                    onHelpPress={selectedType === 2 ? StartHelp : undefined}
-                />
+            <View style={styles.page} onTouchStart={this.keyboardDismiss}>
+                <PageHeader onBackPress={this.back} onSecondaryIconPress={selectedType === 2 ? StartHelp : undefined} />
 
-                <Text containerStyle={{ marginBottom: 24 }} fontSize={36}>{lang['page-title']}</Text>
+                <Text style={styles.titleContainer}>{lang['page-title']}</Text>
 
                 <ComboBox
                     title={lang['types-text']}
@@ -151,24 +28,146 @@ class Report extends BackReport {
                     onSelect={this.selectType}
                 />
 
-                <View style={{ minHeight: reportHeight, marginTop: 24 }} onLayout={this.onLayout}>
+                <View style={[styles.container, { minHeight: reportHeight }]} onLayout={this.onLayout}>
                     {selectedType === 0 && this.renderActivity()}
                     {selectedType === 1 && this.renderSuggest()}
                     {selectedType === 2 && this.renderBug()}
                     {selectedType === 3 && this.renderMessage()}
 
-                    <Button
-                        style={styles.button}
-                        color='main2'
-                        onPress={this.sendData}
-                        loading={sending}
-                    >
+                    <Button onPress={this.sendData} loading={sending}>
                         {lang['button-send']}
                     </Button>
                 </View>
-            </Page>
+            </View>
         );
     }
+
+    renderActivity = () => {
+        const {
+            input_skillname,
+            input_skillcategory,
+            input_skillstats,
+            input_skillstats_max,
+            input_skillstats_remain
+        } = this.state;
+        const lang = langManager.curr['report'];
+        const langStats = langManager.curr['statistics']['names-min'];
+
+        return (
+            <View>
+                <Text style={styles.text}>{lang['type-activity-text']}</Text>
+                <View style={styles.row}>
+                    <View style={styles.column}>
+                        <InputText
+                            containerStyle={styles.input}
+                            label={lang['type-activity-name']}
+                            value={input_skillname}
+                            onChangeText={this.changeTextInputSkillName}
+                        />
+                        <InputText
+                            containerStyle={styles.input}
+                            label={lang['type-activity-category']}
+                            value={input_skillcategory}
+                            onChangeText={this.changeTextInputSkillCategory}
+                        />
+                    </View>
+
+                    <View style={styles.column}>
+                        <Text fontSize={18}>{`${lang['type-activity-remain']} ${input_skillstats_remain}`}</Text>
+                        <FlatList
+                            keyExtractor={(item) => `report-stat-${item}`}
+                            data={user.experience.statsKey}
+                            renderItem={({ item }) => (
+                                <View style={styles.rowDigit}>
+                                    <Text>{langStats[item]}</Text>
+                                    <Digit
+                                        minDigitWidth={14}
+                                        value={input_skillstats[item]}
+                                        maxValue={input_skillstats_max[item]}
+                                        onChangeValue={(index) => this.changeDigit(item, index)}
+                                    />
+                                </View>
+                            )}
+                        />
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
+    renderSuggest = () => {
+        const { input_suggest } = this.state;
+
+        const lang = langManager.curr['report'];
+        const text = lang['type-suggest-text'];
+        const label = lang['type-suggest-input'];
+
+        return (
+            <View>
+                <Text style={styles.textSuggest}>{text}</Text>
+                <InputText
+                    containerStyle={styles.input}
+                    label={label}
+                    value={input_suggest}
+                    onChangeText={this.changeTextInputSuggest}
+                    numberOfLines={2}
+                    multiline
+                />
+            </View>
+        );
+    };
+
+    renderBug = () => {
+        const { input_bug1, input_bug2 } = this.state;
+
+        const lang = langManager.curr['report'];
+        const text = lang['type-bug-text'];
+        const input1 = lang['type-bug-input1'];
+        const input2 = lang['type-bug-input2'];
+
+        return (
+            <View>
+                <Text style={[styles.text, styles.marginBot]}>{text}</Text>
+                <InputText
+                    containerStyle={styles.input}
+                    label={input1}
+                    value={input_bug1}
+                    onChangeText={this.changeTextInputBug1}
+                    numberOfLines={2}
+                    multiline
+                />
+                <InputText
+                    containerStyle={styles.input}
+                    label={input2}
+                    value={input_bug2}
+                    onChangeText={this.changeTextInputBug2}
+                    numberOfLines={2}
+                    multiline
+                />
+            </View>
+        );
+    };
+
+    renderMessage = () => {
+        const { input_message } = this.state;
+
+        const lang = langManager.curr['report'];
+        const text = lang['type-message-text'];
+
+        return (
+            <View>
+                <Text style={[styles.text, styles.marginBot]}>{text}</Text>
+                <InputText
+                    containerStyle={styles.input}
+                    label={lang['type-message-input']}
+                    value={input_message}
+                    onChangeText={this.changeTextInputMessage}
+                    numberOfLines={2}
+                    multiline
+                />
+            </View>
+        );
+    };
 }
 
 export default Report;

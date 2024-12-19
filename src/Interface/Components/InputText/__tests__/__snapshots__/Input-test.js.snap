@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`[Component] InputText renders correctly 1`] = `
+<View
+  collapsable={false}
+  onLayout={[Function]}
+  style={
+    {
+      "backgroundColor": "#00000000",
+      "borderColor": "#D0D0D0",
+      "borderRadius": 8,
+      "borderWidth": 1.2,
+      "opacity": 1,
+      "paddingRight": 0,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      {
+        "backgroundColor": "#0E1247",
+        "height": 3,
+        "left": 6,
+        "position": "absolute",
+        "top": -2,
+        "transform": [
+          {
+            "scaleX": 0,
+          },
+        ],
+        "width": 0,
+      }
+    }
+  />
+  <View
+    collapsable={false}
+    pointerEvents="none"
+    style={
+      {
+        "alignItems": "center",
+        "display": "flex",
+        "justifyContent": "center",
+        "left": 0,
+        "overflow": "scroll",
+        "paddingHorizontal": 4,
+        "position": "absolute",
+        "top": 0,
+        "transform": [
+          {
+            "translateX": -0,
+          },
+          {
+            "translateY": -0,
+          },
+          {
+            "scale": 1,
+          },
+          {
+            "translateX": 0,
+          },
+          {
+            "translateY": 0,
+          },
+          {
+            "translateX": 16,
+          },
+          {
+            "translateY": -2,
+          },
+        ],
+      }
+    }
+  />
+  <TextInput
+    autoComplete="off"
+    autoCorrect={false}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onSubmitEditing={[Function]}
+    placeholderTextColor="#B0B0B0"
+    selectionColor="white"
+    style={
+      [
+        {
+          "fontSize": 18,
+          "maxHeight": 256,
+          "minHeight": 12,
+          "paddingHorizontal": 24,
+          "paddingVertical": 16,
+          "verticalAlign": "middle",
+        },
+        {
+          "color": "#ECECEC",
+        },
+        undefined,
+      ]
+    }
+    testID="textInput"
+    textContentType="none"
+  />
+</View>
+`;

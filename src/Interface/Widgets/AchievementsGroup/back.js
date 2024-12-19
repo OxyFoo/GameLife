@@ -5,9 +5,9 @@ import user from 'Managers/UserManager';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Types/UserOnline').Friend} Friend
- * @typedef {import('Class/Achievements').Achievement} Achievement
+ *
+ * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('Data/User/Achievements').Achievement} Achievement
  */
 
 const AchievementsGroupProps = {
@@ -22,7 +22,10 @@ class AchievementsGroupBack extends React.Component {
     state = {
         /** @type {Array<Achievement>} */
         lastAchievements: []
-    }
+    };
+
+    /** @type {Symbol | null} */
+    achievementsListener = null;
 
     /** @param {AchievementsGroupProps} props */
     constructor(props) {
@@ -51,17 +54,21 @@ class AchievementsGroupBack extends React.Component {
         this.setState({
             lastAchievements: user.achievements.GetLast()
         });
-    }
+    };
 
     openAchievements = () => {
         if (this.props.friend === null) {
             user.interface.ChangePage('achievements');
         } else {
             user.interface.ChangePage('achievements', {
-                friendID: this.props.friend.accountID
+                args: {
+                    friendID: this.props.friend.accountID
+                }
             });
         }
-    }
+    };
+
+    /** @param {number} ID */
     onAchievementPress = (ID) => user.achievements.ShowCardPopup(ID);
 }
 

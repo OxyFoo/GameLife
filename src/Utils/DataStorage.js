@@ -2,26 +2,36 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { StrIsJSON } from './String';
 
-/**
- * @typedef {object} DataStorage_Data
- */
 const STORAGE_KEYS = {
     LOGIN: '@data/login',
-    USER: '@data/user',
-    INTERNAL: '@data/internal',
+    USER_CLASS: '@data/user-class',
+    USER_DATA: '@data/user-data',
+    APP_DATA: '@data/app',
 
-    INTERNAL_HASHES: '@settings/internal_hashes',
+    APPDATA_HASHES: '@settings/appdata_hashes',
     DATE: '@tools/date'
 };
 
 class DataStorage {
     /**
-     * @param {DataStorage_Data} storageKey Storage key
-     * @param {object} data Data to save (JSON object)
+     * @param {string} storageKey Storage key
+     * @param {object | null} data Data to save (JSON object)
      * @returns {Promise<boolean>} True if data was saved
      */
     static async Save(storageKey, data) {
         let success = true;
+
+        // If data is null, reset the storage
+        if (data === null) {
+            await AsyncStorage.removeItem(storageKey, (err) => {
+                if (err) {
+                    console.error(err);
+                    success = false;
+                }
+            });
+            return success;
+        }
+
         const strData = JSON.stringify(data);
         await AsyncStorage.setItem(storageKey, strData, (err) => {
             if (err) {
@@ -33,15 +43,20 @@ class DataStorage {
     }
 
     /**
-     * @param {DataStorage_Data} storageKey Storage key
-     * @returns {Promise<object?>} Data (JSON object) or null if an error occurred
+     * @template {object} T
+     * @param {string} storageKey Storage key
+     * @returns {Promise<T | null>} Data (JSON object) or null if an error occurred
      */
     static async Load(storageKey) {
         let json = null;
 
-        const localData = await AsyncStorage.getItem(storageKey);
-        if (StrIsJSON(localData)) {
-            json = JSON.parse(localData);
+        try {
+            const localData = await AsyncStorage.getItem(storageKey);
+            if (localData !== null && StrIsJSON(localData)) {
+                json = JSON.parse(localData);
+            }
+        } catch (error) {
+            console.error(error);
         }
 
         return json;

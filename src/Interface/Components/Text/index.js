@@ -1,80 +1,79 @@
 import * as React from 'react';
-import { StyleSheet, Text as RNText, TouchableOpacity } from 'react-native';
+import { Animated, Text as RNText, TouchableOpacity, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
 const MAIN_FONT_NAME = 'Hind Vadodara';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').TextStyle} TextStyle
  * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle>} TextStyleProp
+ * @typedef {import('react-native').Animated.AnimatedProps<TextStyle>} AnimatedTextStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle | AnimatedTextStyle>} TextStyleProp
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
- * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('react-native').TextProps} TextProps
+ * @typedef {import('react-native').StyleProp<TextStyle>} StyleProp
+ *
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ *
+ * @typedef {Object} TextPropsType
+ * @property {TextStyleProp} style
+ * @property {ViewStyleProp} containerStyle Style of touchable opacity for onPress text
+ * @property {number} fontSize
+ * @property {ThemeColor | ThemeText} color
+ * @property {boolean} animated
  */
 
+const AnimatedRNText = Animated.createAnimatedComponent(RNText);
+
+/** @type {TextProps & TextPropsType} */
 const TextProps = {
-    /** @type {string | JSX.Element | null} */
-    children: null,
-
-    /** @type {TextStyleProp} */
     style: {},
-    
-    /** @type {ViewStyleProp} */
     containerStyle: {},
-
-    /** @type {number} */
     fontSize: 18,
-
-    /** @type {ThemeColor | ThemeText} */
     color: 'primary',
-
-    /** @type {(event: GestureResponderEvent) => void | null} */
-    onPress: null,
-
-    /** @type {(event: LayoutChangeEvent) => void} */
-    onLayout: (event) => {},
-
-    /** @type {boolean} */
-    bold: false,
-
-    /** @type {number?} */
-    numberOfLines: undefined
+    animated: false
 };
 
 class Text extends React.Component {
-    render() {
-        const onPress = this.props.onPress;
-        const color = themeManager.GetColor(this.props.color);
-
+    /** @param {TextProps & TextPropsType} nextProps */
+    shouldComponentUpdate(nextProps) {
         return (
-            <TouchableOpacity
-                style={this.props.containerStyle}
-                onPress={onPress}
-                activeOpacity={.5}
-                disabled={onPress === null}
-            >
-                <RNText
-                    numberOfLines={this.props.numberOfLines}
-                    style={[
-                        styles.text,
-                        {
-                            color: color,
-                            fontSize: this.props.fontSize,
-                            fontWeight: this.props.bold ? 'bold' : 'normal'
-                        },
-                        this.props.style
-                    ]}
-                    onLayout={this.props.onLayout}
-                >
-                    {this.props.children}
-                </RNText>
-            </TouchableOpacity>
+            this.props.style !== nextProps.style ||
+            this.props.children !== nextProps.children ||
+            this.props.color !== nextProps.color ||
+            this.props.fontSize !== nextProps.fontSize ||
+            this.props.animated !== nextProps.animated ||
+            this.props.onPress !== nextProps.onPress
         );
+    }
+
+    render() {
+        const { style, animated, containerStyle, color, fontSize, onPress, children, ...props } = this.props;
+
+        /** @type {StyleProp} */
+        const basicColor = {
+            fontSize,
+            color: typeof color === 'string' ? themeManager.GetColor(color) : color
+        };
+
+        const RawText = animated ? AnimatedRNText : RNText;
+        let component = (
+            <RawText style={[styles.text, basicColor, style]} {...props}>
+                {children}
+            </RawText>
+        );
+
+        if (onPress) {
+            component = (
+                <TouchableOpacity style={containerStyle} onPress={onPress} activeOpacity={0.5}>
+                    {component}
+                </TouchableOpacity>
+            );
+        }
+
+        return component;
     }
 }
 
@@ -90,5 +89,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Text;
-export { MAIN_FONT_NAME };
+export { Text, MAIN_FONT_NAME };

@@ -8,9 +8,9 @@ import { DateFormat } from 'Utils/Date';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Interface/Components').Button} Button
- * @typedef {import('Interface/Components').SimpleContainer} SimpleContainer
+ *
+ * @typedef {import('Data/User/DailyQuests').DailyQuestDay} DailyQuestDay
+ * @typedef {import('Data/User/DailyQuests').DailyQuestData} DailyQuestData
  */
 
 const DailyQuestProps = {
@@ -20,12 +20,16 @@ const DailyQuestProps = {
 
 class DailyQuestBack extends React.Component {
     state = {
-        dailyQuest: user.quests.dailyquest.today.Get(),
+        dailyQuest: user.dailyQuest.currentQuest.Get(),
 
-        claimIndex: -1,
-        claimDay: 0,
+        /** @type {DailyQuestData | null} */
+        claimList: null,
+        /** @type {DailyQuestDay | null} */
+        claimDay: null,
+        claimStreak: 0,
+        /** @type {string | null} */
         claimDate: null
-    }
+    };
 
     /** @type {Symbol | null} */
     dailyQuestListener = null;
@@ -33,56 +37,60 @@ class DailyQuestBack extends React.Component {
     /** @type {Symbol | null} */
     claimListsListener = null;
 
-    /** @type {React.RefObject<SimpleContainer>} */
-    refContainer = React.createRef();
-
-    /** @type {React.RefObject<Button>} */
-    refOpenStreakPopup = React.createRef();
-
-    gradientPos1 = { x: 0, y: -2 };
-    gradientPos2 = { x: 1, y: 2 };
-
     componentDidMount() {
-        this.updateClaimList();
-
-        this.dailyQuestListener = user.quests.dailyquest.today.AddListener((dailyQuest) => {
-            this.setState({ dailyQuest });
-        });
-        this.claimListsListener = user.quests.dailyquest.claimsList.AddListener(this.updateClaimList);
+        this.dailyQuestListener = user.dailyQuest.currentQuest.AddListener(this.updateClaimList);
+        this.claimListsListener = user.dailyQuest.claimsList.AddListener(this.updateClaimList);
     }
 
     componentWillUnmount() {
-        user.quests.dailyquest.today.RemoveListener(this.dailyQuestListener);
-        user.quests.dailyquest.claimsList.RemoveListener(this.claimListsListener);
+        user.dailyQuest.currentQuest.RemoveListener(this.dailyQuestListener);
+        user.dailyQuest.claimsList.RemoveListener(this.claimListsListener);
     }
 
     updateClaimList = () => {
-        let claimDay = 0;
+        const dailyQuest = user.dailyQuest.currentQuest.Get();
+        const claimLists = user.dailyQuest.claimsList.Get();
+        const claimListIndex = user.dailyQuest.GetCurrentClaimIndex();
+        const claimList = claimListIndex === -1 ? null : claimLists[claimListIndex];
+
+        /** @type {this['state']['claimDay']} */
+        let claimDay = null;
+
+        /** @type {this['state']['claimStreak']} */
+        let claimStreak = 0;
+
+        /** @type {this['state']['claimDate']} */
         let claimDate = null;
 
-        const claimIndex = user.quests.dailyquest.GetCurrentClaimIndex();
-        const claimLists = user.quests.dailyquest.claimsList.Get();
-        const claimList = claimLists[claimIndex];
-        if (claimIndex !== -1) {
-            for (claimDay = 0; claimDay < claimList.daysCount; claimDay++) {
-                if (!claimList.claimed.includes(claimDay + 1)) break;
-            }
-            if (!user.quests.dailyquest.IsCurrentList(claimList)) {
+        if (claimList !== null) {
+            const claimDays = user.dailyQuest.GetClaimDays(claimList);
+            const claimDayIndex = user.dailyQuest.GetLastUnclaimedDayIndex(claimList);
+
+            claimDay = claimDays.find((day) => day.index === claimDayIndex) || null;
+            claimStreak = user.dailyQuest.GetStreak(claimList);
+            if (!user.dailyQuest.IsCurrentList(claimList)) {
                 claimDate = DateFormat(new Date(claimList.start + 'T00:00:00'), 'DD/MM/YYYY');
             }
+        } else {
+            const claimDays = user.dailyQuest.GetClaimDays(null);
+            claimDay = claimDays[0];
         }
 
         this.setState({
-            dailyQuest: user.quests.dailyquest.today.Get(),
-            claimIndex,
+            dailyQuest,
+            claimList,
             claimDay,
+            claimStreak,
             claimDate
         });
-    }
+    };
 
     openRewardPopup = () => {
-        user.interface.popup.Open('custom', RenderPopup, undefined, true, false);
-    }
+        user.interface.popup?.Open({
+            content: <RenderPopup />,
+            cancelable: true
+        });
+    };
 }
 
 DailyQuestBack.prototype.props = DailyQuestProps;

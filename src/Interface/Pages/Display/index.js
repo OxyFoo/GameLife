@@ -1,60 +1,47 @@
 import * as React from 'react';
-import { View, Animated, Dimensions, StyleSheet } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
-import { Page, Text, Icon, Button } from 'Interface/Components';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import { Text, Icon, Button } from 'Interface/Components';
 
 class Display extends BackDisplay {
     render() {
+        const { icon, text, button, button2 } = this.props.args;
+
         return (
-            <Page ref={ref => this.refPage = ref} style={styles.page} canScrollOver>
-                <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
-                    <Icon
-                        icon={this.icon}
-                        size={SCREEN_WIDTH * this.iconRatio}
-                    />
-                </Animated.View>
-                <Text>{this.text}</Text>
-                {this.renderButtons()}
+            <View style={styles.page}>
+                <View style={styles.iconParent}>
+                    <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
+                        <Icon icon={icon} size={this.iconWidth} />
+                    </Animated.View>
+                    <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
+                        <Text style={styles.title}>{text}</Text>
+                    </Animated.View>
+                </View>
+
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
-                        <Text fontSize={16} color={'light'} style={styles.quote}>{this.quote.text}</Text>
-                        <Text fontSize={14} color={'secondary'} style={styles.quote}>{this.quote.author}</Text>
+                        <Text fontSize={16} color={'light'} style={styles.quote}>
+                            {this.quote.text}
+                        </Text>
+                        <Text fontSize={14} color={'secondary'} style={styles.quote}>
+                            {this.quote.author}
+                        </Text>
                     </View>
                 )}
-            </Page>
-        );
-    }
 
-    renderButtons = () => {
-        // Show two buttons if both are defined
-        if (!!this.button2 && !!this.callback2) {
-            return (
                 <View style={styles.doubleButtons}>
-                    <Button
-                        style={styles.buttonHalf1}
-                        color='main1'
-                        fontSize={14}
-                        onPress={this.callback}
-                    >
-                        {this.button}
-                    </Button>
-                    <Button
-                        style={styles.buttonHalf2}
-                        color='main2'
-                        fontSize={14}
-                        onPress={this.callback2}
-                    >
-                        {this.button2}
+                    {button2 && this.callback2 && (
+                        <Button style={styles.button} appearance='outline' fontSize={14} onPress={this.callback2}>
+                            {button2}
+                        </Button>
+                    )}
+                    <Button style={styles.button} fontSize={14} onPress={this.callback}>
+                        {button}
                     </Button>
                 </View>
-            );
-        }
-        return (
-            <Button style={styles.button} color='main1' onPress={this.callback}>{this.button}</Button>
+            </View>
         );
     }
 }
@@ -63,30 +50,31 @@ const styles = StyleSheet.create({
     page: {
         width: '100%',
         height: '100%',
-        paddingTop: 48,
-        paddingBottom: 10,
+        padding: 24,
         alignItems: 'center',
-        justifyContent: 'space-evenly'
-    },
-    doubleButtons: {
-        width: '100%',
-        flexDirection: 'row',
         justifyContent: 'space-between'
     },
+    iconParent: {
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    title: {
+        marginTop: 16,
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
+
+    doubleButtons: {
+        width: '100%'
+    },
     button: {
-        width: '80%'
+        marginBottom: 12
     },
-    buttonHalf1: {
-        flex: 1,
-        marginRight: 6,
-        paddingHorizontal: 6
-    },
-    buttonHalf2: {
-        flex: 1,
-        marginLeft: 6,
-        paddingHorizontal: 6
-    },
+
     quoteContainer: {
+        paddingVertical: 42,
         alignItems: 'center',
         justifyContent: 'flex-end'
     },

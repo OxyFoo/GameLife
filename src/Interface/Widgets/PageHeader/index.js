@@ -1,39 +1,72 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 
+import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { Text, Icon } from 'Interface/Components';
+import { Text, Icon, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
+ * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ *
+ * @typedef {object} PageHeaderPropsType
+ * @property {StyleProp} style
+ * @property {string | null} title
+ * @property {(event: GestureResponderEvent) => void} onBackPress
+ * @property {IconsName} [secondaryIcon]
+ * @property {ThemeColor | ThemeText | 'gradient'} [secondaryIconColor]
+ * @property {(event: GestureResponderEvent) => void} [onSecondaryIconPress]
  */
 
+/** @type {PageHeaderPropsType} */
 const PageHeaderProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {(event: GestureResponderEvent) => void} */
-    onBackPress: (event) => {},
-
-    /** @type {(event: GestureResponderEvent) => void} */
-    onHelpPress: undefined
+    title: null,
+    onBackPress: () => {},
+    secondaryIcon: 'info-circle-outline',
+    secondaryIconColor: 'white',
+    onSecondaryIconPress: undefined
 };
 
 class PageHeader extends React.Component {
     render() {
-        const { onBackPress, onHelpPress} = this.props;
-        const T_back = langManager.curr['modal']['back'];
+        const {
+            title,
+            onBackPress,
+            secondaryIcon: helpIcon,
+            secondaryIconColor,
+            onSecondaryIconPress: onHelpPress
+        } = this.props;
+        const text = title ?? langManager.curr['modal']['back'];
 
         return (
-            <View style={[styles.header, this.props.style]}>
-                <TouchableOpacity style={styles.headerLeft} activeOpacity={.5} onPress={onBackPress}>
-                    <Icon style={styles.headerLeftArrow} icon='arrowLeft' size={30} />
-                    <Text fontSize={16}>{T_back}</Text>
+            <View style={[styles.header, onHelpPress && styles.headerWithIcon, this.props.style]}>
+                <TouchableOpacity style={styles.headerLeft} activeOpacity={0.5} onPress={onBackPress}>
+                    <Icon
+                        style={styles.headerLeftArrow}
+                        icon='arrow-square-outline'
+                        color='gradient'
+                        size={24}
+                        angle={-90}
+                    />
+
+                    {title === null ? <Text fontSize={16}>{text}</Text> : <Text style={styles.text}>{text}</Text>}
                 </TouchableOpacity>
-                {!!onHelpPress && <Icon onPress={onHelpPress} icon='info' size={30} />}
+                {onHelpPress && (
+                    <Button
+                        style={styles.secondaryButton}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={(e) => onHelpPress(e)}
+                    >
+                        <Icon icon={helpIcon} color={secondaryIconColor} size={30} />
+                    </Button>
+                )}
             </View>
         );
     }
@@ -42,27 +75,4 @@ class PageHeader extends React.Component {
 PageHeader.prototype.props = PageHeaderProps;
 PageHeader.defaultProps = PageHeaderProps;
 
-const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        marginTop: 36,
-        marginBottom: 48,
-
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-
-        elevation: 1000,
-        zIndex: 1000
-    },
-    headerLeft: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    headerLeftArrow: {
-        marginRight: 12
-    }
-});
-
-export default PageHeader;
+export { PageHeader };

@@ -1,3 +1,5 @@
+// TODO: This page is unused, remove it ?
+
 import * as React from 'react';
 import { View, FlatList } from 'react-native';
 
@@ -6,7 +8,7 @@ import BackLeaderboard from './back';
 import { RankElement } from './element';
 import langManager from 'Managers/LangManager';
 
-import { Page, Input, Button } from 'Interface/Components';
+import { InputText, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Leaderboard extends BackLeaderboard {
@@ -17,20 +19,16 @@ class Leaderboard extends BackLeaderboard {
         const sortType = Object.values(this.sortList)[sortIndex];
 
         return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
+            <View>
                 <PageHeader style={styles.header} onBackPress={this.Back} />
 
-                <View style={styles.myRankContainer}>
-                    {selfData !== null && (
-                        <RankElement item={selfData} />
-                    )}
-                </View>
+                <View style={styles.myRankContainer}>{selfData !== null && <RankElement item={selfData} />}</View>
 
                 <View style={[styles.filter, styles.row]}>
-                    <Input
+                    <InputText
                         style={styles.inputSearch}
                         label={lang['input-label-search']}
-                        text={search}
+                        value={search}
                         onChangeText={this.onChangeSearch}
                     />
                     <Button
@@ -48,9 +46,9 @@ class Leaderboard extends BackLeaderboard {
                     data={playersData}
                     style={styles.flatlist}
                     renderItem={({ item }) => <RankElement item={item} />}
-                    keyExtractor={item => `rank-id-${item.accountID}`}
+                    keyExtractor={(item) => `rank-id-${item.accountID}`}
                 />
-            </Page>
+            </View>
         );
     }
 }

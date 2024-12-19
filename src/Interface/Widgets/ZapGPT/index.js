@@ -7,13 +7,13 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { Text, Input, Button, Separator } from 'Interface/Components';
+import { Text, InputText, Button, Separator } from 'Interface/Components';
 import { GetFullDate } from 'Utils/Date';
 import { GetDate, TimeToFormatString } from 'Utils/Time';
 import { renderNoRemaining, renderNotBuyed, renderNotConnected } from './render';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('react-native').ListRenderItemInfo<Activity>} ListRenderItemInfo
  */
 
@@ -56,9 +56,9 @@ class ZapGPT extends ZapGPTBack {
                     ))}
                 </View>
 
-                {/* Input */}
+                {/* InputText */}
                 <View style={styles.input}>
-                    <Input
+                    <InputText
                         label={lang['input-label'] + placeholder}
                         text={text}
                         onChangeText={this.onChangeText}
@@ -102,7 +102,7 @@ class ZapGPT extends ZapGPTBack {
                             `${item.startTime}-${item.skillID}-${item.duration}-${index}`
                         }
                         ItemSeparatorComponent={() => (
-                            <Separator.Horizontal style={styles.separator} />
+                            <Separator style={styles.separator} />
                         )}
                     />
                 </View>
@@ -116,7 +116,7 @@ class ZapGPT extends ZapGPTBack {
                     />
                     <Button
                         style={styles.buttonRetry}
-                        color='main3'
+                        color='backgroundDark'
                         icon='retry'
                         onPress={this.Retry}
                     />

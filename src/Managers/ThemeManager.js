@@ -1,5 +1,4 @@
 import THEMES from 'Ressources/themes';
-import { Rarity } from 'Data/Items';
 import { MinMax } from 'Utils/Functions';
 
 /**
@@ -8,6 +7,7 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {keyof typeof THEMES[ThemeName]['Color']} ThemeColor
  * @typedef {keyof typeof THEMES[ThemeName]['Text']} ThemeText
  * @typedef {keyof typeof THEMES[ThemeName]['Rarity']} ThemeRarity
+ * @typedef {import('Types/Global/Rarities').Rarities} Rarities
  */
 
 class ThemeManager {
@@ -62,11 +62,23 @@ class ThemeManager {
         }
 
         const theme = THEMES[themeName];
-        for (const type of Object.keys(theme)) {
-            if (param.type === null || param.type === type) {
-                if (theme[type].hasOwnProperty(color)) {
-                    return this.ApplyOpacity(theme[type][color], param.opacity);
-                }
+        /** @type {Array<keyof THEMES['Main']>} */ // @ts-ignore
+        const THEME_KEYS = Object.keys(theme);
+
+        for (const type of THEME_KEYS) {
+            const themeType = theme[type];
+            if (param.type !== null && param.type !== type) {
+                continue;
+            }
+            if (!themeType.hasOwnProperty(color)) {
+                continue;
+            }
+
+            /** @type {string} */ // @ts-ignore
+            const _color = themeType[color];
+            const newColor = this.ApplyOpacity(_color, param.opacity);
+            if (newColor !== null) {
+                return newColor;
             }
         }
 
@@ -80,44 +92,46 @@ class ThemeManager {
      * @returns {string?} Hex color (or null if not hex color)
      */
     ApplyOpacity(hexColor, opacity = 1) {
-        if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) return null;
-        if (opacity === 1) return hexColor;
+        if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) {
+            return null;
+        }
+        if (opacity === 1) {
+            return hexColor;
+        }
 
         let hexOpacityColor = Math.round(opacity * 255).toString(16);
-        if (hexOpacityColor.length === 1) hexOpacityColor = '0' + hexOpacityColor;
+        if (hexOpacityColor.length === 1) {
+            hexOpacityColor = '0' + hexOpacityColor;
+        }
         return hexColor.substring(0, 7) + hexOpacityColor;
     }
 
     /**
-     * @param {number} rarity 0 to 4 (common, rare, epic, legendary, event)
+     * @param {Rarities} rarity 0 to 4 (common, rare, epic, legendary, event)
      * @returns {string[]}
      */
     GetRariryColors = (rarity) => {
+        /** @type {string[]} */
         let colors = [];
         switch (rarity) {
-
-            case Rarity.common:
-                colors = [ this.GetColor('common1'), this.GetColor('common2') ];
+            case 'common':
+                colors = [this.GetColor('common1'), this.GetColor('common2')];
                 break;
 
-            case Rarity.rare:
-                colors = [ this.GetColor('rare1'), this.GetColor('rare2') ];
+            case 'rare':
+                colors = [this.GetColor('rare1'), this.GetColor('rare2')];
                 break;
 
-            case Rarity.epic:
-                colors = [ this.GetColor('epic1'), this.GetColor('epic2') ];
+            case 'epic':
+                colors = [this.GetColor('epic1'), this.GetColor('epic2')];
                 break;
 
-            case Rarity.legendary:
-                colors = [ this.GetColor('legendary1'), this.GetColor('legendary2') ];
-                break;
-
-            case Rarity.event:
-                colors = [ this.GetColor('event1'), this.GetColor('event2') ];
+            case 'legendary':
+                colors = [this.GetColor('legendary1'), this.GetColor('legendary2')];
                 break;
         }
         return colors;
-    }
+    };
 
     /**
      * @param {string} color The color to shade, in hex format
@@ -133,11 +147,30 @@ class ThemeManager {
         G = MinMax(0, Math.round(G * (1 + percent / 100)), 255);
         B = MinMax(0, Math.round(B * (1 + percent / 100)), 255);
 
-        const RR = (R.toString(16).length === 1) ? `0${R.toString(16)}` : R.toString(16);
-        const GG = (G.toString(16).length === 1) ? `0${G.toString(16)}` : G.toString(16);
-        const BB = (B.toString(16).length === 1) ? `0${B.toString(16)}` : B.toString(16);
+        const RR = R.toString(16).length === 1 ? `0${R.toString(16)}` : R.toString(16);
+        const GG = G.toString(16).length === 1 ? `0${G.toString(16)}` : G.toString(16);
+        const BB = B.toString(16).length === 1 ? `0${B.toString(16)}` : B.toString(16);
 
         return `#${RR}${GG}${BB}`;
+    }
+
+    /**
+     * @param {string | ThemeColor | ThemeText | ThemeRarity} hex Hexadecimal color like #RRGGBB
+     * @returns {number} Luminance relative between 0 and 1
+     */
+    GetLuminance(hex) {
+        if (!hex.includes('#')) {
+            throw new Error('Hex color must start with #');
+        }
+
+        const _hex = hex.replace(/^#/, '');
+        const bigint = parseInt(_hex, 16);
+
+        const r = ((bigint >> 16) & 255) / 255;
+        const g = ((bigint >> 8) & 255) / 255;
+        const b = (bigint & 255) / 255;
+
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 }
 

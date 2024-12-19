@@ -1,15 +1,14 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
 import styles from './style';
 import BackNewPage from './back';
 
-import { Page } from 'Interface/Components';
-
 class NewPage extends BackNewPage {
     render() {
         return (
-            <Page ref={ref => this.refPage = ref} canScrollOver>
-            </Page>
+            <View>
+            </View>
         );
     }
 }

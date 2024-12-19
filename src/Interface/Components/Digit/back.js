@@ -2,62 +2,46 @@ import * as React from 'react';
 import { Animated } from 'react-native';
 
 import { TimingAnimation, SpringAnimation } from 'Utils/Animations';
-import { MinMax } from 'Utils/Functions';
+import { MinMax, Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * 
- * @typedef {(name: string, index: number) => void} DigitCallback
+ *
+ * @typedef {Object} DigitPropsType
+ * @property {StyleViewProp} style
+ * @property {number} minDigitWidth
+ * @property {ThemeColor | ThemeText} color
+ * @property {boolean} lock If true, value can't be changed
+ * @property {number} value
+ * @property {number} minValue
+ * @property {number} maxValue
+ * @property {number} stepValue
+ * @property {number} velocity Multiplier of the animation speed
+ * @property {number} fontSize
+ * @property {ThemeColor | ThemeText} fadeColor
+ * @property {(index: number) => void} onChangeValue
  */
 
+/** @type {DigitPropsType} */
 const DigitProps = {
-    /** @type {StyleViewProp} */
-    containerStyle: {},
-
-    /** @type {number} */
-    containerWidth: 46,
-
-    /** @type {number} */
+    style: {},
     minDigitWidth: 0,
-
-    /** @type {string} - The text to get in callback */
-    name: 'index',
-
-    /** @type {ThemeColor | ThemeText} */
     color: 'primary',
-
-    /** @type {boolean} If true, value can't be changed */
     lock: false,
-
-    /** @type {number} */
-    initValue: 0,
-
-    /** @type {number} */
+    value: 0,
     minValue: 0,
-
-    /** @type {number} */
     maxValue: 6,
-
-    /** @type {number} */
     stepValue: 1,
-
-    /** @type {number} Multiplier of the animation speed */
     velocity: 1,
-
-    /** @type {number} */
-    fontSize: undefined,
-
-    /** @type {ThemeColor | ThemeText} */
-    fadeColor: 'background',
-
-    /** @type {DigitCallback} */
-    callback: (name, index) => {}
+    fontSize: 16,
+    fadeColor: 'ground1',
+    onChangeValue: () => {}
 };
 
 /**
@@ -74,14 +58,16 @@ class DigitBack extends React.Component {
     scrollX = 0;
 
     state = {
-        paddingLeft: 0,
+        containerWidth: 0,
         digitWidth: 0,
         animLeft: new Animated.Value(0)
-    }
+    };
 
     componentDidMount() {
-        const { initValue, minValue, maxValue, stepValue } = this.props;
-        const newValue = MinMax(minValue, initValue, maxValue);
+        const { value, minValue, maxValue, stepValue } = this.props;
+
+        // Set initial value
+        const newValue = MinMax(minValue, value, maxValue);
         const interval = setInterval(() => {
             if (this.state.digitWidth > 0) {
                 this.SetDigitsIndex(newValue / stepValue);
@@ -90,89 +76,93 @@ class DigitBack extends React.Component {
         }, 200);
     }
 
-    /** @param {DigitProps} prevProps */
+    /** @param {DigitPropsType} prevProps */
     componentDidUpdate(prevProps) {
         const { digitWidth } = this.state;
-        const { name, minValue, maxValue, stepValue, callback } = this.props;
+        const { minValue, maxValue, stepValue, onChangeValue } = this.props;
 
         // If maxValue is decreased, we need to update the position of digits
         if (prevProps.maxValue > maxValue && maxValue / stepValue < this.scrollX / digitWidth) {
             this.SetDigitsIndex(maxValue / stepValue);
-            callback(name, maxValue / stepValue);
+            onChangeValue(maxValue / stepValue);
         }
 
         // If minValue is increased, we need to update the position of digits
         if (prevProps.minValue < minValue && minValue / stepValue > this.scrollX / digitWidth) {
             this.SetDigitsIndex(minValue / stepValue);
-            callback(name, minValue / stepValue);
+            onChangeValue(minValue / stepValue);
+        }
+
+        // If value is changed, we need to update the position of digits
+        if (prevProps.value !== this.props.value) {
+            this.SetDigitsIndex(this.props.value / stepValue);
         }
     }
 
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
-        const { minDigitWidth, containerWidth } = this.props;
         const { width } = event.nativeEvent.layout;
-        const margins = 4; // 2 * 2
-        const digitWidth = Math.max(minDigitWidth, width) + margins;
+        this.setState({ containerWidth: width });
+    };
 
-        // Init
-        if (digitWidth > this.state.digitWidth) {
-            const containerBorders = 4; // 2 * 2
-            const paddingLeft = (containerWidth - containerBorders - digitWidth) / 2;
-            this.setState({ digitWidth, paddingLeft });
+    /** @param {LayoutChangeEvent} event */
+    onLayoutDigit = (event) => {
+        const { width } = event.nativeEvent.layout;
+        if (width > this.state.digitWidth) {
+            this.setState({ digitWidth: width });
         }
-    }
+    };
 
     /** @param {number} index Scroll position index */
     SetDigitsIndex = (index) => {
         const { digitWidth } = this.state;
-        this.SetDigitsPosX(index * digitWidth);
-    }
+        const { minValue, maxValue, stepValue, onChangeValue } = this.props;
+
+        const _min = Math.floor(minValue / stepValue);
+        const _max = Math.floor(maxValue / stepValue);
+        const _index = MinMax(_min, index, _max);
+        const _width = digitWidth + 4;
+        this.SetDigitsPosX(_index * _width);
+        onChangeValue(_index);
+    };
 
     /** @param {number} posX Scroll position in pixels */
     SetDigitsPosX = (posX) => {
         this.scrollX = posX;
         this.newPosX = posX;
         SpringAnimation(this.state.animLeft, this.scrollX).start();
-    }
+    };
+
+    firstX = 0;
+    newPosX = 0;
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.firstX = event.nativeEvent.pageX;
-    }
+    };
+
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
         event.stopPropagation();
-
         const posX = event.nativeEvent.pageX;
         const delta = (this.firstX - posX) / 2;
         this.newPosX = this.scrollX + delta * this.props.velocity;
         TimingAnimation(this.state.animLeft, this.newPosX, 0).start();
-    }
-    /** @param {GestureResponderEvent} event */
-    onTouchEnd = (event) => {
-        if (this.props.lock) {
+    };
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
+        const { digitWidth } = this.state;
+        const { lock } = this.props;
+
+        if (lock) {
             this.SetDigitsPosX(this.scrollX);
             return;
         }
 
-        const { digitWidth } = this.state;
-        const { name, stepValue, minValue, maxValue, callback } = this.props;
-
-        let min_index = -1;
-        let min_delta = -1;
-        for (let i = 0; i <= maxValue / stepValue; i++) {
-            const delta = Math.abs(this.newPosX - i * digitWidth);
-            if (min_delta == -1 || delta < min_delta) {
-                min_index = i;
-                min_delta = delta;
-            }
-        }
-
-        const newIndex = Math.max(min_index, minValue / stepValue);
+        const newIndex = Round((this.newPosX + (digitWidth + 4) / 2) / (digitWidth + 4));
         this.SetDigitsIndex(newIndex);
-        callback(name, newIndex);
-    }
+    };
 }
 
 DigitBack.prototype.props = DigitProps;

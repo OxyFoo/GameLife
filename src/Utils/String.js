@@ -2,10 +2,13 @@
  * @param {string} str String to check if it's a valid json
  * @returns {boolean} Return true if string is a valid json
  */
- function StrIsJSON(str) {
+function StrIsJSON(str) {
     let isJSON = true;
-    try { JSON.parse(str); }
-    catch (e) { isJSON = false; }
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        isJSON = false;
+    }
     return isJSON;
 }
 
@@ -13,9 +16,9 @@
  * @param {string} email
  * @returns {boolean} True if str "email" is a valid email
  */
- function IsEmail(email) {
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    return typeof(email) === 'string' && email.length && reg.test(email);
+function IsEmail(email) {
+    const reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
+    return typeof email === 'string' && !!email.length && reg.test(email);
 }
 
 /**
@@ -30,9 +33,9 @@
  * @param {boolean} plural
  * @returns {string}
  */
- function ParsePlural(text, plural = false) {
+function ParsePlural(text, plural = false) {
     while (text.indexOf('[') !== -1) {
-        let [ start, end ] = [ text.indexOf('['), text.indexOf(']') ];
+        let [start, end] = [text.indexOf('['), text.indexOf(']')];
         let pluralText = '';
         if (plural) {
             pluralText = text.substring(start + 1, end);
@@ -58,4 +61,26 @@ function FormatForSearch(str) {
         .trim();
 }
 
-export { IsEmail, StrIsJSON, ParsePlural, FormatForSearch };
+/**
+ * @param {string} str
+ * @returns {number} Length of the string in pixels (approximate)
+ */
+function GetStringLength(str) {
+    const shortChars = ['i', 'l', 'j', 't'];
+    const longChars = ['W', 'M'];
+
+    let width = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (shortChars.includes(str[i])) {
+            width += 5;
+        } else if (longChars.includes(str[i])) {
+            width += 8;
+        } else {
+            width += 7;
+        }
+    }
+
+    return width;
+}
+
+export { IsEmail, StrIsJSON, ParsePlural, FormatForSearch, GetStringLength };

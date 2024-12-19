@@ -3,11 +3,11 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // Popup
     popup: {
-        height: 500,
+        width: '90%',
+        minWidth: '90%',
         paddingVertical: 12,
         paddingHorizontal: 12,
-        justifyContent: 'center',
-        overflow: 'visible'
+        justifyContent: 'center'
     },
     popupTitleContainer: {
         marginTop: -42,
@@ -68,29 +68,31 @@ const styles = StyleSheet.create({
     },
     rewardValue: {
         position: 'absolute',
-        right: -32,
-        bottom: -12
+        right: 2,
+        bottom: -2
     },
 
     claimState: {
-        minWidth: 72,
         position: 'absolute',
         top: 0,
         right: 0,
         bottom: 0,
+        paddingRight: 12,
         paddingVertical: 6,
         alignItems: 'center',
         justifyContent: 'center'
     },
     claimButton: {
-        width: 72,
         height: '100%',
-        marginRight: 28,
+        justifyContent: 'center',
         paddingVertical: 0,
-        paddingHorizontal: 6
+        paddingHorizontal: 12
+    },
+    claimTodayProgressbar: {
+        marginTop: 4
     },
     claimTomorrow: {
-        marginRight: 16,
+        marginRight: 0,
         fontSize: 16
     },
 
@@ -105,9 +107,7 @@ const styles = StyleSheet.create({
     claimAllButton: {
         height: 'auto',
         paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderWidth: 1.5,
-        borderColor: '#B83EFFE3'
+        paddingHorizontal: 16
     }
 });
 

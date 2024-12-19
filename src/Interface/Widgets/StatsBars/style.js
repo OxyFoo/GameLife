@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     XPHeaderSimplified: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: '10%',
+        paddingHorizontal: '10%'
     },
     XPBar: {
         marginBottom: 16
@@ -24,23 +24,22 @@ const styles = StyleSheet.create({
     },
     popupContentHeader: {
         position: 'absolute',
-        top: 12,
+        top: 16,
         left: 0,
         right: 0,
-        padding: 12,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    popupContentSwiper: {
-        justifyContent: 'flex-start',
-        paddingBottom: -12
+    popupButtonNavigation: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
     },
     popupContentStatPage: {
-        marginTop: 6,
-        marginBottom: 24
+        marginTop: 6
     },
     popupContentStat: {
-        padding: 12,
+        paddingVertical: 12,
         paddingHorizontal: 24
     }
 });

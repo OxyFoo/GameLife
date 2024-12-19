@@ -1,95 +1,85 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackHome from './back';
-import user from 'Managers/UserManager';
+import { Title } from './title';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Text, XPBar, Page } from 'Interface/Components';
-import { News, TodayPieChart, SkillsGroup, StatsBars, MultiplayerPanel, Missions } from 'Interface/Widgets';
-
-/**
- * @typedef {import('Class/Quests/MyQuests').MyQuest} MyQuest
- * @typedef {import('react-native').ListRenderItem<MyQuest>} FlatListMyQuestProps
- */
+import { Text, ProgressBar, Button } from 'Interface/Components';
+import { TodayPieChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
+        const lang = langManager.curr['home'];
         const {
             experience: { xpInfo },
-            values: { current_level, next_level },
-            mission
+            values: { currentLevel, currentXP, nextLevelXP },
+            scrollable
         } = this.state;
 
-        const lang = langManager.curr['home'];
-        const txt_level = langManager.curr['level']['level'];
-
-        const styleContainer = {
-            backgroundColor: themeManager.GetColor('dataBigKpi')
-        };
-
-        const styleSmallContainer = {
-            backgroundColor: themeManager.GetColor('ground2'),
-        };
-
         return (
-            <Page ref={ref => this.refPage = ref} isHomePage canScrollOver>
-
-                <View style={styles.XPHeader}>
-                    <View style={styles.XPHeaderLvl}>
-                        <Text style={styles.level}>{txt_level}</Text>
-                        <Text color='main2'>{current_level}</Text>
-                    </View>
-                    <Text>{next_level + '%'}</Text>
-                </View>
-
-                <XPBar
+            <ScrollView ref={this.refScrollView} style={styles.page} scrollEnabled={scrollable}>
+                {/* Experience */}
+                <ProgressBar
+                    style={styles.progressbar}
+                    height={8}
+                    color='main1'
                     value={xpInfo.xp}
                     maxValue={xpInfo.next}
                 />
-
-                <View style={[styles.homeRow, styles.topSpace]}>
-                    <TodayPieChart style={styles.todayPieChart} />
+                <View style={styles.XPHeader}>
+                    <Text style={styles.level}>{langManager.curr['level']['level-small'] + '. ' + currentLevel}</Text>
+                    <Text style={styles.experience}>
+                        {currentXP + '/' + nextLevelXP + ' ' + langManager.curr['level']['xp']}
+                    </Text>
                 </View>
 
-                <Missions
-                    style={styles.topSpace}
-                    refHome={this}
-                />
+                {/* Today missions */}
+                <Missions />
 
-                {mission.state === 'claimed' && (
-                    <News style={styles.topSpace} />
-                )}
+                {/* Today performance */}
+                <Title ref={this.refQuestsTitle} title={lang['section-today-performance']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='add-outline'
+                        fontColor='gradient'
+                        onPress={this.addActivity}
+                    />
+                </Title>
+                <TodayPieChart style={styles.todayPieChart} />
 
-                <View style={[styles.homeRow, styles.topSpace]}>
-                    <View style={[styleSmallContainer, styles.stats]}>
-                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
-                            {lang['container-stats-title']}
-                        </Text>
-                        <StatsBars data={user.stats} simplifiedDisplay={true} />
-                    </View>
+                {/* Today missions */}
+                <DailyQuest style={styles.dailyQuests} />
 
-                    <View style={[styleContainer, styles.skills]}>
-                        <Text bold={true} fontSize={20} style={styles.titleWidget}>
-                            {lang['container-skills-title']}
-                        </Text>
-                        <SkillsGroup style={styles.skillsGroup} />
-                    </View>
-                </View>
+                {/* Today quests */}
+                <Title title={lang['section-today-quests']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='add-outline'
+                        fontColor='gradient'
+                        onPress={this.addQuest}
+                    />
+                </Title>
+                <QuestsList />
 
-                <MultiplayerPanel
-                    ref={this.refMultiplayerPanel}
-                    style={styles.topSpace}
-                    hideWhenOffline
-                />
-
-                {mission.state !== 'claimed' && (
-                    <News style={styles.topSpace} />
-                )}
-
-            </Page>
+                {/* My todos */}
+                <Title title={lang['section-my-todos']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='add-outline'
+                        fontColor='gradient'
+                        onPress={this.addTodo}
+                    />
+                </Title>
+                <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
+            </ScrollView>
         );
     }
 }

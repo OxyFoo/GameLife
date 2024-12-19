@@ -15,23 +15,27 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @param {number} param0.index
  * @param {number} param0.total
  * @param {{ width: number, height: number }} param0.parentLayout
- * @returns 
+ * @returns
  */
 function OxObject({ index, total, parentLayout }) {
-    // Init
-    const [position, setPosition] = React.useState(new Animated.ValueXY());
     const [show, setShow] = React.useState(false);
-    const [scale, setScale] = React.useState(new Animated.Value(index === 0 ? 1 : 0));
-    const [shake, setShake] = React.useState(new Animated.Value(0));
-    const [opacity, setOpacity] = React.useState(new Animated.Value(0));
+
+    const [position] = React.useState(new Animated.ValueXY());
+    const [scale] = React.useState(new Animated.Value(index === 0 ? 1 : 0));
+    const [shake] = React.useState(new Animated.Value(0));
+    const [opacity] = React.useState(new Animated.Value(0));
 
     // Random position
     React.useEffect(() => {
-        TimingAnimation(position, {
-            x: Random(-300, 300),
-            y: Random(-300, 300)
-        }, 0).start();
-    }, []);
+        TimingAnimation(
+            position,
+            {
+                x: Random(-300, 300),
+                y: Random(-300, 300)
+            },
+            0
+        ).start();
+    }, [position]);
 
     // Waiting time
     React.useEffect(() => {
@@ -41,7 +45,7 @@ function OxObject({ index, total, parentLayout }) {
         }
         const timeout = 1000 + (1600 / total) * index;
         setTimeout(() => setShow(true), timeout);
-    }, []);
+    }, [index, total]);
 
     // Scale & opacity
     React.useEffect(() => {
@@ -61,7 +65,7 @@ function OxObject({ index, total, parentLayout }) {
                 ]).start();
             }
         }
-    }, [show]);
+    }, [index, opacity, position, scale, shake, show]);
 
     /** @type {StyleAnimatedImageProp} */
     const style = {
@@ -79,10 +83,7 @@ function OxObject({ index, total, parentLayout }) {
                 )
             },
             {
-                translateY: Animated.add(
-                    position.y,
-                    parentLayout?.height / 2
-                )
+                translateY: Animated.add(position.y, parentLayout?.height / 2)
             },
             { scale: scale }
         ],
@@ -93,12 +94,7 @@ function OxObject({ index, total, parentLayout }) {
         style.zIndex = 1000;
     }
 
-    return (
-        <Animated.Image
-            source={IMG_OX}
-            style={[styles.ox, style]}
-        />
-    )
+    return <Animated.Image source={IMG_OX} style={[styles.ox, style]} />;
 }
 
 const styles = StyleSheet.create({
@@ -106,8 +102,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: 75,
         height: 75,
-        top: -75/2,
-        left: -75/2
+        top: -75 / 2,
+        left: -75 / 2
     }
 });
 

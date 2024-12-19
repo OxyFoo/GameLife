@@ -1,15 +1,12 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Components';
-import StartTutorial from './tuto';
-import StartMission from './mission';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 
 /**
- * @typedef {import('Interface/Components').Page} Page
  * @typedef {import('Class/Shop').Chest} Chest
- * @typedef {import('Data/Items').StuffID} StuffID
- * 
+ * @typedef {import('Data/App/Items').StuffID} StuffID
+ *
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
  * @typedef {import('./InAppPurchases').default} InAppPurchases
@@ -19,8 +16,10 @@ import user from 'Managers/UserManager';
  */
 
 class BackShop extends PageBase {
+    static feShowNavBar = true;
+    static feShowUserHeader = true;
+
     state = {
-        /** @type {Page | null} */
         refPage: null,
 
         loaded: false,
@@ -33,7 +32,7 @@ class BackShop extends PageBase {
 
         /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */
         targetChestsStats: null
-    }
+    };
 
     /** @type {React.RefObject<ShopHeader>} */
     refHeader = React.createRef();
@@ -54,39 +53,30 @@ class BackShop extends PageBase {
     refDyes = React.createRef();
 
     componentDidMount() {
-        super.componentDidMount();
-
         this.componentDidFocused(this.props);
-        user.server.GetShopContent()
-            .then((shopInfo) => {
-                this.setState({
-                    loaded: true,
-                    dailyItemsID: shopInfo.dailyDeals,
-                    randomChestsStats: {
-                        common: shopInfo.chestsStats.random.common,
-                        rare: shopInfo.chestsStats.random.rare,
-                        epic: shopInfo.chestsStats.random.epic
-                    },
-                    targetChestsStats: {
-                        common: shopInfo.chestsStats.target.common,
-                        rare: shopInfo.chestsStats.target.rare,
-                        epic: shopInfo.chestsStats.target.epic
-                    }
-                });
-            })
-            .catch((error) => {
-                user.interface.console.AddLog('error', '[Shop] Failed to load shop content', error);
-            });
-    }
-
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
-        StartMission.call(this, args?.missionName);
-    }
-
-    setRef = (ref) => {
-        this.refPage = ref;
-        this.setState({ refPage: ref });
+        // TODO: Reimplement get-shop
+        // Old request: getDailyDeals
+        // user.server
+        //     .GetShopContent()
+        //     .then((shopInfo) => {
+        //         this.setState({
+        //             loaded: true,
+        //             dailyItemsID: shopInfo.dailyDeals,
+        //             randomChestsStats: {
+        //                 common: shopInfo.chestsStats.random.common,
+        //                 rare: shopInfo.chestsStats.random.rare,
+        //                 epic: shopInfo.chestsStats.random.epic
+        //             },
+        //             targetChestsStats: {
+        //                 common: shopInfo.chestsStats.target.common,
+        //                 rare: shopInfo.chestsStats.target.rare,
+        //                 epic: shopInfo.chestsStats.target.epic
+        //             }
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
+        //     });
     }
 }
 

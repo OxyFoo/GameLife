@@ -13,8 +13,8 @@ import { GetRandomIndexesByDay, GetRandomIntByDay } from 'Utils/Items';
 const SHOP_NUMBER_DYE = 2;
 
 /**
- * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
- * 
+ * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
+ *
  * @typedef BuyableDye
  * @property {Object} ItemBefore
  * @property {string} ItemBefore.ID

@@ -9,10 +9,10 @@ import themeManager from 'Managers/ThemeManager';
 import { Character } from 'Interface/Components';
 
 /**
- * @typedef {import('Data/Items').Item} Item
- * @typedef {import('Data/Items').StuffID} StuffID
- * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
- * 
+ * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('Data/App/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
+ *
  * @typedef BuyableItem
  * @property {string | number} ID
  * @property {string} Name
@@ -33,8 +33,8 @@ const BackShopItemsProps = {
 class BackShopItems extends React.Component {
     state = {
         /** @type {Array<BuyableItem>} */
-        buyableItems: [],
-    }
+        buyableItems: []
+    };
 
     constructor(props) {
         super(props);
@@ -53,12 +53,12 @@ class BackShopItems extends React.Component {
         /** @type {BuyableItem[]} */
         const buyableItems = [];
         dailyItemsID.forEach((itemID, index) => {
-            const item = allBuyableItems.find(i => i.ID == itemID) || null;
+            const item = allBuyableItems.find((i) => i.ID == itemID) || null;
             if (item === null) return;
 
             const characterKey = `shop-character-${itemID.toString()}`;
             const character = new Character(characterKey, user.character.sexe, 'skin_01', 0);
-            character.SetEquipment([ itemID.toString() ]);
+            character.SetEquipment([itemID.toString()]);
 
             /** @type {BuyableItem} */
             const buyableItem = {
@@ -76,13 +76,13 @@ class BackShopItems extends React.Component {
         });
 
         return buyableItems;
-    }
+    };
 
     /** @param {Item} item */
     openItemPopup = (item) => {
         const render = () => renderItemPopup.call(this, item);
         user.interface.popup.Open('custom', render);
-    }
+    };
 }
 
 BackShopItems.defaultProps = BackShopItemsProps;

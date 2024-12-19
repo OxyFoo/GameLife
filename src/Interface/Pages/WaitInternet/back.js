@@ -1,40 +1,37 @@
 import { Linking } from 'react-native';
-import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
 const REFRESH_DELAY_SECONDS = 30;
 
 class BackWaitinternet extends PageBase {
     state = {
-        loading: false
-    }
+        loading: false,
 
-    image = require('../../../../res/logo/login_circles.png');
+        /** @type {'not-connected' | 'maintenance' | 'error'} */
+        currentStatus: 'not-connected'
+    };
 
     componentDidMount() {
-        super.componentDidMount();
-        this.interval = window.setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
+        this.interval = setInterval(this.Loop, REFRESH_DELAY_SECONDS * 1000);
     }
     componentWillUnmount() {
         clearInterval(this.interval);
     }
     Loop = async () => {
-        await user.server.Ping();
-        if (user.server.online) {
-            if (this.props.args.force) {
-                RNExitApp.exitApp();
-                return;
-            }
-            user.interface.ChangePage('login', undefined, true);
+        const status = await user.server2.Connect(true);
+        if (status === 'success' || status === 'already-connected') {
+            user.interface.ChangePage('login', { storeInHistory: false });
+        } else {
+            this.setState({ currentStatus: status });
         }
-    }
+    };
 
     goToWebsite = () => {
         Linking.openURL('https://oxyfoo.com');
-    }
+    };
 }
 
 export default BackWaitinternet;

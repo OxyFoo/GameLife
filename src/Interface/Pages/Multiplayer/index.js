@@ -1,166 +1,80 @@
 import * as React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
+import styles from './style';
 import BackMultiplayer from './back';
+import TopFriends from './TopFriends';
+import OnlineFriends from './OnlineFriends';
 import langManager from 'Managers/LangManager';
 
-import { Button, Page, Text, UserOnlineElement } from 'Interface/Components';
-import { PageHeader } from 'Interface/Widgets';
-import { FRIENDS_LIMIT } from 'Class/Multiplayer';
+import { Gradient } from 'Interface/Primitives';
+import { Button, Text } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
-        return (
-            <Page
-                ref={ref => this.refPage = ref}
-                overlay={this.renderAddButton()}
-                bottomOffset={64}
-                canScrollOver
-            >
-                <PageHeader onBackPress={this.Back} />
-                {this.renderContent()}
-            </Page>
-        );
-    }
-
-    renderAddButton = () => {
-        const { state, friends, friendsPending } = this.state;
-
-        if (state !== 'connected') {
-            return null;
-        }
+        const lang = langManager.curr['multiplayer'];
+        const { friends, bestFriends } = this.state;
 
         return (
-            <>
-                <Button
-                    style={styles.leaderboardButton}
-                    color='main1'
-                    icon='leaderboard'
-                    borderRadius={12}
-                    onPress={this.openLeaderboard}
-                />
-                {friends.length + friendsPending.length < FRIENDS_LIMIT && (
+            <View style={styles.page}>
+                <Text style={styles.title} color='border'>
+                    {lang['title-top-friends']}
+                </Text>
+
+                <TopFriends style={styles.topfriendsContainer} friends={bestFriends} />
+
+                <Text style={styles.title} color='border'>
+                    {lang['title-online-friends']}
+                </Text>
+
+                <OnlineFriends friends={friends} />
+
+                {/** Bottom buttons: Add friend / Leaderboard */}
+                <Gradient style={styles.leaderboardButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
                     <Button
-                        ref={this.refAddButton}
-                        style={styles.addFriendButton}
-                        color='main2'
-                        icon='userAdd'
-                        borderRadius={12}
+                        nativeRef={this.refAddButton}
+                        style={styles.leaderboardButton}
+                        icon='add'
+                        appearance='uniform'
+                        color='transparent'
+                        fontColor='gradient'
                         onPress={this.addFriendHandle}
                     />
-                )}
-            </>
-        );
-    }
+                </Gradient>
 
-    renderContent = () => {
-        const lang = langManager.curr['multiplayer'];
-        const { state, friends, friendsPending } = this.state;
-
-        if (state === 'disconnected')   return this.renderDisconnected();
-        else if (state === 'idle')      return this.renderLoading();
-        else if (state === 'error')     return this.renderError();
-
-        return (
-            <View>
-                <Text fontSize={24}>{lang['category-friend']}</Text>
-                <FlatList
-                    style={styles.flatList}
-                    data={friends}
-                    keyExtractor={(item, index) => 'multi-player-' + item.accountID}
-                    renderItem={({ item, index }) => (
-                        <UserOnlineElement friend={item} />
-                    )}
-                    ListEmptyComponent={this.renderEmpty}
-                />
-
-                {friendsPending.length > 0 && (
-                    <>
-                        <Text style={styles.topMargin} fontSize={24}>{lang['category-friend-pending']}</Text>
-                        <FlatList
-                            style={styles.flatList}
-                            data={friendsPending}
-                            keyExtractor={(item, index) => 'multi-player-' + item.accountID}
-                            renderItem={({ item, index }) => (
-                                <UserOnlineElement friend={item} />
-                            )}
-                        />
-                    </>
-                )}
+                <Gradient style={styles.addFriendButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
+                    <Button
+                        style={styles.addFriendButton}
+                        appearance='uniform'
+                        color='transparent'
+                        fontColor='gradient'
+                        icon='users'
+                        onPress={this.goToFriends}
+                    />
+                </Gradient>
             </View>
-        );
-    }
-
-    renderEmpty = () => {
-        const lang = langManager.curr['multiplayer'];
-        return (
-            <>
-                <Text style={styles.firstText}>{lang['container-friends-empty']}</Text>
-            </>
         );
     }
 
     renderLoading = () => {
         const textLoading = langManager.curr['multiplayer']['connection-loading'];
-        return (
-            <>
-                <Text style={styles.firstText}>{textLoading}</Text>
-            </>
-        );
-    }
 
-    renderError = () => {
-        const textFailed = langManager.curr['multiplayer']['connection-failed'];
-        const textRetry = langManager.curr['multiplayer']['button-retry'];
         return (
             <>
-                <Text style={styles.firstText}>{textFailed}</Text>
-                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>{textRetry}</Button>
+                <Text>{textLoading}</Text>
             </>
         );
-    }
+    };
 
     renderDisconnected = () => {
         const textFailed = langManager.curr['multiplayer']['connection-offline'];
-        const textRetry = langManager.curr['multiplayer']['button-retry'];
+
         return (
             <>
-                <Text style={styles.firstText}>{textFailed}</Text>
-                <Button style={{ marginTop: 24 }} color='main1' onPress={this.Reconnect}>{textRetry}</Button>
+                <Text>{textFailed}</Text>
             </>
         );
-    }
+    };
 }
-
-const styles = StyleSheet.create({
-    flatList: {
-        marginTop: 12,
-        marginHorizontal: -24
-    },
-    leaderboardButton: {
-        aspectRatio: 1,
-        position: 'absolute',
-        left: 24,
-        bottom: 24,
-        paddingHorizontal: 0
-    },
-    addFriendButton: {
-        aspectRatio: 1,
-        position: 'absolute',
-        right: 24,
-        bottom: 24,
-        paddingHorizontal: 0
-    },
-
-    topMargin: {
-        marginTop: 24
-    },
-
-    firstText: {
-        marginTop: '45%',
-        paddingHorizontal: 12,
-        fontSize: 24
-    }
-});
 
 export default Multiplayer;

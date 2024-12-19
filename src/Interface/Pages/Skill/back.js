@@ -1,50 +1,67 @@
-import { PageBase } from 'Interface/Components';
+import React from 'react';
+
+import HistoryView from './history';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { GetDate } from 'Utils/Time';
 import { Round } from 'Utils/Functions';
-import { DateToFormatString, DateToFormatTimeString } from 'Utils/Date';
+import { DateFormat } from 'Utils/Date';
 
 /**
- * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
- * 
- * @typedef HistoryActivity
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').ActivitySaved} ActivitySaved
+ *
+ * @typedef HistoryActivityItem
  * @property {Activity} activity
  * @property {string} title
- * @property {(event: GestureResponderEvent) => void} onPress
+ * @property {() => void} onPress
  */
 
+const BackSkillProps = {
+    args: {
+        /** @type {number} */
+        skillID: 0
+    }
+};
+
 class BackSkill extends PageBase {
-    /** @type {ActivityPanel | null} */
-    refActivityPanel = null;
+    state = {
+        selectedSkill: {
+            ID: 0,
+            name: '',
+            category: '',
+            level: langManager.curr['level']['level'] + ' 1',
+            earnXp: 0,
+            xp: 0,
+            next: 1,
+            creator: '',
+            stats: user.experience.statsKey.map(() => 0),
+            xml: '',
+            enabled: true,
+            totalDuration: 0
+        },
 
-    /** @type {Array<HistoryActivity>} */
-    history = [];
-
-    skill = {
-        ID: 0,
-        name: '',
-        category: '',
-        level: langManager.curr['level']['level'] + ' 1',
-        totalFloatXp: 0,
-        xp: 0,
-        next: 1,
-        creator: '',
-        stats: user.statsKey.map(() => 0),
-        xml: '',
-        enabled: true,
-        totalDuration: 0
+        /** @type {HistoryActivityItem[]} */
+        history: []
     };
 
+    /** @type {boolean} Used to avoid multiple comebacks */
+    alreadyComeback = false;
+
+    /** @type {Symbol | null} */
+    listenerActivity = null;
+
+    /** @param {BackSkillProps} props */
     constructor(props) {
         super(props);
 
         // Property error handling
-        if (typeof(props.args) === 'undefined' || !props.args.hasOwnProperty('skillID')) {
+        if (typeof props.args === 'undefined' || !props.args.hasOwnProperty('skillID')) {
             return;
         }
 
@@ -52,84 +69,139 @@ class BackSkill extends PageBase {
         const skillID = props.args['skillID'];
         const skill = dataManager.skills.GetByID(skillID);
         if (skill === null) {
-            user.interface.console.AddLog('error', 'Skill not found for skillID: ' + skillID);
+            user.interface.console?.AddLog('error', 'Skill not found for skillID: ' + skillID);
             return;
         }
 
         // Skill data
-        const skillXP = user.experience.GetSkillExperience(skillID);
+        const skillXP = user.experience.GetSkillExperience(skill);
         if (skillXP === null) {
-            user.interface.console.AddLog('error', 'SkillXP not found for skillID: ' + skillID);
+            user.interface.console?.AddLog('error', 'SkillXP not found for skillID: ' + skillID);
             return;
         }
 
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         if (category === null) {
-            user.interface.console.AddLog('error', 'Category not found for skillID: ' + skillID);
+            user.interface.console?.AddLog('error', 'Category not found for skillID: ' + skillID);
             return;
         }
 
         const authorText = langManager.curr['skill']['text-author'].replace('{}', skill.Creator);
         const totalDuration = this.getTotalDurationFromSkillID(skillID);
 
-        this.skill = {
+        this.state.selectedSkill = {
             ID: skillID,
             name: langManager.GetText(skill.Name),
             category: langManager.GetText(category.Name),
             level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
-            totalFloatXp: Round(skillXP.totalXP, 0),
+            earnXp: Round(skill.XP, 1),
             xp: skillXP.xp,
             next: skillXP.next,
             creator: skill.Creator ? authorText : '',
             stats: Object.values(skill.Stats),
-            xml: dataManager.skills.GetXmlByLogoID(skill.LogoID),
+            xml: dataManager.skills.GetXmlByLogoID(skill.LogoID || category.LogoID),
             enabled: skill.Enabled,
             totalDuration: totalDuration
         };
 
-        this.__updateHIstory();
+        this.state.history = this.#getHistory();
     }
 
     componentDidMount() {
-        if (this.skill.ID === 0) {
-            // TODO: Clean instant back handle
-            this.timeout = setTimeout(() => {
-                user.interface.BackHandle();
-            }, 100);
+        const { selectedSkill } = this.state;
+
+        if (selectedSkill.ID === 0) {
+            this.onBackPress();
+            return;
         }
+
+        this.listenerActivity = user.activities.allActivities.AddListener(this.updateActivity);
     }
 
-    __updateHIstory = () => {
-        const langDateName = langManager.curr['dates']['names'];
+    componentWillUnmount() {
+        user.activities.allActivities.RemoveListener(this.listenerActivity);
+    }
 
-        if (this.skill.ID === 0) return;
-        const userActivities = user.activities.GetBySkillID(this.skill.ID);
+    /** @param {(Activity | ActivitySaved)[]} _activities */
+    updateActivity = (_activities) => {
+        const { selectedSkill } = this.state;
 
-        this.history = [];
-        for (const activity of userActivities.reverse()) {
-            // Format title with date and duration
-            const date = GetDate(activity.startTime);
-            const dateStr = DateToFormatString(date);
-            const start = DateToFormatTimeString(date);
-            const durationH = Math.floor(activity.duration / 60);
-            const durationM = activity.duration % 60;
-            const title = `${dateStr}\n${start} - ${durationH}${langDateName['hours-min']} ${durationM}${langDateName['minutes-min']}`;
+        if (selectedSkill.ID === 0) {
+            user.interface.console?.AddLog('warn', 'No skill selected');
+            return;
+        }
 
-            // On press function
-            const onPress = () => {
-                this.refActivityPanel?.SelectActivity(activity, () => {
-                    this.__updateHIstory();
-                    if (this.history.length === 0) {
-                        user.interface.BackHandle();
-                    } else {
-                        this.forceUpdate();
-                    }
-                });
+        const skill = dataManager.skills.GetByID(selectedSkill.ID);
+        if (skill === null) {
+            user.interface.console?.AddLog('error', 'Skill not found for skillID: ' + selectedSkill.ID);
+            return;
+        }
+
+        const skillXP = user.experience.GetSkillExperience(skill);
+        if (skillXP === null) {
+            user.interface.console?.AddLog('error', 'SkillXP not found for skillID: ' + skill.ID);
+            return;
+        }
+
+        this.setState(
+            {
+                selectedSkill: {
+                    ...selectedSkill,
+                    level: langManager.curr['level']['level'] + ' ' + skillXP.lvl,
+                    xp: skillXP.xp,
+                    next: skillXP.next,
+                    stats: Object.values(skill.Stats),
+                    totalDuration: this.getTotalDurationFromSkillID(skill.ID)
+                },
+                history: this.#getHistory()
+            },
+            async () => {
+                // If history is empty, come back
+                if (this.state.history.length === 0 && !this.alreadyComeback) {
+                    this.alreadyComeback = true;
+                    await user.interface.bottomPanel?.Close();
+                    this.onBackPress();
+                }
             }
+        );
+    };
 
-            this.history.push({ activity, title, onPress });
-        };
-    }
+    /** @returns {HistoryActivityItem[]} */
+    #getHistory = () => {
+        const { selectedSkill } = this.state;
+
+        if (selectedSkill.ID === 0) {
+            return [];
+        }
+
+        const history = [];
+        const userActivities = user.activities.GetBySkillID(selectedSkill.ID);
+
+        for (const activity of userActivities.reverse()) {
+            const date = GetDate(activity.startTime);
+
+            // Start
+            const startDateText = DateFormat(date, 'DD/MM/YYYY');
+            const startTimeText = DateFormat(date, 'HH:mm');
+
+            // End
+            date.setMinutes(date.getMinutes() + activity.duration);
+            const endTimeText = DateFormat(date, 'HH:mm');
+
+            history.push({
+                activity,
+                title: `${startDateText} ${startTimeText} - ${endTimeText}`,
+                onPress: async () => {
+                    await user.interface.bottomPanel?.Close();
+                    user.interface.bottomPanel?.Open({
+                        content: <AddActivity editActivity={activity} />
+                    });
+                }
+            });
+        }
+
+        return history;
+    };
 
     /** @param {number} skillID */
     getTotalDurationFromSkillID = (skillID) => {
@@ -138,13 +210,32 @@ class BackSkill extends PageBase {
         for (const element of history) {
             totalDuration += element.duration;
         }
-        return Round(totalDuration/60, 1);
-    }
+        return Round(totalDuration / 60, 1);
+    };
 
     addActivity = () => {
-        const skillID = this.skill.ID;
-        user.interface.ChangePage('activity', { skillID }, true);
-    }
+        const { selectedSkill } = this.state;
+        const skillID = selectedSkill.ID;
+
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity openSkillID={skillID} />
+        });
+    };
+
+    showHistory = () => {
+        const { history } = this.state;
+
+        user.interface.bottomPanel?.Open({
+            content: <HistoryView items={history} />
+        });
+    };
+
+    onBackPress = () => {
+        user.interface.BackHandle();
+    };
 }
+
+BackSkill.defaultProps = BackSkillProps;
+BackSkill.prototype.props = BackSkillProps;
 
 export default BackSkill;

@@ -1,0 +1,52 @@
+{
+    "$schema": "https://json.schemastore.org/eslintrc",
+    "root": true,
+    "extends": "@react-native",
+    "env": {
+      "node": true
+    },
+    "plugins": [
+        "react",
+        "react-native"
+    ],
+    "ignorePatterns": [
+        "node_modules/",
+        "Backups/",
+        "android/",
+        "ios/",
+        "build/"
+    ],
+    "rules": {
+        "semi": ["warn", "always"],
+        "quotes": ["warn", "single", {
+            "avoidEscape": true,
+            "allowTemplateLiterals": true
+        }],
+        "jsx-quotes": ["warn", "prefer-single"],
+        "comma-dangle": ["warn", "never"],
+        "eol-last": ["warn", "always"],
+        "dot-notation": "off",
+        "no-bitwise": "off",
+        "curly": ["warn", "multi-line"],
+        "max-len": ["error", {
+            "code": 120,
+            "ignoreUrls": true,
+            "ignoreComments": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true
+        }],
+
+        "prettier/prettier": [
+            "warn",
+            {
+                "singleQuote": true,
+                "parser": "flow",
+                "tabWidth": 4,
+                "jsxSingleQuote": true,
+                "avoidEscape": true,
+                "trailingComma": "none",
+                "printWidth": 120
+            }
+        ]
+    }
+}

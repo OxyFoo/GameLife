@@ -29,12 +29,12 @@ class DynamicVar {
      * @param {T} [value] New value to set. If left undefined, it updates without changing the value
      */
     Set(value) {
-        if (typeof(value) === 'undefined') {
+        if (typeof value === 'undefined') {
             this._updateListeners(this.var, this.var);
             return;
         }
 
-        if (this.var !== value || typeof(this.var) === 'object') {
+        if (this.var !== value || typeof this.var === 'object') {
             const oldValue = this.var;
             this.var = value;
             this._updateListeners(value, oldValue);
@@ -58,7 +58,7 @@ class DynamicVar {
      * @returns {Symbol | null} ID of the listener or null if the callback is not a function
      */
     AddListener(callback) {
-        if (typeof(callback) !== 'function') {
+        if (typeof callback !== 'function') {
             return null;
         }
 

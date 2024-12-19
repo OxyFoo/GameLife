@@ -1,333 +1,448 @@
 import React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { Animated } from 'react-native';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
-import { PageBase } from 'Interface/Components';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
+import dataManager from 'Managers/DataManager';
 
-import StartTutorial from './tuto';
-import { Sleep } from 'Utils/Functions';
-import { SpringAnimation } from 'Utils/Animations';
-import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
-import { GetBlockMonth } from 'Interface/Widgets/BlockMonth/script';
-import { TIME_STEP_MINUTES } from 'Utils/Activities';
+import { AddActivity } from 'Interface/Widgets';
+import { SpringAnimation, EasingAnimation } from 'Utils/Animations';
+import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
- * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} ScrollEvent
- * 
- * @typedef {import('Class/Activities').Activity} Activity
- * @typedef {import('Interface/Components').ActivityTimeline} ActivityTimeline
- * @typedef {import('Interface/Widgets').ActivityPanel} ActivityPanel
- * @typedef {import('Interface/Widgets/BlockMonth/index').MonthData} MonthData
+ * @typedef {import('react-native').FlatList<DayDataType>} FlatListDay
+ * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ *
+ * @typedef {import('Data/User/Activities/index').Skill} Skill
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').ActivitySaved} ActivitySaved
+ *
+ * @typedef {object} DayDataType
+ * @property {number} day
+ * @property {number} month
+ * @property {number} year
+ * @property {boolean} selected
+ * @property {boolean} containsActivity
+ * @property {(day: DayDataType) => void} onPress
+ *
+ * @typedef {object} ActivityDataType
+ * @property {DayDataType} day
+ * @property {Skill | null} skill
+ * @property {Activity} activity
+ * @property {(activity: ActivityDataType) => void} onPress
+ * @property {(activity: ActivityDataType) => void} onLongPress
  */
 
-class BackCalendar extends PageBase {
-    /** @type {ActivityPanel | null} */
-    refActivityPanel = null;
+const TOTAL_DAYS_COUNT = 100;
+const BATCH_DAYS = 30;
+const ITEM_WIDTH = 65 + 6; // width of each item plus separator
 
-    /** @type {boolean} Used for ActivityTimeline */
-    isScrolling = false;
+const INITIAL_DATE = new Date();
+INITIAL_DATE.setDate(INITIAL_DATE.getDate() - TOTAL_DAYS_COUNT / 2);
+
+class BackCalendar extends PageBase {
+    _timeBatchStart = GetLocalTime(INITIAL_DATE);
+    _timeBatchEnd = GetLocalTime(INITIAL_DATE) + TOTAL_DAYS_COUNT * 24 * 60 * 60;
+
+    activitiesInBatch = user.activities
+        .Get()
+        .filter((activity) => activity.startTime >= this._timeBatchStart && activity.startTime <= this._timeBatchEnd);
 
     state = {
-        /** @type {Array<MonthData>} */
-        months: [],
+        /** @type {ActivityDataType[]} */
+        activities: [],
 
-        animation: new Animated.Value(0),
-        selectedALL: {
-            day: null,
-            week: null,
-            month: null,
-            year: null
-        },
+        /** @type {string} */
+        selectedMonth: langManager.curr['dates']['month'][new Date().getMonth()],
 
-        /** @type {Array<Activity>} */
-        currActivities: []
-    }
+        /** @type {DayDataType | null} */
+        selectedDay: null,
 
-    constructor(props) {
-        super(props);
+        todayStrDate: '',
 
-        /** @type {React.RefObject<ActivityTimeline>} */
-        this.refActivityTimeline = React.createRef();
+        /** @type {DayDataType[]} */
+        days: Array(TOTAL_DAYS_COUNT)
+            .fill(0)
+            .map((_, index) => {
+                const date = new Date(INITIAL_DATE);
+                date.setDate(date.getDate() + index);
+                date.setHours(0, 0, 0, 0);
+                return {
+                    day: date.getDate(),
+                    month: date.getMonth(),
+                    year: date.getFullYear(),
+                    selected: false,
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(date)),
+                    onPress: this.onDayPress.bind(this)
+                };
+            }),
 
-        // Infinite scroll vars
-        this.ratioY = 0;
-        this.offsetY = 0;
-        this.isReached = false;
+        animSummaryY: new Animated.Value(0),
+        animTodayButton: new Animated.Value(0)
+    };
 
-        /** @type {FlatList} */
-        this.flatlist = null;
+    /** @type {Symbol | null} */
+    activitiesListener = null;
 
-        const today = new Date();
-        const month = today.getMonth();
-        const year = today.getFullYear();
+    static feKeepMounted = true;
+    static feShowUserHeader = true;
+    static feShowNavBar = true;
 
-        /** @type {Array<MonthData>} */
-        let months = [{ month, year }];
-        months = this.addMonthToTop(months, 2, false);
-        months = this.addMonthToBottom(months, 2, false);
-        this.state.months = months;
-
-        // Internal state
-        this.animating = false;
-        this.opened = false;
-
-        this.activitiesListener = user.activities.allActivities.AddListener(async () => {
-            // Update activities
-            if (this.state.selectedALL === null) return;
-
-            const { day, month, year } = this.state.selectedALL;
-            await this.daySelect(day, month, year, true);
-        });
-    }
+    /** @type {React.RefObject<FlatListDay>} */
+    refDayList = React.createRef();
+    dayListPosX = 0;
+    dayListWidth = 0;
 
     componentDidMount() {
-        super.componentDidMount();
+        this.activitiesListener = user.activities.allActivities.AddListener(this.updateActivities);
 
-        const today = new Date();
-        const Day = today.getDate();
-        const Month = today.getMonth();
-        const FullYear = today.getFullYear();
-        this.daySelect(Day, Month, FullYear);
-
-        // Timeout to fix iOS compatibility
-        setTimeout(() => {
-            this.flatlist?.scrollToIndex({ index: 2, animated: false });
-        }, 100);
-    }
-
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
+        const { days } = this.state;
+        this.onDayPress(days[days.length / 2], false);
     }
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
-    onScroll = (e) => {
-        const offsetY = e.nativeEvent.contentOffset.y;
-        const layoutY = e.nativeEvent.layoutMeasurement.height;
-        const contentY = e.nativeEvent.contentSize.height;
-        const maxOffsetY = contentY - layoutY;
+    /** @param {(Activity | ActivitySaved)[]} activities */
+    updateActivities = (activities = user.activities.allActivities.Get()) => {
+        this.refreshActivitiesInBatch();
 
-        this.offsetY = offsetY;
-        this.ratioY = offsetY / maxOffsetY;
+        const { selectedDay } = this.state;
+        if (!selectedDay) return;
 
-        // TODO - Update infinite scroll
-        //console.log('Scroll', this.isReached, offsetY, this.ratioY);
-        //return;
+        const selectedDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
 
-        const offsetLimit = 0;
-        if (!this.isReached && (this.ratioY <= offsetLimit || this.ratioY >= 1 - offsetLimit)) {
-            (async () => {
-                this.isReached = true;
-                let delta = 0;
-                await new Promise((resolve) => {
-                    let newMonths = [];
-                    if (this.ratioY <= offsetLimit) newMonths = this.addMonthToTop(this.state.months, 2);
-                    if (this.ratioY >= 1 - offsetLimit) newMonths = this.addMonthToBottom(this.state.months, 2);
-                    delta = Math.abs(newMonths.length - this.state.months.length);
-                    this.setState({ months: newMonths }, () => resolve());
+        this.setState({
+            /** @type {ActivityDataType[]} */
+            activities: user.activities.GetByTime(GetLocalTime(selectedDate), activities, true).map((activity) => ({
+                day: selectedDay,
+                skill: dataManager.skills.GetByID(activity.skillID),
+                activity,
+                onPress: this.onActivityPress.bind(this),
+                onLongPress: this.onActivityLongPress.bind(this)
+            })),
+            days: this.state.days.map((day) => ({
+                ...day,
+                containsActivity: this.batchContainsActivity(GetGlobalTime(new Date(day.year, day.month, day.day)))
+            }))
+        });
+    };
+
+    openCalendar = () => {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: 'Pas terminé',
+                message: "Cette feature n'est pas encore implémentée, un peu de patience 👀"
+            }
+        });
+    };
+
+    openToday = () => {
+        const { days } = this.state;
+
+        const today = new Date();
+        const date = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
+
+        const todayDay = days.findIndex((day) => day.day === date && day.month === month && day.year === year);
+        if (todayDay !== -1) {
+            if (!days[todayDay].selected) {
+                this.onDayPress(days[todayDay], true);
+            }
+        } else {
+            // Reset days to the current date
+            const newDays = Array(TOTAL_DAYS_COUNT)
+                .fill(0)
+                .map((_, index) => {
+                    const tempDate = new Date(INITIAL_DATE);
+                    tempDate.setDate(tempDate.getDate() + index);
+                    tempDate.setHours(0, 0, 0, 0);
+                    return {
+                        day: tempDate.getDate(),
+                        month: tempDate.getMonth(),
+                        year: tempDate.getFullYear(),
+                        selected: false,
+                        containsActivity: this.batchContainsActivity(GetGlobalTime(tempDate)),
+                        onPress: this.onDayPress.bind(this)
+                    };
                 });
-                const newOffsetY = this.offsetY + delta * (this.ratioY <= offsetLimit ? 284 : -284);
-                this.flatlist.scrollToOffset({ offset: newOffsetY, animated: false });
-                await Sleep(10);
-                this.isReached = false;
-            })();
+            this.setState({ days: newDays }, () => {
+                this.onDayPress(newDays[newDays.length / 2], true);
+            });
         }
+    };
+
+    refreshActivitiesInBatch() {
+        this.activitiesInBatch = user.activities.allActivities
+            .Get()
+            .filter(
+                (activity) => activity.startTime >= this._timeBatchStart && activity.startTime <= this._timeBatchEnd
+            );
     }
 
-    /** @param {MonthData} date */
-    editMonth = (date, add) => {
-        let { month, year } = date;
-        month += add;
-        while (month < 0) { month += 12; year-- };
-        while (month > 11) { month -= 12; year++ };
-        return { month, year };
+    /** @param {number} startTime */
+    batchContainsActivity(startTime) {
+        return this.activitiesInBatch.some(
+            (activity) =>
+                (activity.startTime + activity.timezone * 3600 >= startTime ||
+                    activity.startTime + activity.timezone * 3600 + activity.duration * 60 > startTime) &&
+                activity.startTime + activity.timezone * 3600 < startTime + 24 * 60 * 60
+        );
     }
 
-    /**
-     * @param {Array<MonthData>} currMonths
-     * @param {number} [number=1]
-     * @param {boolean} [autoRemove=true]
-     */
-    addMonthToTop = (currMonths, number = 1, autoRemove = true) => {
-        if (autoRemove) {
-            currMonths.length -= number;
-        }
+    hideSummary = false;
+    summaryHeight = 0;
 
-        let newMonths = [ ...currMonths ];
-        for (let i = 0; i < number; i++) {
-            const monthBefore = this.editMonth(newMonths.at(0), -1);
-            newMonths.splice(0, 0, monthBefore);
-        }
+    refreshing = false;
 
-        return newMonths;
-    }
+    addActivity = () => {
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity />
+        });
+    };
 
-    /**
-     * @param {Array<MonthData>} currMonths
-     * @param {number} [number=1]
-     * @param {boolean} [autoRemove=true]
-     */
-    addMonthToBottom = (currMonths, number = 1, autoRemove = true) => {
-        if (autoRemove) {
-            currMonths.splice(0, number);
-        }
+    /** @param {ActivityDataType} activityData */
+    onActivityPress(activityData) {
+        const { activity } = activityData;
 
-        let newMonths = [ ...currMonths ];
-        for (let i = 0; i < number; i++) {
-            const monthAfter = this.editMonth(newMonths.at(-1), 1);
-            newMonths.push(monthAfter);
-        }
-
-        return newMonths;
-    }
-
-    /**
-     * @param {number} day
-     * @param {number} month
-     * @param {number} year
-     * @param {boolean} [force=false]
-     * @returns {Promise<void>}
-     */
-    daySelect = async (
-        day = null,
-        month = this.state.selectedALL?.month,
-        year = this.state.selectedALL?.year,
-        force = false
-    ) => {
-        if (!force &&
-            this.state.selectedALL?.day === day &&
-            this.state.selectedALL?.month === month &&
-            this.state.selectedALL.year === year) {
-                // Already selected
-                return;
-        }
-
-        const date = new Date(year, month, day);
-
-        // Select day
-        if (day !== null) {
-            const now = new Date();
-            date.setHours(now.getHours(), now.getMinutes(), 0, 0);
-            const nowLocalTime = GetLocalTime(date) + GetTimeZone() * 60;
-            user.tempSelectedTime = RoundTimeTo(TIME_STEP_MINUTES, nowLocalTime);
-
-            if (!this.opened) {
-                this.showPanel();
-            }
-        }
-
-        // Unselect day (calendar mode)
-        else {
-            user.tempSelectedTime = null;
-            if (this.opened) {
-                this.hidePanel();
-            }
-        }
-
-        return new Promise((resolve, reject) => {
-            if (day !== null) {
-                const weeks = GetBlockMonth(month, year, undefined, day).data;
-                const week = weeks.findIndex(w => w.filter(d => d?.day === day).length > 0);
-                const activities = user.activities.GetByTime(GetLocalTime(date));
-
-                this.setState({
-                    currActivities: activities,
-                    selectedALL: { day, week, month, year }
-                }, resolve);
-            } else {
-                this.setState({ selectedALL: null }, resolve);
-            }
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity editActivity={activity} />
         });
     }
-    dayRefresh = () => this.daySelect();
 
-    showPanel = () => this.animPanel(0);
-    hidePanel = () => this.animPanel(1);
-    animPanel = (value) => {
-        const { animation } = this.state;
+    /** @param {ActivityDataType} activityData */
+    onActivityLongPress(activityData) {
+        const { activity } = activityData;
 
-        if (this.animating) return null;
+        this.fe.ChangePage('skill', { args: { skillID: activity.skillID } });
+    }
 
-        return new Promise((resolve, reject) => {
-            this.animating = true;
-            SpringAnimation(animation, value).start();
-            setTimeout(() => {
-                this.animating = false;
-                this.opened = value === 0;
-                resolve();
-            }, 300);
+    /** @param {number} startTime */
+    onAddActivityFromTime(startTime) {
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity time={startTime} />
         });
     }
 
     /**
-     * Move one week before or later
-     * @param {-1 | 1} move 
+     * @param {DayDataType} day
      */
-    weekSelect = (move) => {
-        const { day, month, year } = this.state.selectedALL;
+    async onDayPress(day, scrollToSelection = true) {
+        // Update the selected day
+        const { days } = this.state;
 
-        const date = new Date(year, month, day);
-        const weeks = GetBlockMonth(month, year).data;
-        const selectedWeek = weeks.findIndex(w => w.find(d => d?.day === day));
-        let nextWeek = selectedWeek;
-
-        do {
-            date.setDate(date.getDate() + move);
-            nextWeek = weeks.findIndex(w => w.find(d => d?.day === date.getDate()))
-        } while (selectedWeek === nextWeek);
-
-        const newDay = date.getDate();
-        const newMonth = date.getMonth();
-        const newYear = date.getFullYear();
-        this.daySelect(newDay, newMonth, newYear);
-    }
-    selectNextWeek = () => this.weekSelect(1);
-    selectPrevWeek = () => this.weekSelect(-1);
-
-    /**
-     * @param {Activity} activity 
-     */
-    onActivityPress = (activity) => {
-        this.refActivityPanel?.SelectActivity(activity, undefined, () => {
-            // Show bottom bar
-            const newBarState = { bottomBarShow: true, bottomBarIndex: 1 };
-            user.interface.setState(newBarState);
-        });
-
-        // Hide bottom bar
-        const newBarState = { bottomBarShow: false, bottomBarIndex: 2 };
-        user.interface.setState(newBarState);
-    }
-
-    /** @param {Activity} activity */
-    onAddActivityFromActivity = (activity) => {
-        const time = activity.startTime + activity.duration * 60;
-        user.interface.ChangePage('activity', { time }, true);
-    }
-
-    /** @param {number} time */
-    onAddActivityFromTime = (time) => {
-        user.interface.ChangePage('activity', { time }, true);
-    }
-
-    /**
-     * Called when the user scroll the page 
-     * @param {ScrollEvent} event
-     */
-    handleScroll = (event) => {
-        const scrollY = event.nativeEvent.contentOffset.y;
-
-        if (this.isScrolling && scrollY <= 0) {
-            this.isScrolling = false;
-        } else if (!this.isScrolling && scrollY > 20) {
-            this.isScrolling = true;
+        /** @type {DayDataType | null} */
+        let selectedDay = null;
+        for (const d in days) {
+            if (days[d] === day) {
+                days[d].selected = true;
+                selectedDay = days[d];
+            } else if (days[d].selected) {
+                days[d].selected = false;
+            }
         }
 
-        this.refActivityTimeline.current?.SetThinMode(this.isScrolling);
+        if (selectedDay === null) {
+            user.interface.console?.AddLog('warn', 'Selected day not found', day);
+            return;
+        }
+
+        const today = new Date();
+        const selectedIsToday =
+            selectedDay.day === today.getDate() &&
+            selectedDay.month === today.getMonth() &&
+            selectedDay.year === today.getFullYear();
+        if (selectedIsToday) {
+            EasingAnimation(this.state.animTodayButton, 0, 200).start();
+        } else {
+            EasingAnimation(this.state.animTodayButton, 1, 200).start();
+        }
+
+        let strDay = selectedDay?.day.toString();
+        let strMonth = langManager.curr['dates']['month'][selectedDay?.month || 0];
+        let strYear = selectedDay?.year.toString();
+
+        if (langManager.currentLangageKey === 'en') {
+            function getOrdinalSuffix(d = 0) {
+                if (d > 3 && d < 21) return 'th';
+                switch (d % 10) {
+                    case 1:
+                        return 'st';
+                    case 2:
+                        return 'nd';
+                    case 3:
+                        return 'rd';
+                    default:
+                        return 'th';
+                }
+            }
+
+            strDay = strMonth;
+            strMonth = selectedDay?.day + getOrdinalSuffix(selectedDay?.day);
+        }
+
+        const todayStrDate = `${strDay} ${strMonth} ${strYear}`;
+
+        this.setState({ selectedDay, todayStrDate }, this.updateActivities);
+
+        // Scroll to the selected day
+        if (scrollToSelection) {
+            const index = days.indexOf(selectedDay);
+            const newItemsWidth = index * ITEM_WIDTH - this.dayListWidth / 2 + ITEM_WIDTH / 2;
+            this.refDayList.current?.scrollToOffset({
+                offset: newItemsWidth,
+                animated: true
+            });
+        }
     }
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutSummary = (event) => {
+        this.summaryHeight = event.nativeEvent.layout.height;
+    };
+
+    /** @param {LayoutChangeEvent} event */
+    onLayoutDayList = (event) => {
+        this.dayListWidth = event.nativeEvent.layout.width;
+    };
+
+    /** @type {FlatListDay['props']['onScroll']} */
+    handleActivityScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+
+        if (!this.hideSummary && y > 150) {
+            this.hideSummary = true;
+            SpringAnimation(this.state.animSummaryY, -this.summaryHeight, false).start();
+        } else if (this.hideSummary && y <= 40) {
+            this.hideSummary = false;
+            SpringAnimation(this.state.animSummaryY, 0, false).start();
+        }
+    };
+
+    /** @type {FlatListDay['props']['onScroll']} */
+    handleDayScroll = (event) => {
+        this.dayListPosX = event.nativeEvent.contentOffset.x;
+
+        // Define the current month
+        const { days } = this.state;
+        const index = this.dayListPosX / ITEM_WIDTH + this.dayListWidth / ITEM_WIDTH / 2;
+        const { month, year } = days[Math.floor(index)];
+        const monthText = langManager.curr['dates']['month'][month];
+        const yearText = year === new Date().getFullYear() ? '' : ` ${year}`;
+        if (this.state.selectedMonth !== monthText + yearText) {
+            this.setState({ selectedMonth: monthText + yearText });
+        }
+    };
+
+    /** @type {FlatListDay['props']['onStartReached']} */
+    onDayStartReached = async () => {
+        if (this.refreshing) return;
+        this.refreshing = true;
+
+        const { days } = this.state;
+        const firstDay = days[0];
+
+        // Update the activities in batch
+        this._timeBatchStart -= BATCH_DAYS * 24 * 60 * 60;
+        this._timeBatchEnd -= BATCH_DAYS * 24 * 60 * 60;
+        this.refreshActivitiesInBatch();
+
+        const newDays = Array(BATCH_DAYS)
+            .fill(0)
+            .map((_, index) => {
+                const { selectedDay } = this.state;
+                const date = new Date(firstDay.year, firstDay.month, firstDay.day);
+                date.setDate(date.getDate() - index - 1);
+
+                /** @type {DayDataType} */
+                const day = {
+                    day: date.getDate(),
+                    month: date.getMonth(),
+                    year: date.getFullYear(),
+                    selected:
+                        selectedDay?.year === date.getFullYear() &&
+                        selectedDay?.month === date.getMonth() &&
+                        selectedDay?.day === date.getDate(),
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(date)),
+                    onPress: this.onDayPress.bind(this)
+                };
+
+                return day;
+            })
+            .reverse();
+
+        this.setState(
+            /** @param {this['state']} prevState */
+            (prevState) => ({
+                days: [...newDays, ...prevState.days.slice(0, -BATCH_DAYS)]
+            }),
+            () => {
+                const newItemsWidth = this.dayListPosX + newDays.length * ITEM_WIDTH;
+                this.refDayList.current?.scrollToOffset({
+                    offset: newItemsWidth,
+                    animated: false
+                });
+                this.refreshing = false;
+            }
+        );
+    };
+
+    /** @type {FlatListDay['props']['onEndReached']} */
+    onDayEndReached = async () => {
+        if (this.refreshing) return;
+        this.refreshing = true;
+
+        const { days } = this.state;
+        const lastDay = days[days.length - 1];
+
+        // Update the activities in batch
+        this._timeBatchStart += BATCH_DAYS * 24 * 60 * 60;
+        this._timeBatchEnd += BATCH_DAYS * 24 * 60 * 60;
+        this.refreshActivitiesInBatch();
+
+        const newDays = Array(BATCH_DAYS)
+            .fill(0)
+            .map((_, index) => {
+                const { selectedDay } = this.state;
+                const date = new Date(lastDay.year, lastDay.month, lastDay.day);
+                date.setDate(date.getDate() + index + 1);
+
+                /** @type {DayDataType} */
+                const day = {
+                    day: date.getDate(),
+                    month: date.getMonth(),
+                    year: date.getFullYear(),
+                    selected:
+                        selectedDay?.year === date.getFullYear() &&
+                        selectedDay?.month === date.getMonth() &&
+                        selectedDay?.day === date.getDate(),
+                    containsActivity: this.batchContainsActivity(GetGlobalTime(date)),
+                    onPress: this.onDayPress.bind(this)
+                };
+
+                return day;
+            });
+
+        this.setState(
+            /** @param {this['state']} prevState */
+            (prevState) => ({
+                days: [...prevState.days.slice(BATCH_DAYS), ...newDays]
+            }),
+            () => {
+                const newItemsWidth = this.dayListPosX - newDays.length * ITEM_WIDTH;
+                this.refDayList.current?.scrollToOffset({
+                    offset: newItemsWidth,
+                    animated: false
+                });
+                this.refreshing = false;
+            }
+        );
+    };
 }
 
+export { TOTAL_DAYS_COUNT };
 export default BackCalendar;

@@ -9,50 +9,42 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native').DimensionValue} DimensionValue
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ *
+ * @typedef {Object} SwiperPropsType
+ * @property {StyleProp} style
+ * @property {'flex-start' | 'flex-end' | 'center'} verticalAlign
+ * @property {DimensionValue | undefined} minHeight If undefined, height equals to max height of pages content
+ * @property {number} borderRadius
+ * @property {boolean} enableAutoNext If true, automatically swipe to the next page
+ * @property {boolean} disableCircular
+ * @property {number} delayNext Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true
+ * @property {Array<React.ReactNode>} pages
+ * @property {number} initIndex
+ * @property {ThemeColor} backgroundColor
+ * @property {(index: number) => void} onSwipe Callback is called when page index change
+ * @property {(event: LayoutChangeEvent) => void} onLayout Callback is called when page layout change
+ * @property {boolean} disableSwipe
  */
 
+/** @type {SwiperPropsType} */
 const SwiperProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {"flex-start" | "flex-end" | "center"} */
     verticalAlign: 'center',
-
-    /** @type {number | string} If undefined, height equals to max height of pages content */
-    height: undefined,
-
-    /** @type {number} */
-    borderRadius: 16,
-
-    /** @type {boolean} If true, automatically swipe to the next page */
+    minHeight: undefined,
+    borderRadius: 8,
     enableAutoNext: true,
-
-    /** @type {boolean} */
     disableCircular: false,
-
-    /** @type {number} Number of seconds to automatically swipe to the next page, if "enableAutoNext" is true */
     delayNext: 10,
-
-    /** @type {Array<React.Component | React.ReactElement>} */
     pages: [],
-
-    /** @type {number} */
     initIndex: 0,
-
-    /** @type {ThemeColor} */
     backgroundColor: 'backgroundTransparent',
-
-    /** @type {(index: number) => void} Callback is called when page index change */
-    onSwipe: (index) => {},
-
-    /** @type {(event: LayoutChangeEvent) => void} Callback is called when page layout change */
-    onLayout: (event) => {},
-
-    /** @type {boolean} */
+    onSwipe: () => {},
+    onLayout: () => {},
     disableSwipe: false
 };
 
@@ -61,26 +53,23 @@ class SwiperBack extends React.Component {
 
     state = {
         width: 0,
-        animHeight: new Animated.Value(0),
         positionX: new Animated.Value(this.props.initIndex),
         positionDots: new Animated.Value(this.props.initIndex)
-    }
+    };
 
-    maxHeight = 0;
+    // Temporary variables
+    acc = 0;
+    tickPos = 0;
+    firstTouchX = 0;
+    firstTouchY = 0;
+    firstPosX = 0;
+    tickTime = 0;
 
     /** @type {'none' | 'vertical' | 'horizontal'} */
     scroll = 'none';
 
     componentDidMount() {
         this.startTimer();
-    }
-
-    /** @param {SwiperProps} nextProps */
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.pages !== this.props.pages) {
-            this.maxHeight = 0;
-        }
-        return true;
     }
 
     componentWillUnmount() {
@@ -92,11 +81,11 @@ class SwiperBack extends React.Component {
 
         const { delayNext } = this.props;
         clearInterval(this.interval);
-        this.interval = window.setInterval(this.Next, delayNext * 1000);
-    }
+        this.interval = setInterval(this.Next, delayNext * 1000);
+    };
     stopTimer = () => {
         clearInterval(this.interval);
-    }
+    };
 
     Next = () => {
         const nextIndex = (this.posX + 1) % this.props.pages.length;
@@ -104,21 +93,21 @@ class SwiperBack extends React.Component {
         SpringAnimation(this.state.positionX, nextIndex).start();
         SpringAnimation(this.state.positionDots, nextIndex, false).start();
         this.props.onSwipe(nextIndex);
-    }
+    };
     Prev = () => {
         const prevIndex = this.posX === 0 ? this.props.pages.length - 1 : this.posX - 1;
         this.posX = prevIndex;
         SpringAnimation(this.state.positionX, prevIndex).start();
         SpringAnimation(this.state.positionDots, prevIndex, false).start();
         this.props.onSwipe(prevIndex);
-    }
+    };
     /** @param {number} index */
     GoTo = (index) => {
         this.posX = MinMax(0, index, this.props.pages.length - 1);
         SpringAnimation(this.state.positionX, index).start();
         SpringAnimation(this.state.positionDots, index, false).start();
         this.props.onSwipe(index);
-    }
+    };
 
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
@@ -129,9 +118,13 @@ class SwiperBack extends React.Component {
 
         this.tickPos = 0;
         this.tickTime = Date.now();
-    }
+    };
+
     /** @param {GestureResponderEvent} event */
     onTouchMove = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         if (this.props.disableSwipe) return;
 
         // Prevent vertical scroll when horizontal swipe
@@ -163,16 +156,17 @@ class SwiperBack extends React.Component {
         const newDotPos = MinMax(0, newPosX, this.props.pages.length - 1);
         TimingAnimation(this.state.positionX, newPosX, 0).start();
         TimingAnimation(this.state.positionDots, newDotPos, 0, false).start();
-    }
-    /** @param {GestureResponderEvent} event */
-    onTouchEnd = (event) => {
+    };
+
+    /** @param {GestureResponderEvent} _event */
+    onTouchEnd = (_event) => {
         this.scroll = 'none';
 
         // Define the next page index
         let newIndex = 0;
         const dec = (this.posX % 1) + this.acc;
         if (dec > 0.5) newIndex = Math.ceil(this.posX);
-        else           newIndex = Math.floor(this.posX);
+        else newIndex = Math.floor(this.posX);
 
         // Go to the first page if swipe to the last page & vice versa
         if (!this.props.disableCircular) {
@@ -188,7 +182,8 @@ class SwiperBack extends React.Component {
         this.props.onSwipe(newIndex);
 
         this.startTimer();
-    }
+    };
+
     /** @param {GestureResponderEvent} event */
     onTouchCancel = (event) => {
         // Prevent vertical scroll when horizontal swipe
@@ -197,18 +192,16 @@ class SwiperBack extends React.Component {
         const newIndex = Math.round(this.posX);
         SpringAnimation(this.state.positionX, newIndex).start();
         SpringAnimation(this.state.positionDots, newIndex, false).start();
-    }
+    };
 
     /** @param {LayoutChangeEvent} event */
     onLayoutPage = (event) => {
-        const { width, height } = event.nativeEvent.layout;
+        const { width } = event.nativeEvent.layout;
 
-        if (height > this.maxHeight) {
-            this.maxHeight = height;
+        if (width !== this.state.width) {
             this.setState({ width: width });
-            SpringAnimation(this.state.animHeight, this.maxHeight, false).start();
         }
-    }
+    };
 }
 
 SwiperBack.prototype.props = SwiperProps;

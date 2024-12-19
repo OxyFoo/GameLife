@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS, { IMG_CHEST_OX } from 'Ressources/items/chests/chests';
-import { Page, Frame, Text, Button } from 'Interface/Components';
+import { Frame, Text, Button } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
 class ChestReward extends BackChestReward {
@@ -16,10 +16,10 @@ class ChestReward extends BackChestReward {
         const langM = langManager.curr['modal'];
 
         // Default chest image
-        let chestImage = IMG_CHESTS[0];
+        let chestImage = IMG_CHESTS.common;
         if (this.chestRarity === 'ox') {
             chestImage = IMG_CHEST_OX;
-        } else if (this.chestRarity > 0 && this.chestRarity < IMG_CHESTS.length) {
+        } else {
             chestImage = IMG_CHESTS[this.chestRarity];
         }
 
@@ -30,28 +30,26 @@ class ChestReward extends BackChestReward {
 
         // Shake the chest
         const styleChestAnimation = {
-            transform: [{
-                rotateZ: this.state.animChest.interpolate({
-                    inputRange: [0, 1, 2, 3, 4],
-                    outputRange: ['0deg', '1deg', '-1deg', '1deg', '0deg']
-                })
-            }]
+            transform: [
+                {
+                    rotateZ: this.state.animChest.interpolate({
+                        inputRange: [0, 1, 2, 3, 4],
+                        outputRange: ['0deg', '1deg', '-1deg', '1deg', '0deg']
+                    })
+                }
+            ]
         };
 
         const styleText = {
             opacity: this.state.animItem,
-            transform: [
-                { translateY: WithInterpolation(this.state.animItem, 20, 0) }
-            ]
+            transform: [{ translateY: WithInterpolation(this.state.animItem, 20, 0) }]
         };
         const styleTextSecondary = {
             color: this.rarityColor
         };
         const styleButton = {
             opacity: this.state.animInteractions,
-            transform: [
-                { translateY: WithInterpolation(this.state.animInteractions, 20, 0) }
-            ]
+            transform: [{ translateY: WithInterpolation(this.state.animInteractions, 20, 0) }]
         };
 
         // Ox objects
@@ -63,52 +61,30 @@ class ChestReward extends BackChestReward {
 
             for (let i = 0; i < count; i++) {
                 oxObjects.push(
-                    <OxObject
-                        key={`ox-obj-${i}`}
-                        index={i}
-                        total={count}
-                        parentLayout={this.state.layoutFrameOx}
-                    />
+                    <OxObject key={`ox-obj-${i}`} index={i} total={count} parentLayout={this.state.layoutFrameOx} />
                 );
             }
         }
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.page}
-                canScrollOver={false}
-            >
-                <Animated.View
-                    style={[
-                        styles.container,
-                        { transform: [{ scale: this.state.animGlobal }] }
-                    ]}
-                >
+            <View style={styles.page}>
+                <Animated.View style={[styles.container, { transform: [{ scale: this.state.animGlobal }] }]}>
                     {/* Chest */}
                     <Animated.View style={[styleChestAnimation, styles.chestContainer]}>
-                        <Image
-                            style={styles.chestImage}
-                            source={chestImage}
-                        />
+                        <Image style={styles.chestImage} source={chestImage} />
                     </Animated.View>
 
                     {/* Item */}
-                    <Animated.View
-                        style={[
-                            styles.frameContainer,
-                            { transform: [{ scale: this.state.animItem }] }
-                        ]}
-                    >
-                        {this.chestRarity !== 'ox' && (
+                    <Animated.View style={[styles.frameContainer, { transform: [{ scale: this.state.animItem }] }]}>
+                        {(this.chestRarity !== 'ox' && this.character !== null && (
                             <Frame
                                 style={[styles.frame, itemBackgroundStyle]}
-                                characters={[ this.character ]}
+                                characters={[this.character]}
                                 onlyItems={true}
                                 size={this.characterSize}
                                 loadingTime={0}
                             />
-                        ) || (
+                        )) || (
                             <View style={[styles.frameOX, itemBackgroundStyle]} onLayout={this.onOxLayout}>
                                 {oxObjects}
                             </View>
@@ -118,21 +94,16 @@ class ChestReward extends BackChestReward {
 
                 {/* Text */}
                 <Animated.View style={styleText}>
-                    <Text color='primary' fontSize={24}>{this.text}</Text>
-                    {!!this.textSecondary && (
-                        <Text style={styleTextSecondary}>{this.textSecondary}</Text>
-                    )}
+                    <Text color='primary' fontSize={24}>
+                        {this.text}
+                    </Text>
+                    {!!this.textSecondary && <Text style={styleTextSecondary}>{this.textSecondary}</Text>}
                 </Animated.View>
 
-                <Button
-                    style={styles.button}
-                    styleAnimation={styleButton}
-                    color='main1'
-                    onPress={this.onPress}
-                >
+                <Button style={styles.button} styleAnimation={styleButton} color='main1' onPress={this.onPress}>
                     {langM['btn-continue']}
                 </Button>
-            </Page>
+            </View>
         );
     }
 }

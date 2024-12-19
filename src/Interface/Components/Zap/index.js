@@ -1,66 +1,51 @@
 import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
-import InputBack from './back';
+import ZapBack from './back';
 
 /**
- * @typedef {import('react-native').ViewStyle} ViewStyle
- * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').ImageProps} ImageProps
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {Animated.WithAnimatedObject<import('react-native').ImageStyle>} StyleAnimProp
  * @typedef {import('./back').ZapOrientation} ZapOrientation
- * 
+ *
  * @typedef {Omit<ImageProps & { orientation?: ZapOrientation }, 'source'>} ZapHighProps
  */
 
-class Zap extends InputBack {
+class Zap extends ZapBack {
     /** @param {ZapHighProps} props */
     static High = (props) => {
         /** @type {ZapOrientation} */
         const orientation = props.orientation || 'right';
 
         const zapStyle = {
-            transform: [
-                { scaleX: orientation === 'left' ? -1 : 1 }
-            ]
+            transform: [{ scaleX: orientation === 'left' ? -1 : 1 }]
         };
 
         return (
-            <Animated.Image
-                {...props}
-                style={[styles.zap, zapStyle, props.style]}
-                source={this.getHighZapImage()}
-            />
+            <Animated.Image {...props} style={[styles.zap, zapStyle, props.style]} source={this.getHighZapImage()} />
         );
-    }
+    };
 
     render() {
-        const { position, orientation } = this.props;
+        const { style, position, orientation } = this.props;
 
-        /** @type {StyleAnimProp} */
-        const zapStyle = { ...styles.zap };
-        if (position !== null) {
-            // Add styles.zapAbsolute to the style
-            for (const key in styles.zapAbsolute) {
-                zapStyle[key] = styles.zapAbsolute[key];
-            }
-
-            zapStyle.transform = [
-                { translateX: position.x },
-                { translateY: position.y },
-                { scaleX: orientation === 'left' ? -1 : 1 },
-            ];
-        }
-
-        // Add props style to the style
-        for (const key in Object(this.props.style)) {
-            zapStyle[key] = this.props.style[key];
+        if (position === null) {
+            return <Animated.Image style={[styles.zap, style]} onLayout={this.onLayout} source={this.getZapImage()} />;
         }
 
         return (
             <Animated.Image
-                style={zapStyle}
+                style={[
+                    styles.zap,
+                    styles.zapAbsolute,
+                    {
+                        transform: [
+                            { translateX: position.x },
+                            { translateY: position.y },
+                            { scaleX: orientation === 'left' ? -1 : 1 }
+                        ]
+                    },
+                    style
+                ]}
                 onLayout={this.onLayout}
                 source={this.getZapImage()}
             />
@@ -81,4 +66,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Zap;
+export { Zap };

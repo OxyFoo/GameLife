@@ -1,68 +1,74 @@
 import * as React from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 
+import styles from './style';
+import ProgressBarBack from './back';
+import { ProgressBarInfinite } from './infinite';
 import themeManager from 'Managers/ThemeManager';
 
-import { Random, Sleep } from 'Utils/Functions';
-import { TimingAnimation } from 'Utils/Animations';
+/**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ */
 
-class ProgressBar extends React.Component {
-    state = {
-        animTranslate: new Animated.Value(0),
-        animScale: new Animated.Value(0)
-    }
-
-    componentDidMount() {
-        this.loop();
-        this.interval = window.setInterval(this.loop, 2000);
-    }
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-    loop = async () => {
-        TimingAnimation(this.state.animTranslate, -1, 0, false).start();
-        await Sleep(100);
-        TimingAnimation(this.state.animTranslate, 1, 1800, false).start();
-        TimingAnimation(this.state.animScale, .8, Random(300, 600), false).start();
-        await Sleep(Random(600, 1200));
-        TimingAnimation(this.state.animScale, .4, Random(300, 600), false).start();
-    }
+class ProgressBar extends ProgressBarBack {
+    static Infinite = ProgressBarInfinite;
 
     render() {
-        const inter = { inputRange: [0, 1], outputRange: ['0%', '100%'] };
+        const { style, height } = this.props;
+        const { width, animation, animCover } = this.state;
+
+        const leftOffset = Animated.multiply(animation, width);
+        const suppOffset = Animated.multiply(animCover, width);
+
+        /** @type {StyleProp} */
+        const animSupStyle = {
+            transform: [{ translateX: Animated.add(leftOffset, suppOffset) }]
+        };
+
         return (
-            <View style={styles.parent}>
-                <Animated.View style={[
-                    styles.bar,
-                    {
-                        backgroundColor: themeManager.GetColor('main1'),
-                        left: this.state.animTranslate.interpolate(inter),
-                        transform: [
-                            { scaleX: this.state.animScale }
-                        ]
-                    }
-                ]} />
+            <View style={[styles.body, { height }, style]} onLayout={this.onLayout}>
+                <Animated.View style={[styles.supXP, animSupStyle]} />
+                <MaskedView maskElement={this.renderMask()}>{this.renderBackground()}</MaskedView>
             </View>
         );
     }
+
+    renderMask = () => {
+        const { width, animation } = this.state;
+        const leftOffset = Animated.multiply(animation, width);
+
+        return (
+            <Animated.View
+                style={[
+                    styles.mask,
+                    {
+                        transform: [{ translateX: leftOffset }]
+                    }
+                ]}
+            />
+        );
+    };
+
+    renderBackground = () => {
+        const { color } = this.props;
+
+        if (color !== 'gradient') {
+            const backgroundColor = themeManager.GetColor(color);
+            return <View style={[styles.bar, { backgroundColor }]} />;
+        }
+
+        return (
+            <LinearGradient
+                style={styles.bar}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={['#DBA1FF', '#9095FF', '#8CF7FF']}
+            />
+        );
+    };
 }
 
-const styles = StyleSheet.create({
-    parent: {
-        width: '100%',
-        height: 4,
-        backgroundColor: '#9095FF55',
-        borderRadius: 24,
-        overflow: 'hidden'
-    },
-    bar: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        borderRadius: 24
-    }
-});
-
-export default ProgressBar;
+export { ProgressBar };

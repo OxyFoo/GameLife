@@ -1,24 +1,28 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    background: {
+    parent: {
         width: '100%',
-        paddingHorizontal: 16,
-        backgroundColor: 'rgba(0,0,0,0.1)'
-    },
-    container: {
-        height: 16,
-        width: '100%',
-        borderLeftWidth: 1,
-        borderLeftColor: 'rgba(0,0,0,0.5)',
-        borderRightWidth: 1,
-        borderRightColor: 'rgba(0,0,0,0.5)'
+        height: 12,
+        borderRadius: 20,
+        backgroundColor: '#00000050'
     },
     timelineItem: {
         flexDirection: 'row',
+        borderWidth: 2,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    adjacentLeft: {
+        borderLeftWidth: 0,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0
+    },
+    adjacentRight: {
+        borderRightWidth: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0
     }
 });
 

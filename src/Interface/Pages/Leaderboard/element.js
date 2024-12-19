@@ -19,9 +19,9 @@ import { Button, Text, Character, Frame } from 'Interface/Components';
 function RankElement({ item }) {
     if (!item) return null;
 
-    const [ character, setCharacter ] = useState(null);
-    const [ statusStyle, setStatusStyle ] = useState({});
-    const [ componentColor, setComponentColor ] = useState({});
+    const [character, setCharacter] = useState(null);
+    const [statusStyle, setStatusStyle] = useState({});
+    const [componentColor, setComponentColor] = useState({});
 
     useEffect(() => {
         const isThisPlayer = item.accountID === 0;
@@ -38,12 +38,7 @@ function RankElement({ item }) {
             item.avatar.Skin,
             item.avatar.SkinColor
         );
-        const stuff = [
-            item.avatar.Hair,
-            item.avatar.Top,
-            item.avatar.Bottom,
-            item.avatar.Shoes
-        ];
+        const stuff = [item.avatar.Hair, item.avatar.Top, item.avatar.Bottom, item.avatar.Shoes];
         character.SetEquipment(stuff);
 
         const statusStyle = {};
@@ -56,7 +51,7 @@ function RankElement({ item }) {
         setCharacter(character);
         setStatusStyle(statusStyle);
         setComponentColor(componentColor);
-    }, [ item ]);
+    }, [item]);
 
     const onPress = () => {
         if (item.accountID === 0) return;
@@ -64,11 +59,7 @@ function RankElement({ item }) {
     };
 
     return (
-        <Button
-            style={[styles.itemContainer, componentColor]}
-            onPress={onPress}
-            rippleColor='white'
-        >
+        <Button style={[styles.itemContainer, componentColor]} onPress={onPress} rippleColor='white'>
             <View style={[styles.frameBorder, statusStyle]}>
                 {character !== null && (
                     <Frame
@@ -83,19 +74,16 @@ function RankElement({ item }) {
             </View>
 
             <View style={styles.textContainer}>
-                <Text style={styles.username} color={'primary'}>{item.username}</Text>
-                <Text style={styles.details} color={'secondary'}>{item.label}</Text>
+                <Text style={styles.username} color={'primary'}>
+                    {item.username}
+                </Text>
+                <Text style={styles.details} color={'secondary'}>
+                    {item.label}
+                </Text>
             </View>
             <View style={styles.rankContainer}>
-                <Image
-                    style={styles.rankImage}
-                    source={rank_purple}
-                />
-                <Text
-                    style={styles.rankText}
-                    color={'main1'}
-                    fontSize={30 - (item.rank.toString().length * 2)}
-                >
+                <Image style={styles.rankImage} source={rank_purple} />
+                <Text style={styles.rankText} color={'main1'} fontSize={30 - item.rank.toString().length * 2}>
                     {item.rank.toString()}
                 </Text>
             </View>

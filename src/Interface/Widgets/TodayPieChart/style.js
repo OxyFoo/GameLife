@@ -2,10 +2,9 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        height: 'auto',
-        padding: 16,
-        paddingBottom: 8,
-        paddingHorizontal: 16,
+        width: 'auto',
+        paddingVertical: 12,
+        paddingHorizontal: 8,
         borderRadius: 20,
 
         flexDirection: 'column',
@@ -19,20 +18,20 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     headerText: {
+        marginBottom: 8,
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold'
     },
     notEnoughData: {
-        width: '100%'
+        width: '100%',
+        paddingHorizontal: 12
     },
     notEnoughDataText: {
         fontSize: 16
     },
     notEnoughDataButton: {
-        height: 'auto',
-        marginVertical: 12,
-        marginHorizontal: 24,
+        marginTop: 12,
         paddingVertical: 12
     }
 });

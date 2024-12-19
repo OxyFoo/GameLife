@@ -1,16 +1,42 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    text: { fontSize: 22 },
-    input: { height: 52, marginBottom: 24 },
+    page: {
+        paddingHorizontal: 24
+    },
 
-    column: { width: '50%' },
+    titleContainer: {
+        marginBottom: 24,
+        fontSize: 36
+    },
+    container: {
+        marginTop: 24
+    },
+
+    text: {
+        fontSize: 22
+    },
+    textSuggest: {
+        marginBottom: 24,
+        fontSize: 22
+    },
+    input: {
+        marginBottom: 24
+    },
+
+    marginBot: {
+        marginBottom: 24
+    },
+
+    column: {
+        width: '50%'
+    },
     row: {
         marginVertical: 24,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     rowDigit: {
         marginVertical: 2,
@@ -20,19 +46,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
-    },
-    center: {
-        marginVertical: "10%",
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        
-    },
-    button: {
-        height: 48,
-        marginHorizontal: '20%',
-        borderRadius: 8
     }
 });
 

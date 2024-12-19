@@ -6,7 +6,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import renderer from 'react-test-renderer';
 
 // Graphical components
-import Icon from '../index';
+import { Icon } from '../index';
 
 describe('[Component] Icon', () => {
     it('renders correctly', () => {

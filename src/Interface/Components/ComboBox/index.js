@@ -1,34 +1,165 @@
 import * as React from 'react';
-import { View, Animated, TouchableHighlight, FlatList } from 'react-native';
+import { View, Animated, TouchableHighlight, FlatList, Modal } from 'react-native';
 
 import styles from './style';
 import ComboBoxBack from './back';
 import themeManager from 'Managers/ThemeManager';
 import langManager from 'Managers/LangManager';
 
-import Text from 'Interface/Components/Text';
-import Button from 'Interface/Components/Button';
-import Icon from 'Interface/Components/Icon';
-import Input from 'Interface/Components/Input';
+import { Text } from '../Text';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
+import { InputText } from '../InputText';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('./back').ComboBoxItem} ComboBoxItem
  */
 
 class ComboBox extends ComboBoxBack {
-    renderSearchBar = () => (
-        <View style={styles.parentSearchBar}>
-            <Input
-                label={langManager.curr['modal']['search']}
-                text={this.state.search}
-                onChangeText={this.refreshSearch}
-            />
-        </View>
-    );
+    render() {
+        const { selectionMode } = this.state;
+
+        return (
+            <>
+                {this.renderElement()}
+
+                <Modal visible={selectionMode} transparent={true} animationType='fade'>
+                    {this.renderOverlay()}
+                    {this.renderContent()}
+                </Modal>
+            </>
+        );
+    }
+
+    renderElement = () => {
+        const { style, inputStyle, title, activeColor, enabled, selectedValue, hideChevron } = this.props;
+        const { anim, selectionMode } = this.state;
+
+        const angle = anim.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '180deg']
+        });
+
+        return (
+            <View ref={this.refParent} style={[styles.parentContent, style]}>
+                {/* Button for interaction (open combobox) */}
+                <Button
+                    testID='combobox-button'
+                    style={styles.hoverButton}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={this.onPress}
+                    onLongPress={this.resetSelection}
+                    onTouchMove={this.closeSelection}
+                />
+
+                {/* InputText to show result */}
+                <InputText
+                    style={inputStyle}
+                    label={title}
+                    value={selectedValue}
+                    activeColor={activeColor}
+                    forceActive={selectionMode}
+                    pointerEvents='none'
+                />
+
+                {/* Chevron icon */}
+                {enabled && !hideChevron && (
+                    <View style={styles.chevron} pointerEvents='none'>
+                        <Animated.View style={{ transform: [{ rotateX: angle }] }}>
+                            <Icon icon='chevron' color={selectionMode ? activeColor : 'border'} size={20} angle={-90} />
+                        </Animated.View>
+                    </View>
+                )}
+            </View>
+        );
+    };
+
+    renderOverlay = () => {
+        const { selectionMode } = this.state;
+
+        if (!selectionMode) {
+            return null;
+        }
+
+        return <View style={styles.overlayBackground} onTouchStart={this.closeSelection} />;
+    };
+
+    renderContent = () => {
+        const { enableSearchBar: setSearchBar, maxContentHeight: maxHeight, activeColor } = this.props;
+        const { parent, anim, data, selectionMode } = this.state;
+        const { x, y, width, height } = parent;
+
+        const animValue = anim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-60, 0]
+        });
+
+        /** @type {StyleProp} */
+        const overlayStyle = {
+            width: width,
+            maxHeight: maxHeight,
+            transform: [{ translateX: x }, { translateY: y + height }]
+        };
+
+        /** @type {StyleProp} */
+        const borderFixStyle = {
+            opacity: anim,
+            transform: [{ translateX: x }, { translateY: y + height }],
+            borderColor: themeManager.GetColor(activeColor)
+        };
+
+        /** @type {StyleProp} */
+        const panelStyle = {
+            opacity: anim,
+            transform: [{ translateY: animValue }],
+            borderColor: themeManager.GetColor(activeColor)
+        };
+
+        return (
+            <>
+                <Animated.View style={[styles.borderFix, borderFixStyle, { width }]} pointerEvents={'none'} />
+
+                <Animated.View
+                    style={[styles.overlayParent, overlayStyle]}
+                    pointerEvents={selectionMode ? 'auto' : 'none'}
+                >
+                    <Animated.View style={[styles.overlayPanel, panelStyle]}>
+                        <FlatList
+                            ref={this.refFlatlist}
+                            ListHeaderComponent={
+                                !setSearchBar ? null : (
+                                    <View style={styles.parentSearchBar}>
+                                        <InputText
+                                            style={styles.search}
+                                            containerStyle={styles.searchContainer}
+                                            label={langManager.curr['modal']['search']}
+                                            value={this.state.search}
+                                            onChangeText={this.refreshSearch}
+                                        />
+                                    </View>
+                                )
+                            }
+                            style={[
+                                styles.overlayContent,
+                                {
+                                    backgroundColor: themeManager.GetColor('backgroundGrey')
+                                }
+                            ]}
+                            data={data}
+                            renderItem={this.renderItem}
+                            keyExtractor={(item, index) => `i-${item.key}-${index}`}
+                        />
+                    </Animated.View>
+                </Animated.View>
+            </>
+        );
+    };
 
     /** @param {{ item: ComboBoxItem }} param0 */
     renderItem = ({ item }) => {
-        const { key, value } = item;
         const backgroundColor = themeManager.GetColor('backgroundTransparent');
 
         return (
@@ -37,74 +168,10 @@ class ComboBox extends ComboBoxBack {
                 onPress={() => this.onItemPress(item)}
                 underlayColor={backgroundColor}
             >
-                <Text style={styles.itemText}>{value}</Text>
+                <Text style={styles.itemText}>{item.value}</Text>
             </TouchableHighlight>
         );
-    }
-
-    renderChevron = () => {
-        const angle = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
-
-        return this.props.enabled && (
-            <View style={styles.chevron} pointerEvents='none'>
-                <Animated.View style={{ transform: [{ rotateX: angle }] }}>
-                    <Icon icon='chevron' size={20} angle={-90} />
-                </Animated.View>
-            </View>
-        );
-    }
-
-    render() {
-        const  { x, y, width, height } = this.state.parent;
-        const animValue = this.state.anim.interpolate({ inputRange: [0, 1], outputRange: [y+height+20, y+height] });
-        const overlayPos = [styles.overlay, {
-            width: width,
-            maxHeight: this.props.maxHeight,
-            opacity: this.state.anim,
-            transform: [{ translateX: x }, { translateY: animValue }],
-            backgroundColor: themeManager.GetColor('backgroundGrey')
-        }];
-        const header = this.props.setSearchBar ? this.renderSearchBar : null;
-
-        return (
-            <>
-                {/* Component (Input for selection, chevron and button for ripple + events) */}
-                <View style={[styles.parent, this.props.style]} onLayout={this.onLayout}>
-                    <Input
-                        label={this.props.title}
-                        text={this.state.selectedValue}
-                        active={this.state.selectionMode}
-                        pointerEvents='none'
-                    />
-
-                    <this.renderChevron />
-
-                    <Button
-                        testID='combobox-button'
-                        style={styles.hoverButton}
-                        onPress={this.openSelection}
-                        onLongPress={this.resetSelection}
-                        rippleColor='white'
-                    />
-                </View>
-
-                {/* Overlay (black opacity + back event) */}
-                {this.state.selectionMode && <View style={styles.overlayBackground} onTouchStart={this.closeSelection} />}
-
-                {/* Content (flatlist with elements) */}
-                <Animated.View style={overlayPos} pointerEvents={this.state.selectionMode ? 'auto': 'none'}>
-                    <FlatList
-                        ref={ref => this.flatlistRef = ref}
-                        ListHeaderComponent={header}
-                        data={this.state.data}
-                        renderItem={this.renderItem}
-                        onTouchMove={(e) => e.stopPropagation()}
-                        keyExtractor={(item, index) => 'i-' + index}
-                    />
-                </Animated.View>
-            </>
-        );
-    }
+    };
 }
 
-export default ComboBox;
+export { ComboBox };

@@ -6,13 +6,13 @@ import dataManager from 'Managers/DataManager';
 import { GetDate } from 'Utils/Time';
 import { DateToFormatString } from 'Utils/Date';
 
-/** 
+/**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * 
+ *
  * @typedef {{ date: string, value: number }} LineData
  */
 
@@ -34,12 +34,12 @@ class SkillChartBack extends React.Component {
 
         /** @type {ThemeColor | ThemeText} */
         lineColor: 'black'
-    }
+    };
 
     componentDidMount() {
         const lineColor = this.getLineColor(this.props.skillID);
         const linesData = this.getDataFromSkillID(this.props.skillID);
-        const cleaningData = (this.fillMissingDates(linesData));
+        const cleaningData = this.fillMissingDates(linesData);
 
         this.setState({
             cleanedData: cleaningData,
@@ -47,22 +47,22 @@ class SkillChartBack extends React.Component {
         });
     }
 
-    /** 
+    /**
      * Get all the data from the skillID
      * @param {number} skillID
      * @returns {LineData[]}
-    */
+     */
     getDataFromSkillID(skillID) {
         const dataFromBack = [];
 
-        // get the datas here 
+        // get the datas here
         const userActivities = user.activities.Get();
-        const history = userActivities.filter((a) => a.skillID === skillID)
+        const history = userActivities.filter((a) => a.skillID === skillID);
 
-        // go through the history and create one {activity: string, date: string, value: number} 
+        // go through the history and create one {activity: string, date: string, value: number}
         for (const element of history) {
             const date = DateToFormatString(GetDate(element.startTime));
-            const index = dataFromBack.findIndex(item => item.date === date);
+            const index = dataFromBack.findIndex((item) => item.date === date);
             if (index !== -1) {
                 dataFromBack[index].value += element.duration;
                 continue;
@@ -78,16 +78,16 @@ class SkillChartBack extends React.Component {
 
     /**
      * return the same array of map with filled dates and 0 values
-     * @param {LineData[]} data 
-     * @returns 
+     * @param {LineData[]} data
+     * @returns
      */
     fillMissingDates = (data) => {
-        const parseDate = dateString => {
+        const parseDate = (dateString) => {
             const [day, month, year] = dateString.split('/').map(Number);
             return new Date(year, month - 1, day);
         };
 
-        const formatDate = date => {
+        const formatDate = (date) => {
             const day = date.getDate().toString().padStart(2, '0');
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
             const year = date.getFullYear();
@@ -104,7 +104,7 @@ class SkillChartBack extends React.Component {
         let latestDate = null;
 
         // Gather all unique dates and find earliest/latest dates
-        data.forEach(dataPoint => {
+        data.forEach((dataPoint) => {
             const currentDate = parseDate(dataPoint.date);
             allDates.add(dataPoint.date);
             if (!earliestDate || currentDate < earliestDate) {
@@ -128,8 +128,8 @@ class SkillChartBack extends React.Component {
         });
 
         // Fill in missing dates
-        const result = dateRange.map(date => {
-            const existingDataPoint = data.find(dataPoint => dataPoint.date === date);
+        const result = dateRange.map((date) => {
+            const existingDataPoint = data.find((dataPoint) => dataPoint.date === date);
             if (existingDataPoint) {
                 return existingDataPoint;
             }
@@ -141,7 +141,7 @@ class SkillChartBack extends React.Component {
     };
 
     /**
-     * Returns the color of the category of the skill 
+     * Returns the color of the category of the skill
      * @param {number} skillID
      * @returns {string}
      */
@@ -153,7 +153,7 @@ class SkillChartBack extends React.Component {
             return 'black';
         }
         return category.Color;
-    }
+    };
 }
 
 SkillChartBack.prototype.props = SkillChartProps;

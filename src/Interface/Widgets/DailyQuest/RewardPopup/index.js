@@ -3,106 +3,88 @@ import { View, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
-import { RenderItemMemo } from './element';
+import { DailyQuestDayItem } from './element';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 import { Button, Text } from 'Interface/Components';
-import { DateToFormatString } from 'Utils/Date';
+import { DateFormat } from 'Utils/Date';
 
-function RenderPopup(props) {
+/** @param {Object} _props */
+function RenderPopup(_props) {
     const lang = langManager.curr['daily-quest'];
-    const stylePopup = {
-        backgroundColor: themeManager.GetColor('background')
-    };
 
-    const claimsList = user.quests.dailyquest.claimsList.Get();
-    const [ claimIndex, setClaimIndex ] = React.useState(user.quests.dailyquest.GetCurrentClaimIndex());
-    const [ claimCount, setClaimCount ] = React.useState(0);
+    const _init_claimsList = user.dailyQuest.claimsList.Get();
+    const _init_index = user.dailyQuest.GetCurrentClaimIndex();
 
-    let timeout;
+    const [claimList, setClaimList] = React.useState(_init_index === -1 ? null : _init_claimsList[_init_index]);
+    const [claimCount, setClaimCount] = React.useState(0);
+    const [claimDays, setClaimDays] = React.useState(
+        user.dailyQuest.GetClaimDays(_init_index === -1 ? null : _init_claimsList[_init_index])
+    );
+
     React.useEffect(() => {
-        const listener = user.quests.dailyquest.claimsList.AddListener((claimsList) => {
-            if (timeout) clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                setClaimIndex(user.quests.dailyquest.GetCurrentClaimIndex());
-            }, 1000);
+        const listener = user.dailyQuest.claimsList.AddListener((claimsList) => {
+            const index = user.dailyQuest.GetCurrentClaimIndex();
+            setClaimList({ ...claimsList[index] });
         });
 
         return () => {
-            user.quests.dailyquest.claimsList.RemoveListener(listener);
-        }
+            user.dailyQuest.claimsList.RemoveListener(listener);
+        };
     }, []);
 
     React.useEffect(() => {
-        if (claimIndex !== -1) {
-            const claimTotal = claimsList[claimIndex].daysCount;
-            const claimedCount = claimsList[claimIndex].claimed.length;
+        if (claimList !== null) {
+            const claimTotal = claimList.daysCount;
+            const claimedCount = claimList.claimed.length;
             setClaimCount(claimTotal - claimedCount);
+            setClaimDays(user.dailyQuest.GetClaimDays(claimList));
         }
-    }, [ claimIndex ]);
+    }, [claimList]);
+
+    if (claimDays === null) {
+        return null;
+    }
 
     let claimDate = null;
     let isCurrentStreak = false;
-    if (claimsList.length > 0) {
-        const currentClaimList = claimsList[claimIndex];
-        isCurrentStreak = user.quests.dailyquest.IsCurrentList(currentClaimList);
+    if (claimList !== null && _init_claimsList.length > 0) {
+        isCurrentStreak = user.dailyQuest.IsCurrentList(claimList);
         if (!isCurrentStreak) {
-            claimDate = DateToFormatString(new Date(currentClaimList.start + 'T00:00:00'));
+            claimDate = DateFormat(new Date(claimList.start + 'T00:00:00'), 'DD/MM/YYYY');
         }
     }
 
     return (
-        <View style={[styles.popup, stylePopup]}>
+        <View style={styles.popup}>
             <LinearGradient
                 style={styles.popupTitleContainer}
-                colors={[ '#384065', '#B83EFFE3' ]}
+                colors={['#384065', '#B83EFFE3']}
                 start={{ x: 0, y: -2 }}
                 end={{ x: 1, y: 2 }}
             >
-                <Text style={styles.popupTitle}>
-                    {lang['container-title']}
-                </Text>
+                <Text style={styles.popupTitle}>{lang['container-title']}</Text>
             </LinearGradient>
 
-            {claimIndex !== -1 && !isCurrentStreak && (
-                <Text style={styles.popupText}>
-                    {lang['popup']['list-date'].replace('{}', claimDate)}
-                </Text>
+            {claimList !== null && !isCurrentStreak && claimDate !== null && (
+                <Text style={styles.popupText}>{lang['popup']['list-date'].replace('{}', claimDate)}</Text>
             )}
 
             <FlatList
-                data={DAILY_QUEST_REWARDS}
-                keyExtractor={(item, index) => index.toString()}
+                data={claimDays}
+                keyExtractor={(item) => item.index.toString()}
                 initialNumToRender={10}
-                renderItem={(props) => (
-                    <RenderItemMemo
-                        index={props.index}
-                        claimIndex={claimIndex}
-                    />
-                )}
-                ListHeaderComponent={() => (
-                    <View style={styles.separatorFirst} />
-                )}
-                ItemSeparatorComponent={() => (
-                    <View style={styles.separator} />
-                )}
-                getItemLayout={(data, index) => (
-                    { length: 68, offset: 68 * index, index }
-                )}
+                renderItem={(props) => <DailyQuestDayItem item={props.item} claimList={claimList} />}
+                ListHeaderComponent={<View style={styles.separatorFirst} />}
+                ItemSeparatorComponent={RenderSeparator}
+                getItemLayout={(_data, index) => ({ length: 68, offset: 68 * index, index })}
                 showsVerticalScrollIndicator={false}
             />
 
             {claimCount > 3 && (
                 <View style={styles.claimAllView}>
-                    <Button
-                        style={styles.claimAllButton}
-                        color='background'
-                        rippleColor='white'
-                        onPress={user.quests.dailyquest.ClaimAll}
-                    >
+                    <Button style={styles.claimAllButton} onPress={ClaimAll}>
                         {lang['popup']['claim-all']}
                     </Button>
                 </View>
@@ -110,5 +92,25 @@ function RenderPopup(props) {
         </View>
     );
 }
+
+async function ClaimAll() {
+    const lang = langManager.curr['daily-quest'];
+
+    const result = await user.dailyQuest.ClaimAll();
+
+    if (result !== 'success') {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-claim-error-title'],
+                message: lang['alert-claim-error-message'].replace('{}', result)
+            },
+            cancelable: false,
+            priority: true
+        });
+    }
+}
+
+const RenderSeparator = () => <View style={styles.separator} />;
 
 export default RenderPopup;

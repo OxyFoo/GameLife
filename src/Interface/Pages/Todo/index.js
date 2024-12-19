@@ -1,86 +1,93 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 
-import user from 'Managers/UserManager';
-
+import styles from './style';
 import BackTodo from './back';
 import SectionTitle from './Sections/title';
 import SectionDescription from './Sections/description';
 import SectionSchedule from './Sections/schedule';
-import SectionTasks from './Sections/tasks';
+import SectionTasks from './Sections/Tasks';
+import langManager from 'Managers/LangManager';
 
-import StartHelp from './help';
+import { Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Button, Page, KeyboardSpacerView } from 'Interface/Components';
+import { WithInterpolation } from 'Utils/Animations';
 
 class Todo extends BackTodo {
     render() {
-        const { title, error } = this.state;
+        const lang = langManager.curr['todo'];
+        const { loading, action, tempTodo, error, animEditButton, editButtonHeight, scrollable } = this.state;
+        const title = action === 'new' ? lang['title-new'] : lang['title'];
+
+        const styleAnimEditButton = {
+            opacity: animEditButton,
+            transform: [
+                {
+                    translateY: WithInterpolation(animEditButton, editButtonHeight, 0)
+                }
+            ]
+        };
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                onStartShouldSetResponder={this.keyboardDismiss}
-                overlay={this.renderOverlay()}
-                bottomOffset={72}
-            >
-                <PageHeader
-                    onBackPress={user.interface.BackHandle}
-                    onHelpPress={StartHelp.bind(this)}
-                />
+            <>
+                <ScrollView
+                    ref={this.refScrollView}
+                    style={styles.page}
+                    onTouchStart={this.keyboardDismiss}
+                    onScroll={this.onScroll}
+                    scrollEnabled={scrollable}
+                >
+                    <PageHeader title={title} onBackPress={this.onBackPress} />
 
-                <SectionTitle
-                    title={title}
-                    error={error}
-                    onChangeTitle={this.onChangeTitle}
-                />
+                    <SectionTitle todo={tempTodo} error={error} onChangeTodo={this.onChangeTodo} />
+                    <SectionSchedule todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                    <SectionDescription todo={tempTodo} onChangeTodo={this.onChangeTodo} />
+                    <SectionTasks
+                        todo={tempTodo}
+                        onChangeTodo={this.onChangeTodo}
+                        changeScrollable={this.onChangeScrollable}
+                    />
 
-                <SectionSchedule
-                    ref={ref => this.refSectionSchedule = ref}
-                    onChange={this.onEditTodo}
-                />
+                    {/* Button: Remove */}
+                    {action !== 'new' && (
+                        <Button
+                            style={[styles.removeButton, action === 'edit' && styles.removeButtonWithEdit]}
+                            appearance='outline'
+                            icon='trash'
+                            onPress={this.removeTodo}
+                            loading={loading}
+                        >
+                            {lang['button-remove']}
+                        </Button>
+                    )}
+                </ScrollView>
 
-                <SectionDescription
-                    ref={ref => this.refSectionDescription = ref}
-                    onChange={this.onEditTodo}
-                />
+                {/* Button: Add */}
+                {action === 'new' && (
+                    <Button style={styles.button} onPress={this.addTodo} enabled={error === null} loading={loading}>
+                        {lang['button-add']}
+                    </Button>
+                )}
 
-                <SectionTasks
-                    ref={ref => this.refSectionTasks = ref}
-                    onChange={this.onEditTodo}
-                />
-
-                <KeyboardSpacerView onChangeState={this.onKeyboardChangeState} />
-            </Page>
-        );
-    }
-
-    renderOverlay = () => {
-        const { button, error } = this.state;
-
-        return (
-            <Button
-                style={styles.button}
-                color={button.color}
-                onPress={this.onButtonPress}
-                enabled={error.length === 0}
-            >
-                {button.text}
-            </Button>
+                {/* Button: Edit (Animated) */}
+                {action !== 'new' && (
+                    <Button
+                        style={styles.button}
+                        styleAnimation={styleAnimEditButton}
+                        appearance='normal'
+                        color='success'
+                        onLayout={this.onEditButtonLayout}
+                        onPress={this.editTodo}
+                        enabled={error === null}
+                        loading={loading}
+                        pointerEvents={action === 'edit' ? 'auto' : 'none'}
+                    >
+                        {lang['button-save']}
+                    </Button>
+                )}
+            </>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    button: {
-        position: 'absolute',
-        height: 50,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        marginBottom: 24,
-        marginHorizontal: 24
-    }
-});
 
 export default Todo;

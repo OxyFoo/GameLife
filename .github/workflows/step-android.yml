@@ -35,21 +35,16 @@ jobs:
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
-
-      - name: 'Cache NPM packages'
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          node-version: '22.x'
 
       - name: 'Install Dependencies'
         run: npm install
 
       - name: 'Change bundle id for test environment'
         if: inputs.environment == 'test'
-        run: ./Tools/BundleSwitcher/bundleSwitcher.sh test
+        run: |
+          chmod +x ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh
+          ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
 
       - name: 'Get config files'
         run: |
@@ -72,14 +67,14 @@ jobs:
           ls -la
 
       - name: 'Upload aab artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.FILE_AAB }}
           path: ./${{ env.FILE_AAB }}
           if-no-files-found: error  
 
       - name: 'Upload mapping artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.FILE_MAPPING }}
           path: ./${{ env.FILE_MAPPING }}
@@ -106,7 +101,7 @@ jobs:
 
       - name: 'Upload apk artifact'
         if: ${{ inputs.save-apk-artifact }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.FILE_APK }}
           path: ./${{ env.FILE_APK }}
@@ -122,12 +117,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 'Get aab artifact'
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.FILE_AAB }}
 
       - name: 'Get mapping artifact'
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.FILE_MAPPING }}
 

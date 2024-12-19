@@ -6,11 +6,11 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     separator: {
-        height: .4
+        height: 0.4
     },
     btnSmall: {
-        height: 46,
-        marginHorizontal: 24,
+        paddingVertical: 12,
+        paddingHorizontal: 24,
         borderRadius: 8
     }
 });

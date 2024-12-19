@@ -22,7 +22,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-ios/.xcode.env.local
+**/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -67,25 +67,25 @@ buck-out/
 *.jsbundle
 
 # CocoaPods
-/ios/Pods/
+/**/Pods/
 
 # Credentials
-config.php
 app.json
 google-services.json
-src/Server/TCP/.env
 
 # VSCode
 .vscode/
 *.code-workspace
 
+# Python tools
+__pycache__/
+*.pyc
+
 # Useless config
 .gitattributes
 .editorconfig
-.eslintrc.js
 .flowconfig
 .prettierrc.js
-.watchmanconfig
 
 # Other
 Backups

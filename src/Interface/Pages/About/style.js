@@ -1,21 +1,35 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    content: {
-        flex: 1,
-        justifyContent: 'space-between'
+    page: {
+        paddingHorizontal: 24
     },
+    pageContent: {
+        minHeight: '100%'
+    },
+
     pageHeader: {
         marginBottom: 24
     },
+    title: {
+        marginBottom: 12,
+        textAlign: 'center',
+        fontSize: 28
+    },
 
+    // Header
+    headerImage: {
+        width: '50%',
+        height: 100,
+        alignSelf: 'center',
+        borderRadius: 12
+    },
     headerVersion: {
-        marginBottom: 12
+        marginBottom: 24
     },
-    headerTitle: {
-        marginBottom: 12
-    },
-    headerRow: {
+
+    // Team
+    teamRow: {
         display: 'flex',
         marginBottom: 6,
         flexDirection: 'row',
@@ -23,27 +37,30 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
-    contributorsView:  {
+    // Contributors
+    contributorsView: {
         flex: 1,
         paddingVertical: 24
     },
     contributorsText: {
-        marginBottom: 12
+        marginBottom: 12,
+        fontSize: 22
     },
-    contributorsFlatlist: {
-        flex: 1,
-        borderWidth: 3,
-        borderColor: '#FFFFFF'
+    contributorsSubText: {
+        textAlign: 'justify'
     },
 
+    // Links
     footerText: {
-        marginBottom: 12
+        marginBottom: 24
     },
-    footerRow: {
+    iconsRow: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        marginTop: 6,
+        marginBottom: 32
     }
 });
 

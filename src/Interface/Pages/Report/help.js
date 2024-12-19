@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 function StartHelp() {
     const lang = langManager.curr['report']['tuto'];
 
-    user.interface.screenTuto.ShowTutorial([
+    user.interface.screenTuto?.ShowTutorial([
         {
             component: null,
             text: lang['bug'],

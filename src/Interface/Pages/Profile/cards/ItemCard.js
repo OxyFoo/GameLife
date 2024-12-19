@@ -9,8 +9,8 @@ import themeManager from 'Managers/ThemeManager';
 import { Character, Frame } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Inventory').Stuff} Stuff
- * @typedef {import('Interface/Components/Character/Frame').BodyView} BodyView
+ * @typedef {import('Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('Interface/OldComponents/Character/Frame').BodyView} BodyView
  */
 
 const ItemCardProps = {

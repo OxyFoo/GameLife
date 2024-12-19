@@ -1,14 +1,17 @@
 import langManager from 'Managers/LangManager';
+import { IUserClass } from 'Types/Interface/IUserClass';
 
-import { DateToFormatString } from 'Utils/Date';
+import { DateFormat } from 'Utils/Date';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
- * 
- * @typedef {import('Interface/Components/Icon').Icons} Icons
+ *
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
- * 
+ *
+ * @typedef {import('Types/Class/Shop').SaveObject_Shop} SaveObject_Shop
+ *
  * @typedef Chest
  * @property {number} priceOriginal
  * @property {number} priceDiscount
@@ -17,7 +20,7 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {number} probas.rare
  * @property {number} probas.epic
  * @property {number} probas.legendary
- * 
+ *
  * @typedef BuyableRandomChest
  * @property {string} ref
  * @property {string | number} ID
@@ -29,12 +32,12 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
  * @property {() => void} OnPress
- * 
+ *
  * @typedef Target
  * @property {string} id
- * @property {Icons} icon
+ * @property {IconsName} icon
  * @property {() => void} onPress
- * 
+ *
  * @typedef BuyableTargetedChest
  * @property {string} ref
  * @property {string | number} ID
@@ -49,9 +52,12 @@ import { DateToFormatString } from 'Utils/Date';
  * @property {() => void} OnPress
  */
 
-class Shop {
+/** @extends {IUserClass<SaveObject_Shop>} */
+class Shop extends IUserClass {
     /** @param {UserManager} user */
     constructor(user) {
+        super('shop');
+
         this.user = user;
     }
 
@@ -59,55 +65,78 @@ class Shop {
         /** @type {string} Today date */
         day: '',
 
-        /** @type {Array<string>} List of items ID */
+        /** @type {string[]} List of items ID */
         items: [],
 
-        /** @type {Array<number>} List of inventory items ID */
+        /** @type {number[]} List of inventory items ID */
         dyes: []
     };
 
-    /** @type {Array<string>} */
+    /** @type {string[]} */
     IAP_IDs = [];
 
     /** @type {number} Price factor, applied to all Ox prices in shop */
     priceFactor = 1;
 
-    Clear() {
+    Clear = () => {
         this.buyToday = {
             day: '',
             items: [],
             dyes: []
         };
-    }
+    };
+
+    // TODO: Reimplement shop
+    /**
+     * @param {Object} inventory
+     * @param {this['buyToday']} inventory.buyToday
+     */
     LoadOnline(inventory) {
-        if (typeof(inventory) !== 'object') return;
+        if (typeof inventory !== 'object') return;
+        /** @param {string} key */
         const contains = (key) => inventory.hasOwnProperty(key);
         if (contains('buyToday')) {
-            const today = DateToFormatString(new Date());
+            const today = DateFormat(new Date(), 'DD/MM/YYYY');
             this.buyToday = inventory['buyToday'];
             this.buyToday.day = today;
-            this.user.LocalSave();
+            this.user.SaveLocal();
         }
     }
-    Load(data) {
-        const contains = (key) => data.hasOwnProperty(key);
-        if (contains('buyToday')) this.buyToday = data['buyToday'];
 
-        const today = DateToFormatString(new Date());
+    /**
+     * @param {Partial<SaveObject_Shop>} data
+     */
+    Load = (data) => {
+        if (typeof data.day !== 'undefined') {
+            this.buyToday.day = data.day;
+        }
+        if (typeof data.items !== 'undefined') {
+            this.buyToday.items = data.items;
+        }
+        if (typeof data.dyes !== 'undefined') {
+            this.buyToday.dyes = data.dyes;
+        }
+
+        // If today is different, reset
+        const today = DateFormat(new Date(), 'DD/MM/YYYY');
         if (today !== this.buyToday.day) {
             this.buyToday.day = today;
             this.buyToday.items = [];
             this.buyToday.dyes = [];
-            this.user.LocalSave();
+            this.user.SaveLocal();
         }
-    }
-    Save() {
-        const data = {
-            buyToday: this.buyToday
-        };
-        return data;
-    }
+    };
 
+    /** @returns {SaveObject_Shop} */
+    Save = () => {
+        return {
+            day: this.buyToday.day,
+            items: this.buyToday.items,
+            dyes: this.buyToday.dyes
+        };
+    };
+
+    /** @param {string[]} iaps */
     LoadIAPs(iaps) {
         if (Array.isArray(iaps)) {
             this.IAP_IDs = iaps;
@@ -121,9 +150,13 @@ class Shop {
 
         // Check Ox Amount
         if (this.user.informations.ox.Get() < price) {
-            const title = lang['popup-notenoughox-title'];
-            const text = lang['popup-notenoughox-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
             return;
         }
 
@@ -134,9 +167,13 @@ class Shop {
 
         // Check error
         if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
-            const title = lang['reward-failed-title'];
-            const text = lang['reward-failed-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
             return;
         }
 
@@ -150,19 +187,21 @@ class Shop {
         this.user.inventory.stuffs.push(newItem);
 
         // Save inventory
-        this.user.LocalSave();
+        this.user.SaveLocal();
 
         // Update mission
         this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
-        const args = {
-            itemID: newItem['ItemID'],
-            chestRarity: chest.Rarity,
-            callback: this.user.interface.BackHandle
-        };
-        this.user.interface.ChangePage('chestreward', args, true);
-    }
+        this.user.interface.ChangePage('chestreward', {
+            args: {
+                itemID: newItem['ItemID'],
+                chestRarity: chest.Rarity,
+                callback: this.user.interface.BackHandle
+            },
+            storeInHistory: false
+        });
+    };
 
     /** @param {BuyableTargetedChest} chest */
     BuyTargetedChest = async (chest) => {
@@ -171,9 +210,13 @@ class Shop {
 
         // Check Ox Amount
         if (this.user.informations.ox.Get() < price) {
-            const title = lang['popup-notenoughox-title'];
-            const text = lang['popup-notenoughox-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ]);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
             return;
         }
 
@@ -187,9 +230,13 @@ class Shop {
 
         // Check error
         if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
-            const title = lang['reward-failed-title'];
-            const text = lang['reward-failed-text'];
-            this.user.interface.popup.ForceOpen('ok', [ title, text ], undefined, false);
+            this.user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
             return;
         }
 
@@ -203,19 +250,21 @@ class Shop {
         this.user.inventory.stuffs.push(newItem);
 
         // Save inventory
-        this.user.LocalSave();
+        this.user.SaveLocal();
 
         // Update mission
         this.user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
-        const args = {
-            itemID: newItem['ItemID'],
-            chestRarity: chest.Rarity,
-            callback: this.user.interface.BackHandle
-        };
-        this.user.interface.ChangePage('chestreward', args, true);
-    }
+        this.user.interface.ChangePage('chestreward', {
+            args: {
+                itemID: newItem['ItemID'],
+                chestRarity: chest.Rarity,
+                callback: this.user.interface.BackHandle
+            },
+            storeInHistory: false
+        });
+    };
 }
 
 export default Shop;

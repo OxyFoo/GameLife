@@ -1,175 +1,118 @@
 import * as React from 'react';
-import { View, FlatList, Animated } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Animated, View, FlatList, Dimensions } from 'react-native';
 
-import BackCalendar from './back';
-import styles from './style';
-import user from 'Managers/UserManager';
-import themeManager from 'Managers/ThemeManager';
+import styles, { getItemLayout } from './style';
+import BackCalendar, { TOTAL_DAYS_COUNT } from './back';
+import { RenderActivity, RenderDay } from './elements';
+import { CardHeader, CardSeparator, CardFooter } from './AddButtons';
+import langManager from 'Managers/LangManager';
 
-import { cardHeader, cardItem, cardFooter, cardSeparator } from './cards';
-import { Page, Text, Button, Icon, ActivityTimeline } from 'Interface/Components';
-import { ActivityPanel, BlockMonth } from 'Interface/Widgets';
-import { GetFullDate, GetMonthAndYear } from 'Utils/Date';
+import { ActivityTimeline, Button, Icon, Text } from 'Interface/Components';
 
-/**
- * @typedef {import('Interface/Widgets/BlockMonth').MonthData} MonthData
- */
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(null, 0).length + 1) / 2;
 
 class Calendar extends BackCalendar {
-    /** @param {{ item: MonthData }} param0 */
-    month = ({ item }) => (
-        <BlockMonth
-            style={styles.months}
-            height={260}
-            data={item}
-            onPressDay={this.daySelect}
-        />
-    )
-
-    renderActivity = () => (
-        <ActivityPanel
-            ref={ref => this.refActivityPanel = ref}
-            topOffset={200}
-            variantTheme
-        />
-    )
-
     render() {
-        const { months, selectedALL, animation, currActivities } = this.state;
+        const lang = langManager.curr['calendar'];
+        const { activities, todayStrDate, selectedDay, selectedMonth, days, animSummaryY, animTodayButton } =
+            this.state;
 
-        const interPanel = { inputRange: [0, 1], outputRange: [0, user.interface.screenHeight] };
-        const interDateP = { inputRange: [0, 1], outputRange: [user.interface.screenHeight / 4, 0] };
-
-        const styleContent = [
-            styles.mainContent,
-            {
-                height: user.interface.screenHeight - 130,
-                transform: [{ translateY: animation.interpolate(interPanel) }]
-            }
-        ];
-        const styleCalendar = {
-            transform: [{ translateY: animation.interpolate(interDateP) }]
+        const summaryStyle = {
+            marginTop: animSummaryY
         };
-        const styleMonth = {
-            height: user.interface.screenHeight - 190 // 130 (height of the top bar) + 60 (half of the bottom bar)
-        };
-        const styleBackground = {
-            backgroundColor: themeManager.GetColor('backgroundGrey')
-        };
-
-        let title = '';
-        let titleSelectedDay = '';
-        if (selectedALL !== null) {
-            const { day, month, year } = selectedALL;
-            title = selectedALL === null ? '' : GetMonthAndYear(month, year);
-            titleSelectedDay = GetFullDate(new Date(year, month, day));
-        }
 
         return (
-            <Page
-                ref={ref => this.refPage = ref}
-                style={styles.page}
-                overlay={this.renderActivity()}
-                isHomePage
-                scrollable={false}
-            >
-                <Animated.View style={styleContent}>
-                    {/* Month + button to show full calendar */}
-                    <View style={styles.row}>
-                        <Icon size={32} />
-                        <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
-                        <Icon
-                            icon='calendar'
-                            onPress={this.dayRefresh}
-                            color='main1'
-                            size={32}
-                        />
+            <View style={styles.page}>
+                {/** Summary (hidden on scroll) */}
+                <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
+                    <Text style={styles.summaryTitle} color='secondary'>
+                        {lang['summary-title']}
+                    </Text>
+
+                    <View style={styles.summaryHoursContent}>
+                        <Text fontSize={12} color='secondary'>
+                            {'00:00'}
+                        </Text>
+                        <Text fontSize={12} color='secondary'>
+                            {'24:00'}
+                        </Text>
                     </View>
 
-                    {/* Date selection + arrows prev/next */}
-                    <View style={styles.row}>
-                        <Button style={styles.btnIcon} rippleColor='white' onPress={this.selectPrevWeek}>
-                            <Icon
-                                icon='chevron'
-                                color='main1'
-                                size={18}
-                                angle={180}
-                            />
-                        </Button>
-                        <BlockMonth
-                            style={styles.weekRow}
-                            data={selectedALL}
-                            onPressDay={this.daySelect}
-                            hideTitle
-                        />
-                        <Button style={styles.btnIcon} rippleColor='white' onPress={this.selectNextWeek}>
-                            <Icon
-                                icon='chevron'
-                                color='main1'
-                                size={18}
-                            />
-                        </Button>
-                    </View>
-
-                    {/* CurrDate + Activities panel */}
-                    <View
-                        style={[styles.panel, styleBackground]}
-                    >
-                        <ActivityTimeline
-                            ref={this.refActivityTimeline}
-                            activities={currActivities}
-                        />
-                        <Text style={styles.date} color='main1' fontSize={18}>{titleSelectedDay}</Text>
-                        {selectedALL?.day && ( // Force re-render after date selection
-                            <FlatList
-                                style={styles.panelCard}
-                                contentContainerStyle={styles.panelCardContainer}
-                                data={currActivities}
-                                onScroll={this.handleScroll}
-                                ListHeaderComponent={cardHeader.bind(this)}
-                                ListFooterComponent={cardFooter.bind(this)}
-                                ItemSeparatorComponent={cardSeparator.bind(this)}
-                                renderItem={cardItem.bind(this)}
-                                keyExtractor={(item, index) =>
-                                    `activity-card-s-${index}-${item.startTime}`
-                                }
-                            />
-                        )}
-                        <LinearGradient
-                            style={styles.fadeBottom}
-                            colors={[
-                                themeManager.GetColor('backgroundGrey', { opacity: 0 }),
-                                themeManager.GetColor('backgroundGrey', { opacity: 1 })
-                            ]}
-                        />
-                    </View>
+                    <ActivityTimeline activities={activities.map((i) => i.activity)} day={selectedDay?.day} />
                 </Animated.View>
 
-                {/* Big Calendar */}
-                <Animated.View style={styleCalendar}>
+                {/** Activities list */}
+                <View style={styles.activityList}>
+                    <View style={styles.activityTitleContent}>
+                        <Text style={styles.activityTitle} color='secondary'>
+                            {lang['activities-title'].replace('{}', todayStrDate)}
+                        </Text>
+                    </View>
+
                     <FlatList
-                        ref={(ref) => { this.flatlist = ref }}
-                        style={styleMonth}
-                        data={months}
-                        renderItem={this.month}
-                        keyExtractor={(item, index) => `${item.month}-${item.year}`}
-                        getItemLayout={(data, index) => (
-                            { length: 260, offset: 260 * index, index }
+                        data={activities}
+                        keyExtractor={(activity) => `${activity.activity.startTime}`}
+                        renderItem={(props) => <RenderActivity {...props} />}
+                        ListHeaderComponent={CardHeader.bind(this)}
+                        ListFooterComponent={CardFooter.bind(this)}
+                        ItemSeparatorComponent={CardSeparator.bind(this)}
+                        ListEmptyComponent={() => (
+                            <Button
+                                style={styles.activityEmptyButton}
+                                appearance='outline'
+                                icon='add'
+                                onPress={this.addActivity}
+                            >
+                                {lang['add-activity']}
+                            </Button>
                         )}
-                        refreshing={false}
-                        onScroll={this.onScroll}
+                        onScroll={this.handleActivityScroll}
                     />
-                    <LinearGradient
-                        style={styles.fadeBottom2}
-                        colors={[
-                            themeManager.GetColor('ground1b', { opacity: 0 }),
-                            themeManager.GetColor('ground1b', { opacity: 1 })
-                        ]}
-                    />
-                </Animated.View>
+                </View>
 
-            </Page>
+                {/** Days selection */}
+                <View>
+                    <View style={styles.dayList}>
+                        <Button
+                            style={styles.daysButtonOption}
+                            appearance='uniform'
+                            color='transparent'
+                            onPress={this.openCalendar}
+                        >
+                            <Icon icon='planner' color='main1' size={18} />
+                        </Button>
+                        <Text style={styles.monthTitle} color='secondary'>
+                            {selectedMonth}
+                        </Text>
+                        <Button
+                            style={styles.daysButtonOption}
+                            styleAnimation={{ opacity: animTodayButton }}
+                            appearance='uniform'
+                            color='transparent'
+                            onPress={this.openToday}
+                        >
+                            <Icon icon='retry' color='main2' size={16} />
+                        </Button>
+                    </View>
+                    <FlatList
+                        ref={this.refDayList}
+                        data={days}
+                        keyExtractor={(item) => `${item.year}-${item.month}-${item.day}`}
+                        initialScrollIndex={INITIAL_SCROLL_INDEX}
+                        getItemLayout={getItemLayout}
+                        renderItem={(props) => <RenderDay {...props} />}
+                        onLayout={this.onLayoutDayList}
+                        onScroll={this.handleDayScroll}
+                        onStartReached={this.onDayStartReached}
+                        onStartReachedThreshold={0.4}
+                        onEndReached={this.onDayEndReached}
+                        onEndReachedThreshold={0.4}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                    />
+                </View>
+            </View>
         );
     }
 }

@@ -8,6 +8,7 @@ on:
       - hotfix/**/*
       - bugfix/**/*
       - feature/**/*
+      - version/**/*
 
 jobs:
   test-client:

@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
 import {
-    initConnection, endConnection,
-    requestPurchase, PurchaseStateAndroid,
+    initConnection,
+    endConnection,
+    requestPurchase,
+    PurchaseStateAndroid,
     flushFailedPurchasesCachedAsPendingAndroid,
-    getProducts, finishTransaction,
-    purchaseUpdatedListener, purchaseErrorListener,
+    getProducts,
+    finishTransaction,
+    purchaseUpdatedListener,
+    purchaseErrorListener,
     ErrorCode,
     clearProductsIOS
 } from 'react-native-iap';
@@ -20,11 +24,11 @@ import { Character } from 'Interface/Components';
  * @typedef {import('react-native-iap').Product} Product
  * @typedef {import('react-native-iap').Purchase} Purchase
  * @typedef {import('react-native-iap').PurchaseError} PurchaseError
- * 
- * @typedef {import('Data/Items').Item} Item
- * @typedef {import('Data/Items').CharacterContainerSize} CharacterContainerSize
+ *
+ * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  * @typedef {import('Managers/LangManager').Lang} Lang
- * 
+ *
  * @typedef BuyableItem
  * @property {string | number} ID
  * @property {string} Name
@@ -35,7 +39,7 @@ import { Character } from 'Interface/Components';
  * @property {Character} Character Character to display item
  * @property {CharacterContainerSize} Size Item size in pixels for the character
  * @property {() => void} OnPress
- * 
+ *
  * @typedef IAPItem
  * @property {string} ID
  * @property {string} Name
@@ -51,7 +55,7 @@ class BackShopIAP extends React.Component {
 
         /** @type {Array<IAPItem>} */
         iapItems: []
-    }
+    };
 
     purchaseUpdateSubscription = null;
     purchaseErrorSubscription = null;
@@ -74,7 +78,11 @@ class BackShopIAP extends React.Component {
             })
             .catch((exception) => {
                 // Nothing to do here
-                user.interface.console.AddLog('error', '[IAP] Error flushing failed purchases cached as pending', exception);
+                user.interface.console.AddLog(
+                    'error',
+                    '[IAP] Error flushing failed purchases cached as pending',
+                    exception
+                );
             });
     }
 
@@ -95,11 +103,10 @@ class BackShopIAP extends React.Component {
     LoadIAP = async () => {
         const allIAP = await getProducts({
             skus: user.shop.IAP_IDs
-        })
-            .catch((error) => {
-                user.interface.console.AddLog('error', '[IAP] Error fetching products', error);
-                return /** @type {Array<Product>} */ ([]);
-            });
+        }).catch((error) => {
+            user.interface.console?.AddLog('error', '[IAP] Error fetching products', error);
+            return /** @type {Array<Product>} */ [];
+        });
 
         if (allIAP === null || allIAP.length === 0) {
             return;
@@ -127,7 +134,7 @@ class BackShopIAP extends React.Component {
             .sort((a, b) => a.ID.localeCompare(b.ID));
 
         this.setState({ iapItems });
-    }
+    };
 
     /** @param {Purchase} purchase */
     purchaseDidUpdate = async (purchase) => {
@@ -135,7 +142,7 @@ class BackShopIAP extends React.Component {
             // If purchase is pending, we should just wait
             if (purchase.purchaseStateAndroid === PurchaseStateAndroid.PENDING) {
                 const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
-                user.interface.popup.Open('ok', [ title, message ], undefined, true);
+                user.interface.popup.Open('ok', [title, message], undefined, true);
                 return;
             }
 
@@ -159,19 +166,23 @@ class BackShopIAP extends React.Component {
             return;
         }
 
-        // Wait if reward application is not loaded or 
+        // Wait if reward application is not loaded or already on reward page
         while (user.appIsLoaded === false || user.interface.GetCurrentPageName() === 'chestreward') {
             await Sleep(200);
         }
 
         // Show reward
-        user.interface.ChangePage('chestreward', {
-            chestRarity: 'ox',
-            oxCount: addedOx,
-            callback: () => {
-                user.interface.BackHandle();
-            }
-        }, true);
+        user.interface.ChangePage(
+            'chestreward',
+            {
+                chestRarity: 'ox',
+                oxCount: addedOx,
+                callback: () => {
+                    user.interface.BackHandle();
+                }
+            },
+            true
+        );
 
         // Finish transaction
         finishTransaction({
@@ -180,7 +191,7 @@ class BackShopIAP extends React.Component {
             // Is consumable (can be purchased again)
             isConsumable: true
         });
-    }
+    };
 
     /** @param {PurchaseError} error */
     purchaseDidError = (error) => {
@@ -189,7 +200,7 @@ class BackShopIAP extends React.Component {
         }
 
         this.handleError('purchase-error', 'Error purchasing item', error);
-    }
+    };
 
     /** @param {string} sku Product ID */
     purchase = (sku) => {
@@ -205,7 +216,7 @@ class BackShopIAP extends React.Component {
         } else {
             this.handleError('wrong-platform', 'Platform not supported', Platform.OS);
         }
-    }
+    };
 
     /**
      * @param {Purchase} purchase
@@ -230,7 +241,7 @@ class BackShopIAP extends React.Component {
         user.informations.purchasedCount++;
         user.informations.ox.Set(result.ox);
         return result.addedOx;
-    }
+    };
 
     /**
      * Show error in console & open a popup
@@ -241,8 +252,8 @@ class BackShopIAP extends React.Component {
     handleError = (errorKey, errorName, error) => {
         user.interface.console.AddLog('error', `[IAP] ${errorName}:`, error);
         const { title, message } = langManager.curr['shop']['popup-purchase'][errorKey];
-        user.interface.popup.Open('ok', [ title, message ], undefined, true);
-    }
+        user.interface.popup.Open('ok', [title, message], undefined, true);
+    };
 }
 
 export default BackShopIAP;

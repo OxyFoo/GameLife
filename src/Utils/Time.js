@@ -37,8 +37,9 @@ function GetYearTime(time = GetLocalTime()) {
  * @returns {Date} Date object in local UTC
  */
 function GetDate(time = null) {
-    if (time === null)
+    if (time === null) {
         time = GetLocalTime();
+    }
     return new Date(time * 1000);
 }
 
@@ -51,7 +52,7 @@ function TimeToFormatString(time) {
     const minutesInDay = Math.floor(time / 60) % (24 * 60);
     const HH = Math.floor(minutesInDay / 60);
     const MM = Math.floor(minutesInDay - HH * 60);
-    return [ HH, MM ].map(TwoDigit).join(':');
+    return [HH, MM].map(TwoDigit).join(':');
 }
 
 /**
@@ -77,7 +78,7 @@ function RoundTimeTo(step, time, type = 'near') {
  */
 function GetMidnightTime(time) {
     time -= time % (24 * 60 * 60);
-    return time - (GetTimeZone() * 60 * 60);
+    return time - GetTimeZone() * 60 * 60;
 }
 
 /**
@@ -87,9 +88,9 @@ function GetMidnightTime(time) {
  */
 function GetAge(time) {
     const today = GetGlobalTime();
-    const delta = today - time - (GetTimeZone() * 60 * 60);
+    const delta = today - time - GetTimeZone() * 60 * 60;
     const age = delta / (60 * 60 * 24 * 365.25);
-    return Math.floor(age)
+    return Math.floor(age);
 }
 
 /**
@@ -98,7 +99,7 @@ function GetAge(time) {
  * @returns {number} time in seconds
  */
 function GetTimeToTomorrow(now = GetGlobalTime()) {
-    return (24 * 60 * 60) - now % (24 * 60 * 60);
+    return 24 * 60 * 60 - (now % (24 * 60 * 60));
 }
 
 /**
@@ -114,7 +115,7 @@ function GetDaysUntil(time) {
 
 /** @returns {number} Timezone in hours */
 function GetTimeZone() {
-    return - (new Date()).getTimezoneOffset() / 60;
+    return -new Date().getTimezoneOffset() / 60;
 }
 
 /**
@@ -123,14 +124,24 @@ function GetTimeZone() {
  */
 function GetDaysCountInYear(year) {
     let days = 365;
-    if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))
+    if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
         days++;
+    }
     return days;
 }
 
 export {
     DAY_TIME,
-    GetGlobalTime, GetLocalTime, GetYearTime, GetDate, TimeToFormatString, RoundTimeTo,
-    GetMidnightTime, GetAge, GetTimeToTomorrow, GetDaysUntil, GetTimeZone,
+    GetGlobalTime,
+    GetLocalTime,
+    GetYearTime,
+    GetDate,
+    TimeToFormatString,
+    RoundTimeTo,
+    GetMidnightTime,
+    GetAge,
+    GetTimeToTomorrow,
+    GetDaysUntil,
+    GetTimeZone,
     GetDaysCountInYear
 };

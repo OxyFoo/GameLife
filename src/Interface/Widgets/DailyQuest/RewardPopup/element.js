@@ -8,176 +8,131 @@ import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import DAILY_QUEST_REWARDS from 'Ressources/items/quests/DailyQuest';
 
-import { Text, Icon, Button } from 'Interface/Components';
-import { DateFormat } from 'Utils/Date';
+import { Text, Icon, Button, ProgressBar } from 'Interface/Components';
+import { ACTIVITY_MINUTES_PER_DAY } from 'Data/User/DailyQuests';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
- * @typedef {import('Ressources/items/quests/DailyQuest').DailyQuestRewardType} DailyQuestRewardType
+ *
+ * @typedef {import('Types/Class/Rewards').RawReward} RawReward
+ * @typedef {import('Data/User/DailyQuests').DailyQuestDay} DailyQuestDay
+ * @typedef {import('Data/User/DailyQuests').DailyQuestData} DailyQuestData
  */
 
 /**
  * @param {Object} props
  * @param {StyleProp} [props.style] Style of the container
- * @param {number} props.index Selected day
- * @param {number} props.claimIndex Index of the claim in the dailyquest.claimsList
- * @param {(index: number) => void} [props.handleClaim] Function called when the user press the button
+ * @param {DailyQuestDay} props.item DailyQuestDay object
+ * @param {DailyQuestData | null} props.claimList Current claim list or null if not available yet
+ * @param {(index: number) => Promise<void>} [props.handleClaim] Function called when the user press the button
  * @returns {JSX.Element}
  */
-const RenderItem = (props) => {
+const DailyQuestDayItem = (props) => {
     const lang = langManager.curr['daily-quest'];
     const langD = langManager.curr['dates']['names'];
-    const [ loading, setLoading ] = React.useState(false);
 
-    const currentDay = props.index + 1;
-    const textToday = langD['day'] + ' ' + currentDay.toString();
+    const [loading, setLoading] = React.useState(false);
 
-    /** @type {StyleProp[]} */
-    const styleItem = [
-        {
-            backgroundColor: themeManager.GetColor('backgroundCard')
-        },
-        props.style || {}
-    ];
-    const styleBorder = {
-        borderColor: '#B83EFFE3',
-        borderWidth: 1.5
-    };
-
-    /** @type {'none' | 'loading' | 'not-claimed' | 'claiming' | 'claim-tomorrow' | 'claimed'} */
-    let status = 'none';
-
-    if (props.claimIndex !== -1) {
-        const allClaimLists = user.quests.dailyquest.claimsList.Get();
-        const claimList = allClaimLists[props.claimIndex];
-
-        if (loading) {
-            status = 'loading';
-        } else if (claimList.claimed.includes(currentDay)) {
-            status = 'claimed';
-        } else if (currentDay <= claimList.daysCount) {
-            status = 'claiming';
-        } else if (currentDay === claimList.daysCount + 1) {
-            // Get today date
-            const tmpDateToday = new Date();
-            tmpDateToday.setDate(tmpDateToday.getDate() + 1);
-            const todayStr = DateFormat(tmpDateToday, 'YYYY-MM-DD');
-
-            // Get target date
-            const tmpDate = new Date(claimList.start + 'T00:00:00');
-            tmpDate.setDate(tmpDate.getDate() + claimList.daysCount);
-            const targetDate = DateFormat(tmpDate, 'YYYY-MM-DD');
-
-            if (todayStr === targetDate) {
-                status = 'claim-tomorrow';
-            }
-        }
-    }
-
-    const styleOpacity = {
-        opacity: status === 'claimed' ? 0.5 : 1
-    };
+    const { item } = props;
 
     const handleEvent = async () => {
-        if (loading || props.claimIndex === -1) return;
+        if (loading || props.claimList === null) return;
 
         setLoading(true);
-        const claimList = user.quests.dailyquest.claimsList.Get()[props.claimIndex];
-        const result = await user.quests.dailyquest.ClaimReward(claimList.start, [ props.index ]);
-        setLoading(false);
+        const { claimList } = props;
+        const result = await user.dailyQuest.ClaimReward(claimList.start, [item.index]);
 
-        if (result === 'error') {
-            const title = lang['alert-claim-error-title'];
-            const text = lang['alert-claim-error-text'];
-            user.interface.popup.ForceOpen('ok', [ title, text ]);
+        if (result !== 'success') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-claim-error-title'],
+                    message: lang['alert-claim-error-message'].replace('{}', result)
+                },
+                callback: () => setLoading(false),
+                cancelable: false,
+                priority: true
+            });
             return;
         }
 
-        props.handleClaim && props.handleClaim(props.index);
-    }
+        props.handleClaim && (await props.handleClaim(item.index));
+        setLoading(false);
+    };
+
+    const currentDay = item.index + 1;
+
+    /** @type {StyleProp} */
+    const styleItem = {
+        backgroundColor: themeManager.GetColor('backgroundCard')
+    };
+
+    /** @type {StyleProp} */
+    const styleOpacity = {
+        opacity: item.status === 'claimed' ? 0.5 : 1
+    };
 
     return (
-        <View style={[styles.item, styleItem]}>
+        <View style={[styles.item, styleItem, props.style]}>
             <View style={[styles.content, styleOpacity]}>
-                <Text style={styles.itemDay}>{textToday}</Text>
+                <Text style={styles.itemDay}>{`${langD['day']} ${currentDay}`}</Text>
 
-                {
-                    DAILY_QUEST_REWARDS[props.index].map((reward, index) => (
-                        <RenderReward
-                            key={`dailyquest-reward-${index}`}
-                            item={reward}
-                        />
-                    ))
-                }
+                {item.rewards.map((reward, index) => (
+                    <RenderReward key={`dailyquest-reward-${index}`} item={reward} />
+                ))}
             </View>
 
             <View style={styles.claimState}>
-                {status === 'claim-tomorrow' && (
+                {item.status === 'to-do' && (
+                    <>
+                        <Text style={styles.claimTomorrow}>{lang['container-todo']}</Text>
+                        <ProgressBar
+                            style={styles.claimTodayProgressbar}
+                            height={6}
+                            value={user.dailyQuest.currentQuest.Get().progression}
+                            maxValue={ACTIVITY_MINUTES_PER_DAY}
+                        />
+                    </>
+                )}
+                {item.status === 'claim-tomorrow' && (
                     <Text style={styles.claimTomorrow}>{lang['container-tomorrow']}</Text>
                 )}
-                {(status === 'claiming' || status === 'loading') && (
-                    <Button
-                        style={[styles.claimButton, styleBorder]}
-                        color='transparent'
-                        onPress={handleEvent}
-                        loading={loading}
-                    >
+                {(item.status === 'to-claim' || loading) && (
+                    <Button style={styles.claimButton} color='transparent' onPress={handleEvent} loading={loading}>
                         {lang['popup']['claim']}
                     </Button>
                 )}
-                {status === 'claimed' && (
-                    <Icon icon='check' color='success' />
-                )}
+                {item.status === 'claimed' && <Icon icon='check' color='success' />}
             </View>
         </View>
     );
-}
+};
 
-const RenderItemMemo = React.memo(RenderItem, (prevProps, nextProps) => {
-    if (prevProps.index !== nextProps.index) {
-        return false;
-    }
-    if (prevProps.claimIndex !== nextProps.claimIndex) {
-        return false;
-    }
-    return true;
-});
-
-/** @param {{ item: DailyQuestRewardType }} props */
+/** @param {{ item: RawReward }} props */
 function RenderReward(props) {
     const styleReward = {
         ...styles.rewardItem,
         backgroundColor: themeManager.GetColor('background')
     };
 
-    if (props.item.type === 'ox') {
+    if (props.item.Type === 'OX') {
         return (
             <View style={styleReward}>
-                <Image
-                    style={styles.rewardImage}
-                    source={IMG_OX}
-                />
-                <Text style={styles.rewardValue}>
-                    {'x' + props.item.value.toString()}
-                </Text>
+                <Image style={styles.rewardImage} source={IMG_OX} />
+                <Text style={styles.rewardValue}>{'x' + props.item.Amount.toString()}</Text>
+            </View>
+        );
+    } else if (props.item.Type === 'Chest') {
+        return (
+            <View style={styleReward}>
+                <Image style={styles.rewardImage} source={IMG_CHESTS[props.item.ChestRarity]} />
             </View>
         );
     }
 
-    else if (props.item.type === 'chest') {
-        return (
-            <View style={styleReward}>
-                <Image
-                    style={styles.rewardImage}
-                    source={IMG_CHESTS[props.item.value]}
-                />
-            </View>
-        );
-    }
+    return null;
 }
 
-export { RenderItemMemo };
+export { DailyQuestDayItem };

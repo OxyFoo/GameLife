@@ -4,68 +4,54 @@ import Config from 'react-native-config';
 
 import styles from './style';
 import BackLoading from './back';
-import user from 'Managers/UserManager';
+import IconLoading from './IconLoading';
 import langManager from 'Managers/LangManager';
 
-import { Page, GLLoading, Button, Text, Icon, Zap } from 'Interface/Components';
+import { Button, Text, Icon, Zap } from 'Interface/Components';
 
 class Loading extends BackLoading {
     render() {
-        return (
-            <Page ref={ref => this.refPage = ref} scrollable={false}>
-                {this.state.icon === 4 ?
-                    this.renderTestCautionMessage() :
-                    this.renderLoading()
-                }
-            </Page>
-        );
-    }
+        const { icon, showTestMessage, displayedSentence } = this.state;
 
-    renderLoading() {
+        if (showTestMessage) {
+            return this.renderTestCautionMessage();
+        }
+
         return (
-            <>
-                <View
-                    style={styles.content}
-                    onTouchStart={this.onToucheStart}
-                    onTouchEnd={this.onToucheEnd}
-                >
-                    <GLLoading state={this.state.icon} />
+            <View>
+                <View style={styles.content} onTouchStart={this.onToucheStart} onTouchEnd={this.onToucheEnd}>
+                    <IconLoading state={icon} />
                 </View>
-                {this.renderVersionText()}
-                <Text style={styles.sentence}>
-                    {this.state.displayedSentence}
-                </Text>
-            </>
+                <View style={styles.textContainer}>
+                    {this.renderVersionText()}
+                    <Text>{displayedSentence}</Text>
+                </View>
+            </View>
         );
     }
 
     renderTestCautionMessage() {
         const lang = langManager.curr['onboarding'];
-        const smallScreen = user.interface.screenHeight < 600;
-        const textSize = smallScreen ? 18 : 22;
         const buttonPosY = {
-            transform: [{ translateY: Animated.multiply(300, this.state.animTestButton) }]
+            transform: [
+                {
+                    translateY: Animated.multiply(300, this.state.animTestButton)
+                }
+            ]
         };
 
         return (
             <View style={styles.contentTest}>
                 <Icon style={styles.iconTest} icon='warning' size={84} />
 
-                <Text fontSize={textSize}>
-                    {lang['test-caution-message']}
-                </Text>
-                <Text onPress={this.handleDiscordRedirection} fontSize={textSize} color='main1'>
+                <Text fontSize={22}>{lang['test-caution-message']}</Text>
+                <Text onPress={this.handleDiscordRedirection} fontSize={22} color='main1'>
                     {lang['test-caution-redirect']}
                 </Text>
 
                 <Zap style={styles.zapTest} />
 
-                <Button
-                    style={styles.buttonTest}
-                    styleAnimation={buttonPosY}
-                    color='main1'
-                    onPress={this.nextPage}
-                >
+                <Button style={styles.buttonTest} styleAnimation={buttonPosY} color='main1' onPress={this.nextPage}>
                     {lang['test-caution-button']}
                 </Button>
             </View>
@@ -81,11 +67,7 @@ class Loading extends BackLoading {
         const mode = __DEV__ ? 'DEBUG' : 'RELEASE';
         const bottomText = env + ' MODE - ' + mode;
 
-        return (
-            <Text style={styles.version}>
-                {bottomText}
-            </Text>
-        );
+        return <Text>{bottomText}</Text>;
     }
 }
 

@@ -1,10 +1,9 @@
 import langManager from 'Managers/LangManager';
 
-import { GetDate } from './Time';
 import { TwoDigit } from './Functions';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  */
 
 const DAYS = {
@@ -67,37 +66,52 @@ function DateToFormatString(date) {
     const dd = TwoDigit(date.getDate());
     const mm = TwoDigit(date.getMonth() + 1);
     const yyyy = date.getFullYear();
-    return [ dd, mm, yyyy ].join('/');
+    return [dd, mm, yyyy].join('/');
 }
 
 /**
  * Return local date with format. E.g. DD/MM/YYYY
  * @param {Date} date
+ * @param {string} format DD MM YYYY HH mm
  * @returns {string} Formatted date
  */
 function DateFormat(date, format = 'DD/MM/YYYY') {
-    const dd = TwoDigit(date.getDate());
-    const mm = TwoDigit(date.getMonth() + 1);
-    const yyyy = date.getFullYear().toString();
+    let output = format;
 
-    return format
-        .replace('DD', dd)
-        .replace('MM', mm)
-        .replace('YYYY', yyyy);
+    if (format.includes('DD')) {
+        const DD = TwoDigit(date.getDate());
+        output = output.replace('DD', DD);
+    }
+    if (format.includes('MM')) {
+        const MM = TwoDigit(date.getMonth() + 1);
+        output = output.replace('MM', MM);
+    }
+    if (format.includes('YYYY')) {
+        const YYYY = date.getFullYear().toString();
+        output = output.replace('YYYY', YYYY);
+    }
+    if (format.includes('HH')) {
+        const HH = TwoDigit(date.getHours());
+        output = output.replace('HH', HH);
+    }
+    if (format.includes('mm')) {
+        const mm = TwoDigit(date.getMinutes());
+        output = output.replace('mm', mm);
+    }
+
+    return output;
 }
 
 /**
  * Return date with format : HH:MM
  * @param {Date} date
  * @returns {string} HH:MM
+ * @deprecated Replaced by DateFormat
  */
 function DateToFormatTimeString(date) {
     const HH = TwoDigit(date.getHours());
     const MM = TwoDigit(date.getMinutes());
-    return [ HH, MM ].join(':');
+    return [HH, MM].join(':');
 }
 
-export {
-    DAYS, GetDay, GetMonthAndYear, GetFullDate,
-    DateToFormatString, DateToFormatTimeString, DateFormat
-};
+export { DAYS, GetDay, GetMonthAndYear, GetFullDate, DateToFormatString, DateToFormatTimeString, DateFormat };

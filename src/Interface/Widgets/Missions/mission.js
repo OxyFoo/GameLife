@@ -1,79 +1,32 @@
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
+
+import StartMission1 from './Chapters/mission1';
+import StartMission2 from './Chapters/mission2';
+import StartMission3 from './Chapters/mission3';
 
 /**
- * @typedef {import('Class/Missions').MissionKeys} MissionKeys
+ * @typedef {import('Types/Database/Missions').MissionKeys} MissionKeys
  */
 
+const MISSIONS = {
+    mission1: StartMission1,
+    mission2: StartMission2,
+    mission3: StartMission3
+};
+
 /**
- * @this {import('./back').default}
  * @param {MissionKeys} missionName
+ * @returns {Promise<boolean>}
  */
-function StartMission(missionName) {
-    const mission = user.missions.GetCurrentMission().mission;
-    if (mission === null) return;
-
-    const lang = langManager.curr['missions']['content'][mission.name];
-
-    if (missionName === 'mission1') {
-        const texts = lang['texts'];
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: user.interface.bottomBar.refButtons[2],
-                text: texts['1'],
-                execAfter: () => {
-                    user.interface.ChangePage('activity', { missionName }, true);
-                    return false;
-                }
-            }
-        ]);
+async function StartMission(missionName) {
+    if (!Object.keys(MISSIONS).includes(missionName)) {
+        user.interface.console?.AddLog('error', `[Mission] Chapter "${missionName}" not found`);
+        return false;
     }
 
-    else if (missionName === 'mission2') {
-        const texts = lang['texts'];
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: user.interface.bottomBar.refButtons[3],
-                text: texts['1'],
-                execAfter: () => {
-                    user.interface.ChangePage('quests', { missionName }, true);
-                    return false;
-                }
-            }
-        ]);
-    }
-
-    else if (missionName === 'mission3') {
-        const texts = lang['texts'];
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: user.interface.bottomBar.refButtons[4],
-                text: texts['1'],
-                execAfter: () => {
-                    user.interface.ChangePage('shop', { missionName }, true);
-                    return false;
-                }
-            }
-        ]);
-    }
-
-    else if (missionName === 'mission4') {
-        const texts = lang['texts'];
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: user.interface.header.refContainer,
-                text: texts['1'],
-                execAfter: () => {
-                    user.interface.ChangePage('profile', { missionName }, true);
-                    return false;
-                }
-            }
-        ]);
-    }
-
-    else if (missionName === 'mission5') {
-        this.props.refHome.StartMission('mission5');
-    }
+    const mission = MISSIONS[missionName];
+    await mission();
+    return true;
 }
 
 export default StartMission;

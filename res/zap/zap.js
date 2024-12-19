@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const ZAP_IMAGES = {
     day: {
         onTwoLegs: {

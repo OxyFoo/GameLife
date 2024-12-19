@@ -1,15 +1,20 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    friend: {
+    friendButton: {
         width: '100%',
         height: 'auto',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    },
+    friendGradient: {
+        width: '100%',
+        height: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderRadius: 0
+        paddingVertical: 4,
+        paddingHorizontal: 8
     },
     friendInfo: {
         flexDirection: 'row',
@@ -17,30 +22,33 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     friendInfoTitle: {
-        marginLeft: 8,
+        marginLeft: 12,
         alignItems: 'flex-start'
     },
-    friendDetails: {
-        aspectRatio: 1,
-        width: 36,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 100,
-        backgroundColor: '#00000050'
+    title: {
+        marginTop: -2
     },
     frame: {
         paddingVertical: 0,
         paddingHorizontal: 0
     },
     frameBorder: {
-        width: 48,
-        height: 48,
+        width: 42,
+        height: 42,
         aspectRatio: 1,
-        borderRadius: 4,
+        borderRadius: 6,
         borderWidth: 2,
         borderColor: '#00000050'
     },
+    friendTopPlaceholder: {
+        width: '100%',
+        height: '100%'
+    },
+    details: {
+        flexDirection: 'row'
+    },
     level: {
+        marginRight: 12
     }
 });
 

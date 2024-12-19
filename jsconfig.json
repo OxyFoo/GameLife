@@ -3,6 +3,7 @@
         "jsx": "react",
         "target": "ES6",
         "checkJs": true,
+        "strict": true,
         "resolveJsonModule": true,
         "module": "NodeNext",
         "baseUrl": "src",
@@ -10,12 +11,18 @@
             "Ressources/*": [
                 "../res/*"
             ]
-        }
+        },
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
     },
     "include": [
         "src"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "Types"
     ]
 }

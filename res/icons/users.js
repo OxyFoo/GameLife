@@ -1,0 +1,10 @@
+import * as React from 'react';
+import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
+const SvgComponent = (props) => (
+  <Svg viewBox='0 0 24 24' {...props}>
+    <Circle cx={10} cy={6} r={4} />
+    <Ellipse cx={10} cy={17.001} rx={7} ry={4} />
+    <Path d='M21.999 17c0 1.657-2.036 3-4.521 3 .732-.8 1.235-1.805 1.235-2.998 0-1.195-.504-2.2-1.238-3.001C19.961 14 22 15.344 22 17Zm-3-11a3 3 0 0 1-4.029 2.82A5.688 5.688 0 0 0 15.713 6c0-1.025-.27-1.987-.742-2.819a3 3 0 0 1 4.027 2.82Z' />
+  </Svg>
+);
+export default SvgComponent;

@@ -7,7 +7,7 @@ import langManager from 'Managers/LangManager';
 import { ParsePlural } from 'Utils/String';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('Class/TCP').ConnectionState} ConnectionState
  */
 
@@ -26,17 +26,17 @@ class ZapGPTBack extends React.Component {
         error: null,
 
         /** @type {ConnectionState} */
-        tcpState: user.tcp.state.Get(),
+        tcpState: user.server2.tcp.state.Get(),
 
         /** @type {Array<Activity> | null} */
         data: null
-    }
+    };
 
     /** @type {Symbol | null} */
     listenerTCP = null;
 
     componentDidMount() {
-        this.listenerTCP = user.tcp.state.AddListener((state) => {
+        this.listenerTCP = user.server2.tcp.state.AddListener((state) => {
             if (state !== this.state.tcpState) {
                 this.setState({ tcpState: state });
             }
@@ -44,18 +44,18 @@ class ZapGPTBack extends React.Component {
     }
 
     componentWillUnmount() {
-        user.tcp.state.RemoveListener(this.listenerTCP);
+        user.server2.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {string} text */
     onChangeText = (text) => {
         this.setState({ text });
-    }
+    };
 
     ZapGPThandler = async () => {
         const lang = langManager.curr['zap-gpt'];
 
-        if (user.tcp.IsConnected() === false) {
+        if (user.server2.tcp.IsConnected() === false) {
             this.setState({ error: lang['errors']['tcp-not-connected'] });
             return;
         }
@@ -70,13 +70,13 @@ class ZapGPTBack extends React.Component {
             error: null
         });
 
-        user.tcp.Send({
+        user.server2.tcp.Send({
             action: 'zap-gpt',
             prompt: this.state.text,
             callbackID: 'activity-prompt'
         });
 
-        const result = await user.tcp.WaitForCallback('activity-prompt', 15000);
+        const result = await user.server2.tcp.WaitForCallback('activity-prompt', 15000);
         if (result === 'timeout') {
             this.setState({
                 loading: false,
@@ -115,7 +115,7 @@ class ZapGPTBack extends React.Component {
             error: null,
             data: activities
         });
-    }
+    };
 
     /** @param {number} index */
     RemoveActivity = (index) => {
@@ -131,7 +131,7 @@ class ZapGPTBack extends React.Component {
         } else {
             this.setState({ data });
         }
-    }
+    };
 
     Validate = () => {
         const lang = langManager.curr['zap-gpt'];
@@ -153,27 +153,34 @@ class ZapGPTBack extends React.Component {
         const text = ParsePlural(lang['added-message'], addedActivities > 1);
         if (addedActivities > 0) {
             this.props.onChangePage();
-            user.interface.ChangePage('display', {
-                'icon': 'success',
-                'iconRatio': .8,
-                'text': text.replace('{}', addedActivities.toString()),
-                'button': 'OK'
-            }, true);
+            user.interface.ChangePage(
+                'display',
+                {
+                    icon: 'success',
+                    iconRatio: 0.8,
+                    text: text.replace('{}', addedActivities.toString()),
+                    button: 'OK'
+                },
+                true
+            );
         } else {
             const title = lang['no-activities-title'];
             const text = lang['no-activities-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+            user.interface.popup.Open('ok', [title, text]);
         }
-    }
+    };
 
     Retry = () => {
-        this.setState({
-            loading: false,
-            error: null,
-            data: null
-        }, this.ZapGPThandler);
+        this.setState(
+            {
+                loading: false,
+                error: null,
+                data: null
+            },
+            this.ZapGPThandler
+        );
         this.props.onScrollToTop();
-    }
+    };
 
     Reset = () => {
         this.setState({
@@ -183,7 +190,7 @@ class ZapGPTBack extends React.Component {
             data: null
         });
         this.props.onScrollToTop();
-    }
+    };
 }
 
 ZapGPTBack.prototype.props = ZapGPTProps;

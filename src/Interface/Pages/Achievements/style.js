@@ -1,59 +1,108 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    flatlist: {
-        position: 'absolute',
-        left: 12,
-        right: 12,
-        bottom: 12
+    // Achievements page
+    parent: {
+        height: '100%'
     },
-
-    pageHeader: {
+    flatlist: {
         marginBottom: 24
     },
-    achievementsContainer: {
-        width: '50%',
-        padding: 6
+    pageHeader: {
+        paddingHorizontal: 24
     },
-    achievementsPlayerTitle: {
-        marginBottom: 16
-    },
-    achievementsBox: {
-        flex: 1,
-        display: 'flex',
+
+    // Achievements page banner
+    banner: {
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 6,
-        borderWidth: 2,
-        borderRadius: 8
-    },
-    title: {
-        minHeight: 30,
         marginBottom: 12,
-        fontSize: 18
+        paddingLeft: 24,
+        paddingRight: 12
     },
-    description: {
-        marginBottom: 12,
+    bannerTitleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    bannerTitleText: {
+        fontSize: 20,
+        marginLeft: 4
+    },
+    bannerSortButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: 'auto',
+        paddingVertical: 6,
+        paddingHorizontal: 12
+    },
+    bannerSortButtonText: {
+        fontSize: 18,
+        marginRight: 4
+    },
+
+    // Achievement cards
+    achievementButton: {
+        width: 'auto',
+        marginVertical: 6,
+        marginHorizontal: 24,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        borderWidth: 1.4
+    },
+    achievementGradient: {
+        flex: 1
+    },
+    achievementContent: {
+        flex: 1,
+        paddingTop: 6,
+        paddingBottom: 12,
+        paddingHorizontal: 12
+    },
+
+    // Card content
+    achievementContentTitle: {
+        marginTop: 6,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    achievementInfoIcon: {
+        marginTop: 1
+    },
+    achievementTitle: {
+        fontSize: 18,
+        textAlign: 'left'
+    },
+
+    // Card content description / condition / reward (rollable)
+    achievementContentDescription: {
+        overflow: 'hidden'
+    },
+    achievementDescription: {
+        marginTop: 6,
+        marginBottom: 6,
+        textAlign: 'left',
+        fontSize: 14
+    },
+    achievementCondition: {
+        textAlign: 'left',
         fontSize: 14
     },
 
-    progressBar: {
-        height: 4,
-        borderRadius: 6,
-        backgroundColor: 'rgba(0,0,0,.2)'
+    achievementReward: {
+        marginBottom: 6,
+        textAlign: 'left',
+        fontSize: 14
     },
-    progressBarInner: {
-        height: '100%',
-        borderRadius: 6
+    achievementGlobalProgression: {
+        textAlign: 'left',
+        fontSize: 14
     },
-    progressionValue: {
-        position: 'absolute',
-        right: 6,
-        bottom: 0
-    },
-    progressBarIcon: {
-        position: 'absolute',
-        bottom: 6,
-        left: 6
+
+    achievementProgressionValue: {
+        marginBottom: 2,
+        fontSize: 14,
+        textAlign: 'right'
     }
 });
 

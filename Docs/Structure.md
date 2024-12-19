@@ -7,8 +7,8 @@
 | `res` | Contient toutes les ressources, les icones, les fonts, les fichiers langues etc |
 | `src` | Contient tous les codes sources pour la compilation de l'application |
 | `src > App` | Contient le script principal, qui gère le chargement de l'application |
-| `src > Class` | Toutes les classes utilisées par le UserManager, correspondantes aux données côté utilisateur |
-| `src > Data` | Toutes les classes utilisées dans les "Internal data" correspondantes aux données côté base de donnée |
+| `src > Class` | Toutes les classes utilisées par le UserManager, correspondantes aux données locales côté client |
+| `src > Data` | Toutes données utilisées en tant que donnée d'application "AppData" ou que données utilisateur "UserData" |
 | `src > Interface` | Les pages de l'app (front + back) ainsi que les composants et les widgets (ensemble de composants) |
 | `src > Managers` | Classes qui gèrent toute une partie de l'app |
 | `src > HTTP` | Contient tous les fichiers serveurs HTTP, responsables de tous les échanges de données entre le serveur et l'application |
@@ -17,28 +17,13 @@
 | `Tools` | Outils pour améliorer l'app (Legion pour DDOS l'app, TableFusion pour synchroniser les bases de données) |
 
 ### Variables
-| Internal Data | User class | Database |
+| App Data | User class | Database |
 |-|-|-|
 | Achievements | Achievement | InventoriesAchievements |
 | Skills (SkillsIcon & SkillsCategory) | Activity | Activities |
 | Items | Inventory (stuff) | Inventories & Avatars |
 | Titles | Inventory (title) | InventoriesTitles |
 | | Tasks | Tasks |
-
-
-
-## Serveurs
-### TCP (NodeJS - VPS)
-- Multijoueur
-- Notifications (amis)
-
-### HTTP (PHP - Apache2)
-- Internal data
-- Inventaires
-- Pubs
-- Shop
-- Notifications (succès)
-- Tout le reste
 
 
 
@@ -68,45 +53,12 @@ Exemple : ``` Sk8 GT 7 ``` ou ``` Battery LT 0.05 ```
 
 ### Récompenses (& GiftCodes Rewards)
 Syntaxe : ``` TYPE ID ``` ou ``` TYPE Quantité ```\
-Exemple : ``` Title 8 ``` ou ``` OX 20,Item top_08 ```
+Exemple : ``` Title 8 ``` ou ``` OX 20,Item top_08:1,Chest rare ```
 <pre>
 Séparés par des virgules, sans espaces
 * Types
     - Title + ID
-    - Item + ID
     - OX + Quantité
-</pre>
-
-
-
-## News
-* Template exemple
-<pre>
-[
-    {
-        "ID": 0,
-        "Content": {
-            "fr": "Vide",
-            "en": "Empty"
-        },
-        "Icon": null,
-        "ButtonText": null,
-        "ButtonEvent": null,
-        "TextAlign": "auto"
-    },
-    {
-        "ID": 1,
-        "Content": {
-            "fr": "Test - Texte en français",
-            "en": "Test - Text in english"
-        },
-        "Icon": "cdsiuchdsidcsuhscd___ICONe_en_xml_base64",
-        "ButtonText": {
-            "fr": "Ouvir le shop",
-            "en": "Open shop"
-        },
-        "ButtonEvent": "shop",
-        "TextAlign": "right"
-    }
-]
+    - Item + ID:COUNT
+    - Chest + Rarity
 </pre>

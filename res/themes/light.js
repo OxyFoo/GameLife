@@ -1,13 +1,17 @@
 const Color = {
     main1: '#DBA1FF', // Pink
     main2: '#9095FF', // Purple
-    main3: '#0B112F', // Dark (background)
+    main3: '#8CF7FF', // Blue
     white: '#FFFFFF', // White
     black: '#000000', // Black
-    border: '#808080', // Grey
+    grey: '#384065', // Grey
+    border: '#999EB5', // Grey
+    borderLight: '#D0D0D0', // Light grey
     background: '#0E1247', // Dark purple
     backgroundCard: '#384065', // Transparent purple
     backgroundGrey: '#222740', // Grey
+    backgroundDark: '#0B112F', // Dark (background)
+    backgroundInput: '#1F2540DD', // Transparent blue
     backgroundTransparent: '#FFFFFF33', // Transparent white
     success: '#27AE60', // Green
     danger: '#CC0029', // Red
@@ -18,7 +22,6 @@ const Color = {
 
     ox: '#962D8B',
     dataBigKpi: '#232B5D', // Dark blue
-    dataSmallKpi: '#38406550', // Transparent blue
 
     ground1: '#FFFFFF',
     ground1a: '#FFFFFF',

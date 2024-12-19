@@ -3,8 +3,8 @@ import en from '../../res/langs/en.json';
 import { GetLangRegionLocale } from 'Utils/Device';
 
 const LANGAGES = {
-    'fr': fr,
-    'en': en
+    fr: fr,
+    en: en
 };
 
 /**
@@ -28,14 +28,27 @@ class LangManager {
         return LANGAGES;
     }
 
+    /** @returns {LangKey[]} */
     GetLangsKeys() {
+        // @ts-ignore
         return Object.keys(LANGAGES);
+    }
+
+    /**
+     * @description Check is lang is available & convert it to a valid lang key
+     * @param {string} lang
+     * @returns {LangKey | null}
+     */
+    IsLangAvailable(lang) {
+        const langs = this.GetLangsKeys();
+        const index = langs.findIndex((l) => l === lang);
+        return index !== -1 ? langs[index] : null;
     }
 
     /** @param {LangKey | null} lang */
     SetLangage(lang = null) {
         let newLang = DEFAULT_LANG;
-        if (Object.keys(LANGAGES).includes(lang)) {
+        if (lang && Object.keys(LANGAGES).includes(lang)) {
             newLang = lang;
         }
         this.currentLangageKey = newLang;
@@ -48,7 +61,7 @@ class LangManager {
      */
     GetText(value) {
         let output = '';
-        if (typeof(value) === 'object') {
+        if (typeof value === 'object') {
             const key = this.currentLangageKey;
             if (value.hasOwnProperty(key)) output = value[key];
             else if (value.hasOwnProperty('fr')) output = value['fr'];

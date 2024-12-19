@@ -30,7 +30,7 @@ class BackShopItems extends React.Component {
             PriceOriginal: this.props.randomChestsStats.common.priceOriginal,
             PriceDiscount: this.props.randomChestsStats.common.priceDiscount,
             Rarity: 0,
-            Colors: themeManager.GetRariryColors(0),
+            Colors: themeManager.GetRariryColors('common'),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
             OnPress: () => this.openItemPopup(1)
         },
@@ -43,7 +43,7 @@ class BackShopItems extends React.Component {
             PriceOriginal: this.props.randomChestsStats.rare.priceOriginal,
             PriceDiscount: this.props.randomChestsStats.rare.priceDiscount,
             Rarity: 1,
-            Colors: themeManager.GetRariryColors(1),
+            Colors: themeManager.GetRariryColors('rare'),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
             OnPress: () => this.openItemPopup(2)
         },
@@ -56,7 +56,7 @@ class BackShopItems extends React.Component {
             PriceOriginal: this.props.randomChestsStats.epic.priceOriginal,
             PriceDiscount: this.props.randomChestsStats.epic.priceDiscount,
             Rarity: 2,
-            Colors: themeManager.GetRariryColors(2),
+            Colors: themeManager.GetRariryColors('epic'),
             BackgroundColor: themeManager.GetColor('backgroundCard'),
             OnPress: () => this.openItemPopup(3)
         }
@@ -64,10 +64,10 @@ class BackShopItems extends React.Component {
 
     /** @param {number} chestID */
     openItemPopup = (chestID) => {
-        const chest = this.CHESTS.find(chest => chest.ID === chestID);
+        const chest = this.CHESTS.find((chest) => chest.ID === chestID);
         const render = () => renderBuyPopup.call(this, chest, user.interface.popup.Close);
         user.interface.popup.Open('custom', render);
-    }
+    };
 }
 
 BackShopItems.defaultProps = BackShopItemsProps;

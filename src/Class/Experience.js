@@ -1,30 +1,25 @@
 import dataManager from 'Managers/DataManager';
 
-import { MinMax, Sum } from 'Utils/Functions';
+import { IUserClass } from 'Types/Interface/IUserClass';
+import DynamicVar from 'Utils/DynamicVar';
+import { MinMax, Round, Sum } from 'Utils/Functions';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Managers/UserManager').Stats} Stats
- * 
+ * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Types/Class/Experience').Stats} Stats
+ * @typedef {import('Types/Class/Experience').StatsXP} StatsXP
+ * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
+ * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ */
+
+/**
  * @typedef {'user' | 'stat' | 'skill'} XPTypes
- * 
+ *
  * @typedef {object} XPOptions
  * @property {number} xpPerLevel
  * @property {number} increaseRatio Default: 0.5. ]0, 1[ for logarithmic, 1 for linear and ]1, 2] for exponential
- * 
- * @typedef {object} XPInfo
- * @property {number} xp - Current XP
- * @property {number} lvl - Current level
- * @property {number} next - XP to next level
- * @property {number} totalXP - Total XP
- * 
- * @typedef {object} EnrichedXPInfo
- * @property {number} xp - Current XP
- * @property {number} lvl - Current level
- * @property {number} next - XP to next level
- * @property {number} totalXP - Total XP
- * @property {number} lastTime - Last time the user gained XP
  */
 
 /** @type {{ [key in XPTypes]: XPOptions }} */
@@ -43,46 +38,69 @@ const XPOptions = {
     }
 };
 
-class Experience {
+class Experience extends IUserClass {
+    /** @type {UserManager} */
+    #user;
+
+    /**
+     * @readonly
+     * @type {Array<keyof Stats>}
+     */
+    statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
+
+    experience = new DynamicVar({
+        stats: this.GetEmptyExperience(),
+        xpInfo: this.getXPDict(0)
+    });
+
+    /** @type {Symbol | null} */
+    #listenerActivities = null;
+
     /** @param {UserManager} user */
     constructor(user) {
-        this.user = user;
-        this.getUsefulActivities = this.user.activities.GetUseful;
+        super('experience');
 
-        this.cache = {
-            id: '',
-            /** @type {{stats: Stats, xpInfo: XPInfo}} */
-            experience: {
-                stats: this.GetEmptyExperience(),
-                xpInfo: this.getXPDict(0)
-            }
-        };
+        this.#user = user;
     }
+
+    onMount = () => {
+        this.UpdateExperience();
+        this.#listenerActivities = this.#user.activities.allActivities.AddListener(this.UpdateExperience);
+    };
+
+    onUnmount = () => {
+        this.#user.activities.allActivities.RemoveListener(this.#listenerActivities);
+    };
+
+    Clear = () => {
+        this.experience.Set({ stats: this.GetEmptyExperience(), xpInfo: this.getXPDict(0) });
+    };
 
     /** @returns {Stats} */
     GetEmptyExperience() {
-        const stats = this.user.statsKey.map(i => ({[i]: this.getXPDict()}));
+        const stats = this.statsKey.map((i) => ({ [i]: this.getXPDict() }));
         return Object.assign({}, ...stats);
     }
 
     /**
-     * @returns {{stats: Stats, xpInfo: XPInfo}}
+     * @param {string} key
+     * @returns {key is keyof Stats}
      */
-    GetExperience() {
-        const { statsKey } = this.user;
-        const activities = this.getUsefulActivities();
+    KeyIsStats(key) {
+        // @ts-ignore
+        return this.statsKey.includes(key);
+    }
 
-        if (this.cache.id === activities.length.toString()) {
-            return this.cache.experience;
-        }
+    UpdateExperience = () => {
+        const activities = this.#user.activities.GetUseful(true);
 
         let XP = 0;
 
         /** @type {Stats} */
-        const stats = Object.assign({}, ...statsKey.map(i => ({[i]: null})));
+        const stats = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: null })));
 
         /** @type {{ [key: string]: number }} */
-        const statValues = Object.assign({}, ...statsKey.map(i => ({[i]: 0})));
+        const statValues = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: 0 })));
 
         for (let a in activities) {
             const activity = activities[a];
@@ -97,25 +115,24 @@ class Experience {
             XP += XP * this.GetExperienceFriendBonus(activity);
 
             // Stats
-            for (let s in statsKey) {
-                const stat = statsKey[s];
+            for (let s in this.statsKey) {
+                const stat = this.statsKey[s];
                 statValues[stat] += skill.Stats[stat];
             }
         }
 
-        for (let k in statsKey) {
-            const key = statsKey[k];
+        for (let k in this.statsKey) {
+            const key = this.statsKey[k];
             stats[key] = this.getXPDict(statValues[key], 'stat');
         }
 
-        this.cache.id = activities.length.toString();
-        this.cache.experience = { stats, xpInfo: this.getXPDict(XP, 'user') };
+        this.experience.Set({ stats, xpInfo: this.getXPDict(XP, 'user') });
+    };
 
-        return {
-            stats: stats,
-            xpInfo: this.getXPDict(XP, 'user')
-        };
-    }
+    GetStatsNumber = () => {
+        const experience = this.experience.Get();
+        return Object.assign({}, ...this.statsKey.map((key) => ({ [key]: Round(experience.stats[key].totalXP, 2) })));
+    };
 
     /**
      * @param {Activity} activity
@@ -129,23 +146,20 @@ class Experience {
     }
 
     /**
-     * @param {number} skillID
-     * @returns {EnrichedXPInfo | null} null if the skill doesn't exist
+     * @param {Skill} skill
+     * @returns {EnrichedXPInfo}
      */
-    GetSkillExperience(skillID) {
-        const skill = dataManager.skills.GetByID(skillID);
-        if (skill === null) return null;
-
-        const activities = this.user.activities.GetBySkillID(skillID);
+    GetSkillExperience(skill) {
+        const activities = this.#user.activities.GetBySkillID(skill.ID);
         const durations = activities
-            .filter(activity => this.user.activities.GetExperienceStatus(activity) !== 'isNotPast')
-            .map(a => a.duration);
+            .filter((activity) => this.#user.activities.GetExperienceStatus(activity) !== 'isNotPast')
+            .map((a) => a.duration);
 
         const totalDuration = Sum(durations);
         const totalXP = skill.XP * (totalDuration / 60);
 
         const experience = this.getXPDict(totalXP, 'skill');
-        const lastTime = activities.length === 0 ? 0 : activities.at(-1)?.startTime ?? 0;
+        const lastTime = activities.length === 0 ? 0 : (activities.at(-1)?.startTime ?? 0);
         return { ...experience, lastTime };
     }
 
@@ -156,7 +170,7 @@ class Experience {
     GetSkillCategoryExperience(categoryID) {
         let totalXP = 0;
 
-        const activities = this.getUsefulActivities();
+        const activities = this.#user.activities.GetUseful();
         for (let a in activities) {
             const activity = activities[a];
             const skill = dataManager.skills.GetByID(activity.skillID);
@@ -175,7 +189,7 @@ class Experience {
      * @description Use arithmetic series
      * * Equation: `Sn = n/2 * (a1 + an)` with `an = (n - 1) * xpPerLevel`
      * * Variables: `a1 = 0`, `Sn -> Total xp`, `n -> level`
-     * 
+     *
      * - `Sn = n/2 * ((n - 1) * xpPerLevel)`
      * - `TotalXP = lvl/2 * ((lvl - 1) * xpPerLevel))`
      * - `lvl = 1/2 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)/2`
@@ -187,12 +201,12 @@ class Experience {
         const { xpPerLevel, increaseRatio } = XPOptions[type];
 
         if (totalXP < 0 || xpPerLevel <= 0) {
-            return { 'xp': 0, 'lvl': 0, 'next': 0, 'totalXP': 0 };
+            return { xp: 0, lvl: 0, next: 0, totalXP: 0 };
         }
 
-        const lvl = Math.floor((1 + Math.pow(1 + 8 * totalXP / xpPerLevel, increaseRatio)) / 2);
-        const xpForCurrLevel = xpPerLevel * (Math.pow(2 * (lvl + 0) - 1, 1 / increaseRatio) - 1) / 8;
-        const xpForNextLevel = xpPerLevel * (Math.pow(2 * (lvl + 1) - 1, 1 / increaseRatio) - 1) / 8;
+        const lvl = Math.floor((1 + Math.pow(1 + (8 * totalXP) / xpPerLevel, increaseRatio)) / 2);
+        const xpForCurrLevel = (xpPerLevel * (Math.pow(2 * (lvl + 0) - 1, 1 / increaseRatio) - 1)) / 8;
+        const xpForNextLevel = (xpPerLevel * (Math.pow(2 * (lvl + 1) - 1, 1 / increaseRatio) - 1)) / 8;
 
         const xp = totalXP - xpForCurrLevel;
         const next = xpForNextLevel - xpForCurrLevel;

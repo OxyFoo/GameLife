@@ -1,61 +1,40 @@
-import About from './Pages/About/index';
-import Achievements from './Pages/Achievements/index';
-import Activity from './Pages/Activity/index';
-import ActivityTimer from './Pages/ActivityTimer/index';
-import BenchMark from './Pages/BenchMark/index';
-import Calendar from './Pages/Calendar/index';
-import ChestReward from './Pages/ChestReward/index';
-import Display from './Pages/Display/index';
-import Home from './Pages/Home/index';
-import Leaderboard from './Pages/Leaderboard/index';
-import Loading from './Pages/Loading/index';
-import Login from './Pages/Login/index';
-import Multiplayer from './Pages/Multiplayer/index';
-import MyQuest from './Pages/MyQuest/index';
-import MyQuestStats from './Pages/MyQuestStats/index';
-import Onboarding from './Pages/Onboarding/index';
-import Profile from './Pages/Profile/index';
-import ProfileFriend from './Pages/ProfileFriend/index';
-import Quests from './Pages/Quests/index';
-import Report from './Pages/Report/index';
-import Settings from './Pages/Settings/index';
-import Shop from './Pages/Shop/index';
-import Skill from './Pages/Skill/index';
-import Skills from './Pages/Skills/index';
-import Waitinternet from './Pages/WaitInternet/index';
-import Waitmail from './Pages/WaitMail/index';
-import Test from './Pages/Test/index';
-import Todo from './Pages/Todo/index';
-
+/* eslint-disable prettier/prettier */
 const PAGES = {
-    'about':            About,
-    'achievements':     Achievements,
-    'activity':         Activity,
-    'activitytimer':    ActivityTimer,
-    'benchmark':        BenchMark,
-    'calendar':         Calendar,
-    'chestreward':      ChestReward,
-    'display':          Display,
-    'home':             Home,
-    'leaderboard':      Leaderboard,
-    'loading':          Loading,
-    'login':            Login,
-    'multiplayer':      Multiplayer,
-    'myquest':          MyQuest,
-    'myqueststats':     MyQuestStats,
-    'onboarding':       Onboarding,
-    'profile':          Profile,
-    'profilefriend':    ProfileFriend,
-    'quests':           Quests,
-    'report':           Report,
-    'settings':         Settings,
-    'shop':             Shop,
-    'skill':            Skill,
-    'skills':           Skills,
-    'waitinternet':     Waitinternet,
-    'waitmail':         Waitmail,
-    'test':             Test,
-    'todo':             Todo
+    about:                  require('./Pages/About').default,
+    achievements:           require('./Pages/Achievements').default,
+    activitytimer:          require('./Pages/ActivityTimer').default,
+    benchmark:              require('./Pages/Debug_BenchMark').default,
+    responsive:             require('./Pages/Debug_Responsive').default,
+    calendar:               require('./Pages/Calendar').default,
+    chestreward:            require('./Pages/ChestReward').default,
+    display:                require('./Pages/Display').default,
+    friends:                require('./Pages/Friends').default,
+    home:                   require('./Pages/Home').default,
+    leaderboard:            require('./Pages/Leaderboard').default,
+    loading:                require('./Pages/Loading').default,
+    login:                  require('./Pages/Login').default,
+    multiplayer:            require('./Pages/Multiplayer').default,
+    onboarding:             require('./Pages/Onboarding').default,
+    profile:                require('./Pages/Profile').default,
+    quest:                  require('./Pages/Quest').default,
+    quests:                 require('./Pages/Quests').default,
+    queststats:             require('./Pages/QuestStats').default,
+    report:                 require('./Pages/Report').default,
+    settings:               require('./Pages/Settings').default,
+    settings_notifications: require('./Pages/Settings/Notifications').default,
+    shop:                   require('./Pages/Shop').default,
+    skill:                  require('./Pages/Skill').default,
+    skills:                 require('./Pages/Skills').default,
+    statistics:             require('./Pages/Statistics').default,
+    waitinternet:           require('./Pages/WaitInternet').default,
+    waitmail:               require('./Pages/WaitMail').default,
+    test:                   require('./Pages/Test').default,
+    todo:                   require('./Pages/Todo').default
 };
+/* eslint-enable prettier/prettier */
+
+/**
+ * @typedef {keyof typeof PAGES} PageNames
+ */
 
 export default PAGES;

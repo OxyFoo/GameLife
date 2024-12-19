@@ -1,89 +1,68 @@
-import { Animated } from 'react-native';
+import React from 'react';
 import RNExitApp from 'react-native-exit-app';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { PageBase } from 'Interface/Components';
-import { SpringAnimation } from 'Utils/Animations';
+import PageBase from 'Interface/FlowEngine/PageBase';
 
 /**
- * @typedef {import('Interface/Components').Button} Button
+ * @typedef {import('Interface/Components').Swiper} Swiper
+ * @typedef {import('Managers/LangManager').LangKey} LangKey
  */
 
 class BackOnboarding extends PageBase {
     state = {
-        helpAnimation: new Animated.Value(-64),
-        tutoLaunched: false
+        selectedLangKey: langManager.currentLangageKey
+    };
+
+    /** @type {React.RefObject<Swiper>} */
+    refSwiper = React.createRef();
+
+    componentDidMount() {
+        // Update animations in swiper's pages
+        setImmediate(this.forceUpdate.bind(this));
     }
 
-    /** @type {Button} */
-    refInfo = null;
+    /** @param {LangKey} key */
+    selectLanguage = (key) => {
+        user.settings.SetLang(key);
+        this.setState({ selectedLangKey: key }, this.Next);
+    };
 
-    selectEnglish = () => {
-        langManager.SetLangage('en');
-        this.forceUpdate();
-    }
-    selectFrench = () => {
-        langManager.SetLangage('fr');
-        this.forceUpdate();
-    }
+    Next = async () => {
+        if (!this.refSwiper.current) return;
 
-    launchOnboarding = () => {
-        const lang = langManager.curr['onboarding'];
+        const index = this.refSwiper.current.posX;
 
-        user.interface.screenTuto.ShowTutorial([
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page1']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page2']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page3']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page4']
-            },
-            {
-                component: this.refInfo,
-                showSkipButton: false,
-                text: lang['page5']
-            },
-            {
-                component: null,
-                showSkipButton: false,
-                text: lang['page6'],
-                execAfter: () => {
-                    this.endOnboarding();
-                    return true;
-                }
-            }
-        ]);
-
-        SpringAnimation(this.state.helpAnimation, 0).start();
-        this.setState({ tutoLaunched: true });
-    }
-
-    endOnboarding = async () => {
-        user.settings.onboardingWatched = true;
-
-        const saved = await user.settings.Save();
-        if (!saved) {
-            RNExitApp.exitApp();
+        // If the user is not on the last page, go to the next one
+        if (index < 2) {
+            this.refSwiper.current.Next();
             return;
         }
 
-        user.interface.ChangePage('loading', undefined, true);
-    }
+        // If the user is on the last page, save the settings and go to the loading page
+        user.settings.onboardingWatched = true;
+
+        const saved = await user.settings.IndependentSave();
+
+        // If the settings are not saved, display an error message and close the app
+        if (!saved) {
+            const lang = langManager.curr['app'];
+            user.interface.ChangePage('display', {
+                args: {
+                    icon: 'close-filled',
+                    text: lang['loading-error-message']['userdata-not-saved'],
+                    button: lang['loading-error-button'],
+                    action: RNExitApp.exitApp
+                },
+                storeInHistory: false
+            });
+            return;
+        }
+
+        user.interface.ChangePage('loading', { storeInHistory: false });
+    };
 }
 
 export default BackOnboarding;

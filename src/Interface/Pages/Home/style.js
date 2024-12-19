@@ -1,45 +1,58 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    page: {
+        flex: 1,
+        paddingHorizontal: 24
+    },
+    progressbar: {
+        marginTop: 12,
+        marginBottom: 6
+    },
     XPHeader: {
         marginTop: 0,
-        marginBottom: 12,
+        marginBottom: 0,
         paddingHorizontal: 16,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    XPHeaderLvl: {
-        flexDirection: 'row'
-    },
     level: {
-        marginRight: 8
+        fontSize: 16,
+        fontWeight: 700
     },
-    homeRow: {
+    experience: {
+        fontSize: 16
+    },
+
+    sectionContainer: {
+        marginTop: 24,
+        marginBottom: 16,
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between'
     },
-    topSpace: {
-        marginTop: 16
+    sectionTitle: {
+        paddingVertical: 6,
+        fontSize: 21,
+        textAlign: 'left',
+        textTransform: 'uppercase'
     },
-    titleWidget: {
-        marginBottom: 12
+    dailyQuests: {
+        marginTop: 24
     },
+    sectionTitleAddButton: {
+        width: 'auto',
+        paddingVertical: 8,
+        paddingHorizontal: 8
+    },
+
     todayPieChart: {
-        flex: 1
+        width: '100%',
+        borderRadius: 8
     },
-    stats: {
-        flex: 1,
-        borderRadius: 24,
-        marginRight: 18,
-        padding: 8
-    },
-    skills: {
-        width: '60%',
-        borderRadius: 20,
-        padding: 8
-    },
-    skillsGroup: {
-        flex: 0
+
+    todoList: {
+        marginBottom: 24
     }
 });
 

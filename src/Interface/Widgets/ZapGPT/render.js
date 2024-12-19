@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text, Button, Zap } from 'Interface/Components';
 
 /**
- * @typedef {import('Class/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('react-native').ListRenderItemInfo<Activity>} ListRenderItemInfo
  */
 

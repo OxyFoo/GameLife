@@ -1,21 +1,23 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container:{
-        borderRadius: 10,
-        padding: 1,
+    container: {
         flex: 1,
-        marginHorizontal: 5,
+        alignSelf: 'stretch',
+        padding: 12,
 
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'center'
+        borderRadius: 8
     },
-    value:{
-        fontWeight: 'bold',
-        margin: 0
+    value: {
+        margin: 0,
+        fontSize: 21,
+        fontWeight: 'bold'
     },
-    title:{
-        margin: 0
+    title: {
+        margin: 0,
+        fontSize: 14
     }
 });
 

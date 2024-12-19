@@ -1,141 +1,138 @@
 import * as React from 'react';
-import { View, Image, Animated } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
-import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { Page, Text, Button, Input, Checkbox } from 'Interface/Components';
+import { Text, Button, InputText, CheckBox, ComboBox } from 'Interface/Components';
 
 class Login extends BackLogin {
     render() {
-        const { langs } = this;
-        const { mainContentHeight } = this.state;
+        const lang = langManager.curr['login'];
+        const {
+            signinMode,
+            animSignin,
+            animSigninBis,
+            loading,
+            email,
+            username,
+            cguAccepted,
+            errorCgu,
+            errorEmail,
+            errorUsername,
+            cbSelectedLang
+        } = this.state;
 
-        const contentHeight = Animated.add(100, Animated.multiply(160, this.state.animSignin));
-        const btnLoginX = Animated.multiply(84, this.state.animSignin);
-        const btnBackX = Animated.add(-128, Animated.multiply(128, this.state.animSignin));
+        const cguTexts = lang['input-cgu-text'].split('%');
 
-        const imageHeight = user.interface.screenHeight - mainContentHeight - 388;
-        const imageAnim = {
-            height: imageHeight > 150 ? imageHeight : 0,
-            transform: [
-                { scale: this.state.animImage },
-                { translateY: Animated.multiply(this.state.animFocus, -250) }
-            ]
-        };
-        const contentAnim = {
-            transform: [
-                { translateY: Animated.multiply(this.state.animFocus, -250) }
-            ]
-        };
-        const contentNoAnim = { opacity: Animated.subtract(1, this.state.animFocus) };
-
-        const smallScreen = user.interface.screenHeight < 600;
+        const btnLoginX = Animated.multiply(84, animSignin);
+        const btnBackX = Animated.add(-128, Animated.multiply(128, animSignin));
+        const bisPointerEvents = signinMode ? 'auto' : 'none';
 
         return (
-            <Page ref={ref => this.refPage = ref} style={styles.body} scrollable={false}>
-                {/* Background images */}
-                {smallScreen ? null : (
-                    <Image style={styles.backgroundCircles} source={this.imageBackground} />
-                )}
+            <View style={styles.page}>
+                <View style={styles.form}>
+                    {/* Title */}
+                    <View>
+                        <Text style={styles.title} color='primary'>
+                            {lang['page-title']}
+                        </Text>
 
-                {/* Main image */}
-                <Animated.View
-                    style={[styles.mainImageContainer, imageAnim]}
-                    onTouchStart={this.onPressImageIn}
-                    onTouchEnd={this.onPressImageOut}
-                >
-                    <Image
-                        style={styles.mainImage}
-                        resizeMode='contain'
-                        source={this.imageMain}
-                    />
-                </Animated.View>
-
-                {/* Title */}
-                <Animated.View style={contentNoAnim} onLayout={this.onLayout}>
-                    <Text
-                        style={smallScreen ? styles.smallTitle : styles.title}
-                        color='primary'
-                    >
-                        {langs.pageTitle}
-                    </Text>
-
-                    <Text
-                        style={styles.text}
-                        color='secondary'
-                    >
-                        {langs.pageText}
-                    </Text>
-                </Animated.View>
-
-                {/* Content */}
-                <Animated.View style={[
-                    styles.container,
-                    contentAnim,
-                    { height: contentHeight }
-                ]}>
+                        <Text style={styles.text} color='secondary'>
+                            {lang['page-text']}
+                        </Text>
+                    </View>
 
                     {/* Email */}
-                    <Input
-                        ref={ref => this.refInputEmail = ref}
-                        style={styles.input}
-                        label={langs.titleEmail}
-                        text={this.state.email}
+                    <InputText
+                        containerStyle={styles.input}
+                        type='email'
+                        error={!!errorEmail}
+                        label={lang['input-email-title']}
+                        value={email}
                         onChangeText={this.onChangeEmail}
-                        onFocus={this.onFocus}
-                        onBlur={this.onBlur}
-                        textContentType='email'
-                        enabled={!this.state.signinMode}
+                        enabled={!signinMode}
                     />
-                    <Text style={styles.error} color={'error'}>{this.state.errorEmail}</Text>
+                    <Text style={styles.error} color={'error'}>
+                        {errorEmail || ' '}
+                    </Text>
 
                     {/* Username */}
-                    <Input
-                        ref={ref => this.refInputUsername = ref}
-                        style={styles.input}
-                        label={langs.titleUsername}
-                        text={this.state.username}
-                        onChangeText={this.onChangeUsername}
-                        onFocus={this.onFocus}
-                        onBlur={this.onBlur}
-                        textContentType='name'
-                        enabled={this.state.signinMode}
-                    />
-                    <Text style={styles.error} color={'error'}>{this.state.errorUsername}</Text>
+                    <Animated.View style={[styles.input, { opacity: animSignin }]} pointerEvents={bisPointerEvents}>
+                        <InputText
+                            error={!!errorUsername}
+                            type='name'
+                            label={lang['input-username-title']}
+                            value={username}
+                            onChangeText={this.onChangeUsername}
+                            enabled={signinMode}
+                        />
+                        <Text style={styles.error} color={'error'}>
+                            {errorUsername || ' '}
+                        </Text>
+                    </Animated.View>
 
                     {/* CGU */}
-                    <View style={styles.cgu}>
-                        <Checkbox
-                            style={{ marginRight: 4 }}
-                            checked={this.state.cguAccepted}
-                            onChange={this.onCGUToggle}
-                        />
-                        <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>{langs.cguTexts[0]}</Text>
-                        <Text onPress={this.onCGURedirect} fontSize={12} color='main1'>{langs.cguTexts[1]}</Text>
-                        <Text onPress={this.onCGUToggle} fontSize={14} color='secondary'>{langs.cguTexts[2]}</Text>
-                    </View>
-                    <Text style={styles.error} color={'error'}>{this.state.errorCgu}</Text>
-                </Animated.View>
+                    <Animated.View style={{ opacity: animSigninBis }} pointerEvents={bisPointerEvents}>
+                        <View style={styles.cgu}>
+                            <CheckBox
+                                style={styles.cguCheckBox}
+                                color='white'
+                                value={cguAccepted}
+                                onPress={this.onCGUToggle}
+                            />
+                            <Text
+                                containerStyle={styles.cguTextContainer}
+                                style={styles.cguText}
+                                onPress={this.onCGURedirect}
+                                fontSize={14}
+                                color='secondary'
+                            >
+                                {cguTexts[0]}
+                                <Text fontSize={16} color='main1'>
+                                    {cguTexts[1]}
+                                </Text>
+                                {cguTexts[2]}
+                            </Text>
+                        </View>
+                        <Text style={styles.error} color={'error'}>
+                            {errorCgu || ' '}
+                        </Text>
+                    </Animated.View>
+                </View>
 
+                {/* Separator */}
+                <View />
+
+                {/* Language */}
+                <ComboBox
+                    style={styles.cbLang}
+                    inputStyle={styles.cbLangInput}
+                    title=''
+                    data={this.availableLangs}
+                    selectedValue={cbSelectedLang.value}
+                    onSelect={this.onChangeLang}
+                    hideChevron
+                />
+
+                {/* Buttons */}
                 <Button
-                    style={styles.button}
+                    style={styles.buttonLoginSignin}
                     styleAnimation={{ left: btnLoginX }}
-                    color='main1'
-                    onPress={this.onLoginOrSignin}
-                    loading={this.state.loading}
+                    onPress={signinMode ? this.signin : this.loginOrGoToSignin}
+                    loading={loading}
                 >
-                    {this.state.signinMode ? langs.btnSignin : langs.btnLogin}
+                    {signinMode ? lang['button-signin-text'] : lang['button-login-text']}
                 </Button>
                 <Button
-                    style={styles.backButton}
-                    styleAnimation={{transform: [{ translateX: btnBackX }] }}
-                    color='main1'
-                    icon='arrowLeft'
-                    onPress={this.setSigninMode}
+                    style={styles.buttonBack}
+                    styleAnimation={{ transform: [{ translateX: btnBackX }] }}
+                    appearance='outline'
+                    icon='arrow-left'
+                    onPress={this.backToLogin}
                 />
-            </Page>
+            </View>
         );
     }
 }

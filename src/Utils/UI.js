@@ -1,4 +1,4 @@
-import { NativeModules, Platform, findNodeHandle } from 'react-native';
+import SafeArea from 'react-native-safe-area';
 
 /**
  * @typedef {import('react-native').View} View
@@ -6,20 +6,36 @@ import { NativeModules, Platform, findNodeHandle } from 'react-native';
  */
 
 /**
- * @param {React.Component} ref
+ * @param {React.RefObject<View>} ref
  * @returns {Promise<LayoutRectangle>}
  */
-function GetAbsolutePosition(ref) {
-    const UIManager = NativeModules.UIManager;
-    const handle = findNodeHandle(ref);
-    return new Promise((resolve, reject) => {
-        UIManager.measureInWindow(handle, (x, y, width, height) => {
-            if (Platform.OS === 'ios') {
-                y -= 24;
-            }
-            resolve({ x, y, width, height });
-        });
+async function GetAbsolutePosition(ref) {
+    if (!ref.current || typeof ref.current.measureInWindow !== 'function') {
+        return { x: 0, y: 0, width: 0, height: 0 };
+    }
+
+    /** @type {LayoutRectangle} */
+    const absolutePosition = await new Promise((resolve) => {
+        if (!ref.current) return resolve({ x: 0, y: 0, width: 0, height: 0 });
+
+        ref.current.measureInWindow((x, y, width, height) =>
+            resolve({
+                x,
+                y,
+                width,
+                height
+            })
+        );
     });
+
+    const { safeAreaInsets } = await SafeArea.getSafeAreaInsetsForRootView();
+
+    return {
+        x: absolutePosition.x - safeAreaInsets.left,
+        y: absolutePosition.y - safeAreaInsets.top,
+        width: absolutePosition.width,
+        height: absolutePosition.height
+    };
 }
 
 export { GetAbsolutePosition };

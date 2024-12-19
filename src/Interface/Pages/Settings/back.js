@@ -2,23 +2,17 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { PageBase } from 'Interface/Components';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetGlobalTime } from 'Utils/Time';
-import Notifications from 'Utils/Notifications';
 
 /**
- * @typedef {import('Types/TCP').ConnectionState} ConnectionState
+ * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('Managers/LangManager').LangKey} LangKey
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 
 class BackSettings extends PageBase {
-    /** @type {ComboBoxItem[]} */
-    availableLangs = langManager.GetLangsKeys().map(lang => ({
-        key: lang,
-        value: langManager.GetAllLangs()[lang]['name']
-    }));
-
     state = {
         /** @type {ComboBoxItem} */
         cbSelectedLang: {
@@ -26,180 +20,278 @@ class BackSettings extends PageBase {
             value: langManager.curr['name']
         },
 
-        switchMorningNotifs: user.settings.morningNotifications,
-        switchEveningNotifs: user.settings.eveningNotifications,
-        waitingConsentPopup: false,
         sendingMail: false,
         devicesLoading: false,
 
         /** @param {ConnectionState} state */
-        serverTCPState: user.tcp.state.Get()
-    }
+        serverTCPState: user.server2.tcp.state.Get(),
 
+        waitingConsentPopup: false
+    };
+
+    /** @type {ComboBoxItem[]} */
+    availableLangs = langManager.GetLangsKeys().map((lang) => ({
+        key: lang,
+        value: langManager.GetAllLangs()[lang]['name']
+    }));
+
+    /** @type {Symbol | null} */
+    listenerTCP = null;
+
+    /** @type {NodeJS.Timeout | null} Manage consent popup loading */
     intervalConsentChecking = null;
 
     componentDidMount() {
+        // Listen to TCP state
+        this.listenerTCP = user.server2.tcp.state.AddListener(this.onTCPStateChange);
+
+        // Check if consent popup is loading
         if (user.consent.loading) {
             this.setState({ waitingConsentPopup: true });
             this.intervalConsentChecking = setInterval(() => {
                 if (!user.consent.loading) {
                     this.setState({ waitingConsentPopup: false });
-                    clearInterval(this.intervalConsentChecking);
+                    if (this.intervalConsentChecking !== null) {
+                        clearInterval(this.intervalConsentChecking);
+                    }
                 }
             }, 100);
         }
-        this.listenerTCP = user.tcp.state.AddListener(this.onTCPStateChange);
     }
 
     componentWillUnmount() {
+        user.server2.tcp.state.RemoveListener(this.listenerTCP);
         if (this.intervalConsentChecking !== null) {
             clearInterval(this.intervalConsentChecking);
         }
-        user.tcp.state.RemoveListener(this.listenerTCP);
     }
 
     /** @param {ConnectionState} state */
     onTCPStateChange = (state) => {
         this.setState({ serverTCPState: state });
-    }
+    };
 
     onBack = () => user.interface.BackHandle();
-    openAbout = () => user.interface.ChangePage('about', undefined, true);
-    openReport = () => user.interface.ChangePage('report', undefined, true);
+    openAbout = () => user.interface.ChangePage('about', { storeInHistory: false });
+    openReport = () => user.interface.ChangePage('report', { storeInHistory: false });
+    openNotifications = () => user.interface.ChangePage('settings_notifications', { storeInHistory: false });
 
-    openConsentPopup = async () => {
-        this.setState({ waitingConsentPopup: true });
-        await user.consent.ShowTrackingPopup(true);
-        this.setState({ waitingConsentPopup: false });
-    }
-
-    /** @param {ComboBoxItem} lang */
-    onChangeLang = (lang) => {
+    /** @param {ComboBoxItem | null} lang */
+    onChangeLang = async (lang) => {
+        if (lang === null || typeof lang.key !== 'string') return;
         this.setState({ cbSelectedLang: lang });
-        langManager.SetLangage(/** @type {'fr' | 'en'} */ (lang.key));
-        user.settings.Save();
-    }
+
+        const key = langManager.IsLangAvailable(lang.key);
+        if (key === null) return;
+
+        await user.settings.SetLang(key);
+    };
 
     /** @param {number} themeIndex */
     onChangeTheme = (themeIndex) => {
         /** @type {ThemeName[]} */
-        const themes = [ 'Main', 'Light' ];
+        const themes = ['Main', 'Light'];
         const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
-            user.interface.SetTheme(themeIndex);
-            user.interface.forceUpdate();
-            user.settings.Save();
+            user.settings.IndependentSave();
         }
-    }
+    };
 
-    /** @param {boolean} enabled */
-    onChangeMorningNotifications = (enabled) => {
-        if (enabled) Notifications.Morning.Enable();
-        else Notifications.Morning.Disable();
-        this.setState({ switchMorningNotifs: enabled });
-        user.settings.morningNotifications = enabled;
-        user.settings.Save();
-    }
+    openConsentPopup = async () => {
+        const lang = langManager.curr['settings'];
 
-    /** @param {boolean} enabled */
-    onChangeEveningNotifications = (enabled) => {
-        if (enabled) Notifications.Evening.Enable();
-        else Notifications.Evening.Disable();
-        this.setState({ switchEveningNotifs: enabled });
-        user.settings.eveningNotifications = enabled;
-        user.settings.Save();
-    }
+        this.setState({ waitingConsentPopup: true });
+        const consentStatus = await user.consent.ShowTrackingPopup(true);
+        this.setState({ waitingConsentPopup: false });
+
+        if (consentStatus === 'error') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-consent-error-title'],
+                    message: lang['alert-consent-error-message']
+                }
+            });
+        } else if (consentStatus === 'not-available') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-consent-not-available-title'],
+                    message: lang['alert-consent-not-available-message']
+                }
+            });
+        }
+    };
 
     restartTuto = () => {
-        user.interface.ChangePage('home', { tuto: 1 }, true);
-    }
+        user.interface.ChangePage('home', { args: { tuto: 1 }, storeInHistory: false });
+    };
 
     disconnect = () => {
-        const event = async (button) => {
-            if (button === 'yes' && !await user.Disconnect(true)) {
-                const title = langManager.curr['settings']['alert-disconnecterror-title'];
-                const text = langManager.curr['settings']['alert-disconnecterror-text'];
-                user.interface.popup.Open('ok', [ title, text ], undefined, false);
+        const lang = langManager.curr['settings'];
+
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-disconnect-title'],
+                message: lang['alert-disconnect-message']
+            },
+            callback: async (button) => {
+                if (button === 'yes' && !(await user.Disconnect())) {
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-disconnecterror-title'],
+                            message: lang['alert-disconnecterror-message']
+                        }
+                    });
+                }
             }
-        };
-        const title = langManager.curr['settings']['alert-disconnect-title'];
-        const text = langManager.curr['settings']['alert-disconnect-text'];
-        user.interface.popup.Open('yesno', [ title, text ], event);
-    }
+        });
+    };
 
     disconnectAll = async () => {
-        const event = async (button) => {
-            if (button === 'yes' && !await user.Disconnect(true, true)) {
-                const title = langManager.curr['settings']['alert-disconnecterrortitle'];
-                const text = langManager.curr['settings']['alert-disconnecterror-text'];
-                user.interface.popup.Open('ok', [ title, text ], undefined, false);
-            }
-        };
+        const lang = langManager.curr['settings'];
+
+        // Not connected to the server
+        if (!user.server2.IsAuthenticated()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-disconnecterror-title'],
+                    message: lang['alert-disconnecterror-message']
+                }
+            });
+            return;
+        }
 
         this.setState({ devicesLoading: true });
-        const title = langManager.curr['settings']['alert-disconnectall-title'];
-        const text = langManager.curr['settings']['alert-disconnectall-text'];
-        const devices = await user.GetDevices();
-        const textDevices = devices === null ? 'Error' : '- ' + devices.join(' - \n- ') + ' -\n';
-        user.interface.popup.Open('yesno', [ title, text.replace('{}', textDevices) ], event);
+        const devicesStatus = await user.server2.tcp.SendAndWait({ action: 'get-devices' });
         this.setState({ devicesLoading: false });
-    }
+
+        // Error while getting devices
+        if (
+            devicesStatus === 'interrupted' ||
+            devicesStatus === 'not-sent' ||
+            devicesStatus === 'timeout' ||
+            devicesStatus.status !== 'get-devices'
+        ) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-disconnecterror-title'],
+                    message: lang['alert-disconnecterror-message']
+                }
+            });
+            return;
+        }
+
+        // Format devices list
+        const { devices } = devicesStatus;
+        const textDevices =
+            typeof devices === 'undefined' || devices.length === 0
+                ? 'Error'
+                : devices.map((device) => `- ${device.deviceName} -\n`).join('');
+
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: lang['alert-disconnectall-title'],
+                message: lang['alert-disconnectall-message'].replace('{}', textDevices)
+            },
+            callback: async (button) => {
+                if (button === 'yes' && !(await user.Disconnect(true))) {
+                    user.interface.popup?.OpenT({
+                        type: 'ok',
+                        data: {
+                            title: lang['alert-disconnecterror-title'],
+                            message: lang['alert-disconnecterror-message']
+                        }
+                    });
+                }
+            }
+        });
+
+        this.setState({ devicesLoading: false });
+    };
 
     reconnectTCP = () => {
-        user.tcp.Connect();
+        user.server2.Connect(false);
         this.setState({ serverTCPState: 'idle' });
-    }
+    };
 
     deleteAccount = () => {
-        /** @param {'yes' | 'no'} button */
-        const event = async (button) => {
-            if (button !== 'yes')
-                return;
-
-            this.setState({ sendingMail: true });
-
-            const data = {
-                email: user.settings.email,
-                lang: langManager.currentLangageKey
-            }
-
-            // Send mail
-            const result = await user.server.Request('deleteAccount', data);
-            if (result === null) return;
-
-            if (result['status'] === 'ok') {
-                // Mail sent
-                const title = langManager.curr['settings']['alert-deletedmailsent-title'];
-                const text = langManager.curr['settings']['alert-deletedmailsent-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
-                    this.setState({ sendingMail: false }, () => {
-                        user.Disconnect(true);
-                    });
-                }, false);
-                user.tempMailSent = now;
-            } else {
-                // Mail sent failed
-                const title = langManager.curr['settings']['alert-deletedfailed-title'];
-                const text = langManager.curr['settings']['alert-deletedfailed-text'];
-                user.interface.popup.ForceOpen('ok', [ title, text ], () => {
-                    this.setState({ sendingMail: false })
-                }, false);
-            }
-        };
-
         const now = GetGlobalTime();
         if (user.tempMailSent === null || now - user.tempMailSent > 1 * 60) {
             // Confirmation popup
             const title = langManager.curr['settings']['alert-deleteaccount-title'];
-            const text = langManager.curr['settings']['alert-deleteaccount-text'];
-            user.interface.popup.Open('yesno', [ title, text ], event);
+            const message = langManager.curr['settings']['alert-deleteaccount-message'];
+            user.interface.popup?.OpenT({
+                type: 'yesno',
+                data: { title, message },
+                callback: this.DeleteAccount
+            });
         } else {
             // Too early
             const title = langManager.curr['settings']['alert-deletedmailtooearly-title'];
-            const text = langManager.curr['settings']['alert-deletedmailtooearly-text'];
-            user.interface.popup.Open('ok', [ title, text ]);
+            const message = langManager.curr['settings']['alert-deletedmailtooearly-message'];
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title, message }
+            });
         }
-    }
+    };
+
+    /**
+     * @param {'yes' | 'no' | 'closed'} button
+     * @private
+     */
+    DeleteAccount = async (button) => {
+        const lang = langManager.curr['settings'];
+        if (button !== 'yes') {
+            return;
+        }
+
+        // Send mail
+        this.setState({ sendingMail: true });
+        const response = await user.server2.tcp.SendAndWait({ action: 'delete-account' });
+
+        // Mail sent failed
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'delete-account' ||
+            response.result !== 'ok'
+        ) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-deletedfailed-title'],
+                    message: lang['alert-deletedfailed-message']
+                },
+                callback: () => {
+                    this.setState({ sendingMail: false });
+                }
+            });
+            return;
+        }
+
+        // Mail sent
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-deletedmailsent-title'],
+                message: lang['alert-deletedmailsent-message']
+            },
+            callback: () => {
+                this.setState({ sendingMail: false }, () => {
+                    user.Disconnect();
+                });
+            }
+        });
+        user.tempMailSent = GetGlobalTime();
+    };
 }
 
 export default BackSettings;

@@ -1,49 +1,71 @@
 import * as React from 'react';
-import SVGIcons from './icons';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
- * 
- * @typedef {keyof SVGIcons} Icons
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ *
+ * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
- * 
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ *
  * @callback GestureEvent
  * @param {GestureResponderEvent} event
+ *
+ * @typedef {Object} IconPropsType
+ * @property {StyleProp} style
+ * @property {StyleProp} containerStyle
+ * @property {number} throttleTime
+ * @property {string | null} xml Display an icon from XML base64 encoded ('icon' skip if define)
+ * @property {IconsName | null} icon
+ * @property {number} size Size of icon in pixels
+ * @property {number} angle Rotation angle in degrees
+ * @property {ThemeColor | ThemeText | 'gradient'} color
+ * @property {GestureEvent | null} onPress
+ * @property {boolean} show
  */
 
+/** @type {IconPropsType} */
 const IconProps = {
-    /** @type {StyleProp} */
     style: {},
-
-    /** @type {StyleProp} */
     containerStyle: {},
-
-    /** @type {string | null} Display an icon from XML base64 encoded ('icon' skip if define) */
+    throttleTime: 250,
     xml: null,
-
-    /** @type {Icons | null} */
     icon: null,
-
-    /** @type {number} Size of icon in pixels */
     size: 24,
-
-    /** @type {number} Rotation angle in degrees */
     angle: 0,
-
-    /** @type {ThemeColor | ThemeText} */
     color: 'white',
-
-    /** @type {(event: GestureResponderEvent) => void | null} */
     onPress: null,
-
-    /** @type {boolean} */
     show: true
 };
 
 class IconBack extends React.Component {
+    last = 0;
+
+    /** @param {IconPropsType} nextProps */
+    shouldComponentUpdate(nextProps) {
+        return (
+            this.props.show !== nextProps.show ||
+            this.props.xml !== nextProps.xml ||
+            this.props.icon !== nextProps.icon ||
+            this.props.size !== nextProps.size ||
+            this.props.angle !== nextProps.angle ||
+            this.props.color !== nextProps.color
+        );
+    }
+
+    /** @param {GestureResponderEvent} event */
+    onPress = (event) => {
+        const now = Date.now();
+        if (now - this.last < this.props.throttleTime) {
+            return;
+        }
+
+        this.last = now;
+        if (this.props.onPress !== null) {
+            this.props.onPress(event);
+        }
+    };
 }
 
 IconBack.prototype.props = IconProps;

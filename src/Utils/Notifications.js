@@ -1,5 +1,6 @@
-import { Platform, NativeModules } from 'react-native';
+import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 import user from 'Managers/UserManager';
@@ -10,8 +11,6 @@ import { ParsePlural } from './String';
 import { GetGlobalTime } from './Time';
 import { Random, Range } from './Functions';
 
-const { AlarmPermission } = NativeModules;
-
 /**
  * @typedef {import('@react-native-community/push-notification-ios').NotificationRequest} NotificationRequest
  * @typedef {import('react-native-push-notification').PushNotificationScheduledLocalObject} PushNotificationScheduledLocalObject
@@ -21,23 +20,14 @@ const MAX_DAYS = 30;
 
 const Management = {
     async checkPermissionsAndroid(forcePopup = false) {
-        if (typeof Platform.Version === 'number' && Platform.Version < 33) {
-            return true;
-        }
-
-        try {
-            const result = await AlarmPermission.requestExactAlarmPermission();
-            if (result) {
-                user.interface.console.AddLog('info', 'Permission granted');
-                return true;
-            } else {
-                user.interface.console.AddLog('warn', 'Permission denied or pending');
+        let permissionStatus = await check(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
+        if (permissionStatus === RESULTS.DENIED) {
+            const newStatus = await request(PERMISSIONS.ANDROID.SCHEDULE_EXACT_ALARM);
+            if (newStatus !== RESULTS.GRANTED) {
                 return false;
             }
-        } catch (error) {
-            user.interface.console.AddLog('error', 'Error requesting alarm permission', error);
-            return false;
         }
+        return true;
     },
     async checkPermissionsIOS(forcePopup = false) {
         let authorization = false;
@@ -249,7 +239,7 @@ class Notifications {
             return null;
             const now = GetGlobalTime();
             const day = 24 * 60 * 60;
-            const quests = user.quests.myquests.Get();
+            const quests = user.quests.Get();
             let halftime = {}, tomorrow = {}, today = {};
 
             for (let i = 0; i < quests.length; i++) {

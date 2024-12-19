@@ -1,38 +1,45 @@
 import * as React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
+import themeManager from 'Managers/ThemeManager';
 
-import { GetDate } from 'Utils/Time';
-import { DateToFormatString } from 'Utils/Date';
-import { Text, Button, IconCheckable, Icon } from 'Interface/Components';
+import { Text, IconCheckable, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('./index').default} SkillsPage
- * @typedef {import('Data/Skills').EnrichedSkill} EnrichedSkill
- * @typedef {import('Data/Skills').Category} Category
+ * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} SkillCategory
+ * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  */
 
 /**
  * @this {SkillsPage}
- * @param {{item: Category}} item
- * @returns {JSX.Element}
+ * @param {SkillCategory | null} value
+ * @param {number} _index
+ * @param {Array<SkillCategory | null>} _array
+ * @returns {JSX.Element | null}
  */
-function renderCategory({ item }) {
-    const { ID, LogoID } = item;
+function renderCategory(value, _index, _array) {
+    if (value === null) {
+        return null;
+    }
 
+    const { ID, LogoID } = value;
     const checked = this.state.selectedCategories.includes(ID);
     const icon = dataManager.skills.GetXmlByLogoID(LogoID);
 
     return (
         <IconCheckable
-            style={styles.categoryIcon}
+            key={`category-${ID}`}
+            style={styles.category}
             id={ID}
             xml={icon}
-            size={32}
+            size={24}
             checked={checked}
+            colorOn='main1'
             onPress={this.onSwitchCategory}
         />
     );
@@ -47,88 +54,79 @@ function renderSkill({ item }) {
     const { ID, LogoXML, FullName, Experience } = item;
 
     const xpLang = langManager.curr['level'];
-    const { lvl, lastTime } = Experience;
+    const { lvl } = Experience;
     const text = `${xpLang['level']} ${lvl}`;
-    const last = DateToFormatString(GetDate(lastTime));
-    const onPress = () => user.interface.ChangePage('skill', { skillID: ID });
+    const onPress = () => user.interface.ChangePage('skill', { args: { skillID: ID } });
 
     return (
-        <TouchableOpacity
-            style={[styles.skillCard, this.backgroundCard]}
-            onPress={onPress}
-            activeOpacity={.6}
-        >
-            <View style={[styles.skillIcon, this.backgroundActive]}>
-                <Icon xml={LogoXML} size={64} />
-            </View>
+        <TouchableOpacity style={styles.skillItem} onPress={onPress} activeOpacity={0.6}>
+            <LinearGradient
+                style={styles.skillGradient}
+                colors={[
+                    themeManager.GetColor('grey', { opacity: 0.45 }),
+                    themeManager.GetColor('grey', { opacity: 0.15 })
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+            >
+                {/* Skill header (icon + name) */}
+                <View style={styles.skillHeader}>
+                    <Icon xml={LogoXML} size={28} />
+                    <Text style={styles.skillTitle} fontSize={24}>
+                        {FullName}
+                    </Text>
+                </View>
 
-            <View style={styles.skillContent}>
-                <Text style={styles.skillTitle} fontSize={24}>{FullName}</Text>
-                <Text style={styles.skillText}>{text}</Text>
-                <Text style={styles.skillText}>{last}</Text>
-            </View>
+                <View style={styles.skillDetails}>
+                    <Text style={styles.skillLvlText} color='main2'>
+                        {text}
+                    </Text>
+                    <Icon icon='arrow-square' size={24} angle={90} color='gradient' />
+                </View>
+            </LinearGradient>
         </TouchableOpacity>
     );
 }
 
-/**
- * @this {SkillsPage}
- * @returns {JSX.Element}
- */
-function renderEmpty() {
-    const lang = langManager.curr['skills'];
-    return (
-        <View style={styles.emptyContent}>
-            <Text>{lang['text-empty']}</Text>
-            <Button
-                style={styles.emptyButtonAddActivity}
-                borderRadius={8}
-                color='main2'
-                onPress={this.addActivity}
-            >
-                {lang['text-add']}
-            </Button>
-        </View>
-    );
-}
-
 const styles = StyleSheet.create({
-    categoryIcon: {
-        marginBottom: 8
+    category: {
+        flex: 1,
+        paddingHorizontal: 0,
+        marginVertical: 4,
+        marginHorizontal: 4
     },
 
-    skillCard: {
-        marginBottom: 24,
-        borderRadius: 12,
+    skillItem: {
+        marginBottom: 8,
         flexDirection: 'row'
     },
-    skillIcon: {
-        width: 88,
-        margin: 12,
-        padding: 12,
-        borderRadius: 12
-    },
-    skillContent: {
+    skillGradient: {
+        flex: 1,
         paddingVertical: 12,
-        justifyContent: 'space-between'
+        paddingHorizontal: 16,
+
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderRadius: 8
+    },
+    skillHeader: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     skillTitle: {
-        textAlign: 'left',
-        marginBottom: 6
-    },
-    skillText: {
-        textAlign: 'left'
+        marginLeft: 12,
+        fontSize: 16
     },
 
-    emptyContent: {
-        padding: 12
+    skillDetails: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    emptyButtonAddActivity: {
-        width: '50%',
-        height: 48,
-        marginTop: 24,
-        marginLeft: '25%'
+    skillLvlText: {
+        marginRight: 12,
+        fontSize: 14
     }
 });
 
-export { renderCategory, renderSkill, renderEmpty };
+export { renderCategory, renderSkill };

@@ -1,73 +1,123 @@
 import React from 'react';
 
-import { PageBase } from 'Interface/Components';
-import StartTutorial from './tuto';
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
-import { MultiplayerPanel } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
-import StartMission from './mission';
+import { AddActivity } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Interface/Widgets').Missions} Missions
- * @typedef {import('Class/Missions').MissionsItem} MissionsItem
+ * @typedef {import('react-native').View} View
+ * @typedef {import('react-native').ScrollView} ScrollView
+ *
+ * @typedef {import('Managers/UserManager').UserManager} UserManager
  */
 
-class BackHome extends PageBase {
-    state = {
-        experience: user.experience.GetExperience(),
-        values: {
-            current_level: '0',
-            next_level: '0'
-        },
-
-        /** @type {MissionsItem} */
-        mission: user.missions.GetCurrentMission().mission
+const BackHomeProps = {
+    args: {
+        /** @type {number} */
+        tuto: 0
     }
+};
 
-    /** @type {React.RefObject<MultiplayerPanel>} */
-    refMultiplayerPanel = React.createRef();
+class BackHome extends PageBase {
+    static feKeepMounted = true;
+    static feShowUserHeader = true;
+    static feShowNavBar = true;
 
-    /** @type {React.RefObject<Missions>} */
-    refMissions = React.createRef();
+    state = {
+        experience: user.experience.experience.Get(),
+        values: {
+            currentLevel: '0',
+            currentXP: '0',
+            nextLevelXP: '0'
+        },
+        scrollable: true
+    };
+
+    /** @type {React.RefObject<ScrollView>} */
+    refScrollView = React.createRef();
+
+    /** @type {React.RefObject<View>} */
+    refQuestsTitle = React.createRef();
+
+    /** @type {Symbol | null} */
+    listenerActivities = null;
 
     componentDidMount() {
-        super.componentDidMount();
-
-        this.handleLevelsUpdate();
-        this.listenerActivities = user.activities.allActivities.AddListener(
-            this.handleLevelsUpdate
-        );
-        this.listenerMissions = user.missions.missions.AddListener(this.handleMissionsUpdate);
-    }
-    componentDidFocused = (args) => {
-        StartTutorial.call(this, args?.tuto);
+        this.handleLevelsUpdate(user.experience.experience.Get());
+        this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
     }
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
-        user.missions.missions.RemoveListener(this.listenerMissions);
     }
 
-    handleLevelsUpdate = () => {
-        const experience = user.experience.GetExperience();
-        const { xpInfo: { lvl, xp, next } } = experience;
-        const current_level = lvl.toString();
-        const next_level = Round(100 * xp / next, 0).toString();
+    /** @param {UserManager['experience']['experience']['var']} experience */
+    handleLevelsUpdate = (experience) => {
+        const {
+            xpInfo: { lvl, xp, next }
+        } = experience;
 
-        this.setState({ experience, values: { current_level, next_level } });
-    }
+        this.setState({
+            experience,
+            values: {
+                currentLevel: lvl.toString(),
+                currentXP: Round(xp, 0).toString(),
+                nextLevelXP: next.toString()
+            }
+        });
+    };
 
-    handleMissionsUpdate = () => {
-        const { mission } = user.missions.GetCurrentMission();
-        this.setState({ mission });
-    }
+    /** @param {boolean} scrollable */
+    onChangeScrollable = (scrollable) => {
+        this.setState({ scrollable });
+    };
 
-    StartMission = StartMission.bind(this);
+    addActivity = () => {
+        this.fe.bottomPanel?.Open({
+            content: <AddActivity />
+        });
+    };
 
-    addActivity = () => user.interface.ChangePage('activity', undefined, true);
-    openSkills = () => user.interface.ChangePage('skills');
-    openQuests = () => user.interface.ChangePage('quests');
+    /**
+     * Add a new quest to the list and open the quest page\
+     * Max 10 quests
+     */
+    addQuest = () => {
+        const lang = langManager.curr['quests'];
+        if (user.quests.IsMax()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-questslimit-title'],
+                    message: lang['alert-questslimit-message']
+                }
+            });
+            return;
+        }
+        user.interface.ChangePage('quest', { storeInHistory: false });
+    };
+
+    addTodo = () => {
+        const lang = langManager.curr['todos'];
+        if (user.todos.IsMax()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-todoslimit-title'],
+                    message: lang['alert-todoslimit-message']
+                }
+            });
+            return;
+        }
+
+        user.interface.ChangePage('todo', { storeInHistory: false });
+    };
 }
+
+BackHome.defaultProps = BackHomeProps;
+BackHome.prototype.props = BackHomeProps;
 
 export default BackHome;

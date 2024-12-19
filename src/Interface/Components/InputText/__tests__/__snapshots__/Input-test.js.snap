@@ -89,6 +89,8 @@ exports[`[Component] InputText renders correctly 1`] = `
           "minHeight": 12,
           "paddingHorizontal": 24,
           "paddingVertical": 16,
+        },
+        {
           "verticalAlign": "middle",
         },
         {

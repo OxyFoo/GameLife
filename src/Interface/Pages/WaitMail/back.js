@@ -20,7 +20,7 @@ class BackWaitmail extends PageBase {
         this.tick = setInterval(this.onTick, 1000);
 
         this.listenerServer = user.server2.tcp.state.AddListener((state) => {
-            if (state !== 'connected') {
+            if (state !== 'connected' && state !== 'authenticated') {
                 this.fe.ChangePage('waitinternet', {
                     storeInHistory: false,
                     transition: 'fromBottom'

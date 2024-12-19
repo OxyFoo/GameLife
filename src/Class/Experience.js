@@ -2,22 +2,16 @@ import dataManager from 'Managers/DataManager';
 
 import { IUserClass } from 'Types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
-import { MinMax, Sum } from 'Utils/Functions';
+import { MinMax, Round, Sum } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Types/Class/Experience').Stats} Stats
+ * @typedef {import('Types/Class/Experience').StatsXP} StatsXP
  * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
- *
- * @typedef {object} Stats
- * @property {XPInfo} int
- * @property {XPInfo} soc
- * @property {XPInfo} for
- * @property {XPInfo} sta
- * @property {XPInfo} agi
- * @property {XPInfo} dex
  */
 
 /**
@@ -133,6 +127,11 @@ class Experience extends IUserClass {
         }
 
         this.experience.Set({ stats, xpInfo: this.getXPDict(XP, 'user') });
+    };
+
+    GetStatsNumber = () => {
+        const experience = this.experience.Get();
+        return Object.assign({}, ...this.statsKey.map((key) => ({ [key]: Round(experience.stats[key].totalXP, 2) })));
     };
 
     /**

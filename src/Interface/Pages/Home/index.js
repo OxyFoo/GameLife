@@ -67,8 +67,8 @@ class Home extends BackHome {
                 </Title>
                 <QuestsList />
 
-                {/* My todoes */}
-                <Title title={lang['section-my-todoes']}>
+                {/* My todos */}
+                <Title title={lang['section-my-todos']}>
                     <Button
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'

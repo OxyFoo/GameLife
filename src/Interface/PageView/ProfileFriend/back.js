@@ -10,8 +10,8 @@ import { StartActivityNow } from 'Utils/Activities';
 /**
  * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
- * @typedef {import('Class/Experience').XPInfo} XPInfo
- * @typedef {import('Class/Experience').Stats} Stats
+ * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Types/Class/Experience').Stats} Stats
  */
 
 const BackProfileFriendProps = {
@@ -47,12 +47,13 @@ class BackProfileFriend extends React.Component {
     constructor(props) {
         super(props);
 
-        if (!props.hasOwnProperty('friendID') || !props.friendID) {
+        if (!props.hasOwnProperty('friendID') || (!props.friendID && props.friendID !== 0)) {
             this.Back();
             return;
         }
 
-        const friend = user.multiplayer.GetFriendByID(props.friendID);
+        const friend =
+            props.friendID !== 0 ? user.multiplayer.GetFriendByID(props.friendID) : user.multiplayer.GetSelf();
         if (friend === null) {
             this.Back();
             return;

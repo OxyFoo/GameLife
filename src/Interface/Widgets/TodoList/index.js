@@ -18,7 +18,7 @@ class TodoList extends BackTodoList {
 
     render() {
         const { style } = this.props;
-        const { todoes, draggedItem, mouseY } = this.state;
+        const { todos, draggedItem, mouseY } = this.state;
 
         return (
             <View style={style}>
@@ -32,7 +32,7 @@ class TodoList extends BackTodoList {
                 )}
 
                 <FlatList
-                    data={todoes}
+                    data={todos}
                     extraData={draggedItem}
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
@@ -70,9 +70,9 @@ class TodoList extends BackTodoList {
     };
 
     renderEmpty = () => {
-        const lang = langManager.curr['todoes'];
+        const lang = langManager.curr['todos'];
 
-        return <Text style={styles.emptyText}>{lang['todoes-empty-text']}</Text>;
+        return <Text style={styles.emptyText}>{lang['todos-empty-text']}</Text>;
     };
 }
 

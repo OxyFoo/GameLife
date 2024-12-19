@@ -72,6 +72,10 @@ class QuestStats extends BackQuest {
                         </View>
                     </LinearGradient>
 
+                    <Text style={styles.warnText} color='secondary'>
+                        {lang['warn-message']}
+                    </Text>
+
                     {/* Streak chart */}
                     <LinearGradient
                         style={styles.streakChartContainer}

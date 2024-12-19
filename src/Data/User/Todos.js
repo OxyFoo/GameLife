@@ -10,7 +10,7 @@ import { GetGlobalTime } from 'Utils/Time';
  * @typedef {import('Types/Data/User/Todos').SaveObject_Todos} SaveObject_Todos
  */
 
-const MAX_TODOES = 10;
+const MAX_TODOS = 10;
 const MAX_TASKS = 20;
 
 /** @extends {IUserData<SaveObject_Todos>} */
@@ -23,7 +23,7 @@ class Todos extends IUserData {
     }
 
     /** @type {TodoSaved[]} */
-    #SAVED_todoes = [];
+    #SAVED_todos = [];
 
     /** @type {Todo[]} */
     #UNSAVED_additions = [];
@@ -35,18 +35,18 @@ class Todos extends IUserData {
     #UNSAVED_deletions = [];
 
     /**
-     * Sorted todoes using titles
+     * Sorted todos using titles
      * @type {number[]}
      */
     #sort = [];
 
     /**
-     * @type {boolean} True if todoes sort is saved
+     * @type {boolean} True if todos sort is saved
      */
     #sortSaved = true;
 
     /**
-     * @description All todoes (saved and unsaved)
+     * @description All todos (saved and unsaved)
      * @type {DynamicVar<Todo[]>}
      */
     // eslint-disable-next-line prettier/prettier
@@ -55,7 +55,7 @@ class Todos extends IUserData {
     #token = 0;
 
     Clear = () => {
-        this.#SAVED_todoes = [];
+        this.#SAVED_todos = [];
         this.#UNSAVED_additions = [];
         this.#UNSAVED_editions = [];
         this.#UNSAVED_deletions = [];
@@ -66,32 +66,32 @@ class Todos extends IUserData {
     };
 
     /**
-     * Return all todoes (save and unsaved) sorted by start time (ascending)
+     * Return all todos (save and unsaved) sorted by start time (ascending)
      * @returns {(Todo | TodoSaved)[]}
      */
     Get = () => {
-        // Saved todoes
-        let todoes = [...this.#SAVED_todoes];
+        // Saved todos
+        let todos = [...this.#SAVED_todos];
 
         // Apply unsaved editions
         for (const edition of this.#UNSAVED_editions) {
-            const index = todoes.findIndex((todo) => todo.ID === edition.ID);
+            const index = todos.findIndex((todo) => todo.ID === edition.ID);
             if (index !== null) {
-                todoes[index] = edition;
+                todos[index] = edition;
             }
         }
 
         // Apply unsaved deletions
         for (const deletion of this.#UNSAVED_deletions) {
-            const index = todoes.findIndex((todo) => todo.ID === deletion);
+            const index = todos.findIndex((todo) => todo.ID === deletion);
             if (index !== null) {
-                todoes.splice(index, 1);
+                todos.splice(index, 1);
             }
         }
 
         // Apply unsaved additions
         /** @type {(Todo | TodoSaved)[]} */
-        const allTodos = [...todoes, ...this.#UNSAVED_additions];
+        const allTodos = [...todos, ...this.#UNSAVED_additions];
 
         /** @type {(Todo | TodoSaved)[]} */
         const sortedTodos = [];
@@ -106,7 +106,7 @@ class Todos extends IUserData {
     };
 
     GetSort = (todos = this.Get()) => {
-        // Add new todoes title at the top
+        // Add new todos title at the top
         for (const todo of todos) {
             if (!this.#sort.includes(todo.created)) {
                 this.#sort.splice(0, 0, todo.created);
@@ -114,7 +114,7 @@ class Todos extends IUserData {
             }
         }
 
-        // Remove deleted todoes title
+        // Remove deleted todos title
         this.#sort = this.#sort.filter((created) => {
             if (todos.findIndex((todo) => todo.created === created) !== -1) {
                 return true;
@@ -128,7 +128,7 @@ class Todos extends IUserData {
 
     /** @param {Partial<SaveObject_Todos>} data */
     Load = (data) => {
-        if (typeof data.todoes !== 'undefined') this.#SAVED_todoes = data.todoes;
+        if (typeof data.todos !== 'undefined') this.#SAVED_todos = data.todos;
         if (typeof data.additions !== 'undefined') this.#UNSAVED_additions = data.additions;
         if (typeof data.editions !== 'undefined') this.#UNSAVED_editions = data.editions;
         if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
@@ -141,7 +141,7 @@ class Todos extends IUserData {
     /** @returns {SaveObject_Todos} */
     Save = () => {
         return {
-            todoes: this.#SAVED_todoes,
+            todos: this.#SAVED_todos,
             additions: this.#UNSAVED_additions,
             editions: this.#UNSAVED_editions,
             deletions: this.#UNSAVED_deletions,
@@ -169,16 +169,16 @@ class Todos extends IUserData {
             return true;
         }
 
-        this.#SAVED_todoes = response.result.todo;
+        this.#SAVED_todos = response.result.todo;
         this.#sort = response.result.sort;
         this.#token = response.result.token;
-        this.user.interface.console?.AddLog('info', `[Todos] Loaded ${this.#SAVED_todoes.length} todoes`);
+        this.user.interface.console?.AddLog('info', `[Todos] Loaded ${this.#SAVED_todos.length} todos`);
         this.todos.Set(this.Get());
         return true;
     };
 
     /**
-     * Save todoes online
+     * Save todos online
      * @param {number} [attempt] Number of attempt left
      * @returns {Promise<boolean>}
      */
@@ -261,27 +261,27 @@ class Todos extends IUserData {
 
     /**
      * Apply unsaved editions
-     * @param {TodoSaved[]} newTodoes
+     * @param {TodoSaved[]} newTodos
      */
-    #purge = (newTodoes) => {
+    #purge = (newTodos) => {
         // Apply editions
         for (const edition of this.#UNSAVED_editions) {
-            const index = this.#SAVED_todoes.findIndex((todo) => todo.ID === edition.ID);
+            const index = this.#SAVED_todos.findIndex((todo) => todo.ID === edition.ID);
             if (index !== null) {
-                this.#SAVED_todoes[index] = edition;
+                this.#SAVED_todos[index] = edition;
             }
         }
 
         // Apply deletions
         for (const deletion of this.#UNSAVED_deletions) {
-            const index = this.#SAVED_todoes.findIndex((todo) => todo.ID === deletion);
+            const index = this.#SAVED_todos.findIndex((todo) => todo.ID === deletion);
             if (index !== null) {
-                this.#SAVED_todoes.splice(index, 1);
+                this.#SAVED_todos.splice(index, 1);
             }
         }
 
         // Apply additions
-        this.#SAVED_todoes.push(...newTodoes);
+        this.#SAVED_todos.push(...newTodos);
 
         // Clear unsaved
         this.#UNSAVED_additions = [];
@@ -291,7 +291,7 @@ class Todos extends IUserData {
     };
 
     IsMax = () => {
-        return this.Get().length >= MAX_TODOES;
+        return this.Get().length >= MAX_TODOS;
     };
 
     /**
@@ -314,7 +314,7 @@ class Todos extends IUserData {
         };
 
         // Check if not exist
-        const indexSaved = this.#getIndex(this.#SAVED_todoes, newTodo);
+        const indexSaved = this.#getIndex(this.#SAVED_todos, newTodo);
         const indexUnsaved = this.#getIndex(this.#UNSAVED_additions, newTodo);
 
         // Todo already exist
@@ -357,7 +357,7 @@ class Todos extends IUserData {
             refToNewTodo = _newTodo;
 
             // Check if not exist
-            const indexSaved = this.#SAVED_todoes.findIndex((todo) => todo.ID === _oldTodo.ID);
+            const indexSaved = this.#SAVED_todos.findIndex((todo) => todo.ID === _oldTodo.ID);
             if (indexSaved === -1) {
                 return 'not-exist';
             }
@@ -412,7 +412,7 @@ class Todos extends IUserData {
         if (isSavedTodo) {
             // eslint-disable-next-line prettier/prettier
             const _todo = /** @type {TodoSaved} */ (todo);
-            const index = this.#getIndex(this.#SAVED_todoes, todo);
+            const index = this.#getIndex(this.#SAVED_todos, todo);
             if (index === null) {
                 return 'notExist';
             }
@@ -430,7 +430,7 @@ class Todos extends IUserData {
     }
 
     /**
-     * Change sort order of todoes titles
+     * Change sort order of todos titles
      * @param {Todo} todo
      * @param {number} newIndex
      * @returns {boolean} Success of the operation
@@ -470,7 +470,7 @@ class Todos extends IUserData {
     }
 
     /**
-     * Change sort order of todoes titles
+     * Change sort order of todos titles
      * @param {Todo} todo
      * @param {number} checkedTime UTC Time in seconds or 0 if unchecked
      * @returns {boolean} Success of the operation
@@ -499,5 +499,5 @@ class Todos extends IUserData {
     }
 }
 
-export { MAX_TODOES, MAX_TASKS };
+export { MAX_TODOS, MAX_TASKS };
 export default Todos;

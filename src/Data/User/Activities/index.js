@@ -39,11 +39,14 @@ const DEFAULT_ACTIVITY = {
 
 /** @extends {IUserData<SaveObject_Activities>} */
 class Activities extends IUserData {
+    /** @type {UserManager} */
+    #user;
+
     /** @param {UserManager} user */
     constructor(user) {
         super('activities');
 
-        this.user = user;
+        this.#user = user;
     }
 
     /** @type {ActivitySaved[]} */
@@ -174,7 +177,7 @@ class Activities extends IUserData {
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({
+        const response = await this.#user.server2.tcp.SendAndWait({
             action: 'get-activities',
             token: this.#token
         });
@@ -187,7 +190,7 @@ class Activities extends IUserData {
             response.status !== 'get-activities' ||
             response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog('error', '[Activities] Failed to load activities');
+            this.#user.interface.console?.AddLog('error', '[Activities] Failed to load activities');
             return false;
         }
 
@@ -200,7 +203,7 @@ class Activities extends IUserData {
         for (let i = 0; i < response.result.activities.length; i++) {
             const { status } = this.Add(response.result.activities[i], true);
             if (status !== 'added') {
-                this.user.interface.console?.AddLog(
+                this.#user.interface.console?.AddLog(
                     'error',
                     `[Activities] Failed to load activity ${response.result.activities[i].ID} (${status})`
                 );
@@ -217,7 +220,7 @@ class Activities extends IUserData {
 
         // Update and print message
         this.allActivities.Set(this.Get(true));
-        this.user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities loaded`);
+        this.#user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities loaded`);
         return true;
     };
 
@@ -228,17 +231,14 @@ class Activities extends IUserData {
         }
 
         const unsaved = this.#getUnsaved();
-        const experience = this.user.experience.experience.Get();
-        const response = await this.user.server2.tcp.SendAndWait({
+        const experience = this.#user.experience.experience.Get();
+        const response = await this.#user.server2.tcp.SendAndWait({
             action: 'save-activities',
             activitiesToAdd: unsaved.add,
             activitiesToEdit: unsaved.edit,
             activitiesToDelete: unsaved.delete,
             xp: Round(experience.xpInfo.totalXP, 2),
-            stats: Object.assign(
-                {},
-                ...this.user.experience.statsKey.map((key) => ({ [key]: Round(experience.stats[key].xp, 2) }))
-            ),
+            stats: this.#user.experience.GetStatsNumber(),
             token: this.#token
         });
 
@@ -250,12 +250,12 @@ class Activities extends IUserData {
             response.status !== 'save-activities' ||
             response.result === 'error'
         ) {
-            this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
+            this.#user.interface.console?.AddLog('error', '[Activities] Failed to save activities');
             return false;
         }
 
         if (response.result === 'wrong-activities') {
-            this.user.interface.console?.AddLog('error', '[Activities] Failed to save activities (wrong activities)');
+            this.#user.interface.console?.AddLog('error', '[Activities] Failed to save activities (wrong activities)');
             this.Clear();
             await this.LoadOnline();
             return false;
@@ -264,14 +264,14 @@ class Activities extends IUserData {
         // Check if failed or need to reload
         if (response.result === 'not-up-to-date') {
             if (attempt <= 0) {
-                this.user.interface.console?.AddLog(
+                this.#user.interface.console?.AddLog(
                     'error',
                     '[Activities] Failed to save activities (not up to date), no more attempts'
                 );
                 return false;
             }
 
-            this.user.interface.console?.AddLog(
+            this.#user.interface.console?.AddLog(
                 'error',
                 '[Activities] Failed to save activities (wrong last update), retrying'
             );
@@ -287,8 +287,8 @@ class Activities extends IUserData {
         // Update and print message
         this.#purge(response.result.newActivities);
         this.allActivities.Set(this.Get());
-        this.user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities saved`);
-        this.user.SaveLocal();
+        this.#user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities saved`);
+        this.#user.SaveLocal();
 
         return true;
     };
@@ -363,7 +363,7 @@ class Activities extends IUserData {
             return this.#cache_get_useful.activities;
         }
 
-        const activities = this.user.activities.Get().filter(this.DoesGrantXP);
+        const activities = this.#user.activities.Get().filter(this.DoesGrantXP);
 
         let lastMidnight = 0;
         let hoursRemain = MAX_HOUR_PER_DAY;
@@ -405,7 +405,7 @@ class Activities extends IUserData {
      */
     GetLastSkills(number = 6) {
         const now = GetGlobalTime();
-        const usersActivities = this.user.activities.Get().filter((activity) => activity.startTime <= now);
+        const usersActivities = this.#user.activities.Get().filter((activity) => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map((activity) => activity.skillID);
 
         /** @param {Skill} skill */
@@ -419,7 +419,7 @@ class Activities extends IUserData {
             ...skill,
             FullName: langManager.GetText(skill.Name),
             LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID),
-            Experience: this.user.experience.GetSkillExperience(skill)
+            Experience: this.#user.experience.GetSkillExperience(skill)
         });
 
         /** @type {EnrichedSkill[]} */

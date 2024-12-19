@@ -386,7 +386,7 @@
         "section-missions": "Missions découverte",
         "section-today-performance": "Mes activités du jour",
         "section-today-quests": "Mes quêtes",
-        "section-my-todoes": "Mes listes",
+        "section-my-todos": "Mes listes",
 
         "btn-other-skills": "Toutes les comp.",
         "btn-achievements": "Succès",
@@ -896,14 +896,13 @@
         "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
     },
 
-    "todoes": {
+    "todos": {
         "container-title": "Todo liste",
-        "button-all-todoes": "Toutes les listes",
 
-        "todoes-empty-text": "Pas de todo liste",
+        "todos-empty-text": "Pas de todo liste",
 
-        "alert-todoeslimit-title": "Limite atteinte",
-        "alert-todoeslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
+        "alert-todoslimit-title": "Limite atteinte",
+        "alert-todoslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "quest": {
@@ -958,7 +957,8 @@
         "title": "Ma quête",
         "title-current-week": "Semaine en cours",
         "title-heatmap": "Résultats",
-        "button-add-activity": "Ajouter une activité"
+        "button-add-activity": "Ajouter une activité",
+        "warn-message": "Attention : Le calcul de la série n'est pas sûr à 100%. Il est possible d'y voir des erreurs"
     },
 
     "quests": {

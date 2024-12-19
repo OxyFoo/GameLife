@@ -15,7 +15,7 @@ import { GetLocalTime } from 'Utils/Time';
 /**
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
  * @typedef {import('Types/Data/User/Activities').CurrentActivity} CurrentActivity
- * @typedef {import('Class/Experience').Stats} Stats
+ * @typedef {import('Types/Class/Experience').Stats} Stats
  * @typedef {import('react-native').ListRenderItem<keyof Stats>} ListRenderItemStat
  *
  * @typedef {{ key: string, value: number }} Stat

@@ -9,8 +9,8 @@ import { Text } from 'Interface/Components';
 import { PopupContent } from 'Interface/Widgets/StatsBars/popup';
 
 /**
- * @typedef {import('Class/Experience').Stats} Stats
- * @typedef {import('Class/Experience').XPInfo} XPInfo
+ * @typedef {import('Types/Class/Experience').Stats} Stats
+ * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
  * @typedef {{ statKey: keyof Stats, experience: XPInfo }} StatsValues
  * @typedef {import('react-native').ListRenderItem<StatsValues>} ListRenderItemKeyStats
  */

@@ -106,6 +106,38 @@ class Multiplayer extends IUserData {
         return this.friends.Get().find((f) => f.accountID === accountID) || null;
     };
 
+    /** @returns {Friend} */
+    GetSelf = () => {
+        const achievements = this.#user.achievements.Get();
+        const activities = this.#user.activities.Get();
+        return {
+            accountID: 0,
+            achievements: achievements,
+            activities: {
+                firstTime: activities.length === 0 ? 0 : activities[0].startTime,
+                length: activities.length,
+                totalDuration: activities.reduce((acc, a) => acc + a.duration, 0)
+            },
+            // TODO: Finish this
+            avatar: {
+                Sexe: 'MALE',
+                Skin: 'skin_01',
+                SkinColor: 0,
+                Hair: 'hair_01',
+                Top: 'top_01',
+                Bottom: 'bottom_01',
+                Shoes: 'shoes_01'
+            },
+            currentActivity: null,
+            friendshipState: 'accepted',
+            stats: this.#user.experience.GetStatsNumber(),
+            status: 'online',
+            title: this.#user.informations.title.Get(),
+            username: this.#user.informations.username.Get(),
+            xp: this.#user.experience.experience.Get().xpInfo.totalXP
+        };
+    };
+
     /**
      * @param {{ title: string, message: string }} lang
      * @param {string | null} [additionnal]

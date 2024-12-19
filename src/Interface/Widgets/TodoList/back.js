@@ -15,7 +15,7 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('Types/Data/User/Todos').Todo} Todo
  *
  * @typedef {Object} TodoListPropsType
- * @property {StyleProp} style Style of todoes container
+ * @property {StyleProp} style Style of todos container
  * @property {(enabled: boolean) => void} changeScrollable Change scrollable state
  */
 
@@ -28,7 +28,7 @@ const TodoListProps = {
 class BackTodoList extends React.Component {
     state = {
         /** @type {Todo[]} */
-        todoes: [],
+        todos: [],
 
         /** @type {Todo | null} Used to manage selected todo */
         draggedItem: null,
@@ -48,9 +48,9 @@ class BackTodoList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state.todoes = user.todos.Get();
+        this.state.todos = user.todos.Get();
         this.listenerTodo = user.todos.todos.AddListener((todos) => {
-            this.setState({ todoes: [...todos] });
+            this.setState({ todos: [...todos] });
         });
     }
 
@@ -96,14 +96,14 @@ class BackTodoList extends React.Component {
                 return;
             }
 
-            this.setState({ todoes: [...user.todos.Get()] });
+            this.setState({ todos: [...user.todos.Get()] });
             user.GlobalSave();
         });
     };
 
     /** @param {Todo} item */
     onDrag = (item) => {
-        const { draggedItem, todoes } = this.state;
+        const { draggedItem, todos } = this.state;
 
         // If already dragging, do nothing
         if (draggedItem !== null) {
@@ -111,7 +111,7 @@ class BackTodoList extends React.Component {
         }
 
         // If only one todo, do nothing
-        if (todoes.length <= 1) {
+        if (todos.length <= 1) {
             return;
         }
 
@@ -153,11 +153,11 @@ class BackTodoList extends React.Component {
 
     /** @param {GestureResponderEvent} _event */
     onTouchEnd = (_event) => {
-        // Dragging ended & save new todoes order
+        // Dragging ended & save new todos order
         this.props.changeScrollable(true);
         this.setState({ draggedItem: null });
 
-        // Save changes if todoes order changed (and not just a todo check)
+        // Save changes if todos order changed (and not just a todo check)
         const sort = user.todos.GetSort();
         if (this.initialSort.join() !== sort.join() && this.initialSort.length === sort.length) {
             user.GlobalSave();

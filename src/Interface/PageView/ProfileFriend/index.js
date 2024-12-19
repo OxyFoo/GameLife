@@ -90,7 +90,7 @@ class ProfileFriend extends BackProfileFriend {
                         text={lang['container-stats-title']}
                         style={styles.topSpace}
                         type='rollable'
-                        opened={false}
+                        opened={friend.accountID === 0}
                         backgroundColor='dataBigKpi'
                     >
                         <StatsBars data={statsInfo} />
@@ -98,7 +98,7 @@ class ProfileFriend extends BackProfileFriend {
                 )}
 
                 {/** Achievements */}
-                {friend.friendshipState === 'accepted' && (
+                {friend.friendshipState === 'accepted' && friend.accountID !== 0 && (
                     <Container
                         style={styles.topSpace}
                         text={lang['container-achievements-title']}
@@ -111,7 +111,7 @@ class ProfileFriend extends BackProfileFriend {
                 )}
 
                 {/** Actions */}
-                <View style={styles.botSpace}>{this.renderAction()}</View>
+                {friend.accountID !== 0 && <View style={styles.botSpace}>{this.renderAction()}</View>}
             </ScrollView>
         );
     }

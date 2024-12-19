@@ -386,7 +386,7 @@
         "section-missions": "Discovery missions",
         "section-today-performance": "My activities of the day",
         "section-today-quests": "My quests",
-        "section-my-todoes": "My to-do list",
+        "section-my-todos": "My to-do list",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
@@ -896,14 +896,13 @@
         "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost."
     },
 
-    "todoes": {
+    "todos": {
         "container-title": "Todo list",
-        "button-all-todoes": "All todoes",
 
-        "todoes-empty-text": "No todo list",
+        "todos-empty-text": "No todo list",
 
-        "alert-todoeslimit-title": "Limit reached",
-        "alert-todoeslimit-message": "You have reached the limit of todoes, please delete some of them to add more."
+        "alert-todoslimit-title": "Limit reached",
+        "alert-todoslimit-message": "You have reached the limit of todos, please delete some of them to add more."
     },
 
     "quest": {
@@ -958,7 +957,8 @@
         "title": "My quest",
         "title-current-week": "Current week",
         "title-heatmap": "Results",
-        "button-add-activity": "Add an activity"
+        "button-add-activity": "Add an activity",
+        "warn-message": "Warning: the calculation of the strak is uncertain. You may find errors"
     },
 
     "quests": {

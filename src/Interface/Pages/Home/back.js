@@ -101,13 +101,13 @@ class BackHome extends PageBase {
     };
 
     addTodo = () => {
-        const lang = langManager.curr['todoes'];
+        const lang = langManager.curr['todos'];
         if (user.todos.IsMax()) {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
-                    title: lang['alert-todoeslimit-title'],
-                    message: lang['alert-todoeslimit-message']
+                    title: lang['alert-todoslimit-title'],
+                    message: lang['alert-todoslimit-message']
                 }
             });
             return;

@@ -70,7 +70,8 @@ class BackMultiplayer extends PageBase {
             .sort((a, b) => a.username.localeCompare(b.username));
 
         // Sort by XP
-        const newBestFriends = newFriends.sort((a, b) => b.xp - a.xp).slice(0, 3);
+        const selfPlayer = user.multiplayer.GetSelf();
+        const newBestFriends = [selfPlayer, ...newFriends].sort((a, b) => b.xp - a.xp).slice(0, 3);
 
         const newFriendsPending = friends
             .filter((friend) => friend.friendshipState === 'pending')

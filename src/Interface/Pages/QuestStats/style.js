@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
         fontSize: 21,
         textAlign: 'left'
     },
+    warnText: {
+        marginTop: 16,
+        fontSize: 12
+    },
 
     // Quest info
     questHeader: {
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
 
     // Widgets
     streakChartContainer: {
-        marginTop: 24,
+        marginTop: 12,
         alignItems: 'center',
         paddingVertical: 16,
         borderRadius: 12

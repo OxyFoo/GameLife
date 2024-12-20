@@ -64,7 +64,11 @@ jobs:
 
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/GameLife.mobileprovision
+
+          # Debug
+          security find-identity -v -p codesigning
+          ls ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -105,24 +109,22 @@ jobs:
           security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
 
           # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ inputs.environment }} == 'test' ]; then
+          if [ "${{ inputs.environment }}" == "test" ]; then
             chmod +x ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh
             ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
           fi
 
-          # Go to the ios directory
+          # Aller dans le répertoire iOS
           cd ios
 
-          # Archive GameLife
+          # Archiver l'application avec la gestion automatique
           xcodebuild archive \
             -workspace GameLife.xcworkspace \
             -scheme GameLife \
             -sdk iphoneos \
             -configuration Release \
             -archivePath $PWD/build/GameLife.xcarchive \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
+            CODE_SIGN_STYLE=Automatic
 
       - name: 'Export app to ipa'
         env:

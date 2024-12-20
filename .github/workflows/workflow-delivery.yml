@@ -97,7 +97,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git commit -m "📝 Update version to $VERSION"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
 
   android:
     name: '🤖 Android'

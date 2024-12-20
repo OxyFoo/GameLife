@@ -1,4 +1,4 @@
-name: '🧩 iOS build & delivery'
+name: '🧩 iOS Build & Delivery'
 
 on:
   workflow_call:
@@ -44,7 +44,7 @@ jobs:
 
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          
+
           if [ ${{ inputs.environment }} == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
@@ -65,12 +65,6 @@ jobs:
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-
-          # List keychains and provisioning profiles
-          security list-keychains
-          security find-identity -v -p codesigning
-          security find-certificate -a -c "Apple Distribution: Oxy Foo (54ZUH596XX)"
-          ls ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -141,10 +135,7 @@ jobs:
           cd ios
 
           # Export the archived app to an .ipa file
-          xcodebuild \
-            -exportArchive \
-            -sdk iphoneos \
-            -allowProvisioningUpdates \
+          xcodebuild -exportArchive \
             -archivePath $PWD/build/GameLife.xcarchive \
             -exportOptionsPlist GoogleService-Info.plist \
             -exportPath $PWD/build \
@@ -208,24 +199,23 @@ jobs:
 
       - name: 'Upload to App Store'
         env:
-          ISSUER_ID: ${{ secrets.APPLE_API_APP_STORE_CONNECT_ISSUER_ID }}
-          SEND_KEY: ${{ secrets.APPLE_API_APP_STORE_CONNECT_SEND_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
         run: |
-          # Go to the ios directory
+          echo -n "${APPLE_API_PRIVATE_KEY}" | base64 --decode > private_key.p8
           cd ios/build
-
-          # Upload the .ipa to the App Store using altool
           xcrun altool --upload-app \
             -f ${FILE_IPA} \
             -t ios \
-            --apiKey "$SEND_KEY" \
-            --apiIssuer "$ISSUER_ID" \
+            --apiKey "$APPLE_API_KEY_ID" \
+            --apiIssuer "$APPLE_API_ISSUER_ID" \
+            --private-key private_key.p8 \
             --verbose
 
-          # Check if upload was successful
           if [ $? -eq 0 ]; then
             echo "APPSTORE_STATUS=success" >> $GITHUB_ENV
-            echo "Upload successful, state saved"
+            echo "Upload successful"
           else
             echo "APPSTORE_STATUS=failure" >> $GITHUB_ENV
             echo "Upload failed"

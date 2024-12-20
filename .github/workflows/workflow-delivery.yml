@@ -40,12 +40,12 @@ on:
         - minor
         - major
       whatsnew-fr:
-        description: "What's new file - French"
+        description: "What's new file - French (used for update)"
         required: false
         default: ''
         type: string
       whatsnew-en:
-        description: "What's new file - English"
+        description: "What's new file - English (used for update)"
         required: false
         default: ''
         type: string
@@ -89,7 +89,7 @@ jobs:
           NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
           echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
 
-          ./Tools/Version/version.sh $ACTION_UPDATE $WHATSNEW_FR $WHATSNEW_EN --force
+          ./Tools/Version/version.sh $ACTION_UPDATE "$WHATSNEW_FR" "$WHATSNEW_EN" --force
 
       - name: 'Commit changes'
         run: |

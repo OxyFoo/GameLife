@@ -124,6 +124,7 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath $PWD/build/GameLife.xcarchive \
+            -allowProvisioningUpdates \
             CODE_SIGN_STYLE=Automatic
 
       - name: 'Export app to ipa'

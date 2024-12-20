@@ -40,12 +40,12 @@ on:
         - minor
         - major
       whatsnew-fr:
-        description: "What's new file - French (used for update)"
+        description: "[Broken] What's new file - French (used for update)"
         required: false
         default: ''
         type: string
       whatsnew-en:
-        description: "What's new file - English (used for update)"
+        description: "[Broken] What's new file - English (used for update)"
         required: false
         default: ''
         type: string

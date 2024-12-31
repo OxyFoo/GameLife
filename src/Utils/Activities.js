@@ -21,7 +21,7 @@ const MAX_TIME_MINUTES = 72 * TIME_STEP_MINUTES; // 6h
 /** @param {number} skillID */
 function StartActivityNow(skillID) {
     const startTime = GetLocalTime();
-    const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'prev');
+    const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
 
     if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES * 2)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];

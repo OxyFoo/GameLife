@@ -11,6 +11,8 @@ import { GetDeviceIdentifiers } from 'Utils/Device';
  * @typedef {import('Managers/UserManager').default} UserManager
  */
 
+const APP_VERSION = require('../../package.json').version;
+
 class Server2 extends IUserClass {
     /** @type {UserManager} */
     #user;
@@ -63,7 +65,7 @@ class Server2 extends IUserClass {
 
     /**
      * @param {boolean} [connectAsNewUser]
-     * @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'maintenance' | 'error'>}
+     * @returns {Promise<'success' | 'already-connected' | 'not-connected' | 'maintenance' | 'update' | 'error'>}
      */
     Connect = async (connectAsNewUser = false) => {
         if (this.tcp.IsConnected()) {
@@ -82,7 +84,8 @@ class Server2 extends IUserClass {
             deviceName: device.deviceName,
             OSName: device.OSName,
             OSVersion: device.OSVersion,
-            deviceIdentifier: device.identifier
+            deviceIdentifier: device.identifier,
+            appVersion: APP_VERSION
         });
 
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {
@@ -99,6 +102,36 @@ class Server2 extends IUserClass {
             this.#user.interface.console?.AddLog('warn', 'Server is in maintenance');
             this.Disconnect();
             return 'maintenance';
+        }
+
+        if (response.result === 'update') {
+            const lang = langManager.curr['home'];
+            this.#user.interface.console?.AddLog('warn', 'App update required');
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-update-title'],
+                    message: lang['alert-update-message']
+                },
+                callback: RNExitApp.exitApp,
+                cancelable: false
+            });
+
+            this.Disconnect();
+            return 'update';
+        }
+
+        // Version is too recent, but the server is still probably compatible
+        if (response.result === 'downdate') {
+            const lang = langManager.curr['home'];
+            this.#user.interface.console?.AddLog('warn', 'App downgrade required');
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-newversion-title'],
+                    message: lang['alert-newversion-message']
+                }
+            });
         }
 
         this.#isTrusted = true;

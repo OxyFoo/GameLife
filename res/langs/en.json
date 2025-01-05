@@ -60,10 +60,10 @@
 
             "popup-responded-title": "Thanks",
             "popup-responded-message": "Thanks for your reply!",
-            "popup-claim-ox-title": "Congrats",
-            "popup-claim-ox-message": "You have won {} Ox!",
+            "popup-claim-title": "Congrats",
+            "popup-claim-premessage": "You recovered the following rewards:",
             "popup-error-title": "Error",
-            "popup-error-message": "An error has occurred, please try again later."
+            "popup-error-message": "An error has occurred, please try again later ({})."
         }
     },
 
@@ -406,8 +406,8 @@
         "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later.",
-        "alert-update-title": "Update",
-        "alert-update-message": "An update of the application is available",
+        "alert-update-title": "Update available!",
+        "alert-update-message": "Gamelife version {} is now available, you can download it from the blinds.",
         "alert-newversion-title": "Warning",
         "alert-newversion-message": "You're on the next GameLife update, this popup will be removed when the stores release it",
         "alert-exit-title": "Exit",

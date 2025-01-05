@@ -60,10 +60,10 @@
 
             "popup-responded-title": "Merci",
             "popup-responded-message": "Merci pour ta réponse !",
-            "popup-claim-ox-title": "Bravo !",
-            "popup-claim-ox-message": "Tu as gagné {} Ox !",
+            "popup-claim-title": "Bravo !",
+            "popup-claim-premessage": "Tu as récupéré les récompenses suivantes :",
             "popup-error-title": "Erreur",
-            "popup-error-message": "Une erreur est survenue, réessaye plus tard."
+            "popup-error-message": "Une erreur est survenue, réessaye plus tard ({})."
         }
     },
 
@@ -406,8 +406,8 @@
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
-        "alert-update-title": "Mise à jour",
-        "alert-update-message": "Une mise à jour de l'application est disponible",
+        "alert-update-title": "Mise à jour disponible !",
+        "alert-update-message": "La version {} de GameLife est désormais disponible, tu peux la télécharger sur les stores.",
         "alert-newversion-title": "Attention",
         "alert-newversion-message": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
         "alert-exit-title": "Quitter",

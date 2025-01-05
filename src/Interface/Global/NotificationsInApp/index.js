@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Animated, FlatList } from 'react-native';
 
 import styles from './style';
-import { NIA_Template, NIA_Separator, NIA_Empty } from './templates';
+import { NIA_Template } from './templates';
+import { RenderEmpty, RenderSeparator } from './renderUtils';
 import user from 'Managers/UserManager';
 
 import { SpringAnimation } from 'Utils/Animations';
@@ -127,8 +128,8 @@ class NotificationsInApp extends React.Component {
                         data={notifications}
                         keyExtractor={(item) => `notif-in-app-${item.timestamp}`}
                         renderItem={({ item, index }) => <NIA_Template item={item} index={index} />}
-                        ItemSeparatorComponent={NIA_Separator}
-                        ListEmptyComponent={NIA_Empty}
+                        ItemSeparatorComponent={RenderSeparator}
+                        ListEmptyComponent={RenderEmpty}
                         onTouchStart={this.backgroundPressHandler}
                         showsVerticalScrollIndicator={true}
                     />

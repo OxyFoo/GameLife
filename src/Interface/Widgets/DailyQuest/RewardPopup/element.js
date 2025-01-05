@@ -1,22 +1,18 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import IMG_CHESTS from 'Ressources/items/chests/chests';
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-
-import { Text, Icon, Button, ProgressBar } from 'Interface/Components';
+import { Text, Icon, Button, ProgressBar, Reward } from 'Interface/Components';
 import { ACTIVITY_MINUTES_PER_DAY } from 'Data/User/DailyQuests';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Types/Class/Rewards').RawReward} RawReward
  * @typedef {import('Data/User/DailyQuests').DailyQuestDay} DailyQuestDay
  * @typedef {import('Data/User/DailyQuests').DailyQuestData} DailyQuestData
  */
@@ -80,7 +76,7 @@ const DailyQuestDayItem = (props) => {
                 <Text style={styles.itemDay}>{`${langD['day']} ${currentDay}`}</Text>
 
                 {item.rewards.map((reward, index) => (
-                    <RenderReward key={`dailyquest-reward-${index}`} item={reward} />
+                    <Reward key={`dailyquest-reward-${index}`} item={reward} />
                 ))}
             </View>
 
@@ -109,30 +105,5 @@ const DailyQuestDayItem = (props) => {
         </View>
     );
 };
-
-/** @param {{ item: RawReward }} props */
-function RenderReward(props) {
-    const styleReward = {
-        ...styles.rewardItem,
-        backgroundColor: themeManager.GetColor('background')
-    };
-
-    if (props.item.Type === 'OX') {
-        return (
-            <View style={styleReward}>
-                <Image style={styles.rewardImage} source={IMG_OX} />
-                <Text style={styles.rewardValue}>{'x' + props.item.Amount.toString()}</Text>
-            </View>
-        );
-    } else if (props.item.Type === 'Chest') {
-        return (
-            <View style={styleReward}>
-                <Image style={styles.rewardImage} source={IMG_CHESTS[props.item.ChestRarity]} />
-            </View>
-        );
-    }
-
-    return null;
-}
 
 export { DailyQuestDayItem };

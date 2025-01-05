@@ -79,14 +79,16 @@ class Rewards extends IUserData {
         // Get popup content
         if (rewardsContainsOxOrTitles) {
             const rewardText = this.GetText('claimed', rewards);
-            const message = `${preMessage}\n\n${rewardText}`;
 
             // Show popup
             if (mode === 'all' || mode === 'only-popup') {
                 await new Promise((resolve) => {
                     this.#user.interface.popup?.OpenT({
                         type: 'ok',
-                        data: { title, message },
+                        data: {
+                            title,
+                            message: `${preMessage}\n\n${rewardText}`
+                        },
                         callback: resolve
                     });
                 });

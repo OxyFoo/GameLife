@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated, View } from 'react-native';
 
-import styles from '../style';
+import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 

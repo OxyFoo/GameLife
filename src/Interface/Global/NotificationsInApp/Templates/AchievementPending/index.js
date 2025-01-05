@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import styles from '../style';
+import styles from './style';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
@@ -16,7 +16,7 @@ import { Button, Text } from 'Interface/Components';
  * @param {object} props
  * @param {NotificationInAppAchievements} props.notif
  * @param {number} props.index
- * @returns {JSX.Element}
+ * @returns {JSX.Element | null}
  */
 function NIA_AchievementPending({ notif }) {
     const lang = langManager.curr['notifications']['in-app'];
@@ -24,13 +24,17 @@ function NIA_AchievementPending({ notif }) {
 
     const achievement = dataManager.achievements.GetByID(notif.data.achievementID);
     if (achievement === null) {
-        return <></>;
+        return null;
     }
 
     const achievementTitle = langManager.GetText(achievement.Name);
 
     const claimHandle = async () => {
         const langAch = langManager.curr['achievements'];
+
+        if (loading) {
+            return;
+        }
 
         // Claim the achievement
         setLoading(true);
@@ -55,7 +59,6 @@ function NIA_AchievementPending({ notif }) {
                 'error',
                 `[NIA_AchievementPending] Failed to execute rewards for achievement ${notif.data.achievementID}`
             );
-            this.claimAchievementLoading = false;
             return;
         }
 

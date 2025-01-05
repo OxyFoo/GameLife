@@ -5,6 +5,7 @@ import langManager from 'Managers/LangManager';
 
 import TCP from 'Utils/TCP';
 import { CheckDate } from 'Utils/DateCheck';
+import { OpenStore } from 'Utils/Store';
 import { GetDeviceIdentifiers } from 'Utils/Device';
 
 /**
@@ -106,14 +107,18 @@ class Server2 extends IUserClass {
 
         if (response.result === 'update') {
             const lang = langManager.curr['home'];
+            const version = response.version ?? '-unknown-';
+
             this.#user.interface.console?.AddLog('warn', 'App update required');
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: lang['alert-update-title'],
-                    message: lang['alert-update-message']
+                    message: lang['alert-update-message'].replace('{}', version)
                 },
-                callback: RNExitApp.exitApp,
+                callback: () => {
+                    OpenStore().then(RNExitApp.exitApp);
+                },
                 cancelable: false
             });
 

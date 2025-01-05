@@ -142,8 +142,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load local user data
     await user.LoadLocal();
 
-    //await dataManager.LocalLoad(user);
-
     // Load app data
     await dataManager.LoadLocal(user);
     if (user.server2.IsAuthenticated()) {
@@ -206,7 +204,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // TODO: Fix ads
     // Load ads
-    const ads = dataManager.ads.Get();
+    //const ads = dataManager.ads.Get();
     //user.ads.LoadAds(ads);
 
     // Check if ads are available

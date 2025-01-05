@@ -13,7 +13,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {string} [label] Title of the input
  * @property {string} [initialText] Initial text of the input
  * @property {number} [maxLength] Maximum length of the input
- * @property {boolean} [multiline] If true, the input is multiline
+ * @property {boolean} [multiline] If true, the input is multiline // TODO: ⚠️ Fix this
  * @property {(text: string | null) => void} [callback] Callback called when the input is validated or closed, with the text or null
  * @property {(text: string) => void} [callbackStream] Callback called when the input is changed, with the text
  */

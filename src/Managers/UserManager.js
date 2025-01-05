@@ -81,6 +81,11 @@ class UserManager {
             this.multiplayer,
             this.todos
         ];
+
+        // Mount classes
+        this.experience.onMount();
+        this.dailyQuest.onMount();
+        this.notificationsInApp.Initialize();
     }
 
     /**
@@ -102,10 +107,6 @@ class UserManager {
     tempMailSent = null;
 
     StartTimers() {
-        this.experience.onMount();
-        this.dailyQuest.onMount();
-        this.notificationsInApp.Initialize();
-
         // Check achievements every 20 seconds
         this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);

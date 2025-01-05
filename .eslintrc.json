@@ -1,13 +1,17 @@
 {
     "$schema": "https://json.schemastore.org/eslintrc",
     "root": true,
-    "extends": "@react-native",
     "env": {
-      "node": true
+        "node": true
     },
+    "extends": [
+        "@react-native",
+        "plugin:prettier/recommended"
+    ],
     "plugins": [
         "react",
-        "react-native"
+        "react-native",
+        "prettier"
     ],
     "ignorePatterns": [
         "node_modules/",
@@ -40,12 +44,11 @@
             "warn",
             {
                 "singleQuote": true,
-                "parser": "flow",
                 "tabWidth": 4,
                 "jsxSingleQuote": true,
-                "avoidEscape": true,
                 "trailingComma": "none",
-                "printWidth": 120
+                "printWidth": 120,
+                "bracketSpacing": true
             }
         ]
     }

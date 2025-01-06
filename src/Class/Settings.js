@@ -166,7 +166,6 @@ class Settings extends IUserClass {
     /** @param {MusicLinksType} newLinks */
     LoadMusicLinks(newLinks) {
         for (const K in newLinks) {
-            // eslint-disable-next-line prettier/prettier
             const key = /** @type {keyof MusicLinksType} */ (K);
             if (this.musicLinks.hasOwnProperty(key)) {
                 this.musicLinks[key] = newLinks[key];

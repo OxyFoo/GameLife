@@ -68,11 +68,9 @@ class Activities extends IUserData {
      * @description Contain all activities, updated when adding, editing or removing
      * @type {DynamicVar<(Activity | ActivitySaved)[]>}
      */
-    // eslint-disable-next-line prettier/prettier
     allActivities = new DynamicVar(/** @type {(Activity | ActivitySaved)[]} */ ([]));
 
     /** @type {DynamicVar<CurrentActivity | null>} */
-    // eslint-disable-next-line prettier/prettier
     currentActivity = new DynamicVar(/** @type {CurrentActivity | null} */ (null));
 
     #cache_get = {
@@ -440,7 +438,6 @@ class Activities extends IUserData {
      * @param {T} [alreadySaved=false] If false, save activity in UNSAVED_activities
      * @returns {{ status: AddStatus, activity: Activity | null }}
      */
-    // eslint-disable-next-line prettier/prettier
     Add(newActivity, alreadySaved = /** @type {T} */ (false)) {
         newActivity.timezone ||= GetTimeZone();
         newActivity.addedTime ||= GetLocalTime();
@@ -457,7 +454,6 @@ class Activities extends IUserData {
 
         // Add activity
         if (alreadySaved) {
-            // eslint-disable-next-line prettier/prettier
             const newSavedActivity = /** @type {ActivitySaved} */ (newActivity);
             this.#SAVED_activities.push(newSavedActivity);
         } else {
@@ -512,9 +508,7 @@ class Activities extends IUserData {
 
         // Activity edited is already saved
         if (isSavedActivity) {
-            // eslint-disable-next-line prettier/prettier
             const _activity = /** @type {ActivitySaved} */ (activity);
-            // eslint-disable-next-line prettier/prettier
             const _newActivity = /** @type {ActivitySaved} */ (bigEdit ? editedActivity : newActivity);
 
             // Activity does not exist
@@ -536,9 +530,7 @@ class Activities extends IUserData {
             }
         } else {
             // Activity edited is not saved
-            // eslint-disable-next-line prettier/prettier
             const _activity = /** @type {Activity} */ (activity);
-            // eslint-disable-next-line prettier/prettier
             const _newActivity = /** @type {Activity} */ (bigEdit ? editedActivity : newActivity);
 
             const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, _activity);
@@ -565,7 +557,6 @@ class Activities extends IUserData {
         const isSavedActivity = Object.keys(activity).includes('ID');
 
         if (isSavedActivity) {
-            // eslint-disable-next-line prettier/prettier
             const _activity = /** @type {ActivitySaved} */ (activity);
             const indexActivity = this.#SAVED_activities.findIndex((act) => act.ID === _activity.ID);
             if (indexActivity !== -1 && !this.#UNSAVED_deletions.includes(_activity.ID)) {

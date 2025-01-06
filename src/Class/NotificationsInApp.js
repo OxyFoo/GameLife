@@ -11,7 +11,6 @@ class NotificationsInApp extends IUserClass {
     #user;
 
     /** @type {DynamicVar<NotificationInApp[]>} */
-    // eslint-disable-next-line prettier/prettier
     notifications = new DynamicVar(/** @type {NotificationInApp[]} */ ([]));
 
     /** @type {NotificationInApp[]} */

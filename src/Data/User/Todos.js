@@ -49,7 +49,6 @@ class Todos extends IUserData {
      * @description All todos (saved and unsaved)
      * @type {DynamicVar<Todo[]>}
      */
-    // eslint-disable-next-line prettier/prettier
     todos = new DynamicVar(/** @type {Todo[]} */ ([]));
 
     #token = 0;
@@ -340,7 +339,6 @@ class Todos extends IUserData {
         let refToNewTodo = oldTodo;
 
         if (isSavedActivity) {
-            // eslint-disable-next-line prettier/prettier
             const _oldTodo = /** @type {TodoSaved} */ (oldTodo);
 
             /** @type {TodoSaved} */
@@ -410,7 +408,6 @@ class Todos extends IUserData {
         const isSavedTodo = Object.keys(todo).includes('ID');
 
         if (isSavedTodo) {
-            // eslint-disable-next-line prettier/prettier
             const _todo = /** @type {TodoSaved} */ (todo);
             const index = this.#getIndex(this.#SAVED_todos, todo);
             if (index === null) {

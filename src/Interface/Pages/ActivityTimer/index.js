@@ -28,7 +28,6 @@ class ActivityTimer extends BackActivityTimer {
         const bt_cancel = lang['timer-cancel'];
         const bt_complete = lang['timer-complete'];
 
-        // eslint-disable-next-line prettier/prettier
         const musicKeys = /** @type {MusicLinksKeys[]} */ (Object.keys(user.settings.musicLinks));
 
         return (

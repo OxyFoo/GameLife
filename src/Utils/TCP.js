@@ -14,9 +14,6 @@ const TCP_SETTINGS = {
     port: Config.VPS_PORT
 };
 
-/** @type {ConnectionState} */
-const INITIAL_STATE = 'idle';
-
 const SERVER_TIMEOUT_MS = __DEV__ ? 10000 : 5000;
 
 class TCP {
@@ -24,7 +21,7 @@ class TCP {
     socket = null;
 
     /** @type {DynamicVar<ConnectionState>} */
-    state = new DynamicVar(INITIAL_STATE);
+    state = new DynamicVar(/** @type {ConnectionState} */ ('idle'));
 
     /**
      * @description Callback => If True is returned, the callback will be removed

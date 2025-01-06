@@ -25,7 +25,6 @@ class Inventory extends IUserData {
      * @description List of title IDs owned by the user
      * @type {DynamicVar<number[]>}
      */
-    // eslint-disable-next-line prettier/prettier
     titleIDs = new DynamicVar(/** @type {number[]} */ ([]));
 
     /**

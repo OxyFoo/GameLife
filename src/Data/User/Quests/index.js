@@ -56,7 +56,6 @@ class Quests extends IUserData {
      * @description All quests (saved and unsaved)
      * @type {DynamicVar<Quest[]>}
      */
-    // eslint-disable-next-line prettier/prettier
     allQuests = new DynamicVar(/** @type {Quest[]} */ ([]));
 
     /** @type {number} */
@@ -406,13 +405,9 @@ class Quests extends IUserData {
         const isSavedQuest = Object.keys(oldQuest).includes('ID');
 
         if (isSavedQuest) {
-            // eslint-disable-next-line prettier/prettier
             const _quest = /** @type {QuestSaved} */ (oldQuest);
-
-            // eslint-disable-next-line prettier/prettier
             const _newQuest = /** @type {QuestSaved} */ (newQuest);
 
-            // eslint-disable-next-line prettier/prettier
             if (!newQuest.hasOwnProperty('ID') || /** @type {QuestSaved} */ (newQuest).ID !== _quest.ID) {
                 return 'wrong-id';
             }
@@ -455,7 +450,6 @@ class Quests extends IUserData {
 
         // Quest already saved
         if (isSavedQuest) {
-            // eslint-disable-next-line prettier/prettier
             const _quest = /** @type {QuestSaved} */ (quest);
 
             const indexUnsavedQuest = this.#SAVED_quests.findIndex((q) => q.ID === _quest.ID);

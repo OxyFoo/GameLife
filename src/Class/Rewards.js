@@ -239,7 +239,6 @@ class Rewards extends IUserData {
                         const ownedTitles = this.#user.inventory.titleIDs.Get();
                         alreadyOwned = ownedTitles.includes(titleID);
                     } else if (claimState === 'claimed') {
-                        // eslint-disable-next-line prettier/prettier
                         const r = /** @type {Extract<Reward, { Type: 'Title' }>} */ (reward);
                         alreadyOwned = r.ConvertedIntoOx;
                     }
@@ -264,7 +263,6 @@ class Rewards extends IUserData {
                         break;
                     }
 
-                    // eslint-disable-next-line prettier/prettier
                     const r = /** @type {Extract<RawReward, { Type: 'Item' }>} */ (reward);
 
                     const item = dataManager.items.GetByID(r.ItemID);

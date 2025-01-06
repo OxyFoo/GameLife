@@ -327,6 +327,7 @@
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",
+        "create-skill": "Create a skill",
         "swiper-gpt": "ZapGPT",
         "add-commentary": "Add a commentary",
 
@@ -346,6 +347,8 @@
         "alert-error-not-exist-message": "This activity doesn't seem to exist, try again later.",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later ({}).",
+        "alert-skill-already-exist-title": "Error",
+        "alert-skill-already-exist-message": "This skill already exists, please choose another one.",
 
         "timer-launch": "Launch time:",
         "timer-gain": "Current gains: {}",
@@ -363,6 +366,11 @@
         "display-activity-button2": "Add another activity",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
+
+        "skill-add-title": "Add a skill",
+        "skill-add-message": "Here is your skill to add:\n{}\n\n- If you add this activity it will be visible and usable by all the other players\n- Once the competence has been added, to delete it it will be necessary to contact the developers via the discord\n- If you want to modify or add a skill with your own points district, go through the report page or the Discord server\n\nDo you want to add this skill now?",
+        "alert-skill-added-title": "Added competence",
+        "alert-skill-added-message": "The competence has been added!",
 
         "activity-zap-comment": "Added by Zap"
     },

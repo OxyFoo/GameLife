@@ -177,6 +177,10 @@ class AddActivityPage1 extends BackActivityPage1 {
         return (
             <View style={styles.emptyList}>
                 <Text style={styles.emptyListText}>{lang['empty-activity']}</Text>
+
+                <Button style={styles.createActivityButton} appearance='outline' onPress={this.createSkill}>
+                    {lang['create-skill']}
+                </Button>
             </View>
         );
     };

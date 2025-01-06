@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, ScrollView, FlatList } from 'react-native';
 
 import styles from './style';
 import StartHelp from './help';
@@ -13,7 +13,7 @@ import { PageHeader } from 'Interface/Widgets';
 class Report extends BackReport {
     render() {
         const lang = langManager.curr['report'];
-        const { selectedType, reportHeight, sending } = this.state;
+        const { selectedType, sending } = this.state;
 
         return (
             <View style={styles.page} onTouchStart={this.keyboardDismiss}>
@@ -28,16 +28,16 @@ class Report extends BackReport {
                     onSelect={this.selectType}
                 />
 
-                <View style={[styles.container, { minHeight: reportHeight }]} onLayout={this.onLayout}>
+                <ScrollView style={styles.container}>
                     {selectedType === 0 && this.renderActivity()}
-                    {selectedType === 1 && this.renderSuggest()}
-                    {selectedType === 2 && this.renderBug()}
+                    {selectedType === 1 && this.renderBug()}
+                    {selectedType === 2 && this.renderSuggest()}
                     {selectedType === 3 && this.renderMessage()}
 
                     <Button onPress={this.sendData} loading={sending}>
                         {lang['button-send']}
                     </Button>
-                </View>
+                </ScrollView>
             </View>
         );
     }

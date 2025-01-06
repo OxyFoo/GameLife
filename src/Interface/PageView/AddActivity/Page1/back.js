@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated } from 'react-native';
 
 import styles from './style';
+import { CreateSkill } from './addSkill';
 import { GetRecentSkills, CategoryToItem, SkillToItem } from '../types';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
@@ -271,6 +272,19 @@ class BackActivityPage1 extends React.Component {
     /** @param {number} ID */
     openSkill = (ID) => {
         user.interface.ChangePage('skill', { args: { skillID: ID } });
+    };
+
+    createSkill = () => {
+        const maxSkillNameLength = 64;
+        user.interface.screenInput?.Open({
+            label: langManager.curr['activity']['create-skill'],
+            initialText: this.state.skillSearch.trim().slice(0, maxSkillNameLength),
+            maxLength: maxSkillNameLength,
+            callback: (text) => {
+                if (!text) return;
+                CreateSkill(text);
+            }
+        });
     };
 }
 

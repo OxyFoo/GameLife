@@ -86,6 +86,9 @@ const styles = StyleSheet.create({
     emptyListText: {
         textAlign: 'center',
         fontSize: 24
+    },
+    createActivityButton: {
+        marginTop: 24
     }
 });
 

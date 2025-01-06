@@ -327,6 +327,7 @@
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
+        "create-skill": "Créer une compétence",
         "swiper-gpt": "ZapGPT",
         "add-commentary": "Ajouter un commentaire",
 
@@ -346,6 +347,8 @@
         "alert-error-not-exist-message": "Il semblerait que cette activité n'existe pas, réessaye plus tard.",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
+        "alert-skill-already-exist-title": "Erreur",
+        "alert-skill-already-exist-message": "Il semble que cette compétence existe déjà, réessaye avec une autre.",
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains actuel: {}",
@@ -363,6 +366,11 @@
         "display-activity-button2": "Ajouter une autre activité",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
+
+        "skill-add-title": "Ajouter une compétence",
+        "skill-add-message": "Voici ta compétence à ajouter:\n{}\n\n- Si tu ajoutes cette activité elle sera visible et utilisable par tous les autres joueurs\n- Une fois la compétence ajouté, pour la supprimer il faudra contacter les développeurs via le discord\n- Si tu veux modifier ou ajouter une compétence avec ta propre distrubution des points, passe par la page des report ou par le serveur discord\n\nVeux-tu ajouter cette compétence maintenant ?",
+        "alert-skill-added-title": "Compétence ajoutée",
+        "alert-skill-added-message": "La compétence a bien été ajoutée !",
 
         "activity-zap-comment": "Ajouté par Zap"
     },

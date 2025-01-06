@@ -7,6 +7,7 @@ import { IUserData } from 'Types/Interface/IUserData';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Global/Rarities').Rarities} Rarities
  * @typedef {import('Types/Class/Rewards').Reward} Reward
+ * @typedef {Reward & { Type: 'Title' }} TitleReward
  * @typedef {import('Types/Class/Rewards').RawReward} RawReward
  * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
@@ -38,10 +39,8 @@ class Rewards extends IUserData {
         this.#ExecRewardOx(oxAmount, newTotalOx);
 
         // Update titles
-        const titlesIDs = rewards
-            .map((reward) => (reward.Type === 'Title' ? reward.TitleID : 0))
-            .filter((titleID) => titleID !== 0);
-        this.#ExecRewardTitle(titlesIDs);
+        const titles = rewards.filter((reward) => reward.Type === 'Title');
+        this.#ExecRewardTitle(titles);
 
         // Update items
         /** @type {Extract<Reward, { Type: 'Item' | 'Chest' }>[]} */
@@ -140,12 +139,22 @@ class Rewards extends IUserData {
 
     /**
      * Reward title
-     * @param {number[]} titleIDs
+     * @param {TitleReward[]} titles
      */
-    #ExecRewardTitle = (titleIDs) => {
-        for (let i = 0; i < titleIDs.length; i++) {
-            const titleID = titleIDs[i];
-            this.#user.inventory.AddTitle(titleID);
+    #ExecRewardTitle = (titles) => {
+        for (let i = 0; i < titles.length; i++) {
+            const titleReward = titles[i];
+            const title = dataManager.titles.GetByID(titleReward.TitleID);
+            if (title === null) {
+                this.#user.interface.console?.AddLog('error', `[Rewards] Error while get title (ID: ${titleReward})`);
+                continue;
+            }
+
+            if (titleReward.ConvertedIntoOx) {
+                this.#ExecRewardOx(title.Value, null);
+            } else {
+                this.#user.inventory.AddTitle(title.ID);
+            }
         }
     };
 

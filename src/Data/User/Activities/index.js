@@ -159,7 +159,8 @@ class Activities extends IUserData {
         if (typeof data.deletions !== 'undefined') this.#UNSAVED_deletions = data.deletions;
         if (typeof data.current !== 'undefined') this.currentActivity.Set(data.current);
         if (typeof data.token !== 'undefined') this.#token = data.token;
-        this.allActivities.Set(this.Get());
+        this.#user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities loaded`);
+        this.allActivities.Set(this.Get(true));
     };
 
     /** @returns {SaveObject_Activities} */

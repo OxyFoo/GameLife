@@ -93,6 +93,7 @@ class Experience extends IUserClass {
 
     UpdateExperience = () => {
         const activities = this.#user.activities.GetUseful(true);
+        this.#user.interface?.console?.AddLog('info', 'UpdateExperience', activities.length);
 
         let XP = 0;
 

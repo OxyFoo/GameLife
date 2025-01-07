@@ -368,7 +368,18 @@
         "display-fail-button": "Retour vers l'accueil",
 
         "skill-add-title": "Ajouter une compétence",
-        "skill-add-message": "Voici ta compétence à ajouter:\n{}\n\n- Si tu ajoutes cette activité elle sera visible et utilisable par tous les autres joueurs\n- Une fois la compétence ajouté, pour la supprimer il faudra contacter les développeurs via le discord\n- Si tu veux modifier ou ajouter une compétence avec ta propre distrubution des points, passe par la page des report ou par le serveur discord\n\nVeux-tu ajouter cette compétence maintenant ?",
+        "skill-add-informations": [
+            "Si tu ajoutes cette activité elle sera visible et utilisable par tous les autres joueurs",
+            "Pour modifier ou supprimer une compétence il faudra contacter les développeurs via Discord",
+            "Si la compétence est incorrecte ou ne respecte pas les conditions de l'application, elle sera supprimée ainsi que les activités associées"
+        ],
+        "skill-add-confirmation": "Veux-tu ajouter cette compétence maintenant ?",
+        "skill-add-share-username": "Afficher mon pseudo dans la page de cette compétence",
+
+        "alert-skill-feature-disabled-title": "Fonctionnalité désactivée",
+        "alert-skill-feature-disabled-message": "La fonctionnalité de compétence est désactivée pour le moment, réessaye plus tard.",
+        "alert-skill-cant-generate-title": "Erreur",
+        "alert-skill-cant-generate-message": "Impossible de générer cette compétence, elle paraît être incorrecte ou ne respecte pas les conditions de l'applications, essaye avec une autre.",
         "alert-skill-added-title": "Compétence ajoutée",
         "alert-skill-added-message": "La compétence a bien été ajoutée !",
 

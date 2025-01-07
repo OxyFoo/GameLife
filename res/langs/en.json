@@ -368,7 +368,18 @@
         "display-fail-button": "Back home",
 
         "skill-add-title": "Add a skill",
-        "skill-add-message": "Here is your skill to add:\n{}\n\n- If you add this activity it will be visible and usable by all the other players\n- Once the competence has been added, to delete it it will be necessary to contact the developers via the discord\n- If you want to modify or add a skill with your own points district, go through the report page or the Discord server\n\nDo you want to add this skill now?",
+        "skill-add-informations": [
+            "If you add this activity it will be visible and usable by all the other players",
+            "To modify or delete a skill you will have to contact the developers via Discord",
+            "If the competence is incorrect or does not comply with the conditions of the application, it will be deleted as well as the associated activities"
+        ],
+        "skill-add-confirmation": "Do you want to add this skill now?",
+        "skill-add-share-username": "Show my username on the page of this skill",
+
+        "alert-skill-feature-disabled-title": "Functionality deactivated",
+        "alert-skill-feature-disabled-message": "The skill functionality is deactivated for the moment, again again.",
+        "alert-skill-cant-generate-title": "Error",
+        "alert-skill-cant-generate-message": "Impossible to generate this skill, it seems to be incorrect or does not respect the conditions of the applications, try with another.",
         "alert-skill-added-title": "Added competence",
         "alert-skill-added-message": "The competence has been added!",
 

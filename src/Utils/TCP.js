@@ -23,6 +23,9 @@ class TCP {
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar(/** @type {ConnectionState} */ ('idle'));
 
+    /** @type {string | null} */
+    #lastError = null;
+
     /**
      * @description Callback => If True is returned, the callback will be removed
      * @type {Record<string, (data: TCPServerRequest) => boolean | Promise<boolean>>}
@@ -86,6 +89,10 @@ class TCP {
         this.socket = null;
     };
 
+    GetLastError = () => {
+        return this.#lastError;
+    };
+
     /** @param {Event} _event */
     #onOpen = (_event) => {
         this.state.Set('connected');
@@ -129,8 +136,11 @@ class TCP {
         // }
     };
 
-    /** @param {Event} _event */
-    #onError = (_event) => {
+    /** @param {Event} event */
+    #onError = (event) => {
+        // @ts-ignore - The error message is a string (why is not referenced?)
+        this.#lastError = event?.message || 'Unknown error';
+
         this.state.Set('error');
         this.Disconnect();
     };

@@ -4,6 +4,7 @@ import { Svg, Path, Text as TextSVG, Defs, LinearGradient, Stop } from 'react-na
 
 import StreakChartBack from './back';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Text } from 'Interface/Components';
 
@@ -51,7 +52,7 @@ class StreakChart extends StreakChartBack {
                         <Path
                             d={this.state.backgroundProgressBar}
                             fill='none'
-                            stroke='#9095FF3D'
+                            stroke={themeManager.GetColor('main1', { opacity: 0.24 })}
                             strokeWidth={this.props.strokeWidth}
                             strokeLinecap='round'
                             transform={`rotate(270 ${this.props.size / 2} ${this.props.size / 2})`}

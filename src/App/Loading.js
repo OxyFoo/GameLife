@@ -1,6 +1,7 @@
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
 //import Notifications from 'Utils/Notifications';
@@ -31,6 +32,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load important data
     await user.settings.IndependentLoad();
     const email = user.settings.email;
+
+    // Apply theme variation
+    themeManager.SetVariant(user.settings.themeVariant);
 
     // Connect to the server TCP
     const isNewUser = user.settings.email === '';

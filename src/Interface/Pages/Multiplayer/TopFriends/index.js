@@ -88,7 +88,14 @@ const TopFriends = ({ style, friends }) => {
                     onPress={() => handleFriendPress(friends[0])}
                     enabled={username1 !== ''}
                 >
-                    <Gradient style={styles.friendTopMiddleGradient} colors={['#9095FF73', '#9095FF1F']} angle={180}>
+                    <Gradient
+                        style={styles.friendTopMiddleGradient}
+                        colors={[
+                            themeManager.GetColor('main1', { opacity: 0.45 }),
+                            themeManager.GetColor('main1', { opacity: 0.12 })
+                        ]}
+                        angle={180}
+                    >
                         <View style={styles.friendTopView}>
                             {/** Avatar */}
                             <View style={[styles.friendTopFrame, styleFrame]}>

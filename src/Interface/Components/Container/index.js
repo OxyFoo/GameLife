@@ -58,7 +58,13 @@ class Container extends ContainerBack {
                 iconAngle={iconAngle}
                 onPress={this.onChangeState}
             >
-                <Gradient style={styles.headerGradient} colors={['#9095FF73', '#9095FF26']}>
+                <Gradient
+                    style={styles.headerGradient}
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.15 })
+                    ]}
+                >
                     <Text containerStyle={styles.textRollableHeader} color={textcolor}>
                         {text}
                     </Text>
@@ -77,7 +83,13 @@ class Container extends ContainerBack {
                 color='transparent'
                 pointerEvents='none'
             >
-                <Gradient style={styles.headerGradient} colors={['#9095FF73', '#9095FF26']}>
+                <Gradient
+                    style={styles.headerGradient}
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.15 })
+                    ]}
+                >
                     <Text color={textcolor}>{text}</Text>
 
                     {(icon === null && <></>) || (

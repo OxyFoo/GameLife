@@ -10,6 +10,15 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {import('Types/Global/Rarities').Rarities} Rarities
  */
 
+const THEME_VARIANTS_NAMES = ['Défaut', 'Moderne', 'Analogique', 'Tons Naturels', 'Dynamique'];
+const THEME_VARIANTS = [
+    ['#9095FF', '#DBA1FF', '#8CF7FF'],
+    ['#A1B2FF', '#D6A1FF', '#FFE9A1'],
+    ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
+    ['#A1FFC3', '#A1DBFF', '#FFA1A1'],
+    ['#FF8CCF', '#FFDB8C', '#8CFFBF']
+];
+
 class ThemeManager {
     /**
      * Default value
@@ -172,6 +181,23 @@ class ThemeManager {
 
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
+
+    GetVariants = () => {
+        return THEME_VARIANTS_NAMES.map((name, index) => ({
+            key: index,
+            value: name
+        }));
+    };
+
+    /** @param {number} index */
+    SetVariant = (index) => {
+        const variant = THEME_VARIANTS[index];
+        const [color1, color2, color3] = variant;
+
+        THEMES.Main.Color.main1 = color1;
+        THEMES.Main.Color.main2 = color2;
+        THEMES.Main.Color.main3 = color3;
+    };
 }
 
 const themeManager = new ThemeManager();

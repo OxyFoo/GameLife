@@ -38,6 +38,8 @@ class Settings extends IUserClass {
     morningNotifications = true;
     eveningNotifications = true;
 
+    themeVariant = 0;
+
     musicLinks = DEFAULT_MUSIC_LINKS;
 
     Clear = () => {
@@ -48,6 +50,8 @@ class Settings extends IUserClass {
 
         this.morningNotifications = true;
         this.eveningNotifications = true;
+
+        this.themeVariant = 0;
     };
 
     IndependentLoad = async () => {
@@ -77,6 +81,7 @@ class Settings extends IUserClass {
             this.eveningNotifications = settings.eveningNotifications;
         }
         if (typeof settings.musicLinks !== 'undefined') this.musicLinks = settings.musicLinks;
+        if (typeof settings.themeVariant !== 'undefined') this.themeVariant = settings.themeVariant;
 
         if (debugIndex) {
             this.user.interface.console?.EditLog(debugIndex, 'same', 'Settings data: local load success');
@@ -96,7 +101,8 @@ class Settings extends IUserClass {
             questHeatMapIndex: this.questHeatMapIndex,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
-            musicLinks: this.musicLinks
+            musicLinks: this.musicLinks,
+            themeVariant: this.themeVariant
         };
 
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local saving...');

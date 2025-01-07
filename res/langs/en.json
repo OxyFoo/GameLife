@@ -7,6 +7,9 @@
     },
 
     "notifications": {
+        "title": "General notifications",
+        "notif-user": "User notifications",
+
         "morning": {
             "name": "Morning notifications",
             "title": "GameLife"
@@ -694,6 +697,7 @@
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-report": "Report",
+        "input-beta": "Beta",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",

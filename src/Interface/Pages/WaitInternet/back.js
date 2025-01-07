@@ -30,7 +30,7 @@ class BackWaitinternet extends PageBase {
     };
 
     goToWebsite = () => {
-        Linking.openURL('https://oxyfoo.com');
+        Linking.openURL('https://oxyfoo.fr');
     };
 }
 

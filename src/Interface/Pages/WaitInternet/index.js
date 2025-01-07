@@ -21,7 +21,7 @@ class Waitinternet extends BackWaitinternet {
                         {textWait}
                     </Text>
                     <Text style={styles.link} onPress={this.goToWebsite} color='main1'>
-                        oxyfoo.com
+                        oxyfoo.fr
                     </Text>
                 </View>
 

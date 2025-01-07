@@ -26,12 +26,14 @@ class BackAbout extends PageBase {
     InstaPress = () => Linking.openURL('https://www.instagram.com/pierre_mrsaaaa/');
     DiscordPress = () => Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
     GamelifePress = () => {
-        const websiteAvailableLang = ['fr', 'en'];
-        let langKey = 'fr';
-        if (!websiteAvailableLang.includes(langManager.currentLangageKey)) {
-            langKey = langManager.currentLangageKey;
-        }
-        Linking.openURL(`https://${langKey}.oxyfoo.com`);
+        // TODO: Manage langages for the website
+        // const websiteAvailableLang = ['fr', 'en'];
+        // let langKey = 'fr';
+        // if (!websiteAvailableLang.includes(langManager.currentLangageKey)) {
+        //     langKey = langManager.currentLangageKey;
+        // }
+
+        Linking.openURL(`https://oxyfoo.fr`);
     };
 
     onBackPress = () => user.interface.BackHandle();

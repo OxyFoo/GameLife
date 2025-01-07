@@ -4,9 +4,9 @@ import { Linking, View } from 'react-native';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Button, CheckBox, Text } from 'Interface/Components';
-import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('Types/Data/App/Skills').Skill} Skill
@@ -115,12 +115,11 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
         setShareUsername(!shareUsername);
     };
 
-    const valid = () => {
+    const valid = async () => {
         setLoading(true);
-        AddSkill(encryptedSkill, shareUsername).then(() => {
-            setLoading(false);
-            ClosePopup();
-        });
+        const skillAdded = await AddSkill(encryptedSkill, shareUsername);
+        setLoading(false);
+        user.interface.popup?.Close(skillAdded ? 'success' : 'close');
     };
 
     return (
@@ -185,6 +184,7 @@ async function ClosePopup() {
 /**
  * @param {string} encryptedSkill
  * @param {boolean} shareUsername
+ * @returns {Promise<boolean>}
  */
 async function AddSkill(encryptedSkill, shareUsername) {
     const lang = langManager.curr['activity'];
@@ -197,7 +197,7 @@ async function AddSkill(encryptedSkill, shareUsername) {
 
     if (response === 'not-sent' || response === 'timeout' || response === 'interrupted') {
         user.interface.console?.AddLog('error', `[AddSkill] Skill addition failed: ${encryptedSkill} (${response})`);
-        return;
+        return false;
     }
 
     if (response.status !== 'add-skill' || response.result === 'error') {
@@ -209,7 +209,7 @@ async function AddSkill(encryptedSkill, shareUsername) {
                 message: lang['alert-error-message'].replace('{}', 'add-skill-error')
             }
         });
-        return;
+        return false;
     }
 
     if (response.result === 'skill-already-exists') {
@@ -220,9 +220,10 @@ async function AddSkill(encryptedSkill, shareUsername) {
                 message: lang['alert-skill-already-exist-message']
             }
         });
-        return;
+        return false;
     }
 
+    // Show success message
     user.interface.popup?.OpenT({
         type: 'ok',
         data: {
@@ -230,6 +231,8 @@ async function AddSkill(encryptedSkill, shareUsername) {
             message: lang['alert-skill-added-message']
         }
     });
+
+    return true;
 }
 
 export { CreateSkill };

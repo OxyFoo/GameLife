@@ -284,9 +284,21 @@ class BackActivityPage1 extends React.Component {
             initialText: this.state.skillSearch.trim().slice(0, maxSkillNameLength),
             maxLength: maxSkillNameLength,
             callback: (text) => {
-                if (!text) return;
-                CreateSkill(text).then(() => {
+                if (!text) {
                     this.setState({ addSkillLoading: false });
+                    return;
+                }
+
+                CreateSkill(text).then((result) => {
+                    this.setState({ addSkillLoading: false }, async () => {
+                        if (result === 'success') {
+                            await dataManager.LoadOnline(user);
+                            this.allSkillsItems = dataManager.skills
+                                .Get()
+                                .skills.map((skill) => SkillToItem(skill, this.selectSkill));
+                            this.refreshSkills(text);
+                        }
+                    });
                 });
             }
         });

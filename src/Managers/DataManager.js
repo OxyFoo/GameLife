@@ -240,14 +240,14 @@ class DataManager {
             this.quotes.Load(response.data.quotes);
         }
         if (
-            response.data.skills !== null &&
-            response.data.skillIcons !== null &&
+            response.data.skills !== null ||
+            response.data.skillIcons !== null ||
             response.data.skillCategories !== null
         ) {
             this.skills.Load({
-                skills: response.data.skills,
-                skillIcons: response.data.skillIcons,
-                skillCategories: response.data.skillCategories
+                skills: response.data.skills ?? undefined,
+                skillIcons: response.data.skillIcons ?? undefined,
+                skillCategories: response.data.skillCategories ?? undefined
             });
         }
         if (response.data.titles !== null) {

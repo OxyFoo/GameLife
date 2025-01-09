@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, View } from 'react-native';
+import { FlatList, Linking, View } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
@@ -27,6 +27,13 @@ async function CreateSkill(skillName) {
 
     if (response === 'not-sent' || response === 'timeout' || response === 'interrupted') {
         user.interface.console?.AddLog('error', `[CreateSkill] Skill creation failed: ${skillName} (${response})`);
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-error-title'],
+                message: lang['alert-error-message'].replace('{}', response)
+            }
+        });
         return;
     }
 
@@ -125,10 +132,26 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
     return (
         <View>
             <Text style={styles.title}>{lang['skill-add-title']}</Text>
+
             <Text style={styles.skillTitle}>{langManager.GetText(generatedSkill.Name)}</Text>
-            <Text style={styles.details} color='secondary'>
-                {skillDetails}
-            </Text>
+
+            <View style={styles.detailsFlatList}>
+                <FlatList
+                    data={user.experience.statsKey}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item }) =>
+                        generatedSkill.Stats[item] === 0 ? null : (
+                            <Text style={styles.details} color='secondary'>
+                                {langStats[item]}: {generatedSkill.Stats[item]}
+                            </Text>
+                        )
+                    }
+                    numColumns={2}
+                    columnWrapperStyle={styles.columnWrapper}
+                    contentContainerStyle={styles.listContent}
+                />
+            </View>
+
             {lang['skill-add-informations'].map((info, index) => (
                 <Text
                     key={`info-${index}`}

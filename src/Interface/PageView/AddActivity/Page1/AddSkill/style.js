@@ -10,8 +10,20 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         fontSize: 22
     },
+    detailsFlatList: {
+        marginBottom: 12,
+        paddingHorizontal: 24
+    },
+    columnWrapper: {
+        justifyContent: 'flex-start'
+    },
+    listContent: {
+        padding: 10
+    },
     details: {
-        marginBottom: 12
+        width: '50%',
+        textAlign: 'left',
+        marginBottom: 0
     },
     info: {
         textAlign: 'left',

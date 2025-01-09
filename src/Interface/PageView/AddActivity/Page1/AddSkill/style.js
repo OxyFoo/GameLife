@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     buttonDiscord: {
-        maxWidth: '30%'
+        maxWidth: '30%',
+        paddingVertical: 12
     },
     shareUsername: {
         flexDirection: 'row',
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     },
     shareUsernameText: {
         marginLeft: 12,
-        fontSize: 16,
+        fontSize: 14,
         textAlign: 'left'
     },
     shareUsernameTextContainer: {
@@ -62,7 +63,8 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 'auto',
-        minWidth: '40%'
+        minWidth: '40%',
+        paddingVertical: 12
     }
 });
 

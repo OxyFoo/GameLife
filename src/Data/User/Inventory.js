@@ -124,8 +124,8 @@ class Inventory extends IUserData {
         this.avatar = response.result.avatar;
         this.#token = response.result.token;
 
-        this.user.interface.console?.AddLog('info', `${this.titleIDs.Get().length} titles loaded`);
-        this.user.interface.console?.AddLog('info', `${this.stuffs.length} stuffs loaded`);
+        this.user.interface.console?.AddLog('info', `[Titles] ${this.titleIDs.Get().length} titles loaded`);
+        this.user.interface.console?.AddLog('info', `[Stuffs] ${this.stuffs.length} stuffs loaded`);
         return true;
     };
 

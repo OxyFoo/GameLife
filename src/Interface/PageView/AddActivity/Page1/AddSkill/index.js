@@ -106,13 +106,6 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
     const [loading, setLoading] = React.useState(false);
     const [shareUsername, setShareUsername] = React.useState(true);
 
-    const skillDetails = user.experience.statsKey
-        .filter((key) => generatedSkill.Stats[key] > 0)
-        .map((key) => {
-            return langStats[key] + ': ' + generatedSkill.Stats[key];
-        })
-        .join('\n');
-
     const colors = [themeManager.GetColor('primary'), themeManager.GetColor('secondary')];
 
     const changeUserShare = () => {

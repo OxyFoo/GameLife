@@ -10,6 +10,7 @@ exports[`[Component] Button renders correctly 1`] = `
   }
   accessible={true}
   borderColor="automatic"
+  collapsable={false}
   fontColor="automatic"
   onLayout={[Function]}
   onTouchCancel={[Function]}

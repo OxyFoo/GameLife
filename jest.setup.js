@@ -54,6 +54,10 @@ jest.mock('react-native-gifted-charts', () => ({
     PieChart: 'View'
 }));
 
+jest.mock('react-native-safe-area', () => ({
+    SafeAreaView: 'View'
+}));
+
 Animated.timing = () => ({
     start: () => jest.fn(),
     reset: () => jest.fn(),

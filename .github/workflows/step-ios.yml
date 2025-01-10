@@ -1,4 +1,4 @@
-name: '🧩 iOS build & delivery'
+name: '🧩 iOS Build & Delivery'
 
 on:
   workflow_call:
@@ -45,7 +45,7 @@ jobs:
 
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-          
+
           if [ ${{ inputs.environment }} == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
@@ -65,12 +65,10 @@ jobs:
 
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/GameLife.mobileprovision
 
-          # List keychains and provisioning profiles
-          security list-keychains
+          # Debug
           security find-identity -v -p codesigning
-          security find-certificate -a -c "Apple Distribution: Oxy Foo (54ZUH596XX)"
           ls ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: 'Setup Node.js'
@@ -90,6 +88,9 @@ jobs:
 
       - name: 'Setup & clean build directory'
         run: |
+          # Generate type files
+          npm run prestart
+
           # Go to the ios directory
           cd ios
 
@@ -109,24 +110,23 @@ jobs:
           security default-keychain -s $RUNNER_TEMP/app-signing.keychain-db
 
           # Execute bundleSwitcher.sh if environment is test
-          if [ ${{ inputs.environment }} == 'test' ]; then
+          if [ "${{ inputs.environment }}" == "test" ]; then
             chmod +x ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh
             ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
           fi
 
-          # Go to the ios directory
+          # Aller dans le répertoire iOS
           cd ios
 
-          # Archive GameLife
+          # Archiver l'application avec la gestion automatique
           xcodebuild archive \
             -workspace GameLife.xcworkspace \
             -scheme GameLife \
             -sdk iphoneos \
             -configuration Release \
             -archivePath $PWD/build/GameLife.xcarchive \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution: Oxy Foo (54ZUH596XX)" \
-            PROVISIONING_PROFILE_SPECIFIER="${{ env.PROVISION_PROFILE_NAME }}"
+            -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic
 
       - name: 'Export app to ipa'
         env:
@@ -139,10 +139,7 @@ jobs:
           cd ios
 
           # Export the archived app to an .ipa file
-          xcodebuild \
-            -exportArchive \
-            -sdk iphoneos \
-            -allowProvisioningUpdates \
+          xcodebuild -exportArchive \
             -archivePath $PWD/build/GameLife.xcarchive \
             -exportOptionsPlist GoogleService-Info.plist \
             -exportPath $PWD/build \
@@ -199,24 +196,23 @@ jobs:
 
       - name: 'Upload to App Store'
         env:
-          ISSUER_ID: ${{ secrets.APPLE_API_APP_STORE_CONNECT_ISSUER_ID }}
-          SEND_KEY: ${{ secrets.APPLE_API_APP_STORE_CONNECT_SEND_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
         run: |
-          # Go to the ios directory
+          echo -n "${APPLE_API_PRIVATE_KEY}" | base64 --decode > private_key.p8
           cd ios/build
-
-          # Upload the .ipa to the App Store using altool
           xcrun altool --upload-app \
             -f ${FILE_IPA} \
             -t ios \
-            --apiKey "$SEND_KEY" \
-            --apiIssuer "$ISSUER_ID" \
+            --apiKey "$APPLE_API_KEY_ID" \
+            --apiIssuer "$APPLE_API_ISSUER_ID" \
+            --private-key private_key.p8 \
             --verbose
 
-          # Check if upload was successful
           if [ $? -eq 0 ]; then
             echo "APPSTORE_STATUS=success" >> $GITHUB_ENV
-            echo "Upload successful, state saved"
+            echo "Upload successful"
           else
             echo "APPSTORE_STATUS=failure" >> $GITHUB_ENV
             echo "Upload failed"

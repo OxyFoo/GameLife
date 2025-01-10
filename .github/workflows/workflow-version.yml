@@ -1,4 +1,4 @@
-name: 'GL Prod - Change version'
+name: '✋ GameLife - Update version'
 
 on:
   workflow_dispatch:
@@ -10,19 +10,13 @@ on:
         default: 'patch'
         type: choice
         options:
+        - none
+        - build
+        - build-android
+        - build-ios
         - patch
         - minor
         - major
-      whatsnew-fr:
-        description: "What's new file - French"
-        required: false
-        default: ''
-        type: string
-      whatsnew-en:
-        description: "What's new file - English"
-        required: false
-        default: ''
-        type: string
 
 jobs:
   update-version:
@@ -37,13 +31,11 @@ jobs:
       - name: 'Update version'
         env:
           ACTIONS: ${{ github.event.inputs.actions }}
-          WHATSNEW_FR: ${{ github.event.inputs.whatsnew-fr }}
-          WHATSNEW_EN: ${{ github.event.inputs.whatsnew-en }}
         run: |
           NEWVERSION=$(./Tools/Version/version.sh $ACTIONS --version)
           echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
 
-          ./Tools/Version/version.sh $ACTIONS $WHATSNEW_FR $WHATSNEW_EN --force
+          ./Tools/Version/version.sh $ACTIONS --force
 
       - name: 'Commit changes'
         run: |

@@ -18,14 +18,10 @@ on:
         default: 'both'
         type: choice
         options:
+        - none
         - both
         - android
         - ios
-      delivery:
-        description: 'Delivery to stores (test & prod only)'
-        required: true
-        default: false
-        type: boolean
       action-update:
         description: 'Update app version'
         required: true
@@ -39,30 +35,16 @@ on:
         - patch
         - minor
         - major
-      whatsnew-fr:
-        description: "What's new file - French"
-        required: false
-        default: ''
-        type: string
-      whatsnew-en:
-        description: "What's new file - English"
-        required: false
-        default: ''
-        type: string
+      delivery:
+        description: 'Delivery to stores (test & prod only)'
+        required: true
+        default: false
+        type: boolean
       save-apk-artifact:
         description: 'Download apk artifact (android only)'
         required: false
         default: false
         type: boolean
-      version:
-        description: 'App version (unused yet)'
-        required: false # true
-        type: string
-        default: '1.0.0' # Hardcoder la version + modifier à chaque release ?
-      version2:
-        description: 'iOS Version (unused yet)'
-        required: false # true
-        type: string
 
 jobs:
   tests:
@@ -77,32 +59,11 @@ jobs:
 
   update-version:
     name: '📝 Update version'
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/step-version.yml
     if: github.event.inputs.action-update != 'none'
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.environment }}
-
-      - name: 'Update version'
-        env:
-          ACTION_UPDATE: ${{ github.event.inputs.action-update }}
-          WHATSNEW_FR: ${{ github.event.inputs.whatsnew-fr }}
-          WHATSNEW_EN: ${{ github.event.inputs.whatsnew-en }}
-        run: |
-          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
-          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
-
-          ./Tools/Version/version.sh $ACTION_UPDATE $WHATSNEW_FR $WHATSNEW_EN --force
-
-      - name: 'Commit changes'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "📝 Update version to $VERSION"
-          git push
+    secrets: inherit
+    with:
+      action-update: ${{ github.event.inputs.action-update }}
 
   android:
     name: '🤖 Android'
@@ -156,6 +117,8 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: 'TODO'
         run: echo "TODO"
@@ -189,6 +152,8 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: 'Get app version & delivery status'
         run: |

@@ -92,6 +92,15 @@ class Settings extends BackSettings {
                 >
                     {lang['input-report']}
                 </Button>
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    icon='arrow-left'
+                    iconAngle={180}
+                    onPress={this.openBeta}
+                >
+                    {lang['input-beta']}
+                </Button>
 
                 <Text style={styles.title} color='border'>
                     {lang['section-security-privacy']}

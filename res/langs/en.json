@@ -7,6 +7,9 @@
     },
 
     "notifications": {
+        "title": "General notifications",
+        "notif-user": "User notifications",
+
         "morning": {
             "name": "Morning notifications",
             "title": "GameLife"
@@ -60,10 +63,10 @@
 
             "popup-responded-title": "Thanks",
             "popup-responded-message": "Thanks for your reply!",
-            "popup-claim-ox-title": "Congrats",
-            "popup-claim-ox-message": "You have won {} Ox!",
+            "popup-claim-title": "Congrats",
+            "popup-claim-premessage": "You recovered the following rewards:",
             "popup-error-title": "Error",
-            "popup-error-message": "An error has occurred, please try again later."
+            "popup-error-message": "An error has occurred, please try again later ({})."
         }
     },
 
@@ -327,6 +330,7 @@
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",
+        "create-skill": "Create a skill",
         "swiper-gpt": "ZapGPT",
         "add-commentary": "Add a commentary",
 
@@ -346,6 +350,8 @@
         "alert-error-not-exist-message": "This activity doesn't seem to exist, try again later.",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later ({}).",
+        "alert-skill-already-exist-title": "Error",
+        "alert-skill-already-exist-message": "This skill already exists, please choose another one.",
 
         "timer-launch": "Launch time:",
         "timer-gain": "Current gains: {}",
@@ -363,6 +369,22 @@
         "display-activity-button2": "Add another activity",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
+
+        "skill-add-title": "Add a skill",
+        "skill-add-informations": [
+            "If you add this activity it will be visible and usable by all the other players",
+            "To modify or delete a skill you will have to contact the developers via Discord",
+            "If the competence is incorrect or does not comply with the conditions of the application, it will be deleted as well as the associated activities"
+        ],
+        "skill-add-confirmation": "Do you want to add this skill now?",
+        "skill-add-share-username": "Show my username on the page of this skill",
+
+        "alert-skill-feature-disabled-title": "Functionality deactivated",
+        "alert-skill-feature-disabled-message": "The skill functionality is deactivated for the moment, again again.",
+        "alert-skill-cant-generate-title": "Error",
+        "alert-skill-cant-generate-message": "Impossible to generate this skill, it seems to be incorrect or does not respect the conditions of the applications, try with another.",
+        "alert-skill-added-title": "Added competence",
+        "alert-skill-added-message": "The competence has been added!",
 
         "activity-zap-comment": "Added by Zap"
     },
@@ -406,8 +428,8 @@
         "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later.",
-        "alert-update-title": "Update",
-        "alert-update-message": "An update of the application is available",
+        "alert-update-title": "Update available!",
+        "alert-update-message": "Gamelife version {} is now available, you can download it from the blinds.",
         "alert-newversion-title": "Warning",
         "alert-newversion-message": "You're on the next GameLife update, this popup will be removed when the stores release it",
         "alert-exit-title": "Exit",
@@ -675,6 +697,7 @@
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-report": "Report",
+        "input-beta": "Beta",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-all": "Disconnect from all devices",

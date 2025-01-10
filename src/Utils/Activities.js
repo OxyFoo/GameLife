@@ -39,6 +39,7 @@ function StartActivityNow(skillID) {
         timezone: GetTimeZone(),
         friendsIDs: []
     });
+
     user.SaveLocal();
     user.interface.ChangePage('activitytimer', { storeInHistory: false });
 }
@@ -48,10 +49,9 @@ function StartActivityNow(skillID) {
  * @param {number} startTime
  * @param {number} endTime
  * @param {number[]} friendsIDs
- * @param {() => void} funcBack
  * @returns {Promise<boolean>} True if activity was added successfully
  */
-function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
+function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
     const lang = langManager.curr['activity'];
 
     const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
@@ -61,19 +61,21 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs, funcBack) {
     let duration = MinMax(MIN_TIME_MINUTES, delta / 60, MAX_TIME_MINUTES);
 
     // Get the max duration possible
-    while (!user.activities.TimeIsFree(startTimeRounded, duration)) {
+    const activities = user.activities.Get(true);
+    while (!user.activities.TimeIsFree(startTimeRounded, duration, activities)) {
         duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
-            user.interface.ChangePage('display', {
-                args: {
-                    icon: 'close-filled',
-                    text: lang['display-fail-text'].replace('{}', 'time'),
-                    button: lang['display-fail-button'],
-                    action: funcBack
-                },
-                storeInHistory: false
+            return new Promise((resolve) => {
+                user.interface.ChangePage('display', {
+                    args: {
+                        icon: 'close-filled',
+                        text: lang['display-fail-text'].replace('{}', 'time'),
+                        button: lang['display-fail-button'],
+                        action: () => resolve(false)
+                    },
+                    storeInHistory: false
+                });
             });
-            return Promise.resolve(false);
         }
     }
 

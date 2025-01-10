@@ -1,5 +1,5 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { Dimensions, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -7,7 +7,6 @@ import langManager from 'Managers/LangManager';
 import { Sum } from 'Utils/Functions';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Types/Class/Experience').StatsXP} StatsXP
@@ -21,7 +20,6 @@ class BackReport extends PageBase {
     state = {
         sending: false,
         selectedType: 0,
-        reportHeight: 0,
 
         input_activity: {},
         input_skillname: '',
@@ -43,21 +41,12 @@ class BackReport extends PageBase {
 
     reportTypes = [
         { key: 0, value: langManager.curr['report']['types']['activity'] },
-        { key: 1, value: langManager.curr['report']['types']['suggest'] },
-        { key: 2, value: langManager.curr['report']['types']['bug'] },
+        { key: 1, value: langManager.curr['report']['types']['bug'] },
+        { key: 2, value: langManager.curr['report']['types']['suggest'] },
         { key: 3, value: langManager.curr['report']['types']['message'] }
     ];
 
     back = () => user.interface.BackHandle();
-
-    /** @param {LayoutChangeEvent} event */
-    onLayout = (event) => {
-        const { height } = Dimensions.get('window');
-        const { y } = event.nativeEvent.layout;
-
-        const reportHeight = height - y - 48;
-        this.setState({ reportHeight });
-    };
 
     /** @param {ComboBoxItem | null} item */
     selectType = (item) => {

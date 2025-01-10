@@ -3,11 +3,12 @@ import { View, ScrollView, FlatList } from 'react-native';
 
 import styles from './style';
 import BackFriends from './back';
+import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
+import { Gradient } from 'Interface/Primitives';
 import { Button, InputText, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
-import { Gradient } from 'Interface/Primitives';
-import langManager from 'Managers/LangManager';
 
 class Friends extends BackFriends {
     render() {
@@ -94,7 +95,14 @@ class Friends extends BackFriends {
                     />
                 </ScrollView>
 
-                <Gradient style={styles.addFriendButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
+                <Gradient
+                    style={styles.addFriendButtonContainer}
+                    angle={140}
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.12 })
+                    ]}
+                >
                     <Button
                         style={styles.addFriendButton}
                         icon='add'

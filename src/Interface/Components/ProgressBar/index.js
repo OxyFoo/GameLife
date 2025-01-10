@@ -65,7 +65,11 @@ class ProgressBar extends ProgressBarBack {
                 style={styles.bar}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                colors={['#DBA1FF', '#9095FF', '#8CF7FF']}
+                colors={[
+                    themeManager.GetColor('main2'),
+                    themeManager.GetColor('main1'),
+                    themeManager.GetColor('main3')
+                ]}
             />
         );
     };

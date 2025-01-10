@@ -324,6 +324,11 @@ class BackFlowEngine extends React.Component {
         return true;
     };
 
+    // TODO: Useful ?
+    Reload = () => {
+        this.forceUpdate();
+    };
+
     /**
      * Open page
      * @template {PageNames} T
@@ -634,6 +639,7 @@ class BackFlowEngine extends React.Component {
         responsive: this.responsive,
 
         ClearHistory: this.ClearHistory,
+        Reload: this.Reload,
         ChangePage: this.ChangePage,
         BackHandle: this.BackHandle,
         GetPage: this.GetPage,

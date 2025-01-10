@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page: {
+        flex: 1,
         paddingHorizontal: 24
     },
 
@@ -10,7 +11,8 @@ const styles = StyleSheet.create({
         fontSize: 36
     },
     container: {
-        marginTop: 24
+        marginTop: 24,
+        marginBottom: 24
     },
 
     text: {

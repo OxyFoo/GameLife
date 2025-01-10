@@ -74,6 +74,7 @@ class BackSettings extends PageBase {
     onBack = () => user.interface.BackHandle();
     openAbout = () => user.interface.ChangePage('about', { storeInHistory: false });
     openReport = () => user.interface.ChangePage('report', { storeInHistory: false });
+    openBeta = () => user.interface.ChangePage('settings_beta', { storeInHistory: false });
     openNotifications = () => user.interface.ChangePage('settings_notifications', { storeInHistory: false });
 
     /** @param {ComboBoxItem | null} lang */

@@ -12,6 +12,7 @@ export { KeyboardSpacerView } from './Components/KeyboardSpacerView';
 export { KPI } from './Components/KPI';
 export { LineChartSvg } from './Components/LineChartSvg';
 export { ProgressBar } from './Components/ProgressBar';
+export { Reward } from './Components/Reward';
 export { Separator } from './Components/Separator';
 export { Swiper } from './Components/Swiper';
 export { Switch } from './Components/Switch';

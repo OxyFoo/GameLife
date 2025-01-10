@@ -6,7 +6,7 @@ async function OpenStore() {
             ? 'https://apps.apple.com/app/game-life/id1587486522'
             : 'https://play.google.com/store/apps/details?id=com.gamelife';
 
-    await Linking.canOpenURL(url).then((supported) => {
+    return Linking.canOpenURL(url).then((supported) => {
         if (supported) {
             return Linking.openURL(url);
         }

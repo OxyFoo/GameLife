@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
 
-import styles from './style';
-import NIA_GlobalMessage from './Templates/globalMessage';
-import NIA_FriendPending from './Templates/friendPending';
-import NIA_AchievementPending from './Templates/achievementPending';
-import langManager from 'Managers/LangManager';
+import NIA_GlobalMessage from './Templates/GlobalMessage';
+import NIA_FriendPending from './Templates/FriendPending';
+import NIA_AchievementPending from './Templates/AchievementPending';
 
-import { Text, Separator } from 'Interface/Components';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('Types/Class/NotificationsInApp').NotificationInAppTypes} NotificationInAppTypes
  * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<NotificationInAppTypes>} NotificationInApp
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInAppGlobalMessage
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
 /**
@@ -37,47 +37,27 @@ function NIA_Template({ item, index }) {
 
     // Render the correct notification type
     let content;
-    if (item.type === 'friend-pending') {
-        content = <NIA_FriendPending notif={item} index={index} />;
-    } else if (item.type === 'achievement-pending') {
-        content = <NIA_AchievementPending notif={item} index={index} />;
-    } else if (item.type === 'global-message') {
-        content = <NIA_GlobalMessage notif={item} index={index} />;
-    } else {
-        return null;
+    switch (item.type) {
+        case 'friend-pending':
+            const notifFriend = /** @type {NotificationInAppFriendPending} */ (item);
+            content = <NIA_FriendPending notif={notifFriend} index={index} />;
+            break;
+
+        case 'achievement-pending':
+            const notifAchievement = /** @type {NotificationInAppAchievementPending} */ (item);
+            content = <NIA_AchievementPending notif={notifAchievement} index={index} />;
+            break;
+
+        case 'global-message':
+            const notifGlobalMessage = /** @type {NotificationInAppGlobalMessage} */ (item);
+            content = <NIA_GlobalMessage notif={notifGlobalMessage} index={index} />;
+            break;
+
+        default:
+            return null;
     }
 
     return <Animated.View style={animStyle}>{content}</Animated.View>;
 }
 
-/**
- * @returns {JSX.Element}
- */
-function NIA_Separator() {
-    const [fadeAnim] = React.useState(new Animated.Value(0));
-
-    // Animation on mount
-    React.useEffect(() => {
-        setTimeout(() => {
-            SpringAnimation(fadeAnim, 1).start();
-        }, 100);
-    });
-
-    const animStyle = {
-        opacity: fadeAnim
-    };
-
-    return (
-        <Animated.View style={animStyle}>
-            <Separator style={styles.separator} />
-        </Animated.View>
-    );
-}
-
-function NIA_Empty() {
-    const lang = langManager.curr['notifications']['in-app'];
-
-    return <Text>{lang['list-empty']}</Text>;
-}
-
-export { NIA_Template, NIA_Separator, NIA_Empty };
+export { NIA_Template };

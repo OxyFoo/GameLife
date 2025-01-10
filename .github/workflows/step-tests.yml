@@ -34,8 +34,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.CICD_PAT }}
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -69,8 +68,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.CICD_PAT }}
 
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y

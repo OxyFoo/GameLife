@@ -13,12 +13,13 @@ class SettingsNotifications extends BackSettings {
         const { switchEveningNotifs, switchMorningNotifs } = this.state;
 
         const lang = langManager.curr['settings'];
+        const langNotifs = langManager.curr['notifications'];
 
         return (
             <View style={styles.page}>
                 <PageHeader title={lang['input-notifications']} onBackPress={this.onBack} />
 
-                <Text style={styles.title}>[Notifications générales]</Text>
+                <Text style={styles.title}>{langNotifs['title']}</Text>
 
                 {/* Notifications: Morning */}
                 <View style={styles.inline}>
@@ -32,13 +33,13 @@ class SettingsNotifications extends BackSettings {
                     <Switch value={switchEveningNotifs} onChangeValue={this.onChangeEveningNotifications} />
                 </View>
 
-                <Text style={styles.title}>[Notifications utilisateur]</Text>
+                {/* <Text style={styles.title}>{langNotifs['notif-user']}</Text> */}
 
                 {/* Notifications: Evening */}
-                <View style={styles.inline}>
+                {/* <View style={styles.inline}>
                     <Text style={styles.inlineText}>Activités</Text>
                     <Switch value={switchEveningNotifs} onChangeValue={this.onChangeEveningNotifications} />
-                </View>
+                </View> */}
             </View>
         );
     };

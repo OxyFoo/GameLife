@@ -6,6 +6,7 @@ import BackMultiplayer from './back';
 import TopFriends from './TopFriends';
 import OnlineFriends from './OnlineFriends';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Gradient } from 'Interface/Primitives';
 import { Button, Text } from 'Interface/Components';
@@ -30,7 +31,14 @@ class Multiplayer extends BackMultiplayer {
                 <OnlineFriends friends={friends} />
 
                 {/** Bottom buttons: Add friend / Leaderboard */}
-                <Gradient style={styles.leaderboardButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
+                <Gradient
+                    style={styles.leaderboardButtonContainer}
+                    angle={140}
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.12 })
+                    ]}
+                >
                     <Button
                         nativeRef={this.refAddButton}
                         style={styles.leaderboardButton}
@@ -42,7 +50,14 @@ class Multiplayer extends BackMultiplayer {
                     />
                 </Gradient>
 
-                <Gradient style={styles.addFriendButtonContainer} angle={140} colors={['#9095FF73', '#9095FF1F']}>
+                <Gradient
+                    style={styles.addFriendButtonContainer}
+                    angle={140}
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.12 })
+                    ]}
+                >
                     <Button
                         style={styles.addFriendButton}
                         appearance='uniform'

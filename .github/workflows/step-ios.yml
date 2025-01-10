@@ -24,9 +24,10 @@ jobs:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
           submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.CICD_PAT }}
 
       - name: 'Install the Apple certificate and provisioning profile'
         env:
@@ -166,13 +167,6 @@ jobs:
     runs-on: macos-latest
     needs: build
     steps:
-      - name: 'Checkout repository'
-        uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
-
       - name: 'Get ipa artifact'
         uses: actions/download-artifact@v4
         with:

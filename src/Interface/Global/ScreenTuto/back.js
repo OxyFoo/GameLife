@@ -131,13 +131,11 @@ class ScreenTutoBack extends React.Component {
             // Before
             if (execBefore !== null && typeof execBefore === 'function') {
                 await this.setStateSync(
-                    // eslint-disable-next-line prettier/prettier
                     /** @type {Partial<this['state']>} */ ({
                         component: {
                             ...this.state.component,
                             ref: null
                         }
-                        // eslint-disable-next-line prettier/prettier
                     })
                 );
                 await execBefore();

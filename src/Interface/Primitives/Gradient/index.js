@@ -1,6 +1,8 @@
 import * as React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 
+import themeManager from 'Managers/ThemeManager';
+
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
@@ -19,7 +21,7 @@ function Gradient({ style, colors, angle, children }) {
     return (
         <LinearGradient
             style={style}
-            colors={colors ?? ['#8CF7FF', '#DBA1FF']}
+            colors={colors ?? [themeManager.GetColor('main3'), themeManager.GetColor('main2')]}
             useAngle={true}
             angle={angle ?? 267}
             children={children}

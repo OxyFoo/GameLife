@@ -30,7 +30,7 @@ class Shop extends BackShop {
         /*
         const { dailyItemsID, randomChestsStats, targetChestsStats } = this.state;
 
-        if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.com') {
+        if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.fr') {
             return this.renderForTesters();
         } else if (!user.server.IsConnected(false)) {
             return this.renderNoInternet();

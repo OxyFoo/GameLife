@@ -173,10 +173,20 @@ class AddActivityPage1 extends BackActivityPage1 {
      */
     renderEmptyList = () => {
         const lang = langManager.curr['activity'];
+        const { addSkillLoading } = this.state;
 
         return (
             <View style={styles.emptyList}>
                 <Text style={styles.emptyListText}>{lang['empty-activity']}</Text>
+
+                <Button
+                    style={styles.createActivityButton}
+                    appearance='outline'
+                    onPress={this.createSkill}
+                    loading={addSkillLoading}
+                >
+                    {lang['create-skill']}
+                </Button>
             </View>
         );
     };

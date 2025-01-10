@@ -18,14 +18,10 @@ on:
         default: 'both'
         type: choice
         options:
+        - none
         - both
         - android
         - ios
-      delivery:
-        description: 'Delivery to stores (test & prod only)'
-        required: true
-        default: false
-        type: boolean
       action-update:
         description: 'Update app version'
         required: true
@@ -39,16 +35,11 @@ on:
         - patch
         - minor
         - major
-      whatsnew-fr:
-        description: "[Broken] What's new file - French (used for update)"
-        required: false
-        default: ''
-        type: string
-      whatsnew-en:
-        description: "[Broken] What's new file - English (used for update)"
-        required: false
-        default: ''
-        type: string
+      delivery:
+        description: 'Delivery to stores (test & prod only)'
+        required: true
+        default: false
+        type: boolean
       save-apk-artifact:
         description: 'Download apk artifact (android only)'
         required: false
@@ -68,47 +59,28 @@ jobs:
 
   update-version:
     name: '📝 Update version'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        if: github.event.inputs.action-update != 'none'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.environment }}
-          submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: 'Update version'
-        if: github.event.inputs.action-update != 'none'
-        env:
-          ACTION_UPDATE: ${{ github.event.inputs.action-update }}
-          WHATSNEW_FR: |
-            "${{ github.event.inputs.whatsnew-fr }}"
-          WHATSNEW_EN: |
-            "${{ github.event.inputs.whatsnew-en }}"
-        run: |
-          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
-          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
-
-          ./Tools/Version/version.sh $ACTION_UPDATE "$WHATSNEW_FR" "$WHATSNEW_EN" --force
-
-      - name: 'Commit changes'
-        if: github.event.inputs.action-update != 'none'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "📝 Update version to $VERSION"
-          git push origin HEAD:${{ github.ref_name }}
+    uses: ./.github/workflows/step-version.yml
+    if: github.event.inputs.action-update != 'none'
+    secrets: inherit
+    with:
+      action-update: ${{ github.event.inputs.action-update }}
 
   android:
     name: '🤖 Android'
-    if: >
-      github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
-    needs: 
+    needs:
       - tests
       - update-version
+    if: >
+      always() &&
+      (needs.tests.result == 'success') &&
+      (
+        needs.update-version.result == 'success' ||
+        needs.update-version.result == 'skipped'
+      ) &&
+      (
+        github.event.inputs.actions == 'both' ||
+        github.event.inputs.actions == 'android'
+      )
     uses: ./.github/workflows/step-android.yml
     secrets: inherit
     with:
@@ -118,11 +90,20 @@ jobs:
 
   ios:
     name: '🍏 iOS'
-    if: >
-      github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
-    needs: 
+    needs:
       - tests
       - update-version
+    if: >
+      always() &&
+      (needs.tests.result == 'success') &&
+      (
+        needs.update-version.result == 'success' ||
+        needs.update-version.result == 'skipped'
+      ) &&
+      (
+        github.event.inputs.actions == 'both' ||
+        github.event.inputs.actions == 'ios'
+      )
     uses: ./.github/workflows/step-ios.yml
     secrets: inherit
     with:
@@ -137,9 +118,9 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.CICD_PAT }}
 
       - name: 'TODO'
         run: echo "TODO"
@@ -174,9 +155,9 @@ jobs:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           submodules: 'recursive'
-          persist-credentials: true
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.CICD_PAT }}
 
       - name: 'Get app version & delivery status'
         run: |

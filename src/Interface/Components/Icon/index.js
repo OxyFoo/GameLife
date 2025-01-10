@@ -8,7 +8,7 @@ import themeManager from 'Managers/ThemeManager';
 
 import SVGIcons from 'Ressources/Icons';
 import Base64 from 'Utils/Base64';
-import { Gradient } from 'Interface/Primitives';
+import { Gradient } from '../../Primitives';
 
 class Icon extends IconBack {
     render() {

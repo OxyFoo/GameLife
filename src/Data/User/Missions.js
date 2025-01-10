@@ -28,7 +28,6 @@ class Missions extends IUserData {
     }
 
     /** @type {DynamicVar<MissionItem[]>} */
-    // eslint-disable-next-line prettier/prettier
     missions = new DynamicVar(/** @type {MissionItem[]} */ ([]));
 
     /**

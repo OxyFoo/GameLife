@@ -7,6 +7,9 @@
     },
 
     "notifications": {
+        "title": "Notifications générales",
+        "notif-user": "Notifications utilisateur",
+
         "morning": {
             "name": "Notifications matinales",
             "title": "GameLife"
@@ -60,10 +63,10 @@
 
             "popup-responded-title": "Merci",
             "popup-responded-message": "Merci pour ta réponse !",
-            "popup-claim-ox-title": "Bravo !",
-            "popup-claim-ox-message": "Tu as gagné {} Ox !",
+            "popup-claim-title": "Bravo !",
+            "popup-claim-premessage": "Tu as récupéré les récompenses suivantes :",
             "popup-error-title": "Erreur",
-            "popup-error-message": "Une erreur est survenue, réessaye plus tard."
+            "popup-error-message": "Une erreur est survenue, réessaye plus tard ({})."
         }
     },
 
@@ -327,6 +330,7 @@
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
+        "create-skill": "Créer une compétence",
         "swiper-gpt": "ZapGPT",
         "add-commentary": "Ajouter un commentaire",
 
@@ -346,6 +350,8 @@
         "alert-error-not-exist-message": "Il semblerait que cette activité n'existe pas, réessaye plus tard.",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
+        "alert-skill-already-exist-title": "Erreur",
+        "alert-skill-already-exist-message": "Il semble que cette compétence existe déjà, réessaye avec une autre.",
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains actuel: {}",
@@ -363,6 +369,22 @@
         "display-activity-button2": "Ajouter une autre activité",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
+
+        "skill-add-title": "Ajouter une compétence",
+        "skill-add-informations": [
+            "Si tu ajoutes cette activité elle sera visible et utilisable par tous les autres joueurs",
+            "Pour modifier ou supprimer une compétence il faudra contacter les développeurs via Discord",
+            "Si la compétence est incorrecte ou ne respecte pas les conditions de l'application, elle sera supprimée ainsi que les activités associées"
+        ],
+        "skill-add-confirmation": "Veux-tu ajouter cette compétence maintenant ?",
+        "skill-add-share-username": "Afficher mon pseudo dans la page de cette compétence",
+
+        "alert-skill-feature-disabled-title": "Fonctionnalité désactivée",
+        "alert-skill-feature-disabled-message": "La fonctionnalité de compétence est désactivée pour le moment, réessaye plus tard.",
+        "alert-skill-cant-generate-title": "Erreur",
+        "alert-skill-cant-generate-message": "Impossible de générer cette compétence, elle paraît être incorrecte ou ne respecte pas les conditions de l'applications, essaye avec une autre.",
+        "alert-skill-added-title": "Compétence ajoutée",
+        "alert-skill-added-message": "La compétence a bien été ajoutée !",
 
         "activity-zap-comment": "Ajouté par Zap"
     },
@@ -406,8 +428,8 @@
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
-        "alert-update-title": "Mise à jour",
-        "alert-update-message": "Une mise à jour de l'application est disponible",
+        "alert-update-title": "Mise à jour disponible !",
+        "alert-update-message": "La version {} de GameLife est désormais disponible, tu peux la télécharger sur les stores.",
         "alert-newversion-title": "Attention",
         "alert-newversion-message": "Tu es sur la prochaine mise à jour de GameLife, cette popup dispraîtra quand les stores l'auront publiée",
         "alert-exit-title": "Quitter",
@@ -675,6 +697,7 @@
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",
         "input-report": "Report",
+        "input-beta": "Beta",
         "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-all": "Se déconnecter de tous les appareils",

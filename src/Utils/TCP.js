@@ -14,9 +14,6 @@ const TCP_SETTINGS = {
     port: Config.VPS_PORT
 };
 
-/** @type {ConnectionState} */
-const INITIAL_STATE = 'idle';
-
 const SERVER_TIMEOUT_MS = __DEV__ ? 10000 : 5000;
 
 class TCP {
@@ -24,7 +21,10 @@ class TCP {
     socket = null;
 
     /** @type {DynamicVar<ConnectionState>} */
-    state = new DynamicVar(INITIAL_STATE);
+    state = new DynamicVar(/** @type {ConnectionState} */ ('idle'));
+
+    /** @type {string | null} */
+    #lastError = null;
 
     /**
      * @description Callback => If True is returned, the callback will be removed
@@ -89,6 +89,10 @@ class TCP {
         this.socket = null;
     };
 
+    GetLastError = () => {
+        return this.#lastError;
+    };
+
     /** @param {Event} _event */
     #onOpen = (_event) => {
         this.state.Set('connected');
@@ -132,8 +136,11 @@ class TCP {
         // }
     };
 
-    /** @param {Event} _event */
-    #onError = (_event) => {
+    /** @param {Event} event */
+    #onError = (event) => {
+        // @ts-ignore - The error message is a string (why is not referenced?)
+        this.#lastError = event?.message || 'Unknown error';
+
         this.state.Set('error');
         this.Disconnect();
     };

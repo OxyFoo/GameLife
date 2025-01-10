@@ -52,26 +52,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12
     },
 
-    rewardItem: {
-        width: 48,
-        height: 48,
-        padding: 6,
-        marginLeft: 8,
-        borderRadius: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'visible'
-    },
-    rewardImage: {
-        width: '100%',
-        height: '100%'
-    },
-    rewardValue: {
-        position: 'absolute',
-        right: 2,
-        bottom: -2
-    },
-
     claimState: {
         position: 'absolute',
         top: 0,

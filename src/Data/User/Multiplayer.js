@@ -13,9 +13,6 @@ const FRIENDS_LIMIT = 50;
  * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestUpdateFriends} ServerRequestUpdateFriends
  */
 
-/** @type {(UserOnline | Friend)[]} */
-const INIT_FRIENDS = [];
-
 /** @extends {IUserData<SaveObject_Multiplayer>} */
 class Multiplayer extends IUserData {
     /** @type {UserManager} */
@@ -30,10 +27,10 @@ class Multiplayer extends IUserData {
     }
 
     /** @type {DynamicVar<(UserOnline | Friend)[]>} */
-    friends = new DynamicVar(INIT_FRIENDS);
+    friends = new DynamicVar(/** @type {(UserOnline | Friend)[]} */ ([]));
 
     Clear = () => {
-        this.friends.Set(INIT_FRIENDS);
+        this.friends.Set([]);
     };
 
     Get = () => {

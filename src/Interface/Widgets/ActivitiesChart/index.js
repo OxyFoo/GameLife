@@ -22,12 +22,9 @@ import { DateFormat } from 'Utils/Date';
  * @property {Activity[]} activities
  */
 
-/** @type {LineData[]} */
-const INIT_DATA = [];
-
 /** @param {SkillChartProps} props */
 function ActivitiesChart({ style, activities }) {
-    const [data, setData] = React.useState(INIT_DATA);
+    const [data, setData] = React.useState(/** @type {LineData[]} */ ([]));
 
     React.useEffect(() => {
         /** @type {LineData[]} */

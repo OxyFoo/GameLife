@@ -22,7 +22,7 @@ class BackActivityTimer extends PageBase {
     currentActivityEvent = null;
 
     /** @type {boolean} */
-    finished = false;
+    #loading = false;
 
     /** @param {any} props */
     constructor(props) {
@@ -109,7 +109,6 @@ class BackActivityTimer extends PageBase {
             data: { title, message },
             callback: (button) => {
                 if (button === 'yes') {
-                    this.finished = true;
                     this.Back();
                 }
             }
@@ -119,6 +118,10 @@ class BackActivityTimer extends PageBase {
 
     onPressComplete = async () => {
         const { currentActivity } = this.state;
+
+        if (this.#loading) {
+            return;
+        }
 
         if (currentActivity === null) {
             this.Back();
@@ -132,7 +135,8 @@ class BackActivityTimer extends PageBase {
         const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
 
         // Too short
-        if (endTimeRounded - startTimeRounded <= (MIN_TIME_MINUTES * 60) / 2) {
+        const deltaTime = (endTimeRounded - startTimeRounded) / 60;
+        if (deltaTime <= MIN_TIME_MINUTES / 2) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];
             const message = lang['timeralert-tooshort-message'];
@@ -144,11 +148,18 @@ class BackActivityTimer extends PageBase {
             return;
         }
 
-        this.finished = true;
-
+        this.#loading = true;
         this.setState({ loading: true });
-        await AddActivityNow(skillID, startTime, now, friendsIDs, this.Back);
-        this.setState({ loading: false });
+
+        const activityAdded = await AddActivityNow(skillID, startTime, now, friendsIDs);
+
+        if (activityAdded) {
+            this.Back();
+        }
+
+        this.setState({ loading: false }, () => {
+            this.#loading = false;
+        });
     };
 
     Back = () => {

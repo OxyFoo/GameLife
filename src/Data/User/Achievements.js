@@ -40,7 +40,7 @@ class Achievements extends IUserData {
      */
     claimAchievementLoading = false;
 
-    /** @type {DynamicVar<AchievementItem[]>} Actual solved achievements */ // prettier-ignore
+    /** @type {DynamicVar<AchievementItem[]>} Actual solved achievements */
     achievements = new DynamicVar(/** @type {AchievementItem[]} */ ([]));
 
     /** @type {AchievementItem[]} */

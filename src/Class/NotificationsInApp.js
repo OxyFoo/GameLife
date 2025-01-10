@@ -11,11 +11,13 @@ class NotificationsInApp extends IUserClass {
     #user;
 
     /** @type {DynamicVar<NotificationInApp[]>} */
-    // eslint-disable-next-line prettier/prettier
     notifications = new DynamicVar(/** @type {NotificationInApp[]} */ ([]));
 
     /** @type {NotificationInApp[]} */
     #tmpNotifications = [];
+
+    /** @type {Symbol | null} */
+    #listenerNetworkState = null;
 
     /** @type {Symbol | null} */
     #listenerAchievements = null;
@@ -30,6 +32,11 @@ class NotificationsInApp extends IUserClass {
     Initialize = () => {
         this.#updateNotifications();
         this.#listenerAchievements = this.#user.achievements.achievements.AddListener(this.#updateNotifications);
+        this.#listenerNetworkState = this.#user.server2.tcp.state.AddListener((newState) => {
+            if (newState === 'disconnected' || newState === 'error') {
+                this.Clear();
+            }
+        });
         this.#user.server2.tcp.WaitForAction('update-notifications', (response) => {
             this.#tmpNotifications = response.notifications;
             this.#updateNotifications();
@@ -38,6 +45,7 @@ class NotificationsInApp extends IUserClass {
     };
 
     Unmount = () => {
+        this.#user.server2.tcp.state.RemoveListener(this.#listenerNetworkState);
         this.#user.achievements.achievements.RemoveListener(this.#listenerAchievements);
     };
 
@@ -49,6 +57,20 @@ class NotificationsInApp extends IUserClass {
 
     Clear = () => {
         this.notifications.Set([]);
+    };
+
+    /**
+     * @param {NotificationInApp} notif
+     * @returns {boolean}
+     */
+    Remove = (notif) => {
+        const allNotifs = this.notifications.Get();
+        const index = allNotifs.indexOf(notif);
+        if (index === -1) return false;
+
+        allNotifs.splice(index, 1);
+        this.notifications.Set(allNotifs);
+        return true;
     };
 }
 

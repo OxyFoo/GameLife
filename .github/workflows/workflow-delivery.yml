@@ -75,35 +75,35 @@ jobs:
       test-database: false
       test-migration: false
 
-  update-version:
-    name: '📝 Update version'
-    runs-on: ubuntu-latest
-    needs: tests
-    if: github.event.inputs.action-update != 'none'
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.environment }}
+  # update-version:
+  #   name: '📝 Update version'
+  #   runs-on: ubuntu-latest
+  #   needs: tests
+  #   if: github.event.inputs.action-update != 'none'
+  #   steps:
+  #     - name: 'Checkout'
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ github.event.inputs.environment }}
 
-      - name: 'Update version'
-        env:
-          ACTION_UPDATE: ${{ github.event.inputs.action-update }}
-          WHATSNEW_FR: ${{ github.event.inputs.whatsnew-fr }}
-          WHATSNEW_EN: ${{ github.event.inputs.whatsnew-en }}
-        run: |
-          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
-          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
+  #     - name: 'Update version'
+  #       env:
+  #         ACTION_UPDATE: ${{ github.event.inputs.action-update }}
+  #         WHATSNEW_FR: ${{ github.event.inputs.whatsnew-fr }}
+  #         WHATSNEW_EN: ${{ github.event.inputs.whatsnew-en }}
+  #       run: |
+  #         NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
+  #         echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
 
-          ./Tools/Version/version.sh $ACTION_UPDATE $WHATSNEW_FR $WHATSNEW_EN --force
+  #         ./Tools/Version/version.sh $ACTION_UPDATE $WHATSNEW_FR $WHATSNEW_EN --force
 
-      - name: 'Commit changes'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "📝 Update version to $VERSION"
-          git push
+  #     - name: 'Commit changes'
+  #       run: |
+  #         git config --local user.email "github-actions[bot]@users.noreply.github.com"
+  #         git config --local user.name "github-actions[bot]"
+  #         git add .
+  #         git commit -m "📝 Update version to $VERSION"
+  #         git push
 
   android:
     name: '🤖 Android'
@@ -111,7 +111,7 @@ jobs:
       github.event.inputs.actions == 'both' || github.event.inputs.actions == 'android'
     needs: 
       - tests
-      - update-version
+      # - update-version
     uses: ./.github/workflows/step-android.yml
     secrets: inherit
     with:
@@ -125,7 +125,7 @@ jobs:
       github.event.inputs.actions == 'both' || github.event.inputs.actions == 'ios'
     needs: 
       - tests
-      - update-version
+      # - update-version
     uses: ./.github/workflows/step-ios.yml
     secrets: inherit
     with:

@@ -110,6 +110,10 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          persist-credentials: true
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: 'Install PHP with mysqli extension'
         run: sudo apt-get update && sudo apt-get install php php-mysqli -y

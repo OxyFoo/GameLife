@@ -10,6 +10,9 @@
         "paths": {
             "Ressources/*": [
                 "../res/*"
+            ],
+            "Types/*": [
+                "../src/Types/*"
             ]
         },
         "noImplicitAny": true,

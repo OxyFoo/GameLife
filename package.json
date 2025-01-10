@@ -9,7 +9,7 @@
     "install-android": "npm run prestart && cd android && ./gradlew installRelease && cd .. && npm run poststart",
     "install-server": "cd src/Server/TCP && npm install",
     "clean": "cd android && ./gradlew clean",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "lint": "eslint .",
     "server": "cd src/Server/TCP && npm start",
     "podi": "cd ios && pod install",

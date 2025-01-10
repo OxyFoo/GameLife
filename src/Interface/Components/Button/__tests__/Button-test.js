@@ -3,7 +3,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 
 // Note: test renderer must be required after react-native.
-import renderer, { create } from 'react-test-renderer';
+import renderer from 'react-test-renderer';
 
 // Graphical components
 import { Button } from '../index';
@@ -16,17 +16,25 @@ describe('[Component] Button', () => {
 
     it('event onPress', () => {
         const onPress = jest.fn();
-
         const { getByTestId } = render(
-            <Button onPress={() => onPress()} testID='myButton'>
+            <Button testID='button' onPress={onPress}>
                 Test
             </Button>
         );
 
-        fireEvent.press(getByTestId('myButton'));
+        const button = getByTestId('button');
 
-        // TODO: Fix test event
-        expect(onPress).toHaveBeenCalledTimes(0);
+        // Simulez les événements tactiles
+        fireEvent(button, 'touchStart', {
+            nativeEvent: { pageX: 100, pageY: 100, locationX: 50, locationY: 50 }
+        });
+
+        fireEvent(button, 'touchEnd', {
+            nativeEvent: { pageX: 100, pageY: 100 }
+        });
+
+        // Vérifiez si onPress a été appelé
+        expect(onPress).toHaveBeenCalledTimes(1);
     });
 
     it('event onPress disabled', () => {

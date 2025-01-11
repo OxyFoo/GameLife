@@ -32,7 +32,7 @@
     "react-native-device-info": "^10.13.2",
     "react-native-exit-app": "^1.1.0",
     "react-native-gifted-charts": "1.4.29",
-    "react-native-google-mobile-ads": "^14.8.0",
+    "react-native-google-mobile-ads": "14.7.2",
     "react-native-iap": "^12.12.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-modal-datetime-picker": "^18.0.0",

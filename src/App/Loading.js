@@ -46,11 +46,11 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // An error occured, go to the error page
     if (status === 'error') {
+        const lang = langManager.curr['login'];
         fe.ChangePage('display', {
             args: {
                 icon: 'close-filled',
-                // TODO: Message "Server not reachable" with error code ?
-                text: '[Connection to the server failed]',
+                text: lang['error-connection'],
                 button: 'Retry',
                 action: () => {
                     fe.ChangePage('loading', { storeInHistory: false });
@@ -102,11 +102,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Account not found, probably deleted, go to the login page
     else if (loggedState === 'free') {
+        const lang = langManager.curr['login'];
         user.interface.popup?.OpenT({
             type: 'ok',
             data: {
-                title: langManager.curr['login']['alert-deletedaccount-title'],
-                message: langManager.curr['login']['alert-deletedaccount-message']
+                title: lang['alert-deletedaccount-title'],
+                message: lang['alert-deletedaccount-message']
             },
             callback: async () => {
                 await user.Clear();
@@ -119,11 +120,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // An error occured, go to the error page
     else if (loggedState === 'error' || loggedState === 'deviceLimitReached' || loggedState === 'mailNotSent') {
+        const lang = langManager.curr['login'];
         user.interface.popup?.OpenT({
             type: 'ok',
             data: {
-                title: langManager.curr['login']['alert-error-title'],
-                message: langManager.curr['login']['alert-error-message'].replace('{}', loggedState)
+                title: lang['alert-error-title'],
+                message: lang['alert-error-message'].replace('{}', loggedState)
             },
             callback: async () => {
                 await user.Clear();

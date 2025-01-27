@@ -461,6 +461,8 @@
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
 
+        "error-connection": "Échec de la connexion au serveur",
+
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard. ({})",
         "alert-deletedaccount-title": "Compte supprimé",

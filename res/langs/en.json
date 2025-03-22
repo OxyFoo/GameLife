@@ -461,6 +461,8 @@
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
 
+        "error-connection": "Connection to the server failed",
+
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later. ({})",
         "alert-deletedaccount-title": "Account deleted",

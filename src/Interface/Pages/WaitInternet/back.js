@@ -28,9 +28,10 @@ class BackWaitinternet extends PageBase {
         if (status === 'success' || status === 'already-connected') {
             user.interface.ChangePage('login', { storeInHistory: false });
         } else {
+            const lastError = user.server2.tcp.GetLastError();
             this.setState({
                 currentStatus: status,
-                lastError: user.server2.tcp.GetLastError()
+                lastError: lastError === null ? 'Unknown error' : lastError
             });
         }
     };

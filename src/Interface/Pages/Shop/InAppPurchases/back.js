@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-import {
-    initConnection,
-    endConnection,
-    requestPurchase,
-    PurchaseStateAndroid,
-    flushFailedPurchasesCachedAsPendingAndroid,
-    getProducts,
-    finishTransaction,
-    purchaseUpdatedListener,
-    purchaseErrorListener,
-    ErrorCode,
-    clearProductsIOS
-} from 'react-native-iap';
+// import {
+//     initConnection,
+//     endConnection,
+//     requestPurchase,
+//     PurchaseStateAndroid,
+//     flushFailedPurchasesCachedAsPendingAndroid,
+//     getProducts,
+//     finishTransaction,
+//     purchaseUpdatedListener,
+//     purchaseErrorListener,
+//     ErrorCode,
+//     clearProductsIOS
+// } from 'react-native-iap';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Button } from 'react-native';
 
 /**
  * @typedef {import('react-native').View} View
@@ -46,10 +45,8 @@ import { Button } from 'react-native';
  * @property {number} [rippleDuration]
  */
 
-/** @type {ButtonProps & ButtonPropsType} */
+/** @type {Partial<ButtonProps> & ButtonPropsType} */
 const ButtonProps = {
-    ...Button.prototype.props,
-
     nativeRef: React.createRef(),
     children: undefined,
     style: {},

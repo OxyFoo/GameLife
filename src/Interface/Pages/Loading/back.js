@@ -1,6 +1,7 @@
 import { Animated, Linking } from 'react-native';
 import Config from 'react-native-config';
-import RNRestart from 'react-native-restart';
+// import RNRestart from 'react-native-restart';
+import RNExitApp from 'react-native-exit-app';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
@@ -77,7 +78,8 @@ class BackLoading extends PageBase {
                 icon: 'close-filled',
                 text: lang['loading-error-message'][message],
                 button: lang['loading-error-button'],
-                action: RNRestart.restart
+                //action: RNRestart.restart
+                action: RNExitApp.exitApp // TODO: Redémarrer l'app
             },
             storeInHistory: false
         });

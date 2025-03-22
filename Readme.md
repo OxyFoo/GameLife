@@ -23,7 +23,6 @@ En 3 mots : Gestion RPG IRL
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
-* [React Native Push Notification](https://www.npmjs.com/package/react-native-push-notification) and [Push Notification IOS](https://github.com/react-native-push-notification/ios)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
 * [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)

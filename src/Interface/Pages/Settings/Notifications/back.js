@@ -1,7 +1,6 @@
 import user from 'Managers/UserManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import Notifications from 'Utils/Notifications';
 
 /**
  * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
@@ -19,8 +18,9 @@ class BackSettingsNotifications extends PageBase {
 
     /** @param {boolean} enabled */
     onChangeMorningNotifications = (enabled) => {
-        if (enabled) Notifications.Morning.Enable();
-        else Notifications.Morning.Disable();
+        // TODO: Reimplement notifications
+        // if (enabled) Notifications.Morning.Enable();
+        // else Notifications.Morning.Disable();
         this.setState({ switchMorningNotifs: enabled });
         user.settings.morningNotifications = enabled;
         user.settings.IndependentSave();
@@ -28,8 +28,9 @@ class BackSettingsNotifications extends PageBase {
 
     /** @param {boolean} enabled */
     onChangeEveningNotifications = (enabled) => {
-        if (enabled) Notifications.Evening.Enable();
-        else Notifications.Evening.Disable();
+        // TODO: Reimplement notifications
+        // if (enabled) Notifications.Evening.Enable();
+        // else Notifications.Evening.Disable();
         this.setState({ switchEveningNotifs: enabled });
         user.settings.eveningNotifications = enabled;
         user.settings.IndependentSave();

@@ -9,54 +9,40 @@ on:
         required: true
 
 jobs:
-  update-version-prod:
-    name: '📝 Update version - Prod'
+  update-versions:
+    name: '📝 Update versions (Prod & Dev)'
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
+      - name: 'Checkout repository'
         uses: actions/checkout@v4
         with:
-          ref: 'prod'
+          fetch-depth: 0
 
-      - name: 'Update version'
+      - name: 'Update version for both branches'
         env:
           ACTION_UPDATE: ${{ github.event.inputs.action-update }}
         run: |
-          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
-          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
+          # Array of branches to update
+          BRANCHES=("prod" "test" "dev")
 
-          ./Tools/Version/version.sh $ACTION_UPDATE --force
+          for BRANCH in "${BRANCHES[@]}"; do
+            echo "Updating version for branch: $BRANCH"
 
-      - name: 'Commit changes'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "📝 Update version to $VERSION"
-          git push
+            # Checkout branch
+            git fetch origin $BRANCH
+            git checkout $BRANCH
 
-  update-version-dev:
-    name: '📝 Update version - Dev'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v4
-        with:
-          ref: 'dev'
+            # Update version
+            NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
+            echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
+            ./Tools/Version/version.sh $ACTION_UPDATE --force
 
-      - name: 'Update version'
-        env:
-          ACTION_UPDATE: ${{ github.event.inputs.action-update }}
-        run: |
-          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
-          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
+            # Commit changes
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add .
+            git commit -m "📝 Update version to $NEWVERSION for branch $BRANCH"
+            git push origin $BRANCH
 
-          ./Tools/Version/version.sh $ACTION_UPDATE --force
-
-      - name: 'Commit changes'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "📝 Update version to $VERSION"
-          git push
+            echo "Version updated for branch: $BRANCH"
+          done

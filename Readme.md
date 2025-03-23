@@ -23,6 +23,7 @@ En 3 mots : Gestion RPG IRL
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
+* [React Native Notifee](https://www.npmjs.com/package/@notifee/react-native)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
 * [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
@@ -35,7 +36,3 @@ En 3 mots : Gestion RPG IRL
 * [React Native Masked View](https://www.npmjs.com/package/@react-native-masked-view/masked-view)
 * [React Native Config](https://www.npmjs.com/package/react-native-config)
 * [React Native Gifted Charts](https://www.npmjs.com/package/react-native-gifted-charts)
-
-### Potential libs
-* [Notifee](https://notifee.app/react-native/docs/installation)
-* [React Native Notifications](https://github.com/wix/react-native-notifications)

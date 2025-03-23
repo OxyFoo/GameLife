@@ -10,6 +10,15 @@
         "title": "Notifications générales",
         "notif-user": "Notifications utilisateur",
 
+        "channels": {
+            "regular": {
+                "name": "Notifications régulières"
+            },
+            "activity": {
+                "name": "Notifications d'activités"
+            }
+        },
+
         "morning": {
             "name": "Notifications matinales",
             "title": "GameLife"

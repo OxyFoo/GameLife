@@ -62,7 +62,6 @@
     "@types/websocket": "^1.0.10",
     "babel-jest": "^29.6.3",
     "babel-plugin-module-resolver": "^5.0.0",
-    "babel-plugin-transform-class-properties": "^6.10.2",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-ft-flow": "^3.0.10",

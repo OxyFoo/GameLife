@@ -4,7 +4,7 @@ import { Animated, View, KeyboardAvoidingView, Platform } from 'react-native';
 import styles from './style';
 import BackFlowEngine from './back';
 import SafeAreaWithResponsive from './SafeAreaWithResponsive';
-import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
+import { GetAnimationPage } from './animations';
 import themeManager from 'Managers/ThemeManager';
 
 import PAGES from 'Interface/Pages';
@@ -49,7 +49,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
         return this.availablePages.map((pageName) => {
             const { selectedPage, currentTransition } = this.state;
 
-            const page = this.getMountedPage(pageName);
+            const page = this.getActivePage(pageName);
 
             // Page not found or not mounted and not keep mounted
             if (page === null) {
@@ -66,10 +66,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
                         Page.feShowNavBar && { bottom: this.navBar.current?.state.height },
                         {
                             opacity: Animated.subtract(1, page.transitionEnd),
-                            transform: [
-                                ...GetAnimationPageOpen(page, currentTransition),
-                                ...GetAnimationPageClose(page)
-                            ]
+                            transform: GetAnimationPage(page, currentTransition)
                         }
                     ]}
                     pointerEvents={selectedPage === pageName ? 'auto' : 'none'}

@@ -12,6 +12,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').NativeEventSubscription} NativeEventSubscription
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').ScreenInput} ScreenInput
@@ -116,6 +117,9 @@ class BackFlowEngine extends React.Component {
         }
     };
 
+    /** @type {NativeEventSubscription | null} */
+    nativeEventSubscription = null;
+
     /**
      * @type {Array<PageNames>}
      * @protected
@@ -169,11 +173,11 @@ class BackFlowEngine extends React.Component {
         this._public.navBar = this.navBar.current;
         this._public.notificationsInApp = this.notificationsInApp.current;
 
-        BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
+        this.nativeEventSubscription = BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.BackHandle);
+        this.nativeEventSubscription?.remove();
     }
 
     /**
@@ -207,11 +211,11 @@ class BackFlowEngine extends React.Component {
      * @public
      */
     GetPage = (pageName) => {
-        const page = this.getMountedPage(pageName);
+        const page = this.getActivePage(pageName);
         return page?.ref.current || null;
     };
 
-    GetCurrentPage = () => this.getMountedPage(this.state.selectedPage);
+    GetCurrentPage = () => this.getActivePage(this.state.selectedPage);
 
     /**
      * @description Check if page exist
@@ -423,7 +427,7 @@ class BackFlowEngine extends React.Component {
     mountPage = (nextPage, options, isGoingBack = false) => {
         const { mountedPages } = this.state;
 
-        let newPage = this.getMountedPage(nextPage);
+        let newPage = this.getActivePage(nextPage);
 
         // Page doesn't existe: Add it to memory
         if (newPage === null) {
@@ -435,6 +439,7 @@ class BackFlowEngine extends React.Component {
             if (newPage.args !== options.args) {
                 newPage.args = options.args;
             }
+            // TODO: Vers ici les glitch, ou un peu plus bas
             newPage.ref.current?._componentDidFocused(newPage.args);
             newPage.transitionStart.setValue(0);
             newPage.transitionEnd.setValue(0);
@@ -481,7 +486,7 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     unmountPage = (pageName, isGoingBack = false) => {
-        const oldPage = this.getMountedPage(pageName);
+        const oldPage = this.getActivePage(pageName);
         if (pageName === null || oldPage === null) {
             return;
         }
@@ -575,7 +580,7 @@ class BackFlowEngine extends React.Component {
      * @returns {PageMemory<T> | null}
      * @protected
      */
-    getMountedPage = (pageName) => {
+    getActivePage = (pageName) => {
         const { mountedPages } = this.state;
         if (pageName === null) {
             return null;

@@ -1,6 +1,9 @@
 import { Animated } from 'react-native';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').Animated} Animated
+ *
  * @typedef {import('./back').Transitions} Transitions
  * @typedef {import('./back').PageMemory<*>} PageMemory
  */
@@ -8,8 +11,22 @@ import { Animated } from 'react-native';
 /**
  * @param {PageMemory} page
  * @param {Transitions} transition
+ * @returns {Animated.AnimatedProps<ViewStyle>['transform']}
  */
-function GetAnimationPageOpen(page, transition) {
+function GetAnimationPage(page, transition) {
+    return [
+        // @ts-ignore
+        ..._animation_open(page, transition),
+        ..._animation_close(page)
+    ];
+}
+
+/**
+ * @param {PageMemory} page
+ * @param {Transitions} transition
+ * @returns {Animated.AnimatedProps<ViewStyle>['transform']}
+ */
+function _animation_open(page, transition) {
     if (transition === 'fromLeft') {
         return [
             {
@@ -46,8 +63,9 @@ function GetAnimationPageOpen(page, transition) {
 
 /**
  * @param {PageMemory} page
+ * @returns {Animated.AnimatedProps<ViewStyle>['transform']}
  */
-function GetAnimationPageClose(page) {
+function _animation_close(page) {
     return [
         {
             scale: Animated.add(0.75, Animated.multiply(0.25, Animated.subtract(1, page.transitionEnd)))
@@ -55,4 +73,4 @@ function GetAnimationPageClose(page) {
     ];
 }
 
-export { GetAnimationPageOpen, GetAnimationPageClose };
+export { GetAnimationPage };

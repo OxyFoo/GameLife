@@ -33,6 +33,7 @@ build/
 *.hprof
 .cxx/
 .jso/
+.kotlin/
 local.properties
 index.android.bundle.map
 *.keystore

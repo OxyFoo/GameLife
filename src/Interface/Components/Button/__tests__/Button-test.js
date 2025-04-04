@@ -2,16 +2,13 @@ import 'react-native';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
-
 // Graphical components
 import { Button } from '../index';
 
 describe('[Component] Button', () => {
     it('renders correctly', () => {
-        const tree = renderer.create(<Button>Test</Button>).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { toJSON } = render(<Button>Test</Button>);
+        expect(toJSON()).toMatchSnapshot();
     });
 
     it('event onPress', () => {

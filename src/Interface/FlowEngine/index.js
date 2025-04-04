@@ -28,7 +28,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
         };
 
         return (
-            <SafeAreaWithResponsive onLayout={this.onLayout}>
+            <SafeAreaWithResponsive onLayout={this.onLayout} testID={this.props.testID}>
                 <KeyboardAvoidingView style={[styles.fullscreen, styleBackground]} behavior='padding'>
                     <DynamicBackground opacity={0.15} />
                     {this.renderPages()}

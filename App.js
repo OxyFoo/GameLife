@@ -45,7 +45,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <FlowEngine ref={this.ref} />;
+        return <FlowEngine ref={this.ref} testID='FlowEngine' />;
     }
 }
 

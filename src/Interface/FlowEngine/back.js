@@ -30,7 +30,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {Object} PageMemory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
- * @property {React.RefObject<InstanceType<PAGES[T]>>} ref
+ * @property {React.RefObject<InstanceType<PAGES[T]> | null>} ref
  * @property {boolean} storeInHistory
  * @property {Transitions} transition
  * @property {Animated.Value} transitionStart
@@ -64,29 +64,38 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {BackFlowEngine['_public']} FlowEnginePublicClass
  */
 
+/**
+ * @typedef {Object} FlowEnginePropsType
+ * @property {string} [testID]
+ */
+
+/** @type {FlowEnginePropsType} */
+const BackFlowEngineProps = {
+};
+
 class BackFlowEngine extends React.Component {
-    /** @type {React.RefObject<Popup>} */
+    /** @type {React.RefObject<Popup | null>} */
     popup = React.createRef();
 
-    /** @type {React.RefObject<ScreenInput>} */
+    /** @type {React.RefObject<ScreenInput | null>} */
     screenInput = React.createRef();
 
-    /** @type {React.RefObject<ScreenTuto>} */
+    /** @type {React.RefObject<ScreenTuto | null>} */
     screenTuto = React.createRef();
 
-    /** @type {React.RefObject<Console>} */
+    /** @type {React.RefObject<Console | null>} */
     console = React.createRef();
 
-    /** @type {React.RefObject<BottomPanel>} */
+    /** @type {React.RefObject<BottomPanel | null>} */
     bottomPanel = React.createRef();
 
-    /** @type {React.RefObject<UserHeader>} */
+    /** @type {React.RefObject<UserHeader | null>} */
     userHeader = React.createRef();
 
-    /** @type {React.RefObject<NavBar>} */
+    /** @type {React.RefObject<NavBar | null>} */
     navBar = React.createRef();
 
-    /** @type {React.RefObject<NotificationsInApp>} */
+    /** @type {React.RefObject<NotificationsInApp | null>} */
     notificationsInApp = React.createRef();
 
     state = {
@@ -141,7 +150,8 @@ class BackFlowEngine extends React.Component {
      */
     history = [];
 
-    constructor(props = {}) {
+    /** @param {FlowEnginePropsType} props */
+    constructor(props) {
         super(props);
 
         // Check if all PAGES are valid & if extends PageBase
@@ -660,5 +670,8 @@ class BackFlowEngine extends React.Component {
         ResetCustomBackHandler: this.ResetCustomBackHandler
     };
 }
+
+BackFlowEngine.defaultProps = BackFlowEngineProps;
+BackFlowEngine.prototype.props = BackFlowEngineProps;
 
 export default BackFlowEngine;

@@ -34,6 +34,7 @@ build/
 .cxx/
 .jso/
 .kotlin/
+.bundle/
 local.properties
 index.android.bundle.map
 *.keystore
@@ -76,7 +77,6 @@ google-services.json
 
 # VSCode
 .vscode/
-*.code-workspace
 
 # Python tools
 __pycache__/

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, BackHandler } from 'react-native';
+import { BackHandler } from 'react-native';
 import SafeArea from 'react-native-safe-area';
 import RNExitApp from 'react-native-exit-app';
 
@@ -8,11 +8,12 @@ import PAGES from 'Interface/Pages';
 import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
-import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').NativeEventSubscription} NativeEventSubscription
+ * @typedef {import('./wrapper').PageWrapperRef} PageWrapperRef
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').ScreenInput} ScreenInput
@@ -31,10 +32,9 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
  * @property {React.RefObject<InstanceType<PAGES[T]> | null>} ref
+ * @property {React.RefObject<PageWrapperRef | null>} wrapperRef
  * @property {boolean} storeInHistory
  * @property {Transitions} transition
- * @property {Animated.Value} transitionStart
- * @property {Animated.Value} transitionEnd
  */
 
 /**
@@ -70,8 +70,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  */
 
 /** @type {FlowEnginePropsType} */
-const BackFlowEngineProps = {
-};
+const BackFlowEngineProps = {};
 
 class BackFlowEngine extends React.Component {
     /** @type {React.RefObject<Popup | null>} */
@@ -437,9 +436,10 @@ class BackFlowEngine extends React.Component {
     mountPage = (nextPage, options, isGoingBack = false) => {
         const { mountedPages } = this.state;
 
+        let pageAlreadyMounted = false;
         let newPage = this.getActivePage(nextPage);
 
-        // Page doesn't existe: Add it to memory
+        // Page doesn't exists: Add it to memory
         if (newPage === null) {
             newPage = this.createPage(nextPage, options);
         }
@@ -449,10 +449,8 @@ class BackFlowEngine extends React.Component {
             if (newPage.args !== options.args) {
                 newPage.args = options.args;
             }
-            // TODO: Vers ici les glitch, ou un peu plus bas
             newPage.ref.current?._componentDidFocused(newPage.args);
-            newPage.transitionStart.setValue(0);
-            newPage.transitionEnd.setValue(0);
+            pageAlreadyMounted = true;
         }
 
         if (newPage === null) {
@@ -476,14 +474,11 @@ class BackFlowEngine extends React.Component {
                 {
                     selectedPage: nextPage,
                     currentTransition: transition,
-                    mountedPages: [...mountedPages, newPage]
+                    mountedPages: pageAlreadyMounted ? mountedPages : [...mountedPages, newPage]
                 },
                 () => {
                     resolve();
-                    if (newPage !== null) {
-                        SpringAnimation(newPage.transitionStart, 1).start();
-                        SpringAnimation(newPage.transitionEnd, 0).start();
-                    }
+                    newPage?.wrapperRef.current?.animateIn();
                 }
             );
         });
@@ -505,7 +500,7 @@ class BackFlowEngine extends React.Component {
             this.addPageToHistory(oldPage.pageName, oldPage.args);
         }
 
-        TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
+        oldPage.wrapperRef.current?.animateOut(() => {
             if (PAGES[pageName].feKeepMounted === true) {
                 oldPage.ref.current?._componentDidUnfocused();
             } else {
@@ -564,10 +559,9 @@ class BackFlowEngine extends React.Component {
             pageName: pageName,
             args: options.args || {},
             ref: React.createRef(),
+            wrapperRef: React.createRef(),
             storeInHistory: options.storeInHistory ?? true,
-            transition: options.transition || 'auto',
-            transitionStart: new Animated.Value(0),
-            transitionEnd: new Animated.Value(0)
+            transition: options.transition || 'auto'
         };
     };
 

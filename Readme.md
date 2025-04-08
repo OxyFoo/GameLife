@@ -14,6 +14,7 @@ En 3 mots : Gestion RPG IRL
 <details>
 <summary>React native packages</summary>
 
+* [React Native Reanimated](https://npmjs.com/package/react-native-reanimated)
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)

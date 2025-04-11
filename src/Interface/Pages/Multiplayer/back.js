@@ -31,7 +31,7 @@ class BackMultiplayer extends PageBase {
         friendsPending: []
     };
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     refAddButton = React.createRef();
 
     componentDidMount() {

@@ -6,7 +6,7 @@ import SafeArea from 'react-native-safe-area';
  */
 
 /**
- * @param {React.RefObject<View>} ref
+ * @param {React.RefObject<View | null>} ref
  * @returns {Promise<LayoutRectangle>}
  */
 async function GetAbsolutePosition(ref) {

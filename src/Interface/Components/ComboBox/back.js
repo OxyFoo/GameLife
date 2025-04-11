@@ -66,10 +66,10 @@ class ComboBoxBack extends React.Component {
         search: ''
     };
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     refParent = React.createRef();
 
-    /** @type {React.RefObject<FlatList>} */
+    /** @type {React.RefObject<FlatList | null>} */
     refFlatlist = React.createRef();
 
     /**

@@ -22,7 +22,7 @@ function SwitchTextCell(
         onPress: () => {}
     }
 ) {
-    /** @type {React.RefObject<Ripple>} */
+    /** @type {React.RefObject<Ripple | null>} */
     const refRipple = React.useRef(null);
 
     return (

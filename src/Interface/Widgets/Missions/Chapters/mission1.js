@@ -21,7 +21,7 @@ async function StartMission1() {
 
     const lang = langManager.curr['missions']['content'];
 
-    /** @type {React.RefObject<AddActivity>} */
+    /** @type {React.RefObject<AddActivity | null>} */
     const refAddActivity = React.createRef();
     const missionLang = lang['mission1'];
     const missionTexts = missionLang['texts'];
@@ -52,7 +52,8 @@ async function StartMission1() {
                     duration: 60,
                     friends: [],
                     startTime: RoundTimeTo(TIME_STEP_MINUTES, GetLocalTime(), 'near'),
-                    timezone: 0
+                    timezone: 0,
+                    notifyBefore: null
                 });
                 await Sleep(500);
                 return false;

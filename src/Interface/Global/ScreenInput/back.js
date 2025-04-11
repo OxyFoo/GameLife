@@ -30,7 +30,7 @@ class ScreenInputBack extends React.Component {
         keyboardHeight: new Animated.Value(Dimensions.get('window').height)
     };
 
-    /** @type {React.RefObject<InputText>} */
+    /** @type {React.RefObject<InputText | null>} */
     refInput = React.createRef();
 
     posX = 0;

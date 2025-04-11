@@ -22,7 +22,7 @@ import {
  * @typedef {import('Interface/Components').InputText} InputText
  *
  * @typedef {Object} BackActivityPage2AddPropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {Activity} activity
  * @property {Activity | null} baseActivity
  * @property {(newActivity: Activity) => Promise<void>} changeActivity

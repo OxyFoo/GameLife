@@ -11,7 +11,7 @@ import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2PropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {boolean} show
  * @property {Activity} activity
  * @property {Activity | null} editActivity
@@ -40,10 +40,10 @@ class BackActivityPage2 extends React.Component {
         categoryColor: 'main1'
     };
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     nativeRefAddView = React.createRef();
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     nativeRefStartNowView = React.createRef();
 
     /** @param {BackActivityPage2PropsType} props */

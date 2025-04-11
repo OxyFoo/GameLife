@@ -21,7 +21,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * - Minimum size of the panel in pixels, default is same as maxPosY to disable the feature
  * @property {number} [maxPosY] Maximum size of the panel in pixels, default is 90% of the screen height
  * @property {number} [zIndex] Default is 0
- * @property {React.RefObject<FlatList>} [refScroller]
+ * @property {React.RefObject<FlatList | null>} [refScroller]
  * @property {() => void} [onClose]
  */
 

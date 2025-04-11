@@ -195,7 +195,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Setup Notifications
     user.notificationsPush.Initialize();
-    user.notificationsPush.SetupRegularNotifications();
+    user.notificationsPush.SetupAllNotifications();
 
     // Load admob
     //await user.consent.ShowTrackingPopup();

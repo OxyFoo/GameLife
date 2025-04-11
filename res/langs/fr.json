@@ -10,21 +10,8 @@
         "title": "Notifications générales",
         "notif-user": "Notifications utilisateur",
 
-        "channels": {
-            "regular": {
-                "name": "Notifications régulières"
-            },
-            "activity": {
-                "name": "Notifications d'activités"
-            }
-        },
-
-        "morning": {
-            "name": "Notifications matinales",
-            "title": "GameLife"
-        },
-        "evening": {
-            "name": "Notifications sérotinales",
+        "regular": {
+            "name": "Notifications régulières",
             "title": "GameLife",
             "messages": [
                 "Chaque réussite compte ! Quelles sont les étapes que vous avez franchies aujourd'hui ?",
@@ -42,6 +29,23 @@
                 "Votre héritage se construit un jour à la fois. Avez-vous enregistré l'histoire d'aujourd'hui ?",
                 "Des moments épiques vous attendent ! Quels récits épiques de la journée allez-vous partager dans l'application ?",
                 "Marquez des points en notant vos victoires quotidiennes. Avez-vous déjà enregistré vos victoires ?"
+            ]
+        },
+        "activities": {
+            "name": "Notifications d'activités",
+            "title": "GameLife - Activité",
+            "messages": [
+                "C’est parti ! Ta séance de {skillName} commence dans {minutes} minutes — montre ce que tu vaux !",
+                "Plus que {minutes} minutes avant {skillName} — prépare-toi à tout déchirer !",
+                "Ton futur toi te remerciera — {skillName} commence dans {minutes} minutes !",
+                "Hey ! {minutes} minutes avant {skillName} — tu peux le faire !",
+                "Tu l’as déjà zappé la dernière fois... {skillName} dans {minutes} minutes. Montre que tu es motivé."
+            ],
+            "messages-now": [
+                "C’est parti ! Ta séance de {skillName} commence maintenant — montre ce que tu vaux !",
+                "Ta séance de {skillName} commence — prépare-toi à tout déchirer !",
+                "Ton futur toi te remerciera — {skillName} commence maintenant !",
+                "Hey ! {skillName} commence maintenant — tu peux le faire !"
             ]
         },
         "quests": {
@@ -342,6 +346,9 @@
         "create-skill": "Créer une compétence",
         "swiper-gpt": "ZapGPT",
         "add-commentary": "Ajouter un commentaire",
+
+        "notifications-add": "Ajouter une notification",
+        "notifications-add-text": "Minutes avant l'activité",
 
         "alert-remove-title": "Suppression ?",
         "alert-remove-message": "Es-tu sûr(e) de vouloir supprimer cette activité ?",

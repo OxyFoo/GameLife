@@ -16,7 +16,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
     render() {
         const lang = langManager.curr['activity'];
         const langDatesNames = langManager.curr['dates']['names'];
-        const { nativeRef, activity, editActivity } = this.props;
+        const { nativeRef, activity, baseActivity } = this.props;
         const { loading, selectedHours, selectedMinutes, DTPMode, DTPDate } = this.state;
 
         const startDate = GetDate(activity.startTime);
@@ -35,7 +35,7 @@ class AddActivityPage2Add extends BackActivityPage2Add {
         return (
             <View ref={nativeRef} collapsable={false}>
                 {/* Add later or already done */}
-                <Text style={styles.title}>{editActivity === null ? lang['title-add'] : lang['title-edit']}</Text>
+                <Text style={styles.title}>{baseActivity === null ? lang['title-add'] : lang['title-edit']}</Text>
 
                 {/* Select start day & start time */}
                 <View style={styles.plannerContent}>
@@ -112,6 +112,48 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                     </Button>
                 </View>
 
+                {/* Notifications */}
+                {activity.notifyBefore === null ? (
+                    <Button
+                        style={[styles.notificationsAddButton, styleBorderColor]}
+                        styleContent={styles.notificationsAddButtonContent}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={this.enableNotification}
+                    >
+                        <Icon icon='bell-outline' />
+                        <Text>{lang['notifications-add']}</Text>
+                        <Icon icon='add-outline' />
+                    </Button>
+                ) : (
+                    <View style={styles.notifications}>
+                        <View style={[styles.notificationsContent, styleBorderColor]}>
+                            <Icon icon='bell-outline' />
+
+                            <View style={styles.notificationsDigitView}>
+                                <Digit
+                                    style={[styles.stDigit, styleBorderColor]}
+                                    stepValue={5}
+                                    maxValue={60}
+                                    velocity={2}
+                                    value={activity.notifyBefore}
+                                    onChangeValue={this.setNotificationMinutes}
+                                />
+                                <Text>{lang['notifications-add-text']}</Text>
+                            </View>
+
+                            <Button
+                                style={styles.notificationRemoveBtn}
+                                appearance='uniform'
+                                color='transparent'
+                                onPress={this.disableNotification}
+                            >
+                                <Icon icon='trash-outline' color='danger' />
+                            </Button>
+                        </View>
+                    </View>
+                )}
+
                 {/* Input: Comment */}
                 <InputText
                     style={styles.commentInputText}
@@ -125,21 +167,21 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 />
 
                 {/* Button: Add to planner */}
-                {editActivity === null && (
+                {baseActivity === null && (
                     <Button style={styles.addActivityButton} onPress={this.onAddActivity} loading={loading}>
                         {lang['button-add']}
                     </Button>
                 )}
 
                 {/* Button: Edit activity */}
-                {editActivity !== null && this.isEdited() && (
+                {baseActivity !== null && this.isEdited() && (
                     <Button style={styles.addActivityButton} onPress={this.onAddActivity} loading={loading}>
                         {lang['button-edit']}
                     </Button>
                 )}
 
                 {/* Button: Remove activity */}
-                {editActivity !== null && (
+                {baseActivity !== null && (
                     <Button
                         style={styles.addActivityButton}
                         appearance='outline'

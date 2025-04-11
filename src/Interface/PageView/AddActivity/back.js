@@ -42,7 +42,8 @@ class BackActivity extends React.Component {
             addedTime: 0, // Auto defined when activity is added
             addedType: 'normal',
             comment: '',
-            friends: []
+            friends: [],
+            notifyBefore: null
         }
     };
 

@@ -1,0 +1,99 @@
+name: "🚀 GameLife - Fastlane Build & Delivery"
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Choose environment to build (dev, test, prod)"
+        required: true
+        type: string
+      delivery:
+        description: "Should we deliver to the stores?"
+        required: true
+        type: boolean
+
+jobs:
+  android:
+    name: "🤖 Android"
+    runs-on: ubuntu-latest
+    container: reactnativecommunity/react-native-android
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          submodules: "recursive"
+          token: ${{ secrets.CICD_PAT }}
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.x"
+
+      - name: "Install Ruby & Fastlane"
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+
+      - name: "Install npm dependencies"
+        run: npm install
+
+      - name: "Build & Deliver Android with Fastlane"
+        env:
+          ENVFILE: .env.${{ github.event.inputs.environment }}
+          GOOGLE_PLAY_SERVICE_JSON_BASE64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: |
+          # Récupération de la clé Play Store
+          echo "$GOOGLE_PLAY_SERVICE_JSON_BASE64" | base64 -d > ./fastlane/Android/google-play.json
+
+          # Si environnement de test, on change l’ID du package
+          if [ "${{ github.event.inputs.environment }}" == "test" ]; then
+            chmod +x ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh
+            ./Tools/BundleIdSwitcher/bundleIdSwitcher.sh test
+          fi
+
+          # Appel des lanes Fastlane
+          cd fastlane/Android
+          if [ "${{ github.event.inputs.delivery }}" == "true" ] && [ "${{ github.event.inputs.environment }}" != "dev" ]; then
+            fastlane deploy env:"${{ github.event.inputs.environment }}"
+          else
+            fastlane build env:"${{ github.event.inputs.environment }}"
+          fi
+
+  ios:
+    name: "🍏 iOS"
+    runs-on: macos-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          submodules: "recursive"
+          token: ${{ secrets.CICD_PAT }}
+
+      - name: "Install Ruby & Fastlane"
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+
+      - name: "Install dependencies"
+        run: |
+          npm install
+          cd ios && pod install
+
+      - name: "Build & Deliver iOS with Fastlane"
+        env:
+          ENVFILE: .env.${{ github.event.inputs.environment }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        run: |
+          # Appel des lanes Fastlane
+          cd fastlane/iOS
+          if [ "${{ github.event.inputs.delivery }}" == "true" ] && [ "${{ github.event.inputs.environment }}" != "dev" ]; then
+            fastlane deploy env:"${{ github.event.inputs.environment }}"
+          else
+            fastlane build env:"${{ github.event.inputs.environment }}"
+          fi

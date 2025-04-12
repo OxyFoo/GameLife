@@ -1,0 +1,28 @@
+name: '⚙️ GameLife - DEBUG'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        type: choice
+        default: 'prod'
+        options:
+          - dev
+          - test
+          - prod
+      delivery:
+        description: 'Delivery to stores (test & prod only)'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  tests:
+    name: '🔍 Tests'
+    uses: ./.github/workflows/step-mobile.yml
+    secrets: inherit
+    with:
+      environment: ${{ github.event.inputs.environment }}
+      delivery: ${{ github.event.inputs.delivery }}

@@ -17,13 +17,11 @@ const styles = StyleSheet.create({
     },
     plannerButtonLeft: {
         flex: 1,
-        marginRight: 6,
-        justifyContent: 'center'
+        marginRight: 6
     },
     plannerButtonRight: {
         flex: 1,
-        marginLeft: 6,
-        justifyContent: 'center'
+        marginLeft: 6
     },
     plannerButtonText: {
         flex: 1,
@@ -153,6 +151,27 @@ const styles = StyleSheet.create({
 
     addActivityButton: {
         marginTop: 24
+    },
+
+    hintView: {
+        position: 'absolute',
+        transform: [{ translateY: '-50%' }],
+        left: 8,
+        paddingHorizontal: 6,
+        zIndex: 999,
+        elevation: 999
+    },
+    hintText: {
+        fontSize: 12
+    },
+    hintBar: {
+        position: 'absolute',
+        top: '50%',
+        left: 0,
+        right: 0,
+        height: 2,
+        opacity: 0.9,
+        backgroundColor: 'black'
     }
 });
 

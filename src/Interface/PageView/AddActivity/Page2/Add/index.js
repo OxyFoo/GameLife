@@ -37,33 +37,44 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                 {/* Add later or already done */}
                 <Text style={styles.title}>{baseActivity === null ? lang['title-add'] : lang['title-edit']}</Text>
 
-                {/* Select start day & start time */}
                 <View style={styles.plannerContent}>
-                    <Button
-                        style={styles.plannerButtonLeft}
-                        appearance='outline'
-                        fontColor='primary'
-                        borderColor='border'
-                        onPress={this.setDate}
-                    >
-                        <Text style={styles.plannerButtonText}>{textStartDate}</Text>
-                        <Icon icon='planner-outline' />
-                    </Button>
+                    {/* Select start day */}
+                    <View style={styles.plannerButtonLeft}>
+                        <View style={styles.hintView}>
+                            <View style={styles.hintBar} />
+                            <Text style={styles.hintText}>{lang['hint-date']}</Text>
+                        </View>
+                        <Button appearance='outline' fontColor='primary' borderColor='border' onPress={this.setDate}>
+                            <Text style={styles.plannerButtonText}>{textStartDate}</Text>
+                            <Icon icon='planner-outline' />
+                        </Button>
+                    </View>
 
-                    <Button
-                        style={styles.plannerButtonRight}
-                        appearance='outline'
-                        fontColor='primary'
-                        borderColor='border'
-                        onPress={this.setStartTime}
-                    >
-                        <Text style={styles.plannerButtonText}>{textStartTime}</Text>
-                        <Icon icon='clock-outline' />
-                    </Button>
+                    {/* Select start time */}
+                    <View style={styles.plannerButtonRight}>
+                        <View style={styles.hintView}>
+                            <View style={styles.hintBar} />
+                            <Text style={styles.hintText}>{lang['hint-start']}</Text>
+                        </View>
+                        <Button
+                            appearance='outline'
+                            fontColor='primary'
+                            borderColor='border'
+                            onPress={this.setStartTime}
+                        >
+                            <Text style={styles.plannerButtonText}>{textStartTime}</Text>
+                            <Icon icon='clock-outline' />
+                        </Button>
+                    </View>
                 </View>
 
                 {/* Select end time or duration */}
                 <View style={styles.starttime}>
+                    <View style={styles.hintView}>
+                        <View style={styles.hintBar} />
+                        <Text style={styles.hintText}>{lang['hint-duration']}</Text>
+                    </View>
+
                     {/* Input: End time (by duration) */}
                     <View style={[styles.stButtonLeft, styleBorderColor]}>
                         {/* Icon: Hourglass */}
@@ -99,17 +110,23 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                     </View>
 
                     {/* Input: End time (by time) */}
-                    <Button
-                        style={styles.stButtonRight}
-                        styleBackground={styles.stButtonRightBackground}
-                        appearance='outline'
-                        fontColor='primary'
-                        borderColor='border'
-                        onPress={this.setDurationByTime}
-                    >
-                        <Text style={styles.stButtonRightText}>{textEndTime}</Text>
-                        <Icon icon='clock-outline' />
-                    </Button>
+                    <View>
+                        <View style={styles.hintView}>
+                            <View style={styles.hintBar} />
+                            <Text style={styles.hintText}>{lang['hint-end']}</Text>
+                        </View>
+                        <Button
+                            style={styles.stButtonRight}
+                            styleBackground={styles.stButtonRightBackground}
+                            appearance='outline'
+                            fontColor='primary'
+                            borderColor='border'
+                            onPress={this.setDurationByTime}
+                        >
+                            <Text style={styles.stButtonRightText}>{textEndTime}</Text>
+                            <Icon icon='clock-outline' />
+                        </Button>
+                    </View>
                 </View>
 
                 {/* Notifications */}

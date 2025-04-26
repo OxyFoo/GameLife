@@ -72,6 +72,9 @@
             "global-message-input": "Répondre aux développeurs",
             "global-message-mark-read": "Marquer comme lu",
 
+            "optional-update-text": "Une mise à jour est disponible : version {}",
+            "optional-update-button": "Mettre à jour",
+
             "list-empty": "Aucune notification pour le moment",
 
             "popup-responded-title": "Merci",

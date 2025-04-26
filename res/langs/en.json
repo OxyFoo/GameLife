@@ -72,6 +72,9 @@
             "global-message-input": "Reply to developers",
             "global-message-mark-read": "Mark as read",
 
+            "optional-update-text": "An update is available: version {}",
+            "optional-update-button": "Update",
+
             "list-empty": "No notifications available",
 
             "popup-responded-title": "Thanks",

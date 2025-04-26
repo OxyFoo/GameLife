@@ -4,6 +4,7 @@ import { Animated } from 'react-native';
 import NIA_GlobalMessage from './Templates/GlobalMessage';
 import NIA_FriendPending from './Templates/FriendPending';
 import NIA_AchievementPending from './Templates/AchievementPending';
+import NIA_OptionalUpdate from './Templates/OptionalUpdate';
 
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -13,6 +14,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInAppGlobalMessage
  * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
  * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
  */
 
 /**
@@ -51,6 +53,11 @@ function NIA_Template({ item, index }) {
         case 'global-message':
             const notifGlobalMessage = /** @type {NotificationInAppGlobalMessage} */ (item);
             content = <NIA_GlobalMessage notif={notifGlobalMessage} index={index} />;
+            break;
+
+        case 'optional-update':
+            const notifOptionalUpdate = /** @type {NotificationInAppOptionalUpdate} */ (item);
+            content = <NIA_OptionalUpdate notif={notifOptionalUpdate} index={index} />;
             break;
 
         default:

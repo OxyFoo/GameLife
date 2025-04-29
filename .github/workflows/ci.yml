@@ -18,5 +18,4 @@ jobs:
     with:
       environment: dev
       test-client: true
-      test-database: true
-      test-migration: true
+      test-resource: true

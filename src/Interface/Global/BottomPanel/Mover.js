@@ -82,8 +82,10 @@ class Mover {
             return;
         }
 
+        const constructorName = Object.getPrototypeOf(scrollView).constructor.name;
+
         // ScrollView is FlatList
-        if (scrollView instanceof FlatList /* || scrollView instanceof Animated.FlatList */) {
+        if (scrollView instanceof FlatList && constructorName === 'FlatList') {
             if (scrollView.props.scrollEnabled !== false) {
                 scrollView.setNativeProps({ scrollEnabled: false });
             }
@@ -106,7 +108,10 @@ class Mover {
         }
 
         // ScrollView is ScrollView
-        else if (Object.getPrototypeOf(scrollView).constructor.name === 'ReactNativeFiberHostComponent') {
+        else if (
+            constructorName === 'ReactNativeFiberHostComponent' ||
+            constructorName === 'ReactFabricHostComponent'
+        ) {
             // TODO: Add types & check for ScrollView (scrollEnabled, onLayout, onContentSizeChange)
 
             /** @type {ScrollView['props']} */
@@ -171,7 +176,7 @@ class Mover {
         // Update scroll position
         if (animation) {
             SpringAnimation(this.panel.posAnimY, -this.panel.posY).start();
-            EasingAnimation(this.scrollView.scrollAnimY, this.scrollView.scrollY).start();
+            EasingAnimation(this.scrollView.scrollAnimY, this.scrollView.scrollY, 300, false).start();
         } else {
             this.panel.posAnimY.setValue(-this.panel.posY);
             this.scrollView.scrollAnimY.setValue(this.scrollView.scrollY);
@@ -199,7 +204,7 @@ class Mover {
 
         // Update scroll position
         if (animated) {
-            EasingAnimation(this.scrollView.scrollAnimY, _y).start();
+            EasingAnimation(this.scrollView.scrollAnimY, _y, 300, false).start();
         } else {
             this.scrollView.scrollAnimY.setValue(_y);
         }

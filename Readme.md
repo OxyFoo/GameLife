@@ -10,19 +10,16 @@
 En 3 mots : Gestion RPG IRL
 
 ## Sources
-### Useful links
-* [AppIcon.co](https://appicon.co/)
-* [PHP Sandbox](https://sandbox.onlinephpfunctions.com/)
-* [JS benchmarks](https://jsben.ch/WqlIl)
-* [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
-* [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
-* [Préparer l'environnement iOS (Github Actions)](https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development)
 
-### React native packages
+<details>
+<summary>React native packages</summary>
+
+* [React Native Reanimated](https://npmjs.com/package/react-native-reanimated)
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
 * [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
 * [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
+* [React Native Notifee](https://www.npmjs.com/package/@notifee/react-native)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
 * [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
@@ -36,6 +33,16 @@ En 3 mots : Gestion RPG IRL
 * [React Native Config](https://www.npmjs.com/package/react-native-config)
 * [React Native Gifted Charts](https://www.npmjs.com/package/react-native-gifted-charts)
 
-### Potential libs
-* [Notifee](https://notifee.app/react-native/docs/installation)
-* [React Native Notifications](https://github.com/wix/react-native-notifications)
+</details>
+
+<details>
+<summary>Useful links</summary>
+
+* [AppIcon.co](https://appicon.co/)
+* [PHP Sandbox](https://sandbox.onlinephpfunctions.com/)
+* [JS benchmarks](https://jsben.ch/WqlIl)
+* [Svg to RNSvg](https://react-svgr.com/playground/?native=true&svgo=false)
+* [Installer des fonts custom](https://www.bigbinary.com/learn-react-native/adding-custom-fonts)
+* [Préparer l'environnement iOS (Github Actions)](https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development)
+
+</details>

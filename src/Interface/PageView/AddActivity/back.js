@@ -42,17 +42,18 @@ class BackActivity extends React.Component {
             addedTime: 0, // Auto defined when activity is added
             addedType: 'normal',
             comment: '',
-            friends: []
+            friends: [],
+            notifyBefore: null
         }
     };
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     nativeRefPage1 = React.createRef();
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     nativeRefPage2 = React.createRef();
 
-    /** @type {React.RefObject<AddActivityPage2>} */
+    /** @type {React.RefObject<AddActivityPage2 | null>} */
     refChild2 = React.createRef();
 
     /** @param {BackActivityPropsType} props */

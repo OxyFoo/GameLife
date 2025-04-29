@@ -53,7 +53,7 @@ class BackTodo extends PageBase {
     /** @type {Todo | null} */
     initTodo = null;
 
-    /** @type {React.RefObject<ScrollView>} */
+    /** @type {React.RefObject<ScrollView | null>} */
     refScrollView = React.createRef();
 
     /** @type {number} Position of the scroll (0-1) */

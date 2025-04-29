@@ -32,7 +32,7 @@ class ConsoleBack extends React.Component {
         debug: []
     };
 
-    /** @type {React.RefObject<FlatList>} */
+    /** @type {React.RefObject<FlatList | null>} */
     refDebug = React.createRef();
 
     /** @type {boolean} State of delete buttons */

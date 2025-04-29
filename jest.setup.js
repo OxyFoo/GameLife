@@ -101,3 +101,28 @@ Animated.spring = () => ({
     reset: () => jest.fn(),
     stop: () => jest.fn()
 });
+
+jest.mock('Utils/TCP', () => {
+    return jest.fn().mockImplementation(() => ({
+        Connect: jest.fn(() => Promise.resolve(true)),
+        IsConnected: jest.fn(() => false),
+        Disconnect: jest.fn(),
+        Send: jest.fn(() => true),
+        SendAndWait: jest.fn(() => Promise.resolve({ status: 'connect' })),
+        WaitForAction: jest.fn(() => Promise.resolve({ status: 'connect' })),
+        state: {
+            Set: jest.fn(),
+            Get: jest.fn(() => 'disconnected'),
+            AddListener: jest.fn(() => 1),
+            RemoveListener: jest.fn(),
+        }
+    }))
+});
+
+jest.mock('Utils/DataStorage', () => ({
+    Load: jest.fn(() => Promise.resolve({})),
+    Save: jest.fn(() => Promise.resolve(true)),
+    STORAGE: {
+        LOGIN: 'LOGIN',
+    },
+}));

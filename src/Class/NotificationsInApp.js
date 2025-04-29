@@ -51,8 +51,14 @@ class NotificationsInApp extends IUserClass {
 
     #updateNotifications = () => {
         const notifsAchievements = this.#user.achievements.GetNotifications();
-        const allNotifs = [...notifsAchievements, ...this.#tmpNotifications];
-        this.notifications.Set(allNotifs.sort((a, b) => b.timestamp - a.timestamp));
+        const notifsFromServer = this.#tmpNotifications;
+        const notifForOptionalUpdate = this.#user.informations.GetOptionalUpdateNotifications();
+
+        const allNotifs = [notifForOptionalUpdate, ...notifsAchievements, ...notifsFromServer]
+            .filter((n) => n !== null)
+            .sort((a, b) => b.timestamp - a.timestamp);
+
+        this.notifications.Set(allNotifs);
     };
 
     Clear = () => {

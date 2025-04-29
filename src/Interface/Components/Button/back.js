@@ -16,7 +16,7 @@ import * as React from 'react';
  * @typedef {import('Interface/Primitives').Ripple} Ripple
  *
  * @typedef {Object} ButtonPropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {import('react').ReactNode | string | undefined} children
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
@@ -77,7 +77,7 @@ const ButtonProps = {
 };
 
 class ButtonBack extends React.Component {
-    /** @type {React.RefObject<Ripple>} */
+    /** @type {React.RefObject<Ripple | null>} */
     rippleRef = React.createRef();
 
     time = 0;

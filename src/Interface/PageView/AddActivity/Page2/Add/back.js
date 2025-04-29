@@ -22,9 +22,9 @@ import {
  * @typedef {import('Interface/Components').InputText} InputText
  *
  * @typedef {Object} BackActivityPage2AddPropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {Activity} activity
- * @property {Activity | null} editActivity
+ * @property {Activity | null} baseActivity
  * @property {(newActivity: Activity) => Promise<void>} changeActivity
  * @property {() => void} unSelectActivity
  */
@@ -33,7 +33,7 @@ import {
 const BackActivityPage2AddProps = {
     nativeRef: React.createRef(),
     activity: DEFAULT_ACTIVITY,
-    editActivity: null,
+    baseActivity: null,
     changeActivity: async () => {},
     unSelectActivity: () => {}
 };
@@ -67,7 +67,7 @@ class BackActivityPage2Add extends React.Component {
     }
 
     onAddActivity = async () => {
-        const { activity, editActivity } = this.props;
+        const { activity, baseActivity } = this.props;
 
         if (activity.skillID === 0) {
             return;
@@ -76,10 +76,10 @@ class BackActivityPage2Add extends React.Component {
         this.setState({ loading: true });
 
         let success = true;
-        if (editActivity === null) {
+        if (baseActivity === null) {
             success = await AddActivity(activity);
         } else {
-            success = await EditActivity(editActivity, activity);
+            success = await EditActivity(baseActivity, activity);
         }
 
         if (!success) {
@@ -94,15 +94,15 @@ class BackActivityPage2Add extends React.Component {
 
     onRemoveActivity = async () => {
         const lang = langManager.curr['activity'];
-        const { editActivity } = this.props;
+        const { baseActivity } = this.props;
 
-        if (editActivity === null) {
+        if (baseActivity === null) {
             return;
         }
 
         this.setState({ loading: true });
 
-        const removedStatus = await RemoveActivity(editActivity);
+        const removedStatus = await RemoveActivity(baseActivity);
 
         if (removedStatus === 'error') {
             user.interface.popup?.OpenT({
@@ -142,17 +142,18 @@ class BackActivityPage2Add extends React.Component {
     };
 
     isEdited = () => {
-        const { activity, editActivity } = this.props;
+        const { activity, baseActivity } = this.props;
 
-        if (editActivity === null) {
+        if (baseActivity === null) {
             return false;
         }
 
         return (
-            activity.skillID !== editActivity.skillID ||
-            activity.startTime !== editActivity.startTime ||
-            activity.duration !== editActivity.duration ||
-            activity.comment !== editActivity.comment
+            activity.skillID !== baseActivity.skillID ||
+            activity.startTime !== baseActivity.startTime ||
+            activity.duration !== baseActivity.duration ||
+            activity.comment !== baseActivity.comment ||
+            activity.notifyBefore !== baseActivity.notifyBefore
         );
     };
 
@@ -218,6 +219,49 @@ class BackActivityPage2Add extends React.Component {
         endDate.setMinutes(endDate.getMinutes() + (activity.duration % 60));
         const endTime = GetLocalTime(endDate);
         this.showDTP('time', 'endTime', endTime);
+    };
+
+    enableNotification = () => {
+        const { activity, changeActivity } = this.props;
+
+        // Wait ripple animation
+        setTimeout(() => {
+            changeActivity({
+                ...activity,
+                notifyBefore: 5
+            });
+        }, 100);
+    };
+
+    disableNotification = () => {
+        const { activity, changeActivity } = this.props;
+
+        // Wait ripple animation
+        setTimeout(() => {
+            changeActivity({
+                ...activity,
+                notifyBefore: null
+            });
+        }, 100);
+    };
+
+    /** @type {Digit['props']['onChangeValue']} */
+    setNotificationMinutes = (durationIndex) => {
+        const { activity, changeActivity } = this.props;
+
+        const rawMinutes = durationIndex * 5;
+        if (rawMinutes > 12 * 60) {
+            user.interface.console?.AddLog(
+                'warn',
+                '[AddActivity] Notification time is too long, max 12h before activity'
+            );
+        }
+
+        const minutes = MinMax(0, rawMinutes, 12 * 60);
+        changeActivity({
+            ...activity,
+            notifyBefore: minutes
+        });
     };
 
     /** @type {InputText['props']['onChangeText']} */

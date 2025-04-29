@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, BackHandler } from 'react-native';
+import { BackHandler } from 'react-native';
 import SafeArea from 'react-native-safe-area';
 import RNExitApp from 'react-native-exit-app';
 
@@ -8,10 +8,12 @@ import PAGES from 'Interface/Pages';
 import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
-import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').NativeEventSubscription} NativeEventSubscription
+ * @typedef {import('./wrapper').PageWrapperRef} PageWrapperRef
  * @typedef {import('Interface/Pages').PageNames} PageNames
  * @typedef {import('Interface/Global').Popup} Popup
  * @typedef {import('Interface/Global').ScreenInput} ScreenInput
@@ -29,11 +31,10 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {Object} PageMemory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
- * @property {React.RefObject<InstanceType<PAGES[T]>>} ref
+ * @property {React.RefObject<InstanceType<PAGES[T]> | null>} ref
+ * @property {React.RefObject<PageWrapperRef | null>} wrapperRef
  * @property {boolean} storeInHistory
  * @property {Transitions} transition
- * @property {Animated.Value} transitionStart
- * @property {Animated.Value} transitionEnd
  */
 
 /**
@@ -63,29 +64,37 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @typedef {BackFlowEngine['_public']} FlowEnginePublicClass
  */
 
+/**
+ * @typedef {Object} FlowEnginePropsType
+ * @property {string} [testID]
+ */
+
+/** @type {FlowEnginePropsType} */
+const BackFlowEngineProps = {};
+
 class BackFlowEngine extends React.Component {
-    /** @type {React.RefObject<Popup>} */
+    /** @type {React.RefObject<Popup | null>} */
     popup = React.createRef();
 
-    /** @type {React.RefObject<ScreenInput>} */
+    /** @type {React.RefObject<ScreenInput | null>} */
     screenInput = React.createRef();
 
-    /** @type {React.RefObject<ScreenTuto>} */
+    /** @type {React.RefObject<ScreenTuto | null>} */
     screenTuto = React.createRef();
 
-    /** @type {React.RefObject<Console>} */
+    /** @type {React.RefObject<Console | null>} */
     console = React.createRef();
 
-    /** @type {React.RefObject<BottomPanel>} */
+    /** @type {React.RefObject<BottomPanel | null>} */
     bottomPanel = React.createRef();
 
-    /** @type {React.RefObject<UserHeader>} */
+    /** @type {React.RefObject<UserHeader | null>} */
     userHeader = React.createRef();
 
-    /** @type {React.RefObject<NavBar>} */
+    /** @type {React.RefObject<NavBar | null>} */
     navBar = React.createRef();
 
-    /** @type {React.RefObject<NotificationsInApp>} */
+    /** @type {React.RefObject<NotificationsInApp | null>} */
     notificationsInApp = React.createRef();
 
     state = {
@@ -116,6 +125,9 @@ class BackFlowEngine extends React.Component {
         }
     };
 
+    /** @type {NativeEventSubscription | null} */
+    nativeEventSubscription = null;
+
     /**
      * @type {Array<PageNames>}
      * @protected
@@ -137,7 +149,8 @@ class BackFlowEngine extends React.Component {
      */
     history = [];
 
-    constructor(props = {}) {
+    /** @param {FlowEnginePropsType} props */
+    constructor(props) {
         super(props);
 
         // Check if all PAGES are valid & if extends PageBase
@@ -169,11 +182,11 @@ class BackFlowEngine extends React.Component {
         this._public.navBar = this.navBar.current;
         this._public.notificationsInApp = this.notificationsInApp.current;
 
-        BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
+        this.nativeEventSubscription = BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.BackHandle);
+        this.nativeEventSubscription?.remove();
     }
 
     /**
@@ -207,11 +220,11 @@ class BackFlowEngine extends React.Component {
      * @public
      */
     GetPage = (pageName) => {
-        const page = this.getMountedPage(pageName);
+        const page = this.getActivePage(pageName);
         return page?.ref.current || null;
     };
 
-    GetCurrentPage = () => this.getMountedPage(this.state.selectedPage);
+    GetCurrentPage = () => this.getActivePage(this.state.selectedPage);
 
     /**
      * @description Check if page exist
@@ -423,9 +436,10 @@ class BackFlowEngine extends React.Component {
     mountPage = (nextPage, options, isGoingBack = false) => {
         const { mountedPages } = this.state;
 
-        let newPage = this.getMountedPage(nextPage);
+        let pageAlreadyMounted = false;
+        let newPage = this.getActivePage(nextPage);
 
-        // Page doesn't existe: Add it to memory
+        // Page doesn't exists: Add it to memory
         if (newPage === null) {
             newPage = this.createPage(nextPage, options);
         }
@@ -436,8 +450,7 @@ class BackFlowEngine extends React.Component {
                 newPage.args = options.args;
             }
             newPage.ref.current?._componentDidFocused(newPage.args);
-            newPage.transitionStart.setValue(0);
-            newPage.transitionEnd.setValue(0);
+            pageAlreadyMounted = true;
         }
 
         if (newPage === null) {
@@ -461,14 +474,11 @@ class BackFlowEngine extends React.Component {
                 {
                     selectedPage: nextPage,
                     currentTransition: transition,
-                    mountedPages: [...mountedPages, newPage]
+                    mountedPages: pageAlreadyMounted ? mountedPages : [...mountedPages, newPage]
                 },
                 () => {
                     resolve();
-                    if (newPage !== null) {
-                        SpringAnimation(newPage.transitionStart, 1).start();
-                        SpringAnimation(newPage.transitionEnd, 0).start();
-                    }
+                    newPage?.wrapperRef.current?.animateIn();
                 }
             );
         });
@@ -481,7 +491,7 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     unmountPage = (pageName, isGoingBack = false) => {
-        const oldPage = this.getMountedPage(pageName);
+        const oldPage = this.getActivePage(pageName);
         if (pageName === null || oldPage === null) {
             return;
         }
@@ -490,7 +500,7 @@ class BackFlowEngine extends React.Component {
             this.addPageToHistory(oldPage.pageName, oldPage.args);
         }
 
-        TimingAnimation(oldPage.transitionEnd, 1, 200).start(() => {
+        oldPage.wrapperRef.current?.animateOut(() => {
             if (PAGES[pageName].feKeepMounted === true) {
                 oldPage.ref.current?._componentDidUnfocused();
             } else {
@@ -549,10 +559,9 @@ class BackFlowEngine extends React.Component {
             pageName: pageName,
             args: options.args || {},
             ref: React.createRef(),
+            wrapperRef: React.createRef(),
             storeInHistory: options.storeInHistory ?? true,
-            transition: options.transition || 'auto',
-            transitionStart: new Animated.Value(0),
-            transitionEnd: new Animated.Value(0)
+            transition: options.transition || 'auto'
         };
     };
 
@@ -575,7 +584,7 @@ class BackFlowEngine extends React.Component {
      * @returns {PageMemory<T> | null}
      * @protected
      */
-    getMountedPage = (pageName) => {
+    getActivePage = (pageName) => {
         const { mountedPages } = this.state;
         if (pageName === null) {
             return null;
@@ -655,5 +664,8 @@ class BackFlowEngine extends React.Component {
         ResetCustomBackHandler: this.ResetCustomBackHandler
     };
 }
+
+BackFlowEngine.defaultProps = BackFlowEngineProps;
+BackFlowEngine.prototype.props = BackFlowEngineProps;
 
 export default BackFlowEngine;

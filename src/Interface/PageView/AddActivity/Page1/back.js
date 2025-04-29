@@ -24,7 +24,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('../types').ItemCategory} ItemCategory
  *
  * @typedef {Object} BackActivityPage1PropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {boolean} show
  * @property {Activity} activity
  * @property {(newActivity: Activity) => Promise<void>} changeActivity
@@ -67,10 +67,10 @@ class BackActivityPage1 extends React.Component {
         addSkillLoading: false
     };
 
-    /** @type {React.RefObject<FlatList>} */
+    /** @type {React.RefObject<FlatList | null>} */
     refActivities = React.createRef();
 
-    /** @type {React.RefObject<InputTextThin>} */
+    /** @type {React.RefObject<InputTextThin | null>} */
     refSearchInput = React.createRef();
 
     categoriesNames = dataManager.skills.categories.map((category) => langManager.GetText(category.Name));

@@ -34,7 +34,8 @@ const DEFAULT_ACTIVITY = {
     timezone: 0,
     addedType: 'normal',
     addedTime: 0,
-    friends: []
+    friends: [],
+    notifyBefore: null
 };
 
 /** @extends {IUserData<SaveObject_Activities>} */
@@ -431,6 +432,29 @@ class Activities extends IUserData {
 
         return enrichedSkills;
     }
+
+    /**
+     * @param {Activity} activity
+     * @returns {{ id: string, title: string, body: string }} Notification contents
+     */
+    GetNotificationContent = (activity) => {
+        const lang = langManager.curr['notifications']['activities'];
+
+        const skill = dataManager.skills.GetByID(activity.skillID);
+        const skillName = skill !== null ? langManager.GetText(skill.Name) : 'unknown';
+
+        const allMessages = activity.notifyBefore === 0 ? lang['messages-now'] : lang['messages'];
+        const messageIndex = Math.floor(Math.random() * allMessages.length);
+        const message = allMessages[messageIndex]
+            .replace('{skillName}', skillName)
+            .replace('{minutes}', activity.notifyBefore?.toString() ?? '???');
+
+        return {
+            id: `activity-${activity.skillID}-${activity.startTime}`,
+            title: lang['title'],
+            body: message
+        };
+    };
 
     /**
      * Add activity, return status & Activity if added or edited successfully, null otherwise

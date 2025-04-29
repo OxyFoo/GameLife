@@ -4,7 +4,6 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-//import Notifications from 'Utils/Notifications';
 //import { Character } from 'Interface/Components';
 
 /**
@@ -194,16 +193,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
     // user.interface.userHeader?.ShowAvatar(true);
 
-    // Loading: Notifications
-    //await Notifications.DisableAll().then(() => {
-    //    if (user.settings.morningNotifications) {
-    //        return Notifications.Morning.Enable();
-    //    }
-    //    if (user.settings.eveningNotifications) {
-    //        return Notifications.Evening.Enable();
-    //    }
-    //    return;
-    //});
+    // Setup Notifications
+    user.notificationsPush.Initialize();
+    user.notificationsPush.SetupAllNotifications();
 
     // Load admob
     //await user.consent.ShowTrackingPopup();

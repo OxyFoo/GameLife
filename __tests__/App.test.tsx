@@ -3,15 +3,13 @@
  */
 
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
 import App from '../App';
+import { render, waitFor } from '@testing-library/react-native';
 
-test('renders correctly', async () => {
-    await ReactTestRenderer.act(() => {
-        ReactTestRenderer.create(<App />);
-    });
-});
+it('should load app correctly', async () => {
+    const { findByTestId } = render(<App />);
 
-afterEach(() => {
-    jest.clearAllTimers();
+    const element = await waitFor(() => findByTestId('FlowEngine'));
+
+    expect(element).toBeTruthy();
 });

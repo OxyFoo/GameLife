@@ -32,7 +32,7 @@ function PopupContent({ initStatKey, stats = user.experience.experience.Get().st
         );
     };
 
-    /** @type {React.RefObject<Swiper>} */
+    /** @type {React.RefObject<Swiper | null>} */
     const swiperRef = React.createRef();
     const bars = user.experience.statsKey.map(statBox);
     const initIndex = user.experience.statsKey.indexOf(initStatKey);

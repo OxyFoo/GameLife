@@ -17,7 +17,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Components/Zap/back').ZapOrientation} ZapOrientation
  *
  * @typedef {object} TutoElement
- * @property {(() => React.RefObject<View> | null) | (React.RefObject<View> | null)} component Ref of component to display (null to hide all the screen)
+ * @property {(() => React.RefObject<View | null> | null) | (React.RefObject<View | null> | null)} component Ref of component to display (null to hide all the screen)
  * @property {string} text Text to display
  * @property {number} [fontSize] Font size of the text
  * @property {(() => void | Promise<void>) | null} [execBefore=null] Function to execute before showing the element

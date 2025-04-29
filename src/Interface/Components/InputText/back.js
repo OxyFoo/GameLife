@@ -60,7 +60,7 @@ const InputTextProps = {
 const ANIM_DURATION = 200;
 
 class InputTextBack extends React.Component {
-    /** @type {React.RefObject<TextInput>} */
+    /** @type {React.RefObject<TextInput | null>} */
     refInput = React.createRef();
 
     state = {

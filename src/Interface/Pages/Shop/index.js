@@ -88,7 +88,7 @@ class Shop extends BackShop {
 
         return (
             <View style={styles.noInternetContainer}>
-                <Icon icon='nowifi' size={100} />
+                <Icon icon='no-wifi' size={100} />
                 <Text fontSize={22}>{title}</Text>
                 <Text fontSize={16}>{text}</Text>
             </View>
@@ -100,7 +100,7 @@ class Shop extends BackShop {
 
         return (
             <View style={styles.page}>
-                <ShopHeader ref={this.refHeader} refPage={this.state.refPage} style={styles.shopHeader} />
+                <ShopHeader ref={this.refHeader} style={styles.shopHeader} /*refPage={this.state.refPage}*/ />
 
                 <Banner title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />

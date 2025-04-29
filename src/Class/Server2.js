@@ -19,7 +19,12 @@ class Server2 extends IUserClass {
     #user;
     #listenerTCP;
     #isTrusted = false;
+
     devMode = false;
+    isBanned = false;
+
+    /** @type {string | null} Null if no update is available */
+    optionalUpdateAvailable = null;
 
     /** @param {UserManager} user */
     constructor(user) {
@@ -38,6 +43,7 @@ class Server2 extends IUserClass {
         this.#isTrusted = false;
         this.devMode = false;
         this.isBanned = false;
+        this.optionalUpdateAvailable = null;
     };
 
     Disconnect = () => {
@@ -137,6 +143,15 @@ class Server2 extends IUserClass {
                     message: lang['alert-newversion-message']
                 }
             });
+        }
+
+        if (response.result === 'update-optional') {
+            this.optionalUpdateAvailable = response.version ?? null;
+            if (this.optionalUpdateAvailable !== null) {
+                this.#user.interface.console?.AddLog('warn', 'Optional update available');
+            } else {
+                this.#user.interface.console?.AddLog('error', 'Optional update available but no version provided');
+            }
         }
 
         this.#isTrusted = true;

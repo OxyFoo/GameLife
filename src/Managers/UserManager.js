@@ -2,6 +2,7 @@ import Ads from 'Class/Ads';
 import Consent from 'Class/Consent';
 import Experience from 'Class/Experience';
 import NotificationsInApp from 'Class/NotificationsInApp';
+import NotificationsPush from 'Class/NotificationsPush';
 import Rewards from 'Class/Rewards';
 import Server2 from 'Class/Server2';
 import Settings from 'Class/Settings';
@@ -41,6 +42,7 @@ class UserManager {
         this.consent = new Consent(this);
         this.experience = new Experience(this);
         this.notificationsInApp = new NotificationsInApp(this);
+        this.notificationsPush = new NotificationsPush(this);
         this.rewards = new Rewards(this);
         this.server2 = new Server2(this);
         this.settings = new Settings(this);
@@ -63,6 +65,7 @@ class UserManager {
             this.consent,
             this.experience,
             this.notificationsInApp,
+            this.notificationsPush,
             this.server2,
             this.settings,
             this.shop,

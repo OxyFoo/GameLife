@@ -2,18 +2,13 @@ import 'react-native';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
-
 // Graphical components
 import { InputText } from '../index';
 
 describe('[Component] InputText', () => {
     it('renders correctly', () => {
-        const tree = renderer
-            .create(<InputText />)
-            .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { toJSON } = render(<InputText />);
+        expect(toJSON()).toMatchSnapshot();
     });
 
     it('should update the input value when typed', () => {

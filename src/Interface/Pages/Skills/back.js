@@ -30,7 +30,7 @@ class BackSkills extends PageBase {
         skills: []
     };
 
-    /** @type {React.RefObject<FlatList>} */
+    /** @type {React.RefObject<FlatList | null>} */
     refSkills = React.createRef();
 
     sortList = langManager.curr['skills']['top-sort-list'];

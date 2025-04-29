@@ -2,16 +2,13 @@ import 'react-native';
 import React from 'react';
 import { render } from '@testing-library/react-native';
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
-
 // Graphical components
 import { Text } from '../index';
 
 describe('[Component] Text', () => {
     it('should render correctly', () => {
-        const tree = renderer.create(<Text />).toJSON();
-        expect(tree).toMatchSnapshot();
+        const { toJSON } = render(<Text />);
+        expect(toJSON()).toMatchSnapshot();
     });
 
     it('should render the correct text content', () => {

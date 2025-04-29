@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Animated, View, KeyboardAvoidingView, Platform } from 'react-native';
+import React from 'react';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
 
 import styles from './style';
 import BackFlowEngine from './back';
 import SafeAreaWithResponsive from './SafeAreaWithResponsive';
-import { GetAnimationPageClose, GetAnimationPageOpen } from './animations';
+import PageWrapper from './wrapper';
 import themeManager from 'Managers/ThemeManager';
 
 import PAGES from 'Interface/Pages';
@@ -28,7 +28,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
         };
 
         return (
-            <SafeAreaWithResponsive onLayout={this.onLayout}>
+            <SafeAreaWithResponsive onLayout={this.onLayout} testID={this.props.testID}>
                 <KeyboardAvoidingView style={[styles.fullscreen, styleBackground]} behavior='padding'>
                     <DynamicBackground opacity={0.15} />
                     {this.renderPages()}
@@ -46,39 +46,25 @@ class FlowEnginePagesRender extends BackFlowEngine {
     }
 
     renderPages() {
-        return this.availablePages.map((pageName) => {
+        return this.state.mountedPages.map((page) => {
             const { selectedPage, currentTransition } = this.state;
 
-            const page = this.getMountedPage(pageName);
+            const Page = PAGES[page.pageName];
 
-            // Page not found or not mounted and not keep mounted
-            if (page === null) {
-                return null;
-            }
-
-            const Page = PAGES[pageName];
             return (
-                <Animated.View
-                    key={'page-' + pageName}
-                    style={[
-                        styles.parent,
-                        Page.feShowUserHeader && { top: this.userHeader.current?.state.height },
-                        Page.feShowNavBar && { bottom: this.navBar.current?.state.height },
-                        {
-                            opacity: Animated.subtract(1, page.transitionEnd),
-                            transform: [
-                                ...GetAnimationPageOpen(page, currentTransition),
-                                ...GetAnimationPageClose(page)
-                            ]
-                        }
-                    ]}
-                    pointerEvents={selectedPage === pageName ? 'auto' : 'none'}
-                >
-                    <View style={styles.page}>
+                <PageWrapper key={'page-' + page.pageName} ref={page.wrapperRef} transition={currentTransition}>
+                    <View
+                        style={[
+                            styles.parent,
+                            Page.feShowUserHeader && { top: this.userHeader.current?.state.height },
+                            Page.feShowNavBar && { bottom: this.navBar.current?.state.height }
+                        ]}
+                        pointerEvents={selectedPage === page.pageName ? 'auto' : 'none'}
+                    >
                         <Page ref={page.ref} args={page.args} flowEngine={this._public} />
                         {Platform.OS === 'ios' && <KeyboardSpacerView offset={96} />}
                     </View>
-                </Animated.View>
+                </PageWrapper>
             );
         });
     }

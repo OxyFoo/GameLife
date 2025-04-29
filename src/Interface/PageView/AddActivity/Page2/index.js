@@ -70,7 +70,7 @@ class AddActivityPage2 extends BackActivityPage2 {
                     <AddActivityPage2Add
                         nativeRef={this.nativeRefAddView}
                         activity={activity}
-                        editActivity={editActivity}
+                        baseActivity={editActivity}
                         changeActivity={changeActivity}
                         unSelectActivity={unSelectActivity}
                     />

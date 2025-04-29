@@ -2,22 +2,14 @@
  * @format
  */
 
-import 'react-native';
 import React from 'react';
 import App from '../App';
+import { render, waitFor } from '@testing-library/react-native';
 
-// Note: import explicitly to use the types shipped with jest.
-import {it} from '@jest/globals';
+it('should load app correctly', async () => {
+    const { findByTestId } = render(<App />);
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
+    const element = await waitFor(() => findByTestId('FlowEngine'));
 
-jest.useFakeTimers();
-
-it('renders correctly', () => {
-  //renderer.create(<App />);
-});
-
-afterEach(() => {
-  jest.clearAllTimers();
+    expect(element).toBeTruthy();
 });

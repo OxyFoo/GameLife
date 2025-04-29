@@ -36,10 +36,10 @@ class BackHome extends PageBase {
         scrollable: true
     };
 
-    /** @type {React.RefObject<ScrollView>} */
+    /** @type {React.RefObject<ScrollView | null>} */
     refScrollView = React.createRef();
 
-    /** @type {React.RefObject<View>} */
+    /** @type {React.RefObject<View | null>} */
     refQuestsTitle = React.createRef();
 
     /** @type {Symbol | null} */

@@ -3,13 +3,14 @@ import langManager from 'Managers/LangManager';
 import { IUserData } from 'Types/Interface/IUserData';
 
 import DynamicVar from 'Utils/DynamicVar';
-import { GetAge, GetDaysUntil, GetGlobalTime } from 'Utils/Time';
+import { GetAge, GetDaysUntil, GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Types/Class/ZapGPT').ZapGPTState} ZapGPTState
  * @typedef {import('Types/Data/User/Informations').SaveObject_UserInformations} SaveObject_UserInformations
  * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestSetUsername} ServerRequestSetUsername
+ * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
  */
 
 const DAYS_USERNAME_CHANGE = 30;
@@ -271,6 +272,21 @@ class Informations extends IUserData {
             total: DAYS_BIRTHTIME_CHANGE
         };
     }
+
+    /** @returns {NotificationInAppOptionalUpdate | null} */
+    GetOptionalUpdateNotifications = () => {
+        if (this.user.server2.optionalUpdateAvailable === null) {
+            return null;
+        }
+
+        return {
+            type: 'optional-update',
+            data: {
+                version: this.user.server2.optionalUpdateAvailable
+            },
+            timestamp: GetLocalTime()
+        };
+    };
 }
 
 export default Informations;

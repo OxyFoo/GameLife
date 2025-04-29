@@ -32,7 +32,7 @@ class NavBarBack extends React.Component {
 
     show = false;
 
-    /** @type {Record<keyof Lang['navbar'] | 'addActivity', React.RefObject<View>>} */
+    /** @type {Record<keyof Lang['navbar'] | 'addActivity', React.RefObject<View | null>>} */
     refButtons = {
         home: React.createRef(),
         calendar: React.createRef(),

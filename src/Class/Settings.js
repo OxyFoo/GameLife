@@ -35,6 +35,7 @@ class Settings extends IUserClass {
     tutoFinished = false;
     questHeatMapIndex = 0;
 
+    regularNotificationsLastRefresh = 0;
     morningNotifications = true;
     eveningNotifications = true;
 
@@ -48,6 +49,7 @@ class Settings extends IUserClass {
         this.testMessageReaded = false;
         this.questHeatMapIndex = 0;
 
+        this.regularNotificationsLastRefresh = 0;
         this.morningNotifications = true;
         this.eveningNotifications = true;
 
@@ -70,6 +72,9 @@ class Settings extends IUserClass {
         if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
         if (typeof settings.email !== 'undefined') this.email = settings.email;
         if (typeof settings.token !== 'undefined') this.token = settings.token;
+        if (typeof settings.regularNotificationsLastRefresh !== 'undefined') {
+            this.regularNotificationsLastRefresh = settings.regularNotificationsLastRefresh;
+        }
         if (typeof settings.onboardingWatched !== 'undefined') this.onboardingWatched = settings.onboardingWatched;
         if (typeof settings.testMessageReaded !== 'undefined') this.testMessageReaded = settings.testMessageReaded;
         if (typeof settings.tutoFinished !== 'undefined') this.tutoFinished = settings.tutoFinished;
@@ -99,6 +104,7 @@ class Settings extends IUserClass {
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
             questHeatMapIndex: this.questHeatMapIndex,
+            regularNotificationsLastRefresh: this.regularNotificationsLastRefresh,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
             musicLinks: this.musicLinks,

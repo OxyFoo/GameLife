@@ -35,13 +35,13 @@ class UserHeaderBack extends React.Component {
     /** @type {boolean} */
     show = false;
 
-    /** @type {React.RefObject<Button>} */
+    /** @type {React.RefObject<Button | null>} */
     refContainer = React.createRef();
 
-    /** @type {React.RefObject<Frame>} */
+    /** @type {React.RefObject<Frame | null>} */
     refFrame = React.createRef();
 
-    /** @type {React.RefObject<NotificationsInAppButton>} */
+    /** @type {React.RefObject<NotificationsInAppButton | null>} */
     refBellButton = React.createRef();
 
     /** @type {Symbol | null} */

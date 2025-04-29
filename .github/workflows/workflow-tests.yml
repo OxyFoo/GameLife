@@ -17,13 +17,8 @@ on:
         required: true
         type: boolean
         default: true
-      test-database:
-        description: 'Run database ressources tests'
-        required: true
-        type: boolean
-        default: true
-      test-migration:
-        description: 'Run database migration tests'
+      test-resource:
+        description: 'Run database resource tests'
         required: true
         type: boolean
         default: true
@@ -36,5 +31,4 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
       test-client: ${{ github.event.inputs.test-client == 'true' }}
-      test-database: ${{ github.event.inputs.test-database == 'true' }}
-      test-migration: ${{ github.event.inputs.test-migration == 'true' }}
+      test-resource: ${{ github.event.inputs.test-resource == 'true' }}

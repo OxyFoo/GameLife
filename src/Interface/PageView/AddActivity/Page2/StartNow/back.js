@@ -8,7 +8,7 @@ import { StartActivityNow } from 'Utils/Activities';
  * @typedef {import('Types/Data/User/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2StartNowPropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {Activity} activity
  */
 

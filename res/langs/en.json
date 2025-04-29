@@ -10,12 +10,8 @@
         "title": "General notifications",
         "notif-user": "User notifications",
 
-        "morning": {
-            "name": "Morning notifications",
-            "title": "GameLife"
-        },
-        "evening": {
-            "name": "Evening notifications",
+        "regular": {
+            "name": "Regular notifications",
             "title": "GameLife",
             "messages": [
                 "Every achievement counts! What milestones did you hit today?",
@@ -33,6 +29,23 @@
                 "Your legacy is built one day at a time. Have you logged today's story?",
                 "Epic moments await! What epic tales from today will you share in the app?",
                 "Score big by noting down your daily wins. Have you checked in yet?"
+            ]
+        },
+        "activities": {
+            "name": "Activity notifications",
+            "title": "GameLife - Activity",
+            "messages": [
+                "Let’s go! Your {skillName} session starts in {minutes} minutes — time to shine!",
+                "Just {minutes} minutes left before {skillName} — get in the zone!",
+                "Your future self will thank you — {skillName} starts in {minutes} minutes!",
+                "Hey! {minutes} minutes before {skillName} — you’ve got this !",
+                "Skipped last time... again? {skillName} in {minutes} minutes. Prove you’re serious."
+            ],
+            "messages-now": [
+                "Your {skillName} session starts now! — Let’s do this!",
+                "Time to shine! Your {skillName} session starts now!",
+                "Your {skillName} session is starting now! Let’s go!",
+                "It’s time for {skillName}! Let’s get started!"
             ]
         },
         "quests": {
@@ -58,6 +71,9 @@
             "global-message-close": "Close",
             "global-message-input": "Reply to developers",
             "global-message-mark-read": "Mark as read",
+
+            "optional-update-text": "An update is available: version {}",
+            "optional-update-button": "Update",
 
             "list-empty": "No notifications available",
 
@@ -318,6 +334,10 @@
         "button-start-now": "GO!",
         "button-remove": "Remove activity",
 
+        "hint-date": "Date",
+        "hint-start": "Begin",
+        "hint-end": "End",
+        "hint-duration": "Duration",
         "placeholder-comment": "Commentary",
 
         "title-click-me": "(you can click me)",
@@ -333,6 +353,9 @@
         "create-skill": "Create a skill",
         "swiper-gpt": "ZapGPT",
         "add-commentary": "Add a commentary",
+
+        "notifications-add": "Add a notification",
+        "notifications-add-text": "Minutes before activity",
 
         "alert-remove-title": "Delete ?",
         "alert-remove-message": "Are you sure you want to eliminate this activity?",
@@ -460,6 +483,8 @@
         "error-signin-pseudoUsed": "This username is already in use.",
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
+
+        "error-connection": "Connection to the server failed",
 
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later. ({})",

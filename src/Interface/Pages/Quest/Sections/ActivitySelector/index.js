@@ -35,10 +35,10 @@ class ActivitySelector extends React.Component {
         animSearch: new Animated.Value(0)
     };
 
-    /** @type {React.RefObject<Swiper>} */
+    /** @type {React.RefObject<Swiper | null>} */
     refSwiper = React.createRef();
 
-    /** @type {React.RefObject<InputTextThin>} */
+    /** @type {React.RefObject<InputTextThin | null>} */
     refInput = React.createRef();
 
     /** @type {Array<ItemCategory>} */

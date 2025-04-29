@@ -34,22 +34,22 @@ class BackShop extends PageBase {
         targetChestsStats: null
     };
 
-    /** @type {React.RefObject<ShopHeader>} */
+    /** @type {React.RefObject<ShopHeader | null>} */
     refHeader = React.createRef();
 
-    /** @type {React.RefObject<ShopDailyDeals>} */
+    /** @type {React.RefObject<ShopDailyDeals | null>} */
     refDailyDeals = React.createRef();
 
-    /** @type {React.RefObject<InAppPurchases>} */
+    /** @type {React.RefObject<InAppPurchases | null>} */
     refIAP = React.createRef();
 
-    /** @type {React.RefObject<ShopRandomChests>} */
+    /** @type {React.RefObject<ShopRandomChests | null>} */
     refRandomChests = React.createRef();
 
-    /** @type {React.RefObject<ShopTargetedChests>} */
+    /** @type {React.RefObject<ShopTargetedChests | null>} */
     refTargetedChests = React.createRef();
 
-    /** @type {React.RefObject<ShopDyes>} */
+    /** @type {React.RefObject<ShopDyes | null>} */
     refDyes = React.createRef();
 
     componentDidMount() {

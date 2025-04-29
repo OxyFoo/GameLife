@@ -10,11 +10,12 @@ import user from 'Managers/UserManager';
 
 /**
  * @param {Object} props
+ * @param {string} [props.testID]
  * @param {JSX.Element} props.children
  * @param {(event: LayoutChangeEvent) => void} [props.onLayout]
  * @returns {JSX.Element}
  */
-const SafeAreaWithResponsive = ({ children, onLayout }) => {
+const SafeAreaWithResponsive = ({ testID, children, onLayout }) => {
     const [responsive, setResponsive] = React.useState(user.interface?.responsive.Get());
 
     React.useEffect(() => {
@@ -50,6 +51,7 @@ const SafeAreaWithResponsive = ({ children, onLayout }) => {
                     ]
                 }
             ]}
+            testID={testID}
             onLayout={onLayout}
             children={children}
         />

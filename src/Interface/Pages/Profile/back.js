@@ -23,7 +23,7 @@ class BackProfile extends PageBase {
         ...this.getUpdatedExperience()
     };
 
-    /** @type {React.RefObject<EditorAvatar>} */
+    /** @type {React.RefObject<EditorAvatar | null>} */
     refAvatar = React.createRef();
 
     /** @type {Symbol | null} */

@@ -186,6 +186,8 @@ class Experience extends IUserClass {
     }
 
     /**
+     * Calculate the level, the current XP and the XP required for the next level according to the total accumulated XP.
+     *
      * @description Use arithmetic series
      * * Equation: `Sn = n/2 * (a1 + an)` with `an = (n - 1) * xpPerLevel`
      * * Variables: `a1 = 0`, `Sn -> Total xp`, `n -> level`
@@ -193,6 +195,7 @@ class Experience extends IUserClass {
      * - `Sn = n/2 * ((n - 1) * xpPerLevel)`
      * - `TotalXP = lvl/2 * ((lvl - 1) * xpPerLevel))`
      * - `lvl = 1/2 + Math.sqrt(1 + 8 * totalXP / xpPerLevel)/2`
+     *
      * @param {number} totalXP
      * @param {XPTypes} type
      * @returns {XPInfo}

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Button } from 'react-native';
 
 /**
  * @typedef {import('react-native').View} View
@@ -17,7 +16,7 @@ import { Button } from 'react-native';
  * @typedef {import('Interface/Primitives').Ripple} Ripple
  *
  * @typedef {Object} ButtonPropsType
- * @property {React.RefObject<View>} nativeRef
+ * @property {React.RefObject<View | null>} nativeRef
  * @property {import('react').ReactNode | string | undefined} children
  * @property {StyleProp} style
  * @property {AnimatedProps | null} styleAnimation
@@ -46,10 +45,8 @@ import { Button } from 'react-native';
  * @property {number} [rippleDuration]
  */
 
-/** @type {ButtonProps & ButtonPropsType} */
+/** @type {Partial<ButtonProps> & ButtonPropsType} */
 const ButtonProps = {
-    ...Button.prototype.props,
-
     nativeRef: React.createRef(),
     children: undefined,
     style: {},
@@ -80,7 +77,7 @@ const ButtonProps = {
 };
 
 class ButtonBack extends React.Component {
-    /** @type {React.RefObject<Ripple>} */
+    /** @type {React.RefObject<Ripple | null>} */
     rippleRef = React.createRef();
 
     time = 0;

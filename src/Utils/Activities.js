@@ -88,7 +88,8 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
         timezone: 0,
         addedType: 'start-now',
         addedTime: 0,
-        friends: friendsIDs
+        friends: friendsIDs,
+        notifyBefore: null
     };
 
     return AddActivity(newActivity);
@@ -109,7 +110,8 @@ async function AddActivity(activity) {
         timezone: 0,
         addedType: activity.addedType,
         addedTime: 0,
-        friends: activity.friends
+        friends: activity.friends,
+        notifyBefore: activity.notifyBefore
     });
 
     // Manage errors
@@ -135,10 +137,6 @@ async function AddActivity(activity) {
         user.interface.console?.AddLog('error', `Utils/Activities.Add Status unknown: ${status}`);
         return false;
     }
-
-    // TODO: Reenable notifications
-    // Update notifications
-    // Notifications.Evening.RemoveToday();
 
     // Update missions
     user.missions.SetMissionState('mission1', 'completed');
@@ -172,6 +170,21 @@ async function AddActivity(activity) {
             });
             return false;
         }
+    }
+
+    // Setup notifications
+    if (activity.notifyBefore !== null) {
+        const timestamp = GetDate(activity.startTime - activity.notifyBefore * 60).getTime();
+        const notifContent = user.activities.GetNotificationContent(activity);
+        user.notificationsPush.CreateTrigger(
+            'activityNotifications',
+            {
+                id: notifContent.id,
+                title: notifContent.title,
+                body: notifContent.body
+            },
+            timestamp
+        );
     }
 
     // Display the activity
@@ -297,6 +310,25 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
         }
     }
 
+    // Setup notifications
+    if (oldActivity.notifyBefore !== null) {
+        const notifContent = user.activities.GetNotificationContent(oldActivity);
+        await user.notificationsPush.Remove(notifContent.id);
+    }
+    if (newActivity.notifyBefore !== null) {
+        const timestamp = GetDate(newActivity.startTime - newActivity.notifyBefore * 60).getTime();
+        const notifContent = user.activities.GetNotificationContent(newActivity);
+        await user.notificationsPush.CreateTrigger(
+            'activityNotifications',
+            {
+                id: notifContent.id,
+                title: notifContent.title,
+                body: notifContent.body
+            },
+            timestamp
+        );
+    }
+
     return true;
 }
 
@@ -334,6 +366,12 @@ async function RemoveActivity(activity) {
                     });
                     resolve('error');
                     return;
+                }
+
+                // Remove notifications
+                if (activity.notifyBefore !== null) {
+                    const notifContent = user.activities.GetNotificationContent(activity);
+                    user.notificationsPush.Remove(notifContent.id);
                 }
 
                 resolve('removed');

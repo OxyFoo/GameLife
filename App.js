@@ -12,7 +12,7 @@ import FlowEngine from './src/Interface/FlowEngine';
 const TEST_PAGE = false;
 
 class App extends React.Component {
-    /** @type {React.RefObject<FlowEngineBack>} */
+    /** @type {React.RefObject<FlowEngineBack | null>} */
     ref = React.createRef();
 
     componentDidMount() {
@@ -20,7 +20,7 @@ class App extends React.Component {
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
         // Open the test page
-        user.interface = this.ref.current._public;
+        user.interface = this.ref.current?._public;
 
         if (TEST_PAGE) {
             this.ref.current?.ChangePage('test');
@@ -45,7 +45,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <FlowEngine ref={this.ref} />;
+        return <FlowEngine ref={this.ref} testID='FlowEngine' />;
     }
 }
 

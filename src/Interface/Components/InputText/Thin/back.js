@@ -46,7 +46,7 @@ const InputTextThinProps = {
 const ANIM_DURATION = 200;
 
 class InputTextThinBack extends React.Component {
-    /** @type {React.RefObject<TextInput>} */
+    /** @type {React.RefObject<TextInput | null>} */
     refInput = React.createRef();
 
     state = {

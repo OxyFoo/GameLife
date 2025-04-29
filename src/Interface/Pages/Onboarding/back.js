@@ -16,7 +16,7 @@ class BackOnboarding extends PageBase {
         selectedLangKey: langManager.currentLangageKey
     };
 
-    /** @type {React.RefObject<Swiper>} */
+    /** @type {React.RefObject<Swiper | null>} */
     refSwiper = React.createRef();
 
     componentDidMount() {

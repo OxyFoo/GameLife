@@ -363,10 +363,11 @@ class BackFlowEngine extends React.Component {
 
         const isGoingBack = nextpage === this.history[this.history.length - 1]?.pageName;
         this.changing = true;
-        this.mountPage(nextpage, options).then(options.callback);
+        this.mountPage(nextpage, options)
+            .then(options.callback)
+            .then(() => (this.changing = false));
         this.unmountPage(selectedPage, isGoingBack);
         this.pageDidUpdate(nextpage);
-        this.changing = false;
 
         // Avoid next back handle to go back to the same page
         if (isGoingBack) {

@@ -30,9 +30,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0
     },
     friendTopMiddleGradient: {
-        flex: 1,
         paddingVertical: 18,
-        paddingHorizontal: 12,
+        paddingHorizontal: 12
+    },
+    friendTopMiddleGradientContainer: {
+        flex: 1,
         alignItems: 'center',
         borderRadius: 8,
         overflow: 'hidden'

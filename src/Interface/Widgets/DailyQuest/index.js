@@ -88,8 +88,9 @@ class DailyQuest extends DailyQuestBack {
                     ]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    children={children}
-                />
+                >
+                    <View style={styles.bodyContent}>{children}</View>
+                </LinearGradient>
             </View>
         );
     }

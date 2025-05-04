@@ -39,16 +39,18 @@ class Skill extends BackSkill {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                         >
-                            <Icon style={styles.activityIcon} xml={selectedSkill.xml} />
-                            <View style={styles.activityTextView}>
-                                <Text
-                                    style={styles.activityText}
-                                >{`${selectedSkill.name} - ${selectedSkill.category}`}</Text>
-                                {!selectedSkill.enabled && (
-                                    <Text style={styles.skillUnallocated} color='warning'>
-                                        {lang['text-unallocated']}
-                                    </Text>
-                                )}
+                            <View style={styles.activityView}>
+                                <Icon style={styles.activityIcon} xml={selectedSkill.xml} />
+                                <View style={styles.activityTextView}>
+                                    <Text
+                                        style={styles.activityText}
+                                    >{`${selectedSkill.name} - ${selectedSkill.category}`}</Text>
+                                    {!selectedSkill.enabled && (
+                                        <Text style={styles.skillUnallocated} color='warning'>
+                                            {lang['text-unallocated']}
+                                        </Text>
+                                    )}
+                                </View>
                             </View>
                         </LinearGradient>
 
@@ -80,9 +82,9 @@ class Skill extends BackSkill {
                         {lang['informations-title']}
                     </Text>
                     <View style={styles.kpiContainer}>
-                        <KPI style={styles.kpiLeft} title={langLevel['total']} value={history.length} />
+                        <KPI containerStyle={styles.kpiLeft} title={langLevel['total']} value={history.length} />
                         <KPI
-                            style={styles.kpiRight}
+                            containerStyle={styles.kpiRight}
                             title={langLevel['total-hour']}
                             value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
                         />

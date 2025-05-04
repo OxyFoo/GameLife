@@ -31,7 +31,8 @@ class Statistics extends BackStatistics {
                     <View style={styles.kpiRow}>
                         <KPI style={styles.kpiCard} title={lang['kpi-since']} value={kpis.playedDays} />
                         <KPI
-                            style={[styles.kpiCard, styles.kpiCardMiddle]}
+                            style={styles.kpiCard}
+                            containerStyle={styles.kpiCardMiddle}
                             title={lang['kpi-activities']}
                             value={kpis.totalActivityLength}
                         />
@@ -41,7 +42,8 @@ class Statistics extends BackStatistics {
                     <View style={styles.kpiRow}>
                         <KPI style={styles.kpiCard} title={lang['kpi-ox']} value={kpis.ox} />
                         <KPI
-                            style={[styles.kpiCard, styles.kpiCardMiddle]}
+                            style={styles.kpiCard}
+                            containerStyle={styles.kpiCardMiddle}
                             title={lang['kpi-inventory']}
                             value={kpis.inventoryCount}
                         />

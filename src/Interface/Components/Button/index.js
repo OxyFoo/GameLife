@@ -179,7 +179,7 @@ class Button extends ButtonBack {
                         style={styles.absolute}
                         maskElement={<View style={[styles.content, styleContent, styleContentProp]}>{content}</View>}
                     >
-                        <Gradient style={styles.fill} />
+                        <Gradient containerStyle={styles.fill} />
                     </MaskedView>
                 </View>
             );
@@ -198,7 +198,7 @@ class Button extends ButtonBack {
         const { appearance, color, borderColor, styleBackground } = this.props;
 
         if (appearance === 'normal') {
-            return <Gradient style={styles.absolute} />;
+            return <Gradient containerStyle={styles.absolute} />;
         } else if (appearance === 'uniform') {
             return (
                 <View
@@ -229,7 +229,7 @@ class Button extends ButtonBack {
                     style={styles.absolute}
                     maskElement={<View style={[styles.backgroundView, styleBackground]} />}
                 >
-                    <Gradient style={styles.fill} />
+                    <Gradient containerStyle={styles.fill} />
                 </MaskedView>
             );
         } else if (appearance === 'outline-blur') {
@@ -251,7 +251,7 @@ class Button extends ButtonBack {
                         style={styles.absolute}
                         maskElement={<View style={[styles.backgroundView, styleBackground]} />}
                     >
-                        <Gradient style={styles.fill} />
+                        <Gradient containerStyle={styles.fill} />
                     </MaskedView>
                 </>
             );

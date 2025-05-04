@@ -21,10 +21,12 @@ const styles = StyleSheet.create({
 
     // Quest info
     questHeader: {
+        borderRadius: 10
+    },
+    questHeaderView: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderRadius: 10,
         paddingLeft: 16
     },
     questTextView: {
@@ -66,8 +68,10 @@ const styles = StyleSheet.create({
     streakChartContainer: {
         marginTop: 12,
         alignItems: 'center',
-        paddingVertical: 16,
         borderRadius: 12
+    },
+    streakChartView: {
+        paddingVertical: 16
     },
     yearHeatMap: {
         // Margin bottom + add activity button height

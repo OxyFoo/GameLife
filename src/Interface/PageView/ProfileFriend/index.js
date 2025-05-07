@@ -72,7 +72,8 @@ class ProfileFriend extends BackProfileFriend {
                             value={`${activities.totalDays} ${langDates['day-min']}`}
                         />
                         <KPI
-                            style={[styles.kpiProfile, styles.kpiProfileMiddle]}
+                            style={styles.kpiProfile}
+                            containerStyle={styles.kpiProfileMiddle}
                             title={lang['row-activities']}
                             value={activities.activitiesLength}
                         />

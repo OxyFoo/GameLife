@@ -3,11 +3,13 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // Title
     gradient: {
+        borderRadius: 8
+    },
+    gradientInner: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12,
-        borderRadius: 8
+        paddingVertical: 12
     },
     activityIcon: {
         marginRight: 16
@@ -26,12 +28,14 @@ const styles = StyleSheet.create({
 
     // Score
     scoreParent: {
+        marginBottom: 16,
+        borderRadius: 8
+    },
+    scoreView: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 16,
-        padding: 16,
-        borderRadius: 8
+        padding: 16
     },
     scoreTitle: {
         fontSize: 22,
@@ -45,8 +49,10 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
     scoreCellSquare: {
-        padding: 16,
         borderRadius: 8
+    },
+    scoreCellSquareInner: {
+        padding: 16
     },
     scoreCellText: {
         fontSize: 16,

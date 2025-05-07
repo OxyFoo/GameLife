@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        paddingHorizontal: 0
+        borderTopRightRadius: 8
     },
     headerButtonRight: {
         width: 'auto',
@@ -33,9 +32,11 @@ const styles = StyleSheet.create({
 
     // Container body
     bodyStyle: {
-        paddingBottom: 12,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8
+    },
+    bodyContent: {
+        paddingBottom: 12
     },
     viewTitle: {
         flexDirection: 'row',

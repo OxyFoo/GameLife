@@ -60,6 +60,7 @@ class Container extends ContainerBack {
             >
                 <Gradient
                     style={styles.headerGradient}
+                    containerStyle={styles.headerGradientContainer}
                     colors={[
                         themeManager.GetColor('main1', { opacity: 0.45 }),
                         themeManager.GetColor('main1', { opacity: 0.15 })
@@ -85,6 +86,7 @@ class Container extends ContainerBack {
             >
                 <Gradient
                     style={styles.headerGradient}
+                    containerStyle={styles.headerGradientContainer}
                     colors={[
                         themeManager.GetColor('main1', { opacity: 0.45 }),
                         themeManager.GetColor('main1', { opacity: 0.15 })

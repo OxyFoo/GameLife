@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, View } from 'react-native';
+import { Image, Platform, View } from 'react-native';
 
 import styles from './style';
 import user from 'Managers/UserManager';
@@ -125,7 +125,9 @@ function UserOnlineElement({ style, friend }) {
                         style={styles.level}
                         color='secondary'
                     >{`${langExp['level-small']} ${friendExperience.lvl}`}</Text>
-                    <Icon icon='arrow-square-outline' color='gradient' angle={90} />
+
+                    {/* TODO: Why is the icon absolute when it is in the lineargradient on iOS?*/}
+                    {Platform.OS === 'android' && <Icon icon='arrow-square-outline' color='gradient' angle={90} />}
                 </View>
             </Gradient>
         </Button>

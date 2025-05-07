@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         borderRadius: 8
     },
+    gradient: {
+        flexDirection: 'row'
+    },
     container: {
         flexDirection: 'row',
         paddingVertical: 12,

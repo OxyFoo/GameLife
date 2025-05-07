@@ -105,8 +105,10 @@ class ActivityTimerTitle extends React.Component {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                 >
-                    <Icon style={styles.activityIcon} xml={this.xmlIcon} />
-                    <Text style={styles.activityText}>{this.skillTitle}</Text>
+                    <View style={styles.gradientInner}>
+                        <Icon style={styles.activityIcon} xml={this.xmlIcon} />
+                        <Text style={styles.activityText}>{this.skillTitle}</Text>
+                    </View>
                 </LinearGradient>
                 <View>
                     <Text style={styles.startText}>{lang['timer-launch'] + ' ' + displayInitialTime}</Text>

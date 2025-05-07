@@ -129,9 +129,11 @@ class ActivityTimerScore extends React.Component {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                 >
-                    <Text style={styles.scoreTitle}>
-                        {lang['timer-gain'].replace('{}', `+ ${this.getExperienceText()} ${langXP['small']}`)}
-                    </Text>
+                    <View style={styles.scoreView}>
+                        <Text style={styles.scoreTitle}>
+                            {lang['timer-gain'].replace('{}', `+ ${this.getExperienceText()} ${langXP['small']}`)}
+                        </Text>
+                    </View>
                 </LinearGradient>
 
                 <View>
@@ -173,9 +175,11 @@ class ActivityTimerScore extends React.Component {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                 >
-                    <Text style={styles.scoreTitle} color='main2'>
-                        {`+ ${statCountText}`}
-                    </Text>
+                    <View style={styles.scoreCellSquareInner}>
+                        <Text style={styles.scoreTitle} color='main2'>
+                            {`+ ${statCountText}`}
+                        </Text>
+                    </View>
                 </LinearGradient>
                 <Text style={styles.scoreCellText}>{langStats[item]}</Text>
             </View>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import user from 'Managers/UserManager';
@@ -69,19 +69,25 @@ function renderSkill({ item }) {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-                {/* Skill header (icon + name) */}
-                <View style={styles.skillHeader}>
-                    <Icon xml={LogoXML} size={28} />
-                    <Text style={styles.skillTitle} fontSize={24}>
-                        {FullName}
-                    </Text>
-                </View>
+                <View style={styles.skillView}>
+                    {/* Skill header (icon + name) */}
+                    <View style={styles.skillHeader}>
+                        <Icon xml={LogoXML} size={28} />
+                        <Text style={styles.skillTitle} fontSize={24}>
+                            {FullName}
+                        </Text>
+                    </View>
 
-                <View style={styles.skillDetails}>
-                    <Text style={styles.skillLvlText} color='main2'>
-                        {text}
-                    </Text>
-                    <Icon icon='arrow-square' size={24} angle={90} color='gradient' />
+                    <View style={styles.skillDetails}>
+                        <Text style={styles.skillLvlText} color='main2'>
+                            {text}
+                        </Text>
+
+                        {/* TODO: Why does the icon appear in absolute position on iOS? */}
+                        {Platform.OS === 'android' && (
+                            <Icon icon='arrow-square' size={24} angle={90} color='gradient' />
+                        )}
+                    </View>
                 </View>
             </LinearGradient>
         </TouchableOpacity>
@@ -102,13 +108,15 @@ const styles = StyleSheet.create({
     },
     skillGradient: {
         flex: 1,
+        borderRadius: 8
+    },
+    skillView: {
         paddingVertical: 12,
         paddingHorizontal: 16,
 
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        borderRadius: 8
+        justifyContent: 'space-between'
     },
     skillHeader: {
         flexDirection: 'row',

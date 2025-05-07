@@ -3,8 +3,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         width: 'auto',
-        paddingVertical: 12,
-        paddingHorizontal: 8,
         borderRadius: 20,
 
         flexDirection: 'column',
@@ -25,7 +23,8 @@ const styles = StyleSheet.create({
     },
     notEnoughData: {
         width: '100%',
-        paddingHorizontal: 12
+        paddingVertical: 12,
+        paddingHorizontal: 16
     },
     notEnoughDataText: {
         fontSize: 16

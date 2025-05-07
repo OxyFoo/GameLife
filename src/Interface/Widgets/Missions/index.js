@@ -62,7 +62,7 @@ class Missions extends BackMissions {
                     color='transparent'
                 >
                     <LinearGradient
-                        style={styles.container}
+                        style={styles.gradient}
                         colors={[
                             themeManager.GetColor('main2', { opacity: 0.65 }),
                             themeManager.GetColor('main2', { opacity: 0.25 })
@@ -70,48 +70,50 @@ class Missions extends BackMissions {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
-                        <View style={styles.zapContainer}>
-                            <Zap
-                                style={styles.zap}
-                                inclinaison={mission.state === 'pending' ? 'onFourLegs' : 'onTwoLegs'}
-                            />
-                        </View>
-
-                        <View style={styles.columnContent}>
-                            {(mission?.state === 'pending' && (
-                                <View>
-                                    <Text style={styles.text} fontSize={16}>
-                                        {lang['content'][missionsData[step].name].title}
-                                    </Text>
-
-                                    <Text style={styles.text} fontSize={14}>
-                                        {lang['text-hint']}
-                                    </Text>
-                                </View>
-                            )) || (
-                                <Text style={styles.text} fontSize={16}>
-                                    {lang['text-claim']}
-                                </Text>
-                            )}
-
-                            <FlatList
-                                style={styles.flatlist}
-                                contentContainerStyle={styles.flatlistContainer}
-                                data={missionsData}
-                                extraData={step}
-                                renderItem={this.rewardListElement}
-                                horizontal
-                            />
-                        </View>
-
-                        <View style={styles.columnReward}>
-                            <View style={[styles.rewardCard, styleReward]}>
-                                <Animated.View style={[styles.rewardItem, styleAnimation]}>
-                                    {this.renderReward(stepReward)}
-                                </Animated.View>
+                        <View style={styles.container}>
+                            <View style={styles.zapContainer}>
+                                <Zap
+                                    style={styles.zap}
+                                    inclinaison={mission.state === 'pending' ? 'onFourLegs' : 'onTwoLegs'}
+                                />
                             </View>
 
-                            <Text style={styles.missionStep} fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
+                            <View style={styles.columnContent}>
+                                {(mission?.state === 'pending' && (
+                                    <View>
+                                        <Text style={styles.text} fontSize={16}>
+                                            {lang['content'][missionsData[step].name].title}
+                                        </Text>
+
+                                        <Text style={styles.text} fontSize={14}>
+                                            {lang['text-hint']}
+                                        </Text>
+                                    </View>
+                                )) || (
+                                    <Text style={styles.text} fontSize={16}>
+                                        {lang['text-claim']}
+                                    </Text>
+                                )}
+
+                                <FlatList
+                                    style={styles.flatlist}
+                                    contentContainerStyle={styles.flatlistContainer}
+                                    data={missionsData}
+                                    extraData={step}
+                                    renderItem={this.rewardListElement}
+                                    horizontal
+                                />
+                            </View>
+
+                            <View style={styles.columnReward}>
+                                <View style={[styles.rewardCard, styleReward]}>
+                                    <Animated.View style={[styles.rewardItem, styleAnimation]}>
+                                        {this.renderReward(stepReward)}
+                                    </Animated.View>
+                                </View>
+
+                                <Text style={styles.missionStep} fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
+                            </View>
                         </View>
                     </LinearGradient>
                 </Button>

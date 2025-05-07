@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
+    gradient: {
         flex: 1,
         alignSelf: 'stretch',
+        borderRadius: 8
+    },
+    container: {
         padding: 12,
 
         alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 8
+        justifyContent: 'center'
     },
     value: {
         margin: 0,

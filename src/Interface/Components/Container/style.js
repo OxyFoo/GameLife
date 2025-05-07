@@ -13,13 +13,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0
     },
     headerGradient: {
-        width: '100%',
-        height: '100%',
-        paddingVertical: 12,
-        paddingHorizontal: 24,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingVertical: 12,
+        paddingHorizontal: 24
+    },
+    headerGradientContainer: {
+        width: '100%',
+        height: '100%'
     },
     textRollableHeader: {
         padding: 0,

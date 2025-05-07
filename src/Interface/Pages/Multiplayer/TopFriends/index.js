@@ -90,6 +90,7 @@ const TopFriends = ({ style, friends }) => {
                 >
                     <Gradient
                         style={styles.friendTopMiddleGradient}
+                        containerStyle={styles.friendTopMiddleGradientContainer}
                         colors={[
                             themeManager.GetColor('main1', { opacity: 0.45 }),
                             themeManager.GetColor('main1', { opacity: 0.12 })
@@ -107,6 +108,8 @@ const TopFriends = ({ style, friends }) => {
                             </View>
 
                             {/** Rank */}
+                            {/* TODO: Android & iOS => Gradient bug */}
+                            {/* TODO: iOS => Position absolute */}
                             <View style={styles.frientTopRankContainer}>
                                 <Gradient style={[styles.friendTopRank, styleBgRank]}>
                                     <Text color='backgroundDark' style={styles.friendTopRankText}>

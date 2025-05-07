@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
@@ -12,6 +13,7 @@ import { Text } from '../Text';
  *
  * @typedef {Object} KPIPropsType
  * @property {StyleProp} style
+ * @property {StyleProp} containerStyle
  * @property {string} title
  * @property {string | number} value
  */
@@ -19,6 +21,7 @@ import { Text } from '../Text';
 /** @type {KPIPropsType} */
 const KPIProps = {
     style: {},
+    containerStyle: {},
     title: '',
     value: 0
 };
@@ -29,7 +32,7 @@ class KPI extends React.Component {
 
         return (
             <LinearGradient
-                style={[styles.container, this.props.style]}
+                style={[styles.gradient, this.props.containerStyle]}
                 colors={[
                     themeManager.GetColor('border', { opacity: 0.2 }),
                     themeManager.GetColor('border', { opacity: 0.06 })
@@ -37,12 +40,14 @@ class KPI extends React.Component {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-                <Text style={styles.value} color='primary'>
-                    {`${value}`}
-                </Text>
-                <Text style={styles.title} color='light'>
-                    {title}
-                </Text>
+                <View style={[styles.container, this.props.style]}>
+                    <Text style={styles.value} color='primary'>
+                        {`${value}`}
+                    </Text>
+                    <Text style={styles.title} color='light'>
+                        {title}
+                    </Text>
+                </View>
             </LinearGradient>
         );
     }

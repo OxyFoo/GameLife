@@ -16,11 +16,13 @@ const styles = StyleSheet.create({
         marginBottom: 24
     },
     gradient: {
+        borderRadius: 8
+    },
+    activityView: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 8
+        paddingHorizontal: 24
     },
     activityIcon: {
         marginRight: 16

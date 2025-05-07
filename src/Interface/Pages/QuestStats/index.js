@@ -47,28 +47,30 @@ class QuestStats extends BackQuest {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
-                        <View style={styles.questTextView}>
-                            <Text style={styles.questTitle} color='primary'>
-                                {this.selectedQuest.title}
-                            </Text>
-                            <Text style={styles.questSkills} color='primary'>
-                                {skillsName}
-                            </Text>
-                        </View>
+                        <View style={styles.questHeaderView}>
+                            <View style={styles.questTextView}>
+                                <Text style={styles.questTitle} color='primary'>
+                                    {this.selectedQuest.title}
+                                </Text>
+                                <Text style={styles.questSkills} color='primary'>
+                                    {skillsName}
+                                </Text>
+                            </View>
 
-                        <View style={styles.editActivityView}>
-                            <Text style={styles.editActivityTime} color='main1'>
-                                {this.activitiesTimeText}
-                            </Text>
-                            <Button
-                                style={styles.editActivityButton}
-                                appearance='uniform'
-                                color='transparent'
-                                icon='edit'
-                                iconSize={24}
-                                fontColor='gradient'
-                                onPress={this.onEditPress}
-                            />
+                            <View style={styles.editActivityView}>
+                                <Text style={styles.editActivityTime} color='main1'>
+                                    {this.activitiesTimeText}
+                                </Text>
+                                <Button
+                                    style={styles.editActivityButton}
+                                    appearance='uniform'
+                                    color='transparent'
+                                    icon='edit'
+                                    iconSize={24}
+                                    fontColor='gradient'
+                                    onPress={this.onEditPress}
+                                />
+                            </View>
                         </View>
                     </LinearGradient>
 
@@ -86,7 +88,9 @@ class QuestStats extends BackQuest {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
-                        <StreakChart size={200} height={150} currentStreak={currentStreak} bestStreak={maxStreak} />
+                        <View style={styles.streakChartView}>
+                            <StreakChart size={200} height={150} currentStreak={currentStreak} bestStreak={maxStreak} />
+                        </View>
                     </LinearGradient>
 
                     {/* Current week */}

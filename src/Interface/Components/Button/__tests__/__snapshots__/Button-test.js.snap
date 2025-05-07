@@ -65,7 +65,9 @@ exports[`[Component] Button renders correctly 1`] = `
       }
     }
     useAngle={true}
-  />
+  >
+    <View />
+  </BVLinearGradient>
   <View
     pointerEvents="none"
     style={

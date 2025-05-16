@@ -8,11 +8,7 @@
         "@react-native",
         "plugin:prettier/recommended"
     ],
-    "plugins": [
-        "react",
-        "react-native",
-        "prettier"
-    ],
+    "parser": "@typescript-eslint/parser",
     "ignorePatterns": [
         "node_modules/",
         "Backups/",

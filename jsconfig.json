@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "jsx": "react",
+        "jsx": "react-native",
         "target": "ES6",
         "checkJs": true,
         "strict": true,

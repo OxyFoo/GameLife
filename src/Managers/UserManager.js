@@ -27,12 +27,12 @@ import { Sleep } from 'Utils/Functions';
 
 /**
  * @template T
- * @typedef {import('Types/Interface/IUserData').IUserData<T>} IUserData
+ * @typedef {import('@oxyfoo/gamelife-types/Interface/IUserData').IUserData<T>} IUserData
  */
 
 /**
  * @template T
- * @typedef {import('Types/Interface/IUserClass').IUserClass<T>} IUserClass
+ * @typedef {import('@oxyfoo/gamelife-types/Interface/IUserClass').IUserClass<T>} IUserClass
  */
 
 class UserManager {

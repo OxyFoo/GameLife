@@ -6,11 +6,11 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Button, Reward, Text } from 'Interface/Components';
-import { NIA_GlobalActionType } from 'Types/Class/NotificationsInApp';
+import { NIA_GlobalActionType } from '@oxyfoo/gamelife-types/Class/NotificationsInApp';
 
 /**
- * @typedef {import('Types/Class/Rewards').RawReward} RawReward
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInApp
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInApp
  */
 
 let claimLoading = false;

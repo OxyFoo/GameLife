@@ -5,7 +5,7 @@ import { InputText } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} SectionTitlePropsType
  * @property {StyleProp} style

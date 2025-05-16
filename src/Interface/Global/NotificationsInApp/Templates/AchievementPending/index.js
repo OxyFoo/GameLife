@@ -9,7 +9,7 @@ import langManager from 'Managers/LangManager';
 import { Button, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievements
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievements
  */
 
 /**

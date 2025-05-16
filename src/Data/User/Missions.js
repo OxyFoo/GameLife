@@ -1,7 +1,7 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { ParsePlural } from 'Utils/String';
 
@@ -9,10 +9,10 @@ import { ParsePlural } from 'Utils/String';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/User/Inventory').Stuff} Stuff
  *
- * @typedef {import('Types/Database/Missions').MissionKeys} MissionKeys
- * @typedef {import('Types/Data/App/Missions').MissionType} MissionType
- * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
- * @typedef {import('Types/Data/User/Missions').SaveObject_Missions} SaveObject_Missions
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Missions').MissionKeys} MissionKeys
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Missions').MissionType} MissionType
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Missions').MissionItem} MissionItem
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Missions').SaveObject_Missions} SaveObject_Missions
  */
 
 /** @extends {IUserData<SaveObject_Missions>} */

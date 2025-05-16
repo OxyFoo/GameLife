@@ -1,7 +1,7 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { MinMax, Round } from 'Utils/Functions';
 import { IsNotNull } from 'Utils/Types';
@@ -10,13 +10,13 @@ import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Class/Rewards').Reward} Reward
- * @typedef {import('Types/Data/App/Achievements').Condition} Condition
- * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').Reward} Reward
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Achievements').Condition} Condition
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Achievements').Achievement} Achievement
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- * @typedef {import('Types/Data/User/Achievements').AchievementItem} AchievementItem
- * @typedef {import('Types/Data/User/Achievements').SaveObject_Achievements} SaveObject_Achievements
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Achievements').AchievementItem} AchievementItem
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Achievements').SaveObject_Achievements} SaveObject_Achievements
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
  */
 
 /** @extends {IUserData<SaveObject_Achievements>} */

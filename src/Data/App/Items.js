@@ -1,11 +1,11 @@
-import { IAppData } from 'Types/Interface/IAppData';
+import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 /**
  * // TODO: Replace StuffID with ItemID in Types/Data/App/Items.js
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  *
- * @typedef {import('Types/Data/App/Items').Item} Item
- * @typedef {import('Types/Data/App/Items').ItemSlot} Slot
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} Slot
  *
  * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
  *

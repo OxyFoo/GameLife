@@ -10,7 +10,7 @@ import { GetDate, GetGlobalTime } from 'Utils/Time';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Data/User/Todos').Todo} Todo
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').Todo} Todo
  *
  * @typedef {Object} SectionSchedulePropsType
  * @property {Todo | null} todo

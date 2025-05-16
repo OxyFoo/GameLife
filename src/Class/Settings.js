@@ -1,14 +1,14 @@
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import DataStorage, { STORAGE } from 'Utils/DataStorage';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Global/Langs').LangKeys} LangKey
- * @typedef {import('Types/Global/Links').MusicLinksType} MusicLinksType
- * @typedef {import('Types/Class/Settings').SaveObject_Settings} SaveObject_Settings
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Langs').LangKeys} LangKey
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Links').MusicLinksType} MusicLinksType
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Settings').SaveObject_Settings} SaveObject_Settings
  */
 
 /** @type {SaveObject_Settings['musicLinks']} */

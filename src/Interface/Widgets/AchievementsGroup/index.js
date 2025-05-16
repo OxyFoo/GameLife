@@ -11,7 +11,7 @@ import { Button, Separator, Text } from 'Interface/Components';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
- * @typedef {import('Types/Data/App/Achievements').Achievement} Achievement
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Achievements').Achievement} Achievement
  * @typedef {import('react-native').ListRenderItem<Achievement>} ListRenderItemAchievements
  */
 

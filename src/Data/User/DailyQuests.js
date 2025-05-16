@@ -1,6 +1,6 @@
 import dataManager from 'Managers/DataManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import { DateFormat } from 'Utils/Date';
 import DynamicVar from 'Utils/DynamicVar';
 import { Random } from 'Utils/Functions';
@@ -8,9 +8,9 @@ import { GetTimeToTomorrow } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/User/DailyQuest').DailyQuestData} DailyQuestData
- * @typedef {import('Types/Data/User/DailyQuest').DailyQuestToday} DailyQuestToday
- * @typedef {import('Types/Data/User/DailyQuest').SaveObject_DailyQuest} SaveObject_DailyQuest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/DailyQuest').DailyQuestData} DailyQuestData
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/DailyQuest').DailyQuestToday} DailyQuestToday
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/DailyQuest').SaveObject_DailyQuest} SaveObject_DailyQuest
  *
  * @typedef {'success' | 'not-up-to-date' | 'wrong-daily-quests' | 'error'} ClaimResult
  *

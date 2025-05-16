@@ -9,8 +9,8 @@ import themeManager from 'Managers/ThemeManager';
 import { Button, CheckBox, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/App/Skills').GeneratedSkill} GeneratedSkill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').GeneratedSkill} GeneratedSkill
  */
 
 /**

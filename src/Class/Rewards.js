@@ -1,15 +1,15 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Global/Rarities').Rarities} Rarities
- * @typedef {import('Types/Class/Rewards').Reward} Reward
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Rarities').Rarities} Rarities
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').Reward} Reward
  * @typedef {Reward & { Type: 'Title' }} TitleReward
- * @typedef {import('Types/Class/Rewards').RawReward} RawReward
- * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  */
 

@@ -9,7 +9,7 @@ import notifee, {
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
 import { DateFormat } from 'Utils/Date';
 import { GetDate, GetLocalTime } from 'Utils/Time';

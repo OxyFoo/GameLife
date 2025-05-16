@@ -15,7 +15,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  * @typedef {import('Data/User/Quests').InputsError} InputsError
  *
  * @typedef {'add' | 'save' | 'remove'} States

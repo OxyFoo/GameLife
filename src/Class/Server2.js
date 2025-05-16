@@ -1,6 +1,6 @@
 import RNExitApp from 'react-native-exit-app';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import langManager from 'Managers/LangManager';
 
 import TCP from 'Utils/TCP';

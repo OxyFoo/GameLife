@@ -3,7 +3,7 @@ import { DAY_TIME, GetDate, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Data/User/Activities/index').default} Activities
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  *
  * @typedef {'past' | 'filling' | 'future' | 'disabled'} DayClockStates
  *

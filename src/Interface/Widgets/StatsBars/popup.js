@@ -8,8 +8,8 @@ import langManager from 'Managers/LangManager';
 import { Button, Icon, ProgressBar, Swiper, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Class/Experience').Stats} Stats
- * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').XPInfo} XPInfo
  */
 
 /**

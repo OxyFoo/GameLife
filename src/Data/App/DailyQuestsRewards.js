@@ -1,7 +1,7 @@
-import { IAppData } from 'Types/Interface/IAppData';
+import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/App/DailyQuestReward').DailyQuestReward} DailyQuestReward
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/DailyQuestReward').DailyQuestReward} DailyQuestReward
  */
 
 /** @extends {IAppData<DailyQuestReward[]>} */

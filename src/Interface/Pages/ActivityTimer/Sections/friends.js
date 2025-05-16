@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/User/Activities').CurrentActivity} CurrentActivity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').CurrentActivity} CurrentActivity
  */
 
 const ActivityFriendsProps = {

@@ -1,7 +1,7 @@
-import { IAppData } from 'Types/Interface/IAppData';
+import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 /**
- * @typedef {import('Types/Data/App/Titles').Title} Title
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Titles').Title} Title
  */
 
 /** @extends {IAppData<Title[]>} */

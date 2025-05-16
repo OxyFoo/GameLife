@@ -14,7 +14,7 @@ import { Text } from '../../Components/Text';
  * @typedef {import('./back').UpdatingData} UpdatingData
  * @typedef {import('react-native').ListRenderItem<UpdatingData>} ListRenderItem
  *
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  * @typedef {import('react-native').ListRenderItem<Quest>} FlatListQuestProps
  *
  */

@@ -9,7 +9,7 @@ import { AddActivity } from 'Interface/Widgets';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} QuestPropsType
  * @property {StyleProp} style

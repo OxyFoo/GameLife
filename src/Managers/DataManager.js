@@ -13,8 +13,8 @@ import Titles from 'Data/App/Titles';
 /**
  * @typedef {import('Managers/UserManager').default} User
  *
- * @typedef {import('Types/Data/App/index').DataHashes} DataHashes
- * @typedef {import('Types/Data/App/index').DataTypes} DataTypes
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/index').DataHashes} DataHashes
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/index').DataTypes} DataTypes
  */
 
 class DataManager {

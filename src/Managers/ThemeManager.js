@@ -7,7 +7,7 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {keyof typeof THEMES[ThemeName]['Color']} ThemeColor
  * @typedef {keyof typeof THEMES[ThemeName]['Text']} ThemeText
  * @typedef {keyof typeof THEMES[ThemeName]['Rarity']} ThemeRarity
- * @typedef {import('Types/Global/Rarities').Rarities} Rarities
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Rarities').Rarities} Rarities
  */
 
 const THEME_VARIANTS_NAMES = ['Défaut', 'Moderne', 'Analogique', 'Tons Naturels', 'Dynamique'];

@@ -17,10 +17,10 @@ import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 // TODO: Finish avatars
 
 /**
- * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  *
- * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
- * @typedef {import('Types/Data/App/Items').ItemSlot} ItemSlot
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {'skin' | 'skinColor'} SkinSlot
  * @typedef {ItemSlot | SkinSlot} AvatarSlot
  */

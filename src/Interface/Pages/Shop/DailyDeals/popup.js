@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import { Text, Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  */
 
 /**

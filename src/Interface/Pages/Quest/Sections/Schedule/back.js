@@ -7,8 +7,8 @@ import { Range } from 'Utils/Functions';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
  * @typedef {import('Interface/Components/ComboBox/back').ComboBoxItem} ComboBoxItem
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
- * @typedef {import('Types/Data/User/Quests').FrequencyRepeatModes} FrequencyRepeatModes
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').FrequencyRepeatModes} FrequencyRepeatModes
  *
  * @typedef {Object} SectionSchedulePropsType
  * @property {StyleProp} style
@@ -16,7 +16,7 @@ import { Range } from 'Utils/Functions';
  * @property {(quest: Quest) => void} onChangeQuest
  */
 
-/** @type {('frequency' | RepeatModes)[]} */
+/** @type {('frequency' | FrequencyRepeatModes)[]} */
 const TYPES = ['frequency', 'week', 'month'];
 
 /** @type {FrequencyRepeatModes[]} */

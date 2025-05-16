@@ -9,7 +9,7 @@ import { SpringAnimation } from 'Utils/Animations';
 import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Global/Links').MusicLinksKeys} MusicLinksKeys
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Links').MusicLinksKeys} MusicLinksKeys
  */
 
 class BackActivityTimer extends PageBase {

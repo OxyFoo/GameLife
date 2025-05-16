@@ -1,9 +1,9 @@
-import { IAppData } from 'Types/Interface/IAppData';
+import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 import { Random } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/App/Quotes').Quote} Quote
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Quotes').Quote} Quote
  */
 
 /** @extends {IAppData<Quote[]>} */

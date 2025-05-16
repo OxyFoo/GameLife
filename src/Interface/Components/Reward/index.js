@@ -11,7 +11,7 @@ import { Text } from '../Text';
 import { Icon } from '../Icon';
 
 /**
- * @typedef {import('Types/Class/Rewards').RawReward} RawReward
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward
  */
 
 /**

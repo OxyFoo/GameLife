@@ -3,9 +3,9 @@ import DynamicVar from 'Utils/DynamicVar';
 import { RandomString } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
- * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
- * @typedef {import('Types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
  */
 
 const TCP_SETTINGS = {

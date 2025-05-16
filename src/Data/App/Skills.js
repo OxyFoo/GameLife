@@ -1,13 +1,13 @@
 import langManager from 'Managers/LangManager';
 
-import { IAppData } from 'Types/Interface/IAppData';
+import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 import { GetByKey } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/App/SkillIcons').SkillIcon} Icon
- * @typedef {import('Types/Data/App/SkillCategories').SkillCategory} Category
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/SkillIcons').SkillIcon} Icon
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/SkillCategories').SkillCategory} Category
  *
  * @typedef {{ skills: Skill[], skillIcons: Icon[], skillCategories: Category[] }} DataType
  */

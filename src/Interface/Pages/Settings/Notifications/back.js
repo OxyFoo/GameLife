@@ -3,7 +3,7 @@ import user from 'Managers/UserManager';
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 /**
- * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').ConnectionState} ConnectionState
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */

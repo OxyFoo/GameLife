@@ -3,7 +3,7 @@ import { getStartOfMonth, getStartOfWeek } from './utils';
 
 /**
  * @typedef {import('Data/User/Activities').Activity} Activity
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  */
 
 /**

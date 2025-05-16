@@ -8,7 +8,7 @@ import { Button, Text } from 'Interface/Components';
 import { OpenStore } from 'Utils/Store';
 
 /**
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
  */
 
 /**

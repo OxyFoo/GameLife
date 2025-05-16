@@ -9,8 +9,8 @@ import { Sum } from 'Utils/Functions';
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Class/Experience').StatsXP} StatsXP
- * @typedef {import('Types/Database/Reports').ReportType} ReportType
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Reports').ReportType} ReportType
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 

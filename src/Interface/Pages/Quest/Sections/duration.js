@@ -9,7 +9,7 @@ import { TIME_STEP_MINUTES } from 'Utils/Activities';
 const MAX_DURATION_MINUTES = 12 * 60;
 
 /**
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} DurationPropsType
  * @property {Quest | null} quest

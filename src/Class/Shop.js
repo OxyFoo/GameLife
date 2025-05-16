@@ -1,5 +1,5 @@
 import langManager from 'Managers/LangManager';
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
 import { DateFormat } from 'Utils/Date';
 
@@ -10,7 +10,7 @@ import { DateFormat } from 'Utils/Date';
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  *
- * @typedef {import('Types/Class/Shop').SaveObject_Shop} SaveObject_Shop
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Shop').SaveObject_Shop} SaveObject_Shop
  *
  * @typedef Chest
  * @property {number} priceOriginal

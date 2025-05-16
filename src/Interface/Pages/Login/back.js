@@ -9,7 +9,7 @@ import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').ConnectionState} ConnectionState
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
 

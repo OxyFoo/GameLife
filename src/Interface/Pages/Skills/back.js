@@ -13,8 +13,8 @@ import { FormatForSearch } from 'Utils/String';
 /**
  * @typedef {import('react-native').FlatList} FlatList
  *
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  */
 
 class BackSkills extends PageBase {

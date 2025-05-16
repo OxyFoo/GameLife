@@ -43,26 +43,17 @@ class ShopItems extends BackShopItems {
         const backgroundStyle = { backgroundColor: item.BackgroundColor };
 
         return (
-            <View style={styles.itemParent} ref={ref => this[item.ref] = ref}>
+            <View style={styles.itemParent} ref={(ref) => (this[item.ref] = ref)}>
                 <Button style={styles.itemButton} onPress={item.OnPress} enabled={!disabled}>
                     <View style={[styles.itemContent, backgroundStyle]}>
-
                         {/** Chest name & rarity */}
                         <View style={styles.itemInfo}>
                             <Text style={styles.itemName}>{name}</Text>
-                            <Text
-                                style={[styles.itemRarity, rarityStyle]}
-                            >
-                                {rarityText}
-                            </Text>
+                            <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
                         </View>
 
                         {/** Chest frame */}
-                        <Image
-                            style={styles.imageChest}
-                            source={item.Image}
-                            resizeMode='contain'
-                        />
+                        <Image style={styles.imageChest} source={item.Image} resizeMode='contain' />
 
                         {/** Chest price */}
                         {this.renderPrice(item)}
@@ -74,12 +65,11 @@ class ShopItems extends BackShopItems {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                         />
-
                     </View>
                 </Button>
             </View>
         );
-    }
+    };
 
     /** @param {BuyableItem} item */
     renderPrice = (item) => {
@@ -87,9 +77,7 @@ class ShopItems extends BackShopItems {
         if (item.PriceDiscount < 0) {
             return (
                 <View style={styles.itemPrice}>
-                    <Text style={styles.itemPriceOx}>
-                        {item.PriceOriginal.toString()}
-                    </Text>
+                    <Text style={styles.itemPriceOx}>{item.PriceOriginal.toString()}</Text>
                     <Image style={styles.itemOxImage} source={IMG_OX} />
                 </View>
             );
@@ -99,17 +87,13 @@ class ShopItems extends BackShopItems {
         return (
             <View style={styles.itemPrice}>
                 <View>
-                    <Text style={styles.itemPriceOxEditedOld}>
-                        {item.PriceOriginal.toString()}
-                    </Text>
-                    <Text style={styles.itemPriceOxEditedNew}>
-                        {item.PriceDiscount.toString()}
-                    </Text>
+                    <Text style={styles.itemPriceOxEditedOld}>{item.PriceOriginal.toString()}</Text>
+                    <Text style={styles.itemPriceOxEditedNew}>{item.PriceDiscount.toString()}</Text>
                 </View>
                 <Image style={styles.itemOxImageEdited} source={IMG_OX} />
             </View>
         );
-    }
+    };
 }
 
 export default ShopItems;

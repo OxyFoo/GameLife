@@ -74,7 +74,7 @@ const buyDailyDeals = async (item) => {
 
     // Update inventory & Ox amount
     user.inventory.LoadOnline({ stuffs: response['stuffs'] });
-    user.informations.ox.Set(parseInt(response['ox']));
+    user.informations.ox.Set(parseInt(response['ox'], 10));
     user.shop.buyToday.items.push(item.ID);
     user.SaveLocal();
 

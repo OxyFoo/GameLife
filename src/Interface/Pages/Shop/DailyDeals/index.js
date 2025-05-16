@@ -46,22 +46,17 @@ class ShopDailyDeals extends BackShopItems {
             <View style={styles.itemParent}>
                 <Button style={styles.itemButton} onPress={item.OnPress} enabled={!disabled}>
                     <View style={[styles.itemContent, backgroundStyle]}>
-
                         {/** Item name & rarity */}
                         <View style={styles.itemInfo}>
                             <Text style={styles.itemName}>{item.Name}</Text>
-                            <Text
-                                style={[styles.itemRarity, rarityStyle]}
-                            >
-                                {rarityText}
-                            </Text>
+                            <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
                         </View>
 
                         {/** Item frame */}
                         <View style={styles.itemFrameContainer}>
                             <Frame
                                 style={styles.itemFrame}
-                                characters={[ item.Character ]}
+                                characters={[item.Character]}
                                 onlyItems={true}
                                 size={item.Size}
                             />
@@ -77,22 +72,17 @@ class ShopDailyDeals extends BackShopItems {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                         />
-
                     </View>
                 </Button>
             </View>
         );
-    }
+    };
 
     renderEmpty = () => {
         const lang = langManager.curr['shop']['dailyDeals'];
 
-        return (
-            <Text style={styles.errorText}>
-                {lang['error-no-items']}
-            </Text>
-        );
-    }
+        return <Text style={styles.errorText}>{lang['error-no-items']}</Text>;
+    };
 
     /** @param {BuyableItem} item */
     renderPrice = (item) => {
@@ -100,9 +90,7 @@ class ShopDailyDeals extends BackShopItems {
         if (user.shop.priceFactor === 1) {
             return (
                 <View style={styles.itemPrice}>
-                    <Text style={styles.itemPriceOx}>
-                        {item.Price.toString()}
-                    </Text>
+                    <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
                     <Image style={styles.itemOxImage} source={IMG_OX} />
                 </View>
             );
@@ -112,9 +100,7 @@ class ShopDailyDeals extends BackShopItems {
         return (
             <View style={styles.itemPrice}>
                 <View>
-                    <Text style={styles.itemPriceOxEditedOld}>
-                        {item.Price.toString()}
-                    </Text>
+                    <Text style={styles.itemPriceOxEditedOld}>{item.Price.toString()}</Text>
                     <Text style={styles.itemPriceOxEditedNew}>
                         {Math.round(item.Price * user.shop.priceFactor).toString()}
                     </Text>
@@ -122,7 +108,7 @@ class ShopDailyDeals extends BackShopItems {
                 <Image style={styles.itemOxImageEdited} source={IMG_OX} />
             </View>
         );
-    }
+    };
 }
 
 export default ShopDailyDeals;

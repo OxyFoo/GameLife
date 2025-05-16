@@ -8,7 +8,7 @@ import { Text } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
- * 
+ *
  * @typedef {import('./script').DayType} DayType
  */
 
@@ -21,15 +21,15 @@ const DayProps = {
     /** @type {DayType | null} */
     item: null,
 
-    /** @param {DayType | null} item */
-    onPress: (item) => {}
+    /** @type {(item: DayType | null) => void} */
+    onPress: () => {}
 };
 
 class Day extends React.PureComponent {
     onPress = () => {
         const { item, onPress } = this.props;
         onPress(item);
-    }
+    };
 
     render() {
         const { item } = this.props;
@@ -38,27 +38,19 @@ class Day extends React.PureComponent {
         const { day, isToday, isSelected, isActivity, isActivityXP } = item;
 
         let bakStyle;
-        if (isSelected)         bakStyle = dynamicStyles.bgMain1;
-        else if (isToday)       bakStyle = dynamicStyles.bgMain2;
+        if (isSelected) bakStyle = dynamicStyles.bgMain1;
+        else if (isToday) bakStyle = dynamicStyles.bgMain2;
 
         let dotStyle;
-        if (isActivityXP)       dotStyle = dynamicStyles.bgMain1;
-        else if (isActivity)    dotStyle = dynamicStyles.bgMain2;
+        if (isActivityXP) dotStyle = dynamicStyles.bgMain1;
+        else if (isActivity) dotStyle = dynamicStyles.bgMain2;
 
-        const styleParent = [
-            styles.day,
-            styles.circle,
-            bakStyle
-        ];
+        const styleParent = [styles.day, styles.circle, bakStyle];
 
         return (
             <View style={styleParent}>
-
                 {day !== 0 && (
-                    <Text
-                        containerStyle={styles.dayTextContainer}
-                        onPress={this.onPress}
-                    >
+                    <Text containerStyle={styles.dayTextContainer} onPress={this.onPress}>
                         {day.toString()}
                     </Text>
                 )}
@@ -68,7 +60,6 @@ class Day extends React.PureComponent {
                         <View style={[styles.dot, dotStyle]} />
                     </View>
                 )}
-
             </View>
         );
     }

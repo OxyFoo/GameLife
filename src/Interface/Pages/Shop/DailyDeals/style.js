@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     // Daily deals
     itemParent: {
         width: '33%',
-        aspectRatio: 1/1.3,
+        aspectRatio: 1 / 1.3,
         paddingBottom: 4,
         paddingHorizontal: 6
     },
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 
     itemFrameContainer: {
         width: '90%',
-        aspectRatio: 1/1,
+        aspectRatio: 1 / 1,
         zIndex: -10,
         elevation: -10
     },

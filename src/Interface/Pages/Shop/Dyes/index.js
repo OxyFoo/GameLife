@@ -14,7 +14,7 @@ import { Button, Text, Icon, Frame } from 'Interface/Components';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * 
+ *
  * @typedef {import('./back').BuyableDye} BuyableDye
  */
 
@@ -52,7 +52,7 @@ class ShopDyes extends BackShopDyes {
                 {/** Item before */}
                 <Frame
                     style={styles.dyerFrame}
-                    characters={[ ItemBefore.Character ]}
+                    characters={[ItemBefore.Character]}
                     onlyItems={true}
                     size={ItemBefore.Size}
                 />
@@ -66,7 +66,7 @@ class ShopDyes extends BackShopDyes {
                 {/** Item after */}
                 <Frame
                     style={styles.dyerFrame}
-                    characters={[ ItemAfter.Character ]}
+                    characters={[ItemAfter.Character]}
                     onlyItems={true}
                     size={ItemAfter.Size}
                 />
@@ -74,17 +74,13 @@ class ShopDyes extends BackShopDyes {
                 <LinearGradient style={styles.dyeDecoration} colors={dyer.Colors} />
             </Button>
         );
-    }
+    };
 
     renderEmpty = () => {
         const lang = langManager.curr['shop']['dyes'];
 
-        return (
-            <Text style={styles.errorText}>
-                {lang['error-no-dye']}
-            </Text>
-        );
-    }
+        return <Text style={styles.errorText}>{lang['error-no-dye']}</Text>;
+    };
 
     /** @param {BuyableDye} dyer */
     renderPrice = (dyer) => {
@@ -102,9 +98,7 @@ class ShopDyes extends BackShopDyes {
         return (
             <View style={styles.dyeAmountPriceEdit}>
                 <View>
-                    <Text style={styles.dyeAmountTextOld}>
-                        {dyer.Price.toString()}
-                    </Text>
+                    <Text style={styles.dyeAmountTextOld}>{dyer.Price.toString()}</Text>
                     <Text style={styles.dyeAmountText}>
                         {Math.round(dyer.Price * user.shop.priceFactor).toString()}
                     </Text>
@@ -112,7 +106,7 @@ class ShopDyes extends BackShopDyes {
                 <Image style={styles.dyeOxImageEdit} source={IMG_OX} />
             </View>
         );
-    }
+    };
 }
 
 export default ShopDyes;

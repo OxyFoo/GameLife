@@ -40,14 +40,14 @@ class ItemCard extends React.PureComponent {
                 user.character.skin,
                 user.character.skinColor
             );
-            this.character.SetEquipment([ item.ID ]);
+            this.character.SetEquipment([item.ID]);
         }
     }
 
     onPress = () => {
         const { stuff } = this.props;
         this.props.onPress(stuff);
-    }
+    };
 
     render() {
         const { stuff, isEquipped, isSelected } = this.props;
@@ -81,12 +81,12 @@ class ItemCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', { opacity: .5 })}
+                    underlayColor={themeManager.GetColor('main1', { opacity: 0.5 })}
                     touchSoundDisabled={true}
                 >
                     <View>
                         <Frame
-                            characters={[ this.character ]}
+                            characters={[this.character]}
                             onlyItems={onlyItems}
                             bodyView={bodyView}
                             loadingTime={400}

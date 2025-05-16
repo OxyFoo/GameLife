@@ -58,7 +58,7 @@ class TCP {
         this.socket = socket;
 
         this.state.Set('connecting');
-        return new Promise(async (resolve) => {
+        return new Promise((resolve) => {
             /** @param {boolean} bool */
             const finish = (bool) => {
                 clearTimeout(_timeout);

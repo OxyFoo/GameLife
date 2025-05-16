@@ -14,11 +14,14 @@ function GetRandomIntByDay(min, max) {
     const shortYear = today.getFullYear() % 100;
 
     const device = GetDeviceInformations().deviceID;
-    const deviceSeed = device.split('').map(c => c.charCodeAt(0)).reduce((a, b) => a + b, 0);
+    const deviceSeed = device
+        .split('')
+        .map((c) => c.charCodeAt(0))
+        .reduce((a, b) => a + b, 0);
     const random = Math.pow(date + month, shortYear) * deviceSeed;
 
     const seed = random.toLocaleString('fullwide', { useGrouping: false }).slice(2, 16);
-    const index = Number.parseInt(seed.charAt(0)) * (max - min) / 9;
+    const index = (Number.parseInt(seed.charAt(0), 10) * (max - min)) / 9;
 
     return Math.floor(index) + min;
 }
@@ -33,15 +36,15 @@ function GetRandomIndexesByDay(items, length) {
     const midnight = GetMidnightTime(GetLocalTime());
 
     const device = GetDeviceInformations().deviceID;
-    const deviceSeed = device
-        .split('')
-        .map(c => c.charCodeAt(0))
-        .reduce((a, b) => a + b, 0)
-        % 10;
+    const deviceSeed =
+        device
+            .split('')
+            .map((c) => c.charCodeAt(0))
+            .reduce((a, b) => a + b, 0) % 10;
 
     const random = Math.pow(midnight, deviceSeed) % 1000000;
     const randomStrings = String(random).match(/\d+/g);
-    let seed = !!randomStrings ? randomStrings.join('') : '1';
+    let seed = randomStrings ? randomStrings.join('') : '1';
     while (seed.length < length) {
         seed += seed;
     }
@@ -50,7 +53,7 @@ function GetRandomIndexesByDay(items, length) {
     let output = [];
     for (let i = 0; i < length; i++) {
         const total = Object.values(remainItems).reduce((a, b) => a + b, 0);
-        const index = Number.parseInt(seed.charAt(i)) * total / 9;
+        const index = (Number.parseInt(seed.charAt(i), 10) * total) / 9;
 
         let sum = 0;
         for (const key in remainItems) {

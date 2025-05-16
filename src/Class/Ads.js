@@ -139,13 +139,15 @@ class Ads extends IUserClass {
             return;
         }
 
+        let response;
+
         switch (type) {
             case AdEventType.LOADED:
             case RewardedAdEventType.LOADED:
                 callback(ad.meta, 'ready');
                 break;
             case RewardedAdEventType.EARNED_REWARD:
-                const response = await this.user.server2.tcp.SendAndWait({
+                response = await this.user.server2.tcp.SendAndWait({
                     action: 'watch-ad',
                     adName: ad.meta.Name
                 });

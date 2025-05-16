@@ -12,10 +12,10 @@ import { GetMonthAndYear } from 'Utils/Date';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * 
+ *
  * @typedef {import('./script').DayType} DayType
  * @typedef {import('./script').MonthType} MonthType
- * 
+ *
  * @typedef {{ day?: number, week?: number, month: number, year: number }} MonthData
  */
 
@@ -32,22 +32,20 @@ const BlockMonthProps = {
     /** @type {boolean} */
     hideTitle: false,
 
-    /** @param {LayoutChangeEvent} event */
-    onLayout: (event) => {},
+    /** @type {(event: LayoutChangeEvent) => void} */
+    onLayout: () => {},
 
     /**
      * Called when a day is pressed
-     * @param {number} day
-     * @param {number | null} month
-     * @param {number | null} year
+     * @type {(day: number, month: number | null, year: number | null) => void}
      */
-    onPressDay: (day, month, year) => {}
+    onPressDay: () => {}
 };
 
 class BlockMonth extends React.Component {
     state = {
         loaded: false
-    }
+    };
 
     /** @type {MonthType | null} */
     lastBlockMonth = null;
@@ -58,17 +56,22 @@ class BlockMonth extends React.Component {
         }, 100);
     }
 
-    /** @param {BlockMonthProps} nextProps */
+    /**
+     * @param {BlockMonthProps} nextProps
+     * @param {this['state']} nextState
+     */
     shouldComponentUpdate(nextProps, nextState) {
         const { data: nextData } = nextProps;
         const { data: currData } = this.props;
 
         // Month data changed
-        if (nextData?.day !== currData?.day ||
+        if (
+            nextData?.day !== currData?.day ||
             nextData?.week !== currData?.week ||
             nextData?.month !== currData?.month ||
-            nextData?.year !== currData?.year) {
-                return true;
+            nextData?.year !== currData?.year
+        ) {
+            return true;
         }
 
         // Days data changed
@@ -86,16 +89,15 @@ class BlockMonth extends React.Component {
     /** @param {DayType | null} item */
     onPress = (item) => {
         const { data, onPressDay } = this.props;
+        if (item === null || data === null) {
+            return;
+        }
+
         onPressDay(item.day, data.month, data.year);
-    }
+    };
 
     /** @param {{ item: DayType | null }} param0 */
-    renderDay = ({ item }) => (
-        <Day
-            item={item}
-            onPress={this.onPress}
-        />
-    )
+    renderDay = ({ item }) => <Day item={item} onPress={this.onPress} />;
 
     render() {
         const { data, style, height, hideTitle, onLayout } = this.props;
@@ -119,7 +121,9 @@ class BlockMonth extends React.Component {
         return (
             <View style={[styles.container, { height }, style]} onLayout={onLayout}>
                 {hideTitle === false && title !== null && (
-                    <Text style={styles.title} color='main1' fontSize={22}>{title}</Text>
+                    <Text style={styles.title} color='main1' fontSize={22}>
+                        {title}
+                    </Text>
                 )}
 
                 {this.state.loaded && (
@@ -128,7 +132,7 @@ class BlockMonth extends React.Component {
                         numColumns={7}
                         columnWrapperStyle={styles.rowContainer}
                         renderItem={this.renderDay}
-                        keyExtractor={(item, index) => 'm-' + index}
+                        keyExtractor={(_item, index) => 'm-' + index}
                         scrollEnabled={false}
                     />
                 )}

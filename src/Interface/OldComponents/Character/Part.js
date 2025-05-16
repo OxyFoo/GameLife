@@ -8,7 +8,7 @@ import { CHARACTERS, COLORS } from 'Ressources/items/humans/Characters';
 /**
  * @typedef {import('./Body').default} Body
  * @typedef {import('Ressources/items/humans/Characters').PartsName} PartsName
- * 
+ *
  * @typedef {'bodyShadow' | 'stuffShadow' | 'body' | 'stuff'} CharacterRenderTypes
  */
 
@@ -48,7 +48,7 @@ class Part {
     }
 
     /**
-     * @param {Part} child 
+     * @param {Part} child
      */
     AddChild(child) {
         child.parent = this;
@@ -137,7 +137,9 @@ class Part {
                     // @ts-ignore
                     style={styleZIndex}
                 >
-                    {svgItems.map((SVG, i) => <G key={`stuff-${this.name}-${i}`}>{SVG}</G>)}
+                    {svgItems.map((SVG, i) => (
+                        <G key={`stuff-${this.name}-${i}`}>{SVG}</G>
+                    ))}
                 </G>
             );
         } else if (partType === 'stuffShadow') {
@@ -154,7 +156,9 @@ class Part {
                     stroke='#000000'
                     strokeWidth={4 * 2}
                 >
-                    {svgItemsShadows.map((shadow, i) => <G key={`stuff-shadow-${this.name}-${i}`}>{shadow}</G>)}
+                    {svgItemsShadows.map((shadow, i) => (
+                        <G key={`stuff-shadow-${this.name}-${i}`}>{shadow}</G>
+                    ))}
                 </G>
             );
         }

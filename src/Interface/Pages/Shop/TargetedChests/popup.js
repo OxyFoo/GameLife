@@ -18,15 +18,14 @@ import { Text, Button } from 'Interface/Components';
  */
 function renderBuyPopup(item, closePopup) {
     const lang = langManager.curr['shop']['targetedChests'];
-    let [ loading, setLoading ] = React.useState(false);
+    let [loading, setLoading] = React.useState(false);
 
     const price = item.PriceDiscount < 0 ? item.PriceOriginal : item.PriceDiscount;
     const itemDescription = lang['popup-chest-text']
-                        .replace('{}', langManager.curr['rarities'][item.Rarity])
-                        .replace('{}', item.Name)
-                        .replace('{}', price.toString());
-    const buttonText = lang['popup-chest-button']
-                        .replace('{}', price.toString());
+        .replace('{}', langManager.curr['rarities'][item.Rarity])
+        .replace('{}', item.Name)
+        .replace('{}', price.toString());
+    const buttonText = lang['popup-chest-button'].replace('{}', price.toString());
 
     const buy = async () => {
         setLoading(true);
@@ -37,20 +36,11 @@ function renderBuyPopup(item, closePopup) {
 
     return (
         <View style={styles.itemPopup}>
-            <Text style={styles.itemPopupTitle}>
-                {item.Name}
-            </Text>
+            <Text style={styles.itemPopupTitle}>{item.Name}</Text>
 
-            <Text style={styles.itemPopupText}>
-                {itemDescription}
-            </Text>
+            <Text style={styles.itemPopupText}>{itemDescription}</Text>
 
-            <Button
-                style={styles.itemPopupButton}
-                color='main1'
-                onPress={buy}
-                loading={loading}
-            >
+            <Button style={styles.itemPopupButton} color='main1' onPress={buy} loading={loading}>
                 {buttonText}
             </Button>
         </View>

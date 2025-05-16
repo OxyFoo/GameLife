@@ -74,23 +74,21 @@ class Body {
     }
 
     /**
-     * Apply animation to character 
+     * Apply animation to character
      * @param {object} translation
      * @param {object} partsRotations { ..., PartsName: Animated3D, ... }
      */
     __applyAnimation = (translation, partsRotations) => {
         // Rotations
         Object.keys(partsRotations).forEach((partName) => {
-            const part = this
-                            .getChilds(this.firstPart)
-                            .find(part => part.name === partName) || null;
+            const part = this.getChilds(this.firstPart).find((part) => part.name === partName) || null;
             part?.rotation.Update(partsRotations[partName]);
         });
 
         // Translation
         this.firstPart.position.x = translation?.x || 0;
         this.firstPart.position.y = translation?.y || 0;
-    }
+    };
 
     /**
      * @param {Part} part
@@ -99,49 +97,44 @@ class Body {
      */
     getChilds = (part, size = 'full') => {
         const head_partToRemove = 'bust';
-        const topHalf_partToRemove = [
-            'left_thigh',
-            'right_thigh',
-            'left_forearm',
-            'right_forearm'
-        ];
+        const topHalf_partToRemove = ['left_thigh', 'right_thigh', 'left_forearm', 'right_forearm'];
 
         if (size === 'head' && part.name === head_partToRemove) {
-            return [ part.childs[0], ...part.childs[0].childs.map(part => this.getChilds(part, 'full')).flat() ];
-        }
-        else if (size === 'topHalf' && topHalf_partToRemove.includes(part.name)) {
+            return [part.childs[0], ...part.childs[0].childs.map((part) => this.getChilds(part, 'full')).flat()];
+        } else if (size === 'topHalf' && topHalf_partToRemove.includes(part.name)) {
             return [];
         }
 
-        return [ part, ...part.childs.map(part => this.getChilds(part, size)).flat() ];
-    }
+        return [part, ...part.childs.map((_part) => this.getChilds(_part, size)).flat()];
+    };
 
     /**
      * @param {'all' | 'onlyItems'} type
      * @param {BodyView} size
-     * @returns {JSX.Element[]}
+     * @returns {React.ReactNode | null}
      */
     render = (type = 'all', size = 'full') => {
         if (this.character.parentFrame === null) return null;
         if (this.character.outOfBounds || this.character.hide) return null;
 
-        const allParts = this.getChilds(this.firstPart, size)
-                                .sort((a, b) => a.zIndex - b.zIndex);
+        const allParts = this.getChilds(this.firstPart, size).sort((a, b) => a.zIndex - b.zIndex);
 
         if (type === 'all') {
             return [
-                ...allParts.map(part => part.render('bodyShadow')),
-                ...allParts.map(part => part.render('stuffShadow')),
-                ...allParts.map(part => part.render('body')),
-                ...allParts.map(part => part.render('stuff'))
+                ...allParts.map((part) => part.render('bodyShadow')),
+                ...allParts.map((part) => part.render('stuffShadow')),
+                ...allParts.map((part) => part.render('body')),
+                ...allParts.map((part) => part.render('stuff'))
             ];
         } else if (type === 'onlyItems') {
             return [
-                ...allParts.map(part => part.render('stuffShadow')),
-                ...allParts.map(part => part.render('stuff'))
+                ...allParts.map((part) => part.render('stuffShadow')),
+                ...allParts.map((part) => part.render('stuff'))
             ];
         }
-    }
+
+        return null;
+    };
 }
 
 export default Body;

@@ -32,7 +32,7 @@ const renderNoRemaining = () => {
             </View>
         </View>
     );
-}
+};
 
 const renderNotConnected = () => {
     const lang = langManager.curr['zap-gpt'];
@@ -54,7 +54,7 @@ const renderNotConnected = () => {
             </View>
         </View>
     );
-}
+};
 
 const renderNotBuyed = (callback = () => {}) => {
     const lang = langManager.curr['zap-gpt'];
@@ -85,6 +85,6 @@ const renderNotBuyed = (callback = () => {}) => {
             </Button>
         </View>
     );
-}
+};
 
 export { renderNoRemaining, renderNotConnected, renderNotBuyed };

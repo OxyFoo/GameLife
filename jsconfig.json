@@ -10,9 +10,6 @@
         "paths": {
             "Ressources/*": [
                 "../res/*"
-            ],
-            "Types/*": [
-                "../src/Types/*"
             ]
         },
         "noImplicitAny": true,
@@ -25,7 +22,6 @@
         "src"
     ],
     "exclude": [
-        "node_modules",
-        "Types"
+        "node_modules"
     ]
 }

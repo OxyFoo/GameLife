@@ -15,8 +15,6 @@
     "lint": "eslint ./src",
     "server": "cd src/Server/TCP && npm start",
     "podi": "cd ios && pod install",
-    "prestart": "npx tsc -b src/Types/tsconfig.gamelife.json",
-    "poststart": "find src/Types/ -type f \\( -name \"*.js\" -o -name \"*.d.ts\" -o -name \"*.tsbuildinfo\" \\) -delete",
     "apple-reset-cache": "rm -rf ~/Library/Developer/Xcode/DerivedData/GameLife-*/Build/Intermediates.noindex/XCBuildData/"
   },
   "dependencies": {
@@ -48,6 +46,7 @@
     "@babel/core": "^7.27.1",
     "@babel/preset-env": "^7.27.2",
     "@babel/runtime": "^7.27.1",
+    "@oxyfoo/gamelife-types": "^2.0.7",
     "@react-native-community/cli": "18.0.0",
     "@react-native-community/cli-platform-android": "18.0.0",
     "@react-native-community/cli-platform-ios": "18.0.0",

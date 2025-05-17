@@ -4,7 +4,7 @@
 | Variable | Description | Values |
 | --- | --- | --- |
 | ENV | Application environnement | dev, test, prod |
-| VPS_IP | IP of the VPS: TCP Server | IP |
+| VPS_HOST | IP of the VPS: TCP Server | IP |
 | VPS_PORT | Port of the VPS: TCP Server | Port (8092, 8091, 8090) |
 
 ## TCP Server

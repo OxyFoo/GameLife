@@ -10,7 +10,7 @@ import { RandomString } from 'Utils/Functions';
 
 const TCP_SETTINGS = {
     protocol: Config.VPS_PROTOCOL,
-    host: Config.VPS_IP,
+    host: Config.VPS_HOST,
     port: Config.VPS_PORT
 };
 

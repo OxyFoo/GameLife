@@ -7,7 +7,7 @@ jest.mock('react-native-config', () => {
     return {
         ENV: 'dev',
         VPS_PROTOCOL: 'ws',
-        VPS_IP: '10.0.0.179',
+        VPS_HOST: '10.0.0.179',
         VPS_PORT: '8092'
     };
 });
@@ -114,15 +114,15 @@ jest.mock('Utils/TCP', () => {
             Set: jest.fn(),
             Get: jest.fn(() => 'disconnected'),
             AddListener: jest.fn(() => 1),
-            RemoveListener: jest.fn(),
+            RemoveListener: jest.fn()
         }
-    }))
+    }));
 });
 
 jest.mock('Utils/DataStorage', () => ({
     Load: jest.fn(() => Promise.resolve({})),
     Save: jest.fn(() => Promise.resolve(true)),
     STORAGE: {
-        LOGIN: 'LOGIN',
-    },
+        LOGIN: 'LOGIN'
+    }
 }));

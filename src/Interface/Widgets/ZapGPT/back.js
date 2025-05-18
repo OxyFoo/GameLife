@@ -8,7 +8,7 @@ import { ParsePlural } from 'Utils/String';
 
 /**
  * @typedef {import('Data/User/Activities/index').Activity} Activity
- * @typedef {import('Class/TCP').ConnectionState} ConnectionState
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
  */
 
 const ZapGPTProps = {

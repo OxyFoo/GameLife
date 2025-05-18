@@ -38,7 +38,7 @@ async function CreateSkill(skillName) {
     }
 
     if (response.status !== 'create-skill' || response.result === 'error') {
-        user.interface.console?.AddLog('error', `[CreateSkill] Skill creation failed: ${skillName}`);
+        user.interface.console?.AddLog('error', `[CreateSkill] Skill creation failed: ${skillName}`, response);
         user.interface.popup?.OpenT({
             type: 'ok',
             data: {

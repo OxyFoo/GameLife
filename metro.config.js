@@ -1,13 +1,15 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
+const fs = require('fs');
+const path = require('path');
 const Obfuscator = require('obfuscator-io-metro-plugin');
+
 /**
  * Metro configuration for React Native
  * https://github.com/facebook/react-native
  *
  * @format
  */
-
 const jsoMetroPlugin = Obfuscator(
     {
         // for these option look javascript-obfuscator library options from  above url
@@ -33,6 +35,26 @@ const jsoMetroPlugin = Obfuscator(
     }
 );
 
+const localTypesPath = path.resolve(__dirname, '../GameLife-Types/dist');
+const isLocalTypesPresent = fs.existsSync(localTypesPath);
+
+/**
+ * Enable local game life types (more info in README.md)
+ *
+ * @type {import('@react-native/metro-config').MetroConfig}
+ */
+const localGameLifeTypesConfig = {
+    watchFolders: [localTypesPath],
+    resolver: {
+        extraNodeModules: new Proxy(
+            {},
+            {
+                get: (_, name) => path.resolve(__dirname, 'node_modules', name)
+            }
+        )
+    }
+};
+
 /**
  * Metro configuration
  * https://reactnative.dev/docs/metro
@@ -48,6 +70,7 @@ const config = {
             }
         })
     },
+    ...(isLocalTypesPresent && localGameLifeTypesConfig),
     ...jsoMetroPlugin
 };
 

@@ -2,7 +2,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
-import DataStorage, { STORAGE } from 'Utils/DataStorage';
+import Storage from 'Utils/Storage';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -60,7 +60,7 @@ class Settings extends IUserClass {
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local loading...');
 
         /** @type {SaveObject_Settings | null} */
-        const settings = await DataStorage.Load(STORAGE.LOGIN);
+        const settings = await Storage.Load('LOGIN');
         if (settings === null) {
             if (debugIndex) {
                 this.user.interface.console?.EditLog(debugIndex, 'warn', 'Settings data: local load failed');
@@ -113,7 +113,7 @@ class Settings extends IUserClass {
 
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local saving...');
 
-        const status = await DataStorage.Save(STORAGE.LOGIN, settings);
+        const status = await Storage.Save('LOGIN', settings);
 
         if (debugIndex) {
             const statusText = status ? 'success' : 'failed';

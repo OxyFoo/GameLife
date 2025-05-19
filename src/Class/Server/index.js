@@ -3,8 +3,10 @@ import RNExitApp from 'react-native-exit-app';
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import langManager from 'Managers/LangManager';
 
-import TCP from 'Utils/TCP';
-import { CheckDate } from 'Utils/DateCheck';
+import TCP from './TCP';
+import { CheckDate } from './DateCheck';
+import DeviceAuthService from './DeviceAuthService';
+import UserAuthService from './UserAuthService';
 import { OpenStore } from 'Utils/Store';
 import { GetDeviceIdentifiers } from 'Utils/Device';
 
@@ -12,9 +14,9 @@ import { GetDeviceIdentifiers } from 'Utils/Device';
  * @typedef {import('Managers/UserManager').default} UserManager
  */
 
-const APP_VERSION = require('../../package.json').version;
+const APP_VERSION = require('../../../package.json').version;
 
-class Server2 extends IUserClass {
+class Server extends IUserClass {
     /** @type {UserManager} */
     #user;
     #listenerTCP;
@@ -32,6 +34,8 @@ class Server2 extends IUserClass {
 
         this.#user = user;
         this.tcp = new TCP();
+        this.deviceAuthService = new DeviceAuthService(this.tcp);
+        this.userAuthService = new UserAuthService(this.tcp);
         this.#listenerTCP = this.tcp.state.AddListener((state) => {
             if (this.#isTrusted && state !== 'connected' && state !== 'authenticated') {
                 this.#isTrusted = false;
@@ -278,4 +282,4 @@ class Server2 extends IUserClass {
     };
 }
 
-export default Server2;
+export default Server;

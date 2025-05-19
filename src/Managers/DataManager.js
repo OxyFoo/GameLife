@@ -1,4 +1,4 @@
-import DataStorage, { STORAGE } from 'Utils/DataStorage';
+import Storage from 'Utils/Storage';
 
 import Achievements from 'Data/App/Achievements';
 import Ads from 'Data/App/Ads';
@@ -69,8 +69,8 @@ class DataManager {
             titles: 0
         };
 
-        DataStorage.Save(STORAGE.APP_DATA, null);
-        DataStorage.Save(STORAGE.APPDATA_HASHES, null);
+        Storage.Save('APP_DATA', null);
+        Storage.Save('APPDATA_HASHES', null);
     }
 
     /**
@@ -110,7 +110,7 @@ class DataManager {
         const debugIndex = user.interface.console?.AddLog('info', 'App data: local saving...');
 
         // Save hashes
-        const savedHashes = await DataStorage.Save(STORAGE.APPDATA_HASHES, this.#tableHashes);
+        const savedHashes = await Storage.Save('APPDATA_HASHES', this.#tableHashes);
         if (!savedHashes) {
             user.interface.console?.EditLog(debugIndex, 'error', 'App data: local save failed');
             return false;
@@ -130,7 +130,7 @@ class DataManager {
             titles: this.titles.Save()
         };
 
-        const saved = await DataStorage.Save(STORAGE.APP_DATA, appData);
+        const saved = await Storage.Save('APP_DATA', appData);
         if (saved) {
             user.interface.console?.EditLog(debugIndex, 'same', 'App data: local save success');
         } else {
@@ -150,7 +150,7 @@ class DataManager {
 
         // Load hashes
         /** @type {DataHashes | null} */
-        const hashes = await DataStorage.Load(STORAGE.APPDATA_HASHES);
+        const hashes = await Storage.Load('APPDATA_HASHES');
         if (hashes === null) {
             user.interface.console?.EditLog(debugIndex, 'warn', 'App data: local load failed');
             return false;
@@ -160,7 +160,7 @@ class DataManager {
 
         // Load app data
         /** @type {Partial<DataTypes> | null} */
-        const appData = await DataStorage.Load(STORAGE.APP_DATA);
+        const appData = await Storage.Load('APP_DATA');
         if (appData === null) {
             user.interface.console?.EditLog(debugIndex, 'warn', 'App data: local load failed');
             return false;

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { AppState } from 'react-native';
-import Config from 'react-native-config';
 import { initSSLPinning } from 'react-native-ssl-pinning';
 
+import { env } from './src/Utils/Env';
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
 
@@ -22,9 +22,9 @@ class App extends React.Component {
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
         // Initialize SSL Pinning
-        if (Config.VPS_PROTOCOL === 'wss') {
+        if (env.VPS_PROTOCOL === 'wss') {
             initSSLPinning({
-                [Config.VPS_HOST]: {
+                [env.VPS_HOST]: {
                     includeSubDomains: false,
                     enforcePinning: true,
                     publicKeyHashes: [

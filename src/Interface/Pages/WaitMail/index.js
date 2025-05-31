@@ -9,7 +9,7 @@ import { Text, Button, ProgressBar } from 'Interface/Components';
 
 class Waitmail extends BackWaitmail {
     render() {
-        const email = user.settings.email;
+        const email = user.server2.userAuth.email;
         const { statusText } = this.state;
         const langWait = langManager.curr['wait'];
         const textWait = langWait['wait-email-text'];

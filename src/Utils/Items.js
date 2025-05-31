@@ -1,4 +1,4 @@
-import { GetDeviceInformations } from './Device';
+import { GetDeviceUniqueID } from './Device';
 import { GetMidnightTime, GetLocalTime } from './Time';
 
 /**
@@ -13,7 +13,7 @@ function GetRandomIntByDay(min, max) {
     const month = today.getMonth();
     const shortYear = today.getFullYear() % 100;
 
-    const device = GetDeviceInformations().deviceID;
+    const device = GetDeviceUniqueID();
     const deviceSeed = device
         .split('')
         .map((c) => c.charCodeAt(0))
@@ -35,7 +35,7 @@ function GetRandomIntByDay(min, max) {
 function GetRandomIndexesByDay(items, length) {
     const midnight = GetMidnightTime(GetLocalTime());
 
-    const device = GetDeviceInformations().deviceID;
+    const device = GetDeviceUniqueID();
     const deviceSeed =
         device
             .split('')

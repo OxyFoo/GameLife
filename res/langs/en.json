@@ -191,6 +191,7 @@
 
     "app": {
         "loading-error-message": {
+            "authentication-failed": "Device authentication failed",
             "appdata-not-loaded": "App data not loaded",
             "userdata-not-loaded": "User data not loaded",
             "userdata-not-saved": "User data could not be saved"
@@ -478,7 +479,7 @@
         "button-signin-text": "Signin",
 
         "error-login-nonmail": "Please enter a valid email address.",
-        "error-signin-server": "An error has occurred.",
+        "error-signin-server": "An error has occurred. ({})",
         "error-signin-pseudoWrong": "Please enter a correct username.",
         "error-signin-pseudoUsed": "This username is already in use.",
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",

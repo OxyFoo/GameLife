@@ -8,7 +8,7 @@ const REFRESH_DELAY_SECONDS = 30;
 
 class BackWaitinternet extends PageBase {
     state = {
-        /** @type {'not-connected' | 'maintenance' | 'error'} */
+        /** @type {'not-connected' | 'maintenance' | 'authenticated-failed' | 'error'} */
         currentStatus: 'not-connected',
 
         /** @type {string | null} */
@@ -24,14 +24,21 @@ class BackWaitinternet extends PageBase {
     }
 
     Loop = async () => {
-        const status = await user.server2.Connect(true);
-        if (status === 'success' || status === 'already-connected') {
+        const status = await user.server2.Initialize();
+        if (status === 'authenticated' || status === 'already-authenticated') {
             user.interface.ChangePage('login', { storeInHistory: false });
-        } else {
+        } else if (status === 'update') {
+            user.interface.ChangePage('loading', { storeInHistory: false });
+        } else if (status === 'maintenance' || status === 'not-connected' || status === 'authenticated-failed') {
             const lastError = user.server2.tcp.GetLastError();
             this.setState({
                 currentStatus: status,
                 lastError: lastError === null ? 'Unknown error' : lastError
+            });
+        } else {
+            this.setState({
+                currentStatus: 'error',
+                lastError: status
             });
         }
     };

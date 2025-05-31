@@ -29,7 +29,7 @@ class ProfileEditor extends BackProfileEditor {
                     <Text style={styles.textMail} color='secondary'>
                         {lang['title-mail']}
                     </Text>
-                    <Text style={styles.textMail}>{user.settings.email}</Text>
+                    <Text style={styles.textMail}>{user.server2.userAuth.email}</Text>
                 </View>
 
                 <View style={styles.row}>

@@ -20,7 +20,7 @@ class BackWaitmail extends PageBase {
         this.tick = setInterval(this.onTick, 1000);
 
         this.listenerServer = user.server2.tcp.state.AddListener((state) => {
-            if (state !== 'connected' && state !== 'authenticated') {
+            if (state !== 'connected') {
                 this.fe.ChangePage('waitinternet', {
                     storeInHistory: false,
                     transition: 'fromBottom'
@@ -38,8 +38,7 @@ class BackWaitmail extends PageBase {
     }
 
     onBack = () => {
-        user.settings.email = '';
-        user.settings.IndependentSave();
+        user.server2.userAuth.email = null;
         user.interface.ChangePage('login', { storeInHistory: false });
     };
 
@@ -69,8 +68,22 @@ class BackWaitmail extends PageBase {
     };
 
     WaitingMailConfirmation = async () => {
+        if (user.server2.userAuth.email === null) {
+            user.interface.console?.AddLog('error', 'No email set, cannot wait for mail confirmation');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: langManager.curr['login']['alert-error-title'],
+                    message: langManager.curr['login']['alert-error-message'].replace('{}', 'No email set')
+                },
+                callback: () => user.interface.BackHandle(),
+                cancelable: false
+            });
+            return;
+        }
+
         const response = await user.server2.tcp.SendAndWaitWithoutCallback(
-            { action: 'wait-mail', email: user.settings.email },
+            { action: 'wait-mail', email: user.server2.userAuth.email },
             (data) => {
                 // Error
                 if (data.status !== 'wait-mail' || data.result === 'confirmed' || data.result === 'error') {
@@ -125,13 +138,12 @@ class BackWaitmail extends PageBase {
                 cancelable: false
             });
 
-            user.settings.email = '';
-            user.settings.IndependentSave();
+            user.server2.userAuth.email = null;
             return;
         }
 
         // Error
-        if (response.status !== 'wait-mail' || response.result !== 'confirmed' || typeof response.token !== 'string') {
+        if (response.status !== 'wait-mail' || response.result !== 'confirmed') {
             user.interface.console?.AddLog('error', 'Server error:', response);
             user.interface.popup?.OpenT({
                 type: 'ok',
@@ -146,15 +158,12 @@ class BackWaitmail extends PageBase {
                 cancelable: false
             });
 
-            user.settings.email = '';
-            user.settings.IndependentSave();
+            user.server2.userAuth.email = null;
             return;
         }
 
         // Connected
         if (response.result === 'confirmed') {
-            user.settings.token = response.token;
-            await user.settings.IndependentSave();
             user.interface.ChangePage('loading', { storeInHistory: false });
             return;
         }

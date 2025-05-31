@@ -191,6 +191,7 @@
 
     "app": {
         "loading-error-message": {
+            "authentication-failed": "Échec de l'authentification de l'appareil",
             "appdata-not-loaded": "Les données de l'application n'ont pas pu être chargées",
             "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
             "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
@@ -478,7 +479,7 @@
         "button-signin-text": "S'inscrire",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
-        "error-signin-server": "Une erreur est survenue.",
+        "error-signin-server": "Une erreur est survenue. ({})",
         "error-signin-pseudoWrong": "Tu dois entrer un pseudo correct.",
         "error-signin-pseudoUsed": "Ce pseudo est déjà utilisé.",
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",

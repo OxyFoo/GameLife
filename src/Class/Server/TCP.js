@@ -1,18 +1,13 @@
-import Config from 'react-native-config';
 import DynamicVar from 'Utils/DynamicVar';
 import { RandomString } from 'Utils/Functions';
 
 /**
- * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ *
+ * @typedef {'idle' | 'connecting' | 'connected' | 'disconnected' | 'error'} TCPState
+ * @typedef {{ protocol: string, host: string, port: number }} TCPSettings
  */
-
-const TCP_SETTINGS = {
-    protocol: Config.VPS_PROTOCOL,
-    host: Config.VPS_HOST,
-    port: Config.VPS_PORT
-};
 
 const SERVER_TIMEOUT_MS = __DEV__ ? 10000 : 5000;
 
@@ -20,8 +15,14 @@ class TCP {
     /** @type {WebSocket | null} */
     socket = null;
 
-    /** @type {DynamicVar<ConnectionState>} */
-    state = new DynamicVar(/** @type {ConnectionState} */ ('idle'));
+    /** @type {DynamicVar<TCPState>} */
+    state = new DynamicVar(/** @type {TCPState} */ ('idle'));
+
+    /**
+     * @type {TCPSettings | null}
+     * @readonly
+     */
+    settings;
 
     /** @type {string | null} */
     #lastError = null;
@@ -39,15 +40,26 @@ class TCP {
     #callbacksActions = {};
 
     /**
+     * @param {TCPSettings | null} settings
+     */
+    constructor(settings = null) {
+        this.settings = settings;
+    }
+
+    /**
      * @param {boolean} [connectAsNewUser] Whether to connect as a new user
      * @returns {Promise<boolean>} Whether the connection was successful, or if it was already connected
      */
     Connect = async (connectAsNewUser = false) => {
+        if (this.settings === null) {
+            return false;
+        }
+
         if (this.IsConnected()) {
             return false;
         }
 
-        const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
+        const url = `${this.settings.protocol}://${this.settings.host}:${this.settings.port}`;
         const protocol = !connectAsNewUser ? 'gamelife-client' : 'gamelife-client-new';
 
         const socket = new WebSocket(url, protocol);
@@ -79,7 +91,7 @@ class TCP {
     };
 
     IsConnected = () => {
-        return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
+        return this.socket !== null && this.socket.readyState === WebSocket.OPEN && this.state.Get() === 'connected';
     };
 
     Disconnect = () => {

@@ -28,8 +28,6 @@ class Settings extends IUserClass {
         this.user = user;
     }
 
-    email = '';
-    token = '';
     onboardingWatched = false;
     testMessageReaded = false;
     tutoFinished = false;
@@ -44,8 +42,6 @@ class Settings extends IUserClass {
     musicLinks = DEFAULT_MUSIC_LINKS;
 
     Clear = () => {
-        this.email = '';
-        this.token = '';
         this.testMessageReaded = false;
         this.questHeatMapIndex = 0;
 
@@ -70,8 +66,6 @@ class Settings extends IUserClass {
 
         if (typeof settings.lang !== 'undefined') this.SetLang(settings.lang, true);
         if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
-        if (typeof settings.email !== 'undefined') this.email = settings.email;
-        if (typeof settings.token !== 'undefined') this.token = settings.token;
         if (typeof settings.regularNotificationsLastRefresh !== 'undefined') {
             this.regularNotificationsLastRefresh = settings.regularNotificationsLastRefresh;
         }
@@ -98,8 +92,6 @@ class Settings extends IUserClass {
         const settings = {
             lang: langManager.currentLangageKey,
             theme: themeManager.selectedTheme,
-            email: this.email,
-            token: this.token,
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,

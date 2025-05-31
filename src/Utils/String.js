@@ -3,13 +3,12 @@
  * @returns {boolean} Return true if string is a valid json
  */
 function StrIsJSON(str) {
-    let isJSON = true;
     try {
         JSON.parse(str);
     } catch (e) {
-        isJSON = false;
+        return false;
     }
-    return isJSON;
+    return true;
 }
 
 /**

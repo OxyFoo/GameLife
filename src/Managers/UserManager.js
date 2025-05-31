@@ -107,7 +107,7 @@ class UserManager {
     /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
 
-    StartTimers() {
+    onMount() {
         this.experience.onMount();
         this.dailyQuest.onMount();
 
@@ -115,16 +115,28 @@ class UserManager {
         this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
     }
+    async onUnmount() {
+        clearInterval(this.intervalAchievements);
+
+        this.server2.Disconnect();
+        this.experience.onUnmount();
+        this.dailyQuest.onUnmount();
+        this.notificationsInApp.Unmount();
+
+        await this.settings.IndependentSave();
+        await this.SaveLocal();
+        await this.SaveOnline();
+    }
 
     async Clear(keepOnboardingState = true) {
         this.tempMailSent = null;
 
         for (const data of this.CLASS) {
-            data.Clear();
+            await data.Clear();
         }
 
         for (const data of this.DATA) {
-            data.Clear();
+            await data.Clear();
         }
 
         await this.onUnmount();
@@ -171,8 +183,9 @@ class UserManager {
 
         await this.Clear();
         this.server2.Disconnect();
-        await Sleep(500); // Wait for the server to disconnect
-        await this.server2.Connect(true);
+
+        // Wait for the server to disconnect
+        await Sleep(500);
 
         this.interface.ChangePage('login', {
             storeInHistory: false,
@@ -182,19 +195,6 @@ class UserManager {
         });
 
         return true;
-    }
-
-    async onUnmount() {
-        clearInterval(this.intervalAchievements);
-
-        this.server2.Disconnect();
-        this.experience.onUnmount();
-        this.dailyQuest.onUnmount();
-        this.notificationsInApp.Unmount();
-
-        await this.settings.IndependentSave();
-        await this.SaveLocal();
-        await this.SaveOnline();
     }
 
     /**

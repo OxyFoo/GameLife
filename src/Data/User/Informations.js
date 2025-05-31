@@ -275,14 +275,14 @@ class Informations extends IUserData {
 
     /** @returns {NotificationInAppOptionalUpdate | null} */
     GetOptionalUpdateNotifications = () => {
-        if (this.user.server2.optionalUpdateAvailable === null) {
+        if (this.user.server2.serverState.version === null) {
             return null;
         }
 
         return {
             type: 'optional-update',
             data: {
-                version: this.user.server2.optionalUpdateAvailable
+                version: this.user.server2.serverState.version
             },
             timestamp: GetLocalTime()
         };

@@ -6,7 +6,7 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetGlobalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').ConnectionState} ConnectionState
+ * @typedef {import('Class/Server/TCP').TCPState} TCPState
  * @typedef {import('Managers/LangManager').LangKey} LangKey
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
@@ -23,7 +23,7 @@ class BackSettings extends PageBase {
         sendingMail: false,
         devicesLoading: false,
 
-        /** @param {ConnectionState} state */
+        /** @param {TCPState} state */
         serverTCPState: user.server2.tcp.state.Get(),
 
         waitingConsentPopup: false
@@ -66,7 +66,7 @@ class BackSettings extends PageBase {
         }
     }
 
-    /** @param {ConnectionState} state */
+    /** @param {TCPState} state */
     onTCPStateChange = (state) => {
         this.setState({ serverTCPState: state });
     };

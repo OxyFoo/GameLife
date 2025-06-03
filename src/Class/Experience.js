@@ -68,7 +68,7 @@ class Experience extends IUserClass {
         this.#listenerActivities = this.#user.activities.allActivities.AddListener(this.UpdateExperience);
     };
 
-    onUnmount = () => {
+    Unmount = () => {
         this.#user.activities.allActivities.RemoveListener(this.#listenerActivities);
     };
 

@@ -1,11 +1,11 @@
+import { GetIntegrityToken } from './Integrity';
 import SecureStorage from 'Utils/SecureStorage';
 import { GetDeviceInformations } from 'Utils/Device';
-import { GetIntegrityToken } from 'Utils/Integrity';
 
 /**
  * @typedef {import('./TCP').default} TCP
+ * @typedef {import('./Integrity').IntegrityToken} IntegrityToken
  * @typedef {import('Managers/UserManager').UserManager} UserManager
- * @typedef {import('Utils/Integrity').IntegrityToken} IntegrityToken
  */
 
 class DeviceAuthService {
@@ -54,8 +54,10 @@ class DeviceAuthService {
     Clear = async () => {
         this.#banned = false;
         this.#authenticated = false;
-        await SecureStorage.Remove('SESSION_TOKEN');
         await SecureStorage.Remove('INTEGRITY_TOKEN');
+
+        // The credentials (DEVICE_UUID & SESSION_TOKEN) not removed
+        // Device authentication is persistent and not tied to the user authentication
     };
 
     /**
@@ -91,23 +93,19 @@ class DeviceAuthService {
         }
 
         // Step 2: Get the integrity token if needed
-        if (handshakeResult === 'ok') {
-            const integrityToken = await this.#checkIntegrityAndGenerateIfNeeded();
-            if (integrityToken === null) {
-                return false;
-            }
+        const integrityToken = await this.#checkIntegrityAndGenerateIfNeeded();
 
-            // Verify the integrity token on the server
-            const integrityIsValid = await this.#verifyAppIntegrityOnServer(integrityToken);
-            if (!integrityIsValid) {
-                return false;
-            }
-
-            // Save the integrity token in the secure storage
+        // Save the integrity token in the secure storage
+        if (integrityToken !== null) {
             const saveResult = await this.#saveIntegrityToken(integrityToken);
             if (!saveResult) {
                 return false;
             }
+        } else {
+            this.#user.interface.console?.AddLog(
+                'warn',
+                '[DeviceAuthService] Integrity token generation failed, cannot authenticate'
+            );
         }
 
         // Step 3: Authenticate the device
@@ -248,6 +246,27 @@ class DeviceAuthService {
                 );
                 return null;
             }
+
+            const response2 = await this.#tcp.SendAndWait({
+                action: 'check-integrity',
+                integrityToken: newIntegrityToken
+            });
+
+            if (
+                response2 === 'not-sent' ||
+                response2 === 'timeout' ||
+                response2 === 'interrupted' ||
+                response2.status !== 'check-integrity' ||
+                response2.result !== 'ok'
+            ) {
+                const error = typeof response2 === 'string' ? response2 : response2.status;
+                this.#user.interface.console?.AddLog(
+                    'error',
+                    `[DeviceAuthService] Integrity check failed after generating new token: ${error}`
+                );
+                return null;
+            }
+
             return newIntegrityToken;
         } else {
             this.#user.interface.console?.AddLog(
@@ -307,31 +326,6 @@ class DeviceAuthService {
     };
 
     /**
-     * @description Verify the integrity token on the server
-     * @param {IntegrityToken} integrityToken
-     * @returns {Promise<boolean>}
-     */
-    #verifyAppIntegrityOnServer = async (integrityToken) => {
-        const response = await this.#tcp.SendAndWait({
-            action: 'check-integrity',
-            integrityToken: integrityToken
-        });
-
-        if (
-            response === 'not-sent' ||
-            response === 'timeout' ||
-            response === 'interrupted' ||
-            response.status !== 'check-integrity' ||
-            response.result !== 'ok'
-        ) {
-            this.#user.interface.console?.AddLog('error', '[DeviceAuthService] Integrity check failed');
-            return false;
-        }
-
-        return true;
-    };
-
-    /**
      * @description Authenticate the device with the server
      * @returns {Promise<{ uuid: string | undefined, sessionToken: string | undefined } | null>}
      */
@@ -379,9 +373,7 @@ class DeviceAuthService {
             return null;
         }
 
-        if (response.newUuid) {
-            this.#user.interface.console?.AddLog('info', '[DeviceAuthService] UUID assigned');
-        }
+        this.#authenticated = true;
 
         return {
             uuid: response.newUuid,
@@ -402,6 +394,7 @@ class DeviceAuthService {
                 this.#user.interface.console?.AddLog('error', '[DeviceAuthService] UUID not saved');
                 return false;
             }
+            this.#user.interface.console?.AddLog('info', '[DeviceAuthService] New UUID assigned');
         }
 
         if (typeof sessionToken === 'string') {

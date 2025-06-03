@@ -1,10 +1,15 @@
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
-import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
-import { showDowndatePopup, showMaintenancePopup, showUpdatePopup } from './popups';
+import {
+    showDeletedAccountPopup,
+    showDowndatePopup,
+    showLoginErrorPopup,
+    showMaintenancePopup,
+    showUpdatePopup
+} from './popups';
 //import { Character } from 'Interface/Components';
 
 /**
@@ -83,37 +88,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Account not found, probably deleted, go to the login page
     else if (loggedState === 'free') {
-        const lang = langManager.curr['login'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: lang['alert-deletedaccount-title'],
-                message: lang['alert-deletedaccount-message']
-            },
-            callback: async () => {
-                await user.Clear();
-                user.interface.ChangePage('login', { storeInHistory: false });
-            },
-            cancelable: false
-        });
+        showDeletedAccountPopup();
         return;
     }
 
     // An error occured, go to the error page
     else if (loggedState === 'error' || loggedState === 'deviceLimitReached' || loggedState === 'mailNotSent') {
-        const lang = langManager.curr['login'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: lang['alert-error-title'],
-                message: lang['alert-error-message'].replace('{}', loggedState)
-            },
-            callback: async () => {
-                await user.Clear();
-                user.interface.ChangePage('login', { storeInHistory: false });
-            },
-            cancelable: false
-        });
+        showLoginErrorPopup(loggedState);
         return;
     }
 

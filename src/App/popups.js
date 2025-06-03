@@ -4,19 +4,19 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import { OpenStore } from 'Utils/Store';
 
-/** @deprecated */
-export function GoToErrorPage() {
+export function showLoginErrorPopup(loggedState = 'unknown') {
     const lang = langManager.curr['login'];
-    user.interface.ChangePage('display', {
-        args: {
-            icon: 'close-filled',
-            text: lang['error-connection'],
-            button: 'Retry',
-            action: () => {
-                user.interface.ChangePage('loading', { storeInHistory: false });
-            }
+    user.interface.popup?.OpenT({
+        type: 'ok',
+        data: {
+            title: lang['alert-error-title'],
+            message: lang['alert-error-message'].replace('{}', loggedState)
         },
-        storeInHistory: false
+        callback: async () => {
+            await user.Clear();
+            user.interface.ChangePage('login', { storeInHistory: false });
+        },
+        cancelable: false
     });
 }
 

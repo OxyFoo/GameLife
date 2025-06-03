@@ -115,13 +115,16 @@ class UserManager {
         this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
     }
+
     async onUnmount() {
         clearInterval(this.intervalAchievements);
 
-        this.server2.Disconnect();
-        this.experience.onUnmount();
-        this.dailyQuest.onUnmount();
-        this.notificationsInApp.Unmount();
+        for (const _class of this.CLASS) {
+            await _class.Unmount();
+        }
+        for (const data of this.DATA) {
+            await data.Unmount();
+        }
 
         await this.settings.IndependentSave();
         await this.SaveLocal();
@@ -131,15 +134,13 @@ class UserManager {
     async Clear(keepOnboardingState = true) {
         this.tempMailSent = null;
 
-        for (const data of this.CLASS) {
-            await data.Clear();
+        for (const _class of this.CLASS) {
+            await _class.Clear();
         }
-
         for (const data of this.DATA) {
             await data.Clear();
         }
 
-        await this.onUnmount();
         await Storage.ClearAll();
         await this.SaveLocal();
 
@@ -181,8 +182,9 @@ class UserManager {
             this.interface.console?.AddLog('warn', 'Not connected to the server, disconnecting locally');
         }
 
+        await this.server2.userAuth.Disconnect();
+
         await this.Clear();
-        this.server2.Disconnect();
 
         // Wait for the server to disconnect
         await Sleep(500);

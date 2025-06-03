@@ -73,13 +73,15 @@ class DailyQuest extends IUserData {
     onMount = () => {
         this.SetupDailyQuests();
 
-        this.#listenerNetwork = this.#user.server2.tcp.state.AddListener((state) => {
-            if (state === 'authenticated') {
-                this.SetupDailyQuests();
-            } else if (this.currentQuest.Get().selectedCategory !== null) {
-                this.currentQuest.Set(_INIT_DAILYQUESTS);
-            }
-        });
+        if (this.#user.server2.IsAuthenticated()) {
+            this.#listenerNetwork = this.#user.server2.tcp.state.AddListener((state) => {
+                if (state === 'connected') {
+                    this.SetupDailyQuests();
+                } else if (this.currentQuest.Get().selectedCategory !== null) {
+                    this.currentQuest.Set(_INIT_DAILYQUESTS);
+                }
+            });
+        }
 
         this.#listenerActivities = this.#user.activities.allActivities.AddListener(() => {
             // Wait for activities to be updated to avoid conflicts with the data tokens
@@ -87,7 +89,7 @@ class DailyQuest extends IUserData {
         });
     };
 
-    onUnmount = () => {
+    Unmount = () => {
         if (this.#timeout) {
             clearTimeout(this.#timeout);
         }

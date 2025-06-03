@@ -217,7 +217,7 @@ class BackSettings extends PageBase {
     };
 
     reconnectTCP = () => {
-        user.server2.Connect(false);
+        user.server2.Initialize();
         this.setState({ serverTCPState: 'idle' });
     };
 

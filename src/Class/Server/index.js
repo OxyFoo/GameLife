@@ -18,8 +18,23 @@ class Server extends IUserClass {
     /** @type {UserManager} */
     #user;
 
-    /** @type {TCP} */
+    /**
+     * @description TCP connection to the server, used for device and user authentication
+     * @type {TCP}
+     */
     tcp;
+
+    /**
+     * @description Device authentication service
+     * @type {DeviceAuthService}
+     */
+    deviceAuth;
+
+    /**
+     * @description User authentication service
+     * @type {UserAuthService}
+     */
+    userAuth;
 
     /** @type {Symbol | null} */
     #listenerTCP = null;
@@ -98,17 +113,18 @@ class Server extends IUserClass {
         // 3. Manage server state
         if (this.serverState.status === 'maintenance') {
             this.#user.interface.console?.AddLog('warn', 'Server is in maintenance');
-            this.Disconnect();
+            this.tcp.Disconnect();
             return 'maintenance';
         }
 
         if (this.serverState.status === 'update') {
             this.#user.interface.console?.AddLog('warn', 'App update required');
-            this.Disconnect();
+            this.tcp.Disconnect();
             return 'update';
         }
 
         // Version is too recent, but the server is still probably compatible
+        // Generally for the validation of Google/Apple which test the app before its publication in prod
         if (this.serverState.status === 'downdate') {
             this.#user.interface.console?.AddLog('warn', 'App downgrade required');
         }
@@ -141,12 +157,6 @@ class Server extends IUserClass {
         this.serverState.version = null;
         await this.userAuth.Clear();
         await this.deviceAuth.Clear();
-    };
-
-    Disconnect = () => {
-        this.userAuth.Unmount();
-        this.deviceAuth.Unmount();
-        this.tcp.Disconnect();
     };
 
     /**

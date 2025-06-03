@@ -140,12 +140,6 @@ class TCP {
                 return;
             }
         }
-
-        // TODO: Implement global listeners
-        // const { status } = data;
-        // if (status.startsWith('update-')) {
-        //     this.#user.multiplayer.onMessage(data);
-        // }
     };
 
     /** @param {Event} event */

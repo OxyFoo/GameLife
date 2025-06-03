@@ -159,7 +159,7 @@ class UserAuthService {
         return response.result;
     };
 
-    Disconnect = (allDevice = false) => {
+    Disconnect = async (allDevice = false) => {
         // this.email = null;
     };
 }

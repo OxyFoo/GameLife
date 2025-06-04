@@ -199,7 +199,9 @@ class DailyQuest extends IUserData {
             this.claimsList.Set([...this.#SAVED_data, ...this.#UNSAVED_data]);
         }
 
-        return await this.SaveOnline();
+        if (this.#user.server2.IsAuthenticated()) {
+            await this.SaveOnline();
+        }
     };
 
     Clear = () => {

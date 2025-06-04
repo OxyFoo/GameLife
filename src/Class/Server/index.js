@@ -92,7 +92,9 @@ class Server extends IUserClass {
         await this.userAuth.Mount();
 
         // 1. Connect to the server
-        if (!this.tcp.IsConnected()) {
+        if (env.VPS_PROTOCOL === 'none') {
+            this.#user.interface.console?.AddLog('warn', 'Server connection is disabled, using local mode');
+        } else if (!this.tcp.IsConnected()) {
             const isNewUser = !this.userAuth.email;
             const connected = await this.tcp.Connect(isNewUser);
             if (!connected) {
@@ -162,7 +164,7 @@ class Server extends IUserClass {
     /**
      * User is logged to an account and device is authenticated to the server
      */
-    IsAuthenticated = () => this.deviceAuth.IsAuthenticated() && this.userAuth.IsLogged();
+    IsAuthenticated = () => this.deviceAuth.IsAuthenticated() === 'authenticated' && this.userAuth.IsLogged() === true;
 
     // Reconnect = async () => {
     //     if (this.IsAuthenticated()) {

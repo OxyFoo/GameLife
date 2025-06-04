@@ -120,11 +120,12 @@ class BackLoading extends PageBase {
         }
 
         // Go to home or activity timer
-        if (user.activities.currentActivity.Get() === null) {
-            this.fe.ChangePage('home', { args: { tuto } });
-        } else {
+        if (user.activities.currentActivity.Get() !== null) {
             this.fe.ChangePage('activitytimer', { storeInHistory: false });
+            return;
         }
+
+        this.fe.ChangePage('home', { args: { tuto } });
     };
 }
 

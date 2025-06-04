@@ -10,6 +10,8 @@ import {
     showMaintenancePopup,
     showUpdatePopup
 } from './popups';
+import { env } from 'Utils/Env';
+import { LoadTemplate_AppData, LoadTemplate_UserData } from './template';
 //import { Character } from 'Interface/Components';
 
 /**
@@ -71,14 +73,15 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connection to the server is OK but not logged, go to the login page
-    if (!user.server2.userAuth.IsLogged()) {
+    const isServerEnabled = env.VPS_PROTOCOL !== 'none';
+    if (!user.server2.userAuth.IsLogged() && isServerEnabled) {
         fe.ChangePage('login', { storeInHistory: false });
         return;
     }
 
     // User connection
     const email = user.server2.userAuth.email;
-    const loggedState = await user.server2.userAuth.Login(email);
+    const loggedState = isServerEnabled ? await user.server2.userAuth.Login(email) : 'authenticated-offline';
 
     // Try to login but not yet confirmed, go to the wait mail confirmation page
     if (loggedState === 'waitMailConfirmation') {
@@ -119,6 +122,12 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         const time_appdata = Round(time_appdata_end - time_appdata_start, 2);
         user.interface.console?.AddLog('info', `Online load in ${time_appdata} ms for ${dataManager.CountAll()} items`);
         await dataManager.SaveLocal(user);
+    }
+
+    // Load template data if needed (full local mode only)
+    if (!isServerEnabled) {
+        LoadTemplate_AppData(user);
+        LoadTemplate_UserData(user);
     }
 
     // Check if app data are loaded

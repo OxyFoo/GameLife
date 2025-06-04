@@ -33,14 +33,14 @@ function IsEmail(email) {
  * @returns {string}
  */
 function ParsePlural(text, plural = false) {
-    while (text.indexOf('[') !== -1) {
-        let [start, end] = [text.indexOf('['), text.indexOf(']')];
+    let start, end;
+    while ((start = text.indexOf('[')) !== -1 && (end = text.indexOf(']', start + 1)) !== -1) {
         let pluralText = '';
         if (plural) {
-            pluralText = text.substring(start + 1, end);
-            const remLength = pluralText.lastIndexOf('-') + 1;
+            const inner = text.substring(start + 1, end);
+            const remLength = inner.lastIndexOf('-') + 1;
             start -= remLength;
-            pluralText = pluralText.substring(remLength);
+            pluralText = inner.substring(remLength);
         }
         text = text.slice(0, start) + pluralText + text.slice(end + 1);
     }

@@ -35,25 +35,57 @@ const jsoMetroPlugin = Obfuscator(
     }
 );
 
-const localTypesPath = path.resolve(__dirname, '../GameLife-Types/dist');
-const isLocalTypesPresent = fs.existsSync(localTypesPath);
+/**
+ * Configuration for local development modules
+ */
+const LOCAL_MODULES = [
+    {
+        name: '@oxyfoo/gamelife-types',
+        localPath: '../GameLife-Types/dist'
+    },
+    {
+        name: 'react-native-ssl-websocket',
+        localPath: '../react-native-ssl-websocket'
+    }
+];
 
 /**
- * Enable local game life types (more info in README.md)
- *
- * @type {import('@react-native/metro-config').MetroConfig}
+ * Check which local modules are available and create their configurations
  */
-const localGameLifeTypesConfig = {
-    watchFolders: [localTypesPath],
-    resolver: {
-        extraNodeModules: new Proxy(
-            {},
-            {
-                get: (_, name) => path.resolve(__dirname, 'node_modules', name)
-            }
-        )
+function getAvailableLocalModules() {
+    return LOCAL_MODULES.map((module) => ({
+        ...module,
+        absolutePath: path.resolve(__dirname, module.localPath)
+    })).filter((module) => fs.existsSync(module.absolutePath));
+}
+
+/**
+ * Create Metro configuration for local modules
+ */
+function createLocalModulesConfig() {
+    const availableModules = getAvailableLocalModules();
+
+    if (availableModules.length === 0) {
+        return {};
     }
-};
+
+    // Create module mapping for the proxy
+    const moduleMap = new Map(availableModules.map((module) => [module.name, module.absolutePath]));
+
+    return {
+        watchFolders: availableModules.map((module) => module.absolutePath),
+        resolver: {
+            extraNodeModules: new Proxy(
+                {},
+                {
+                    get: (_, moduleName) => {
+                        return moduleMap.get(moduleName) || path.resolve(__dirname, 'node_modules', moduleName);
+                    }
+                }
+            )
+        }
+    };
+}
 
 /**
  * Metro configuration
@@ -70,7 +102,11 @@ const config = {
             }
         })
     },
-    ...(isLocalTypesPresent && localGameLifeTypesConfig),
+
+    // Apply local modules configuration
+    ...createLocalModulesConfig(),
+
+    // Apply obfuscation plugin
     ...jsoMetroPlugin
 };
 

@@ -76,7 +76,7 @@ class Server extends IUserClass {
 
     /**
      * @description Initialize the server connection and device authentication
-     * @returns {Promise<'authenticated' | 'already-authenticated' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
+     * @returns {Promise<'authenticated' | 'already-authenticated' | 'ssl-pinning-failed' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
      */
     Initialize = async () => {
         if (
@@ -96,9 +96,18 @@ class Server extends IUserClass {
             this.#user.interface.console?.AddLog('warn', 'Server connection is disabled, using local mode');
         } else if (!this.tcp.IsConnected()) {
             const isNewUser = !this.userAuth.email;
-            const connected = await this.tcp.Connect(isNewUser);
-            if (!connected) {
-                this.#user.interface.console?.AddLog('error', 'Server connection failed');
+            const connectionStatus = await this.tcp.Connect(isNewUser);
+            if (connectionStatus === 'ssl-pinning-error') {
+                this.#user.interface.console?.AddLog('error', '[Server] SSL Pinning error, check your configuration');
+                return 'ssl-pinning-failed';
+            } else if (connectionStatus === 'error' || connectionStatus === 'timeout') {
+                this.#user.interface.console?.AddLog('error', `[Server] Connection failed: ${connectionStatus}`);
+                return 'not-connected';
+            } else if (connectionStatus !== 'connected' && connectionStatus !== 'already-connected') {
+                this.#user.interface.console?.AddLog(
+                    'error',
+                    `[Server] Unexpected connection status: ${connectionStatus}`
+                );
                 return 'not-connected';
             }
         }
@@ -108,6 +117,7 @@ class Server extends IUserClass {
             const deviceAuthenticated = await this.deviceAuth.Authenticate();
             if (!deviceAuthenticated) {
                 this.#user.interface.console?.AddLog('error', '[Server] Device authentication failed');
+                this.tcp.Disconnect();
                 return 'authenticated-failed';
             }
         }

@@ -194,7 +194,8 @@
             "authentication-failed": "Échec de l'authentification de l'appareil",
             "appdata-not-loaded": "Les données de l'application n'ont pas pu être chargées",
             "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
-            "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
+            "userdata-not-saved": "Les données utilisateur n'ont pas pu être enregistrées",
+            "ssl-pinning-failed": "La vérification de sécurité a échoué."
         },
         "loading-error-button": "Redémarrer"
     },
@@ -1051,7 +1052,8 @@
         "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte. Accepte le et reviens sur l'application.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
         "wait-email-sending": "Envoi en cours...",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
-        "wait-email-send": "Mail envoyé !"
+        "wait-email-sent": "Mail envoyé !",
+        "wait-email-resend": "Renvoyer le mail de confirmation"
     },
 
     "tuto": {

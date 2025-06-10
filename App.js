@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { AppState } from 'react-native';
-import { initSSLPinning } from 'react-native-ssl-pinning';
 
-import { env } from './src/Utils/Env';
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
 
@@ -21,24 +19,9 @@ class App extends React.Component {
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
-        // Initialize SSL Pinning
-        if (env.VPS_PROTOCOL === 'wss') {
-            initSSLPinning({
-                [env.VPS_HOST]: {
-                    includeSubDomains: false,
-                    enforcePinning: true,
-                    publicKeyHashes: [
-                        'sbzOVXslQjOsnO/Uw3pp7a2boF58AcC6xUQDktk6iSc='
-                        // // TODO: Backup hash
-                        //   'sha256/J2k9dsLLzsO5…=='
-                    ]
-                }
-            });
-        }
-
-        // Open the test page
         user.interface = this.ref.current?._public;
 
+        // Open the test page
         if (TEST_PAGE) {
             this.ref.current?.ChangePage('test');
             return;
@@ -57,7 +40,8 @@ class App extends React.Component {
     }
 
     componentWillUnmount() {
-        this.appStateSubscription.remove();
+        // Remove the app state listener
+        this.appStateSubscription?.remove();
         user.onUnmount();
     }
 

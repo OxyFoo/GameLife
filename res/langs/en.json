@@ -194,7 +194,8 @@
             "authentication-failed": "Device authentication failed",
             "appdata-not-loaded": "App data not loaded",
             "userdata-not-loaded": "User data not loaded",
-            "userdata-not-saved": "User data could not be saved"
+            "userdata-not-saved": "User data could not be saved",
+            "ssl-pinning-failed": "Security verification failed."
         },
         "loading-error-button": "Restart"
     },
@@ -1051,7 +1052,8 @@
         "wait-email-text": "An email has been sent to you to authorize your device to connect. Accepts it and come back to the application.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-sending": "Sending email...",
         "wait-email-remain": "Mail sent again in {}m{}s",
-        "wait-email-send": "Mail sent !"
+        "wait-email-sent": "Mail sent !",
+        "wait-email-resend": "Resend the confirmation email"
     },
 
     "tuto": {

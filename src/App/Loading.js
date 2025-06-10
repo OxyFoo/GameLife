@@ -2,7 +2,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Round } from 'Utils/Functions';
+import { Round, Sleep } from 'Utils/Functions';
 import {
     showDeletedAccountPopup,
     showDowndatePopup,
@@ -44,7 +44,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const authenticated = await user.server2.Initialize();
     const time_connect_end = performance.now();
     const time_connect = Round(time_connect_end - time_connect_start, 2);
-    user.interface.console?.AddLog('info', `Connect to the server in ${time_connect}ms (${authenticated})`);
+    user.interface.console?.AddLog('info', `Connection attempt completed in ${time_connect}ms (${authenticated})`);
+
+    // Check if the SSL pinning failed
+    if (authenticated === 'ssl-pinning-failed') {
+        callbackError('ssl-pinning-failed');
+        return;
+    }
 
     // Check if the server is reachable => Error page
     if (authenticated === 'authenticated-failed') {
@@ -128,6 +134,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     if (!isServerEnabled) {
         LoadTemplate_AppData(user);
         LoadTemplate_UserData(user);
+        await Sleep(1000);
     }
 
     // Check if app data are loaded

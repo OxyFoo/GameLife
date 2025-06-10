@@ -8,9 +8,9 @@
     "build": "cd android && ./gradlew bundleRelease",
     "android": "npx react-native run-android",
     "ios": "npx react-native run-ios",
-    "install-android": "npm run prestart && cd android && ./gradlew installRelease && cd .. && npm run poststart",
+    "install-android": "cd android && ./gradlew installRelease",
     "install-server": "cd src/Server/TCP && npm install",
-    "clean": "cd android && ./gradlew clean && cd .. && rm -rf android/app/build android/.gradle android/build ios/build ios/Pods ios/Podfile.lock package-lock.json node_modules",
+    "clean": "rm -rf android/app/build android/app/.cxx android/.gradle && cd android && ./gradlew --stop && ./gradlew clean && cd .. && rm -rf android/build ios/build ios/Pods ios/Podfile.lock package-lock.json node_modules",
     "test": "jest --detectOpenHandles",
     "lint": "eslint ./src",
     "server": "cd src/Server/TCP && npm start",
@@ -42,7 +42,7 @@
     "react-native-reanimated": "^3.17.5",
     "react-native-safe-area": "^0.5.1",
     "react-native-shadow-2": "^7.1.1",
-    "react-native-ssl-pinning": "^1.5.9",
+    "react-native-ssl-websocket": "^1.0.0",
     "react-native-svg": "^15.12.0"
   },
   "devDependencies": {

@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: true
+      test-tls-pinning:
+        description: 'Run TLS pinning tests'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   test-client:
@@ -67,3 +72,29 @@ jobs:
 
       - name: 'Run ressource tests'
         run: cd Tools/RessourcesChecker/ && python3 main.py
+
+  test-tls-pinning:
+    name: '🔐 TLS Pinning'
+    if: ${{ inputs.test-tls-pinning }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.CICD_PAT }}
+
+      - name: 'Get TLS Pinning Key'
+        id: get-tls-pinning-key
+        run: |
+          echo "SSL_PINNING_PRIMARY_KEY=$(grep SSL_PINNING_PRIMARY_KEY .env.${{ inputs.environment }} | cut -d '=' -f2)" >> $GITHUB_ENV
+
+      - name: 'Run TLS Pinning Tests'
+        run: |
+          echo "Running TLS Pinning Tests with key: $SSL_PINNING_PRIMARY_KEY"
+          cd Tools/SSLPinning/
+          ./test_ssl_pinning.sh "$SSL_PINNING_PRIMARY_KEY" "$HOST" "$PORT"
+        env:
+          SSL_PINNING_PRIMARY_KEY: ${{ env.SSL_PINNING_PRIMARY_KEY }}
+          HOST: oxyfoo.fr
+          PORT: ${{ inputs.environment == 'dev' && 4500 || inputs.environment == 'test' && 6500 || 7500 }}

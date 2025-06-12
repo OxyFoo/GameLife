@@ -1,15 +1,15 @@
-import { SSLWebSocket, WebSocketReadyState } from 'react-native-ssl-websocket';
+import { SSLWebSocket, WebSocketReadyState } from 'react-native-pinned-ws';
 
 import { env } from 'Utils/Env';
 import DynamicVar from 'Utils/DynamicVar';
 import { RandomString } from 'Utils/Functions';
 
 /**
- * @typedef {import('react-native-ssl-websocket').WebSocketConfig} WebSocketConfig
- * @typedef {import('react-native-ssl-websocket').WebSocketOpenEvent} WebSocketOpenEvent
- * @typedef {import('react-native-ssl-websocket').WebSocketMessageEvent} WebSocketMessageEvent
- * @typedef {import('react-native-ssl-websocket').WebSocketErrorEvent} WebSocketErrorEvent
- * @typedef {import('react-native-ssl-websocket').WebSocketCloseEvent} WebSocketCloseEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketConfig} WebSocketConfig
+ * @typedef {import('react-native-pinned-ws').WebSocketOpenEvent} WebSocketOpenEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketMessageEvent} WebSocketMessageEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketErrorEvent} WebSocketErrorEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketCloseEvent} WebSocketCloseEvent
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
  *

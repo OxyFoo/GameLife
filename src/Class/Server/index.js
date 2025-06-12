@@ -81,7 +81,7 @@ class Server extends IUserClass {
     Initialize = async () => {
         if (
             this.tcp.IsConnected() &&
-            this.deviceAuth.IsAuthenticated() !== 'not-authenticated' &&
+            this.deviceAuth.GetAuthenticationState() !== 'not-authenticated' &&
             this.userAuth.IsLogged()
         ) {
             return 'already-authenticated';
@@ -113,7 +113,7 @@ class Server extends IUserClass {
         }
 
         // 2. Authenticate the device
-        if (this.deviceAuth.IsAuthenticated() === 'not-authenticated') {
+        if (this.deviceAuth.GetAuthenticationState() === 'not-authenticated') {
             const deviceAuthenticated = await this.deviceAuth.Authenticate();
             if (!deviceAuthenticated) {
                 this.#user.interface.console?.AddLog('error', '[Server] Device authentication failed');
@@ -174,7 +174,7 @@ class Server extends IUserClass {
     /**
      * User is logged to an account and device is authenticated to the server
      */
-    IsAuthenticated = () => this.deviceAuth.IsAuthenticated() === 'authenticated' && this.userAuth.IsLogged() === true;
+    IsAuthenticated = () => this.deviceAuth.IsAuthenticated() && this.userAuth.IsLogged();
 
     // Reconnect = async () => {
     //     if (this.IsAuthenticated()) {

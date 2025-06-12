@@ -64,7 +64,7 @@ class DeviceAuthService {
      * @description Check if the device is authenticated
      * @returns {'authenticated' | 'banned' | 'not-authenticated' | 'not-connected'}
      */
-    IsAuthenticated = () => {
+    GetAuthenticationState = () => {
         if (!this.#tcp.IsConnected()) {
             return 'not-connected';
         }
@@ -75,6 +75,11 @@ class DeviceAuthService {
             return 'authenticated';
         }
         return 'not-authenticated';
+    };
+
+    IsAuthenticated = () => {
+        const state = this.GetAuthenticationState();
+        return state === 'authenticated' || state === 'banned';
     };
 
     /**

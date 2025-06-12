@@ -71,7 +71,7 @@ class UserAuthService {
             return 'error';
         }
 
-        if (!this.#user.server2.deviceAuth.IsAuthenticated()) {
+        if (!this.#user.server2.deviceAuth.GetAuthenticationState()) {
             if (this.IsLogged()) {
                 this.#user.interface.console?.AddLog('error', '[Server2/Login] Device not authenticated but logged');
                 return 'authenticated-offline';

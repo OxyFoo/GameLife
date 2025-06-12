@@ -53,13 +53,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Check if the server is reachable => Error page
-    if (authenticated === 'authenticated-failed') {
+    else if (authenticated === 'authenticated-failed') {
         callbackError('authentication-failed');
         return;
     }
 
     // Update needed => Show update popup & go to the stores
-    if (authenticated === 'update') {
+    else if (authenticated === 'update') {
         const serverVersion = user.server2.serverState.version;
         showUpdatePopup(serverVersion ?? 'unknown');
         return;
@@ -80,7 +80,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Connection to the server is OK but not logged, go to the login page
     const isServerEnabled = env.VPS_PROTOCOL !== 'none';
-    if (!user.server2.userAuth.IsLogged() && isServerEnabled) {
+    if (isServerEnabled && !user.server2.userAuth.IsLogged()) {
         fe.ChangePage('login', { storeInHistory: false });
         return;
     }

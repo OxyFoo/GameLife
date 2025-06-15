@@ -2,8 +2,7 @@ import user from 'Managers/UserManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import themeManager from 'Managers/ThemeManager';
-// import RNRestart from 'react-native-restart';
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 /**
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
@@ -30,10 +29,7 @@ class BackSettingsBeta extends PageBase {
     };
 
     restartApp = () => {
-        // TODO: Restart the app
-        console.warn('App should be restarted');
-        // RNRestart.restart();
-        RNExitApp.exitApp();
+        AppControl.Restart();
     };
 
     onBack = () => user.interface.BackHandle();

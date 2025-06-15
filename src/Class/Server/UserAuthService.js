@@ -1,4 +1,4 @@
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 import { CheckDate } from './DateCheck';
 import langManager from 'Managers/LangManager';
@@ -123,7 +123,7 @@ class UserAuthService {
                     title: langManager.curr['home']['alert-dateerror-title'],
                     message: langManager.curr['home']['alert-dateerror-text']
                 },
-                callback: RNExitApp.exitApp,
+                callback: AppControl.Exit,
                 cancelable: false
             });
             return 'error';

@@ -44,8 +44,12 @@ const LOCAL_MODULES = [
         localPath: '../GameLife-Types/dist'
     },
     {
-        name: 'react-native-ssl-websocket',
-        localPath: '../react-native-ssl-websocket'
+        name: 'react-native-pinned-ws',
+        localPath: '../react-native-pinned-ws'
+    },
+    {
+        name: 'react-native-app-control',
+        localPath: '../react-native-app-control'
     }
 ];
 

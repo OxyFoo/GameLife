@@ -1,4 +1,4 @@
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -31,7 +31,7 @@ export function showUpdatePopup(version) {
             message: lang['alert-update-message'].replace('{}', version)
         },
         callback: () => {
-            OpenStore().then(RNExitApp.exitApp);
+            OpenStore().then(AppControl.Exit);
         },
         cancelable: false
     });

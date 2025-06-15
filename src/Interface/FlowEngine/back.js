@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BackHandler } from 'react-native';
 import SafeArea from 'react-native-safe-area';
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 import PageBase from './PageBase';
 import PAGES from 'Interface/Pages';
@@ -419,7 +419,7 @@ class BackFlowEngine extends React.Component {
             },
             callback: (btn) => {
                 if (btn === 'yes') {
-                    RNExitApp.exitApp();
+                    AppControl.Exit();
                 }
             }
         });

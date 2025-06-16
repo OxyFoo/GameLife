@@ -9,8 +9,8 @@ import themeManager from 'Managers/ThemeManager';
 import { Button, CheckBox, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/App/Skills').GeneratedSkill} GeneratedSkill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').GeneratedSkill} GeneratedSkill
  */
 
 /**
@@ -38,7 +38,7 @@ async function CreateSkill(skillName) {
     }
 
     if (response.status !== 'create-skill' || response.result === 'error') {
-        user.interface.console?.AddLog('error', `[CreateSkill] Skill creation failed: ${skillName}`);
+        user.interface.console?.AddLog('error', `[CreateSkill] Skill creation failed: ${skillName}`, response);
         user.interface.popup?.OpenT({
             type: 'ok',
             data: {

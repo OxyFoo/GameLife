@@ -9,7 +9,7 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Types/Class/Experience').Stats} Stats
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
  */
 
 const StatsBarsProps = {

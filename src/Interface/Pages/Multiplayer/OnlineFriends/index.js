@@ -7,8 +7,8 @@ import langManager from 'Managers/LangManager';
 import { Text, UserOnlineElement } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  * @typedef {import('react-native').ListRenderItem<Friend | UserOnline>} ListRenderItemFriends
  */
 

@@ -12,7 +12,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
- * @typedef {import('Types/Data/User/Missions').MissionItem} MissionItem
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Missions').MissionItem} MissionItem
  */
 
 const MissionsProps = {

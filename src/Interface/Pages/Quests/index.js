@@ -9,7 +9,7 @@ import { Button } from 'Interface/Components';
 import { PageHeader, QuestsList } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  * @typedef {import('react-native').ListRenderItem<Quest>} ListRenderItemQuest
  */
 

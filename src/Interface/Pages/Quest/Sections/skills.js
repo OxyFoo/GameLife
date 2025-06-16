@@ -13,8 +13,8 @@ import { GetLocalTime } from 'Utils/Time';
 const MAX_SKILLS = 10;
 
 /**
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  *
  * @typedef {Object} SectionSkillPropsType
  * @property {Quest | null} quest

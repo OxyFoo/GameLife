@@ -1,5 +1,5 @@
 import React from 'react';
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -54,7 +54,7 @@ class BackOnboarding extends PageBase {
                     icon: 'close-filled',
                     text: lang['loading-error-message']['userdata-not-saved'],
                     button: lang['loading-error-button'],
-                    action: RNExitApp.exitApp
+                    action: AppControl.Exit
                 },
                 storeInHistory: false
             });

@@ -9,7 +9,10 @@ class DynamicVar {
         this.var = initialValue;
     }
 
-    /** @type {T} */
+    /**
+     * @type {T}
+     * @private
+     */
     var;
 
     /**
@@ -30,14 +33,14 @@ class DynamicVar {
      */
     Set(value) {
         if (typeof value === 'undefined') {
-            this._updateListeners(this.var, this.var);
+            this.updateListeners(this.var, this.var);
             return;
         }
 
         if (this.var !== value || typeof this.var === 'object') {
             const oldValue = this.var;
             this.var = value;
-            this._updateListeners(value, oldValue);
+            this.updateListeners(value, oldValue);
         }
     }
 
@@ -46,7 +49,7 @@ class DynamicVar {
      * @param {T} newValue
      * @param {T} oldValue
      */
-    _updateListeners(newValue, oldValue) {
+    updateListeners(newValue, oldValue) {
         this.listeners.forEach((callback) => {
             callback(newValue, oldValue);
         });
@@ -73,15 +76,12 @@ class DynamicVar {
      * @returns {boolean} True if the function was found and removed
      */
     RemoveListener(id) {
-        if (id === null) {
+        if (id === null || !this.listeners.has(id)) {
             return false;
         }
 
-        if (this.listeners.has(id)) {
-            this.listeners.delete(id);
-            return true;
-        }
-        return false;
+        this.listeners.delete(id);
+        return true;
     }
 }
 

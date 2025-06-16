@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
 import { Button, Icon, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Global/Langs').LangKeys} LangKeys
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Langs').LangKeys} LangKeys
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 

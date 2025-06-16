@@ -1,17 +1,17 @@
 import dataManager from 'Managers/DataManager';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
 import { MinMax, Round, Sum } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
- * @typedef {import('Types/Class/Experience').Stats} Stats
- * @typedef {import('Types/Class/Experience').StatsXP} StatsXP
- * @typedef {import('Types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
  */
 
 /**
@@ -68,7 +68,7 @@ class Experience extends IUserClass {
         this.#listenerActivities = this.#user.activities.allActivities.AddListener(this.UpdateExperience);
     };
 
-    onUnmount = () => {
+    Unmount = () => {
         this.#user.activities.allActivities.RemoveListener(this.#listenerActivities);
     };
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Animated } from 'react-native';
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
@@ -280,7 +280,7 @@ class ConsoleBack extends React.Component {
 
     deleteAll = async () => {
         await user.Clear(false);
-        RNExitApp.exitApp();
+        AppControl.Exit();
     };
 }
 

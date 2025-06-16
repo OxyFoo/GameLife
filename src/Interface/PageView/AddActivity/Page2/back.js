@@ -8,7 +8,7 @@ import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 
 /**
  * @typedef {import('react-native').View} View
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
  *
  * @typedef {Object} BackActivityPage2PropsType
  * @property {React.RefObject<View | null>} nativeRef

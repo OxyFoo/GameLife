@@ -12,14 +12,14 @@ const BannerProps = {
     title: '',
 
     /** @type {(id: string) => void} */
-    onPress: (id) => {}
+    onPress: () => {}
 };
 
 class Banner extends React.Component {
     onPress = () => {
         const { id, onPress } = this.props;
         onPress(id);
-    }
+    };
 
     render() {
         const { id, title } = this.props;
@@ -32,13 +32,11 @@ class Banner extends React.Component {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                 >
-                    <Text style={styles.title}>
-                        {title}
-                    </Text>
+                    <Text style={styles.title}>{title}</Text>
 
                     {id !== '' && (
                         <View style={styles.help}>
-                            <Icon icon='info' size={24} />
+                            <Icon icon='info-circle' size={24} />
                         </View>
                     )}
                 </LinearGradient>

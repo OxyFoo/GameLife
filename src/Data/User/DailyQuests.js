@@ -1,6 +1,6 @@
 import dataManager from 'Managers/DataManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import { DateFormat } from 'Utils/Date';
 import DynamicVar from 'Utils/DynamicVar';
 import { Random } from 'Utils/Functions';
@@ -8,9 +8,9 @@ import { GetTimeToTomorrow } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/User/DailyQuest').DailyQuestData} DailyQuestData
- * @typedef {import('Types/Data/User/DailyQuest').DailyQuestToday} DailyQuestToday
- * @typedef {import('Types/Data/User/DailyQuest').SaveObject_DailyQuest} SaveObject_DailyQuest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/DailyQuest').DailyQuestData} DailyQuestData
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/DailyQuest').DailyQuestToday} DailyQuestToday
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/DailyQuest').SaveObject_DailyQuest} SaveObject_DailyQuest
  *
  * @typedef {'success' | 'not-up-to-date' | 'wrong-daily-quests' | 'error'} ClaimResult
  *
@@ -73,13 +73,15 @@ class DailyQuest extends IUserData {
     onMount = () => {
         this.SetupDailyQuests();
 
-        this.#listenerNetwork = this.#user.server2.tcp.state.AddListener((state) => {
-            if (state === 'authenticated') {
-                this.SetupDailyQuests();
-            } else if (this.currentQuest.Get().selectedCategory !== null) {
-                this.currentQuest.Set(_INIT_DAILYQUESTS);
-            }
-        });
+        if (this.#user.server2.IsAuthenticated()) {
+            this.#listenerNetwork = this.#user.server2.tcp.state.AddListener((state) => {
+                if (state === 'connected') {
+                    this.SetupDailyQuests();
+                } else if (this.currentQuest.Get().selectedCategory !== null) {
+                    this.currentQuest.Set(_INIT_DAILYQUESTS);
+                }
+            });
+        }
 
         this.#listenerActivities = this.#user.activities.allActivities.AddListener(() => {
             // Wait for activities to be updated to avoid conflicts with the data tokens
@@ -87,7 +89,7 @@ class DailyQuest extends IUserData {
         });
     };
 
-    onUnmount = () => {
+    Unmount = () => {
         if (this.#timeout) {
             clearTimeout(this.#timeout);
         }
@@ -197,7 +199,9 @@ class DailyQuest extends IUserData {
             this.claimsList.Set([...this.#SAVED_data, ...this.#UNSAVED_data]);
         }
 
-        return await this.SaveOnline();
+        if (this.#user.server2.IsAuthenticated()) {
+            await this.SaveOnline();
+        }
     };
 
     Clear = () => {

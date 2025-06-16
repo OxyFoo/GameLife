@@ -54,9 +54,7 @@ const styles = StyleSheet.create({
     noRemainingZap: {
         width: 86,
         height: 86,
-        transform: [
-            { scaleX: -1 }
-        ]
+        transform: [{ scaleX: -1 }]
     },
 
     notBuyed: {
@@ -85,10 +83,10 @@ const styles = StyleSheet.create({
     },
     separator: {
         width: '80%',
-        height: .5,
+        height: 0.5,
         marginVertical: 6,
         marginHorizontal: '10%',
-        opacity: .5
+        opacity: 0.5
     },
     item: {
         flexDirection: 'row',

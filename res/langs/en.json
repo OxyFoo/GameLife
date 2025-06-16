@@ -191,9 +191,11 @@
 
     "app": {
         "loading-error-message": {
+            "authentication-failed": "Device authentication failed",
             "appdata-not-loaded": "App data not loaded",
             "userdata-not-loaded": "User data not loaded",
-            "userdata-not-saved": "User data could not be saved"
+            "userdata-not-saved": "User data could not be saved",
+            "ssl-pinning-failed": "Security verification failed."
         },
         "loading-error-button": "Restart"
     },
@@ -478,7 +480,7 @@
         "button-signin-text": "Signin",
 
         "error-login-nonmail": "Please enter a valid email address.",
-        "error-signin-server": "An error has occurred.",
+        "error-signin-server": "An error has occurred. ({})",
         "error-signin-pseudoWrong": "Please enter a correct username.",
         "error-signin-pseudoUsed": "This username is already in use.",
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
@@ -713,6 +715,7 @@
         "section-informations-preferences": "INFORMATION AND PREFERENCES",
         "section-notifications-consents": "NOTIFICATIONS AND CONSENTS",
         "section-support-feedback": "SUPPORT AND FEEDBACK",
+        "section-offline-mode": "OFFLINE MODE",
         "section-security-privacy": "SECURITY AND PRIVACY",
 
         "input-about": "About us",
@@ -725,8 +728,8 @@
         "input-beta": "Beta",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
-        "input-disconnect-all": "Disconnect from all devices",
-        "input-reconnect-tcp": "Reconnect to multiplayer",
+        "input-disconnect-other": "Disconnect from other devices",
+        "input-reconnect-tcp": "Reconnect to server",
         "input-tuto-again": "Review the tutorial",
         "input-delete-account": "Delete my account",
 
@@ -752,7 +755,9 @@
         "alert-consent-not-available-title": "Error",
         "alert-consent-not-available-message": "The consents are not available in your geographic area.",
         "alert-consent-error-title": "Error",
-        "alert-consent-error-message": "The consents are not available at the moment, please try again later."
+        "alert-consent-error-message": "The consents are not available at the moment, please try again later.",
+        "alert-reconnect-failed-title": "Reconnect Failed",
+        "alert-reconnect-failed-message": "An error occurred while reconnecting to the server ({}), please try again later."
     },
 
     "shop": {
@@ -1050,7 +1055,8 @@
         "wait-email-text": "An email has been sent to you to authorize your device to connect. Accepts it and come back to the application.\n\nThe email may be sent after a few minutes, check your spam.",
         "wait-email-sending": "Sending email...",
         "wait-email-remain": "Mail sent again in {}m{}s",
-        "wait-email-send": "Mail sent !"
+        "wait-email-sent": "Mail sent !",
+        "wait-email-resend": "Resend the confirmation email"
     },
 
     "tuto": {

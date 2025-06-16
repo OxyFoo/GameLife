@@ -30,6 +30,7 @@ const Icons = {
     'day-to-day-outline':       require('./icons/day-to-day-outline').default,
     'day-to-day':               require('./icons/day-to-day').default,
     'default':                  require('./icons/default').default,
+    'disconnect':               require('./icons/disconnect').default,
     'discord':                  require('./icons/discord').default,
     'edit-outline':             require('./icons/edit-outline').default,
     'edit':                     require('./icons/edit').default,

@@ -19,9 +19,9 @@ class App extends React.Component {
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
-        // Open the test page
         user.interface = this.ref.current?._public;
 
+        // Open the test page
         if (TEST_PAGE) {
             this.ref.current?.ChangePage('test');
             return;
@@ -40,7 +40,8 @@ class App extends React.Component {
     }
 
     componentWillUnmount() {
-        this.appStateSubscription.remove();
+        // Remove the app state listener
+        this.appStateSubscription?.remove();
         user.onUnmount();
     }
 

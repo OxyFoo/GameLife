@@ -8,10 +8,10 @@ import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
 
 /**
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
- * @typedef {import('Types/Class/Experience').XPInfo} XPInfo
- * @typedef {import('Types/Class/Experience').Stats} Stats
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').XPInfo} XPInfo
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
  */
 
 const BackProfileFriendProps = {

@@ -16,8 +16,8 @@ import { Gradient } from 'Interface/Primitives';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
  * @typedef {import('Class/Experience').XPInfo} XPInfo
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
 
 // TODO: Replace this with a real avatar

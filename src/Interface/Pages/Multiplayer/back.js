@@ -9,8 +9,8 @@ import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
 /**
  * @typedef {import('react-native').View} View
  *
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
 
 class BackMultiplayer extends PageBase {

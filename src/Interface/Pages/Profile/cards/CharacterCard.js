@@ -6,7 +6,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Character, Frame } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
  * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  */

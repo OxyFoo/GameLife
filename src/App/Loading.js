@@ -1,13 +1,20 @@
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
-import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Round } from 'Utils/Functions';
+import { Round, Sleep } from 'Utils/Functions';
+import {
+    showDeletedAccountPopup,
+    showDowndatePopup,
+    showLoginErrorPopup,
+    showMaintenancePopup,
+    showUpdatePopup
+} from './popups';
+import { env } from 'Utils/Env';
+import { LoadTemplate_AppData, LoadTemplate_UserData } from './template';
 //import { Character } from 'Interface/Components';
 
 /**
- * @typedef {Awaited<ReturnType<import('Managers/DataManager').User['server2']['Login']>>} LoginResponse
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  */
@@ -28,47 +35,40 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     const time_start = performance.now();
 
-    // Load important data
+    // Load important data & apply theme
     await user.settings.IndependentLoad();
-    const email = user.settings.email;
-
-    // Apply theme variation
     themeManager.SetVariant(user.settings.themeVariant);
 
-    // Connect to the server TCP
-    const isNewUser = user.settings.email === '';
+    // Connect to the server and authenticate device & user
     const time_connect_start = performance.now();
-    const status = await user.server2.Connect(isNewUser);
+    const authenticated = await user.server2.Initialize();
     const time_connect_end = performance.now();
     const time_connect = Round(time_connect_end - time_connect_start, 2);
-    user.interface.console?.AddLog('info', `Connect to the server in ${time_connect}ms (${status})`);
+    user.interface.console?.AddLog('info', `Connection attempt completed in ${time_connect}ms (${authenticated})`);
 
-    // An error occured, go to the error page
-    if (status === 'error') {
-        const lang = langManager.curr['login'];
-        fe.ChangePage('display', {
-            args: {
-                icon: 'close-filled',
-                text: lang['error-connection'],
-                button: 'Retry',
-                action: () => {
-                    fe.ChangePage('loading', { storeInHistory: false });
-                }
-            },
-            storeInHistory: false
-        });
+    // Check if the SSL pinning failed
+    if (authenticated === 'wrong-ssl-pinning') {
+        callbackError('ssl-pinning-failed');
+        return;
+    }
+
+    // Check if the server is reachable => Error page
+    else if (authenticated === 'authenticated-failed') {
+        callbackError('authentication-failed');
+        return;
+    }
+
+    // Update needed => Show update popup & go to the stores
+    else if (authenticated === 'update') {
+        const serverVersion = user.server2.serverState.version;
+        showUpdatePopup(serverVersion ?? 'unknown');
         return;
     }
 
     // Not connected to the server and user not logged, go to the wait internet page
-    if (!user.server2.IsLogged()) {
-        if (status === 'not-connected' || status === 'maintenance' || !user.server2.IsConnected()) {
-            fe.ChangePage('waitinternet', {
-                storeInHistory: false,
-                transition: 'fromBottom'
-            });
-            return;
-        }
+    if (!user.server2.deviceAuth.IsAuthenticated() && !user.server2.userAuth.IsLogged()) {
+        fe.ChangePage('waitinternet', { storeInHistory: false, transition: 'fromBottom' });
+        return;
     }
 
     // Show onboarding if not watched
@@ -79,64 +79,40 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connection to the server is OK but not logged, go to the login page
-    if (email === '') {
+    const isServerEnabled = env.VPS_PROTOCOL !== 'none';
+    if (isServerEnabled && !user.server2.userAuth.IsLogged() && !user.settings.waitingEmail) {
         fe.ChangePage('login', { storeInHistory: false });
         return;
     }
 
-    /**
-     * User is logged, check if the token is still valid (online)
-     * @type {LoginResponse} Default: false (offline)
-     */
-    let loggedState = false;
-    if (user.server2.IsConnected() && email !== '') {
-        loggedState = await user.server2.Login(email);
-    }
+    // User connection
+    // If the user is not logged, try to login with the waiting email to avoid asking the user again
+    const email = user.server2.userAuth.GetEmail() ?? user.settings.waitingEmail;
+    const loggedState = isServerEnabled ? await user.server2.userAuth.Login(email) : 'authenticated-offline';
 
     // Try to login but not yet confirmed, go to the wait mail confirmation page
     if (loggedState === 'waitMailConfirmation') {
-        fe.ChangePage('waitmail', { storeInHistory: false });
+        fe.ChangePage('waitmail', {
+            storeInHistory: false,
+            args: { email: email }
+        });
         return;
     }
 
     // Account not found, probably deleted, go to the login page
     else if (loggedState === 'free') {
-        const lang = langManager.curr['login'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: lang['alert-deletedaccount-title'],
-                message: lang['alert-deletedaccount-message']
-            },
-            callback: async () => {
-                await user.Clear();
-                user.interface.ChangePage('login', { storeInHistory: false });
-            },
-            cancelable: false
-        });
+        showDeletedAccountPopup();
         return;
     }
 
     // An error occured, go to the error page
     else if (loggedState === 'error' || loggedState === 'deviceLimitReached' || loggedState === 'mailNotSent') {
-        const lang = langManager.curr['login'];
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: lang['alert-error-title'],
-                message: lang['alert-error-message'].replace('{}', loggedState)
-            },
-            callback: async () => {
-                await user.Clear();
-                user.interface.ChangePage('login', { storeInHistory: false });
-            },
-            cancelable: false
-        });
+        showLoginErrorPopup(loggedState);
         return;
     }
 
     // Offline mode
-    else if (loggedState === false) {
+    else if (loggedState === 'authenticated-offline') {
         user.interface.console?.AddLog('warn', 'Not connected to the server, data will be saved locally only');
     }
 
@@ -158,6 +134,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         await dataManager.SaveLocal(user);
     }
 
+    // Load template data if needed (full local mode only)
+    if (!isServerEnabled) {
+        LoadTemplate_AppData(user);
+        LoadTemplate_UserData(user);
+        await Sleep(1000);
+    }
+
     // Check if app data are loaded
     const dataLoaded = dataManager.DataAreLoaded();
     if (!dataLoaded) {
@@ -170,7 +153,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const t2 = performance.now();
 
     // Loading: User data online
-    if (user.server2.IsLogged()) {
+    if (user.server2.IsAuthenticated()) {
         await user.SaveOnline();
         await user.LoadOnline();
         await user.SaveLocal();
@@ -215,7 +198,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     nextStep();
 
-    user.StartTimers();
+    user.onMount();
 
     // End of initialisation
     const time_end = performance.now();
@@ -230,19 +213,10 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.server2.tcp.Send({ action: 'send-statistics', stats: { LoadingTimeMs: time_total }, anonymous: false });
 
     // Maintenance message
-    if (status === 'maintenance') {
-        const lang = langManager.curr['home'];
-
-        await new Promise((resolve) => {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-maintenance-title'],
-                    message: lang['alert-maintenance-message']
-                },
-                callback: resolve
-            });
-        });
+    if (user.server2.serverState.status === 'maintenance') {
+        await showMaintenancePopup();
+    } else if (user.server2.serverState.status === 'downdate') {
+        await showDowndatePopup();
     }
 
     nextPage();

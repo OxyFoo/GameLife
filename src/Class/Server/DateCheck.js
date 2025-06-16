@@ -1,8 +1,8 @@
-import { GetGlobalTime } from './Time';
-import DataStorage, { STORAGE } from './DataStorage';
+import { GetGlobalTime } from 'Utils/Time';
+import Storage from 'Utils/Storage';
 
 /**
- * @typedef {import('Utils/TCP').default} TCP
+ * @typedef {import('./TCP').default} TCP
  */
 
 /**
@@ -31,8 +31,8 @@ async function CheckDate(tcp) {
 async function DateIsSafeLocal() {
     const now = GetGlobalTime();
     /** @type {{ date?: number } | null} */
-    const data = await DataStorage.Load(STORAGE.DATE);
-    DataStorage.Save(STORAGE.DATE, { date: now });
+    const data = await Storage.Load('DATE');
+    Storage.Save('DATE', { date: now });
 
     if (data !== null && typeof data.date === 'number') {
         if (data.date > now) {

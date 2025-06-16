@@ -6,8 +6,8 @@ import user from 'Managers/UserManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
- * @typedef {import('Types/Data/User/Quests').QuestSaved} QuestSaved
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').QuestSaved} QuestSaved
  *
  * @typedef {Object} BackQuestsListPropsType
  * @property {StyleProp} style

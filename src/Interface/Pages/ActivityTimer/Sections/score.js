@@ -13,9 +13,9 @@ import { Round } from 'Utils/Functions';
 import { GetLocalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/User/Activities').CurrentActivity} CurrentActivity
- * @typedef {import('Types/Class/Experience').Stats} Stats
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').CurrentActivity} CurrentActivity
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
  * @typedef {import('react-native').ListRenderItem<keyof Stats>} ListRenderItemStat
  *
  * @typedef {{ key: string, value: number }} Stat

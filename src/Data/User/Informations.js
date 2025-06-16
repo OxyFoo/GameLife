@@ -1,16 +1,16 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 
 import DynamicVar from 'Utils/DynamicVar';
 import { GetAge, GetDaysUntil, GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Class/ZapGPT').ZapGPTState} ZapGPTState
- * @typedef {import('Types/Data/User/Informations').SaveObject_UserInformations} SaveObject_UserInformations
- * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestSetUsername} ServerRequestSetUsername
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
+ * @typedef {import('@oxyfoo/gamelife-types/Class/ZapGPT').ZapGPTState} ZapGPTState
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Informations').SaveObject_UserInformations} SaveObject_UserInformations
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_ServerToClient').ServerRequestSetUsername} ServerRequestSetUsername
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
  */
 
 const DAYS_USERNAME_CHANGE = 30;
@@ -275,14 +275,14 @@ class Informations extends IUserData {
 
     /** @returns {NotificationInAppOptionalUpdate | null} */
     GetOptionalUpdateNotifications = () => {
-        if (this.user.server2.optionalUpdateAvailable === null) {
+        if (this.user.server2.serverState.version === null) {
             return null;
         }
 
         return {
             type: 'optional-update',
             data: {
-                version: this.user.server2.optionalUpdateAvailable
+                version: this.user.server2.serverState.version
             },
             timestamp: GetLocalTime()
         };

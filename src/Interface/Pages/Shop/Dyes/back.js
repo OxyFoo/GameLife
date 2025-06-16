@@ -36,7 +36,7 @@ class BackShopDyes extends React.Component {
     state = {
         /** @type {Array<BuyableDye>} */
         buyableDyes: []
-    }
+    };
 
     componentDidMount() {
         this.refreshDye();
@@ -44,23 +44,23 @@ class BackShopDyes extends React.Component {
 
     refreshDye = () => {
         // Get random buyable items
-        const rarities = [ .75, .18, .6, .1 ];
+        const rarities = [0.75, 0.18, 0.6, 0.1];
         const allBuyableDyes = dataManager.items.GetBuyable();
 
-        const ownItems = user.inventory.stuffs.map(item => ({
+        const ownItems = user.inventory.stuffs.map((item) => ({
             StuffID: item.ID,
             ...dataManager.items.GetByID(item.ItemID)
         }));
-        const altItems = ownItems.filter(i => dataManager.items.GetDyables(i.ID, allBuyableDyes).length > 0);
-        const altItemsProbas = ArrayToDict(altItems.map(i => ({ [i.ID]: rarities[i.Rarity] })));
+        const altItems = ownItems.filter((i) => dataManager.items.GetDyables(i.ID, allBuyableDyes).length > 0);
+        const altItemsProbas = ArrayToDict(altItems.map((i) => ({ [i.ID]: rarities[i.Rarity] })));
         const buyableItemsID = GetRandomIndexesByDay(altItemsProbas, SHOP_NUMBER_DYE);
 
         // Create characters & get data for each item
         const buyableDyes = [];
         buyableItemsID.forEach((itemID, index) => {
-            const itemBefore = allBuyableDyes.find(i => i.ID == itemID) || null;
+            const itemBefore = allBuyableDyes.find((i) => i.ID == itemID) || null;
             if (itemBefore === null) return;
-            const inventoryID = user.inventory.stuffs.find(i => i.ItemID == itemBefore.ID).ID;
+            const inventoryID = user.inventory.stuffs.find((i) => i.ItemID == itemBefore.ID).ID;
 
             const itemsAlternative = dataManager.items.GetDyables(itemBefore.ID, allBuyableDyes);
             const itemAfter = itemsAlternative[GetRandomIntByDay(0, itemsAlternative.length - 1)] || null;
@@ -70,8 +70,8 @@ class BackShopDyes extends React.Component {
             const characterAfterKey = `shop-dye-character-after-${itemBefore.ID}`;
             const characterBefore = new Character(characterBeforeKey, user.character.sexe, 'skin_01', 0);
             const characterAfter = new Character(characterAfterKey, user.character.sexe, 'skin_01', 0);
-            characterBefore.SetEquipment([ itemBefore.ID ]);
-            characterAfter.SetEquipment([ itemAfter.ID ]);
+            characterBefore.SetEquipment([itemBefore.ID]);
+            characterAfter.SetEquipment([itemAfter.ID]);
 
             /** @type {BuyableDye} */
             const buyableDye = {
@@ -87,7 +87,7 @@ class BackShopDyes extends React.Component {
                     Size: dataManager.items.GetContainerSize(itemAfter.Slot)
                 },
                 Name: langManager.GetText(itemAfter.Name),
-                Price: Round(itemAfter.Value * 3/4),
+                Price: Round((itemAfter.Value * 3) / 4),
                 Colors: themeManager.GetRariryColors(itemAfter.Rarity),
                 BackgroundColor: themeManager.GetColor('backgroundCard'),
                 OnPress: () => this.openDyePopup(buyableDye)
@@ -96,14 +96,14 @@ class BackShopDyes extends React.Component {
         });
 
         this.setState({ buyableDyes: buyableDyes });
-    }
+    };
 
     /** @param {BuyableDye} dye */
     openDyePopup = (dye) => {
         const callback = this.refreshDye.bind(this);
         const render = () => renderDyePopup.bind(this)(dye, callback);
         user.interface.popup.Open('custom', render);
-    }
+    };
 }
 
 export default BackShopDyes;

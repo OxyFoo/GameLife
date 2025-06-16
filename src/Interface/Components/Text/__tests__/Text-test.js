@@ -20,11 +20,7 @@ describe('[Component] Text', () => {
     });
 
     it('should have the correct styles applied', () => {
-        const { getByText } = render(
-            <Text style={{ color: 'red', fontSize: 16 }}>
-                Styled Text
-            </Text>
-        );
+        const { getByText } = render(<Text style={{ color: 'red', fontSize: 16 }}>Styled Text</Text>);
         const textElement = getByText('Styled Text');
 
         // Get only user-defined styles

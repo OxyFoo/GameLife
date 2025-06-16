@@ -1,9 +1,9 @@
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<*>} NotificationInApp
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<*>} NotificationInApp
  */
 
 class NotificationsInApp extends IUserClass {

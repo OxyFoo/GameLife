@@ -13,7 +13,7 @@ class Point3D {
      * @param {{ rX: number, rY: number, rZ: number }} angles
      */
     Update(angles) {
-        if (typeof(angles) !== 'object') {
+        if (typeof angles !== 'object') {
             throw new Error('Point3D.Update: angles must be an object');
         }
 
@@ -29,7 +29,7 @@ class Point3D {
  * @returns {Array<Part>}
  */
 function __getParents(el) {
-    let parents = [ el ];
+    let parents = [el];
     let parent = el.parent;
     while (parent !== null) {
         parents.splice(0, 0, parent);
@@ -52,7 +52,7 @@ function CalculateParentPos(part) {
         if (el.parent !== null) {
             let currentRotation = 0;
             const elChilds = __getParents(el);
-            for (let i = 0; i < elChilds.length-1; i++) {
+            for (let i = 0; i < elChilds.length - 1; i++) {
                 const child = elChilds[i];
                 const childRotation = (child.a % 360) + child.rotation.rZ;
                 currentRotation += childRotation;
@@ -74,7 +74,7 @@ function CalculateParentPos(part) {
 
             calculateParentPos(el.parent);
         }
-    }
+    };
     calculateParentPos(part);
 
     posX += part.body.position.x;

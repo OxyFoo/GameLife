@@ -1,31 +1,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { StrIsJSON } from './String';
+import { STORAGE_KEYS } from 'Constants/StorageKeys';
 
-const STORAGE_KEYS = {
-    LOGIN: '@data/login',
-    USER_CLASS: '@data/user-class',
-    USER_DATA: '@data/user-data',
-    APP_DATA: '@data/app',
-
-    APPDATA_HASHES: '@settings/appdata_hashes',
-    DATE: '@tools/date'
-};
-
-class DataStorage {
+class Storage {
     /**
-     * @param {string} storageKey Storage key
+     * @param {keyof STORAGE_KEYS} storageKey Storage key
      * @param {object | null} data Data to save (JSON object)
      * @returns {Promise<boolean>} True if data was saved
      */
     static async Save(storageKey, data) {
         let success = true;
 
+        // Check if the storage key is valid
+        if (!STORAGE_KEYS.hasOwnProperty(storageKey)) {
+            console.error(`[Storage] Invalid storage key: ${storageKey}`);
+            return false;
+        }
+
         // If data is null, reset the storage
         if (data === null) {
             await AsyncStorage.removeItem(storageKey, (err) => {
                 if (err) {
-                    console.error(err);
+                    console.error('[Storage]', err);
                     success = false;
                 }
             });
@@ -35,7 +32,7 @@ class DataStorage {
         const strData = JSON.stringify(data);
         await AsyncStorage.setItem(storageKey, strData, (err) => {
             if (err) {
-                console.error(err);
+                console.error('[Storage]', err);
                 success = false;
             }
         });
@@ -44,11 +41,17 @@ class DataStorage {
 
     /**
      * @template {object} T
-     * @param {string} storageKey Storage key
+     * @param {keyof STORAGE_KEYS} storageKey Storage key
      * @returns {Promise<T | null>} Data (JSON object) or null if an error occurred
      */
     static async Load(storageKey) {
         let json = null;
+
+        // Check if the storage key is valid
+        if (!STORAGE_KEYS.hasOwnProperty(storageKey)) {
+            console.error(`[Storage] Invalid storage key: ${storageKey}`);
+            return null;
+        }
 
         try {
             const localData = await AsyncStorage.getItem(storageKey);
@@ -56,7 +59,7 @@ class DataStorage {
                 json = JSON.parse(localData);
             }
         } catch (error) {
-            console.error(error);
+            console.error('[Storage]', error);
         }
 
         return json;
@@ -70,5 +73,4 @@ class DataStorage {
     }
 }
 
-export { STORAGE_KEYS as STORAGE };
-export default DataStorage;
+export default Storage;

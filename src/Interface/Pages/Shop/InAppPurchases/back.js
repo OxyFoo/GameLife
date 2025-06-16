@@ -25,7 +25,7 @@ import { Character } from 'Interface/Components';
  * @typedef {import('react-native-iap').Purchase} Purchase
  * @typedef {import('react-native-iap').PurchaseError} PurchaseError
  *
- * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  * @typedef {import('Managers/LangManager').Lang} Lang
  *

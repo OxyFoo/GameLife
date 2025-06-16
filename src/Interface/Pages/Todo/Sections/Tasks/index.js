@@ -11,7 +11,7 @@ import { Text, Button, Icon } from 'Interface/Components';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').TextStyle} TextStyle
  *
- * @typedef {import('Types/Data/User/Todos').Task} Task
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').Task} Task
  */
 
 class SectionTasks extends BackSectionTasks {

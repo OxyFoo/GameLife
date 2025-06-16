@@ -1,13 +1,13 @@
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/User/Todos').Todo} Todo
- * @typedef {import('Types/Data/User/Todos').Task} Task
- * @typedef {import('Types/Data/User/Todos').TodoSaved} TodoSaved
- * @typedef {import('Types/Data/User/Todos').SaveObject_Todos} SaveObject_Todos
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').Todo} Todo
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').Task} Task
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').TodoSaved} TodoSaved
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').SaveObject_Todos} SaveObject_Todos
  */
 
 const MAX_TODOS = 10;

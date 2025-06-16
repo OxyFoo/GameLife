@@ -10,7 +10,7 @@ import langManager from 'Managers/LangManager';
 import { Button } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  * @typedef {import('react-native').ListRenderItem<Quest>} ListRenderItemQuest
  */
 

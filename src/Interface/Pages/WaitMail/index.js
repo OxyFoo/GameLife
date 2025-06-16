@@ -2,20 +2,20 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import BackWaitmail from './back';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text, Button, ProgressBar } from 'Interface/Components';
 
 class Waitmail extends BackWaitmail {
     render() {
-        const email = user.settings.email;
-        const { statusText } = this.state;
+        const { email } = this.props.args;
+        const { statusText, showResendButton } = this.state;
         const langWait = langManager.curr['wait'];
         const textWait = langWait['wait-email-text'];
 
         return (
             <View style={styles.page}>
+                {/* Title and Email Display */}
                 <View>
                     <Text style={styles.title} color='primary' fontSize={22}>
                         {email}
@@ -24,14 +24,32 @@ class Waitmail extends BackWaitmail {
                         {textWait}
                     </Text>
                 </View>
+
+                {/* Empty View for spacing */}
                 <View />
 
                 {/* ProgressBar & Back button */}
                 <View style={styles.bottomView}>
-                    <Button style={styles.backButton} appearance='outline' icon='arrow-left' onPress={this.onBack} />
+                    <Button
+                        style={styles.backButton}
+                        appearance='outline'
+                        icon='arrow-left'
+                        onPress={this.onBack}
+                        throttleTime={1000}
+                    />
+
+                    {/* Resend Button / Waiting View */}
                     <View style={styles.waitingView}>
-                        <Text style={styles.resendText}>{statusText}</Text>
-                        <ProgressBar.Infinite />
+                        {showResendButton ? (
+                            <Button appearance='normal' onPress={this.onResend} throttleTime={3000}>
+                                {langWait['wait-email-resend']}
+                            </Button>
+                        ) : (
+                            <>
+                                <Text style={styles.resendText}>{statusText}</Text>
+                                <ProgressBar.Infinite />
+                            </>
+                        )}
                     </View>
                 </View>
             </View>

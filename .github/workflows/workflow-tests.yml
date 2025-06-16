@@ -22,6 +22,11 @@ on:
         required: true
         type: boolean
         default: true
+      test-tls-pinning:
+        description: 'Run TLS pinning tests'
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   tests:
@@ -32,3 +37,4 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       test-client: ${{ github.event.inputs.test-client == 'true' }}
       test-resource: ${{ github.event.inputs.test-resource == 'true' }}
+      test-tls-pinning: ${{ github.event.inputs.test-tls-pinning == 'true' }}

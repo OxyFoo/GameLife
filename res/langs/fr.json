@@ -14,21 +14,21 @@
             "name": "Notifications régulières",
             "title": "GameLife",
             "messages": [
-                "Chaque réussite compte ! Quelles sont les étapes que vous avez franchies aujourd'hui ?",
-                "Augmentez vos progrès en enregistrant vos aventures d'aujourd'hui dès maintenant !",
-                "Votre voyage est important ! Consignez les chapitres d'aujourd'hui dans l'application",
-                "Boostez votre score ! Comment avez-vous progressé dans la vie réelle aujourd'hui ?",
-                "Le jeu de votre vie est en cours. Veillez à ce que chacun de vos mouvements soit suivi. Connectez-vous maintenant !",
-                "N'oubliez pas que chaque petite activité peut vous faire gagner des points. Avez-vous ajouté les vôtres ?",
-                "Chassez les classements ! Assurez-vous de saisir vos expériences du jour",
-                "Chaque quête et chaque défi d'aujourd'hui est source de croissance. Avez-vous mis à jour l'application ?",
-                "Notez votre parcours ! Quels ont été les hauts et les bas d'aujourd'hui ?",
-                "La vie est un jeu, et chaque jour est un nouveau tournant. Assurez-vous d'avoir joué le vôtre en vous connectant",
-                "Un autre jour, une autre quête ! Assurez-vous d'immortaliser toutes vos aventures",
-                "Vous avez obtenu des bonus ou des succès aujourd'hui ? Ne les laissez pas s'échapper, notez-les !",
-                "Votre héritage se construit un jour à la fois. Avez-vous enregistré l'histoire d'aujourd'hui ?",
-                "Des moments épiques vous attendent ! Quels récits épiques de la journée allez-vous partager dans l'application ?",
-                "Marquez des points en notant vos victoires quotidiennes. Avez-vous déjà enregistré vos victoires ?"
+                "Chaque réussite compte ! Quelles sont les étapes que tu as franchies aujourd'hui ?",
+                "Augmente tes progrès en enregistrant tes aventures d'aujourd'hui dès maintenant !",
+                "Ton voyage est important ! Consigne les chapitres d'aujourd'hui dans l'application",
+                "Booste ton score ! Comment as-tu progressé dans la vie réelle aujourd'hui ?",
+                "Le jeu de ta vie est en cours. Veille à ce que chacun de tes mouvements soit suivi. Connecte-toi maintenant !",
+                "N'oublie pas que chaque petite activité peut te faire gagner des points. As-tu ajouté les tiennes ?",
+                "Chasse les classements ! Assure-toi de saisir tes expériences du jour",
+                "Chaque quête et chaque défi d'aujourd'hui est source de croissance. As-tu mis à jour l'application ?",
+                "Note ton parcours ! Quels ont été les hauts et les bas d'aujourd'hui ?",
+                "La vie est un jeu, et chaque jour est un nouveau tournant. Assure-toi d'avoir joué le tien en te connectant",
+                "Un autre jour, une autre quête ! Assure-toi d'immortaliser toutes tes aventures",
+                "Tu as obtenu des bonus ou des succès aujourd'hui ? Ne les laisse pas s'échapper, note-les !",
+                "Ton héritage se construit un jour à la fois. As-tu enregistré l'histoire d'aujourd'hui ?",
+                "Des moments épiques t'attendent ! Quels récits épiques de la journée vas-tu partager dans l'application ?",
+                "Marque des points en notant tes victoires quotidiennes. As-tu déjà enregistré tes victoires ?"
             ]
         },
         "activities": {
@@ -191,9 +191,11 @@
 
     "app": {
         "loading-error-message": {
+            "authentication-failed": "Échec de l'authentification de l'appareil",
             "appdata-not-loaded": "Les données de l'application n'ont pas pu être chargées",
             "userdata-not-loaded": "Les données utilisateur n'ont pas pu être chargées",
-            "userdata-not-saved": "Les données utilisateur n'ont pas pu être chargées"
+            "userdata-not-saved": "Les données utilisateur n'ont pas pu être enregistrées",
+            "ssl-pinning-failed": "La vérification de sécurité a échoué."
         },
         "loading-error-button": "Redémarrer"
     },
@@ -433,7 +435,7 @@
         "section-today-quests": "Mes quêtes",
         "section-my-todos": "Mes listes",
 
-        "btn-other-skills": "Toutes les comp.",
+        "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
 
         "chart-today-recap": "Activités sur 24h",
@@ -478,7 +480,7 @@
         "button-signin-text": "S'inscrire",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
-        "error-signin-server": "Une erreur est survenue.",
+        "error-signin-server": "Une erreur est survenue. ({})",
         "error-signin-pseudoWrong": "Tu dois entrer un pseudo correct.",
         "error-signin-pseudoUsed": "Ce pseudo est déjà utilisé.",
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
@@ -713,6 +715,7 @@
         "section-informations-preferences": "INFORMATIONS ET PRÉFÉRENCES",
         "section-notifications-consents": "NOTIFICATIONS ET CONSENTEMENT",
         "section-support-feedback": "SUPPORT ET RETOUR D’EXPÉRIENCE",
+        "section-offline-mode": "MODE HORS LIGNE",
         "section-security-privacy": "SÉCURITÉ ET CONFIDENTIALITÉ",
 
         "input-about": "À propos de nous",
@@ -725,8 +728,8 @@
         "input-beta": "Beta",
         "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
-        "input-disconnect-all": "Se déconnecter de tous les appareils",
-        "input-reconnect-tcp": "Se reconnecter au multijoueur",
+        "input-disconnect-other": "Se déconnecter des autres appareils",
+        "input-reconnect-tcp": "Se reconnecter au serveur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
 
@@ -752,7 +755,9 @@
         "alert-consent-not-available-title": "Erreur",
         "alert-consent-not-available-message": "Les consents ne sont pas disponibles dans ta zone géographique.",
         "alert-consent-error-title": "Erreur",
-        "alert-consent-error-message": "Les consents ne sont pas disponibles pour le moment, réessaye plus tard."
+        "alert-consent-error-message": "Les consents ne sont pas disponibles pour le moment, réessaye plus tard.",
+        "alert-reconnect-failed-title": "Échec de la reconnexion",
+        "alert-reconnect-failed-message": "Une erreur est survenue lors de la reconnexion au serveur ({}), réessaye plus tard."
     },
 
     "shop": {
@@ -1050,7 +1055,8 @@
         "wait-email-text": "Un mail t'a été envoyé pour autoriser ton appareil à se connecter à ton compte. Accepte le et reviens sur l'application.\n\nLe mail peut s'envoyer après quelques minutes, vérifie tes spams.",
         "wait-email-sending": "Envoi en cours...",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
-        "wait-email-send": "Mail envoyé !"
+        "wait-email-sent": "Mail envoyé !",
+        "wait-email-resend": "Renvoyer le mail de confirmation"
     },
 
     "tuto": {

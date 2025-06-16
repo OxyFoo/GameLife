@@ -11,7 +11,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<any>} NotificationInApp
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<any>} NotificationInApp
  */
 
 class NotificationsInApp extends React.Component {

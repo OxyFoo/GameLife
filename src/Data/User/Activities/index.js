@@ -1,7 +1,7 @@
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import { GetActivityIndex, TimeIsFree } from './utils';
 import DynamicVar from 'Utils/DynamicVar';
 import { Round, SortByKey } from 'Utils/Functions';
@@ -9,12 +9,12 @@ import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } f
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
- * @typedef {import('Types/Data/App/Skills').EnrichedSkill} EnrichedSkill
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
- * @typedef {import('Types/Data/User/Activities').CurrentActivity} CurrentActivity
- * @typedef {import('Types/Data/User/Activities').ActivitySaved} ActivitySaved
- * @typedef {import('Types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').CurrentActivity} CurrentActivity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').ActivitySaved} ActivitySaved
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly'} AddStatus

@@ -1,27 +1,36 @@
-import Config from 'react-native-config';
+import { SSLWebSocket, WebSocketReadyState } from 'react-native-pinned-ws';
+
+import { env } from 'Utils/Env';
 import DynamicVar from 'Utils/DynamicVar';
 import { RandomString } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/TCP/GameLife/Request').ConnectionState} ConnectionState
- * @typedef {import('Types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
- * @typedef {import('Types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ * @typedef {import('react-native-pinned-ws').WebSocketConfig} WebSocketConfig
+ * @typedef {import('react-native-pinned-ws').WebSocketOpenEvent} WebSocketOpenEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketMessageEvent} WebSocketMessageEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketErrorEvent} WebSocketErrorEvent
+ * @typedef {import('react-native-pinned-ws').WebSocketCloseEvent} WebSocketCloseEvent
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
+ *
+ * @typedef {{ protocol: string, host: string, port: number }} TCPSettings
  */
-
-const TCP_SETTINGS = {
-    protocol: Config.VPS_PROTOCOL,
-    host: Config.VPS_IP,
-    port: Config.VPS_PORT
-};
 
 const SERVER_TIMEOUT_MS = __DEV__ ? 10000 : 5000;
 
 class TCP {
-    /** @type {WebSocket | null} */
+    /** @type {SSLWebSocket | null} */
     socket = null;
 
     /** @type {DynamicVar<ConnectionState>} */
     state = new DynamicVar(/** @type {ConnectionState} */ ('idle'));
+
+    /**
+     * @type {TCPSettings | null}
+     * @readonly
+     */
+    settings;
 
     /** @type {string | null} */
     #lastError = null;
@@ -39,18 +48,56 @@ class TCP {
     #callbacksActions = {};
 
     /**
+     * @param {TCPSettings | null} settings
+     */
+    constructor(settings = null) {
+        this.settings = settings;
+    }
+
+    /**
      * @param {boolean} [connectAsNewUser] Whether to connect as a new user
-     * @returns {Promise<boolean>} Whether the connection was successful, or if it was already connected
+     * @returns {Promise<'connected' | 'already-connected' | 'wrong-ssl-pinning' | 'timeout' | 'error'>} Whether the connection was successful, or if it was already connected
      */
     Connect = async (connectAsNewUser = false) => {
-        if (this.IsConnected()) {
-            return false;
+        if (this.settings === null) {
+            return 'error';
         }
 
-        const url = `${TCP_SETTINGS.protocol}://${TCP_SETTINGS.host}:${TCP_SETTINGS.port}`;
+        if (this.IsConnected()) {
+            return 'already-connected';
+        }
+
+        const url = `${this.settings.protocol}://${this.settings.host}:${this.settings.port}`;
         const protocol = !connectAsNewUser ? 'gamelife-client' : 'gamelife-client-new';
 
-        const socket = new WebSocket(url, protocol);
+        /** @type {WebSocketConfig} */
+        const socketConfig = {
+            url: url,
+            protocols: protocol,
+            connectionTimeout: SERVER_TIMEOUT_MS,
+            options: {
+                allowSelfSignedCerts: false
+            }
+        };
+
+        if (this.settings.protocol === 'wss') {
+            socketConfig.sslPinning = {
+                hostname: this.settings.host,
+                publicKeyHashes: [],
+                includeSubdomains: true,
+                timeout: SERVER_TIMEOUT_MS
+            };
+
+            if (env.SSL_PINNING_PRIMARY_KEY) {
+                socketConfig.sslPinning?.publicKeyHashes.push(env.SSL_PINNING_PRIMARY_KEY);
+                if (env.SSL_PINNING_BACKUP_KEY) {
+                    socketConfig.sslPinning?.publicKeyHashes.push(env.SSL_PINNING_BACKUP_KEY);
+                }
+            }
+        }
+
+        const socket = new SSLWebSocket(socketConfig);
+
         socket.addEventListener('open', this.#onOpen);
         socket.addEventListener('message', this.#onMessage);
         socket.addEventListener('error', this.#onError);
@@ -58,28 +105,40 @@ class TCP {
         this.socket = socket;
 
         this.state.Set('connecting');
-        return new Promise(async (resolve) => {
-            /** @param {boolean} bool */
-            const finish = (bool) => {
+
+        return new Promise((resolve) => {
+            /** @param {'connected' | 'wrong-ssl-pinning' | 'timeout' | 'error'} state */
+            const finish = (state) => {
                 clearTimeout(_timeout);
-                this.state.RemoveListener(id);
-                resolve(bool);
+                this.state.RemoveListener(_listenerId);
+                resolve(state);
             };
 
             // Timeout
             const _timeout = setTimeout(() => {
-                finish(false);
+                finish('timeout');
             }, SERVER_TIMEOUT_MS);
 
             // Listen for the connection
-            const id = this.state.AddListener((state) => {
-                finish(state === 'connected');
+            const _listenerId = this.state.AddListener((state) => {
+                if (state === 'idle' || state === 'connecting' || state === 'disconnected') {
+                    return; // Ignore idle or connecting states
+                }
+
+                finish(state);
             });
+
+            // Start the connection
+            socket.connect();
         });
     };
 
     IsConnected = () => {
-        return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
+        return (
+            this.socket !== null &&
+            this.socket.readyState === WebSocketReadyState.OPEN &&
+            this.state.Get() === 'connected'
+        );
     };
 
     Disconnect = () => {
@@ -93,22 +152,29 @@ class TCP {
         return this.#lastError;
     };
 
-    /** @param {Event} _event */
+    /** @param {WebSocketOpenEvent} _event */
     #onOpen = (_event) => {
         this.state.Set('connected');
     };
 
-    /** @param {MessageEvent} event */
+    /** @param {WebSocketMessageEvent} event */
     #onMessage = async (event) => {
+        if (typeof event.data !== 'string' || event.type !== 'message') {
+            this.#lastError = 'Received non-string data';
+            this.state.Set('error');
+            this.Disconnect();
+            return;
+        }
+
         /** @type {TCPServerRequest} */
-        const data = JSON.parse(event.data);
+        const parsedData = JSON.parse(event.data);
 
         // Callbacks
-        if (data.callbackID && data.callbackID in this.#callbacks) {
-            const callbackID = data.callbackID;
+        if (parsedData.callbackID && parsedData.callbackID in this.#callbacks) {
+            const callbackID = parsedData.callbackID;
             const callback = this.#callbacks[callbackID];
             if (typeof callback === 'function') {
-                const removeCallback = await callback(data);
+                const removeCallback = await callback(parsedData);
                 if (removeCallback) {
                     delete this.#callbacks[callbackID];
                 }
@@ -117,35 +183,34 @@ class TCP {
         }
 
         // Callbacks from status
-        if (data.status in this.#callbacksActions) {
-            const callback = this.#callbacksActions[data.status];
+        if (parsedData.status in this.#callbacksActions) {
+            const callback = this.#callbacksActions[parsedData.status];
             if (typeof callback === 'function') {
                 // @ts-ignore
-                const removeCallback = await callback(data);
+                const removeCallback = await callback(parsedData);
                 if (removeCallback) {
-                    delete this.#callbacksActions[data.status];
+                    delete this.#callbacksActions[parsedData.status];
                 }
                 return;
             }
         }
-
-        // TODO: Implement global listeners
-        // const { status } = data;
-        // if (status.startsWith('update-')) {
-        //     this.#user.multiplayer.onMessage(data);
-        // }
     };
 
-    /** @param {Event} event */
+    /** @param {WebSocketErrorEvent} event */
     #onError = (event) => {
-        // @ts-ignore - The error message is a string (why is not referenced?)
         this.#lastError = event?.message || 'Unknown error';
 
-        this.state.Set('error');
+        // Check if this might be an SSL pinning error
+        if (event?.errorType === 'ssl_pinning') {
+            this.state.Set('wrong-ssl-pinning');
+        } else {
+            this.state.Set('error');
+        }
+
         this.Disconnect();
     };
 
-    /** @param {CloseEvent} _event */
+    /** @param {WebSocketCloseEvent} _event */
     #onClose = (_event) => {
         this.state.Set('disconnected');
         this.Disconnect();
@@ -164,7 +229,7 @@ class TCP {
             return false;
         }
 
-        if (this.socket.readyState !== WebSocket.OPEN) {
+        if (this.socket.readyState !== WebSocketReadyState.OPEN) {
             return false;
         }
 

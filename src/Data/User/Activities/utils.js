@@ -1,6 +1,6 @@
 /**
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
- * @typedef {import('Types/Data/User/Activities').ActivitySaved} ActivitySaved
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').ActivitySaved} ActivitySaved
  */
 
 /**

@@ -2,6 +2,7 @@ import AppControl from 'react-native-app-control';
 
 import { CheckDate } from './DateCheck';
 import langManager from 'Managers/LangManager';
+import DynamicVar from 'Utils/DynamicVar';
 import SecureStorage from 'Utils/SecureStorage';
 
 /**
@@ -16,8 +17,8 @@ class UserAuthService {
     /** @type {TCP} */
     #tcp;
 
-    /** @type {string | null} */
-    email = null;
+    /** @type {DynamicVar<string | null>} */
+    email = new DynamicVar(/** @type {string | null} */ (null));
 
     /** @type {boolean} */
     devMode = false;
@@ -35,16 +36,16 @@ class UserAuthService {
     }
 
     Mount = async () => {
-        this.email = await SecureStorage.Load('ACCOUNT_EMAIL');
+        const email = await SecureStorage.Load('ACCOUNT_EMAIL');
+        this.email.Set(email);
     };
 
     Unmount = () => {
-        this.email = null;
+        this.email.Set(null);
     };
 
     Clear = async () => {
-        this.email = null;
-        await SecureStorage.Remove('ACCOUNT_EMAIL');
+        await this.ResetEmail();
     };
 
     /**
@@ -52,7 +53,44 @@ class UserAuthService {
      * @returns {boolean}
      */
     IsLogged = () => {
-        return this.email !== null;
+        return this.email.Get() !== null;
+    };
+
+    /**
+     * @description Get the email of the logged user
+     * @returns {string | null}
+     */
+    GetEmail = () => {
+        return this.email.Get();
+    };
+
+    /**
+     * @param {string} email The email to set
+     * @returns {Promise<boolean>} Returns true if the email was set successfully
+     */
+    SetEmail = async (email) => {
+        const isEmailSaved = await SecureStorage.Save('ACCOUNT_EMAIL', email);
+        if (!isEmailSaved) {
+            this.#user.interface.console?.AddLog('error', '[Server2/UserAuthService/SetEmail] Failed to save email');
+            return false;
+        }
+
+        this.email.Set(email);
+        return true;
+    };
+
+    ResetEmail = async () => {
+        const isEmailRemoved = await SecureStorage.Remove('ACCOUNT_EMAIL');
+        if (!isEmailRemoved) {
+            this.#user.interface.console?.AddLog(
+                'error',
+                '[Server2/UserAuthService/ResetEmail] Failed to remove email'
+            );
+            return false;
+        }
+
+        this.email.Set(null);
+        return true;
     };
 
     /**
@@ -71,11 +109,12 @@ class UserAuthService {
             return 'error';
         }
 
-        if (!this.#user.server2.deviceAuth.GetAuthenticationState()) {
+        if (!this.#user.server2.deviceAuth.IsAuthenticated()) {
             if (this.IsLogged()) {
                 this.#user.interface.console?.AddLog('error', '[Server2/Login] Device not authenticated but logged');
                 return 'authenticated-offline';
             }
+            this.#user.interface.console?.AddLog('error', '[Server2/Login] Device not authenticated');
             return 'error';
         }
 
@@ -104,6 +143,7 @@ class UserAuthService {
             response.result === 'waitMailConfirmation' ||
             response.result === 'error'
         ) {
+            this.#user.interface.console?.AddLog('info', `[Server2/Login] Login status: ${response.result}`);
             return response.result;
         }
 
@@ -129,8 +169,12 @@ class UserAuthService {
             return 'error';
         }
 
-        this.email = email;
-        await SecureStorage.Save('ACCOUNT_EMAIL', email);
+        // Save email
+        const isEmailSet = await this.SetEmail(email);
+        if (!isEmailSet) {
+            this.#user.interface.console?.AddLog('error', '[Server2/Login] Failed to save email');
+            return 'error';
+        }
 
         return 'authenticated';
     };
@@ -157,10 +201,6 @@ class UserAuthService {
         }
 
         return response.result;
-    };
-
-    Disconnect = async (allDevice = false) => {
-        // this.email = null;
     };
 }
 

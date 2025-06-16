@@ -30,7 +30,12 @@ async function Login(email) {
 
     // New device or mail unconfirmed
     else if (status === 'waitMailConfirmation') {
-        user.interface.ChangePage('waitmail', { storeInHistory: false });
+        user.settings.waitingEmail = email;
+        await user.settings.IndependentSave();
+        user.interface.ChangePage('waitmail', {
+            storeInHistory: false,
+            args: { email }
+        });
     }
 
     // Device limit reached

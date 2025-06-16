@@ -47,7 +47,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.interface.console?.AddLog('info', `Connection attempt completed in ${time_connect}ms (${authenticated})`);
 
     // Check if the SSL pinning failed
-    if (authenticated === 'ssl-pinning-failed') {
+    if (authenticated === 'wrong-ssl-pinning') {
         callbackError('ssl-pinning-failed');
         return;
     }
@@ -80,18 +80,22 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Connection to the server is OK but not logged, go to the login page
     const isServerEnabled = env.VPS_PROTOCOL !== 'none';
-    if (isServerEnabled && !user.server2.userAuth.IsLogged()) {
+    if (isServerEnabled && !user.server2.userAuth.IsLogged() && !user.settings.waitingEmail) {
         fe.ChangePage('login', { storeInHistory: false });
         return;
     }
 
     // User connection
-    const email = user.server2.userAuth.email;
+    // If the user is not logged, try to login with the waiting email to avoid asking the user again
+    const email = user.server2.userAuth.GetEmail() ?? user.settings.waitingEmail;
     const loggedState = isServerEnabled ? await user.server2.userAuth.Login(email) : 'authenticated-offline';
 
     // Try to login but not yet confirmed, go to the wait mail confirmation page
     if (loggedState === 'waitMailConfirmation') {
-        fe.ChangePage('waitmail', { storeInHistory: false });
+        fe.ChangePage('waitmail', {
+            storeInHistory: false,
+            args: { email: email }
+        });
         return;
     }
 

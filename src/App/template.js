@@ -161,5 +161,5 @@ export function LoadTemplate_AppData(user) {
  */
 export function LoadTemplate_UserData(user) {
     user.informations.username.Set('TemplateUser');
-    user.server2.userAuth.email = 'templateuser@localhost';
+    user.server2.userAuth.SetEmail('templateuser@localhost');
 }

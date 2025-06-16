@@ -41,6 +41,7 @@ class Server extends IUserClass {
 
     /**
      * Defined in the handshake in deviceAuthService
+     * Independent of the user authentication, just to check if the server is reachable
      * @type {ServerState}
      */
     serverState = {
@@ -76,14 +77,10 @@ class Server extends IUserClass {
 
     /**
      * @description Initialize the server connection and device authentication
-     * @returns {Promise<'authenticated' | 'already-authenticated' | 'ssl-pinning-failed' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
+     * @returns {Promise<'authenticated' | 'already-authenticated' | 'wrong-ssl-pinning' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
      */
     Initialize = async () => {
-        if (
-            this.tcp.IsConnected() &&
-            this.deviceAuth.GetAuthenticationState() !== 'not-authenticated' &&
-            this.userAuth.IsLogged()
-        ) {
+        if (this.IsAuthenticated()) {
             return 'already-authenticated';
         }
 
@@ -95,11 +92,11 @@ class Server extends IUserClass {
         if (env.VPS_PROTOCOL === 'none') {
             this.#user.interface.console?.AddLog('warn', 'Server connection is disabled, using local mode');
         } else if (!this.tcp.IsConnected()) {
-            const isNewUser = !this.userAuth.email;
+            const isNewUser = this.userAuth.GetEmail() === null;
             const connectionStatus = await this.tcp.Connect(isNewUser);
-            if (connectionStatus === 'ssl-pinning-error') {
+            if (connectionStatus === 'wrong-ssl-pinning') {
                 this.#user.interface.console?.AddLog('error', '[Server] SSL Pinning error, check your configuration');
-                return 'ssl-pinning-failed';
+                return 'wrong-ssl-pinning';
             } else if (connectionStatus === 'error' || connectionStatus === 'timeout') {
                 this.#user.interface.console?.AddLog('error', `[Server] Connection failed: ${connectionStatus}`);
                 return 'not-connected';
@@ -113,7 +110,7 @@ class Server extends IUserClass {
         }
 
         // 2. Authenticate the device
-        if (this.deviceAuth.GetAuthenticationState() === 'not-authenticated') {
+        if (!this.deviceAuth.IsAuthenticated()) {
             const deviceAuthenticated = await this.deviceAuth.Authenticate();
             if (!deviceAuthenticated) {
                 this.#user.interface.console?.AddLog('error', '[Server] Device authentication failed');
@@ -152,6 +149,8 @@ class Server extends IUserClass {
         return 'authenticated';
     };
 
+    Reconnect = this.Initialize;
+
     Unmount = () => {
         if (this.#listenerTCP) {
             this.tcp.state.RemoveListener(this.#listenerTCP);
@@ -174,33 +173,7 @@ class Server extends IUserClass {
     /**
      * User is logged to an account and device is authenticated to the server
      */
-    IsAuthenticated = () => this.deviceAuth.IsAuthenticated() && this.userAuth.IsLogged();
-
-    // Reconnect = async () => {
-    //     if (this.IsAuthenticated()) {
-    //         return;
-    //     }
-
-    //     const email = this.#user.settings.email;
-
-    //     if (!email) {
-    //         return false;
-    //     }
-
-    //     this.#user.interface.console?.AddLog('info', 'Reconnecting to the server');
-
-    //     const connected = await this.Connect();
-    //     if (connected !== 'success' && connected !== 'already-connected') {
-    //         return false;
-    //     }
-
-    //     const logged = await this.Login(email);
-    //     if (logged !== 'ok') {
-    //         return false;
-    //     }
-
-    //     return true;
-    // };
+    IsAuthenticated = () => this.tcp.IsConnected() && this.deviceAuth.IsAuthenticated() && this.userAuth.IsLogged();
 }
 
 export default Server;

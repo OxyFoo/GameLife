@@ -21,18 +21,28 @@ const OnlineViewProps = {
  */
 function OnlineView(props = OnlineViewProps) {
     const { children, offlineView, onChangeState } = props;
-    const initialOnlineState = user.server2.tcp.state.Get() === 'authenticated';
+
+    const initialOnlineState = user.server2.IsAuthenticated();
     const [isOnline, setIsOnline] = React.useState(initialOnlineState);
 
     React.useEffect(() => {
-        const listener = user.server2.tcp.state.AddListener(() => {
-            const _isOnline = user.server2.tcp.state.Get() === 'authenticated';
-            onChangeState?.(_isOnline);
-            setIsOnline(_isOnline);
-        });
+        const updateOnlineStatus = () => {
+            const _isOnline = user.server2.IsAuthenticated();
+
+            if (_isOnline !== isOnline) {
+                onChangeState?.(_isOnline);
+                setIsOnline(_isOnline);
+            }
+        };
+
+        const listenerTCP = user.server2.tcp.state.AddListener(updateOnlineStatus);
+        const listenerDevice = user.server2.deviceAuth.state.AddListener(updateOnlineStatus);
+        const listenerUser = user.server2.userAuth.email.AddListener(updateOnlineStatus);
 
         return () => {
-            user.server2.tcp.state.RemoveListener(listener);
+            user.server2.tcp.state.RemoveListener(listenerTCP);
+            user.server2.deviceAuth.state.RemoveListener(listenerDevice);
+            user.server2.userAuth.email.RemoveListener(listenerUser);
         };
     });
 

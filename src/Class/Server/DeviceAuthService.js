@@ -1,4 +1,5 @@
 import { GetIntegrityToken } from './Integrity';
+import DynamicVar from 'Utils/DynamicVar';
 import SecureStorage from 'Utils/SecureStorage';
 import { GetDeviceInformations } from 'Utils/Device';
 
@@ -6,6 +7,8 @@ import { GetDeviceInformations } from 'Utils/Device';
  * @typedef {import('./TCP').default} TCP
  * @typedef {import('./Integrity').IntegrityToken} IntegrityToken
  * @typedef {import('Managers/UserManager').UserManager} UserManager
+ *
+ * @typedef {'authenticated' | 'banned' | 'not-authenticated'} DeviceAuthState
  */
 
 class DeviceAuthService {
@@ -18,11 +21,8 @@ class DeviceAuthService {
     /** @type {Symbol | null} */
     #listenerTCP = null;
 
-    /** @param {string | null} tcp */
-    #authenticated = false;
-
-    /** @type {boolean} */
-    #banned = false;
+    /** @type {DynamicVar<DeviceAuthState>} */
+    state = new DynamicVar(/** @type {DeviceAuthState} */ ('not-connected'));
 
     /**
      * @param {UserManager} user
@@ -37,23 +37,20 @@ class DeviceAuthService {
         // Add the listener to reset the authentication state if the TCP connection is lost
         if (this.#listenerTCP === null) {
             this.#listenerTCP = this.#tcp.state.AddListener((state) => {
-                if (this.#authenticated && state !== 'connected') {
-                    this.#authenticated = false;
+                if (this.IsAuthenticated() && state !== 'connected') {
+                    this.state.Set('not-authenticated');
                 }
             });
         }
     };
 
     Unmount = () => {
-        this.#banned = false;
-        this.#authenticated = false;
+        this.state.Set('not-authenticated');
         this.#tcp.state.RemoveListener(this.#listenerTCP);
         this.#listenerTCP = null;
     };
 
     Clear = async () => {
-        this.#banned = false;
-        this.#authenticated = false;
         await SecureStorage.Remove('INTEGRITY_TOKEN');
 
         // The credentials (DEVICE_UUID & SESSION_TOKEN) not removed
@@ -62,23 +59,14 @@ class DeviceAuthService {
 
     /**
      * @description Check if the device is authenticated
-     * @returns {'authenticated' | 'banned' | 'not-authenticated' | 'not-connected'}
+     * @returns {DeviceAuthState}
      */
     GetAuthenticationState = () => {
-        if (!this.#tcp.IsConnected()) {
-            return 'not-connected';
-        }
-        if (this.#banned) {
-            return 'banned';
-        }
-        if (this.#authenticated) {
-            return 'authenticated';
-        }
-        return 'not-authenticated';
+        return this.state.Get();
     };
 
     IsAuthenticated = () => {
-        const state = this.GetAuthenticationState();
+        const state = this.state.Get();
         return state === 'authenticated' || state === 'banned';
     };
 
@@ -87,12 +75,13 @@ class DeviceAuthService {
      * @returns {Promise<boolean>}
      */
     Authenticate = async () => {
-        // Step 1: Do the handshake
-        const handshakeResult = await this.#handshake();
-        if (handshakeResult === 'already-authenticated') {
+        // If the device is already authenticated, return true
+        if (this.IsAuthenticated()) {
             return true;
         }
 
+        // Step 1: Do the handshake
+        const handshakeResult = await this.#handshake();
         if (handshakeResult === 'not-connected' || handshakeResult === 'error') {
             return false;
         }
@@ -132,15 +121,11 @@ class DeviceAuthService {
     };
 
     /**
-     * @returns {Promise<'ok' | 'already-authenticated' | 'not-connected' | 'error'>}
+     * @returns {Promise<'ok' | 'not-connected' | 'error'>}
      */
     #handshake = async () => {
         if (!this.#tcp.IsConnected()) {
             return 'not-connected';
-        }
-
-        if (this.#authenticated) {
-            return 'already-authenticated';
         }
 
         // Load app version & UUID from the secure storage
@@ -367,7 +352,7 @@ class DeviceAuthService {
         }
 
         if (response.result === 'banned') {
-            this.#banned = true;
+            this.state.Set('banned');
             this.#user.interface.console?.AddLog('warn', '[DeviceAuthService] Device banned');
             return null;
         } else if (response.result !== 'ok') {
@@ -378,7 +363,7 @@ class DeviceAuthService {
             return null;
         }
 
-        this.#authenticated = true;
+        this.state.Set('authenticated');
 
         return {
             uuid: response.newUuid,

@@ -6,7 +6,7 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetGlobalTime } from 'Utils/Time';
 
 /**
- * @typedef {import('Class/Server/TCP').TCPState} TCPState
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
  * @typedef {import('Managers/LangManager').LangKey} LangKey
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
@@ -23,7 +23,7 @@ class BackSettings extends PageBase {
         sendingMail: false,
         devicesLoading: false,
 
-        /** @param {TCPState} state */
+        /** @param {ConnectionState} state */
         serverTCPState: user.server2.tcp.state.Get(),
 
         waitingConsentPopup: false
@@ -66,7 +66,7 @@ class BackSettings extends PageBase {
         }
     }
 
-    /** @param {TCPState} state */
+    /** @param {ConnectionState} state */
     onTCPStateChange = (state) => {
         this.setState({ serverTCPState: state });
     };
@@ -151,7 +151,7 @@ class BackSettings extends PageBase {
         });
     };
 
-    disconnectAll = async () => {
+    disconnectOtherDevices = async () => {
         const lang = langManager.curr['settings'];
 
         // Not connected to the server
@@ -187,6 +187,7 @@ class BackSettings extends PageBase {
             return;
         }
 
+        // TODO: Laisser la possibilité de déconnecter les appareils un à un ?
         // Format devices list
         const { devices } = devicesStatus;
         const textDevices =
@@ -217,8 +218,30 @@ class BackSettings extends PageBase {
     };
 
     reconnectTCP = () => {
-        user.server2.Initialize();
+        const lang = langManager.curr['settings'];
+        const { serverTCPState } = this.state;
+
+        // Already connecting or connected
+        if (serverTCPState === 'connecting' || serverTCPState === 'connected') {
+            return;
+        }
+
         this.setState({ serverTCPState: 'idle' });
+
+        user.server2.Reconnect().then((result) => {
+            if (result === 'authenticated' || result === 'already-authenticated') {
+                return;
+            }
+
+            // Reconnection failed popup
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-reconnect-failed-title'],
+                    message: lang['alert-reconnect-failed-message'].replace('{}', result)
+                }
+            });
+        });
     };
 
     deleteAccount = () => {

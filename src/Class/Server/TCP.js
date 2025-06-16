@@ -12,8 +12,8 @@ import { RandomString } from 'Utils/Functions';
  * @typedef {import('react-native-pinned-ws').WebSocketCloseEvent} WebSocketCloseEvent
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPServerRequest} TCPServerRequest
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').TCPClientRequest} TCPClientRequest
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
  *
- * @typedef {'idle' | 'connecting' | 'connected' | 'disconnected' | 'ssl-pinning-error' | 'error'} TCPState
  * @typedef {{ protocol: string, host: string, port: number }} TCPSettings
  */
 
@@ -23,8 +23,8 @@ class TCP {
     /** @type {SSLWebSocket | null} */
     socket = null;
 
-    /** @type {DynamicVar<TCPState>} */
-    state = new DynamicVar(/** @type {TCPState} */ ('idle'));
+    /** @type {DynamicVar<ConnectionState>} */
+    state = new DynamicVar(/** @type {ConnectionState} */ ('idle'));
 
     /**
      * @type {TCPSettings | null}
@@ -56,7 +56,7 @@ class TCP {
 
     /**
      * @param {boolean} [connectAsNewUser] Whether to connect as a new user
-     * @returns {Promise<'connected' | 'already-connected' | 'ssl-pinning-error' | 'timeout' | 'error'>} Whether the connection was successful, or if it was already connected
+     * @returns {Promise<'connected' | 'already-connected' | 'wrong-ssl-pinning' | 'timeout' | 'error'>} Whether the connection was successful, or if it was already connected
      */
     Connect = async (connectAsNewUser = false) => {
         if (this.settings === null) {
@@ -107,7 +107,7 @@ class TCP {
         this.state.Set('connecting');
 
         return new Promise((resolve) => {
-            /** @param {'connected' | 'ssl-pinning-error' | 'timeout' | 'error'} state */
+            /** @param {'connected' | 'wrong-ssl-pinning' | 'timeout' | 'error'} state */
             const finish = (state) => {
                 clearTimeout(_timeout);
                 this.state.RemoveListener(_listenerId);
@@ -202,7 +202,7 @@ class TCP {
 
         // Check if this might be an SSL pinning error
         if (event?.errorType === 'ssl_pinning') {
-            this.state.Set('ssl-pinning-error');
+            this.state.Set('wrong-ssl-pinning');
         } else {
             this.state.Set('error');
         }

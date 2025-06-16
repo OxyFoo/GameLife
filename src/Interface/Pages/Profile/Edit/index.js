@@ -13,6 +13,7 @@ class ProfileEditor extends BackProfileEditor {
     render() {
         const lang = langManager.curr['profile'];
         const { username, title, age, stateDTP } = this.state;
+        const email = user.server2.userAuth.GetEmail() ?? 'N/A';
 
         // Date Time Picker
         const dtpStartDate = new Date(2000, 0, 1, 0, 0, 0, 0);
@@ -29,7 +30,7 @@ class ProfileEditor extends BackProfileEditor {
                     <Text style={styles.textMail} color='secondary'>
                         {lang['title-mail']}
                     </Text>
-                    <Text style={styles.textMail}>{user.server2.userAuth.email}</Text>
+                    <Text style={styles.textMail}>{email}</Text>
                 </View>
 
                 <View style={styles.row}>

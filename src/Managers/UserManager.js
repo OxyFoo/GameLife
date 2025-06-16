@@ -182,8 +182,6 @@ class UserManager {
             this.interface.console?.AddLog('warn', 'Not connected to the server, disconnecting locally');
         }
 
-        await this.server2.userAuth.Disconnect();
-
         await this.Clear();
 
         // Wait for the server to disconnect

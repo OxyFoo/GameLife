@@ -30,6 +30,7 @@ class Settings extends IUserClass {
 
     onboardingWatched = false;
     testMessageReaded = false;
+    waitingEmail = '';
     tutoFinished = false;
     questHeatMapIndex = 0;
 
@@ -43,6 +44,7 @@ class Settings extends IUserClass {
 
     Clear = () => {
         this.testMessageReaded = false;
+        this.waitingEmail = '';
         this.questHeatMapIndex = 0;
 
         this.regularNotificationsLastRefresh = 0;
@@ -71,6 +73,7 @@ class Settings extends IUserClass {
         }
         if (typeof settings.onboardingWatched !== 'undefined') this.onboardingWatched = settings.onboardingWatched;
         if (typeof settings.testMessageReaded !== 'undefined') this.testMessageReaded = settings.testMessageReaded;
+        if (typeof settings.waitingEmail !== 'undefined') this.waitingEmail = settings.waitingEmail;
         if (typeof settings.tutoFinished !== 'undefined') this.tutoFinished = settings.tutoFinished;
         if (typeof settings.questHeatMapIndex !== 'undefined') this.questHeatMapIndex = settings.questHeatMapIndex;
         if (typeof settings.morningNotifications !== 'undefined') {
@@ -95,6 +98,7 @@ class Settings extends IUserClass {
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
+            waitingEmail: this.waitingEmail,
             questHeatMapIndex: this.questHeatMapIndex,
             regularNotificationsLastRefresh: this.regularNotificationsLastRefresh,
             morningNotifications: this.morningNotifications,

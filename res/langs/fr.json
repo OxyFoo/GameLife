@@ -435,7 +435,7 @@
         "section-today-quests": "Mes quêtes",
         "section-my-todos": "Mes listes",
 
-        "btn-other-skills": "Toutes les comp.",
+        "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
 
         "chart-today-recap": "Activités sur 24h",
@@ -715,6 +715,7 @@
         "section-informations-preferences": "INFORMATIONS ET PRÉFÉRENCES",
         "section-notifications-consents": "NOTIFICATIONS ET CONSENTEMENT",
         "section-support-feedback": "SUPPORT ET RETOUR D’EXPÉRIENCE",
+        "section-offline-mode": "MODE HORS LIGNE",
         "section-security-privacy": "SÉCURITÉ ET CONFIDENTIALITÉ",
 
         "input-about": "À propos de nous",
@@ -727,8 +728,8 @@
         "input-beta": "Beta",
         "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
-        "input-disconnect-all": "Se déconnecter de tous les appareils",
-        "input-reconnect-tcp": "Se reconnecter au multijoueur",
+        "input-disconnect-other": "Se déconnecter des autres appareils",
+        "input-reconnect-tcp": "Se reconnecter au serveur",
         "input-tuto-again": "Revoir le tutoriel",
         "input-delete-account": "Supprimer le compte",
 
@@ -754,7 +755,9 @@
         "alert-consent-not-available-title": "Erreur",
         "alert-consent-not-available-message": "Les consents ne sont pas disponibles dans ta zone géographique.",
         "alert-consent-error-title": "Erreur",
-        "alert-consent-error-message": "Les consents ne sont pas disponibles pour le moment, réessaye plus tard."
+        "alert-consent-error-message": "Les consents ne sont pas disponibles pour le moment, réessaye plus tard.",
+        "alert-reconnect-failed-title": "Échec de la reconnexion",
+        "alert-reconnect-failed-message": "Une erreur est survenue lors de la reconnexion au serveur ({}), réessaye plus tard."
     },
 
     "shop": {

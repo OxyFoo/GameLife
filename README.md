@@ -14,25 +14,38 @@ En 3 mots : Gestion RPG IRL
 <details>
 <summary>React native packages</summary>
 
-* [React Native Reanimated](https://npmjs.com/package/react-native-reanimated)
-* [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
-* [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
-* [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
+### 🔒 Sécurité & Intégrité
+* [React Native Google Play Integrity](https://www.npmjs.com/package/react-native-google-play-integrity)
+* [React Native iOS AppAttest](https://www.npmjs.com/package/react-native-ios-appattest)
 * [React Native Keychain](https://npmjs.com/package/react-native-keychain)
+* [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
+* [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws) 📦
+
+### 💰 Monétisation & achats in-app
+* [React Native IAP](https://github.com/dooboolab-community/react-native-iap)
+* [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
+
+### 🎨 UI & graphisme
 * [React Native Svg](https://github.com/react-native-svg/react-native-svg)
-* [React Native Notifee](https://www.npmjs.com/package/@notifee/react-native)
+* [React Native Reanimated](https://npmjs.com/package/react-native-reanimated)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
-* [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
-* [React Native Permissions](https://www.npmjs.com/package/react-native-permissions)
-* [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
-* [React Native IAP](https://github.com/dooboolab-community/react-native-iap)
 * [React Native Community Blur](https://www.npmjs.com/package/@react-native-community/blur)
 * [React Native Masked View](https://www.npmjs.com/package/@react-native-masked-view/masked-view)
-* [React Native Config](https://www.npmjs.com/package/react-native-config)
+* [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
 * [React Native Gifted Charts](https://www.npmjs.com/package/react-native-gifted-charts)
 
-### Our packages
+### 💾 Stockage & état
+* [React Native Config](https://www.npmjs.com/package/react-native-config)
+* [React Native Device Info](https://github.com/react-native-device-info/react-native-device-info)
+* [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
+
+### ⚙️ Fonctionnalités natives
+* [React Native Notifee](https://www.npmjs.com/package/@notifee/react-native)
+* [React Native Permissions](https://www.npmjs.com/package/react-native-permissions)
+* [React Native App Control](https://github.com/Gerem66/react-native-app-control) 📦
+
+### 📦 Our packages
 * [OxyFoo GameLife Types](https://github.com/OxyFoo/GameLife-Types)
 * [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws)
 * [React Native App Control](https://github.com/Gerem66/react-native-app-control)

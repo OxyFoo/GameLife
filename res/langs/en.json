@@ -715,6 +715,7 @@
         "section-informations-preferences": "INFORMATION AND PREFERENCES",
         "section-notifications-consents": "NOTIFICATIONS AND CONSENTS",
         "section-support-feedback": "SUPPORT AND FEEDBACK",
+        "section-offline-mode": "OFFLINE MODE",
         "section-security-privacy": "SECURITY AND PRIVACY",
 
         "input-about": "About us",
@@ -727,8 +728,8 @@
         "input-beta": "Beta",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
-        "input-disconnect-all": "Disconnect from all devices",
-        "input-reconnect-tcp": "Reconnect to multiplayer",
+        "input-disconnect-other": "Disconnect from other devices",
+        "input-reconnect-tcp": "Reconnect to server",
         "input-tuto-again": "Review the tutorial",
         "input-delete-account": "Delete my account",
 
@@ -754,7 +755,9 @@
         "alert-consent-not-available-title": "Error",
         "alert-consent-not-available-message": "The consents are not available in your geographic area.",
         "alert-consent-error-title": "Error",
-        "alert-consent-error-message": "The consents are not available at the moment, please try again later."
+        "alert-consent-error-message": "The consents are not available at the moment, please try again later.",
+        "alert-reconnect-failed-title": "Reconnect Failed",
+        "alert-reconnect-failed-message": "An error occurred while reconnecting to the server ({}), please try again later."
     },
 
     "shop": {

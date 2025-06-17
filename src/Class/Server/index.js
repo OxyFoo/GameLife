@@ -80,6 +80,12 @@ class Server extends IUserClass {
      * @returns {Promise<'authenticated' | 'already-authenticated' | 'wrong-ssl-pinning' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
      */
     Initialize = async () => {
+        if (env.VPS_PROTOCOL === 'none') {
+            this.#user.interface.console?.AddLog('warn', 'Server connection is disabled, using local mode');
+            this.serverState.status = 'not-connected';
+            return 'not-connected';
+        }
+
         if (this.IsAuthenticated()) {
             return 'already-authenticated';
         }
@@ -89,9 +95,7 @@ class Server extends IUserClass {
         await this.userAuth.Mount();
 
         // 1. Connect to the server
-        if (env.VPS_PROTOCOL === 'none') {
-            this.#user.interface.console?.AddLog('warn', 'Server connection is disabled, using local mode');
-        } else if (!this.tcp.IsConnected()) {
+        if (!this.tcp.IsConnected()) {
             const isNewUser = this.userAuth.GetEmail() === null;
             const connectionStatus = await this.tcp.Connect(isNewUser);
             if (connectionStatus === 'wrong-ssl-pinning') {

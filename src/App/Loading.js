@@ -66,7 +66,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Not connected to the server and user not logged, go to the wait internet page
-    if (!user.server2.deviceAuth.IsAuthenticated() && !user.server2.userAuth.IsLogged()) {
+    const isServerEnabled = env.VPS_PROTOCOL !== 'none';
+    if (isServerEnabled && !user.server2.deviceAuth.IsAuthenticated() && !user.server2.userAuth.IsLogged()) {
         fe.ChangePage('waitinternet', { storeInHistory: false, transition: 'fromBottom' });
         return;
     }
@@ -79,7 +80,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Connection to the server is OK but not logged, go to the login page
-    const isServerEnabled = env.VPS_PROTOCOL !== 'none';
     if (isServerEnabled && !user.server2.userAuth.IsLogged() && !user.settings.waitingEmail) {
         fe.ChangePage('login', { storeInHistory: false });
         return;

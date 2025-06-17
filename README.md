@@ -1,15 +1,35 @@
 # GameLife
 
-[![GL Dev - Continuous Integration](https://github.com/OxyFoo/GameLife/actions/workflows/dev-ci.yml/badge.svg?branch=dev)](https://github.com/OxyFoo/GameLife/actions/workflows/dev-ci.yml)
-[![GL Test - CICD](https://github.com/OxyFoo/GameLife/actions/workflows/test-cicd.yml/badge.svg?branch=dev)](https://github.com/OxyFoo/GameLife/actions/workflows/test-cicd.yml)
+[![⚙️ Continuous Integration](https://github.com/OxyFoo/GameLife/actions/workflows/ci.yml/badge.svg)](https://github.com/OxyFoo/GameLife/actions/workflows/ci.yml)
+[![✋ GameLife - Continuous Delivery](https://github.com/OxyFoo/GameLife/actions/workflows/workflow-delivery.yml/badge.svg)](https://github.com/OxyFoo/GameLife/actions/workflows/workflow-delivery.yml)
 
-[![GL Prod - CICD](https://github.com/OxyFoo/GameLife/actions/workflows/prod-delivery.yml/badge.svg?branch=test)](https://github.com/OxyFoo/GameLife/actions/workflows/prod-delivery.yml)
-[![GL Prod - Deploy](https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml/badge.svg?branch=test)](https://github.com/OxyFoo/GameLife/actions/workflows/prod-deploy.yml)
+## 🎮 À propos du projet
 
-## Idée
-En 3 mots : Gestion RPG IRL
+GameLife est une application React Native qui transforme votre vie quotidienne en jeu de rôle. Les utilisateurs peuvent :
+- Suivre leurs activités et gagner de l'expérience
+- Développer des compétences dans différents domaines
+- Accomplir des quêtes et missions
+- Débloquer des achievements
+- Interagir avec d'autres utilisateurs en multijoueur
+- Personnaliser leur avatar et utiliser le shop in-app
 
-## Sources
+## 📖 Documentation
+
+Le projet inclut une documentation complète dans le dossier `docs/` :
+
+- **[STRUCTURE.md](docs/STRUCTURE.md)** : Architecture détaillée du projet et organisation des dossiers
+- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** : Guide complet de contribution (installation, standards, processus de développement)
+- **[GIT.md](docs/GIT.md)** : Workflow Git et gestion des branches
+- **[GUIDELINES.md](docs/GUIDELINES.md)** : Standards de code et conventions de nommage
+- **[ENVIRONNEMENTS.md](docs/ENVIRONNEMENTS.md)** : Configuration des environnements (dev, test, prod)
+
+## 🛠️ Technologies principales
+- React Native 0.79.2 + React 19.0.0
+- Architecture multi-plateforme (iOS/Android)
+- Multijoueur en temps réel via WebSocket
+- Synchronisation locale/cloud
+
+## 📚 Sources
 
 <details>
 <summary>React native packages</summary>

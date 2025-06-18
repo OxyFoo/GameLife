@@ -19,7 +19,6 @@ class App extends Component {
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
-        // @ts-ignore
         user.interface = this.ref.current?._public;
 
         // Open the test page
@@ -47,7 +46,6 @@ class App extends Component {
     }
 
     render() {
-        // @ts-ignore
         return <FlowEngine ref={this.ref} testID='FlowEngine' />
     }
 }

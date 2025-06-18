@@ -5,9 +5,9 @@ import styles from './style';
 import InputTextBack from './back';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from '../Text';
-import { Icon } from '../Icon';
-import { InputTextThin } from './Thin';
+import { Text } from '../Text'
+import { Icon } from 'Interface/Components'
+import { InputTextThin } from './Thin'
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

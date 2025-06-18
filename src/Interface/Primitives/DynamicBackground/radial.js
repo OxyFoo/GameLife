@@ -1,9 +1,9 @@
-import React from 'react';
-import { Animated, Dimensions, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react'
+import { Animated, Dimensions, StyleSheet } from 'react-native'
 
-import themeManager from 'Managers/ThemeManager';
-import { TimingAnimation } from 'Utils/Animations';
-import { Defs, RadialGradient, Rect, Stop, Svg } from 'react-native-svg';
+import themeManager from 'Managers/ThemeManager'
+import { TimingAnimation } from 'Utils/Animations'
+import { Defs, RadialGradient, Rect, Stop, Svg } from 'react-native-svg'
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -22,7 +22,7 @@ import { Defs, RadialGradient, Rect, Stop, Svg } from 'react-native-svg';
  * @param {number} [props.duration] Duration for each animation in ms
  * @returns {JSX.Element | null}
  */
-function Radial(props) {
+const Radial = (props) => {
     const screenSize = Dimensions.get('window');
 
     const size = {
@@ -30,9 +30,9 @@ function Radial(props) {
         height: screenSize.height
     };
 
-    const [animPos] = React.useState(new Animated.ValueXY({ x: 0, y: 0 }));
+    const [animPos] = useState(new Animated.ValueXY({ x: 0, y: 0 }));
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (props.animPath) {
             Animated.loop(
                 Animated.sequence(
@@ -61,6 +61,7 @@ function Radial(props) {
     }
 
     const opacity = props.opacity ?? 0.2;
+    const color = themeManager.GetColor(props?.color || 'main1');
 
     return (
         <Animated.View
@@ -89,7 +90,7 @@ function Radial(props) {
                     <RadialGradient id='grad'>
                         <Stop
                             offset='0%'
-                            stopColor={themeManager.GetColor(props?.color || 'main1')}
+                            stopColor={color}
                             stopOpacity={opacity}
                         />
                         <Stop offset='100%' stopColor='transparent' stopOpacity='0' />

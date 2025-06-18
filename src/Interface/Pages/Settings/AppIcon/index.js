@@ -10,17 +10,17 @@ import { Text, ComboBox, Button } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class SettingsBeta extends BackSettingsBeta {
-    render = () => {
+    render() {
         const { themeVariant } = this.state;
 
         const lang = langManager.curr['settings'];
 
-        const variants = themeManager.GetVariants();
+        const variants = themeManager.variants;
         const selectedVariantText = variants.find((item) => item.key === themeVariant)?.value;
 
         return (
             <View style={styles.page}>
-                <PageHeader title={lang['input-notifications']} onBackPress={this.onBack} />
+                <PageHeader title={lang['input-app-icon']} onBackPress={this.onBack} />
 
                 <Text style={styles.title}>[Thème des couleurs principales]</Text>
 

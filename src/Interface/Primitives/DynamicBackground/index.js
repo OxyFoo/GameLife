@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { useState } from 'react'
+import { View, StyleSheet } from 'react-native'
 
-import { Radial } from './radial';
+import { Radial } from './radial'
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -15,6 +15,7 @@ const PATH1 = [
     { x: 1, y: 0 },
     { x: 0, y: 0 }
 ];
+
 const PATH2 = [
     { x: 1, y: 0.5 },
     { x: 1, y: 1 },
@@ -35,7 +36,7 @@ const PATH2 = [
  * @returns {JSX.Element | null}
  */
 function DynamicBackground(props) {
-    const [layout, setLayout] = React.useState({ width: 0, height: 0 });
+    const [layout, setLayout] = useState({ width: 0, height: 0 });
 
     return (
         <View

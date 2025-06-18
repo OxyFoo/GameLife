@@ -4,6 +4,7 @@ import { Animated, View } from 'react-native';
 import styles from './style';
 
 import { Button, Icon, Text } from 'Interface/Components';
+import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('Ressources/Icons').IconsName} Icons
@@ -123,7 +124,7 @@ const NavButton = React.forwardRef(
                     ]}
                     pointerEvents='none'
                 >
-                    <Text style={styles.text} color='main1'>
+                    <Text style={styles.text} color={themeManager.selectedThemeVariant === 'volcanic' ? 'main2' : 'main1'}>
                         {text}
                     </Text>
                 </Animated.View>

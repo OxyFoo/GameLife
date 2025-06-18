@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 
 import IconCheckableBack from './back';
 
-import { Icon } from '../Icon';
-import { Button } from '../Button';
+import { Icon } from 'Interface/Components'
+import { Button } from 'Interface/Components';
 
 class IconCheckable extends IconCheckableBack {
     render() {

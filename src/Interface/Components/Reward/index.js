@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { Image, View } from 'react-native';
+import * as React from 'react'
+import { Image, View } from 'react-native'
 
-import styles from './style';
-import themeManager from 'Managers/ThemeManager';
+import styles from './style'
+import themeManager from 'Managers/ThemeManager'
 
-import IMG_CHESTS from 'Ressources/items/chests/chests';
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
+import IMG_CHESTS from 'Ressources/items/chests/chests'
+import { IMG_OX } from 'Ressources/items/currencies/currencies'
 
-import { Text } from '../Text';
-import { Icon } from '../Icon';
+import { Text } from '../Text'
+import { Icon } from 'Interface/Components'
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward

@@ -78,11 +78,35 @@ class Settings extends BackSettings {
                     {lang['input-ad-consent']}
                 </Button>
 
+                {/* Appearance page */}
+                <Text style={styles.title} color='border'>
+                    {lang['section-appearance']}
+                </Text>
+
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    icon='arrow-left'
+                    iconAngle={180}
+                    onPress={this.openTheme}
+                >
+                    {lang['input-theme']}
+                </Button>
+                <Button
+                    style={styles.margin}
+                    appearance='outline'
+                    icon='arrow-left'
+                    iconAngle={180}
+                    onPress={this.openAppIcon}
+                >
+                    {lang['input-app-icon']}
+                </Button>
+
+                {/* Reports page */}
                 <Text style={styles.title} color='border'>
                     {lang['section-support-feedback']}
                 </Text>
 
-                {/* Reports page */}
                 <Button
                     style={styles.margin}
                     appearance='outline'
@@ -91,15 +115,6 @@ class Settings extends BackSettings {
                     onPress={this.openReport}
                 >
                     {lang['input-report']}
-                </Button>
-                <Button
-                    style={styles.margin}
-                    appearance='outline'
-                    icon='arrow-left'
-                    iconAngle={180}
-                    onPress={this.openBeta}
-                >
-                    {lang['input-beta']}
                 </Button>
 
                 {/* Reconnect TCP */}

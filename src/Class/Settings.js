@@ -38,7 +38,10 @@ class Settings extends IUserClass {
     morningNotifications = true;
     eveningNotifications = true;
 
-    themeVariant = 0;
+    /**
+     * @type {import('Managers/ThemeManager').ThemeVariantAllKeys}
+     */
+    themeVariant = 'gameLife';
 
     musicLinks = DEFAULT_MUSIC_LINKS;
 
@@ -51,7 +54,7 @@ class Settings extends IUserClass {
         this.morningNotifications = true;
         this.eveningNotifications = true;
 
-        this.themeVariant = 0;
+        this.themeVariant = 'gameLife';
     };
 
     IndependentLoad = async () => {
@@ -63,11 +66,12 @@ class Settings extends IUserClass {
             if (debugIndex) {
                 this.user.interface.console?.EditLog(debugIndex, 'warn', 'Settings data: local load failed');
             }
+
             return;
         }
 
         if (typeof settings.lang !== 'undefined') this.SetLang(settings.lang, true);
-        if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
+        if (typeof settings.theme !== 'undefined') themeManager.setTheme(settings.theme);
         if (typeof settings.regularNotificationsLastRefresh !== 'undefined') {
             this.regularNotificationsLastRefresh = settings.regularNotificationsLastRefresh;
         }
@@ -95,6 +99,7 @@ class Settings extends IUserClass {
         const settings = {
             lang: langManager.currentLangageKey,
             theme: themeManager.selectedTheme,
+            themeVariant: this.themeVariant,
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
@@ -104,7 +109,6 @@ class Settings extends IUserClass {
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
             musicLinks: this.musicLinks,
-            themeVariant: this.themeVariant
         };
 
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local saving...');

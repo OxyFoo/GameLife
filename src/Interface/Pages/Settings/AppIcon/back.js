@@ -19,9 +19,9 @@ class BackSettingsBeta extends PageBase {
             return;
         }
 
-        themeManager.SetVariant(themeItem.key);
-        user.settings.themeVariant = themeItem.key;
-        await user.settings.IndependentSave();
+        // themeManager.setVariant(themeItem.key);
+        // user.settings.themeVariant = themeItem.key;
+        // await user.settings.IndependentSave();
 
         this.setState({ themeVariant: themeItem.key }, () => {
             user.interface.Reload();

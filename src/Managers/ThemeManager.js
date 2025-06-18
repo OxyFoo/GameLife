@@ -1,5 +1,19 @@
-import THEMES from 'Ressources/themes';
-import { MinMax } from 'Utils/Functions';
+import { Component, createRef } from 'react';
+import THEMES from 'Ressources/themes'
+import { MinMax } from 'Utils/Functions'
+
+const THEME_VARIANTS = {
+    ALL: {
+        gameLife: ['#9095FF', '#DBA1FF', '#8CF7FF'],
+        modern: ['#A1B2FF', '#D6A1FF', '#FFE9A1'],
+        analog: ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
+        naturalTones: ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
+        dynamic: ['#A1FFC3', '#A1DBFF', '#FFA1A1'],
+        volcanic: ['#FAD88E', '#FFB56C', '#FF9494'],
+    },
+    DARK: {},
+    LIGHT: {},
+}
 
 /**
  * @typedef {keyof typeof THEMES} ThemeName
@@ -7,39 +21,50 @@ import { MinMax } from 'Utils/Functions';
  * @typedef {keyof typeof THEMES[ThemeName]['Color']} ThemeColor
  * @typedef {keyof typeof THEMES[ThemeName]['Text']} ThemeText
  * @typedef {keyof typeof THEMES[ThemeName]['Rarity']} ThemeRarity
+ * @typedef {keyof typeof THEME_VARIANTS} ThemeVariantType
+ * @typedef {keyof typeof THEME_VARIANTS['ALL']} ThemeDefaultVariantKeys
+ * @typedef {keyof typeof THEME_VARIANTS['DARK']} ThemeVariantDarkKeys
+ * @typedef {keyof typeof THEME_VARIANTS['LIGHT']} ThemeVariantLightKeys
+ * @typedef {ThemeDefaultVariantKeys | ThemeVariantDarkKeys | ThemeVariantLightKeys} ThemeVariantAllKeys
  * @typedef {import('@oxyfoo/gamelife-types/Global/Rarities').Rarities} Rarities
  */
 
-const THEME_VARIANTS_NAMES = ['Défaut', 'Moderne', 'Analogique', 'Tons Naturels', 'Dynamique'];
-const THEME_VARIANTS = [
-    ['#9095FF', '#DBA1FF', '#8CF7FF'],
-    ['#A1B2FF', '#D6A1FF', '#FFE9A1'],
-    ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
-    ['#A1FFC3', '#A1DBFF', '#FFA1A1'],
-    ['#FF8CCF', '#FFDB8C', '#8CFFBF']
-];
+// const THEME_VARIANTS_NAMES = [
+//     'GameLife',
+//     'Moderne',
+//     'Analogique',
+//     'Tons Naturels',
+//     'Dynamique',
+//     '',
+// ];
 
 class ThemeManager {
-    /**
-     * Default value
-     * @type {ThemeName}
-     * @default 'Main'
-     */
-    selectedTheme = 'Main';
+    _listeners = new Map();
 
     /**
-     * @description Define the theme
-     * @param {ThemeName} theme
-     * @returns {boolean} True if theme is valid
+    * Default value
+    * @type {ThemeName}
+    * @default 'DARK'
+    */
+    selectedTheme = 'DARK';
+
+    /**
+     * @type {ThemeVariantAllKeys}
      */
-    SetTheme(theme) {
-        if (this.isTheme(theme)) {
-            this.selectedTheme = theme;
-            this.colors = THEMES[theme];
-            return true;
+    selectedThemeVariant = 'gameLife';
+
+    get variants() {
+        return {
+            ...THEME_VARIANTS.ALL,
+            ...THEME_VARIANTS[this.selectedTheme]
         }
-        return false;
-    }
+    };
+
+    get variantsKeys() {
+        return [
+            ...new Set(Object.keys(this.variants))
+        ]
+    };
 
     /**
      * @description Check if theme is valid
@@ -50,6 +75,37 @@ class ThemeManager {
     isTheme(theme) {
         return Object.keys(THEMES).includes(theme);
     }
+
+    /**
+     * @description Define the theme
+     * @param {ThemeName} themeName
+     * @returns {boolean} True if theme is valid
+     */
+    setTheme(themeName) {
+        if (this.isTheme(themeName)) {
+            this.selectedTheme = themeName;
+            this.colors = THEMES[themeName];
+            this._emit('theme', themeName);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /** @param {ThemeVariantAllKeys} variantName */
+    setVariant = (variantName) => {
+        this.selectedThemeVariant = variantName;
+
+        const variant = this.variants[this.selectedThemeVariant];
+        const [color1, color2, color3] = variant;
+
+        THEMES[this.selectedTheme].Color.main1 = color1;
+        THEMES[this.selectedTheme].Color.main2 = color2;
+        THEMES[this.selectedTheme].Color.main3 = color3;
+
+        this._emit('variant', variantName);
+    };
 
     /**
      * @description Get the theme color by name (or return the color if already hex color)
@@ -65,20 +121,20 @@ class ThemeManager {
         const param = { opacity: 1, themeName: null, type: null, ...params };
         const themeName = param.themeName || this.selectedTheme;
 
-        // Wrong theme selected
         if (!this.isTheme(themeName)) {
             return color;
         }
 
         const theme = THEMES[themeName];
-        /** @type {Array<keyof THEMES['Main']>} */ // @ts-ignore
-        const THEME_KEYS = Object.keys(theme);
+        const THEME_KEYS = /** @type {(ThemeTypes)[]} */ (Object.keys(theme));
 
         for (const type of THEME_KEYS) {
             const themeType = theme[type];
+
             if (param.type !== null && param.type !== type) {
                 continue;
             }
+
             if (!themeType.hasOwnProperty(color)) {
                 continue;
             }
@@ -104,6 +160,7 @@ class ThemeManager {
         if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) {
             return null;
         }
+
         if (opacity === 1) {
             return hexColor;
         }
@@ -112,6 +169,7 @@ class ThemeManager {
         if (hexOpacityColor.length === 1) {
             hexOpacityColor = '0' + hexOpacityColor;
         }
+
         return hexColor.substring(0, 7) + hexOpacityColor;
     }
 
@@ -122,6 +180,7 @@ class ThemeManager {
     GetRariryColors = (rarity) => {
         /** @type {string[]} */
         let colors = [];
+
         switch (rarity) {
             case 'common':
                 colors = [this.GetColor('common1'), this.GetColor('common2')];
@@ -139,6 +198,7 @@ class ThemeManager {
                 colors = [this.GetColor('legendary1'), this.GetColor('legendary2')];
                 break;
         }
+
         return colors;
     };
 
@@ -182,25 +242,65 @@ class ThemeManager {
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
-    GetVariants = () => {
-        return THEME_VARIANTS_NAMES.map((name, index) => ({
-            key: index,
-            value: name
-        }));
-    };
+    /**
+     * @param {string} eventName
+     * @param {Function} callback
+     */
+    subscribe(eventName, callback) {
+        if (!this._listeners.has(eventName)) {
+            this._listeners.set(eventName, new Set());
+        }
 
-    /** @param {number} index */
-    SetVariant = (index) => {
-        const variant = THEME_VARIANTS[index];
-        const [color1, color2, color3] = variant;
+        this._listeners.get(eventName).add(callback);
+    }
 
-        THEMES.Main.Color.main1 = color1;
-        THEMES.Main.Color.main2 = color2;
-        THEMES.Main.Color.main3 = color3;
-    };
+    /**
+     * @param {string} eventName
+     * @param {Function} callback
+     */
+    unsubscribe(eventName, callback) {
+        if (this._listeners.has(eventName)) {
+            this._listeners.get(eventName).delete(callback);
+        }
+    }
+
+    /**
+     * @param {string} eventName
+     * @param {any} value
+     */
+    _emit(eventName, value) {
+        if (this._listeners.has(eventName)) {
+            // @ts-ignore
+            this._listeners.get(eventName).forEach((cb) => cb(value));
+        }
+    }
 }
 
-const themeManager = new ThemeManager();
+export const themeManager = new ThemeManager();
 
-export default themeManager;
-export { ThemeManager };
+// @ts-ignore
+export const withThemeForceUpdate = (WrappedComponent) => {
+    return class extends Component {
+        wrappedRef = createRef();
+
+        onThemeChanged = () => {
+            if (this.wrappedRef.current) {
+                this.wrappedRef.current.forceUpdate();
+            }
+        };
+
+        componentDidMount() {
+            themeManager.subscribe('variant', this.onThemeChanged);
+        }
+
+        componentWillUnmount() {
+            themeManager.unsubscribe('variant', this.onThemeChanged);
+        }
+
+        render() {
+            return <WrappedComponent ref={this.wrappedRef} {...this.props} />;
+        }
+    };
+};
+
+export default themeManager

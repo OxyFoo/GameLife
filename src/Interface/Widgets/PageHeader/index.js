@@ -1,11 +1,12 @@
-import { View, TouchableOpacity } from 'react-native';
+import { Component } from 'react'
+import { View, TouchableOpacity } from 'react-native'
 
-import styles from './style';
-import langManager from 'Managers/LangManager';
+import langManager from 'Managers/LangManager'
 
-import { Text, Icon, Button } from 'Interface/Components';
-import themeManager from 'Managers/ThemeManager';
-import { Component } from 'react';
+import { Text, Icon, Button } from 'Interface/Components'
+import themeManager from 'Managers/ThemeManager'
+
+import styles from './style'
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -22,6 +23,7 @@ import { Component } from 'react';
  * @property {IconsName} [secondaryIcon]
  * @property {ThemeColor | ThemeText | 'gradient'} [secondaryIconColor]
  * @property {(event: GestureResponderEvent) => void} [onSecondaryIconPress]
+ * @property {boolean} [isBeta]
  */
 
 /** @type {PageHeaderPropsType} */

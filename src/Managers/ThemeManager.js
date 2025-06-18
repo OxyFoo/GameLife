@@ -7,11 +7,13 @@ const THEME_VARIANTS = {
         gameLife: ['#9095FF', '#DBA1FF', '#8CF7FF'],
         modern: ['#A1B2FF', '#D6A1FF', '#FFE9A1'],
         analog: ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
-        naturalTones: ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
-        dynamic: ['#A1FFC3', '#A1DBFF', '#FFA1A1'],
-        volcanic: ['#FAD88E', '#FFB56C', '#FF9494'],
+        naturalTones: ['#A1FFC3', '#A1DBFF', '#FFA1A1'],
+        dynamic: ['#FF8CCF', '#FFDB8C', '#8CFFBF'],
     },
-    DARK: {},
+    DARK: {
+        volcanic: ['#FAD88E', '#FFB56C', '#FF9494'],
+        abyss: ['#4BDEFF', '#82AAFF', '#636BFF']
+    },
     LIGHT: {},
 }
 
@@ -28,15 +30,6 @@ const THEME_VARIANTS = {
  * @typedef {ThemeDefaultVariantKeys | ThemeVariantDarkKeys | ThemeVariantLightKeys} ThemeVariantAllKeys
  * @typedef {import('@oxyfoo/gamelife-types/Global/Rarities').Rarities} Rarities
  */
-
-// const THEME_VARIANTS_NAMES = [
-//     'GameLife',
-//     'Moderne',
-//     'Analogique',
-//     'Tons Naturels',
-//     'Dynamique',
-//     '',
-// ];
 
 class ThemeManager {
     _listeners = new Map();
@@ -95,9 +88,15 @@ class ThemeManager {
 
     /** @param {ThemeVariantAllKeys} variantName */
     setVariant = (variantName) => {
+        if (!this.variantsKeys.includes(variantName)) {
+            variantName = 'gameLife';
+        }
+
         this.selectedThemeVariant = variantName;
 
         const variant = this.variants[this.selectedThemeVariant];
+        if (!variant) return;
+
         const [color1, color2, color3] = variant;
 
         THEMES[this.selectedTheme].Color.main1 = color1;
@@ -112,13 +111,21 @@ class ThemeManager {
      * @param {ThemeColor | ThemeText | ThemeRarity} color Color name or hexadecimal color
      * @param {Object} [params] Parameters
      * @param {number} [params.opacity=1] Opacity of color, between 0 and 1
+     * @param {number} [params.luminance=1] Luminance of color, between 0 and 1
      * @param {ThemeName} [params.themeName] Theme name (if not defined, use current theme)
      * @param {ThemeTypes} [params.type] Type of theme (if not defined, defined automatically)
      * @returns {string} Hex color (or same color than input if not found and not hex)
      */
     GetColor(color, params = {}) {
         // Define parameters
-        const param = { opacity: 1, themeName: null, type: null, ...params };
+        const param = {
+            opacity: 1,
+            luminance: 1,
+            themeName: null,
+            type: null,
+            ...params
+        };
+
         const themeName = param.themeName || this.selectedTheme;
 
         if (!this.isTheme(themeName)) {
@@ -139,11 +146,14 @@ class ThemeManager {
                 continue;
             }
 
-            /** @type {string} */ // @ts-ignore
+            /** @type {color} */ // @ts-ignore
             const _color = themeType[color];
-            const newColor = this.ApplyOpacity(_color, param.opacity);
-            if (newColor !== null) {
-                return newColor;
+
+            let _newColor = this.ApplyOpacity(_color, param.opacity);
+            _newColor = this.applyLuminance(_color, param.luminance);
+
+            if (_newColor !== null) {
+                return _newColor;
             }
         }
 
@@ -171,6 +181,35 @@ class ThemeManager {
         }
 
         return hexColor.substring(0, 7) + hexOpacityColor;
+    }
+
+    /**
+     * @description Apply luminance to a color (hex to hex)
+     * @param {string} hexColor Hex color
+     * @param {number} [luminance=1] Luminance of color, between 0 and 1
+     * @returns {string?} Hex color (or null if not hex color)
+     */
+    applyLuminance(hexColor, luminance = 1) {
+        if (!hexColor || !hexColor.startsWith('#') || hexColor.length < 4) {
+            return null;
+        }
+
+        if (luminance === 1) {
+            return hexColor;
+        }
+
+        let hex = hexColor.slice(1);
+        if (hex.length === 3) {
+            hex = hex.split('').map(char => char + char).join('');
+        }
+
+        const newColor = [0, 1, 2].map(i => {
+            const channel = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+            const adjusted = Math.min(255, Math.max(0, Math.round(channel * luminance)));
+            return adjusted.toString(16).padStart(2, '0');
+        }).join('');
+
+        return `#${newColor}`;
     }
 
     /**

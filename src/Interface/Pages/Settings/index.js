@@ -92,15 +92,6 @@ class Settings extends BackSettings {
                 >
                     {lang['input-theme']}
                 </Button>
-                <Button
-                    style={styles.margin}
-                    appearance='outline'
-                    icon='arrow-left'
-                    iconAngle={180}
-                    onPress={this.openAppIcon}
-                >
-                    {lang['input-app-icon']}
-                </Button>
 
                 {/* Reports page */}
                 <Text style={styles.title} color='border'>

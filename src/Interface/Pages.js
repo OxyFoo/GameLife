@@ -22,7 +22,6 @@ const PAGES = {
     report:                 require('./Pages/Report').default,
     settings:               require('./Pages/Settings').default,
     settings_theme:         require('./Pages/Settings/Theme').default,
-    settings_app_icon:      require('./Pages/Settings/AppIcon').default,
     settings_notifications: require('./Pages/Settings/Notifications').default,
     shop:                   require('./Pages/Shop').default,
     skill:                  require('./Pages/Skill').default,

@@ -8,10 +8,6 @@ import themeManager from 'Managers/ThemeManager'
  */
 
 export default class BackSettingsTheme extends PageBase {
-    state = {
-        themeVariant: user.settings.themeVariant
-    };
-
     /** @param {string | null} themeItem */
     onSelectVariantTheme = async (themeItem) => {
         if (themeItem === null || typeof themeItem !== 'string') {
@@ -23,10 +19,7 @@ export default class BackSettingsTheme extends PageBase {
         // @ts-ignore
         user.settings.themeVariant = themeItem;
         await user.settings.IndependentSave();
-
-        this.setState({ themeVariant: themeItem }, () => {
-            user.interface.Reload();
-        });
+        user.interface.Reload();
     };
 
     onBack = () => {

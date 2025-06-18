@@ -6,6 +6,16 @@
         "Light": "Clair"
     },
 
+    "theme-variants": {
+        "gameLife": "GameLife",
+        "modern": "Moderne",
+        "analog": "Analogique",
+        "naturalTones": "Tons Naturels",
+        "dynamic": "Dynamique",
+        "volcanic": "Volcanique",
+        "abyss": "Abyssal"
+    },
+
     "notifications": {
         "title": "Notifications générales",
         "notif-user": "Notifications utilisateur",
@@ -722,7 +732,6 @@
         "input-about": "À propos de nous",
         "input-langage": "Langues",
         "input-theme": "Thèmes",
-        "input-app-icon": "Icône de l'appli",
         "input-notifications": "Notifications",
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",

@@ -113,10 +113,9 @@ class PieChart extends BackPieChart {
                         data={data}
                         donut
                         showGradient
-                        sectionAutoFocus
                         radius={50}
-                        innerRadius={30}
-                        innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
+                        innerRadius={35}
+                        innerCircleColor={`${themeManager.GetColor('main1')}`}
                         centerLabelComponent={this.renderCenterLabelComponentFullDay}
                     />
                 </View>

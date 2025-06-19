@@ -13,7 +13,6 @@ class TodayPieChart extends TodayPieChartBack {
     render() {
         const lang = langManager.curr['home'];
 
-        let headerText = lang['chart-today-recap'];
 
         // If there is no focused activity or no data to display, show add activity button
         if (!this.state.focusedActivity || !this.state.dataToDisplay) {
@@ -44,22 +43,19 @@ class TodayPieChart extends TodayPieChartBack {
         return (
             <Button
                 style={[styles.container, this.props.style]}
-                appearance='uniform'
-                color='backgroundTransparent'
+                appearance='normal'
+                gradientColors={[
+                    `${themeManager.GetColor('main1')}1F`,  // main1 12% opacity (1F hex ≈ 12%)
+                    `${themeManager.GetColor('main1')}73` // main1 45% opacity (73 hex ≈ 45%)
+                ]}
                 onLayout={this.onLayout}
             >
-                {/* Top row view */}
-                <View style={styles.flexBetween}>
-                    <Text style={styles.headerText}>{headerText}</Text>
-                </View>
-
                 {/* Pie chart view */}
                 <PieChart
                     data={this.state.dataToDisplay}
                     //dataFullDay={this.state.dataToDisplayFullDay}
                     focusedActivity={this.state.focusedActivity}
                     focusedActivityFullDay={this.state.focusedActivityFullDay}
-                    //layoutWidth={this.state.layoutWidth - 32}
                 />
             </Button>
         );

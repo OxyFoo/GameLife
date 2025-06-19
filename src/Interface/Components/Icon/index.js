@@ -1,13 +1,13 @@
-import { View, TouchableOpacity } from 'react-native'
-import { SvgXml } from 'react-native-svg'
-import MaskedView from '@react-native-masked-view/masked-view'
+import { View, TouchableOpacity } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import MaskedView from '@react-native-masked-view/masked-view';
 
-import IconBack from './back'
-import { themeManager, withThemeForceUpdate } from 'Managers/ThemeManager'
+import IconBack from './back';
+import { themeManager, withThemeForceUpdate } from 'Managers/ThemeManager';
 
-import SVGIcons from 'Ressources/Icons'
-import Base64 from 'Utils/Base64'
-import { Gradient } from '../../Primitives'
+import SVGIcons from 'Ressources/Icons';
+import Base64 from 'Utils/Base64';
+import { Gradient } from '../../Primitives';
 
 class Icon extends IconBack {
     render() {

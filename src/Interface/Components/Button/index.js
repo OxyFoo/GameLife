@@ -1,14 +1,14 @@
-import { View, Animated } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
-import MaskedView from '@react-native-masked-view/masked-view'
+import { View, Animated } from 'react-native';
+import { BlurView } from '@react-native-community/blur';
+import MaskedView from '@react-native-masked-view/masked-view';
 
-import styles from './style'
-import ButtonBack from './back'
-import { themeManager, withThemeForceUpdate } from 'Managers/ThemeManager'
+import styles from './style';
+import ButtonBack from './back';
+import { themeManager, withThemeForceUpdate } from 'Managers/ThemeManager';
 
-import { Text } from '../Text'
-import { Icon } from 'Interface/Components'
-import { Gradient, Ripple } from 'Interface/Primitives'
+import { Text } from '../Text';
+import { Icon } from 'Interface/Components';
+import { Gradient, Ripple } from 'Interface/Primitives';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

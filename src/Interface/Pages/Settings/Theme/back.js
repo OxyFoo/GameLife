@@ -1,7 +1,7 @@
-import user from 'Managers/UserManager'
+import user from 'Managers/UserManager';
 
-import PageBase from 'Interface/FlowEngine/PageBase'
-import themeManager from 'Managers/ThemeManager'
+import PageBase from 'Interface/FlowEngine/PageBase';
+import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
@@ -23,6 +23,6 @@ export default class BackSettingsTheme extends PageBase {
     };
 
     onBack = () => {
-        user.interface.BackHandle()
+        user.interface.BackHandle();
     };
 }

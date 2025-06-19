@@ -1,15 +1,15 @@
-import * as React from 'react'
-import { View, Animated, TouchableHighlight, FlatList, Modal } from 'react-native'
+import * as React from 'react';
+import { View, Animated, TouchableHighlight, FlatList, Modal } from 'react-native';
 
-import styles from './style'
-import ComboBoxBack from './back'
-import themeManager from 'Managers/ThemeManager'
-import langManager from 'Managers/LangManager'
+import styles from './style';
+import ComboBoxBack from './back';
+import themeManager from 'Managers/ThemeManager';
+import langManager from 'Managers/LangManager';
 
-import { Text } from '../Text'
-import Button from '../Button'
-import { Icon } from 'Interface/Components'
-import { InputText } from '../InputText'
+import { Text } from '../Text';
+import Button from '../Button';
+import { Icon } from 'Interface/Components';
+import { InputText } from '../InputText';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

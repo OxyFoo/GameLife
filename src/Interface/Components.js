@@ -1,31 +1,31 @@
-export { ActivityTimeline } from './Components/ActivityTimeline'
-export { CheckBox } from './Components/CheckBox'
-export { ComboBox } from './Components/ComboBox'
-export { Container } from './Components/Container'
-export { Digit } from './Components/Digit'
-export { HeatMap } from './Components/HeatMap'
-export { IconCheckable } from './Components/IconCheckable'
-export { InputText } from './Components/InputText'
-export { KeyboardSpacerView } from './Components/KeyboardSpacerView'
-export { KPI } from './Components/KPI'
-export { LineChartSvg } from './Components/LineChartSvg'
-export { ProgressBar } from './Components/ProgressBar'
-export { Reward } from './Components/Reward'
-export { Separator } from './Components/Separator'
-export { Swiper } from './Components/Swiper'
-export { Switch } from './Components/Switch'
-export { SwitchText } from './Components/SwitchText'
-export { Text } from './Components/Text'
-export { UserOnlineElement } from './Components/UserOnlineElement'
-export { Zap } from './Components/Zap'
+export { ActivityTimeline } from './Components/ActivityTimeline';
+export { CheckBox } from './Components/CheckBox';
+export { ComboBox } from './Components/ComboBox';
+export { Container } from './Components/Container';
+export { Digit } from './Components/Digit';
+export { HeatMap } from './Components/HeatMap';
+export { IconCheckable } from './Components/IconCheckable';
+export { InputText } from './Components/InputText';
+export { KeyboardSpacerView } from './Components/KeyboardSpacerView';
+export { KPI } from './Components/KPI';
+export { LineChartSvg } from './Components/LineChartSvg';
+export { ProgressBar } from './Components/ProgressBar';
+export { Reward } from './Components/Reward';
+export { Separator } from './Components/Separator';
+export { Swiper } from './Components/Swiper';
+export { Switch } from './Components/Switch';
+export { SwitchText } from './Components/SwitchText';
+export { Text } from './Components/Text';
+export { UserOnlineElement } from './Components/UserOnlineElement';
+export { Zap } from './Components/Zap';
 
-import Button from './Components/Button'
-import Icon from './Components/Icon'
+import Button from './Components/Button';
+import Icon from './Components/Icon';
 
 // TODO: Reimplements old components
-import Frame from './OldComponents/Character/Frame'
-import Character from './OldComponents/Character/Character'
-import PieChart from './OldComponents/PieChart'
-import StreakChart from './OldComponents/StreakChart'
+import Frame from './OldComponents/Character/Frame';
+import Character from './OldComponents/Character/Character';
+import PieChart from './OldComponents/PieChart';
+import StreakChart from './OldComponents/StreakChart';
 
-export { Icon, Button, Frame, Character, PieChart, StreakChart }
+export { Icon, Button, Frame, Character, PieChart, StreakChart };

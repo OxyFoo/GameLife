@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { Animated, View, TextInput } from 'react-native'
+import * as React from 'react';
+import { Animated, View, TextInput } from 'react-native';
 
-import styles from './style'
-import InputTextThinBack from './back'
-import themeManager from 'Managers/ThemeManager'
+import styles from './style';
+import InputTextThinBack from './back';
+import themeManager from 'Managers/ThemeManager';
 
-import { Icon } from 'Interface/Components'
+import { Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

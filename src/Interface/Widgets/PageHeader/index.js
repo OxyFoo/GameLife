@@ -1,12 +1,12 @@
-import { Component } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { Component } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 
-import langManager from 'Managers/LangManager'
+import langManager from 'Managers/LangManager';
 
-import { Text, Icon, Button } from 'Interface/Components'
-import themeManager from 'Managers/ThemeManager'
+import { Text, Icon, Button } from 'Interface/Components';
+import themeManager from 'Managers/ThemeManager';
 
-import styles from './style'
+import styles from './style';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -34,7 +34,7 @@ const PageHeaderProps = {
     secondaryIcon: 'info-circle-outline',
     secondaryIconColor: 'white',
     onSecondaryIconPress: undefined,
-    isBeta: false,
+    isBeta: false
 };
 
 class PageHeader extends Component {
@@ -60,16 +60,18 @@ class PageHeader extends Component {
                         angle={-90}
                     />
 
-                    {
-                        title === null
-                            ? <Text fontSize={16}>{text}</Text>
-                            : (
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.text}>{text}</Text>
-                                    { isBeta && <Text style={[styles.beta, { backgroundColor: themeManager.GetColor('main3') }]}>BETA</Text> }
-                                </View>
-                            )
-                    }
+                    {title === null ? (
+                        <Text fontSize={16}>{text}</Text>
+                    ) : (
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>{text}</Text>
+                            {isBeta && (
+                                <Text style={[styles.beta, { backgroundColor: themeManager.GetColor('main3') }]}>
+                                    BETA
+                                </Text>
+                            )}
+                        </View>
+                    )}
                 </TouchableOpacity>
                 {onHelpPress && (
                     <Button

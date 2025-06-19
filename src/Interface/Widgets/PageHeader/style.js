@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
 
         elevation: 1000,
-        zIndex: 1000,
+        zIndex: 1000
     },
     headerWithIcon: {
         marginTop: 28
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     beta: {
         fontSize: 14,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         color: '#505050',
         paddingHorizontal: 6,
         paddingVertical: 4,
-        borderRadius: 5,
+        borderRadius: 5
     },
     secondaryButton: {
         width: 'auto',

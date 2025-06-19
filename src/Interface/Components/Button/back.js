@@ -109,7 +109,7 @@ class ButtonBack extends React.Component {
     /** @param {GestureResponderEvent} event */
     onTouchStart = (event) => {
         this.props.onTouchStart(event);
-        
+
         const { pageX, pageY, locationX, locationY } = event.nativeEvent;
         if (this.props.enabled) {
             this.rippleRef.current?.Press(locationX, locationY, this.size);

@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component } from 'react';
 
 /**
  * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
@@ -57,7 +57,7 @@ class PageBase extends Component {
         this.refresh = false;
         this.componentDidUnfocused();
     }
-    
+
     /**
      * @description Called when page is already mounted and focused
      * @param {this['props']} props

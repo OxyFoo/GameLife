@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { View, Animated } from 'react-native'
+import * as React from 'react';
+import { View, Animated } from 'react-native';
 
-import styles from './style'
-import ContainerBack from './back'
-import themeManager from 'Managers/ThemeManager'
+import styles from './style';
+import ContainerBack from './back';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text } from 'Interface/Components/Text'
-import { Icon } from 'Interface/Components'
-import { Button } from 'Interface/Components'
-import { Gradient } from 'Interface/Primitives'
+import { Text } from 'Interface/Components/Text';
+import { Icon } from 'Interface/Components';
+import { Button } from 'Interface/Components';
+import { Gradient } from 'Interface/Primitives';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

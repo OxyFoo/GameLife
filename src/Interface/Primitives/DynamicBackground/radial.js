@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import { Animated, Dimensions, StyleSheet } from 'react-native'
+import { useState, useEffect } from 'react';
+import { Animated, Dimensions, StyleSheet } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager'
-import { TimingAnimation } from 'Utils/Animations'
-import { Defs, RadialGradient, Rect, Stop, Svg } from 'react-native-svg'
+import themeManager from 'Managers/ThemeManager';
+import { TimingAnimation } from 'Utils/Animations';
+import { Defs, RadialGradient, Rect, Stop, Svg } from 'react-native-svg';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -88,11 +88,7 @@ const Radial = (props) => {
             >
                 <Defs>
                     <RadialGradient id='grad'>
-                        <Stop
-                            offset='0%'
-                            stopColor={color}
-                            stopOpacity={opacity}
-                        />
+                        <Stop offset='0%' stopColor={color} stopOpacity={opacity} />
                         <Stop offset='100%' stopColor='transparent' stopOpacity='0' />
                     </RadialGradient>
                 </Defs>
@@ -100,7 +96,7 @@ const Radial = (props) => {
             </Svg>
         </Animated.View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     parent: {

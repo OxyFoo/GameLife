@@ -1,6 +1,7 @@
 import { Component, createRef } from 'react';
-import THEMES from 'Ressources/themes'
-import { MinMax } from 'Utils/Functions'
+
+import THEMES from 'Ressources/themes';
+import { MinMax } from 'Utils/Functions';
 
 const THEME_VARIANTS = {
     ALL: {
@@ -8,14 +9,14 @@ const THEME_VARIANTS = {
         modern: ['#A1B2FF', '#D6A1FF', '#FFE9A1'],
         analog: ['#B6B8FF', '#FFB8DB', '#B8FFFF'],
         naturalTones: ['#A1FFC3', '#A1DBFF', '#FFA1A1'],
-        dynamic: ['#FF8CCF', '#FFDB8C', '#8CFFBF'],
+        dynamic: ['#FF8CCF', '#FFDB8C', '#8CFFBF']
     },
     DARK: {
         volcanic: ['#FAD88E', '#FFB56C', '#FF9494'],
         abyss: ['#4BDEFF', '#82AAFF', '#636BFF']
     },
-    LIGHT: {},
-}
+    LIGHT: {}
+};
 
 /**
  * @typedef {keyof typeof THEMES} ThemeName
@@ -35,29 +36,35 @@ class ThemeManager {
     _listeners = new Map();
 
     /**
-    * Default value
-    * @type {ThemeName}
-    * @default 'DARK'
-    */
+     * @description Default value of theme
+     * @type {ThemeName}
+     * @default 'DARK'
+     */
     selectedTheme = 'DARK';
 
     /**
+     * @description Default value for variant of theme
      * @type {ThemeVariantAllKeys}
+     * @default 'gameLife'
      */
     selectedThemeVariant = 'gameLife';
 
+    /**
+     * @description All variants available via the selected theme
+     */
     get variants() {
         return {
             ...THEME_VARIANTS.ALL,
             ...THEME_VARIANTS[this.selectedTheme]
-        }
-    };
+        };
+    }
 
+    /**
+     * @description All variant keys available through the selected theme
+     */
     get variantsKeys() {
-        return [
-            ...new Set(Object.keys(this.variants))
-        ]
-    };
+        return /** @type {(keyof this['variants'])[]} */ ([...new Set(Object.keys(this.variants))]);
+    }
 
     /**
      * @description Check if theme is valid
@@ -146,8 +153,7 @@ class ThemeManager {
                 continue;
             }
 
-            /** @type {color} */ // @ts-ignore
-            const _color = themeType[color];
+            const _color = /** @type {any} */ (themeType)[color];
 
             let _newColor = this.ApplyOpacity(_color, param.opacity);
             _newColor = this.applyLuminance(_color, param.luminance);
@@ -200,14 +206,19 @@ class ThemeManager {
 
         let hex = hexColor.slice(1);
         if (hex.length === 3) {
-            hex = hex.split('').map(char => char + char).join('');
+            hex = hex
+                .split('')
+                .map((char) => char + char)
+                .join('');
         }
 
-        const newColor = [0, 1, 2].map(i => {
-            const channel = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-            const adjusted = Math.min(255, Math.max(0, Math.round(channel * luminance)));
-            return adjusted.toString(16).padStart(2, '0');
-        }).join('');
+        const newColor = [0, 1, 2]
+            .map((i) => {
+                const channel = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+                const adjusted = Math.min(255, Math.max(0, Math.round(channel * luminance)));
+                return adjusted.toString(16).padStart(2, '0');
+            })
+            .join('');
 
         return `#${newColor}`;
     }
@@ -317,7 +328,11 @@ class ThemeManager {
 
 export const themeManager = new ThemeManager();
 
-// @ts-ignore
+/**
+ * @deprecated
+ * @description Utility function to force component reload when a variant theme changes
+ * @param {any} WrappedComponent
+ */
 export const withThemeForceUpdate = (WrappedComponent) => {
     return class extends Component {
         wrappedRef = createRef();
@@ -342,4 +357,4 @@ export const withThemeForceUpdate = (WrappedComponent) => {
     };
 };
 
-export default themeManager
+export default themeManager;

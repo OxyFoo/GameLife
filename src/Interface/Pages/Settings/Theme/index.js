@@ -1,12 +1,12 @@
-import { View } from 'react-native'
+import { View } from 'react-native';
 
-import styles from './style'
-import BackSettingsTheme from './back'
+import styles from './style';
+import BackSettingsTheme from './back';
 
-import { PageHeader } from 'Interface/Widgets'
-import SelectTheme from 'Interface/Components/SelectTheme'
+import { PageHeader } from 'Interface/Widgets';
+import SelectTheme from 'Interface/Components/SelectTheme';
 
-import langManager from 'Managers/LangManager'
+import langManager from 'Managers/LangManager';
 
 export default class SettingsTheme extends BackSettingsTheme {
     render() {
@@ -14,16 +14,10 @@ export default class SettingsTheme extends BackSettingsTheme {
 
         return (
             <View style={styles.page}>
-                <PageHeader
-                    title={lang['input-theme']}
-                    onBackPress={this.onBack}
-                    isBeta={true}
-                />
+                <PageHeader title={lang['input-theme']} onBackPress={this.onBack} isBeta={true} />
 
-                <SelectTheme
-                    onSelect={this.onSelectVariantTheme}
-                />
+                <SelectTheme onSelect={this.onSelectVariantTheme} />
             </View>
         );
-    };
+    }
 }

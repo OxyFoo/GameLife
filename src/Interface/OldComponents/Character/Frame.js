@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-import Svg from 'react-native-svg'
+import * as React from 'react';
+import { View, StyleSheet } from 'react-native';
+import Svg from 'react-native-svg';
 
-import themeManager from 'Managers/ThemeManager'
-import { Sleep } from 'Utils/Functions'
+import themeManager from 'Managers/ThemeManager';
+import { Sleep } from 'Utils/Functions';
 
-import { Icon } from 'Interface/Components'
+import { Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

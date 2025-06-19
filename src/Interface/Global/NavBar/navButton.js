@@ -124,7 +124,10 @@ const NavButton = React.forwardRef(
                     ]}
                     pointerEvents='none'
                 >
-                    <Text style={styles.text} color={themeManager.selectedThemeVariant === 'volcanic' ? 'main2' : 'main1'}>
+                    <Text
+                        style={styles.text}
+                        color={themeManager.selectedThemeVariant === 'volcanic' ? 'main2' : 'main1'}
+                    >
                         {text}
                     </Text>
                 </Animated.View>

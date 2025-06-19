@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 
-import { Radial } from './radial'
+import { Radial } from './radial';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle

@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { Animated } from 'react-native'
-import MaskedView from '@react-native-masked-view/masked-view'
+import * as React from 'react';
+import { Animated } from 'react-native';
+import MaskedView from '@react-native-masked-view/masked-view';
 
-import styles from './style'
-import BackNotificationsInApp from './back'
-import themeManager from 'Managers/ThemeManager'
+import styles from './style';
+import BackNotificationsInApp from './back';
+import themeManager from 'Managers/ThemeManager';
 
-import { Text } from '../../Components/Text'
-import { Icon } from 'Interface/Components'
-import { Button } from 'Interface/Components'
+import { Text } from '../../Components/Text';
+import { Icon } from 'Interface/Components';
+import { Button } from 'Interface/Components';
 
 class NotificationsInAppButton extends BackNotificationsInApp {
     render() {

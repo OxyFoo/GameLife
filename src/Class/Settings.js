@@ -108,7 +108,7 @@ class Settings extends IUserClass {
             regularNotificationsLastRefresh: this.regularNotificationsLastRefresh,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
-            musicLinks: this.musicLinks,
+            musicLinks: this.musicLinks
         };
 
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local saving...');

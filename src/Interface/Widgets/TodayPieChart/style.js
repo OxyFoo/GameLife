@@ -7,7 +7,10 @@ const styles = StyleSheet.create({
 
         flexDirection: 'column',
         alignItems: 'flex-start',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+
+        paddingHorizontal: 8,
+        paddingVertical: 12
     },
     flexBetween: {
         display: 'flex',

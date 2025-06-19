@@ -17,7 +17,6 @@ import { GetLocalTime } from 'Utils/Time';
  *
  * @typedef {object} UpdatingData
  * @property {number} id
- * @property {string} name
  * @property {number} value
  * @property {number} valueMinutes
  * @property {string} color
@@ -97,7 +96,6 @@ class TodayPieChartBack extends React.Component {
             id: 0,
             value: 100 - pourcent,
             valueMinutes: updatingData.reduce((acc, cur) => acc + cur.valueMinutes, 0),
-            name: lang['chart-total-text'],
             color: '#130f40',
             gradientCenterColor: '#130f40',
             focused: false

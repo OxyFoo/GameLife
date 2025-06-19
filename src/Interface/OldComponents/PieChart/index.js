@@ -89,10 +89,7 @@ class PieChart extends BackPieChart {
 
         return (
             <View style={styles.centerLabel}>
-                <Text fontSize={10} color='white'>
-                    {lang['chart-total-text']}
-                </Text>
-                <Text fontSize={12} color='white'>
+                <Text fontSize={16} color='white'>
                     {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
                 </Text>
             </View>
@@ -114,7 +111,7 @@ class PieChart extends BackPieChart {
                         donut
                         showGradient
                         radius={50}
-                        innerRadius={35}
+                        innerRadius={38}
                         innerCircleColor={`${themeManager.GetColor('main1')}`}
                         centerLabelComponent={this.renderCenterLabelComponentFullDay}
                     />

@@ -47,5 +47,16 @@
     <string>Apple Distribution</string>
     <key>signingStyle</key>
     <string>manual</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>googleSignIn</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.911058983753-eh98h1pefjl7dgflt8p1q264m7i05ou3</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

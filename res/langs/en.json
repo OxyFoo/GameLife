@@ -478,6 +478,7 @@
         "input-cgu-text": "I have read and agree to the %terms and conditions%.",
         "button-login-text": "Next",
         "button-signin-text": "Signin",
+        "button-google-signin": "Sign in with Google",
 
         "error-login-nonmail": "Please enter a valid email address.",
         "error-signin-server": "An error has occurred. ({})",

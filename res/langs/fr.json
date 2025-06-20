@@ -478,6 +478,7 @@
         "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
         "button-login-text": "Suivant",
         "button-signin-text": "S'inscrire",
+        "button-google-signin": "Se connecter avec Google",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
         "error-signin-server": "Une erreur est survenue. ({})",

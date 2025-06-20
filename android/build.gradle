@@ -9,6 +9,9 @@ buildscript {
 
         androidXAnnotation = "1.1.0"
         androidXBrowser = "1.0.0"
+
+        // With Firebase
+        //googlePlayServicesAuthVersion = "20.7.0"
     }
     repositories {
         google()

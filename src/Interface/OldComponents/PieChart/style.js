@@ -15,11 +15,15 @@ const styles = StyleSheet.create({
 
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'stretch'
+        alignItems: 'stretch',
+        overflow: 'visible'
     },
     pieChart: {
-        width: '45%',
-        alignItems: 'center'
+        width: '40%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 120, // Taille minimale pour éviter l'écrasement
+        maxWidth: 140 // Taille maximale pour garder la compacité
     },
     pieChartFullDay: {
         position: 'absolute',

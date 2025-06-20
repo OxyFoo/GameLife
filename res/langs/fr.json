@@ -6,6 +6,16 @@
         "Light": "Clair"
     },
 
+    "theme-variants": {
+        "gameLife": "GameLife",
+        "modern": "Moderne",
+        "analog": "Analogique",
+        "naturalTones": "Tons Naturels",
+        "dynamic": "Dynamique",
+        "volcanic": "Volcanique",
+        "abyss": "Abyssal"
+    },
+
     "notifications": {
         "title": "Notifications générales",
         "notif-user": "Notifications utilisateur",
@@ -715,6 +725,7 @@
         "section-informations-preferences": "INFORMATIONS ET PRÉFÉRENCES",
         "section-notifications-consents": "NOTIFICATIONS ET CONSENTEMENT",
         "section-support-feedback": "SUPPORT ET RETOUR D’EXPÉRIENCE",
+        "section-appearance": "APPARENCE",
         "section-offline-mode": "MODE HORS LIGNE",
         "section-security-privacy": "SÉCURITÉ ET CONFIDENTIALITÉ",
 

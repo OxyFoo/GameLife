@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import IconBack from './back';
-import themeManager from 'Managers/ThemeManager';
+import { themeManager, withThemeForceUpdate } from 'Managers/ThemeManager';
 
 import SVGIcons from 'Ressources/Icons';
 import Base64 from 'Utils/Base64';
@@ -84,4 +83,6 @@ class Icon extends IconBack {
     }
 }
 
-export { Icon };
+const _Icon = withThemeForceUpdate(Icon);
+
+export { _Icon as Icon };

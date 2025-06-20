@@ -1,9 +1,9 @@
-import THEME_MAIN from './main';
-import THEME_LIGHT from './light';
+import THEME_DARK from './dark'
+import THEME_LIGHT from './light'
 
 const THEMES = {
-    Main: THEME_MAIN,
-    Light: THEME_LIGHT
+    DARK: THEME_DARK,
+    LIGHT: THEME_LIGHT
 };
 
 export default THEMES;

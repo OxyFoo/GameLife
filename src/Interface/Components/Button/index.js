@@ -1,15 +1,16 @@
-import * as React from 'react';
 import { View, Animated } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import MaskedView from '@react-native-masked-view/masked-view';
 
-import styles from './style';
-import ButtonBack from './back';
-import themeManager from 'Managers/ThemeManager';
+import { Gradient, Ripple } from 'Interface/Primitives';
+
+import { themeManager, withThemeForceUpdate } from 'Managers/ThemeManager';
 
 import { Text } from '../Text';
 import { Icon } from '../Icon';
-import { Gradient, Ripple } from 'Interface/Primitives';
+
+import ButtonBack from './back';
+import styles from './style';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -48,7 +49,6 @@ class Button extends ButtonBack {
 
         const ButtonView = styleAnimation === null ? View : Animated.View;
         return (
-            // @ts-ignore
             <ButtonView
                 {...rest}
                 ref={nativeRef}
@@ -261,4 +261,6 @@ class Button extends ButtonBack {
     };
 }
 
-export { Button };
+const _Button = withThemeForceUpdate(Button);
+
+export { _Button as Button };

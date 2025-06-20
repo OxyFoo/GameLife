@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View, Animated, FlatList } from 'react-native';
 
 import styles from './style';

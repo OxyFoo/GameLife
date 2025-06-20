@@ -74,7 +74,7 @@ class BackSettings extends PageBase {
     onBack = () => user.interface.BackHandle();
     openAbout = () => user.interface.ChangePage('about', { storeInHistory: false });
     openReport = () => user.interface.ChangePage('report', { storeInHistory: false });
-    openBeta = () => user.interface.ChangePage('settings_beta', { storeInHistory: false });
+    openTheme = () => user.interface.ChangePage('settings_theme', { storeInHistory: false });
     openNotifications = () => user.interface.ChangePage('settings_notifications', { storeInHistory: false });
 
     /** @param {ComboBoxItem | null} lang */
@@ -91,7 +91,7 @@ class BackSettings extends PageBase {
     /** @param {number} themeIndex */
     onChangeTheme = (themeIndex) => {
         /** @type {ThemeName[]} */
-        const themes = ['Main', 'Light'];
+        const themes = ['DARK', 'LIGHT'];
         const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
             user.settings.IndependentSave();

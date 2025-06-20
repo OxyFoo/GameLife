@@ -1,10 +1,10 @@
-import * as React from 'react';
+import { Component } from 'react';
 
 /**
  * @typedef {import('Interface/FlowEngine/back').FlowEnginePublicClass} FlowEnginePublicClass
  */
 
-class PageBase extends React.Component {
+class PageBase extends Component {
     /**
      * @description Page is not unmounted when changing page (default: false)
      * @type {boolean}

@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { AppState } from 'react-native';
+import { Component, createRef } from 'react'
+import { AppState } from 'react-native'
 
-import user from './src/Managers/UserManager';
-import FlowEngine from './src/Interface/FlowEngine';
+import user from './src/Managers/UserManager'
+import FlowEngine from './src/Interface/FlowEngine'
 
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus
@@ -11,9 +11,9 @@ import FlowEngine from './src/Interface/FlowEngine';
 
 const TEST_PAGE = false;
 
-class App extends React.Component {
+class App extends Component {
     /** @type {React.RefObject<FlowEngineBack | null>} */
-    ref = React.createRef();
+    ref = createRef();
 
     componentDidMount() {
         // Get the app state (active or background) to check the date
@@ -46,7 +46,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <FlowEngine ref={this.ref} testID='FlowEngine' />;
+        return <FlowEngine ref={this.ref} testID='FlowEngine' />
     }
 }
 

@@ -81,7 +81,7 @@ class ThemeManager {
      * @param {ThemeName} themeName
      * @returns {boolean} True if theme is valid
      */
-    setTheme(themeName) {
+    SetTheme(themeName) {
         if (this.isTheme(themeName)) {
             this.selectedTheme = themeName;
             this.colors = THEMES[themeName];
@@ -94,7 +94,7 @@ class ThemeManager {
     }
 
     /** @param {ThemeVariantAllKeys} variantName */
-    setVariant = (variantName) => {
+    SetVariant = (variantName) => {
         if (!this.variantsKeys.includes(variantName)) {
             variantName = 'gameLife';
         }

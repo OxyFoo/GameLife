@@ -8,7 +8,7 @@ import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
 
 import { Text } from '../Text';
-import { Icon } from 'Interface/Components';
+import { Icon } from '../Icon';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward

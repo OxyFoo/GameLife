@@ -7,8 +7,8 @@ import themeManager from 'Managers/ThemeManager';
 import langManager from 'Managers/LangManager';
 
 import { Text } from '../Text';
-import Button from '../Button';
-import { Icon } from 'Interface/Components';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
 import { InputText } from '../InputText';
 
 /**

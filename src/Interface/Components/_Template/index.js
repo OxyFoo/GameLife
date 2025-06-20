@@ -1,12 +1,16 @@
-import * as React from 'react';
 import { View } from 'react-native';
+import React from 'react';
 
-import styles from './style';
 import BackNewComponent from './back';
+import styles from './style';
 
 class NewComponent extends BackNewComponent {
     render() {
-        return <View />;
+        return (
+            <View>
+
+            </View>
+        );
     }
 }
 

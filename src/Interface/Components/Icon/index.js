@@ -83,4 +83,6 @@ class Icon extends IconBack {
     }
 }
 
-export default withThemeForceUpdate(Icon);
+const _Icon = withThemeForceUpdate(Icon);
+
+export { _Icon as Icon };

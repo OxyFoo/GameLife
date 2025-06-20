@@ -1,4 +1,6 @@
 export { ActivityTimeline } from './Components/ActivityTimeline';
+export { Button } from './Components/Button';
+export { Icon } from './Components/Icon';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
 export { Container } from './Components/Container';
@@ -19,13 +21,10 @@ export { Text } from './Components/Text';
 export { UserOnlineElement } from './Components/UserOnlineElement';
 export { Zap } from './Components/Zap';
 
-import Button from './Components/Button';
-import Icon from './Components/Icon';
-
 // TODO: Reimplements old components
 import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import PieChart from './OldComponents/PieChart';
 import StreakChart from './OldComponents/StreakChart';
 
-export { Icon, Button, Frame, Character, PieChart, StreakChart };
+export { Frame, Character, PieChart, StreakChart };

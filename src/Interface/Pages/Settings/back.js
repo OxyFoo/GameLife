@@ -93,7 +93,7 @@ class BackSettings extends PageBase {
         /** @type {ThemeName[]} */
         const themes = ['DARK', 'LIGHT'];
         const newTheme = themes[themeIndex];
-        if (themeManager.setTheme(newTheme)) {
+        if (themeManager.SetTheme(newTheme)) {
             user.settings.IndependentSave();
         }
     };

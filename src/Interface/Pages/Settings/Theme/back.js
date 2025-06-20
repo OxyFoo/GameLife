@@ -15,7 +15,7 @@ export default class BackSettingsTheme extends PageBase {
         }
 
         // @ts-ignore
-        themeManager.setVariant(themeItem);
+        themeManager.SetVariant(themeItem);
         // @ts-ignore
         user.settings.themeVariant = themeItem;
         await user.settings.IndependentSave();

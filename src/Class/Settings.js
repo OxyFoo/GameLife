@@ -71,7 +71,7 @@ class Settings extends IUserClass {
         }
 
         if (typeof settings.lang !== 'undefined') this.SetLang(settings.lang, true);
-        if (typeof settings.theme !== 'undefined') themeManager.setTheme(settings.theme);
+        if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
         if (typeof settings.regularNotificationsLastRefresh !== 'undefined') {
             this.regularNotificationsLastRefresh = settings.regularNotificationsLastRefresh;
         }

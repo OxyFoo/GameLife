@@ -37,7 +37,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Load important data & apply theme
     await user.settings.IndependentLoad();
-    themeManager.setVariant(user.settings.themeVariant);
+    themeManager.SetVariant(user.settings.themeVariant);
 
     // Connect to the server and authenticate device & user
     const time_connect_start = performance.now();

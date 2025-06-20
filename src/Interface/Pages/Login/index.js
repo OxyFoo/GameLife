@@ -3,6 +3,7 @@ import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
+import GoogleSignIn from 'App/GoogleSignIn';
 import langManager from 'Managers/LangManager';
 
 import { Text, Button, InputText, CheckBox, ComboBox, Icon } from 'Interface/Components';
@@ -15,7 +16,6 @@ class Login extends BackLogin {
             animSignin,
             animSigninBis,
             loading,
-            googleLoading,
             email,
             username,
             cguAccepted,
@@ -117,21 +117,23 @@ class Login extends BackLogin {
                     hideChevron
                 />
 
-                {/* Google Sign-In Button - Only show when not in signin mode */}
-                <Button
-                    style={styles.buttonGoogleSignin}
-                    styleContent={styles.buttonGoogleContent}
-                    appearance='outline'
-                    fontColor='white'
-                    onPress={this.googleSignIn}
-                    loading={googleLoading}
-                >
-                    <Icon icon='google' color='main1' size={20} />
-                    <Text color='white' fontSize={16}>
-                        {lang['button-google-signin']}
-                    </Text>
-                    <Icon icon='google' color='main1' size={20} show={false} />
-                </Button>
+                {/* Google Sign-In Button - Only show when not in signin mode and when configured */}
+                {GoogleSignIn.shouldShowButton() && !signinMode && (
+                    <Button
+                        style={styles.buttonGoogleSignin}
+                        styleContent={styles.buttonGoogleContent}
+                        appearance='outline'
+                        fontColor='white'
+                        onPress={this.googleSignIn}
+                        loading={loading}
+                    >
+                        <Icon icon='google' color='main1' size={20} />
+                        <Text color='white' fontSize={16}>
+                            {lang['button-google-signin']}
+                        </Text>
+                        <Icon icon='google' color='main1' size={20} show={false} />
+                    </Button>
+                )}
 
                 {/* Buttons */}
                 <Button

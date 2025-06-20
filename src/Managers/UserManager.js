@@ -18,6 +18,7 @@ import Multiplayer from 'Data/User/Multiplayer';
 import Todos from 'Data/User/Todos';
 
 import Storage from 'Utils/Storage';
+import GoogleSignIn from 'App/GoogleSignIn';
 import { Sleep } from 'Utils/Functions';
 
 /**
@@ -181,6 +182,9 @@ class UserManager {
         if (result === 'not-sent' || result.status !== 'disconnect') {
             this.interface.console?.AddLog('warn', 'Not connected to the server, disconnecting locally');
         }
+
+        // Sign out from Google if signed in
+        await GoogleSignIn.SignOut();
 
         await this.Clear();
 

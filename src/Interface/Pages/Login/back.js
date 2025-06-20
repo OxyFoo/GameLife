@@ -1,14 +1,13 @@
 import { Animated, Linking } from 'react-native';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Login, Signin } from './login';
+import GoogleSignIn from 'App/GoogleSignIn';
 import { IsEmail } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
-import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
@@ -22,7 +21,6 @@ class BackLogin extends PageBase {
     state = {
         loading: false,
         signinMode: false,
-        googleLoading: false,
 
         email: '',
         username: '',
@@ -55,12 +53,6 @@ class BackLogin extends PageBase {
     componentDidMount() {
         this.onServerUpdateState(user.server2.tcp.state.Get());
         this.listenerServer = user.server2.tcp.state.AddListener(this.onServerUpdateState);
-
-        // Configuration Google Sign-In
-        GoogleSignin.configure({
-            webClientId: env.GOOGLE_WEB_CLIENT_ID,
-            offlineAccess: false
-        });
     }
 
     componentWillUnmount() {
@@ -205,65 +197,23 @@ class BackLogin extends PageBase {
     googleSignIn = async () => {
         const lang = langManager.curr['login'];
 
-        try {
-            this.setState({ googleLoading: true });
+        this.setState({ loading: true });
 
-            // Check if device supports Google Play Services
-            await GoogleSignin.hasPlayServices();
+        const result = await GoogleSignIn.SignIn();
 
-            // Sign in with Google
-            const userInfo = await GoogleSignin.signIn();
-
-            if (userInfo.type === 'cancelled' || userInfo.type !== 'success') {
-                this.setState({
-                    errorEmail: lang['error-signin-server'].replace('{}', `Google sign-in cancelled - ${userInfo.type}`)
-                });
-                return;
-            }
-
-            user.interface.console?.AddLog('info', 'Google Sign-In Success:', userInfo);
-
-            if (userInfo && userInfo.user && userInfo.user.email) {
-                const email = userInfo.user.email;
-
-                // Use the existing login function with the Google email
-                await Login.call(this, email);
-            } else {
-                this.setState({
-                    errorEmail: lang['error-signin-server'].replace('{}', 'Google sign-in failed')
-                });
-            }
-        } catch (error) {
-            console.log('Google Sign-In Error:', error);
-            let errorMessage = 'Google sign-in failed';
-
-            if (error && typeof error === 'object' && 'code' in error) {
-                if (error.code === 'SIGN_IN_CANCELLED') {
-                    errorMessage = 'Sign-in cancelled';
-                } else if (error.code === 'IN_PROGRESS') {
-                    errorMessage = 'Sign-in in progress';
-                } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
-                    errorMessage = 'Play Services not available';
-                } else if (error.code === 'DEVELOPER_ERROR') {
-                    errorMessage = 'Configuration error - SHA-1 fingerprint missing in Google Cloud Console';
-
-                    // Show detailed error for debugging
-                    user.interface.popup?.OpenT({
-                        type: 'ok',
-                        data: {
-                            title: 'Configuration Google Sign-In',
-                            message: `Erreur de configuration détectée.\n\nSHA-1 Debug: 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25\n\nSHA-1 Prod: 32:A6:81:E5:43:6D:F2:E8:5D:AE:4C:83:51:AF:39:56:0A:5D:D1:EC\n\nAjoutez ces SHA-1 dans Google Cloud Console > APIs & Services > Credentials`
-                        }
-                    });
-                }
-            }
-
+        if (!result.success) {
+            // Handle error
             this.setState({
-                errorEmail: lang['error-signin-server'].replace('{}', errorMessage)
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', result.error)
             });
-        } finally {
-            this.setState({ googleLoading: false });
+            return;
         }
+
+        // TODO: Appeler juste avant le serveur avec le token générer pour le valider avant de demander le pseudo
+        // Use the existing login function with the Google email
+        await Login.call(this, result.email);
+        this.setState({ loading: false });
     };
 }
 

@@ -26,15 +26,15 @@ const styles = StyleSheet.create({
     },
     notEnoughData: {
         width: '100%',
-        paddingVertical: 12,
-        paddingHorizontal: 16
+        paddingVertical: 8,
+        paddingHorizontal: 8
     },
     notEnoughDataText: {
         fontSize: 16
     },
     notEnoughDataButton: {
         marginTop: 12,
-        paddingVertical: 12
+        paddingVertical: 12,
     }
 });
 

@@ -13,53 +13,44 @@ class TodayPieChart extends TodayPieChartBack {
     render() {
         const lang = langManager.curr['home'];
 
-        let headerText = lang['chart-today-recap'];
 
         // If there is no focused activity or no data to display, show add activity button
         if (!this.state.focusedActivity || !this.state.dataToDisplay) {
-            const background = {
-                backgroundColor: themeManager.GetColor('dataBigKpi')
-            };
 
             return (
-                <LinearGradient
-                    colors={[
-                        themeManager.GetColor('main1', { opacity: 0.45 }),
-                        themeManager.GetColor('main1', { opacity: 0.12 })
+                <Button
+                    style={[styles.container, this.props.style]}
+                    appearance='normal'
+                    gradientColors={[
+                        `${themeManager.GetColor('main1')}1F`,  // main1 12% opacity (1F hex ≈ 12%)
+                        `${themeManager.GetColor('main1')}73` // main1 45% opacity (73 hex ≈ 45%)
                     ]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={[styles.container, background, this.props.style]}
+                    onLayout={this.onLayout}
+                    onPress={this.onAddActivityPress}
                 >
                     <View style={styles.notEnoughData}>
                         <Text style={styles.notEnoughDataText}>{lang['chart-today-notmuch']}</Text>
-                        <Button style={styles.notEnoughDataButton} color='main2' onPress={this.onAddActivityPress}>
-                            {lang['chart-today-notmuch-button']}
-                        </Button>
                     </View>
-                </LinearGradient>
+                </Button>
             );
         }
 
         return (
             <Button
                 style={[styles.container, this.props.style]}
-                appearance='uniform'
-                color='backgroundTransparent'
+                appearance='normal'
+                gradientColors={[
+                    `${themeManager.GetColor('main1')}1F`,  // main1 12% opacity (1F hex ≈ 12%)
+                    `${themeManager.GetColor('main1')}73` // main1 45% opacity (73 hex ≈ 45%)
+                ]}
                 onLayout={this.onLayout}
             >
-                {/* Top row view */}
-                <View style={styles.flexBetween}>
-                    <Text style={styles.headerText}>{headerText}</Text>
-                </View>
-
                 {/* Pie chart view */}
                 <PieChart
                     data={this.state.dataToDisplay}
                     //dataFullDay={this.state.dataToDisplayFullDay}
                     focusedActivity={this.state.focusedActivity}
                     focusedActivityFullDay={this.state.focusedActivityFullDay}
-                    //layoutWidth={this.state.layoutWidth - 32}
                 />
             </Button>
         );

@@ -17,8 +17,8 @@ import { GetLocalTime } from 'Utils/Time';
  *
  * @typedef {object} UpdatingData
  * @property {number} id
- * @property {string} name
  * @property {number} value
+ * @property {string} name
  * @property {number} valueMinutes
  * @property {string} color
  * @property {string} gradientCenterColor

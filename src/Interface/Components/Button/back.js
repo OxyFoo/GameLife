@@ -25,6 +25,7 @@ import * as React from 'react';
  * @property {number} throttleTime Time in ms to throttle the press event
  * @property {'normal' | 'outline' | 'outline-blur' | 'uniform'} appearance
  * @property {ThemeColor | ThemeText} color Background color of the button, only used in 'uniform' appearance
+ * @property {string[]} [gradientColors] Custom gradient colors for 'normal' appearance
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText | 'automatic' | 'gradient'} fontColor
  * @property {ThemeColor | ThemeText | 'automatic'} borderColor
@@ -56,6 +57,7 @@ const ButtonProps = {
     throttleTime: 250,
     appearance: 'normal',
     color: 'main1',
+    gradientColors: undefined,
     fontSize: 16,
     fontColor: 'automatic',
     borderColor: 'automatic',

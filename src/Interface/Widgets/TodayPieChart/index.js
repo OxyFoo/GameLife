@@ -22,8 +22,8 @@ class TodayPieChart extends TodayPieChartBack {
                     style={[styles.container, this.props.style]}
                     appearance='normal'
                     gradientColors={[
-                        `${themeManager.GetColor('main1')}1F`,  // main1 12% opacity (1F hex ≈ 12%)
-                        `${themeManager.GetColor('main1')}73` // main1 45% opacity (73 hex ≈ 45%)
+                        themeManager.GetColor('main1', { opacity: 0.12 }),
+                        themeManager.GetColor('main1', { opacity: 0.45 })
                     ]}
                     onLayout={this.onLayout}
                     onPress={this.onAddActivityPress}
@@ -40,8 +40,8 @@ class TodayPieChart extends TodayPieChartBack {
                 style={[styles.container, this.props.style]}
                 appearance='normal'
                 gradientColors={[
-                    `${themeManager.GetColor('main1')}1F`,  // main1 12% opacity (1F hex ≈ 12%)
-                    `${themeManager.GetColor('main1')}73` // main1 45% opacity (73 hex ≈ 45%)
+                    themeManager.GetColor('main1', { opacity: 0.12 }),
+                    themeManager.GetColor('main1', { opacity: 0.45 })
                 ]}
                 onLayout={this.onLayout}
             >

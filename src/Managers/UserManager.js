@@ -18,7 +18,7 @@ import Multiplayer from 'Data/User/Multiplayer';
 import Todos from 'Data/User/Todos';
 
 import Storage from 'Utils/Storage';
-import GoogleSignIn from 'App/GoogleSignIn';
+import GoogleSignIn from 'Utils/GoogleSignIn';
 import { Sleep } from 'Utils/Functions';
 
 /**
@@ -185,6 +185,7 @@ class UserManager {
 
         // Sign out from Google if signed in
         await GoogleSignIn.SignOut();
+        await this.server2.tcp.SendAndWait({ action: 'google-signin-token-reset' });
 
         await this.Clear();
 

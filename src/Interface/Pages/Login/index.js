@@ -3,7 +3,7 @@ import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
-import GoogleSignIn from 'App/GoogleSignIn';
+import GoogleSignIn from 'Utils/GoogleSignIn';
 import langManager from 'Managers/LangManager';
 
 import { Text, Button, InputText, CheckBox, ComboBox, Icon } from 'Interface/Components';
@@ -121,7 +121,7 @@ class Login extends BackLogin {
                 {GoogleSignIn.shouldShowButton() && !signinMode && (
                     <Button
                         style={styles.buttonGoogleSignin}
-                        styleContent={styles.buttonGoogleContent}
+                        styleContent={!loading && styles.buttonGoogleContent}
                         appearance='outline'
                         fontColor='white'
                         onPress={this.googleSignIn}
@@ -139,7 +139,7 @@ class Login extends BackLogin {
                 <Button
                     style={styles.buttonLoginSignin}
                     styleAnimation={{ left: btnLoginX }}
-                    onPress={signinMode ? this.signin : this.loginOrGoToSignin}
+                    onPress={signinMode ? this.onSignin : this.onLogin}
                     loading={loading}
                 >
                     {signinMode ? lang['button-signin-text'] : lang['button-login-text']}

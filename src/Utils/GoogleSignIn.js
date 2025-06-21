@@ -1,8 +1,60 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-import user from 'Managers/UserManager';
-
 import { env } from 'Utils/Env';
+
+/**
+ * @typedef {'cancelled' | 'no_email_or_token' | 'unknown' | 'in_progress' | 'play_services_unavailable' | 'developer_error'} GoogleSignInErrorType
+ */
+
+/**
+ * @typedef {Object} GoogleSignInSuccess
+ * @property {true} success - Indicates successful sign-in
+ * @property {string} email - User's email address
+ * @property {string} idToken - ID token for server-side verification
+ */
+
+/**
+ * @typedef {Object} GoogleSignInError
+ * @property {false} success - Indicates failed sign-in
+ * @property {string} error - Error message
+ * @property {GoogleSignInErrorType} errorType - Error type for handling different scenarios
+ */
+
+/**
+ * @typedef {Function} LoggerFunction
+ * @param {('info' | 'warn' | 'error')} level - Log level
+ * @param {string} message - Log message
+ * @param {...any} args - Additional arguments for logging
+ * @returns {void}
+ */
+
+/**
+ * Logger function to be set from outside
+ * @type {LoggerFunction | null}
+ */
+let loggerFunction = null;
+
+/**
+ * Set the logger function to handle logs
+ * @param {LoggerFunction | null} logFn - Function to handle logs, or null to disable logging
+ * @returns {void}
+ */
+function setLogger(logFn) {
+    loggerFunction = logFn;
+}
+
+/**
+ * Internal logging function
+ * @param {('info' | 'warn' | 'error')} level - Log level
+ * @param {string} message - Log message
+ * @param {...any} args - Additional arguments for logging
+ * @returns {void}
+ */
+function log(level, message, ...args) {
+    if (loggerFunction && typeof loggerFunction === 'function') {
+        loggerFunction(level, message, ...args);
+    }
+}
 
 /**
  * Check if Google Sign-In is properly configured
@@ -26,7 +78,7 @@ function shouldShowGoogleSignInButton() {
  */
 function configureGoogleSignIn() {
     if (!isGoogleSignInConfigured()) {
-        user.interface.console?.AddLog('warn', 'Google Sign-In: No CLIENT_ID configured, skipping initialization');
+        log('warn', 'Google Sign-In: No CLIENT_ID configured, skipping initialization');
         return;
     }
 
@@ -35,12 +87,12 @@ function configureGoogleSignIn() {
         offlineAccess: false
     });
 
-    user.interface.console?.AddLog('info', 'Google Sign-In: Configuration completed');
+    log('info', 'Google Sign-In: Configuration completed');
 }
 
 /**
  * Perform Google Sign-In
- * @returns {Promise<{ success: true, email: string } | { success: false, error: string, errorType: string }>}
+ * @returns {Promise<GoogleSignInSuccess | GoogleSignInError>}
  */
 async function performGoogleSignIn() {
     try {
@@ -58,23 +110,23 @@ async function performGoogleSignIn() {
             };
         }
 
-        user.interface.console?.AddLog('info', 'Google Sign-In Success:', userInfo);
-
-        if (userInfo && userInfo.user && userInfo.user.email) {
+        if (userInfo && userInfo.data.user && userInfo.data.user.email && userInfo.data.idToken) {
             return {
                 success: true,
-                email: userInfo.user.email
+                email: userInfo.data.user.email,
+                idToken: userInfo.data.idToken
             };
         } else {
             return {
                 success: false,
-                error: 'Google sign-in failed - no email returned',
-                errorType: 'no_email'
+                error: 'Google sign-in failed - no email or token returned',
+                errorType: 'no_email_or_token'
             };
         }
     } catch (error) {
-        let errorMessage = 'Google sign-in failed';
+        /** @type {GoogleSignInErrorType} */
         let errorType = 'unknown';
+        let errorMessage = 'Google sign-in failed';
 
         if (error && typeof error === 'object' && 'code' in error) {
             if (error.code === 'SIGN_IN_CANCELLED') {
@@ -108,34 +160,18 @@ async function signOutGoogle() {
     try {
         if (isGoogleSignInConfigured()) {
             await GoogleSignin.signOut();
-            user.interface.console?.AddLog('info', 'Google Sign-In: User signed out');
+            log('info', 'Google Sign-In: User signed out');
         }
     } catch (error) {
-        user.interface.console?.AddLog('error', 'Google Sign-In: Error during sign out:', error);
-    }
-}
-
-/**
- * Check if user is signed in to Google
- * @returns {Promise<boolean>}
- */
-async function isSignedInToGoogle() {
-    try {
-        if (!isGoogleSignInConfigured()) {
-            return false;
-        }
-        return await GoogleSignin.isSignedIn();
-    } catch (error) {
-        user.interface.console?.AddLog('error', 'Google Sign-In: Error checking sign in status:', error);
-        return false;
+        log('error', 'Google Sign-In: Error during sign out:', error);
     }
 }
 
 export default {
+    SetLogger: setLogger,
     Configure: configureGoogleSignIn,
     SignIn: performGoogleSignIn,
     SignOut: signOutGoogle,
     isConfigured: isGoogleSignInConfigured,
-    shouldShowButton: shouldShowGoogleSignInButton,
-    isSignedIn: isSignedInToGoogle
+    shouldShowButton: shouldShowGoogleSignInButton
 };

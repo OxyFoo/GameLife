@@ -3,7 +3,7 @@ import { AppState } from 'react-native';
 
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
-import GoogleSignIn from './src/App/GoogleSignIn';
+import GoogleSignIn from './src/Utils/GoogleSignIn';
 
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus

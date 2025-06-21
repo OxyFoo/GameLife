@@ -7,7 +7,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Text } from '../../Components/Text';
+import { Text } from '../Text';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData
@@ -175,4 +175,4 @@ class PieChart extends BackPieChart {
     };
 }
 
-export default PieChart;
+export { PieChart };

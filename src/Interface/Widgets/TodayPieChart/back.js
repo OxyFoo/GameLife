@@ -13,7 +13,7 @@ import { GetLocalTime } from 'Utils/Time';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Interface/OldComponents/PieChart/back').FocusedActivity} FocusedActivity
+ * @typedef {import('Interface/Components/PieChart/back').FocusedActivity} FocusedActivity
  *
  * @typedef {object} UpdatingData
  * @property {number} id

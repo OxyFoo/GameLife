@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import TodayPieChartBack from './back';
@@ -42,6 +41,7 @@ class TodayPieChart extends TodayPieChartBack {
                     themeManager.GetColor('main1', { opacity: 0.45 })
                 ]}
                 onLayout={this.onLayout}
+                onPress={this.onAddActivityPress}
             >
                 {/* Pie chart view */}
                 <PieChart

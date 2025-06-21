@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     },
     notEnoughDataButton: {
         marginTop: 12,
-        paddingVertical: 12,
+        paddingVertical: 12
     }
 });
 

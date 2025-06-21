@@ -101,8 +101,8 @@ class PieChart extends BackPieChart {
      */
     convertDataForDonutChart = (data) => {
         return data
-            .filter(item => item.value > 0) // Filter out items with 0 value
-            .map(item => ({
+            .filter((item) => item.value > 0) // Filter out items with 0 value
+            .map((item) => ({
                 label: item.name || 'Unknown',
                 value: item.value,
                 stroke: item.color || '#000000'
@@ -121,16 +121,21 @@ class PieChart extends BackPieChart {
 
         return (
             <View style={[styles.pieChartContainer, style]}>
-                <View style={[styles.pieChart, {
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'visible'
-                }]}>
+                <View
+                    style={[
+                        styles.pieChart,
+                        {
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            overflow: 'visible'
+                        }
+                    ]}
+                >
                     <DonutChart
                         data={convertedData}
                         size={110}
                         strokeWidth={8}
-                        strokeLinecap="round"
+                        strokeLinecap='round'
                         duration={1000}
                         delay={100}
                         segmentGap={12}

@@ -13,10 +13,8 @@ class TodayPieChart extends TodayPieChartBack {
     render() {
         const lang = langManager.curr['home'];
 
-
         // If there is no focused activity or no data to display, show add activity button
         if (!this.state.focusedActivity || !this.state.dataToDisplay) {
-
             return (
                 <Button
                     style={[styles.container, this.props.style]}

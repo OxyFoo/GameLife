@@ -199,7 +199,13 @@ class Button extends ButtonBack {
         const { appearance, color, borderColor, styleBackground, gradientColors } = this.props;
 
         if (appearance === 'normal') {
-            return <Gradient containerStyle={styles.absolute} colors={gradientColors} angle={gradientColors ? 90 : undefined} />;
+            return (
+                <Gradient
+                    containerStyle={styles.absolute}
+                    colors={gradientColors}
+                    angle={gradientColors ? 90 : undefined}
+                />
+            );
         } else if (appearance === 'uniform') {
             return (
                 <View

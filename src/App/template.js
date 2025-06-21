@@ -202,12 +202,12 @@ export function LoadTemplate_AppData(user) {
             }
         ],
         skillCategories: [
-            { ID: 0, Name: { fr: 'Récents', en: 'Recent' }, Color: '#000000', LogoID: 1 },
+            { ID: 0, Name: { fr: 'Récent', en: 'Recent' }, Color: '#000000', LogoID: 1 },
             { ID: 1, Name: { fr: 'Bien-être', en: 'Well-being' }, Color: '#006DFF', LogoID: 1 },
             { ID: 2, Name: { fr: 'Travail', en: 'Work' }, Color: '#A8C69F', LogoID: 2 },
             { ID: 3, Name: { fr: 'Créativité', en: 'Creativity' }, Color: '#BDB2FA', LogoID: 1 },
             { ID: 4, Name: { fr: 'Quotidien', en: 'Daily life' }, Color: '#FFA5BA', LogoID: 1 },
-            { ID: 5, Name: { fr: 'Social', en: 'Social' }, Color: '#8C2155', LogoID: 1 },
+            { ID: 5, Name: { fr: 'Social', en: 'Social' }, Color: '#8C2155', LogoID: 1 }
         ]
     });
     dataManager.titles.Load([

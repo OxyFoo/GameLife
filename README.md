@@ -34,6 +34,9 @@ Le projet inclut une documentation complète dans le dossier `docs/` :
 <details>
 <summary>React native packages</summary>
 
+### 🔐 Authentification
+* [React Native Google Sign-In](https://github.com/react-native-google-signin/google-signin)
+
 ### 🔒 Sécurité & Intégrité
 * [React Native Google Play Integrity](https://www.npmjs.com/package/react-native-google-play-integrity)
 * [React Native iOS AppAttest](https://www.npmjs.com/package/react-native-ios-appattest)

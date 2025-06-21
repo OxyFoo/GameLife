@@ -5,7 +5,9 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Login, Signin } from './login';
+import GoogleSignIn from 'Utils/GoogleSignIn';
 import { IsEmail } from 'Utils/String';
+import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -37,6 +39,13 @@ class BackLogin extends PageBase {
             value: langManager.curr['name']
         }
     };
+
+    /**
+     * Flag to indicate if the Google token has been validated
+     * This is used to track token validation state when login or signin is cancelled
+     * @type {boolean}
+     */
+    googleTokenValidated = false;
 
     /** @param {PageBase['props']} props */
     constructor(props) {
@@ -113,7 +122,7 @@ class BackLogin extends PageBase {
         Linking.openURL(`https://oxyfoo.fr/legal/terms-of-service`);
     }
 
-    loginOrGoToSignin = async () => {
+    onLogin = async () => {
         const lang = langManager.curr['login'];
         const { loading, email, errorEmail } = this.state;
 
@@ -130,7 +139,8 @@ class BackLogin extends PageBase {
         }
 
         // Login
-        return await Login.call(this, email);
+        await Login.call(this, email);
+        return;
     };
 
     goToSignin = () => {
@@ -152,9 +162,11 @@ class BackLogin extends PageBase {
             return false;
         }
 
+        // Reset animations
         setTimeout(SpringAnimation(animSignin, 0, false).start, 100);
         SpringAnimation(animSigninBis, 0, false).start();
 
+        // Reset state
         this.setState({
             signinMode: false,
             username: '',
@@ -162,11 +174,21 @@ class BackLogin extends PageBase {
             errorUsername: '',
             errorCgu: ''
         });
+
+        // Remove custom back handler
         user.interface.RemoveCustomBackHandler(this.backToLogin);
+
+        // If Google token was validated, reset it
+        if (this.googleTokenValidated) {
+            this.googleTokenValidated = false;
+            user.server2.tcp.Send({ action: 'google-signin-token-reset' });
+            GoogleSignIn.SignOut();
+        }
+
         return false;
     };
 
-    signin = async () => {
+    onSignin = async () => {
         const lang = langManager.curr['login'];
         const { email, username, errorUsername, cguAccepted, errorCgu } = this.state;
 
@@ -190,6 +212,79 @@ class BackLogin extends PageBase {
 
         // Signin
         return await Signin.bind(this)(email, username);
+    };
+
+    // Google Sign-In method
+    googleSignIn = async () => {
+        const lang = langManager.curr['login'];
+
+        this.setState({ loading: true });
+
+        // Wait for animations to finish
+        await Sleep(200);
+
+        // Perform Google Sign-In
+        const result = await GoogleSignIn.SignIn();
+        if (!result.success) {
+            // Do nothing if the user cancelled the sign-in
+            if (result.errorType === 'cancelled') {
+                this.setState({ loading: false });
+                return;
+            }
+
+            // Handle error
+            this.setState({
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', result.error)
+            });
+            return;
+        }
+
+        // Submit Google token to server for validation before proceeding with login/signin
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'google-signin-token-submit',
+            email: result.email,
+            token: result.idToken
+        });
+        if (
+            response === 'timeout' ||
+            response === 'not-sent' ||
+            response === 'interrupted' ||
+            response.status !== 'google-signin-token-submit'
+        ) {
+            // Handle server error
+            const error = typeof response === 'string' ? response : 'unknown';
+            this.setState({
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', error)
+            });
+            return;
+        }
+
+        this.googleTokenValidated = true;
+
+        // Use the existing login function with the Google email
+        const needSignin = await Login.call(this, result.email);
+
+        // Continue login in loading page
+        if (!needSignin) {
+            const mailSaved = await user.server2.userAuth.SetEmail(result.email);
+            if (!mailSaved) {
+                this.setState({
+                    loading: false,
+                    errorEmail: lang['error-signin-server'].replace('{}', 'email-save-failed')
+                });
+                return;
+            }
+            this.fe.ChangePage('loading', { storeInHistory: false });
+        }
+
+        // Reset loading state
+        this.setState({
+            loading: false,
+            email: result.email,
+            errorEmail: ''
+        });
     };
 }
 

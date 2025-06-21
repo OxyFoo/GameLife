@@ -5,6 +5,7 @@ export const env = {
     VPS_PROTOCOL: envEnum('VPS_PROTOCOL', ['none', 'ws', 'wss']),
     VPS_HOST: envString('VPS_HOST', false),
     VPS_PORT: envNumber('VPS_PORT', false),
+    GOOGLE_WEB_CLIENT_ID: envString('GOOGLE_WEB_CLIENT_ID', false),
     SSL_PINNING_PRIMARY_KEY: envString('SSL_PINNING_PRIMARY_KEY', false),
     SSL_PINNING_BACKUP_KEY: envString('SSL_PINNING_BACKUP_KEY', false)
 };

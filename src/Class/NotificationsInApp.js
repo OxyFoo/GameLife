@@ -30,7 +30,6 @@ class NotificationsInApp extends IUserClass {
     }
 
     Initialize = () => {
-        this.#updateNotifications();
         this.#listenerAchievements = this.#user.achievements.achievements.AddListener(this.#updateNotifications);
         this.#listenerNetworkState = this.#user.server2.tcp.state.AddListener((newState) => {
             if (newState === 'disconnected' || newState === 'error') {
@@ -42,6 +41,10 @@ class NotificationsInApp extends IUserClass {
             this.#updateNotifications();
             return false;
         });
+    };
+
+    Update = () => {
+        this.#updateNotifications();
     };
 
     Unmount = () => {

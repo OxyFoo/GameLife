@@ -6,13 +6,15 @@ import langManager from 'Managers/LangManager';
  */
 
 /**
- * Login, return true if success (& next page loading) or false if error
+ * Login function that handles user authentication
  * @this {LoginPage}
  * @param {string} email
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>} Returns true if signin is required (free account), false if login was handled (success or failure)
  */
 async function Login(email) {
     const lang = langManager.curr['login'];
+
+    let signinMode = false;
 
     this.setState({ loading: true });
     const status = await user.server2.userAuth.Login(email);
@@ -26,6 +28,7 @@ async function Login(email) {
     // No account, go to signin
     else if (status === 'free') {
         this.goToSignin();
+        signinMode = true;
     }
 
     // New device or mail unconfirmed
@@ -55,6 +58,9 @@ async function Login(email) {
             errorEmail: lang['error-signin-server'].replace('{}', status)
         });
     }
+
+    // Return true if signin is required (free account), false if login was handled (success or failure)
+    return signinMode;
 }
 
 /**

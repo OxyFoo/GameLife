@@ -169,9 +169,11 @@ class Server extends IUserClass {
         this.devMode = false;
         this.isBanned = false;
         this.serverState.status = 'not-connected';
-        this.serverState.version = null;
         await this.userAuth.Clear();
         await this.deviceAuth.Clear();
+
+        // Don't reset `this.serverState.version` to keep the last known version
+        // Keep last known server version for reconnection scenarios to avoid re-fetching
     };
 
     /**

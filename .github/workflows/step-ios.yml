@@ -83,7 +83,6 @@ jobs:
 
       - name: 'Get config files'
         run: |
-          echo ${{ secrets.KEYSTORE }} | base64 -d > ./keystore
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
 
       - name: 'Setup & clean build directory'

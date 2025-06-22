@@ -94,11 +94,6 @@ jobs:
         run: |
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
 
-      - name: 'Setup & generate types'
-        run: |
-          # Generate type files
-          npm run prestart
-
       - name: 'Setup Bundle ID for test environment'
         if: inputs.environment == 'test'
         run: |

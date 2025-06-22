@@ -132,7 +132,13 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
         run: |
           cd ios
-          bundle exec fastlane build environment:${{ inputs.environment }}
+          echo "Building for environment: ${{ inputs.environment }}"
+          if [ -z "${{ inputs.environment }}" ]; then
+            echo "❌ Environment not specified, using 'dev' as default"
+            bundle exec fastlane build environment:dev
+          else
+            bundle exec fastlane build environment:${{ inputs.environment }}
+          fi
 
       - name: 'Upload ipa artifact'
         uses: actions/upload-artifact@v4

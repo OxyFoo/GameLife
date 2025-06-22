@@ -20,6 +20,17 @@ platform :ios do
   lane :build do |options|
     environment = options[:environment] || "dev"
     
+    # Handle empty environment string
+    if environment.nil? || environment.empty?
+      environment = "dev"
+      UI.important "⚠️ Empty environment provided, defaulting to 'dev'"
+    end
+    
+    # Validate environment
+    unless ['dev', 'test', 'prod'].include?(environment)
+      UI.user_error! "❌ Invalid environment '#{environment}'. Must be 'dev', 'test', or 'prod'"
+    end
+    
     UI.message "🏗️ Building for environment: #{environment}"
     
     # Get app identifier based on environment
@@ -30,6 +41,16 @@ platform :ios do
     
     UI.message "📱 App Identifier: #{app_identifier}"
     UI.message "🔐 Provisioning Profile: #{profile_name}"
+    
+    # Verify provisioning profile exists
+    UI.message "🔍 Checking provisioning profiles..."
+    Dir.glob("#{Dir.home}/Library/MobileDevice/Provisioning Profiles/*.mobileprovision") do |profile_path|
+      UI.message "Found profile: #{File.basename(profile_path)}"
+    end
+    
+    # Verify certificates
+    UI.message "🔍 Checking available certificates..."
+    sh("security find-identity -v -p codesigning") rescue UI.error("Could not list certificates")
     
     # Update app identifier in project if needed
     update_app_identifier(
@@ -52,27 +73,44 @@ platform :ios do
     )
     
     # Build the app
-    build_app(
-      workspace: "GameLife.xcworkspace", 
-      scheme: "GameLife",
-      configuration: "Release",
-      export_method: "app-store",
-      output_directory: "./build",
-      output_name: "GameLife-#{environment}.ipa",
-      clean: true,
-      archive_path: "./build/GameLife.xcarchive",
-      export_options: {
-        method: "app-store",
-        teamID: ENV["TEAM_ID"] || "54ZUH596XX",
-        signingStyle: "manual",
-        provisioningProfiles: {
-          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
+    begin
+      UI.message "🔨 Starting build process..."
+      build_app(
+        workspace: "GameLife.xcworkspace", 
+        scheme: "GameLife",
+        configuration: "Release",
+        export_method: "app-store",
+        output_directory: "./build",
+        output_name: "GameLife-#{environment}.ipa",
+        clean: true,
+        archive_path: "./build/GameLife.xcarchive",
+        export_options: {
+          method: "app-store",
+          teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+          signingStyle: "manual",
+          provisioningProfiles: {
+            (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
+          },
+          uploadSymbols: true
         },
-        uploadSymbols: true
-      },
-      # Additional xcodebuild settings to ensure proper deployment target
-      xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
-    )
+        # Additional xcodebuild settings to ensure proper deployment target
+        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+      )
+    rescue => e
+      UI.error "Build failed with error: #{e.message}"
+      UI.error "Full error: #{e.backtrace.join("\n")}" if e.backtrace
+      
+      # Try to read the detailed log
+      log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
+      if File.exist?(log_path)
+        UI.message "📋 Detailed build log:"
+        log_content = File.read(log_path)
+        # Show last 50 lines of the log
+        UI.message log_content.split("\n").last(50).join("\n")
+      end
+      
+      raise e
+    end
     
     # Output the final build info
     UI.success "Built #{environment} version: GameLife-#{environment}.ipa"

@@ -20,11 +20,16 @@ platform :ios do
   lane :build do |options|
     environment = options[:environment] || "dev"
     
+    UI.message "🏗️ Building for environment: #{environment}"
+    
     # Get app identifier based on environment
     app_identifier = ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife"
     
     # Set provisioning profile name based on environment
     profile_name = environment == 'prod' ? 'Game Life Distributed' : 'GameLife Test Profile'
+    
+    UI.message "📱 App Identifier: #{app_identifier}"
+    UI.message "🔐 Provisioning Profile: #{profile_name}"
     
     # Update app identifier in project if needed
     update_app_identifier(
@@ -63,7 +68,7 @@ platform :ios do
         provisioningProfiles: {
           (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
         },
-        uploadSymbols: true      # Garde les symboles pour le crash reporting
+        uploadSymbols: true
       },
       # Additional xcodebuild settings to ensure proper deployment target
       xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
@@ -74,7 +79,7 @@ platform :ios do
   end
 
   desc "Upload to App Store Connect"
-  lane :upload_to_app_store do |options|
+  lane :upload_to_appstore do |options|
     environment = options[:environment] || "prod"
     ipa_path = "./build/GameLife-#{environment}.ipa"
     
@@ -101,7 +106,7 @@ platform :ios do
     environment = options[:environment] || "prod"
     
     build(environment: environment)
-    upload_to_app_store(environment: environment) if environment != "dev"
+    upload_to_appstore(environment: environment) if environment != "dev"
   end
 
   error do |lane, exception|

@@ -174,4 +174,4 @@ jobs:
         run: |
           cd ios
           bundle install
-          bundle exec fastlane upload_to_app_store environment:${{ inputs.environment }}
+          bundle exec fastlane upload_to_appstore environment:${{ inputs.environment }}

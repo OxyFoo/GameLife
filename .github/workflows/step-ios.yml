@@ -87,7 +87,11 @@ jobs:
       - name: 'Install dependencies'
         run: |
           npm install
-          cd ios && pod install
+          cd ios
+          # Clean and reinstall pods to ensure proper deployment target configuration
+          pod deintegrate || true
+          rm -rf Pods Podfile.lock
+          pod install --repo-update
           bundle install
 
       - name: 'Get config files'
@@ -99,6 +103,18 @@ jobs:
         run: |
           # Bundle ID management is now handled by Fastlane
           echo "Bundle ID will be managed by Fastlane based on APP_IDENTIFIER environment variable"
+
+      - name: 'Verify iOS deployment targets'
+        run: |
+          cd ios
+          echo "Verifying iOS deployment targets for all pods..."
+          # Check main project deployment target
+          xcodebuild -showBuildSettings -project GameLife.xcodeproj -target GameLife | grep IPHONEOS_DEPLOYMENT_TARGET
+          # Check if there are any pods with incorrect deployment targets
+          if [ -f "Pods/Pods.xcodeproj/project.pbxproj" ]; then
+            echo "Checking pods deployment targets..."
+            grep -n "IPHONEOS_DEPLOYMENT_TARGET" Pods/Pods.xcodeproj/project.pbxproj | head -10
+          fi
 
       - name: 'Build with Fastlane'
         env:

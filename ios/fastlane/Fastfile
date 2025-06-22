@@ -62,8 +62,11 @@ platform :ios do
         signingStyle: "manual",
         provisioningProfiles: {
           (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
-        }
-      }
+        },
+        uploadSymbols: true      # Garde les symboles pour le crash reporting
+      },
+      # Additional xcodebuild settings to ensure proper deployment target
+      xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
     )
     
     # Output the final build info

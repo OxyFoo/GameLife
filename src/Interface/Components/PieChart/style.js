@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         minWidth: 120, // Taille minimale pour éviter l'écrasement
-        maxWidth: 140 // Taille maximale pour garder la compacité
+        maxWidth: 140, // Taille maximale pour garder la compacité
+        overflow: 'visible'
     },
     pieChartFullDay: {
         position: 'absolute',

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
-import { DonutChart } from 'Interface/Components/DonutChart';
 
 import BackPieChart from './back';
 import styles from './style';
@@ -8,6 +7,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Text } from '../Text';
+import { DonutChart } from '../DonutChart';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData
@@ -121,16 +121,7 @@ class PieChart extends BackPieChart {
 
         return (
             <View style={[styles.pieChartContainer, style]}>
-                <View
-                    style={[
-                        styles.pieChart,
-                        {
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            overflow: 'visible'
-                        }
-                    ]}
-                >
+                <View style={styles.pieChart}>
                     <DonutChart
                         data={convertedData}
                         size={110}

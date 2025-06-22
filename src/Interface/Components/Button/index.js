@@ -40,6 +40,7 @@ class Button extends ButtonBack {
             fontSize,
             color,
             gradientColors,
+            gradientColorsAngle,
             pointerEvents,
             onPress,
             onLongPress,
@@ -196,16 +197,10 @@ class Button extends ButtonBack {
     };
 
     renderBackground = () => {
-        const { appearance, color, borderColor, styleBackground, gradientColors } = this.props;
+        const { appearance, color, borderColor, styleBackground, gradientColors, gradientColorsAngle } = this.props;
 
         if (appearance === 'normal') {
-            return (
-                <Gradient
-                    containerStyle={styles.absolute}
-                    colors={gradientColors}
-                    angle={gradientColors ? 90 : undefined}
-                />
-            );
+            return <Gradient containerStyle={styles.absolute} colors={gradientColors} angle={gradientColorsAngle} />;
         } else if (appearance === 'uniform') {
             return (
                 <View

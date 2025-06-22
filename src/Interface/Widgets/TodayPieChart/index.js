@@ -22,6 +22,7 @@ class TodayPieChart extends TodayPieChartBack {
                         themeManager.GetColor('main1', { opacity: 0.12 }),
                         themeManager.GetColor('main1', { opacity: 0.45 })
                     ]}
+                    gradientColorsAngle={90}
                     onLayout={this.onLayout}
                     onPress={this.onAddActivityPress}
                 >

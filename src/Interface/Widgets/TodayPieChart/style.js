@@ -12,18 +12,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 12
     },
-    flexBetween: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    headerText: {
-        marginBottom: 8,
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
     notEnoughData: {
         width: '100%',
         paddingVertical: 8,

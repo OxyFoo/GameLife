@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { View, Animated, Easing } from 'react-native';
 import { Svg, Path, G } from 'react-native-svg';
 
+import styles from './style';
+
 /**
  * @typedef {Object} DonutDataItem
  * @property {string} label - Label of the segment
@@ -60,7 +62,7 @@ function DonutChart({
         while (animationValues.length > data.length) {
             animationValues.pop();
         }
-    }, [data.length]);
+    }, [animationValues, data.length]);
 
     // Calculate total value
     const totalValue = data.reduce((sum, item) => sum + item.value, 0);
@@ -78,7 +80,7 @@ function DonutChart({
         );
 
         Animated.parallel(animations).start();
-    }, [data, delay, duration, easing]);
+    }, [animationValues, data, delay, duration, easing]);
 
     useEffect(() => {
         if (onMeasure) {
@@ -125,7 +127,7 @@ function DonutChart({
     });
 
     return (
-        <View style={[{ width: size, height: size, position: 'relative' }, style]}>
+        <View style={[{ width: size, height: size }, styles.parent, style]}>
             <Svg width={size} height={size}>
                 <G>
                     {segments.map((segment, index) => {
@@ -155,22 +157,7 @@ function DonutChart({
             </Svg>
 
             {/* Center content */}
-            {children && (
-                <View
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        pointerEvents: 'none'
-                    }}
-                >
-                    {children}
-                </View>
-            )}
+            {children && <View style={styles.content}>{children}</View>}
         </View>
     );
 }

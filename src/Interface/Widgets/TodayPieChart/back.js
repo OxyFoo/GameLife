@@ -22,7 +22,6 @@ import { GetLocalTime } from 'Utils/Time';
  * @property {number} valueMinutes
  * @property {string} color
  * @property {string} gradientCenterColor
- * @property {boolean} focused
  *
  * @typedef {object} InputPropsType
  * @property {StyleProp} style
@@ -86,12 +85,6 @@ class TodayPieChartBack extends React.Component {
         const lang = langManager.curr['home'];
         const updatingDataFullDay = [...updatingData];
 
-        // Find the biggest activity
-        const focusedActivityFullDay = this.findBiggestActivity(updatingDataFullDay);
-        if (focusedActivityFullDay && focusedActivityFullDay.id !== 0) {
-            updatingDataFullDay.find((item) => item.id === focusedActivityFullDay.id).focused = true;
-        }
-
         const pourcent = this.convertTimeToPercent(updatingDataFullDay, 24 * 60);
         updatingDataFullDay.push({
             id: 0,
@@ -99,15 +92,12 @@ class TodayPieChartBack extends React.Component {
             valueMinutes: updatingData.reduce((acc, cur) => acc + cur.valueMinutes, 0),
             name: lang['chart-total-text'],
             color: '#130f40',
-            gradientCenterColor: '#130f40',
-            focused: false
+            gradientCenterColor: '#130f40'
         });
 
         // Find the biggest activity
         const focusedActivity = this.findBiggestActivity(updatingData);
-        if (focusedActivity && focusedActivity.id !== 0) {
-            updatingData.find((item) => item.id === focusedActivity.id).focused = true;
-        }
+        const focusedActivityFullDay = this.findBiggestActivity(updatingDataFullDay);
 
         // Update the state and return the new state
         const newState = {
@@ -141,8 +131,7 @@ class TodayPieChartBack extends React.Component {
                 valueMinutes: 0,
                 name: '',
                 color: '#000000',
-                gradientCenterColor: '#000000',
-                focused: false
+                gradientCenterColor: '#000000'
             };
 
             const category = dataManager.skills.GetCategoryByID(allCategories[i].ID);

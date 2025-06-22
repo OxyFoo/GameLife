@@ -1,0 +1,109 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build the app without uploading"
+  lane :build do |options|
+    environment = options[:environment] || "dev"
+    
+    # Get app identifier based on environment
+    app_identifier = ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife"
+    
+    # Set provisioning profile name based on environment
+    profile_name = environment == 'prod' ? 'Game Life Distributed' : 'GameLife Test Profile'
+    
+    # Update app identifier in project if needed
+    update_app_identifier(
+      xcodeproj: "GameLife.xcodeproj",
+      plist_path: "GameLife/Info.plist",
+      app_identifier: app_identifier
+    )
+    
+    UI.success "Updated app identifier to: #{app_identifier}"
+    UI.success "Using provisioning profile: #{profile_name}"
+    
+    # Update code signing settings for manual signing
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "GameLife.xcodeproj",
+      team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+      targets: ["GameLife"],
+      code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
+      profile_name: profile_name
+    )
+    
+    # Build the app
+    build_app(
+      workspace: "GameLife.xcworkspace", 
+      scheme: "GameLife",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "GameLife-#{environment}.ipa",
+      clean: true,
+      archive_path: "./build/GameLife.xcarchive",
+      export_options: {
+        method: "app-store",
+        teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+        signingStyle: "manual",
+        provisioningProfiles: {
+          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
+        }
+      }
+    )
+    
+    # Output the final build info
+    UI.success "Built #{environment} version: GameLife-#{environment}.ipa"
+  end
+
+  desc "Upload to App Store Connect"
+  lane :upload_to_app_store do |options|
+    environment = options[:environment] || "prod"
+    ipa_path = "./build/GameLife-#{environment}.ipa"
+    
+    # Use App Store Connect API with environment variables
+    app_store_connect_api_key(
+      key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
+      key_content: ENV['APP_STORE_CONNECT_API_KEY_KEY']
+    )
+
+    upload_to_app_store(
+      skip_waiting_for_build_processing: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      force: true,
+      ipa: ipa_path,
+      submit_for_review: false,
+      automatic_release: false
+    )
+  end
+
+  desc "Build and upload to App Store"
+  lane :release do |options|
+    environment = options[:environment] || "prod"
+    
+    build(environment: environment)
+    upload_to_app_store(environment: environment) if environment != "dev"
+  end
+
+  error do |lane, exception|
+    UI.error "Error in lane #{lane}: #{exception}"
+  end
+end
+
+

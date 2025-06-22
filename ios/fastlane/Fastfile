@@ -37,7 +37,16 @@ platform :ios do
     app_identifier = ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife"
     
     # Set provisioning profile name based on environment
-    profile_name = environment == 'prod' ? 'Game Life Distributed' : 'GameLife Test Profile'
+    case environment
+    when 'prod'
+      profile_name = 'Game Life Distributed'
+    when 'test'
+      profile_name = 'GameLife Test Profile'
+    when 'dev'
+      profile_name = 'GameLife Dev Profile'
+    else
+      UI.user_error! "❌ Unknown environment: #{environment}"
+    end
     
     UI.message "📱 App Identifier: #{app_identifier}"
     UI.message "🔐 Provisioning Profile: #{profile_name}"
@@ -46,6 +55,20 @@ platform :ios do
     UI.message "🔍 Checking provisioning profiles..."
     Dir.glob("#{Dir.home}/Library/MobileDevice/Provisioning Profiles/*.mobileprovision") do |profile_path|
       UI.message "Found profile: #{File.basename(profile_path)}"
+
+      # Try to read profile name from the file
+      begin
+        profile_content = File.read(profile_path)
+        if profile_content.include?("Name")
+          # Extract profile name (simplified)
+          name_match = profile_content.match(/<key>Name<\/key>\s*<string>([^<]+)<\/string>/)
+          if name_match
+            UI.message "  Profile name: #{name_match[1]}"
+          end
+        end
+      rescue => e
+        UI.message "  Could not read profile details: #{e.message}"
+      end
     end
     
     # Verify certificates
@@ -68,8 +91,7 @@ platform :ios do
       path: "GameLife.xcodeproj",
       team_id: ENV["TEAM_ID"] || "54ZUH596XX",
       targets: ["GameLife"],
-      code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
-      profile_name: profile_name
+      code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
     )
     
     # Build the app

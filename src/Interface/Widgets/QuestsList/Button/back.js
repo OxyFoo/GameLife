@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import { AddActivity } from 'Interface/Widgets';
 
 /**
@@ -123,6 +124,94 @@ class QuestButtonBack extends React.Component {
     /** @param {GestureResponderEvent} _event */
     onTouchEnd = (_event) => {
         clearTimeout(this.a);
+    };
+
+    /**
+     * Calcule le pourcentage de progression d'une quête (0-100)
+     * @returns {number}
+     */
+    getQuestProgress = () => {
+        const { quest } = this.props;
+        if (quest === null) return 0;
+
+        try {
+            // Obtient les jours de la quête pour calculer le progrès d'aujourd'hui
+            const days = user.quests.GetDays(quest);
+            const today = days.find((day) => day.isToday);
+            
+            if (today && typeof today.progress === 'number') {
+                // Convertit la progression (0-1+) en pourcentage (0-100)
+                // Cap à 100% même si on dépasse l'objectif
+                return Math.min(today.progress * 100, 100);
+            }
+            
+            return 0;
+        } catch (error) {
+            console.warn('Erreur lors du calcul du progrès de la quête:', error);
+            return 0;
+        }
+    };
+
+    /**
+     * Obtient la couleur de la catégorie la plus utilisée pour cette quête
+     * @returns {string}
+     */
+    getQuestCategoryColor = () => {
+        const { quest } = this.props;
+        if (quest === null) return '#3498db'; // Couleur par défaut
+
+        try {
+            // Obtient toutes les activités liées à cette quête
+            const questActivities = user.quests.GetQuestActivities(quest);
+            
+            if (questActivities.length === 0) {
+                // Pas d'activités, utilise la première skill de la quête pour déterminer la couleur
+                if (quest.skills.length > 0) {
+                    const firstSkill = dataManager.skills.GetByID(quest.skills[0]);
+                    if (firstSkill) {
+                        const category = dataManager.skills.GetCategoryByID(firstSkill.CategoryID);
+                        return category?.Color || '#3498db';
+                    }
+                }
+                return '#3498db';
+            }
+
+            // Calcule le temps total par catégorie
+            /** @type {Record<number, {duration: number, color: string}>} */
+            const categoryDurations = {};
+            
+            questActivities.forEach((activity) => {
+                const skill = dataManager.skills.GetByID(activity.skillID);
+                if (skill) {
+                    const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
+                    if (category) {
+                        if (!categoryDurations[category.ID]) {
+                            categoryDurations[category.ID] = {
+                                duration: 0,
+                                color: category.Color
+                            };
+                        }
+                        categoryDurations[category.ID].duration += activity.duration;
+                    }
+                }
+            });
+
+            // Trouve la catégorie avec le plus de temps
+            let maxDuration = 0;
+            let dominantColor = '#3498db';
+            
+            Object.values(categoryDurations).forEach((categoryData) => {
+                if (categoryData.duration > maxDuration) {
+                    maxDuration = categoryData.duration;
+                    dominantColor = categoryData.color;
+                }
+            });
+
+            return dominantColor;
+        } catch (error) {
+            console.warn('Erreur lors du calcul de la couleur de catégorie de la quête:', error);
+            return '#3498db';
+        }
     };
 }
 

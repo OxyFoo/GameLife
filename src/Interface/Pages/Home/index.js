@@ -50,9 +50,7 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodayPieChart style={styles.todayPieChart} />
-
-                {/* Today missions */}
-                <DailyQuest style={styles.dailyQuests} />
+                <QuestsList />
 
                 {/* Today quests */}
                 <Title title={lang['section-today-quests']}>
@@ -65,7 +63,8 @@ class Home extends BackHome {
                         onPress={this.addQuest}
                     />
                 </Title>
-                <QuestsList />
+                {/* Today missions */}
+                <DailyQuest style={styles.dailyQuests} />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>

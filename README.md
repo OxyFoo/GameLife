@@ -5,14 +5,22 @@
 
 ## 🌟 Qu'est-ce que GameLife ?
 
-GameLife est une application mobile innovante qui gamifie votre productivité personnelle. Elle permet aux utilisateurs de :
+GameLife est une application mobile innovante qui gamifie ta productivité personnelle. Elle te permet de :
 
-- **🎯 Suivre leurs activités** et gagner de l'expérience
-- **🛡️ Développer des compétences** dans différents domaines de la vie
+- **🎯 Suivre tes activités** et gagner de l'expérience
+- **🛡️ Développer tes compétences** dans différents domaines de la vie
 - **⚔️ Accomplir des quêtes** et missions personnalisées
 - **🏆 Débloquer des achievements** et récompenses
 - **👥 Interagir en multijoueur** avec d'autres utilisateurs
-- **🎨 Personnaliser leur avatar** et explorer le shop in-app
+- **🎨 Personnaliser ton avatar** et explorer le shop in-app
+
+## 📲 Télécharger GameLife
+
+<div align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.gamelife&hl=fr&gl=US"><img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white" alt="Télécharger sur Google Play" height="60"/></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://apps.apple.com/fr/app/game-life/id1587486522"><img src="https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white" alt="Télécharger sur l'App Store" height="60"/></a>
+</div>
 
 ## 📖 Documentation
 
@@ -30,7 +38,7 @@ Pour les contributeurs, vous trouverez des guides détaillés sur la contributio
 
 #### 🔧 Prérequis
 
-Pour pouvoir développer et tester GameLife, assurez-vous d'avoir installé [React Native](https://reactnative.dev/docs/set-up-your-environment), [Android Studio](https://developer.android.com/studio) et [Xcode](https://developer.apple.com/xcode/).
+Pour pouvoir développer et tester GameLife, il est nécessaire d'avoir installé [React Native](https://reactnative.dev/docs/set-up-your-environment), [Android Studio](https://developer.android.com/studio) et [Xcode](https://developer.apple.com/xcode/).
 
 #### 🚀 Installation
 
@@ -110,6 +118,6 @@ npm run android   # Pour Android
 
 ---
 
-🎮 **Transformez votre vie en aventure avec GameLife !**
+🎮 **GameLife transforme la vie quotidienne en aventure !**
 
 > *"Chaque jour est une nouvelle quête, chaque tâche une opportunité de progresser."*

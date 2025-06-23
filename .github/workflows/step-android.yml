@@ -70,9 +70,6 @@ jobs:
           GAMELIFE_KEYSTORE_PASSWORD: ${{ secrets.GAMELIFE_KEYSTORE_PASSWORD }}
           GAMELIFE_KEY_PASSWORD: ${{ secrets.GAMELIFE_KEY_PASSWORD }}
         run: |
-          # Build types
-          npm run prestart
-
           # Build the app with environment variables
           GAMELIFE_KEYSTORE_PASSWORD="${GAMELIFE_KEYSTORE_PASSWORD}" GAMELIFE_KEY_PASSWORD="${GAMELIFE_KEY_PASSWORD}" npm run build
 

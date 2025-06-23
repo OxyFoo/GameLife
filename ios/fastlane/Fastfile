@@ -1,0 +1,177 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build the app without uploading"
+  lane :build do |options|
+    environment = options[:environment] || "dev"
+    
+    # Handle empty environment string
+    if environment.nil? || environment.empty?
+      environment = "dev"
+      UI.important "⚠️ Empty environment provided, defaulting to 'dev'"
+    end
+    
+    # Validate environment
+    unless ['dev', 'test', 'prod'].include?(environment)
+      UI.user_error! "❌ Invalid environment '#{environment}'. Must be 'dev', 'test', or 'prod'"
+    end
+    
+    UI.message "🏗️ Building for environment: #{environment}"
+    
+    # Get app identifier based on environment
+    app_identifier = ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife"
+    
+    # Set provisioning profile name based on environment
+    case environment
+    when 'prod'
+      profile_name = 'Game Life Distributed'
+    when 'test'
+      profile_name = 'GameLife Test Profile'
+    when 'dev'
+      profile_name = 'GameLife Dev Profile'
+    else
+      UI.user_error! "❌ Unknown environment: #{environment}"
+    end
+    
+    UI.message "📱 App Identifier: #{app_identifier}"
+    UI.message "🔐 Provisioning Profile: #{profile_name}"
+    
+    # Verify provisioning profile exists
+    UI.message "🔍 Checking provisioning profiles..."
+    Dir.glob("#{Dir.home}/Library/MobileDevice/Provisioning Profiles/*.mobileprovision") do |profile_path|
+      UI.message "Found profile: #{File.basename(profile_path)}"
+
+      # Try to read profile name from the file
+      begin
+        profile_content = File.read(profile_path)
+        if profile_content.include?("Name")
+          # Extract profile name (simplified)
+          name_match = profile_content.match(/<key>Name<\/key>\s*<string>([^<]+)<\/string>/)
+          if name_match
+            UI.message "  Profile name: #{name_match[1]}"
+          end
+        end
+      rescue => e
+        UI.message "  Could not read profile details: #{e.message}"
+      end
+    end
+    
+    # Verify certificates
+    UI.message "🔍 Checking available certificates..."
+    sh("security find-identity -v -p codesigning") rescue UI.error("Could not list certificates")
+    
+    # Update app identifier in project if needed
+    update_app_identifier(
+      xcodeproj: "GameLife.xcodeproj",
+      plist_path: "GameLife/Info.plist",
+      app_identifier: app_identifier
+    )
+    
+    UI.success "Updated app identifier to: #{app_identifier}"
+    UI.success "Using provisioning profile: #{profile_name}"
+    
+    # Update code signing settings for manual signing
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "GameLife.xcodeproj",
+      team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+      targets: ["GameLife"],
+      code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
+    )
+    
+    # Build the app
+    begin
+      UI.message "🔨 Starting build process..."
+      build_app(
+        workspace: "GameLife.xcworkspace", 
+        scheme: "GameLife",
+        configuration: "Release",
+        export_method: "app-store",
+        output_directory: "./build",
+        output_name: "GameLife-#{environment}.ipa",
+        clean: true,
+        archive_path: "./build/GameLife.xcarchive",
+        export_options: {
+          method: "app-store",
+          teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+          signingStyle: "manual",
+          provisioningProfiles: {
+            (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
+          },
+          uploadSymbols: true
+        },
+        # Additional xcodebuild settings to ensure proper deployment target
+        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+      )
+    rescue => e
+      UI.error "Build failed with error: #{e.message}"
+      UI.error "Full error: #{e.backtrace.join("\n")}" if e.backtrace
+      
+      # Try to read the detailed log
+      log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
+      if File.exist?(log_path)
+        UI.message "📋 Detailed build log:"
+        log_content = File.read(log_path)
+        # Show last 50 lines of the log
+        UI.message log_content.split("\n").last(50).join("\n")
+      end
+      
+      raise e
+    end
+    
+    # Output the final build info
+    UI.success "Built #{environment} version: GameLife-#{environment}.ipa"
+  end
+
+  desc "Upload to App Store Connect"
+  lane :upload_to_appstore do |options|
+    environment = options[:environment] || "prod"
+    ipa_path = "./build/GameLife-#{environment}.ipa"
+    
+    # Use App Store Connect API with environment variables
+    app_store_connect_api_key(
+      key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
+      key_content: ENV['APP_STORE_CONNECT_API_KEY_KEY']
+    )
+
+    upload_to_app_store(
+      skip_waiting_for_build_processing: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      force: true,
+      ipa: ipa_path,
+      submit_for_review: false,
+      automatic_release: false
+    )
+  end
+
+  desc "Build and upload to App Store"
+  lane :release do |options|
+    environment = options[:environment] || "prod"
+    
+    build(environment: environment)
+    upload_to_appstore(environment: environment) if environment != "dev"
+  end
+
+  error do |lane, exception|
+    UI.error "Error in lane #{lane}: #{exception}"
+  end
+end
+
+

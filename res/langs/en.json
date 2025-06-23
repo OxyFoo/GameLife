@@ -431,8 +431,8 @@
         "title-hello": "Hello {}",
 
         "section-missions": "Discovery missions",
-        "section-today-performance": "My activities of the day",
-        "section-today-quests": "My quests",
+        "section-today-performance": "Progress and quests",
+        "section-today-quests": "Today's quest (Work in progress)",
         "section-my-todos": "My to-do list",
 
         "btn-other-skills": "All skills",

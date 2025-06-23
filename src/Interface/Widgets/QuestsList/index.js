@@ -29,6 +29,8 @@ class QuestsList extends BackQuestsList {
                     renderItem={this.renderItem}
                     ListFooterComponent={this.renderFooter}
                     scrollEnabled={false}
+                    numColumns={3}
+                    columnWrapperStyle={styles.flatlistColumnWrapper}
                 />
             </View>
         );

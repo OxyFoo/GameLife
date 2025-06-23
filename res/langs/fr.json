@@ -431,8 +431,8 @@
         "title-hello": "Bonjour {}",
 
         "section-missions": "Missions découverte",
-        "section-today-performance": "Mes activités du jour",
-        "section-today-quests": "Mes quêtes",
+        "section-today-performance": "Progrès et quêtes",
+        "section-today-quests": "Quête du jour (jsp quoi en faire)",
         "section-my-todos": "Mes listes",
 
         "btn-other-skills": "Toutes les compétences",

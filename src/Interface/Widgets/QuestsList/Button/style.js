@@ -9,19 +9,32 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderRadius: 8
     },
-    content: {
-        paddingVertical: 10,
-        paddingHorizontal: 12
+    buttonStyle: {
+        paddingVertical: 4,
+        paddingHorizontal: 8
     },
-    header: {
+    content: {
         width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
         marginBottom: 8
     },
-    headerTitle: {
+    contentHeader: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    contentDonut: {
         flex: 1,
-        marginLeft: 4
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 8
+    },
+    contentStreak: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end'
     },
     title: {
         fontSize: 16,
@@ -35,12 +48,25 @@ const styles = StyleSheet.create({
         marginRight: 12,
         fontSize: 16
     },
+    progressText: {
+        fontSize: 14,
+        fontWeight: '700',
+        textAlign: 'center',
+        includeFontPadding: false,
+        textAlignVertical: 'center',
+        lineHeight: 16,
+        letterSpacing: 0.3
+    },
+    progressInfo: {
+        marginLeft: 12,
+        flex: 1
+    },
     streakText: {
         marginRight: 4,
         fontSize: 16
     },
     streakIcon: {
-        marginRight: 12
+        marginRight: 0
     },
     flatlistColumnWrapper: {
         flexDirection: 'row',

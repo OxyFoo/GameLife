@@ -46,26 +46,17 @@ class Home extends BackHome {
                         color='transparent'
                         icon='add-outline'
                         fontColor='gradient'
-                        onPress={this.addActivity}
+                        onPress={this.addQuest}
                     />
                 </Title>
                 <TodayPieChart style={styles.todayPieChart} />
 
-                {/* Today missions */}
-                <DailyQuest style={styles.dailyQuests} />
-
                 {/* Today quests */}
-                <Title title={lang['section-today-quests']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='add-outline'
-                        fontColor='gradient'
-                        onPress={this.addQuest}
-                    />
-                </Title>
-                <QuestsList />
+                <QuestsList style={styles.quests} />
+
+                {/* Today missions */}
+                <Title title={lang['section-today-quests']} />
+                <DailyQuest style={styles.dailyQuests} />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>

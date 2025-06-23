@@ -37,9 +37,10 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         textTransform: 'uppercase'
     },
-    dailyQuests: {
-        marginTop: 24
+    quests: {
+        marginTop: 8
     },
+    dailyQuests: {},
     sectionTitleAddButton: {
         width: 'auto',
         paddingVertical: 8,

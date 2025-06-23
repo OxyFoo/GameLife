@@ -5,6 +5,12 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
 
+    flatlistColumnWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 12
+    },
+
     buttonOpenQuest: {
         paddingVertical: 14
     }

@@ -1,33 +1,54 @@
-# GameLife
+# 🎮 GameLife
 
 [![⚙️ Continuous Integration](https://github.com/OxyFoo/GameLife/actions/workflows/ci.yml/badge.svg)](https://github.com/OxyFoo/GameLife/actions/workflows/ci.yml)
 [![✋ GameLife - Continuous Delivery](https://github.com/OxyFoo/GameLife/actions/workflows/workflow-delivery.yml/badge.svg)](https://github.com/OxyFoo/GameLife/actions/workflows/workflow-delivery.yml)
 
-## 🎮 À propos du projet
+## 🌟 Qu'est-ce que GameLife ?
 
-GameLife est une application React Native qui transforme votre vie quotidienne en jeu de rôle. Les utilisateurs peuvent :
-- Suivre leurs activités et gagner de l'expérience
-- Développer des compétences dans différents domaines
-- Accomplir des quêtes et missions
-- Débloquer des achievements
-- Interagir avec d'autres utilisateurs en multijoueur
-- Personnaliser leur avatar et utiliser le shop in-app
+GameLife est une application mobile innovante qui gamifie votre productivité personnelle. Elle permet aux utilisateurs de :
+
+- **🎯 Suivre leurs activités** et gagner de l'expérience
+- **🛡️ Développer des compétences** dans différents domaines de la vie
+- **⚔️ Accomplir des quêtes** et missions personnalisées
+- **🏆 Débloquer des achievements** et récompenses
+- **👥 Interagir en multijoueur** avec d'autres utilisateurs
+- **🎨 Personnaliser leur avatar** et explorer le shop in-app
 
 ## 📖 Documentation
 
-Le projet inclut une documentation complète dans le dossier `docs/` :
+Si vous voulez plus d'informations sur le projet, sa structure et les concepts clés, consultez la documentation complète dans le wiki du projet : [Wiki GameLife](https://github.com/OxyFoo/GameLife/wiki/Home).
 
-- **[STRUCTURE.md](docs/STRUCTURE.md)** : Architecture détaillée du projet et organisation des dossiers
-- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** : Guide complet de contribution (installation, standards, processus de développement)
-- **[GIT.md](docs/GIT.md)** : Workflow Git et gestion des branches
-- **[GUIDELINES.md](docs/GUIDELINES.md)** : Standards de code et conventions de nommage
-- **[ENVIRONNEMENTS.md](docs/ENVIRONNEMENTS.md)** : Configuration des environnements (dev, test, prod)
+Pour les contributeurs, vous trouverez des guides détaillés sur la contribution dans le fichier [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 🛠️ Technologies principales
-- React Native 0.79.2 + React 19.0.0
+- **React Native** 0.79.2 + **React** 19.0.0
 - Architecture multi-plateforme (iOS/Android)
 - Multijoueur en temps réel via WebSocket
 - Synchronisation locale/cloud
+
+## 🚀 Installation rapide
+
+#### 🔧 Prérequis
+
+Pour pouvoir développer et tester GameLife, assurez-vous d'avoir installé [React Native](https://reactnative.dev/docs/set-up-your-environment), [Android Studio](https://developer.android.com/studio) et [Xcode](https://developer.apple.com/xcode/).
+
+#### 🚀 Installation
+
+Pour commencer rapidement avec le projet, suivez ces étapes :
+
+```bash
+git clone https://github.com/OxyFoo/GameLife.git  # Cloner le dépôt
+cd GameLife                                       # Accéder au dossier du projet
+npm install                                       # Installer les dépendances
+npm run podi                                      # Installer les Pods (uniquement pour iOS)
+npm start                                         # Lancer le serveur Metro
+```
+
+Dans un autre terminal, lancez l'application :
+```bash
+npm run ios       # Pour iOS
+npm run android   # Pour Android
+```
 
 ## 📚 Sources
 
@@ -86,3 +107,9 @@ Le projet inclut une documentation complète dans le dossier `docs/` :
 * [Préparer l'environnement iOS (Github Actions)](https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development)
 
 </details>
+
+---
+
+🎮 **Transformez votre vie en aventure avec GameLife !**
+
+> *"Chaque jour est une nouvelle quête, chaque tâche une opportunité de progresser."*

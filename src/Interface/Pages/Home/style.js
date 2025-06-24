@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     quests: {
-        marginTop: 12
+        marginTop: 0
     },
     dailyQuests: {
         marginTop: 0

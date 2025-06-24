@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    centerLabelText: {
+        fontWeight: 'bold'
+    },
 
     questsFlatlist: {
         width: '100%'

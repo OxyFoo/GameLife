@@ -38,13 +38,13 @@ class Home extends BackHome {
                 {/* Today missions */}
                 <Missions />
 
-                {/* Today performance */}
+                {/* Today recap */}
                 <Title ref={this.refQuestsTitle} title={lang['section-today-performance']}>
                     <Button
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'
                         color='transparent'
-                        icon='add-outline'
+                        icon='info-circle-outline'
                         fontColor='gradient'
                         onPress={this.addActivity}
                     />
@@ -63,20 +63,17 @@ class Home extends BackHome {
                 </View>
 
                 {/* Quests list */}
-                <QuestsList style={styles.quests} />
-
-                {/* Quest of the day */}
                 <Title title={lang['section-today-quests']}>
                     <Button
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'
                         color='transparent'
-                        icon='add-outline'
+                        icon='info-circle-outline'
                         fontColor='gradient'
                         onPress={this.addQuest}
                     />
                 </Title>
-                <DailyQuest style={styles.dailyQuests} />
+                <QuestsList style={styles.quests} />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>
@@ -90,6 +87,10 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
+
+                {/* Quest of the day */}
+                <Title title={lang['section-today-quest']} />
+                <DailyQuest style={styles.dailyQuests} />
             </ScrollView>
         );
     }

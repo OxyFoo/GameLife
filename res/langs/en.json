@@ -431,9 +431,12 @@
         "title-hello": "Hello {}",
 
         "section-missions": "Discovery missions",
-        "section-today-performance": "My activities of the day",
-        "section-today-quests": "My quests",
+        "section-today-performance": "Recap of the day",
+        "today-activity": "Activities",
+        "today-quest": "Quests",
+        "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
+        "section-today-quest":"idk what to do with this",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",

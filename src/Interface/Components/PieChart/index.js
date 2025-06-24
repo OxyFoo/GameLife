@@ -87,7 +87,8 @@ class PieChart extends BackPieChart {
 
         return (
             <View style={styles.centerLabel}>
-                <Text fontSize={16} color='white'>
+                {/* TODO : BOLD TEXT mais il veut pas */}
+                <Text fontSize={16} color='white' style={styles.centerLabelText}>
                     {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
                 </Text>
             </View>

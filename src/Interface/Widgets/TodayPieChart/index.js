@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import TodayPieChartBack from './back';
@@ -34,24 +35,41 @@ class TodayPieChart extends TodayPieChartBack {
         }
 
         return (
-            <Button
-                style={[styles.container, this.props.style]}
-                appearance='normal'
-                gradientColors={[
-                    themeManager.GetColor('main1', { opacity: 0.12 }),
-                    themeManager.GetColor('main1', { opacity: 0.45 })
+            <LinearGradient
+                style={[styles.gradientContainer, this.props.style]}
+                colors={[
+                    themeManager.GetColor('main1', { opacity: 0.45 }),
+                    themeManager.GetColor('main1', { opacity: 0.12 })
                 ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 onLayout={this.onLayout}
-                onPress={this.onAddActivityPress}
             >
-                {/* Pie chart view */}
-                <PieChart
-                    data={this.state.dataToDisplay}
-                    //dataFullDay={this.state.dataToDisplayFullDay}
-                    focusedActivity={this.state.focusedActivity}
-                    focusedActivityFullDay={this.state.focusedActivityFullDay}
-                />
-            </Button>
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <Text fontSize={16} color='white'>
+                            {lang['today-activity']}
+                        </Text>
+                        <Button
+                            style={styles.sectionTitleAddButton}
+                            appearance='uniform'
+                            color='transparent'
+                            icon='add-outline'
+                            fontColor='gradient'
+                        />
+                    </View>
+
+                    <View style={styles.content}>
+                        {/* Pie chart view */}
+                        <PieChart
+                            data={this.state.dataToDisplay}
+                            //dataFullDay={this.state.dataToDisplayFullDay}
+                            focusedActivity={this.state.focusedActivity}
+                            focusedActivityFullDay={this.state.focusedActivityFullDay}
+                        />
+                    </View>
+                </View>
+            </LinearGradient>
         );
     }
 }

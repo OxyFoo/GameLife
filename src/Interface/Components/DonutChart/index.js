@@ -49,12 +49,15 @@ function DonutChart({
     const radius = (size - strokeWidth) / 2;
     const center = size / 2;
 
-    // Animation values for each segment - update when data changes
+    // Animation values for each segment - recreate when component mounts
     /** @type {Animated.Value[]} */
-    const animationValues = useRef([]).current;
+    const animationValues = useRef(data.map(() => new Animated.Value(0))).current;
 
-    // Ensure we have the right number of animation values
+    // Ensure we have the right number of animation values and reset them when data changes
     useEffect(() => {
+        // Reset all animation values to 0 first
+        animationValues.forEach((animValue) => animValue.setValue(0));
+        
         // Adjust animation values array to match data length
         while (animationValues.length < data.length) {
             animationValues.push(new Animated.Value(0));
@@ -79,6 +82,9 @@ function DonutChart({
             })
         );
 
+        // Cancel any existing animations before starting new ones
+        animationValues.forEach((animValue) => animValue.stopAnimation());
+        
         Animated.parallel(animations).start();
     }, [animationValues, data, delay, duration, easing]);
 

@@ -53,7 +53,7 @@ class QuestProgressChart extends QuestProgressChartBack {
                             size={size}
                             progressColor={chartProgressColor}
                             strokeWidth={8}
-                            delay={500}
+                            delay={0}
                         >
                             <View style={styles.centerContent}>
                                 {/* TODO : BOLD TEXT mais il veut pas */}

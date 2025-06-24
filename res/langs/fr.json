@@ -1148,36 +1148,47 @@
         "recap": {
             "popup-title": "Recapitulatif du jour",
 
-            "title-1": "Graphique Activités",
-            "text-1": [
-                "Le graphique des activités vous montre le temps total où vous avez réalisé des activités aujourd'hui. Vous pouvez y voir jusqu'à 5 couleurs différentes, chacune représentant une catégorie différente.",
-                "Pour voir les correspondances de couleurs et comprendre quelle catégorie est associée à quelle couleur, je vous invite à cliquer sur le graphique !",
-            ],
-
-            "title-2": "Graphique Quêtes",
-            "text-2": [
-                "Le graphique des quêtes vous montre le nombre de quêtes que vous devez et avez accomplies aujourd'hui. Les quêtes que vous devez accomplir sont affichées juste en dessous dans la catégorie 'Quêtes du jour'."
+            "content": [
+                {
+                    "title": "Graphique Activités",
+                    "text": [
+                        "Le graphique des activités vous montre le temps total où vous avez réalisé des activités aujourd'hui. Vous pouvez y voir jusqu'à 5 couleurs différentes, chacune représentant une catégorie différente.",
+                        "Pour voir les correspondances de couleurs et comprendre quelle catégorie est associée à quelle couleur, je vous invite à cliquer sur le graphique !",
+                    ]
+                },
+                {
+                    "title": "Graphique Quêtes",
+                    "text": [
+                        "Le graphique des quêtes vous montre le nombre de quêtes que vous devez et avez accomplies aujourd'hui. Les quêtes que vous devez accomplir sont affichées juste en dessous dans la catégorie 'Quêtes du jour'."
+                    ]
+                }
             ]
         },
         "quest": {
             "popup-title": "Les quêtes",
 
-            "title-1": "Qu'est-ce qu'une quête ?",
-            "text-1": [
-                "Dans GameLife, les quêtes sont des objectifs que tu te fixes pour t'améliorer dans un ou plusieurs domaines.",
-                "Imagine, tu veux te remettre au sport, tu peux créer une quête 'Faire du sport'. 15 min tous les jours, qui accepte les activités 'football', 'course', et 'musculation'.",
-                "Pour valider ta quête tous les jours tu dois donc réaliser 15 min d'une de ces activités et l'inscrire dans GameLife. Ta quête sera alors automatiquement validée !"
-            ],
-
-            "title-2": "A quoi servent les quêtes ?",
-            "text-2": [
-                "Le but des quêtes est de te motiver à faire une activité de manière régulière. Une fois une quête commencée, tu peux voir tout un tas de statistiques sur celle-ci, suivre tes progrès, et être fier de toi-même lorsque tu la valides !"
-            ],
-
-            "title-3": "Vous n'imposez pas de quêtes comme dans Solo Leveling ?",
-            "text-3": [
-                "Les quêtes imposées sont assez contre productives car elles ne sont pas adaptées à tout le monde. Dans le cas de Solo Leveling, l'entrainement journalier réalisé dans le manga est trop lourd pour la plupart des gens, il est presque dangereux car peu de repos.",
-                "Nous avons donc décidé de ne pas imposer de quêtes et de laisser les utilisateurs créer leurs propres quêtes adaptées à leurs besoins et capacités."
+            "content": [
+                {
+                    "title": "Qu'est-ce qu'une quête ?",
+                    "text": [
+                        "Dans GameLife, les quêtes sont des objectifs que tu te fixes pour t'améliorer dans un ou plusieurs domaines.",
+                        "Imagine, tu veux te remettre au sport, tu peux créer une quête 'Faire du sport'. 15 min tous les jours, qui accepte les activités 'football', 'course', et 'musculation'.",
+                        "Pour valider ta quête tous les jours tu dois donc réaliser 15 min d'une de ces activités et l'inscrire dans GameLife. Ta quête sera alors automatiquement validée !"
+                    ]
+                },
+                {
+                    "title": "A quoi servent les quêtes ?",
+                    "text": [
+                        "Le but des quêtes est de te motiver à faire une activité de manière régulière. Une fois une quête commencée, tu peux voir tout un tas de statistiques sur celle-ci, suivre tes progrès, et être fier de toi-même lorsque tu la valides !"
+                    ]
+                },
+                {
+                    "title": "Vous n'imposez pas de quêtes comme dans Solo Leveling ?",
+                    "text": [
+                        "Les quêtes imposées sont assez contre productives car elles ne sont pas adaptées à tout le monde. Dans le cas de Solo Leveling, l'entrainement journalier réalisé dans le manga est trop lourd pour la plupart des gens, il est presque dangereux car peu de repos.",
+                        "Nous avons donc décidé de ne pas imposer de quêtes et de laisser les utilisateurs créer leurs propres quêtes adaptées à leurs besoins et capacités."
+                    ]
+                }
             ]
         }
     }

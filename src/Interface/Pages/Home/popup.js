@@ -1,50 +1,98 @@
 import * as React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Animated } from 'react-native';
 
 import stylesPopup from './stylePopup';
 import langManager from 'Managers/LangManager';
 
-import { Text } from 'Interface/Components';
+import { Text, Icon } from 'Interface/Components';
+
+function CollapsibleSection({ section, isExpanded, onToggle }) {
+    const animatedHeight = React.useRef(new Animated.Value(0)).current;
+    const rotateValue = React.useRef(new Animated.Value(0)).current;
+
+    React.useEffect(() => {
+        Animated.parallel([
+            Animated.timing(animatedHeight, {
+                toValue: isExpanded ? 1 : 0,
+                duration: 250,
+                useNativeDriver: false
+            }),
+            Animated.timing(rotateValue, {
+                toValue: isExpanded ? 1 : 0,
+                duration: 250,
+                useNativeDriver: true
+            })
+        ]).start();
+    }, [isExpanded, animatedHeight, rotateValue]);
+
+    const rotateStyle = {
+        transform: [
+            {
+                rotate: rotateValue.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '90deg']
+                })
+            }
+        ]
+    };
+
+    const contentStyle = {
+        opacity: animatedHeight,
+        maxHeight: animatedHeight.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 500]
+        })
+    };
+
+    return (
+        <View style={stylesPopup.section}>
+            <TouchableOpacity style={stylesPopup.titleContainer} onPress={onToggle} activeOpacity={0.7}>
+                <Text fontSize={18} style={stylesPopup.title}>
+                    {section.title}
+                </Text>
+                <Animated.View style={rotateStyle}>
+                    <Icon icon='chevron' size={16} />
+                </Animated.View>
+            </TouchableOpacity>
+            <Animated.View style={[stylesPopup.content, contentStyle]}>
+                {section.text.map((text, i) => (
+                    <Text key={i} fontSize={14} style={stylesPopup.text}>
+                        {text}
+                    </Text>
+                ))}
+            </Animated.View>
+        </View>
+    );
+}
+
+function CollapsiblePopup({ title, sections }) {
+    const [expanded, setExpanded] = React.useState({});
+
+    return (
+        <View style={stylesPopup.container}>
+            <ScrollView>
+                <Text fontSize={24} style={stylesPopup.popupTitle}>
+                    {title}
+                </Text>
+                {sections.map((section, i) => (
+                    <CollapsibleSection
+                        key={i}
+                        section={section}
+                        isExpanded={expanded[i]}
+                        onToggle={() => setExpanded((prev) => ({ ...prev, [i]: !prev[i] }))}
+                    />
+                ))}
+            </ScrollView>
+        </View>
+    );
+}
 
 /**
  * PopupContent pour afficher les informations sur les activités et récap du jour
  */
 function RecapInfoPopupContent() {
     const lang = langManager.curr['app-explain'];
-
-    return (
-        <View style={stylesPopup.popupContent}>
-            <ScrollView style={stylesPopup.popupScrollView}>
-                <View style={stylesPopup.popupHeader}>
-                    <Text fontSize={24} style={stylesPopup.popupTitle}>
-                        {lang['recap']['popup-title']}
-                    </Text>
-                </View>
-
-                <View style={stylesPopup.popupSection}>
-                    <Text fontSize={18} style={stylesPopup.sectionTitle}>
-                        {lang['recap']['title-1']}
-                    </Text>
-                    {lang['recap']['text-1'].map((text, index) => (
-                        <Text key={index} fontSize={14} style={stylesPopup.sectionText}>
-                            {text}
-                        </Text>
-                    ))}
-                </View>
-
-                <View style={stylesPopup.popupSection}>
-                    <Text fontSize={18} style={stylesPopup.sectionTitle}>
-                        {lang['recap']['title-2']}
-                    </Text>
-                    {lang['recap']['text-2'].map((text, index) => (
-                        <Text key={index} fontSize={14} style={stylesPopup.sectionText}>
-                            {text}
-                        </Text>
-                    ))}
-                </View>
-            </ScrollView>
-        </View>
-    );
+    return <CollapsiblePopup title={lang['recap']['popup-title']} sections={lang['recap']['content']} />;
 }
 
 /**
@@ -52,51 +100,7 @@ function RecapInfoPopupContent() {
  */
 function QuestsInfoPopupContent() {
     const lang = langManager.curr['app-explain'];
-
-    return (
-        <View style={stylesPopup.popupContent}>
-            <ScrollView style={stylesPopup.popupScrollView}>
-                <View style={stylesPopup.popupHeader}>
-                    <Text fontSize={24} style={stylesPopup.popupTitle}>
-                        {lang['quest']['popup-title']}
-                    </Text>
-                </View>
-
-                <View style={stylesPopup.popupSection}>
-                    <Text fontSize={18} style={stylesPopup.sectionTitle}>
-                        {lang['quest']['title-1']}
-                    </Text>
-                    {lang['quest']['text-1'].map((text, index) => (
-                        <Text key={index} fontSize={14} style={stylesPopup.sectionText}>
-                            {text}
-                        </Text>
-                    ))}
-                </View>
-
-                <View style={stylesPopup.popupSection}>
-                    <Text fontSize={18} style={stylesPopup.sectionTitle}>
-                        {lang['quest']['title-2']}
-                    </Text>
-                    {lang['quest']['text-2'].map((text, index) => (
-                        <Text key={index} fontSize={14} style={stylesPopup.sectionText}>
-                            {text}
-                        </Text>
-                    ))}
-                </View>
-
-                <View style={stylesPopup.popupSection}>
-                    <Text fontSize={18} style={stylesPopup.sectionTitle}>
-                        {lang['quest']['title-3']}
-                    </Text>
-                    {lang['quest']['text-3'].map((text, index) => (
-                        <Text key={index} fontSize={14} style={stylesPopup.sectionText}>
-                            {text}
-                        </Text>
-                    ))}
-                </View>
-            </ScrollView>
-        </View>
-    );
+    return <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />;
 }
 
 export { RecapInfoPopupContent, QuestsInfoPopupContent };

@@ -1,35 +1,40 @@
 import { StyleSheet } from 'react-native';
 
 const stylesPopup = StyleSheet.create({
-    // Styles for popup
-    popupContent: {
+    container: {
         padding: 16,
-        maxHeight: 500
-    },
-    popupScrollView: {
-        maxHeight: 450
-    },
-    popupHeader: {
-        marginBottom: 16
+        maxHeight: '90%',
+        width: '100%',
+        flex: 1
     },
     popupTitle: {
         textAlign: 'center',
-        fontWeight: '700'
-    },
-    popupSection: {
+        fontWeight: '700',
         marginBottom: 16
     },
-    sectionTitle: {
-        textAlign: 'left',
-        paddingVertical: 0,
+    section: {
+        marginBottom: 16
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 8
+    },
+    title: {
         fontSize: 18,
         fontWeight: '600',
-        marginBottom: 0
+        flex: 1,
+        textAlign: 'left'
     },
-    sectionText: {
-        textAlign: 'left',
+    content: {
+        marginTop: 8,
+        overflow: 'hidden'
+    },
+    text: {
         lineHeight: 20,
-        marginTop: 8
+        marginTop: 8,
+        textAlign: 'left'
     }
 });
 

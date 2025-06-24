@@ -56,6 +56,7 @@ class TodayPieChart extends TodayPieChartBack {
                             color='transparent'
                             icon='add-outline'
                             fontColor='gradient'
+                            onPress={this.onAddActivityPress}
                         />
                     </View>
 

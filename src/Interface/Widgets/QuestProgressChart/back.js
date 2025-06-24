@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -44,6 +45,25 @@ class QuestProgressChartBack extends React.Component {
             ...this.computeProgress(false)
         };
     }
+
+    /**
+     * Add a new quest to the list and open the quest page\
+     * Max 10 quests
+     */
+    addQuest = () => {
+        const lang = langManager.curr['quests'];
+        if (user.quests.IsMax()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-questslimit-title'],
+                    message: lang['alert-questslimit-message']
+                }
+            });
+            return;
+        }
+        user.interface.ChangePage('quest', { storeInHistory: false });
+    };
 
     componentDidMount() {
         this.listenerQuests = user.quests.allQuests.AddListener(() => {
@@ -116,11 +136,6 @@ class QuestProgressChartBack extends React.Component {
 
             return errorState;
         }
-    };
-
-    onQuestPress = () => {
-        // Navigation vers les quêtes - à implémenter selon votre architecture
-        console.log('Quest chart pressed');
     };
 
     /** @param {LayoutChangeEvent} event */

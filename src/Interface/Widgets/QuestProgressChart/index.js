@@ -42,6 +42,7 @@ class QuestProgressChart extends QuestProgressChartBack {
                             color='transparent'
                             icon='add-outline'
                             fontColor='gradient'
+                            onPress={this.addQuest}
                         />
                     </View>
 

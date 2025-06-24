@@ -75,29 +75,18 @@ class BackHome extends PageBase {
         this.setState({ scrollable });
     };
 
-    addActivity = () => {
-        this.fe.bottomPanel?.Open({
-            content: <AddActivity />
-        });
+    /**
+     * TODO : give info about quests
+     */
+    infoQuests = () => {
+        console.log('TODO: give info about quests');
     };
 
     /**
-     * Add a new quest to the list and open the quest page\
-     * Max 10 quests
+     * TODO : give info about activities
      */
-    addQuest = () => {
-        const lang = langManager.curr['quests'];
-        if (user.quests.IsMax()) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-questslimit-title'],
-                    message: lang['alert-questslimit-message']
-                }
-            });
-            return;
-        }
-        user.interface.ChangePage('quest', { storeInHistory: false });
+    infoActivities = () => {
+        console.log('TODO: give info about activities');
     };
 
     addTodo = () => {

@@ -46,7 +46,7 @@ class Home extends BackHome {
                         color='transparent'
                         icon='info-circle-outline'
                         fontColor='gradient'
-                        onPress={this.addActivity}
+                        onPress={this.infoActivities}
                     />
                 </Title>
 
@@ -70,7 +70,7 @@ class Home extends BackHome {
                         color='transparent'
                         icon='info-circle-outline'
                         fontColor='gradient'
-                        onPress={this.addQuest}
+                        onPress={this.infoQuests}
                     />
                 </Title>
                 <QuestsList style={styles.quests} />

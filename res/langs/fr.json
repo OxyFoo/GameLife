@@ -417,7 +417,6 @@
     "calendar": {
         "summary-title": "Résumé de la journée",
         "activities-title": "Activités du {}",
-        "add-activity": "Ajouter une activité",
         "hour-min": "h",
         "start": "Début de journée",
         "end": "Fin de journée",

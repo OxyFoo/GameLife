@@ -128,8 +128,7 @@ class PieChart extends BackPieChart {
                         size={110}
                         strokeWidth={8}
                         strokeLinecap='round'
-                        duration={1000}
-                        delay={100}
+                        delay={500}
                         segmentGap={12}
                     >
                         {this.renderCenterLabelComponentFullDay()}

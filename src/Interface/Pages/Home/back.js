@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
 import { AddActivity } from 'Interface/Widgets';
+import { RecapInfoPopupContent, QuestsInfoPopupContent } from './popup';
 
 /**
  * @typedef {import('react-native').View} View
@@ -76,17 +77,21 @@ class BackHome extends PageBase {
     };
 
     /**
-     * TODO : give info about quests
+     * Affiche des informations sur les quêtes
      */
     infoQuests = () => {
-        console.log('TODO: give info about quests');
+        user.interface.popup?.Open({
+            content: <QuestsInfoPopupContent />
+        });
     };
 
     /**
-     * TODO : give info about activities
+     * Affiche des informations sur les graphiques de performance
      */
-    infoActivities = () => {
-        console.log('TODO: give info about activities');
+    infoRecap = () => {
+        user.interface.popup?.Open({
+            content: <RecapInfoPopupContent />
+        });
     };
 
     addTodo = () => {

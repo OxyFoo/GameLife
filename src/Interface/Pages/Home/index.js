@@ -46,7 +46,7 @@ class Home extends BackHome {
                         color='transparent'
                         icon='info-circle-outline'
                         fontColor='gradient'
-                        onPress={this.infoActivities}
+                        onPress={this.infoRecap}
                     />
                 </Title>
 

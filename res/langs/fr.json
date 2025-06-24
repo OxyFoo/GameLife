@@ -441,7 +441,8 @@
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
 
-        "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher les graphiques",
+        "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher le graphique",
+        "chart-quest-notmuch": "Ajoute une quête aujourd'hui pour afficher le graphique",
         "chart-total-text": "Total",
         "chart-click-me": "clique ici !",
 

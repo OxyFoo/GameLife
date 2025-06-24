@@ -17,7 +17,7 @@ class QuestProgressChart extends QuestProgressChartBack {
         const { completedQuests, totalQuests, allCompleted } = this.state;
 
         // Format progress text
-        const progressText = allCompleted && totalQuests > 0 ? '✓' : `${completedQuests}/${totalQuests}`;
+        const progressText = `${completedQuests}/${totalQuests}`;
 
         // Calculate colors - use white like PieChart
         const chartProgressColor = allCompleted ? '#4CAF50' : progressColor;
@@ -47,28 +47,35 @@ class QuestProgressChart extends QuestProgressChartBack {
                     </View>
 
                     <View style={styles.content}>
-                        <ProgressDonutChart
-                            current={completedQuests}
-                            goal={Math.max(totalQuests, 1)} // Avoid division by zero
-                            size={size}
-                            progressColor={chartProgressColor}
-                            strokeWidth={8}
-                            delay={0}
-                        >
-                            <View style={styles.centerContent}>
-                                {/* TODO : BOLD TEXT mais il veut pas */}
-                                <Text
-                                    style={[
-                                        styles.progressText,
-                                        {
-                                            fontSize: size * 0.15
-                                        }
-                                    ]}
-                                >
-                                    {progressText}
-                                </Text>
+                        {/* If there are no quests, show message */}
+                        {totalQuests === 0 ? (
+                            <View style={styles.notEnoughData}>
+                                <Text style={styles.notEnoughDataText}>{lang['chart-quest-notmuch']}</Text>
                             </View>
-                        </ProgressDonutChart>
+                        ) : (
+                            <ProgressDonutChart
+                                current={completedQuests}
+                                goal={Math.max(totalQuests, 1)} // Avoid division by zero
+                                size={size}
+                                progressColor={chartProgressColor}
+                                strokeWidth={8}
+                                delay={0}
+                            >
+                                <View style={styles.centerContent}>
+                                    {/* TODO : BOLD TEXT mais il veut pas */}
+                                    <Text
+                                        style={[
+                                            styles.progressText,
+                                            {
+                                                fontSize: size * 0.15
+                                            }
+                                        ]}
+                                    >
+                                        {progressText}
+                                    </Text>
+                                </View>
+                            </ProgressDonutChart>
+                        )}
                     </View>
                 </View>
             </LinearGradient>

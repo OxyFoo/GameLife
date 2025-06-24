@@ -44,6 +44,19 @@ const styles = StyleSheet.create({
         color: 'white',
         marginTop: 2,
         opacity: 0.8
+    },
+    
+    notEnoughData: {
+        width: '100%',
+        paddingVertical: 8,
+        paddingHorizontal: 8
+    },
+    notEnoughDataText: {
+        fontSize: 16
+    },
+    notEnoughDataButton: {
+        marginTop: 12,
+        paddingVertical: 12
     }
 });
 

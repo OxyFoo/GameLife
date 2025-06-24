@@ -441,7 +441,8 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-notmuch": "Add an activity today to display the graphics",
+        "chart-today-notmuch": "Add an activity today to display the graphic",
+        "chart-quest-notmuch": "You need to have a quest today to display the graphic",
         "chart-total-text": "Total",
         "chart-click-me": "click-me!",
 

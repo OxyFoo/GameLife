@@ -42,16 +42,6 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 24
     },
-    activityTitleContent: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    activityTitle: {
-        flex: 1,
-        marginBottom: 12,
-        fontSize: 20,
-        textAlign: 'left'
-    },
     activityItem: {
         paddingVertical: 16,
         paddingHorizontal: 16,

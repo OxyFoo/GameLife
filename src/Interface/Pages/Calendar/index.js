@@ -35,7 +35,7 @@ class Calendar extends BackCalendar {
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
                     <Text style={styles.summaryTitle} color='secondary'>
-                        {lang['summary-title']}
+                        {lang['activities-title'].replace('{}', todayStrDate)}
                     </Text>
 
                     <View style={styles.summaryHoursContent}>
@@ -56,12 +56,6 @@ class Calendar extends BackCalendar {
 
                 {/** Activities list */}
                 <View style={styles.activityList}>
-                    <View style={styles.activityTitleContent}>
-                        <Text style={styles.activityTitle} color='secondary'>
-                            {lang['activities-title'].replace('{}', todayStrDate)}
-                        </Text>
-                    </View>
-
                     <FlatList
                         data={activities}
                         keyExtractor={(activity) => `${activity.activity.startTime}`}

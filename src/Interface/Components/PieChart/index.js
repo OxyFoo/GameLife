@@ -135,6 +135,7 @@ class PieChart extends BackPieChart {
                     </DonutChart>
                 </View>
 
+                {/* Commented temporarly for new feature reason
                 <View style={styles.legendContainer}>
                     <FlatList
                         data={data}
@@ -144,6 +145,7 @@ class PieChart extends BackPieChart {
                         scrollEnabled={false}
                     />
                 </View>
+                */}
             </View>
         );
     }

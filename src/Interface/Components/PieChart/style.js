@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
         marginLeft: 8
     },
     pieChartContainer: {
-        width: '100%',
         paddingHorizontal: 0,
         paddingVertical: 0,
 

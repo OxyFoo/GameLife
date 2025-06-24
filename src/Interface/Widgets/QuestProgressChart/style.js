@@ -12,17 +12,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 12
     },
-    notEnoughData: {
-        width: '100%',
-        paddingVertical: 8,
-        paddingHorizontal: 8
+    centerContent: {
+        alignItems: 'center'
     },
-    notEnoughDataText: {
-        fontSize: 16
+    progressText: {
+        fontWeight: 'bold',
+        color: 'white'
     },
-    notEnoughDataButton: {
-        marginTop: 12,
-        paddingVertical: 12
+    subtitleText: {
+        color: 'white',
+        marginTop: 2,
+        opacity: 0.8
     }
 });
 

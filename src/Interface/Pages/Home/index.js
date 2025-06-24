@@ -7,7 +7,7 @@ import { Title } from './title';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
-import { TodayPieChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
+import { QuestProgressChart, TodayPieChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -49,12 +49,23 @@ class Home extends BackHome {
                         onPress={this.addActivity}
                     />
                 </Title>
-                <TodayPieChart style={styles.todayPieChart} />
 
-                {/* Today missions */}
-                <DailyQuest style={styles.dailyQuests} />
+                <View style={styles.chartsContainer}>
+                    {/* Today Pie Chart */}
+                    <View style={styles.chartItem}>
+                        <TodayPieChart style={styles.todayPieChart} />
+                    </View>
 
-                {/* Today quests */}
+                    {/* Quest Progress Chart */}
+                    <View style={styles.chartItem}>
+                        <QuestProgressChart style={styles.questProgressChart} />
+                    </View>
+                </View>
+
+                {/* Quests list */}
+                <QuestsList style={styles.quests} />
+
+                {/* Quest of the day */}
                 <Title title={lang['section-today-quests']}>
                     <Button
                         style={styles.sectionTitleAddButton}
@@ -65,7 +76,7 @@ class Home extends BackHome {
                         onPress={this.addQuest}
                     />
                 </Title>
-                <QuestsList />
+                <DailyQuest style={styles.dailyQuests} />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>

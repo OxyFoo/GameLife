@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
 import { AddActivity } from 'Interface/Widgets';
+import { RecapInfoPopupContent, QuestsInfoPopupContent } from './popup';
 
 /**
  * @typedef {import('react-native').View} View
@@ -75,29 +76,22 @@ class BackHome extends PageBase {
         this.setState({ scrollable });
     };
 
-    addActivity = () => {
-        this.fe.bottomPanel?.Open({
-            content: <AddActivity />
+    /**
+     * Affiche des informations sur les quêtes
+     */
+    infoQuests = () => {
+        user.interface.popup?.Open({
+            content: <QuestsInfoPopupContent />
         });
     };
 
     /**
-     * Add a new quest to the list and open the quest page\
-     * Max 10 quests
+     * Affiche des informations sur les graphiques de performance
      */
-    addQuest = () => {
-        const lang = langManager.curr['quests'];
-        if (user.quests.IsMax()) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-questslimit-title'],
-                    message: lang['alert-questslimit-message']
-                }
-            });
-            return;
-        }
-        user.interface.ChangePage('quest', { storeInHistory: false });
+    infoRecap = () => {
+        user.interface.popup?.Open({
+            content: <RecapInfoPopupContent />
+        });
     };
 
     addTodo = () => {

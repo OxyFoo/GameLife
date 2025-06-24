@@ -9,14 +9,8 @@ const styles = StyleSheet.create({
         marginLeft: 8
     },
     pieChartContainer: {
-        width: '100%',
         paddingHorizontal: 0,
-        paddingVertical: 0,
-
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'stretch',
-        overflow: 'visible'
+        paddingVertical: 0
     },
     pieChart: {
         width: '40%',
@@ -34,11 +28,15 @@ const styles = StyleSheet.create({
         bottom: 0
     },
 
-    flatlist: {
-        flexGrow: 0
-    },
+    flatlist: {},
     legendContainer: {
+        width: '100%',
         flex: 1,
+        justifyContent: 'center',
+        textAlign: 'left'
+    },
+    legendContainerFullScreen: {
+        width: '100%',
         justifyContent: 'center'
     },
     legendContainerFullDay: {
@@ -47,11 +45,15 @@ const styles = StyleSheet.create({
     },
     legendItem: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingRight: 12
     },
     centerLabel: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    centerLabelText: {
+        fontWeight: 'bold'
     },
 
     questsFlatlist: {

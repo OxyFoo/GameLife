@@ -7,7 +7,7 @@ import { Title } from './title';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
-import { TodayPieChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
+import { QuestProgressChart, TodayPieChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -38,34 +38,42 @@ class Home extends BackHome {
                 {/* Today missions */}
                 <Missions />
 
-                {/* Today performance */}
+                {/* Today recap */}
                 <Title ref={this.refQuestsTitle} title={lang['section-today-performance']}>
                     <Button
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'
                         color='transparent'
-                        icon='add-outline'
+                        icon='info-circle-outline'
                         fontColor='gradient'
-                        onPress={this.addActivity}
+                        onPress={this.infoRecap}
                     />
                 </Title>
-                <TodayPieChart style={styles.todayPieChart} />
 
-                {/* Today missions */}
-                <DailyQuest style={styles.dailyQuests} />
+                <View style={styles.chartsContainer}>
+                    {/* Today Pie Chart */}
+                    <View style={styles.chartItem}>
+                        <TodayPieChart style={styles.todayPieChart} />
+                    </View>
 
-                {/* Today quests */}
+                    {/* Quest Progress Chart */}
+                    <View style={styles.chartItem}>
+                        <QuestProgressChart style={styles.questProgressChart} />
+                    </View>
+                </View>
+
+                {/* Quests list */}
                 <Title title={lang['section-today-quests']}>
                     <Button
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'
                         color='transparent'
-                        icon='add-outline'
+                        icon='info-circle-outline'
                         fontColor='gradient'
-                        onPress={this.addQuest}
+                        onPress={this.infoQuests}
                     />
                 </Title>
-                <QuestsList />
+                <QuestsList style={styles.quests} />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>
@@ -79,6 +87,10 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
+
+                {/* Quest of the day */}
+                <Title title={lang['section-today-quest']} />
+                <DailyQuest style={styles.dailyQuests} />
             </ScrollView>
         );
     }

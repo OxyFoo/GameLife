@@ -5,8 +5,10 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 24
     },
+
+    // Styles for progress bar and XP header
     progressbar: {
-        marginTop: 12,
+        marginTop: 0,
         marginBottom: 6
     },
     XPHeader: {
@@ -24,9 +26,10 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
 
+    // Styles for title.js file
     sectionContainer: {
-        marginTop: 24,
-        marginBottom: 16,
+        marginTop: 12,
+        marginBottom: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
@@ -37,20 +40,37 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         textTransform: 'uppercase'
     },
-    dailyQuests: {
-        marginTop: 24
-    },
+
+    // Special styles for section title and add button
     sectionTitleAddButton: {
         width: 'auto',
         paddingVertical: 8,
         paddingHorizontal: 8
     },
 
-    todayPieChart: {
-        width: '100%',
-        borderRadius: 8
+    // Styles for main content
+    chartsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        gap: 12
     },
-
+    chartItem: {
+        flex: 1, // Les deux charts prendront la même largeur
+        alignItems: 'center'
+    },
+    todayPieChart: {
+        width: '100%'
+    },
+    questProgressChart: {
+        width: '100%'
+    },
+    quests: {
+        marginTop: 0
+    },
+    dailyQuests: {
+        marginTop: 0
+    },
     todoList: {
         marginBottom: 24
     }

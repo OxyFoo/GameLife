@@ -11,8 +11,9 @@ export { InputText } from './Components/InputText';
 export { KeyboardSpacerView } from './Components/KeyboardSpacerView';
 export { KPI } from './Components/KPI';
 export { LineChartSvg } from './Components/LineChartSvg';
-import { PieChart } from './Components/PieChart';
+export { PieChart } from './Components/PieChart';
 export { ProgressBar } from './Components/ProgressBar';
+export { ProgressDonutChart } from './Components/ProgressDonutChart';
 export { Reward } from './Components/Reward';
 export { Separator } from './Components/Separator';
 export { Swiper } from './Components/Swiper';
@@ -27,4 +28,4 @@ import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
 import StreakChart from './OldComponents/StreakChart';
 
-export { Frame, Character, PieChart, StreakChart };
+export { Frame, Character, StreakChart };

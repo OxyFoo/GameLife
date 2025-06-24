@@ -431,15 +431,20 @@
         "title-hello": "Hello {}",
 
         "section-missions": "Discovery missions",
-        "section-today-performance": "My activities of the day",
-        "section-today-quests": "My quests",
+        "section-today-performance": "Recap of the day",
+        "today-activity": "Activities",
+        "today-quest": "Quests",
+        "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
+        "section-today-quest":"idk what to do with this",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-notmuch": "Add an activity today to display the graphics",
+        "chart-today-notmuch": "Add an activity today to display the graphic",
+        "chart-quest-notmuch": "You need to have a quest today to display the graphic",
         "chart-total-text": "Total",
+        "chart-click-me": "click-me!",
 
         "news-myquests-title": "Quests to do",
 
@@ -1138,6 +1143,55 @@
             "request-timeout": "Request time limit exceeded",
             "no-activities": "No activities generated",
             "limit-reached": "You have reached the use limit for today"
+        }
+    },
+
+    "app-explain" : {
+        "recap": {
+            "popup-title": "Recap of the day",
+
+             "content": [
+                {
+                    "title": "Activity Graph",
+                    "text": [
+                        "The activity graph shows you the total time you've spent doing activities today. You can see up to 5 different colors, each representing a different category.",
+                        "To see the link between colors and categories, you can click on the graph to display the legend.",
+                    ]
+                }, 
+                {
+                    "title": "Quests Graph",
+                    "text": [
+                        "The quests graph shows you quests you have to complete today. The same quests are displayed in details below the graph.",
+                    ]
+                }
+            ]
+        },
+        "quest": {
+            "popup-title": "Quests",
+
+            "content": [
+                {
+                    "title": "What are quests ?",
+                    "text": [
+                        "In GameLife, quests are a way to motivate you to do activities regularly. You can create your own quests, which will be validated when you complete them.",
+                        "Imagine, for example, that you want to do 15 minutes of sport every day. You can create a quest called \"Daily Sport\" and add activities like running, cycling, or going to the gym.",
+                        "When you complete these activities (and input it in the app), your quest will be validated!"
+                    ]
+                }, 
+                {
+                    "title": "What's the point of quests ?",
+                    "text": [
+                        "Quests are a great way to stay motivated and keep track of your progress. They help you set goals and achieve them, while also making it fun to do activities."
+                    ]
+                },
+                {
+                    "title": "No imposed quests like in Solo Leveling?",
+                    "text": [
+                        "In GameLife, we believe in freedom and flexibility. We don't impose quests on you like in Solo Leveling, where you have to complete specific tasks to progress. Especially because the one in Solo Leveling are often too difficult or unrealistic for most people.",
+                        "Instead, you can create your own quests based on your interests and goals. This way, you can enjoy the game while also improving your real-life skills and habits."
+                    ]
+                }
+            ]
         }
     }
 }

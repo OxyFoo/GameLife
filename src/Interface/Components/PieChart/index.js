@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 
 import BackPieChart from './back';
 import styles from './style';
@@ -19,6 +19,25 @@ import { DonutChart } from '../DonutChart';
  */
 
 class PieChart extends BackPieChart {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showDonutChart: true, // true pour donut chart, false pour flat list
+            donutKey: 0 // compteur pour forcer le remount du donut chart
+        };
+    }
+
+    /**
+     * Bascule entre le donut chart et la flat list
+     */
+    toggleDisplay = () => {
+        this.setState((prevState) => ({
+            showDonutChart: !prevState.showDonutChart,
+            // Incrémenter le donutKey quand on bascule vers le donut chart pour forcer le remount
+            donutKey: !prevState.showDonutChart ? prevState.donutKey + 1 : prevState.donutKey
+        }));
+    };
+
     /**
      * Renders a colored dot used for legends or markers.
      * @param {string} color The color of the dot.
@@ -81,14 +100,19 @@ class PieChart extends BackPieChart {
      */
     renderCenterLabelComponentFullDay = () => {
         const langDates = langManager.curr['dates']['names'];
+        const lang = langManager.curr['home'];
         const totalMinutes = this.props.data.reduce((acc, cur) => acc + cur.valueMinutes, 0);
         const hour = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
 
         return (
             <View style={styles.centerLabel}>
-                <Text fontSize={16} color='white'>
+                {/* TODO : BOLD TEXT mais il veut pas */}
+                <Text fontSize={16} color='white' style={styles.centerLabelText}>
                     {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
+                </Text>
+                <Text fontSize={10} color='white'>
+                    {lang['chart-click-me']}
                 </Text>
             </View>
         );
@@ -111,6 +135,7 @@ class PieChart extends BackPieChart {
 
     render() {
         const { style, data, focusedActivity } = this.props;
+        const { showDonutChart, donutKey } = this.state;
 
         if (!data || !focusedActivity) {
             return null;
@@ -120,31 +145,41 @@ class PieChart extends BackPieChart {
         const convertedData = this.convertDataForDonutChart(data);
 
         return (
-            <View style={[styles.pieChartContainer, style]}>
-                <View style={styles.pieChart}>
-                    <DonutChart
-                        data={convertedData}
-                        size={110}
-                        strokeWidth={8}
-                        strokeLinecap='round'
-                        duration={1000}
-                        delay={100}
-                        segmentGap={12}
-                    >
-                        {this.renderCenterLabelComponentFullDay()}
-                    </DonutChart>
-                </View>
-
-                <View style={styles.legendContainer}>
-                    <FlatList
-                        data={data}
-                        style={styles.flatlist}
-                        renderItem={this.renderLegendItem}
-                        keyExtractor={(item) => `piechart-legend-${item.name}`}
-                        scrollEnabled={false}
-                    />
-                </View>
-            </View>
+            <TouchableOpacity
+                style={[styles.pieChartContainer, style]}
+                onPress={this.toggleDisplay}
+                activeOpacity={0.8}
+            >
+                {showDonutChart ? (
+                    // Affichage du donut chart
+                    <>
+                        <View style={styles.pieChart}>
+                            <DonutChart
+                                key={`donut-${donutKey}`}
+                                data={convertedData}
+                                size={110}
+                                strokeWidth={8}
+                                strokeLinecap='round'
+                                delay={0}
+                                segmentGap={12}
+                            >
+                                {this.renderCenterLabelComponentFullDay()}
+                            </DonutChart>
+                        </View>
+                    </>
+                ) : (
+                    // Affichage de la flat list
+                    <View style={styles.legendContainerFullScreen}>
+                        <FlatList
+                            data={data}
+                            style={styles.flatlist}
+                            renderItem={this.renderLegendItem}
+                            keyExtractor={(item) => `piechart-legend-${item.name}`}
+                            scrollEnabled={false}
+                        />
+                    </View>
+                )}
+            </TouchableOpacity>
         );
     }
 

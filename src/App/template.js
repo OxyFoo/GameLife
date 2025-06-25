@@ -216,6 +216,75 @@ export function LoadTemplate_AppData(user) {
         { ID: 3, Name: { fr: 'Chasseur de rang S', en: 'S rank hunter' }, Value: 100, Buyable: false }
     ]);
 
+    user.multiplayer.Load({
+        friends: [
+            {
+                accountID: 1,
+                username: 'Friend1',
+                activities: {
+                    firstTime: 1700000000,
+                    length: 3600,
+                    totalDuration: 7200
+                },
+                achievements: [],
+                xp: 1000,
+                friendshipState: 'accepted',
+                avatar: {
+                    Top: 'top_01',
+                    Bottom: 'bottom_01',
+                    Skin: 'skin_01',
+                    SkinColor: 0,
+                    Hair: 'hair_01',
+                    Sexe: 'MALE',
+                    Shoes: 'shoes_01'
+                },
+                currentActivity: null,
+                stats: {
+                    agi: 10,
+                    dex: 10,
+                    for: 10,
+                    int: 10,
+                    soc: 10,
+                    sta: 10
+                },
+                status: 'online',
+                title: 0
+            },
+            {
+                accountID: 2,
+                username: 'Friend2',
+                activities: {
+                    firstTime: 1700000000,
+                    length: 3600,
+                    totalDuration: 7200
+                },
+                achievements: [],
+                xp: 1000,
+                friendshipState: 'accepted',
+                avatar: {
+                    Top: 'top_01',
+                    Bottom: 'bottom_01',
+                    Skin: 'skin_01',
+                    SkinColor: 0,
+                    Hair: 'hair_01',
+                    Sexe: 'MALE',
+                    Shoes: 'shoes_01'
+                },
+                currentActivity: null,
+                stats: {
+                    agi: 10,
+                    dex: 10,
+                    for: 10,
+                    int: 10,
+                    soc: 10,
+                    sta: 10
+                },
+                status: 'online',
+                title: 1
+            }
+        ]
+    });
+
     user.interface.console?.AddLog('info', 'App data: template load success');
 }
 

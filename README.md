@@ -28,21 +28,13 @@ Si vous voulez plus d'informations sur le projet, sa structure et les concepts c
 
 Pour les contributeurs, vous trouverez des guides détaillés sur la contribution dans le fichier [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 🛠️ Technologies principales
-- **React Native** 0.79.2 + **React** 19.0.0
-- Architecture multi-plateforme (iOS/Android)
-- Multijoueur en temps réel via WebSocket
-- Synchronisation locale/cloud
+Pour une installation détaillée, consultez la section [Installation](https://github.com/OxyFoo/GameLife/wiki/Setup).
 
 ## 🚀 Installation rapide
 
-#### 🔧 Prérequis
+Pour pouvoir développer et tester GameLife, il est nécessaire d'avoir installé [React Native](https://reactnative.dev/docs/set-up-your-environment).
 
-Pour pouvoir développer et tester GameLife, il est nécessaire d'avoir installé [React Native](https://reactnative.dev/docs/set-up-your-environment), [Android Studio](https://developer.android.com/studio) et [Xcode](https://developer.apple.com/xcode/).
-
-#### 🚀 Installation
-
-Pour commencer rapidement avec le projet, suivez ces étapes :
+Ensuite, vous pouvez cloner le dépôt, installer les dépendances et lancer l'application avec les commandes suivantes :
 
 ```bash
 git clone https://github.com/OxyFoo/GameLife.git  # Cloner le dépôt

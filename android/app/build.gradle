@@ -6,6 +6,34 @@ apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.grad
 apply plugin: "com.google.gms.google-services"
 
 /**
+ * Helper function to get signing passwords with fallback support
+ * Try gradle.properties first (for CI/CD), then local.properties (for local builds)
+ */
+def getSigningPassword(gradlePropertyName) {
+    // First try gradle.properties (environment variables via CI/CD)
+    if (project.hasProperty(gradlePropertyName)) {
+        def envValue = project.property(gradlePropertyName)
+        // Check if value is not null, not empty, and not an unresolved placeholder
+        if (envValue != null && !envValue.toString().isEmpty() && !envValue.toString().startsWith('${')) {
+            return envValue
+        }
+    }
+    
+    // Fallback to local.properties (local development)
+    def localProperties = new Properties()
+    def localPropertiesFile = project.rootProject.file('local.properties')
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.newDataInputStream())
+        def localValue = localProperties.getProperty(gradlePropertyName)
+        if (localValue != null && !localValue.isEmpty()) {
+            return localValue
+        }
+    }
+    
+    throw new RuntimeException("Unable to find signing password for ${gradlePropertyName}")
+}
+
+/**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
  */
@@ -98,11 +126,11 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            if (project.hasProperty('GAMELIFE_UPLOAD_STORE_FILE')) {
+                storeFile file(GAMELIFE_UPLOAD_STORE_FILE)
+                storePassword getSigningPassword('GAMELIFE_KEYSTORE_PASSWORD')
+                keyAlias GAMELIFE_UPLOAD_KEY_ALIAS
+                keyPassword getSigningPassword('GAMELIFE_KEY_PASSWORD')
             }
         }
     }

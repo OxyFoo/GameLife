@@ -143,7 +143,7 @@ class BackLogin extends PageBase {
         return;
     };
 
-    goToSignin = () => {
+    goToSignin = async () => {
         const { signinMode, animSignin, animSigninBis } = this.state;
         if (signinMode) {
             return;
@@ -152,13 +152,16 @@ class BackLogin extends PageBase {
         SpringAnimation(animSignin, 1, false).start();
         setTimeout(SpringAnimation(animSigninBis, 1, false).start, 100);
 
-        this.setState({ signinMode: true });
         user.interface.AddCustomBackHandler(this.backToLogin);
+
+        return new Promise((resolve) => {
+            this.setState({ signinMode: true }, () => resolve(undefined));
+        });
     };
 
     backToLogin = () => {
-        const { signinMode, animSignin, animSigninBis } = this.state;
-        if (!signinMode) {
+        const { loading, signinMode, animSignin, animSigninBis } = this.state;
+        if (loading || !signinMode) {
             return false;
         }
 
@@ -261,13 +264,12 @@ class BackLogin extends PageBase {
             return;
         }
 
-        this.googleTokenValidated = true;
-
-        // Use the existing login function with the Google email
-        const needSignin = await Login.call(this, result.email);
+        if (response.result === 'can-login' || response.result === 'can-signin') {
+            this.googleTokenValidated = true;
+        }
 
         // Continue login in loading page
-        if (!needSignin) {
+        if (response.result === 'can-login') {
             const mailSaved = await user.server2.userAuth.SetEmail(result.email);
             if (!mailSaved) {
                 this.setState({
@@ -280,11 +282,23 @@ class BackLogin extends PageBase {
         }
 
         // Reset loading state
-        this.setState({
-            loading: false,
-            email: result.email,
-            errorEmail: ''
-        });
+        else if (response.result === 'can-signin') {
+            this.goToSignin().then(() => {
+                this.setState({
+                    loading: false,
+                    email: result.email,
+                    errorEmail: ''
+                });
+            });
+        }
+
+        // Handle server error
+        else {
+            this.setState({
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', `req-${response.result}`)
+            });
+        }
     };
 }
 

@@ -142,10 +142,27 @@ class TCP {
     };
 
     Disconnect = () => {
-        if (this.IsConnected()) {
-            this.socket?.close();
+        if (this.socket) {
+            // Remove event listeners to prevent memory leaks
+            this.socket.removeEventListener('open', this.#onOpen);
+            this.socket.removeEventListener('message', this.#onMessage);
+            this.socket.removeEventListener('error', this.#onError);
+            this.socket.removeEventListener('close', this.#onClose);
+
+            // Close the connection if it's still open
+            if (this.IsConnected()) {
+                this.socket.close();
+            }
+
+            this.socket = null;
         }
-        this.socket = null;
+
+        // Clear any pending callbacks
+        this.#callbacks = {};
+        this.#callbacksActions = {};
+
+        // Reset state
+        this.state.Set('disconnected');
     };
 
     GetLastError = () => {

@@ -57,6 +57,12 @@ class DeviceAuthService {
         // Device authentication is persistent and not tied to the user authentication
     };
 
+    HardReset = async () => {
+        await SecureStorage.Remove('DEVICE_UUID');
+        await SecureStorage.Remove('SESSION_TOKEN');
+        await SecureStorage.Remove('INTEGRITY_TOKEN');
+    };
+
     /**
      * @description Check if the device is authenticated
      * @returns {DeviceAuthState}
@@ -344,10 +350,18 @@ class DeviceAuthService {
             response === 'not-sent' ||
             response === 'timeout' ||
             response === 'interrupted' ||
-            response.status !== 'authenticate' ||
-            response.result === 'error'
+            response.status !== 'authenticate'
         ) {
             this.#user.interface.console?.AddLog('error', '[DeviceAuthService] Authentication failed');
+            return null;
+        }
+
+        if (response.result === 'error') {
+            this.#user.interface.console?.AddLog(
+                'error',
+                `[DeviceAuthService] Authentication failed, reset credentials`
+            );
+            await this.HardReset();
             return null;
         }
 

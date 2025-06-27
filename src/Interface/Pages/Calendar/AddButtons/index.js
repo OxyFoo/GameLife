@@ -18,22 +18,20 @@ function Separator({ text = '', onPress = () => {} }) {
 
     return (
         <View style={styles.separator}>
-            {/** Separator text for symmetry */}
-            {!!text && (
-                <Text style={styles.separatorText} color='transparent'>
-                    {text}
-                </Text>
-            )}
-
-            <Button style={styles.separatorButton} appearance='outline' fontColor='primary' onPress={onPress}>
-                {lang['add-activity']}
-            </Button>
-
             {!!text && (
                 <Text style={styles.separatorText} color='light'>
                     {text}
                 </Text>
             )}
+
+            <Button
+                style={styles.separatorButton}
+                appearance='uniform'
+                color='transparent'
+                icon='add-outline'
+                fontColor='gradient'
+                onPress={onPress}
+            />
         </View>
     );
 }

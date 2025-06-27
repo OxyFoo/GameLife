@@ -101,7 +101,11 @@ class Server extends IUserClass {
             if (connectionStatus === 'wrong-ssl-pinning') {
                 this.#user.interface.console?.AddLog('error', '[Server] SSL Pinning error, check your configuration');
                 return 'wrong-ssl-pinning';
-            } else if (connectionStatus === 'error' || connectionStatus === 'timeout') {
+            } else if (
+                connectionStatus === 'error' ||
+                connectionStatus === 'timeout' ||
+                connectionStatus === 'connecting'
+            ) {
                 this.#user.interface.console?.AddLog('error', `[Server] Connection failed: ${connectionStatus}`);
                 return 'not-connected';
             } else if (connectionStatus !== 'connected' && connectionStatus !== 'already-connected') {
@@ -153,7 +157,16 @@ class Server extends IUserClass {
         return 'authenticated';
     };
 
-    Reconnect = this.Initialize;
+    Reconnect = () => {
+        const serverState = this.tcp.state.Get();
+        if (serverState !== 'error' && serverState !== 'disconnected') {
+            this.#user.interface.console?.AddLog('info', '[Server] Already connected to the server');
+            return Promise.resolve('already-authenticated');
+        }
+
+        this.#user.interface.console?.AddLog('info', '[Server] Reconnecting to the server...');
+        return this.Initialize();
+    };
 
     Unmount = () => {
         if (this.#listenerTCP) {

@@ -15,7 +15,7 @@ async function Login(email) {
     const lang = langManager.curr['login'];
 
     this.setState({ loading: true });
-    const status = await user.server2.userAuth.Login(email);
+    const status = await user.server2.userAuth.Login(email, true);
     await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Logged in
@@ -104,7 +104,7 @@ async function Signin(email, username) {
         this.setState({
             username: '',
             errorUsername: '',
-            errorEmail: lang['error-signin-server']
+            errorEmail: lang['error-signin-server'].replace('{}', `${signinStatus}`)
         });
         this.backToLogin();
     }

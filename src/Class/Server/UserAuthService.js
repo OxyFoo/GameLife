@@ -95,6 +95,7 @@ class UserAuthService {
 
     /**
      * @param {string | null} email
+     * @param {boolean} [skipAuthentication=false] If true, skip real authentication (used to check permissions to authenticate)
      * @returns {Promise<'authenticated' | 'authenticated-offline' | 'free' | 'mailNotSent' | 'deviceLimitReached' | 'waitMailConfirmation' | 'error'>}
      * - `false` if the request failed
      * - `ok` if the login is successful
@@ -103,7 +104,7 @@ class UserAuthService {
      * - `waitMailConfirmation` if the mail was sent but not yet confirmed
      * - `error` if an error occurred
      */
-    Login = async (email) => {
+    Login = async (email, skipAuthentication = false) => {
         if (email === null) {
             this.#user.interface.console?.AddLog('error', '[Server2/Login] No email provided');
             return 'error';
@@ -120,7 +121,8 @@ class UserAuthService {
 
         const response = await this.#tcp.SendAndWait({
             action: 'login',
-            email
+            email,
+            skipAuthentication
         });
 
         if (response === 'timeout' || response === 'not-sent' || response === 'interrupted') {

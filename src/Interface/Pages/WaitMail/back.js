@@ -100,6 +100,7 @@ class BackWaitmail extends PageBase {
     onBack = async () => {
         user.settings.waitingEmail = '';
         await user.settings.IndependentSave();
+        await user.server2.userAuth.ResetEmail();
         user.interface.ChangePage('login', { storeInHistory: false });
     };
 

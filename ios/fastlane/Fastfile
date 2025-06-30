@@ -55,12 +55,12 @@ platform :ios do
     actual_profile_name = ENV["PROVISION_PROFILE_NAME_ACTUAL"]
     profile_uuid = ENV["PROVISION_PROFILE_UUID"]
     
-    if actual_profile_name && !actual_profile_name.empty? && actual_profile_name != "unknown"
+    if actual_profile_name && !actual_profile_name.empty?
       UI.message "📋 Using actual profile name from CI: #{actual_profile_name}"
       profile_name = actual_profile_name
     end
     
-    if profile_uuid && !profile_uuid.empty? && profile_uuid != "unknown"
+    if profile_uuid && !profile_uuid.empty?
       UI.message "🆔 Using profile UUID: #{profile_uuid}"
     end
     
@@ -136,9 +136,11 @@ platform :ios do
       else
         export_options_hash[:signingStyle] = "manual"
         export_options_hash[:provisioningProfiles] = {
-          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (profile_uuid && profile_uuid != "unknown") ? profile_uuid : profile_name
+          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (profile_uuid && !profile_uuid.empty?) ? profile_uuid : profile_name
         }
       end
+      
+      UI.message "🔧 Export options: #{export_options_hash}"
       
       build_app(
         workspace: "GameLife.xcworkspace", 
@@ -154,19 +156,52 @@ platform :ios do
         xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
       )
     rescue => e
-      UI.error "Build failed with error: #{e.message}"
-      UI.error "Full error: #{e.backtrace.join("\n")}" if e.backtrace
-      
-      # Try to read the detailed log
-      log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
-      if File.exist?(log_path)
-        UI.message "📋 Detailed build log:"
-        log_content = File.read(log_path)
-        # Show last 50 lines of the log
-        UI.message log_content.split("\n").last(50).join("\n")
+      if use_automatic_signing && e.message.include?("signing")
+        UI.important "⚠️ Automatic signing failed, trying manual signing..."
+        
+        # Retry with manual signing
+        update_code_signing_settings(
+          use_automatic_signing: false,
+          path: "GameLife.xcodeproj",
+          team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+          targets: ["GameLife"],
+          code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
+        )
+        
+        export_options_hash[:signingStyle] = "manual"
+        export_options_hash[:provisioningProfiles] = {
+          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (profile_uuid && !profile_uuid.empty?) ? profile_uuid : profile_name
+        }
+        
+        UI.message "🔧 Retry with manual signing, export options: #{export_options_hash}"
+        
+        build_app(
+          workspace: "GameLife.xcworkspace", 
+          scheme: "GameLife",
+          configuration: "Release",
+          export_method: "app-store",
+          output_directory: "./build",
+          output_name: "GameLife-#{environment}.ipa",
+          clean: true,
+          archive_path: "./build/GameLife.xcarchive",
+          export_options: export_options_hash,
+          xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+        )
+      else
+        UI.error "Build failed with error: #{e.message}"
+        UI.error "Full error: #{e.backtrace.join("\n")}" if e.backtrace
+        
+        # Try to read the detailed log
+        log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
+        if File.exist?(log_path)
+          UI.message "📋 Detailed build log:"
+          log_content = File.read(log_path)
+          # Show last 50 lines of the log
+          UI.message log_content.split("\n").last(50).join("\n")
+        end
+        
+        raise e
       end
-      
-      raise e
     end
     
     # Output the final build info

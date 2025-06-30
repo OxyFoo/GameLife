@@ -84,21 +84,46 @@ jobs:
 
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
-
-          # Extract and display provisioning profile UUID for debugging
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/          # Extract and display provisioning profile information...
           echo "📋 Extracting provisioning profile information..."
-          PP_UUID=$(security cms -D -i "$PP_PATH" | /usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin 2>/dev/null || echo "unknown")
-          PP_NAME=$(security cms -D -i "$PP_PATH" | /usr/libexec/PlistBuddy -c "Print Name" /dev/stdin 2>/dev/null || echo "unknown")
-          PP_APP_ID=$(security cms -D -i "$PP_PATH" | /usr/libexec/PlistBuddy -c "Print Entitlements:application-identifier" /dev/stdin 2>/dev/null || echo "unknown")
-
-          echo "Profile UUID: $PP_UUID"
-          echo "Profile Name: $PP_NAME"
-          echo "App Identifier: $PP_APP_ID"
-
-          # Export for Fastlane
-          echo "PROVISION_PROFILE_UUID=$PP_UUID" >> $GITHUB_ENV
-          echo "PROVISION_PROFILE_NAME_ACTUAL=$PP_NAME" >> $GITHUB_ENV
+          
+          # Decode provisioning profile to temporary plist file
+          PP_PLIST_PATH=$RUNNER_TEMP/profile.plist
+          security cms -D -i "$PP_PATH" > "$PP_PLIST_PATH" 2>/dev/null || echo "Failed to decode provisioning profile"
+          
+          # Extract information from the decoded plist
+          if [ -f "$PP_PLIST_PATH" ]; then
+            PP_UUID=$(plutil -extract UUID raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            PP_NAME=$(plutil -extract Name raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            PP_APP_ID=$(plutil -extract Entitlements.application-identifier raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            
+            # Fallback using PlistBuddy if plutil fails
+            if [ -z "$PP_UUID" ]; then
+              PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            fi
+            if [ -z "$PP_NAME" ]; then
+              PP_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            fi
+            if [ -z "$PP_APP_ID" ]; then
+              PP_APP_ID=$(/usr/libexec/PlistBuddy -c "Print Entitlements:application-identifier" "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            fi
+          else
+            PP_UUID=""
+            PP_NAME=""
+            PP_APP_ID=""
+          fi
+          
+          echo "Profile UUID: ${PP_UUID:-'not found'}"
+          echo "Profile Name: ${PP_NAME:-'not found'}"
+          echo "App Identifier: ${PP_APP_ID:-'not found'}"
+          
+          # Export for Fastlane (only if not empty)
+          if [ -n "$PP_UUID" ]; then
+            echo "PROVISION_PROFILE_UUID=$PP_UUID" >> $GITHUB_ENV
+          fi
+          if [ -n "$PP_NAME" ]; then
+            echo "PROVISION_PROFILE_NAME_ACTUAL=$PP_NAME" >> $GITHUB_ENV
+          fi
 
           # Set as default keychain for this session
           security default-keychain -s $KEYCHAIN_PATH

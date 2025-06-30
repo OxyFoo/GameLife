@@ -51,6 +51,19 @@ platform :ios do
     UI.message "📱 App Identifier: #{app_identifier}"
     UI.message "🔐 Provisioning Profile: #{profile_name}"
     
+    # Get actual provisioning profile info from environment (set by CI)
+    actual_profile_name = ENV["PROVISION_PROFILE_NAME_ACTUAL"]
+    profile_uuid = ENV["PROVISION_PROFILE_UUID"]
+    
+    if actual_profile_name && !actual_profile_name.empty? && actual_profile_name != "unknown"
+      UI.message "📋 Using actual profile name from CI: #{actual_profile_name}"
+      profile_name = actual_profile_name
+    end
+    
+    if profile_uuid && !profile_uuid.empty? && profile_uuid != "unknown"
+      UI.message "🆔 Using profile UUID: #{profile_uuid}"
+    end
+    
     # Verify provisioning profile exists
     UI.message "🔍 Checking provisioning profiles..."
     Dir.glob("#{Dir.home}/Library/MobileDevice/Provisioning Profiles/*.mobileprovision") do |profile_path|
@@ -85,18 +98,48 @@ platform :ios do
     UI.success "Updated app identifier to: #{app_identifier}"
     UI.success "Using provisioning profile: #{profile_name}"
     
-    # Update code signing settings for manual signing
-    update_code_signing_settings(
-      use_automatic_signing: false,
-      path: "GameLife.xcodeproj",
-      team_id: ENV["TEAM_ID"] || "54ZUH596XX",
-      targets: ["GameLife"],
-      code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
-    )
+    # Update code signing settings
+    use_automatic_signing = ENV["USE_AUTOMATIC_SIGNING"] == "true"
+    
+    if use_automatic_signing
+      UI.message "🤖 Using automatic code signing"
+      update_code_signing_settings(
+        use_automatic_signing: true,
+        path: "GameLife.xcodeproj",
+        team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+        targets: ["GameLife"]
+      )
+    else
+      UI.message "📝 Using manual code signing"
+      # Update code signing settings for manual signing
+      update_code_signing_settings(
+        use_automatic_signing: false,
+        path: "GameLife.xcodeproj",
+        team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+        targets: ["GameLife"],
+        code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
+      )
+    end
     
     # Build the app
     begin
       UI.message "🔨 Starting build process..."
+      
+      export_options_hash = {
+        method: "app-store",
+        teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+        uploadSymbols: true
+      }
+      
+      if use_automatic_signing
+        export_options_hash[:signingStyle] = "automatic"
+      else
+        export_options_hash[:signingStyle] = "manual"
+        export_options_hash[:provisioningProfiles] = {
+          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (profile_uuid && profile_uuid != "unknown") ? profile_uuid : profile_name
+        }
+      end
+      
       build_app(
         workspace: "GameLife.xcworkspace", 
         scheme: "GameLife",
@@ -106,15 +149,7 @@ platform :ios do
         output_name: "GameLife-#{environment}.ipa",
         clean: true,
         archive_path: "./build/GameLife.xcarchive",
-        export_options: {
-          method: "app-store",
-          teamID: ENV["TEAM_ID"] || "54ZUH596XX",
-          signingStyle: "manual",
-          provisioningProfiles: {
-            (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
-          },
-          uploadSymbols: true
-        },
+        export_options: export_options_hash,
         # Additional xcodebuild settings to ensure proper deployment target
         xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
       )

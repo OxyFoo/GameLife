@@ -86,6 +86,20 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
 
+          # Extract and display provisioning profile UUID for debugging
+          echo "📋 Extracting provisioning profile information..."
+          PP_UUID=$(security cms -D -i "$PP_PATH" | /usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin 2>/dev/null || echo "unknown")
+          PP_NAME=$(security cms -D -i "$PP_PATH" | /usr/libexec/PlistBuddy -c "Print Name" /dev/stdin 2>/dev/null || echo "unknown")
+          PP_APP_ID=$(security cms -D -i "$PP_PATH" | /usr/libexec/PlistBuddy -c "Print Entitlements:application-identifier" /dev/stdin 2>/dev/null || echo "unknown")
+
+          echo "Profile UUID: $PP_UUID"
+          echo "Profile Name: $PP_NAME"
+          echo "App Identifier: $PP_APP_ID"
+
+          # Export for Fastlane
+          echo "PROVISION_PROFILE_UUID=$PP_UUID" >> $GITHUB_ENV
+          echo "PROVISION_PROFILE_NAME_ACTUAL=$PP_NAME" >> $GITHUB_ENV
+
           # Set as default keychain for this session
           security default-keychain -s $KEYCHAIN_PATH
 
@@ -96,6 +110,15 @@ jobs:
           # Debug
           security find-identity -v -p codesigning
           ls $RUNNER_TEMP
+          
+          # List provisioning profiles
+          echo "📋 Listing installed provisioning profiles..."
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No provisioning profiles directory found"
+          
+          # Show keychain info
+          echo "🔑 Keychain information..."
+          security list-keychains
+          security default-keychain
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -148,6 +171,11 @@ jobs:
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
           APPLE_ID: ${{ secrets.APPLE_ID }}
+          # Provisioning profile information
+          PROVISION_PROFILE_UUID: ${{ env.PROVISION_PROFILE_UUID }}
+          PROVISION_PROFILE_NAME_ACTUAL: ${{ env.PROVISION_PROFILE_NAME_ACTUAL }}
+          # Try automatic signing first
+          USE_AUTOMATIC_SIGNING: "true"
         run: |
           cd ios
           ENVIRONMENT="${{ inputs.environment || 'prod' }}"

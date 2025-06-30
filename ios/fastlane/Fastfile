@@ -62,6 +62,7 @@ platform :ios do
     
     if profile_uuid && !profile_uuid.empty?
       UI.message "🆔 Using profile UUID: #{profile_uuid}"
+      profile_name = profile_uuid  # Use UUID as profile name for more reliability
     end
     
     # Verify provisioning profile exists
@@ -117,7 +118,8 @@ platform :ios do
         path: "GameLife.xcodeproj",
         team_id: ENV["TEAM_ID"] || "54ZUH596XX",
         targets: ["GameLife"],
-        code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
+        code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
+        profile_name: profile_name
       )
     end
     
@@ -153,7 +155,7 @@ platform :ios do
         archive_path: "./build/GameLife.xcarchive",
         export_options: export_options_hash,
         # Additional xcodebuild settings to ensure proper deployment target
-        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+        xcargs: use_automatic_signing ? "IPHONEOS_DEPLOYMENT_TARGET=12.0 -allowProvisioningUpdates" : "IPHONEOS_DEPLOYMENT_TARGET=12.0"
       )
     rescue => e
       if use_automatic_signing && e.message.include?("signing")
@@ -165,7 +167,8 @@ platform :ios do
           path: "GameLife.xcodeproj",
           team_id: ENV["TEAM_ID"] || "54ZUH596XX",
           targets: ["GameLife"],
-          code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
+          code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
+          profile_name: profile_name
         )
         
         export_options_hash[:signingStyle] = "manual"

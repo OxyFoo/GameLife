@@ -1,16 +1,23 @@
 name: '🧩 iOS Build & Delivery'
 
 on:
+  push:
+    branches:
+      - prod
+      - dev
+      - 'feature/*'
   workflow_call:
     inputs:
       environment:
         description: 'Choose environment to deploy (dev, test, prod)'
-        required: true
+        required: false
         type: string
+        default: 'prod'
       delivery:
         description: 'Delivery to App Store Connect'
-        required: true
+        required: false
         type: boolean
+        default: false
 
 env:
   FILE_IPA: GameLife-${{ inputs.environment }}.ipa
@@ -23,13 +30,14 @@ jobs:
     steps:
       - name: '🚧 Check environment availability'
         run: |
-          if [ "${{ inputs.environment }}" != "prod" ]; then
+          ENVIRONMENT="${{ inputs.environment }}"
+          if [ "$ENVIRONMENT" != "prod" ]; then
             echo "🚧 iOS build is currently only available for 'prod' environment"
-            echo "   Requested environment: '${{ inputs.environment }}'"
+            echo "   Requested environment: '$ENVIRONMENT'"
             echo "   Skipping iOS build..."
             exit 1
           fi
-          echo "✅ Environment '${{ inputs.environment }}' is supported for iOS build"
+          echo "✅ Environment '$ENVIRONMENT' is supported for iOS build"
 
       - name: 'Checkout repository'
         uses: actions/checkout@v4
@@ -56,7 +64,8 @@ jobs:
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
-          if [ ${{ inputs.environment }} == 'test' ]; then
+          ENVIRONMENT="${{ inputs.environment }}"
+          if [ $ENVIRONMENT == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
           else
@@ -141,12 +150,13 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
         run: |
           cd ios
-          echo "Building for environment: ${{ inputs.environment }}"
-          if [ -z "${{ inputs.environment }}" ]; then
+          ENVIRONMENT="${{ inputs.environment }}"
+          echo "Building for environment: $ENVIRONMENT"
+          if [ -z "$ENVIRONMENT" ]; then
             echo "❌ Environment not specified, using 'dev' as default"
             bundle exec fastlane build environment:dev
           else
-            bundle exec fastlane build environment:${{ inputs.environment }}
+            bundle exec fastlane build environment:$ENVIRONMENT
           fi
 
       - name: 'Upload ipa artifact'

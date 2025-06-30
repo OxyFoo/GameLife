@@ -20,8 +20,8 @@ on:
         default: false
 
 env:
-  FILE_IPA: GameLife-${{ inputs.environment }}.ipa
-  PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
+  FILE_IPA: GameLife-${{ inputs.environment || 'prod' }}.ipa
+  PROVISION_PROFILE_NAME: ${{ (inputs.environment || 'prod') == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: '🚧 Check environment availability'
         run: |
-          ENVIRONMENT="${{ inputs.environment }}"
+          ENVIRONMENT="${{ inputs.environment || 'prod' }}"
           if [ "$ENVIRONMENT" != "prod" ]; then
             echo "🚧 iOS build is currently only available for 'prod' environment"
             echo "   Requested environment: '$ENVIRONMENT'"
@@ -64,7 +64,7 @@ jobs:
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
-          ENVIRONMENT="${{ inputs.environment }}"
+          ENVIRONMENT="${{ inputs.environment || 'prod' }}"
           if [ $ENVIRONMENT == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
@@ -117,7 +117,7 @@ jobs:
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
 
       - name: 'Setup Bundle ID for test environment'
-        if: inputs.environment == 'test'
+        if: (inputs.environment || 'prod') == 'test'
         run: |
           # Bundle ID management is now handled by Fastlane
           echo "Bundle ID will be managed by Fastlane based on APP_IDENTIFIER environment variable"
@@ -136,21 +136,21 @@ jobs:
 
       - name: 'Build with Fastlane'
         env:
-          ENVFILE: .env.${{ inputs.environment }}
+          ENVFILE: .env.${{ inputs.environment || 'prod' }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
           APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           # Public configuration variables
-          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          APP_IDENTIFIER: ${{ (inputs.environment || 'prod') == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
           TEAM_ID: ${{ vars.TEAM_ID }}
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
           APPLE_ID: ${{ secrets.APPLE_ID }}
         run: |
           cd ios
-          ENVIRONMENT="${{ inputs.environment }}"
+          ENVIRONMENT="${{ inputs.environment || 'prod' }}"
           echo "Building for environment: $ENVIRONMENT"
           if [ -z "$ENVIRONMENT" ]; then
             echo "❌ Environment not specified, using 'dev' as default"
@@ -168,7 +168,7 @@ jobs:
 
   delivery:
     name: '📦 Delivery'
-    if: inputs.delivery == true && inputs.environment == 'prod' # != 'dev'
+    if: inputs.delivery == true && (inputs.environment || 'prod') == 'prod' # != 'dev'
     runs-on: macos-latest
     needs: build
     steps:
@@ -191,7 +191,7 @@ jobs:
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           # Public configuration variables
-          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          APP_IDENTIFIER: ${{ (inputs.environment || 'prod') == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
           TEAM_ID: ${{ vars.TEAM_ID }}
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
@@ -199,4 +199,4 @@ jobs:
         run: |
           cd ios
           bundle install
-          bundle exec fastlane upload_to_appstore environment:${{ inputs.environment }}
+          bundle exec fastlane upload_to_appstore environment:${{ inputs.environment || 'prod' }}

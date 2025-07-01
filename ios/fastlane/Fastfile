@@ -87,7 +87,24 @@ platform :ios do
     
     # Verify certificates
     UI.message "🔍 Checking available certificates..."
-    sh("security find-identity -v -p codesigning") rescue UI.error("Could not list certificates")
+    begin
+      sh("security find-identity -v -p codesigning")
+      
+      # Check for specific certificate that matches our profile
+      team_id = ENV["TEAM_ID"] || "54ZUH596XX"
+      cert_search_result = sh("security find-identity -v -p codesigning | grep 'Apple Distribution.*#{team_id}' || echo 'NONE'", log: false).strip
+      
+      if cert_search_result == "NONE"
+        UI.error "❌ No Apple Distribution certificate found for Team ID: #{team_id}"
+        UI.error "Available certificates:"
+        sh("security find-identity -v -p codesigning")
+        UI.user_error! "Required certificate not found. Please check your certificate installation."
+      else
+        UI.success "✅ Found compatible certificate: #{cert_search_result}"
+      end
+    rescue => e
+      UI.error("Could not list certificates: #{e.message}")
+    end
     
     # Update app identifier in project if needed
     update_app_identifier(

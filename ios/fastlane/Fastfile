@@ -55,14 +55,16 @@ platform :ios do
     actual_profile_name = ENV["PROVISION_PROFILE_NAME_ACTUAL"]
     profile_uuid = ENV["PROVISION_PROFILE_UUID"]
     
+    # Use the UUID if available for more reliable matching
+    if profile_uuid && !profile_uuid.empty?
+      UI.message "🆔 Using profile UUID: #{profile_uuid}"
+      # Don't replace profile_name with UUID, keep the actual name but store UUID separately
+      actual_profile_uuid = profile_uuid
+    end
+    
     if actual_profile_name && !actual_profile_name.empty?
       UI.message "📋 Using actual profile name from CI: #{actual_profile_name}"
       profile_name = actual_profile_name
-    end
-    
-    if profile_uuid && !profile_uuid.empty?
-      UI.message "🆔 Using profile UUID: #{profile_uuid}"
-      profile_name = profile_uuid  # Use UUID as profile name for more reliability
     end
     
     # Verify provisioning profile exists
@@ -119,45 +121,25 @@ platform :ios do
     # Update code signing settings
     use_automatic_signing = ENV["USE_AUTOMATIC_SIGNING"] == "true"
     
-    if use_automatic_signing
-      UI.message "🤖 Using automatic code signing"
-      update_code_signing_settings(
-        use_automatic_signing: true,
-        path: "GameLife.xcodeproj",
-        team_id: ENV["TEAM_ID"] || "54ZUH596XX",
-        targets: ["GameLife"]
-      )
-    else
-      UI.message "📝 Using manual code signing"
-      # Update code signing settings for manual signing
-      update_code_signing_settings(
-        use_automatic_signing: false,
-        path: "GameLife.xcodeproj",
-        team_id: ENV["TEAM_ID"] || "54ZUH596XX",
-        targets: ["GameLife"],
-        code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
-        profile_name: profile_name
-      )
-    end
+    # Force automatic signing first, then fallback to manual if it fails
+    UI.message "🤖 Trying automatic code signing first..."
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: "GameLife.xcodeproj",
+      team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+      targets: ["GameLife"]
+    )
     
     # Build the app
     begin
-      UI.message "🔨 Starting build process..."
+      UI.message "🔨 Starting build process with automatic signing..."
       
       export_options_hash = {
         method: "app-store",
         teamID: ENV["TEAM_ID"] || "54ZUH596XX",
-        uploadSymbols: true
+        uploadSymbols: true,
+        signingStyle: "automatic"
       }
-      
-      if use_automatic_signing
-        export_options_hash[:signingStyle] = "automatic"
-      else
-        export_options_hash[:signingStyle] = "manual"
-        export_options_hash[:provisioningProfiles] = {
-          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (profile_uuid && !profile_uuid.empty?) ? profile_uuid : profile_name
-        }
-      end
       
       UI.message "🔧 Export options: #{export_options_hash}"
       
@@ -172,11 +154,11 @@ platform :ios do
         archive_path: "./build/GameLife.xcarchive",
         export_options: export_options_hash,
         # Additional xcodebuild settings to ensure proper deployment target
-        xcargs: use_automatic_signing ? "IPHONEOS_DEPLOYMENT_TARGET=12.0 -allowProvisioningUpdates" : "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0 -allowProvisioningUpdates"
       )
     rescue => e
-      if use_automatic_signing && e.message.include?("signing")
-        UI.important "⚠️ Automatic signing failed, trying manual signing..."
+      UI.important "⚠️ Automatic signing failed: #{e.message}"
+      UI.important "🔄 Retrying with manual signing..."
         
         # Retry with manual signing
         update_code_signing_settings(
@@ -188,9 +170,14 @@ platform :ios do
           profile_name: profile_name
         )
         
-        export_options_hash[:signingStyle] = "manual"
-        export_options_hash[:provisioningProfiles] = {
-          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (profile_uuid && !profile_uuid.empty?) ? profile_uuid : profile_name
+        export_options_hash = {
+          method: "app-store",
+          teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+          uploadSymbols: true,
+          signingStyle: "manual",
+          provisioningProfiles: {
+            (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (actual_profile_uuid && !actual_profile_uuid.empty?) ? actual_profile_uuid : profile_name
+          }
         }
         
         UI.message "🔧 Retry with manual signing, export options: #{export_options_hash}"

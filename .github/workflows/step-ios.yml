@@ -140,42 +140,14 @@ jobs:
           echo "BUILD_CERTIFICATE_PATH=$CERTIFICATE_PATH" >> $GITHUB_ENV
           echo "PROVISIONING_PROFILE_PATH=$PP_PATH" >> $GITHUB_ENV
 
-          # Debug
+          # Debug (simplified)
           echo "🔑 Available signing identities:"
           security find-identity -v -p codesigning
-          ls $RUNNER_TEMP
-
-          # List provisioning profiles
-          echo "📋 Listing installed provisioning profiles..."
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No provisioning profiles directory found"
-
-          # Detailed provisioning profile analysis
-          if [ -f "$PP_PLIST_PATH" ]; then
-            echo "📋 Detailed provisioning profile analysis:"
-            echo "  Profile Name: ${PP_NAME:-'not found'}"
-            echo "  Profile UUID: ${PP_UUID:-'not found'}"
-            echo "  App Identifier: ${PP_APP_ID:-'not found'}"
-
-            # Extract certificates from provisioning profile
-            echo "🔐 Certificates in provisioning profile:"
-            plutil -extract DeveloperCertificates json "$PP_PLIST_PATH" 2>/dev/null || echo "  Could not extract certificates"
-
-            # Extract team identifier
-            PP_TEAM_ID=$(plutil -extract TeamIdentifier.0 raw "$PP_PLIST_PATH" 2>/dev/null || /usr/libexec/PlistBuddy -c "Print TeamIdentifier:0" "$PP_PLIST_PATH" 2>/dev/null || echo "")
-            echo "  Team ID in profile: ${PP_TEAM_ID:-'not found'}"
-
-            # Compare with expected values
-            echo "🔍 Configuration comparison:"
-            echo "  Expected Team ID: ${{ vars.TEAM_ID }}"
-            echo "  Profile Team ID: ${PP_TEAM_ID:-'not found'}"
-            echo "  Expected App ID: ${{ (inputs.environment || 'prod') == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}"
-            echo "  Profile App ID: ${PP_APP_ID:-'not found'}"
-          fi
-
-          # Show keychain info
-          echo "🔑 Keychain information..."
-          security list-keychains
-          security default-keychain
+          
+          echo "📋 Provisioning profile summary:"
+          echo "  Profile Name: ${PP_NAME:-'not found'}"
+          echo "  Profile UUID: ${PP_UUID:-'not found'}"
+          echo "  App Identifier: ${PP_APP_ID:-'not found'}"
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -213,46 +185,6 @@ jobs:
             echo "Checking pods deployment targets..."
             grep -n "IPHONEOS_DEPLOYMENT_TARGET" Pods/Pods.xcodeproj/project.pbxproj | head -10
           fi
-
-      - name: 'Validate code signing configuration'
-        run: |
-          echo "🔍 Checking code signing configuration..."
-
-          # Check if provisioning profile exists
-          PROFILE_PATH=""
-          if [ -n "$PROVISION_PROFILE_UUID" ] && [ -f ~/Library/MobileDevice/Provisioning\ Profiles/${PROVISION_PROFILE_UUID}.mobileprovision ]; then
-            PROFILE_PATH=~/Library/MobileDevice/Provisioning\ Profiles/${PROVISION_PROFILE_UUID}.mobileprovision
-          elif [ -f ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision ]; then
-            PROFILE_PATH=~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
-          fi
-
-          if [ -z "$PROFILE_PATH" ]; then
-            echo "⚠️ No provisioning profile found, but continuing..."
-          else
-            echo "✅ Found provisioning profile: $PROFILE_PATH"
-
-            # Decode and check profile contents (informational only)
-            TEMP_PLIST=$RUNNER_TEMP/profile_check.plist
-            if security cms -D -i "$PROFILE_PATH" > "$TEMP_PLIST" 2>/dev/null; then
-              # Extract key information
-              PROFILE_TEAM_ID=$(plutil -extract TeamIdentifier.0 raw "$TEMP_PLIST" 2>/dev/null || echo "")
-              PROFILE_APP_ID=$(plutil -extract Entitlements.application-identifier raw "$TEMP_PLIST" 2>/dev/null || echo "")
-
-              echo "📋 Profile information:"
-              echo "  Team ID: ${PROFILE_TEAM_ID:-'not found'}"
-              echo "  App ID: ${PROFILE_APP_ID:-'not found'}"
-              echo "  Expected Team ID: ${{ vars.TEAM_ID }}"
-              echo "  Expected App ID: ${{ (inputs.environment || 'prod') == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}"
-            else
-              echo "⚠️ Could not decode provisioning profile for analysis"
-            fi
-          fi
-
-          # Check certificates (informational only)
-          echo "🔐 Available certificates:"
-          security find-identity -v -p codesigning | grep "Apple Distribution" || echo "  No Apple Distribution certificates found"
-
-          echo "✅ Configuration check completed (continuing with build)..."
 
       - name: 'Build with Fastlane'
         env:

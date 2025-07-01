@@ -223,6 +223,17 @@ jobs:
           path: ios/build/${{ env.FILE_IPA }}
           if-no-files-found: error
 
+      - name: Dump gym log (tail)
+        if: failure()
+        run: |
+          LG=$(ls -t ~/Library/Logs/gym 2>/dev/null | head -n1 || echo "")
+          if [ -n "$LG" ]; then
+            echo "=== 📝 $LG ==="
+            tail -n 250 ~/Library/Logs/gym/$LG
+          else
+            echo "No gym log produced"
+          fi
+
   delivery:
     name: '📦 Delivery'
     if: inputs.delivery == true && (inputs.environment || 'prod') == 'prod' # != 'dev'

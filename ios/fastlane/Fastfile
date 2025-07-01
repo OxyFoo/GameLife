@@ -154,7 +154,8 @@ platform :ios do
         archive_path: "./build/GameLife.xcarchive",
         export_options: export_options_hash,
         # Additional xcodebuild settings to ensure proper deployment target
-        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0 -allowProvisioningUpdates"
+        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0 -allowProvisioningUpdates",
+        disable_xcpretty: true
       )
     rescue => e
       UI.important "⚠️ Automatic signing failed: #{e.message}"

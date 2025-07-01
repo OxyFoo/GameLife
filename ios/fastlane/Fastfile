@@ -194,7 +194,8 @@ platform :ios do
           clean: true,
           archive_path: "./build/GameLife.xcarchive",
           export_options: export_options_hash,
-          xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+          xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0",
+          disable_xcpretty: true
         )
       rescue => retry_error
         UI.error "Build failed with manual signing: #{retry_error.message}"

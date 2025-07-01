@@ -213,7 +213,7 @@ jobs:
             echo "❌ Environment not specified, using 'dev' as default"
             bundle exec fastlane build environment:dev
           else
-            bundle exec fastlane build environment:$ENVIRONMENT
+            bundle exec fastlane --verbose build environment:$ENVIRONMENT
           fi
 
       - name: 'Upload ipa artifact'

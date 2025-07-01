@@ -160,28 +160,29 @@ platform :ios do
       UI.important "⚠️ Automatic signing failed: #{e.message}"
       UI.important "🔄 Retrying with manual signing..."
         
-        # Retry with manual signing
-        update_code_signing_settings(
-          use_automatic_signing: false,
-          path: "GameLife.xcodeproj",
-          team_id: ENV["TEAM_ID"] || "54ZUH596XX",
-          targets: ["GameLife"],
-          code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
-          profile_name: profile_name
-        )
-        
-        export_options_hash = {
-          method: "app-store",
-          teamID: ENV["TEAM_ID"] || "54ZUH596XX",
-          uploadSymbols: true,
-          signingStyle: "manual",
-          provisioningProfiles: {
-            (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (actual_profile_uuid && !actual_profile_uuid.empty?) ? actual_profile_uuid : profile_name
-          }
+      # Retry with manual signing
+      update_code_signing_settings(
+        use_automatic_signing: false,
+        path: "GameLife.xcodeproj",
+        team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+        targets: ["GameLife"],
+        code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
+        profile_name: profile_name
+      )
+      
+      export_options_hash = {
+        method: "app-store",
+        teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+        uploadSymbols: true,
+        signingStyle: "manual",
+        provisioningProfiles: {
+          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (actual_profile_uuid && !actual_profile_uuid.empty?) ? actual_profile_uuid : profile_name
         }
-        
-        UI.message "🔧 Retry with manual signing, export options: #{export_options_hash}"
-        
+      }
+      
+      UI.message "🔧 Retry with manual signing, export options: #{export_options_hash}"
+      
+      begin
         build_app(
           workspace: "GameLife.xcworkspace", 
           scheme: "GameLife",
@@ -194,9 +195,9 @@ platform :ios do
           export_options: export_options_hash,
           xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
         )
-      else
-        UI.error "Build failed with error: #{e.message}"
-        UI.error "Full error: #{e.backtrace.join("\n")}" if e.backtrace
+      rescue => retry_error
+        UI.error "Build failed with manual signing: #{retry_error.message}"
+        UI.error "Full error: #{retry_error.backtrace.join("\n")}" if retry_error.backtrace
         
         # Try to read the detailed log
         log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
@@ -207,7 +208,7 @@ platform :ios do
           UI.message log_content.split("\n").last(50).join("\n")
         end
         
-        raise e
+        raise retry_error
       end
     end
     

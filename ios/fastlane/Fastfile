@@ -230,12 +230,13 @@ platform :ios do
       key_content: ENV['APP_STORE_CONNECT_API_KEY_KEY']
     )
 
+    # Upload to App Store Connect using current API
     upload_to_app_store(
-      skip_waiting_for_build_processing: true,
+      ipa: ipa_path,
+      skip_binary_upload: false,
       skip_screenshots: true,
       skip_metadata: true,
       force: true,
-      ipa: ipa_path,
       submit_for_review: false,
       automatic_release: false
     )

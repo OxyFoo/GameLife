@@ -222,7 +222,7 @@ jobs:
           name: ${{ env.FILE_IPA }}
           path: ios/build/${{ env.FILE_IPA }}
           if-no-files-found: error
-
+          
       - name: Dump gym log (tail)
         if: failure()
         run: |
@@ -233,6 +233,13 @@ jobs:
           else
             echo "No gym log produced"
           fi
+
+      - name: 'Upload full gym log'
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: gym-full-log
+          path: ~/Library/Logs/gym
 
   delivery:
     name: '📦 Delivery'

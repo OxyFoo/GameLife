@@ -67,11 +67,9 @@ jobs:
       - name: 'Build app'
         env:
           ENVFILE: .env.${{ inputs.environment }}
-          GAMELIFE_KEYSTORE_PASSWORD: ${{ secrets.GAMELIFE_KEYSTORE_PASSWORD }}
-          GAMELIFE_KEY_PASSWORD: ${{ secrets.GAMELIFE_KEY_PASSWORD }}
         run: |
-          # Build the app with environment variables
-          GAMELIFE_KEYSTORE_PASSWORD="${GAMELIFE_KEYSTORE_PASSWORD}" GAMELIFE_KEY_PASSWORD="${GAMELIFE_KEY_PASSWORD}" npm run build
+          # Build the app with environment variables passed as Gradle properties
+          npm run build -- -PGAMELIFE_KEYSTORE_PASSWORD="${{ secrets.GAMELIFE_KEYSTORE_PASSWORD }}" -PGAMELIFE_KEY_PASSWORD="${{ secrets.GAMELIFE_KEY_PASSWORD }}"
 
           # Clean types
           npm run poststart

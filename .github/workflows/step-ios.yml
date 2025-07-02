@@ -1,18 +1,12 @@
 name: '🧩 iOS Build & Delivery'
 
 on:
-  push:
-    branches:
-      - prod
-      - dev
-      - 'feature/*'
   workflow_call:
     inputs:
       environment:
         description: 'Choose environment to deploy (dev, test, prod)'
-        required: false
+        required: true
         type: string
-        default: 'prod'
       delivery:
         description: 'Delivery to App Store Connect'
         required: false
@@ -20,8 +14,8 @@ on:
         default: false
 
 env:
-  FILE_IPA: GameLife-${{ inputs.environment || 'prod' }}.ipa
-  PROVISION_PROFILE_NAME: ${{ (inputs.environment || 'prod') == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
+  FILE_IPA: GameLife-${{ inputs.environment }}.ipa
+  PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
 
 jobs:
   build:
@@ -30,7 +24,7 @@ jobs:
     steps:
       - name: '🚧 Check environment availability'
         run: |
-          ENVIRONMENT="${{ inputs.environment || 'prod' }}"
+          ENVIRONMENT="${{ inputs.environment }}"
           if [ "$ENVIRONMENT" != "prod" ]; then
             echo "🚧 iOS build is currently only available for 'prod' environment"
             echo "   Requested environment: '$ENVIRONMENT'"
@@ -72,7 +66,7 @@ jobs:
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
-          ENVIRONMENT="${{ inputs.environment || 'prod' }}"
+          ENVIRONMENT="${{ inputs.environment }}"
           if [ $ENVIRONMENT == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
@@ -93,20 +87,20 @@ jobs:
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
-          
+
           # Extract and display provisioning profile information...
           echo "📋 Extracting provisioning profile information..."
-          
+
           # Decode provisioning profile to temporary plist file
           PP_PLIST_PATH=$RUNNER_TEMP/profile.plist
           security cms -D -i "$PP_PATH" > "$PP_PLIST_PATH" 2>/dev/null || echo "Failed to decode provisioning profile"
-          
+
           # Extract information from the decoded plist
           if [ -f "$PP_PLIST_PATH" ]; then
             PP_UUID=$(plutil -extract UUID raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
             PP_NAME=$(plutil -extract Name raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
             PP_APP_ID=$(plutil -extract Entitlements.application-identifier raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
-            
+
             # Fallback using PlistBuddy if plutil fails
             if [ -z "$PP_UUID" ]; then
               PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" "$PP_PLIST_PATH" 2>/dev/null || echo "")
@@ -117,7 +111,7 @@ jobs:
             if [ -z "$PP_APP_ID" ]; then
               PP_APP_ID=$(/usr/libexec/PlistBuddy -c "Print Entitlements:application-identifier" "$PP_PLIST_PATH" 2>/dev/null || echo "")
             fi
-            
+
             # Copy profile with UUID as filename for better recognition
             if [ -n "$PP_UUID" ]; then
               cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PP_UUID.mobileprovision
@@ -128,11 +122,11 @@ jobs:
             PP_NAME=""
             PP_APP_ID=""
           fi
-          
+
           echo "Profile UUID: ${PP_UUID:-'not found'}"
           echo "Profile Name: ${PP_NAME:-'not found'}"
           echo "App Identifier: ${PP_APP_ID:-'not found'}"
-          
+
           # Export for Fastlane (only if not empty)
           if [ -n "$PP_UUID" ]; then
             echo "PROVISION_PROFILE_UUID=$PP_UUID" >> $GITHUB_ENV
@@ -151,7 +145,7 @@ jobs:
           # Debug (simplified)
           echo "🔑 Available signing identities:"
           security find-identity -v -p codesigning
-          
+
           echo "📋 Provisioning profile summary:"
           echo "  Profile Name: ${PP_NAME:-'not found'}"
           echo "  Profile UUID: ${PP_UUID:-'not found'}"
@@ -177,7 +171,7 @@ jobs:
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
 
       - name: 'Setup Bundle ID for test environment'
-        if: (inputs.environment || 'prod') == 'test'
+        if: inputs.environment == 'test'
         run: |
           # Bundle ID management is now handled by Fastlane
           echo "Bundle ID will be managed by Fastlane based on APP_IDENTIFIER environment variable"
@@ -196,14 +190,14 @@ jobs:
 
       - name: 'Build with Fastlane'
         env:
-          ENVFILE: .env.${{ inputs.environment || 'prod' }}
+          ENVFILE: .env.${{ inputs.environment }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
           APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           # Public configuration variables
-          APP_IDENTIFIER: ${{ (inputs.environment || 'prod') == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
           TEAM_ID: ${{ vars.TEAM_ID }}
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
@@ -215,7 +209,7 @@ jobs:
           USE_AUTOMATIC_SIGNING: "false"
         run: |
           cd ios
-          ENVIRONMENT="${{ inputs.environment || 'prod' }}"
+          ENVIRONMENT="${{ inputs.environment }}"
           echo "Building for environment: $ENVIRONMENT"
           if [ -z "$ENVIRONMENT" ]; then
             echo "❌ Environment not specified, using 'dev' as default"
@@ -251,7 +245,7 @@ jobs:
 
   delivery:
     name: '📦 Delivery'
-    if: inputs.delivery == true && (inputs.environment || 'prod') == 'prod' # != 'dev'
+    if: inputs.delivery == true && inputs.environment != 'dev'
     runs-on: macos-latest
     needs: build
     steps:
@@ -274,7 +268,7 @@ jobs:
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           # Public configuration variables
-          APP_IDENTIFIER: ${{ (inputs.environment || 'prod') == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
           TEAM_ID: ${{ vars.TEAM_ID }}
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
@@ -282,4 +276,4 @@ jobs:
         run: |
           cd ios
           bundle install
-          bundle exec fastlane upload_to_appstore environment:${{ inputs.environment || 'prod' }}
+          bundle exec fastlane upload_to_appstore environment:${{ inputs.environment }}

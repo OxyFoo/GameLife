@@ -44,6 +44,7 @@ index.android.bundle.map
 # node.js
 #
 node_modules/
+package-lock.json
 npm-debug.log
 yarn-error.log
 hs_err_pid*.log

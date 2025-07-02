@@ -9,8 +9,9 @@ on:
         type: string
       delivery:
         description: 'Delivery to App Store Connect'
-        required: true
+        required: false
         type: boolean
+        default: false
 
 env:
   FILE_IPA: GameLife-${{ inputs.environment }}.ipa
@@ -23,13 +24,14 @@ jobs:
     steps:
       - name: '🚧 Check environment availability'
         run: |
-          if [ "${{ inputs.environment }}" != "prod" ]; then
+          ENVIRONMENT="${{ inputs.environment }}"
+          if [ "$ENVIRONMENT" != "prod" ]; then
             echo "🚧 iOS build is currently only available for 'prod' environment"
-            echo "   Requested environment: '${{ inputs.environment }}'"
+            echo "   Requested environment: '$ENVIRONMENT'"
             echo "   Skipping iOS build..."
             exit 1
           fi
-          echo "✅ Environment '${{ inputs.environment }}' is supported for iOS build"
+          echo "✅ Environment '$ENVIRONMENT' is supported for iOS build"
 
       - name: 'Checkout repository'
         uses: actions/checkout@v4
@@ -38,6 +40,14 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
           token: ${{ secrets.CICD_PAT }}
+
+      - name: 'Setup Xcode'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16'
+
+      - name: 'Verify Xcode version'
+        run: xcodebuild -version
 
       - name: 'Install the Apple certificate and provisioning profile'
         env:
@@ -56,7 +66,8 @@ jobs:
           # Import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
-          if [ ${{ inputs.environment }} == 'test' ]; then
+          ENVIRONMENT="${{ inputs.environment }}"
+          if [ $ENVIRONMENT == 'test' ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
           else
@@ -77,6 +88,53 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
 
+          # Extract and display provisioning profile information...
+          echo "📋 Extracting provisioning profile information..."
+
+          # Decode provisioning profile to temporary plist file
+          PP_PLIST_PATH=$RUNNER_TEMP/profile.plist
+          security cms -D -i "$PP_PATH" > "$PP_PLIST_PATH" 2>/dev/null || echo "Failed to decode provisioning profile"
+
+          # Extract information from the decoded plist
+          if [ -f "$PP_PLIST_PATH" ]; then
+            PP_UUID=$(plutil -extract UUID raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            PP_NAME=$(plutil -extract Name raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            PP_APP_ID=$(plutil -extract Entitlements.application-identifier raw "$PP_PLIST_PATH" 2>/dev/null || echo "")
+
+            # Fallback using PlistBuddy if plutil fails
+            if [ -z "$PP_UUID" ]; then
+              PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            fi
+            if [ -z "$PP_NAME" ]; then
+              PP_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            fi
+            if [ -z "$PP_APP_ID" ]; then
+              PP_APP_ID=$(/usr/libexec/PlistBuddy -c "Print Entitlements:application-identifier" "$PP_PLIST_PATH" 2>/dev/null || echo "")
+            fi
+
+            # Copy profile with UUID as filename for better recognition
+            if [ -n "$PP_UUID" ]; then
+              cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PP_UUID.mobileprovision
+              echo "📋 Copied profile with UUID filename: $PP_UUID.mobileprovision"
+            fi
+          else
+            PP_UUID=""
+            PP_NAME=""
+            PP_APP_ID=""
+          fi
+
+          echo "Profile UUID: ${PP_UUID:-'not found'}"
+          echo "Profile Name: ${PP_NAME:-'not found'}"
+          echo "App Identifier: ${PP_APP_ID:-'not found'}"
+
+          # Export for Fastlane (only if not empty)
+          if [ -n "$PP_UUID" ]; then
+            echo "PROVISION_PROFILE_UUID=$PP_UUID" >> $GITHUB_ENV
+          fi
+          if [ -n "$PP_NAME" ]; then
+            echo "PROVISION_PROFILE_NAME_ACTUAL=$PP_NAME" >> $GITHUB_ENV
+          fi
+
           # Set as default keychain for this session
           security default-keychain -s $KEYCHAIN_PATH
 
@@ -84,9 +142,14 @@ jobs:
           echo "BUILD_CERTIFICATE_PATH=$CERTIFICATE_PATH" >> $GITHUB_ENV
           echo "PROVISIONING_PROFILE_PATH=$PP_PATH" >> $GITHUB_ENV
 
-          # Debug
+          # Debug (simplified)
+          echo "🔑 Available signing identities:"
           security find-identity -v -p codesigning
-          ls $RUNNER_TEMP
+
+          echo "📋 Provisioning profile summary:"
+          echo "  Profile Name: ${PP_NAME:-'not found'}"
+          echo "  Profile UUID: ${PP_UUID:-'not found'}"
+          echo "  App Identifier: ${PP_APP_ID:-'not found'}"
 
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
@@ -139,14 +202,20 @@ jobs:
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
           APPLE_ID: ${{ secrets.APPLE_ID }}
+          # Provisioning profile information
+          PROVISION_PROFILE_UUID: ${{ env.PROVISION_PROFILE_UUID }}
+          PROVISION_PROFILE_NAME_ACTUAL: ${{ env.PROVISION_PROFILE_NAME_ACTUAL }}
+          # Try automatic signing first
+          USE_AUTOMATIC_SIGNING: "false"
         run: |
           cd ios
-          echo "Building for environment: ${{ inputs.environment }}"
-          if [ -z "${{ inputs.environment }}" ]; then
+          ENVIRONMENT="${{ inputs.environment }}"
+          echo "Building for environment: $ENVIRONMENT"
+          if [ -z "$ENVIRONMENT" ]; then
             echo "❌ Environment not specified, using 'dev' as default"
             bundle exec fastlane build environment:dev
           else
-            bundle exec fastlane build environment:${{ inputs.environment }}
+            bundle exec fastlane --verbose build environment:$ENVIRONMENT
           fi
 
       - name: 'Upload ipa artifact'
@@ -155,10 +224,28 @@ jobs:
           name: ${{ env.FILE_IPA }}
           path: ios/build/${{ env.FILE_IPA }}
           if-no-files-found: error
+          
+      - name: Dump gym log (tail)
+        if: failure()
+        run: |
+          LG=$(ls -t ~/Library/Logs/gym 2>/dev/null | head -n1 || echo "")
+          if [ -n "$LG" ]; then
+            echo "=== 📝 $LG ==="
+            tail -n 250 ~/Library/Logs/gym/$LG
+          else
+            echo "No gym log produced"
+          fi
+
+      - name: 'Upload full gym log'
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: gym-full-log
+          path: ~/Library/Logs/gym
 
   delivery:
     name: '📦 Delivery'
-    if: inputs.delivery == true && inputs.environment == 'prod' # != 'dev'
+    if: inputs.delivery == true && inputs.environment != 'dev'
     runs-on: macos-latest
     needs: build
     steps:

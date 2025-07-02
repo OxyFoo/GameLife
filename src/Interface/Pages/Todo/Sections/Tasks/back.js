@@ -13,8 +13,8 @@ import { MAX_TASKS } from 'Data/User/Todos';
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
- * @typedef {import('Types/Data/User/Todos').Todo} Todo
- * @typedef {import('Types/Data/User/Todos').Task} Task
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').Todo} Todo
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Todos').Task} Task
  *
  * @typedef {Object} SectionTasksPropsType
  * @property {StylePropView} style

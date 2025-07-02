@@ -1,16 +1,16 @@
 import langManager from 'Managers/LangManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 
 const FRIENDS_LIMIT = 50;
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
- * @typedef {import('Types/Data/User/Multiplayer').SaveObject_Multiplayer} SaveObject_Multiplayer
- * @typedef {import('Types/TCP/GameLife/Request_ServerToClient').ServerRequestUpdateFriends} ServerRequestUpdateFriends
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').SaveObject_Multiplayer} SaveObject_Multiplayer
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_ServerToClient').ServerRequestUpdateFriends} ServerRequestUpdateFriends
  */
 
 /** @extends {IUserData<SaveObject_Multiplayer>} */

@@ -12,7 +12,7 @@ import { Round } from 'Utils/Functions';
 import { DateFormat } from 'Utils/Date';
 
 /**
- * @typedef {import('Types/Data/App/Skills').Skill} Skill
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
  * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('Data/User/Activities/index').ActivitySaved} ActivitySaved
  *

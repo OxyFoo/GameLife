@@ -5,7 +5,7 @@ import StartMission2 from './Chapters/mission2';
 import StartMission3 from './Chapters/mission3';
 
 /**
- * @typedef {import('Types/Database/Missions').MissionKeys} MissionKeys
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Missions').MissionKeys} MissionKeys
  */
 
 const MISSIONS = {

@@ -40,7 +40,7 @@ class ZapGPT extends ZapGPTBack {
 
         // Not attempts
         if (zapGPT.remaining <= 0) {
-            return renderNoRemaining()
+            return renderNoRemaining();
         }
 
         const placeholder = ` (${zapGPT.remaining}/${zapGPT.total} ${lang['remaining-text']})`;
@@ -51,8 +51,10 @@ class ZapGPT extends ZapGPTBack {
                 </Text>
 
                 <View style={styles.texts}>
-                    {lang['instructions'].map((text, index) => (
-                        <Text key={`instruction-${index}`} style={styles.text}>{text}</Text>
+                    {lang['instructions'].map((_text, index) => (
+                        <Text key={`instruction-${index}`} style={styles.text}>
+                            {_text}
+                        </Text>
                     ))}
                 </View>
 
@@ -60,14 +62,12 @@ class ZapGPT extends ZapGPTBack {
                 <View style={styles.input}>
                     <InputText
                         label={lang['input-label'] + placeholder}
-                        text={text}
+                        value={text}
                         onChangeText={this.onChangeText}
                         maxLength={1024}
                         enabled={!loading}
                     />
-                    {error !== null && (
-                        <Text color='error'>{error}</Text>
-                    )}
+                    {error !== null && <Text color='error'>{error}</Text>}
                 </View>
 
                 {/* Buttons */}
@@ -98,34 +98,15 @@ class ZapGPT extends ZapGPTBack {
                     <FlatList
                         data={data}
                         renderItem={this.renderActivity}
-                        keyExtractor={(item, index) => 
-                            `${item.startTime}-${item.skillID}-${item.duration}-${index}`
-                        }
-                        ItemSeparatorComponent={() => (
-                            <Separator style={styles.separator} />
-                        )}
+                        keyExtractor={(item, index) => `${item.startTime}-${item.skillID}-${item.duration}-${index}`}
+                        ItemSeparatorComponent={() => <Separator style={styles.separator} />}
                     />
                 </View>
 
                 <View style={styles.buttons2}>
-                    <Button
-                        style={styles.buttonBack}
-                        color='danger'
-                        icon='cross'
-                        onPress={this.Reset}
-                    />
-                    <Button
-                        style={styles.buttonRetry}
-                        color='backgroundDark'
-                        icon='retry'
-                        onPress={this.Retry}
-                    />
-                    <Button
-                        style={styles.buttonValidate}
-                        color='success'
-                        icon='check'
-                        onPress={this.Validate}
-                    />
+                    <Button style={styles.buttonBack} color='danger' icon='cross' onPress={this.Reset} />
+                    <Button style={styles.buttonRetry} color='backgroundDark' icon='retry' onPress={this.Retry} />
+                    <Button style={styles.buttonValidate} color='success' icon='check' onPress={this.Validate} />
                 </View>
             </View>
         );
@@ -154,16 +135,10 @@ class ZapGPT extends ZapGPTBack {
                     <Text>{`${lang['start-time']}: ${skillStart}, ${lang['duration']}: ${skillDuration}`}</Text>
                 </View>
 
-                <Button
-                    style={styles.itemRemove}
-                    color='danger'
-                    icon='trash'
-                    iconSize={16}
-                    onPress={onRemove}
-                />
+                <Button style={styles.itemRemove} color='danger' icon='trash' iconSize={16} onPress={onRemove} />
             </View>
         );
-    }
+    };
 }
 
 export default ZapGPT;

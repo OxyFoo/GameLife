@@ -6,8 +6,8 @@ import langManager from 'Managers/LangManager';
 import { Round } from 'Utils/Functions';
 
 /**
- * @typedef {import('Types/Data/App/Achievements').Condition} Condition
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Achievements').Condition} Condition
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
  *
  * @typedef {Object} PanelAchievementType
  * @property {number} ID

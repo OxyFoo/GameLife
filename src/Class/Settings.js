@@ -1,14 +1,14 @@
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
-import DataStorage, { STORAGE } from 'Utils/DataStorage';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
+import Storage from 'Utils/Storage';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Global/Langs').LangKeys} LangKey
- * @typedef {import('Types/Global/Links').MusicLinksType} MusicLinksType
- * @typedef {import('Types/Class/Settings').SaveObject_Settings} SaveObject_Settings
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Langs').LangKeys} LangKey
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Links').MusicLinksType} MusicLinksType
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Settings').SaveObject_Settings} SaveObject_Settings
  */
 
 /** @type {SaveObject_Settings['musicLinks']} */
@@ -28,10 +28,9 @@ class Settings extends IUserClass {
         this.user = user;
     }
 
-    email = '';
-    token = '';
     onboardingWatched = false;
     testMessageReaded = false;
+    waitingEmail = '';
     tutoFinished = false;
     questHeatMapIndex = 0;
 
@@ -44,9 +43,8 @@ class Settings extends IUserClass {
     musicLinks = DEFAULT_MUSIC_LINKS;
 
     Clear = () => {
-        this.email = '';
-        this.token = '';
         this.testMessageReaded = false;
+        this.waitingEmail = '';
         this.questHeatMapIndex = 0;
 
         this.regularNotificationsLastRefresh = 0;
@@ -60,7 +58,7 @@ class Settings extends IUserClass {
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local loading...');
 
         /** @type {SaveObject_Settings | null} */
-        const settings = await DataStorage.Load(STORAGE.LOGIN);
+        const settings = await Storage.Load('LOGIN');
         if (settings === null) {
             if (debugIndex) {
                 this.user.interface.console?.EditLog(debugIndex, 'warn', 'Settings data: local load failed');
@@ -70,13 +68,12 @@ class Settings extends IUserClass {
 
         if (typeof settings.lang !== 'undefined') this.SetLang(settings.lang, true);
         if (typeof settings.theme !== 'undefined') themeManager.SetTheme(settings.theme);
-        if (typeof settings.email !== 'undefined') this.email = settings.email;
-        if (typeof settings.token !== 'undefined') this.token = settings.token;
         if (typeof settings.regularNotificationsLastRefresh !== 'undefined') {
             this.regularNotificationsLastRefresh = settings.regularNotificationsLastRefresh;
         }
         if (typeof settings.onboardingWatched !== 'undefined') this.onboardingWatched = settings.onboardingWatched;
         if (typeof settings.testMessageReaded !== 'undefined') this.testMessageReaded = settings.testMessageReaded;
+        if (typeof settings.waitingEmail !== 'undefined') this.waitingEmail = settings.waitingEmail;
         if (typeof settings.tutoFinished !== 'undefined') this.tutoFinished = settings.tutoFinished;
         if (typeof settings.questHeatMapIndex !== 'undefined') this.questHeatMapIndex = settings.questHeatMapIndex;
         if (typeof settings.morningNotifications !== 'undefined') {
@@ -98,11 +95,10 @@ class Settings extends IUserClass {
         const settings = {
             lang: langManager.currentLangageKey,
             theme: themeManager.selectedTheme,
-            email: this.email,
-            token: this.token,
             onboardingWatched: this.onboardingWatched,
             testMessageReaded: this.testMessageReaded,
             tutoFinished: this.tutoFinished,
+            waitingEmail: this.waitingEmail,
             questHeatMapIndex: this.questHeatMapIndex,
             regularNotificationsLastRefresh: this.regularNotificationsLastRefresh,
             morningNotifications: this.morningNotifications,
@@ -113,7 +109,7 @@ class Settings extends IUserClass {
 
         const debugIndex = this.user.interface.console?.AddLog('info', 'Settings data: local saving...');
 
-        const status = await DataStorage.Save(STORAGE.LOGIN, settings);
+        const status = await Storage.Save('LOGIN', settings);
 
         if (debugIndex) {
             const statusText = status ? 'success' : 'failed';

@@ -1,20 +1,19 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
-import { PieChart as PieGiftedChart } from 'react-native-gifted-charts';
 
 import BackPieChart from './back';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
-import { Text } from '../../Components/Text';
+import { Text } from '../Text';
+import { DonutChart } from '../DonutChart';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData
  * @typedef {import('react-native').ListRenderItem<UpdatingData>} ListRenderItem
  *
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  * @typedef {import('react-native').ListRenderItem<Quest>} FlatListQuestProps
  *
  */
@@ -81,7 +80,6 @@ class PieChart extends BackPieChart {
      * @returns {JSX.Element} A View component styled as a center label component.
      */
     renderCenterLabelComponentFullDay = () => {
-        const lang = langManager.curr['home'];
         const langDates = langManager.curr['dates']['names'];
         const totalMinutes = this.props.data.reduce((acc, cur) => acc + cur.valueMinutes, 0);
         const hour = Math.floor(totalMinutes / 60);
@@ -89,14 +87,26 @@ class PieChart extends BackPieChart {
 
         return (
             <View style={styles.centerLabel}>
-                <Text fontSize={10} color='white'>
-                    {lang['chart-total-text']}
-                </Text>
-                <Text fontSize={12} color='white'>
+                <Text fontSize={16} color='white'>
                     {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
                 </Text>
             </View>
         );
+    };
+
+    /**
+     * Converts the data format to our custom DonutChart format
+     * @param {Array<UpdatingData>} data - The original data array
+     * @returns {Array<{label: string, value: number, stroke: string}>} Converted data for DonutChart
+     */
+    convertDataForDonutChart = (data) => {
+        return data
+            .filter((item) => item.value > 0) // Filter out items with 0 value
+            .map((item) => ({
+                label: item.name || 'Unknown',
+                value: item.value,
+                stroke: item.color || '#000000'
+            }));
     };
 
     render() {
@@ -106,19 +116,23 @@ class PieChart extends BackPieChart {
             return null;
         }
 
+        // Convert data for the new DonutChart
+        const convertedData = this.convertDataForDonutChart(data);
+
         return (
             <View style={[styles.pieChartContainer, style]}>
                 <View style={styles.pieChart}>
-                    <PieGiftedChart
-                        data={data}
-                        donut
-                        showGradient
-                        sectionAutoFocus
-                        radius={50}
-                        innerRadius={30}
-                        innerCircleColor={themeManager.GetColor(this.props.insideBackgroundColor)}
-                        centerLabelComponent={this.renderCenterLabelComponentFullDay}
-                    />
+                    <DonutChart
+                        data={convertedData}
+                        size={110}
+                        strokeWidth={8}
+                        strokeLinecap='round'
+                        duration={1000}
+                        delay={100}
+                        segmentGap={12}
+                    >
+                        {this.renderCenterLabelComponentFullDay()}
+                    </DonutChart>
                 </View>
 
                 <View style={styles.legendContainer}>
@@ -152,4 +166,4 @@ class PieChart extends BackPieChart {
     };
 }
 
-export default PieChart;
+export { PieChart };

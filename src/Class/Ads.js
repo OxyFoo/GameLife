@@ -2,11 +2,11 @@ import { Platform } from 'react-native';
 import { TestIds } from 'react-native-google-mobile-ads';
 import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 'react-native-google-mobile-ads';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Data/App/Ads').Ad} Ad
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Ads').Ad} Ad
  *
  * @typedef {'shop' | 'todo'} RewardedAds
  * @typedef {'none'} InterstitialAds
@@ -139,13 +139,15 @@ class Ads extends IUserClass {
             return;
         }
 
+        let response;
+
         switch (type) {
             case AdEventType.LOADED:
             case RewardedAdEventType.LOADED:
                 callback(ad.meta, 'ready');
                 break;
             case RewardedAdEventType.EARNED_REWARD:
-                const response = await this.user.server2.tcp.SendAndWait({
+                response = await this.user.server2.tcp.SendAndWait({
                     action: 'watch-ad',
                     adName: ad.meta.Name
                 });

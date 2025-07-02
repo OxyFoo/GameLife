@@ -9,12 +9,12 @@ import NIA_OptionalUpdate from './Templates/OptionalUpdate';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInAppTypes} NotificationInAppTypes
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<NotificationInAppTypes>} NotificationInApp
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInAppGlobalMessage
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
- * @typedef {import('Types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInAppTypes} NotificationInAppTypes
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<NotificationInAppTypes>} NotificationInApp
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'global-message'>} NotificationInAppGlobalMessage
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'friend-pending'>} NotificationInAppFriendPending
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending
+ * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'optional-update'>} NotificationInAppOptionalUpdate
  */
 
 /**

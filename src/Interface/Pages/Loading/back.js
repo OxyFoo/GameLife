@@ -1,7 +1,6 @@
 import { Animated, Linking } from 'react-native';
 import Config from 'react-native-config';
-// import RNRestart from 'react-native-restart';
-import RNExitApp from 'react-native-exit-app';
+import AppControl from 'react-native-app-control';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
@@ -61,7 +60,7 @@ class BackLoading extends PageBase {
     /** @param {GestureResponderEvent} event */
     onToucheEnd = (event) => {
         // Check if the user is offline and if he has scrolled up to open the console
-        if (event.nativeEvent.pageY - this.startY < -200 && !user.server2.IsConnected()) {
+        if (event.nativeEvent.pageY - this.startY < -200 && user.server2.serverState.status === 'not-connected') {
             user.interface.console?.Enable();
         }
     };
@@ -78,8 +77,7 @@ class BackLoading extends PageBase {
                 icon: 'close-filled',
                 text: lang['loading-error-message'][message],
                 button: lang['loading-error-button'],
-                //action: RNRestart.restart
-                action: RNExitApp.exitApp // TODO: Redémarrer l'app
+                action: AppControl.Restart
             },
             storeInHistory: false
         });
@@ -120,11 +118,12 @@ class BackLoading extends PageBase {
         }
 
         // Go to home or activity timer
-        if (user.activities.currentActivity.Get() === null) {
-            this.fe.ChangePage('home', { args: { tuto } });
-        } else {
+        if (user.activities.currentActivity.Get() !== null) {
             this.fe.ChangePage('activitytimer', { storeInHistory: false });
+            return;
         }
+
+        this.fe.ChangePage('home', { args: { tuto } });
     };
 }
 

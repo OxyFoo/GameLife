@@ -1,18 +1,22 @@
 {
     "compilerOptions": {
-        "jsx": "react",
+        "jsx": "react-native",
         "target": "ES6",
         "checkJs": true,
         "strict": true,
         "resolveJsonModule": true,
         "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "baseUrl": "src",
+        "types": [
+            "react",
+            "react-native",
+            "jest",
+            "node"
+        ],
         "paths": {
             "Ressources/*": [
                 "../res/*"
-            ],
-            "Types/*": [
-                "../src/Types/*"
             ]
         },
         "noImplicitAny": true,
@@ -22,10 +26,10 @@
         "noUnusedParameters": true
     },
     "include": [
+        "App.js",
         "src"
     ],
     "exclude": [
-        "node_modules",
-        "Types"
+        "node_modules"
     ]
 }

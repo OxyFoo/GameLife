@@ -14,7 +14,7 @@ import { Text, Button } from 'Interface/Components';
 import IMG_MUSIC from 'Ressources/logo/music/music';
 
 /**
- * @typedef {import('Types/Global/Links').MusicLinksKeys} MusicLinksKeys
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Links').MusicLinksKeys} MusicLinksKeys
  */
 
 class ActivityTimer extends BackActivityTimer {

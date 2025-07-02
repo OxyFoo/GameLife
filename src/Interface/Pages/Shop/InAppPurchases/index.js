@@ -25,7 +25,6 @@ class ShopIAP extends BackShopIAP {
             <View style={styles.itemParent}>
                 <Button style={styles.itemButton} onPress={item.OnPress}>
                     <View style={[styles.itemContent, backgroundStyle]}>
-
                         {/** Item name & rarity */}
                         <View style={styles.itemInfo}>
                             <Text style={styles.itemName}>{item.Name}</Text>
@@ -40,22 +39,17 @@ class ShopIAP extends BackShopIAP {
                         <View style={styles.itemPrice}>
                             <Text style={styles.itemPriceOx}>{item.Price}</Text>
                         </View>
-
                     </View>
                 </Button>
             </View>
         );
-    }
+    };
 
     renderEmpty = () => {
         const lang = langManager.curr['shop']['dailyDeals'];
 
-        return (
-            <Text style={styles.errorText}>
-                {lang['error-no-items']}
-            </Text>
-        );
-    }
+        return <Text style={styles.errorText}>{lang['error-no-items']}</Text>;
+    };
 
     render() {
         const { iapItems } = this.state;

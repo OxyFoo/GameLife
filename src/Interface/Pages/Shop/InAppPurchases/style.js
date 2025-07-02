@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     // Daily deals
     itemParent: {
         width: '33%',
-        aspectRatio: 1/1.3,
+        aspectRatio: 1 / 1.3,
         marginBottom: 8,
         paddingBottom: 4,
         paddingHorizontal: 6
@@ -53,8 +53,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    itemFrameContainer: {
-    },
+    itemFrameContainer: {},
     itemOxImage: {
         height: 50,
         width: 50,

@@ -47,8 +47,8 @@ class Character {
         this.Refresh();
     }
 
-    Show = () => this.hide = false;
-    Hide = () => this.hide = true;
+    Show = () => (this.hide = false);
+    Hide = () => (this.hide = true);
 
     /**
      * Set items from array of items IDs
@@ -60,7 +60,7 @@ class Character {
         }
         this.items = [...items];
         this.Refresh();
-    }
+    };
 
     /**
      * @param {number} x
@@ -92,7 +92,7 @@ class Character {
         const { poses } = ANIMATIONS[animation];
         const { translation, rotations } = poses[0];
         this.body.__applyAnimation(translation, rotations);
-    }
+    };
 
     /**
      * @private
@@ -102,7 +102,7 @@ class Character {
         if (this.parentFrame !== null) {
             const { width, height } = this.parentFrame.props;
             const delta = 200;
-            const outOfBounds = x < -delta || y < -delta || x > width+delta || y > height+delta;
+            const outOfBounds = x < -delta || y < -delta || x > width + delta || y > height + delta;
             if (this.outOfBounds !== outOfBounds) {
                 this.outOfBounds = outOfBounds;
             }
@@ -113,7 +113,7 @@ class Character {
     Refresh() {
         if (this.parentFrame !== null) {
             this.parentFrame.forceUpdate();
-            this.body.getChilds(this.body.firstPart).forEach(part => {
+            this.body.getChilds(this.body.firstPart).forEach((part) => {
                 part.updateOffsets();
             });
         }

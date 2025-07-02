@@ -9,8 +9,8 @@ import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
 /**
  * @typedef {import('react-native').View} View
  *
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
 
 class BackMultiplayer extends PageBase {
@@ -34,29 +34,38 @@ class BackMultiplayer extends PageBase {
     /** @type {React.RefObject<View | null>} */
     refAddButton = React.createRef();
 
+    /** @type {Symbol | null} */
+    listenerTcpStateChange = null;
+
+    /** @type {Symbol | null} */
+    listenerDeviceAuthStateChange = null;
+
+    /** @type {Symbol | null} */
+    listenerUserAuthEmail = null;
+
+    /** @type {Symbol | null} */
+    listenerFriends = null;
+
     componentDidMount() {
         this.updateOnlineState();
         this.updateFriends(user.multiplayer.friends.Get());
-        this.listenerState = user.server2.tcp.state.AddListener(this.updateOnlineState);
+        this.listenerTcpStateChange = user.server2.tcp.state.AddListener(this.updateOnlineState);
+        this.listenerDeviceAuthStateChange = user.server2.deviceAuth.state.AddListener(this.updateOnlineState);
+        this.listenerUserAuthEmail = user.server2.userAuth.email.AddListener(this.updateOnlineState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
     }
 
     componentWillUnmount() {
-        if (this.listenerState) {
-            user.server2.tcp.state.RemoveListener(this.listenerState);
-        }
-        if (this.listenerFriends) {
-            user.multiplayer.friends.RemoveListener(this.listenerFriends);
-        }
+        user.server2.tcp.state.RemoveListener(this.listenerTcpStateChange);
+        user.server2.deviceAuth.state.RemoveListener(this.listenerDeviceAuthStateChange);
+        user.server2.userAuth.email.RemoveListener(this.listenerUserAuthEmail);
+        user.multiplayer.friends.RemoveListener(this.listenerFriends);
     }
 
     updateOnlineState = () => {
         const { onlineState } = this.state;
 
-        const tcpState = user.server2.tcp.state.Get();
-
-        /** @type {this['state']['onlineState']} */
-        const newOnlineState = tcpState === 'authenticated' ? 'authenticated' : 'offline';
+        const newOnlineState = user.server2.IsAuthenticated() ? 'authenticated' : 'offline';
 
         if (newOnlineState !== onlineState) {
             this.setState({ onlineState: newOnlineState });

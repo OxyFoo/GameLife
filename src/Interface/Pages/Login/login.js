@@ -6,7 +6,7 @@ import langManager from 'Managers/LangManager';
  */
 
 /**
- * Login, return true if success (& next page loading) or false if error
+ * Login function that handles user authentication
  * @this {LoginPage}
  * @param {string} email
  * @returns {Promise<void>}
@@ -15,13 +15,11 @@ async function Login(email) {
     const lang = langManager.curr['login'];
 
     this.setState({ loading: true });
-    const status = await user.server2.Login(email);
+    const status = await user.server2.userAuth.Login(email, true);
     await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Logged in
-    if (status === 'ok') {
-        user.settings.email = email;
-        await user.settings.IndependentSave();
+    if (status === 'authenticated') {
         user.interface.ChangePage('loading', { storeInHistory: false });
     }
 
@@ -32,9 +30,12 @@ async function Login(email) {
 
     // New device or mail unconfirmed
     else if (status === 'waitMailConfirmation') {
-        user.settings.email = email;
+        user.settings.waitingEmail = email;
         await user.settings.IndependentSave();
-        user.interface.ChangePage('waitmail', { storeInHistory: false });
+        user.interface.ChangePage('waitmail', {
+            storeInHistory: false,
+            args: { email }
+        });
     }
 
     // Device limit reached
@@ -50,7 +51,9 @@ async function Login(email) {
 
     // Error
     else {
-        this.setState({ errorEmail: lang['error-signin-server'] });
+        this.setState({
+            errorEmail: lang['error-signin-server'].replace('{}', status)
+        });
     }
 }
 
@@ -64,12 +67,13 @@ async function Login(email) {
 async function Signin(email, username) {
     const lang = langManager.curr['login'];
     this.setState({ loading: true });
-    const signinStatus = await user.server2.Signin(username, email);
+    const signinStatus = await user.server2.userAuth.Signin(username, email);
     await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Signin success
     if (signinStatus === 'ok') {
-        await Login.call(this, email);
+        await user.server2.userAuth.SetEmail(email);
+        user.interface.ChangePage('loading', { storeInHistory: false });
         return;
     }
 
@@ -100,7 +104,7 @@ async function Signin(email, username) {
         this.setState({
             username: '',
             errorUsername: '',
-            errorEmail: lang['error-signin-server']
+            errorEmail: lang['error-signin-server'].replace('{}', `${signinStatus}`)
         });
         this.backToLogin();
     }

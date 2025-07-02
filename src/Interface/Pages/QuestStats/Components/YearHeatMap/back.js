@@ -9,7 +9,7 @@ import { DAY_TIME, GetGlobalTime, GetYearTime } from 'Utils/Time';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
  * @typedef {import('Interface/Components/HeatMap').HeatMapDataType} HeatMapDataType
  *
  * @typedef {Object} YearHeatMapPropsType

@@ -8,27 +8,27 @@ import { DAY_TIME, GetGlobalTime, GetMidnightTime, GetTimeZone } from 'Utils/Tim
  * @typedef {import('Data/User/Activities/index').Activity} Activity
  */
 
-class DayType {
-    /** @type {number} */   day;
-    /** @type {boolean} */  isToday;
-    /** @type {boolean} */  isSelected;
-    /** @type {boolean} */  isActivity;
-    /** @type {boolean} */  isActivityXP;
-}
+/**
+ * Represents a day in a calendar or activity tracker with various state flags.
+ * @typedef {Object} DayType
+ * @property {number} day - The numerical day of the month (1-31).
+ * @property {boolean} isToday - Indicates whether this day represents the current date.
+ * @property {boolean} isSelected - Indicates whether this day is currently selected by the user.
+ * @property {boolean} isActivity - Indicates whether there is activity recorded for this day.
+ * @property {boolean} isActivityXP - Indicates whether there is activity with experience points for this day.
+ */
 
-class MonthType {
-    /** @type {number} */
-    month;
-    /** @type {number} */
-    year;
-    /** @type {Array<Array<DayType | null>>} */
-    data = []
-}
+/**
+ * @typedef {Object} MonthType
+ * @property {number} month - The numerical month (0-11).
+ * @property {number} year - The year (e.g., 2023).
+ * @property {Array<Array<DayType | null>>} data - A two-dimensional array representing weeks and days.
+ */
 
 /**
  * @description Return two dimensionnal array, wich contains week, wich contain number of date (0 if null)
- * @param {number | null} [month=null] Current month if null
- * @param {number | null} [year=null] Current year if null
+ * @param {number | null} month Current month if null
+ * @param {number | null} year Current year if null
  * @param {number} [start=1] First day of week, default: 1 (monday)
  * @param {number} [selectedDay=-1] Current selected day (1-31)
  * @returns {MonthType}
@@ -39,7 +39,6 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
         if (month === null) month = now.getMonth();
         if (year === null) year = now.getFullYear();
     }
-
 
     /** @type {MonthType} */
     let output = {
@@ -79,14 +78,20 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
             let isActivity = false;
             let isActivityXP = false;
 
-            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime + timezone < tmpTime) {
+            while (
+                tmpActivityIndex < allActivities.length &&
+                allActivities[tmpActivityIndex].startTime + timezone < tmpTime
+            ) {
                 tmpActivityIndex++;
             }
 
-            while (tmpActivityIndex < allActivities.length && allActivities[tmpActivityIndex].startTime + timezone < tmpTime + DAY_TIME) {
+            while (
+                tmpActivityIndex < allActivities.length &&
+                allActivities[tmpActivityIndex].startTime + timezone < tmpTime + DAY_TIME
+            ) {
                 isActivity = true;
                 const skill = dataManager.skills.GetByID(allActivities[tmpActivityIndex].skillID);
-                if (skill?.XP ?? 0 > 0) {
+                if ((skill?.XP ?? 0) > 0) {
                     isActivityXP = true;
                     break;
                 }
@@ -117,15 +122,16 @@ function GetBlockMonth(month, year, start = DAYS.monday, selectedDay = -1) {
  */
 function DidUpdateBlockMonth(month) {
     const currMonth = GetBlockMonth(month.month, month.year);
-    return currMonth.data.some((week, w) => week.some((day, d) => {
-        return day?.isToday !== month.data[w][d]?.isToday ||
-            day?.isSelected !== month.data[w][d]?.isSelected ||
-            day?.isActivity !== month.data[w][d]?.isActivity ||
-            day?.isActivityXP !== month.data[w][d]?.isActivityXP;
-    }));
+    return currMonth.data.some((week, w) =>
+        week.some((day, d) => {
+            return (
+                day?.isToday !== month.data[w][d]?.isToday ||
+                day?.isSelected !== month.data[w][d]?.isSelected ||
+                day?.isActivity !== month.data[w][d]?.isActivity ||
+                day?.isActivityXP !== month.data[w][d]?.isActivityXP
+            );
+        })
+    );
 }
 
-export {
-    MonthType, DayType,
-    GetBlockMonth, DidUpdateBlockMonth
-};
+export { GetBlockMonth, DidUpdateBlockMonth };

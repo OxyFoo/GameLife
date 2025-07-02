@@ -6,8 +6,8 @@ import user from 'Managers/UserManager';
 import { AddActivity } from 'Interface/Widgets';
 
 /**
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
- * @typedef {import('Types/Data/User/Quests').QuestSaved} QuestSaved
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').QuestSaved} QuestSaved
  *
  * @typedef {Object} BackQuestPropsType
  * @property {Object} args

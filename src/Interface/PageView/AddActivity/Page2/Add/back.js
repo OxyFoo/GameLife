@@ -17,7 +17,7 @@ import {
 
 /**
  * @typedef {import('react-native').View} View
- * @typedef {import('Types/Data/User/Activities').Activity} Activity
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *

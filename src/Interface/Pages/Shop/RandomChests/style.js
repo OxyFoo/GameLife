@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 
     itemParent: {
         width: '33%',
-        aspectRatio: 1/1.3,
+        aspectRatio: 1 / 1.3,
         paddingHorizontal: 6
     },
     itemButton: {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     imageChest: {
         width: '100%',
         height: '100%',
-        transform: [{ scale: .6 }]
+        transform: [{ scale: 0.6 }]
     },
 
     itemPrice: {

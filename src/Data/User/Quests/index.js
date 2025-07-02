@@ -1,6 +1,6 @@
 import langManager from 'Managers/LangManager';
 
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import { Sum } from 'Utils/Functions';
 import { GetLocalTime } from 'Utils/Time';
@@ -12,9 +12,9 @@ import { getStreakFromFrequencyByMonth, getStreakFromFrequencyByWeek, getStreakF
  * @typedef {import('Data/User/Activities').Activity} Activity
  *
  * @typedef {import('./days').DayType} DayType
- * @typedef {import('Types/Data/User/Quests').Quest} Quest
- * @typedef {import('Types/Data/User/Quests').QuestSaved} QuestSaved
- * @typedef {import('Types/Data/User/Quests').SaveObject_Quests} SaveObject_Quests
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').QuestSaved} QuestSaved
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').SaveObject_Quests} SaveObject_Quests
  *
  * @typedef {'title-empty' | 'title-exists' | 'skills-empty' | 'schedule-empty'} InputsError
  *

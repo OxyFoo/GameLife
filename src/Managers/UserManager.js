@@ -4,7 +4,7 @@ import Experience from 'Class/Experience';
 import NotificationsInApp from 'Class/NotificationsInApp';
 import NotificationsPush from 'Class/NotificationsPush';
 import Rewards from 'Class/Rewards';
-import Server2 from 'Class/Server2';
+import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
 import Achievements from 'Data/User/Achievements';
@@ -17,7 +17,8 @@ import Quests from 'Data/User/Quests/index';
 import Multiplayer from 'Data/User/Multiplayer';
 import Todos from 'Data/User/Todos';
 
-import DataStorage, { STORAGE } from 'Utils/DataStorage';
+import Storage from 'Utils/Storage';
+import GoogleSignIn from 'Utils/GoogleSignIn';
 import { Sleep } from 'Utils/Functions';
 
 /**
@@ -27,12 +28,12 @@ import { Sleep } from 'Utils/Functions';
 
 /**
  * @template T
- * @typedef {import('Types/Interface/IUserData').IUserData<T>} IUserData
+ * @typedef {import('@oxyfoo/gamelife-types/Interface/IUserData').IUserData<T>} IUserData
  */
 
 /**
  * @template T
- * @typedef {import('Types/Interface/IUserClass').IUserClass<T>} IUserClass
+ * @typedef {import('@oxyfoo/gamelife-types/Interface/IUserClass').IUserClass<T>} IUserClass
  */
 
 class UserManager {
@@ -44,7 +45,7 @@ class UserManager {
         this.notificationsInApp = new NotificationsInApp(this);
         this.notificationsPush = new NotificationsPush(this);
         this.rewards = new Rewards(this);
-        this.server2 = new Server2(this);
+        this.server2 = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this);
         this.informations = new Informations(this);
@@ -107,7 +108,7 @@ class UserManager {
     /** @type {number | null} To avoid spamming mail (UTC) */
     tempMailSent = null;
 
-    StartTimers() {
+    onMount() {
         this.experience.onMount();
         this.dailyQuest.onMount();
 
@@ -116,19 +117,32 @@ class UserManager {
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
     }
 
+    async onUnmount() {
+        clearInterval(this.intervalAchievements);
+
+        for (const _class of this.CLASS) {
+            await _class.Unmount();
+        }
+        for (const data of this.DATA) {
+            await data.Unmount();
+        }
+
+        await this.settings.IndependentSave();
+        await this.SaveLocal();
+        await this.SaveOnline();
+    }
+
     async Clear(keepOnboardingState = true) {
         this.tempMailSent = null;
 
-        for (const data of this.CLASS) {
-            data.Clear();
+        for (const _class of this.CLASS) {
+            await _class.Clear();
         }
-
         for (const data of this.DATA) {
-            data.Clear();
+            await data.Clear();
         }
 
-        await this.onUnmount();
-        await DataStorage.ClearAll();
+        await Storage.ClearAll();
         await this.SaveLocal();
 
         if (!keepOnboardingState) {
@@ -169,10 +183,14 @@ class UserManager {
             this.interface.console?.AddLog('warn', 'Not connected to the server, disconnecting locally');
         }
 
+        // Sign out from Google if signed in
+        await GoogleSignIn.SignOut();
+        await this.server2.tcp.SendAndWait({ action: 'google-signin-token-reset' });
+
         await this.Clear();
-        this.server2.Disconnect();
-        await Sleep(500); // Wait for the server to disconnect
-        await this.server2.Connect(true);
+
+        // Wait for the server to disconnect
+        await Sleep(500);
 
         this.interface.ChangePage('login', {
             storeInHistory: false,
@@ -182,19 +200,6 @@ class UserManager {
         });
 
         return true;
-    }
-
-    async onUnmount() {
-        clearInterval(this.intervalAchievements);
-
-        this.server2.Disconnect();
-        this.experience.onUnmount();
-        this.dailyQuest.onUnmount();
-        this.notificationsInApp.Unmount();
-
-        await this.settings.IndependentSave();
-        await this.SaveLocal();
-        await this.SaveOnline();
     }
 
     /**
@@ -235,8 +240,8 @@ class UserManager {
         }
 
         const debugIndex = this.interface.console?.AddLog('info', 'User data: local saving...');
-        const savedData = await DataStorage.Save(STORAGE.USER_DATA, userData);
-        const savedClass = await DataStorage.Save(STORAGE.USER_CLASS, userClass);
+        const savedData = await Storage.Save('USER_DATA', userData);
+        const savedClass = await Storage.Save('USER_CLASS', userClass);
         if (debugIndex) {
             if (savedData && savedClass) {
                 this.interface.console?.EditLog(debugIndex, 'same', 'User data: local save');
@@ -256,10 +261,10 @@ class UserManager {
         const debugIndex = this.interface.console?.AddLog('info', 'User data: local loading...');
 
         /** @type {Record<IUserClass<*>['key'], IUserClass<*>['Save']> | null} */
-        const userClass = await DataStorage.Load(STORAGE.USER_CLASS);
+        const userClass = await Storage.Load('USER_CLASS');
 
         /** @type {Record<IUserData<*>['key'], IUserData<*>['Save']> | null} */
-        const userData = await DataStorage.Load(STORAGE.USER_DATA);
+        const userData = await Storage.Load('USER_DATA');
 
         if (userData === null || userClass === null) {
             if (debugIndex) {

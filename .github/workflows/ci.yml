@@ -19,3 +19,4 @@ jobs:
       environment: dev
       test-client: true
       test-resource: true
+      test-tls-pinning: false

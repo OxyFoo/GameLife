@@ -14,7 +14,7 @@ import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { Title } from 'Interface/Pages/Home/title';
 
 /**
- * @typedef {import('Types/Data/App/Missions').MissionType} MissionType
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Missions').MissionType} MissionType
  */
 
 class Missions extends BackMissions {

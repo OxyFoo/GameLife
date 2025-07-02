@@ -16,8 +16,8 @@ import { Gradient } from 'Interface/Primitives';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
  * @typedef {import('Class/Experience').XPInfo} XPInfo
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
 
 // TODO: Replace this with a real avatar
@@ -26,9 +26,6 @@ const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.
 
 /** @type {Character | null} */
 // const DEFAULT_CHARACTER = null;
-
-/** @type {string | null} */
-const DEFAULT_TITLE = null;
 
 /**
  * @param {object} param0
@@ -41,7 +38,7 @@ function UserOnlineElement({ style, friend }) {
     const lang = langManager.curr['multiplayer'];
 
     // const [character, setCharacter] = React.useState(DEFAULT_CHARACTER);
-    const [friendTitle, setFriendTitle] = React.useState(DEFAULT_TITLE);
+    const [friendTitle, setFriendTitle] = React.useState(/** @type {string | null} */ (null));
     const [statusStyle, setStatusStyle] = React.useState({});
 
     React.useEffect(() => {

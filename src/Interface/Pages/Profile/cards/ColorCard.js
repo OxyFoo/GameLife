@@ -7,15 +7,15 @@ const ColorCardProps = {
     /** @type {string} */
     characterSkinColor: '',
 
-    /** @param {string} color */
-    onPress: (color) => {}
+    /** @type {(color: string) => void} */
+    onPress: () => {}
 };
 
 class ColorCard extends React.PureComponent {
     onPress = () => {
         const { characterSkinColor } = this.props;
         this.props.onPress(characterSkinColor);
-    }
+    };
 
     render() {
         const { characterSkinColor } = this.props;
@@ -26,7 +26,7 @@ class ColorCard extends React.PureComponent {
                 <TouchableHighlight
                     style={[styles.content, background]}
                     onPress={this.onPress}
-                    underlayColor={themeManager.GetColor('main1', { opacity: .5 })}
+                    underlayColor={themeManager.GetColor('main1', { opacity: 0.5 })}
                     touchSoundDisabled={true}
                 >
                     <></>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     card: {
         width: '30%',
         aspectRatio: 1,
-        margin: 6,
+        margin: 6
     },
     content: {
         width: '100%',

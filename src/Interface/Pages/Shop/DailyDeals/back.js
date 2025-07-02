@@ -9,7 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Character } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/App/Items').Item} Item
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').StuffID} StuffID
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  *

@@ -7,8 +7,8 @@ import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
 import { FormatForSearch } from 'Utils/String';
 
 /**
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
 
 const BackFriendsProps = {

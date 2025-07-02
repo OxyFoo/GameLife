@@ -7,8 +7,8 @@ import langManager from 'Managers/LangManager';
 import { Text, UserOnlineElement } from 'Interface/Components';
 
 /**
- * @typedef {import('Types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('Types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  * @typedef {import('react-native').ListRenderItem<Friend | UserOnline>} ListRenderItemFriends
  */
 
@@ -23,7 +23,7 @@ const OnlineFriends = ({ style, friends }) => {
         <FlatList
             style={[styles.flatList, style]}
             data={friends}
-            keyExtractor={(item) => 'multi-player-' + item.accountID}
+            keyExtractor={(item) => `multi-player-${item.accountID}`}
             renderItem={FriendItem}
             ListEmptyComponent={RenderEmpty}
         />

@@ -4,11 +4,11 @@ import { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
 
 import langManager from 'Managers/LangManager';
 
-import { IUserClass } from 'Types/Interface/IUserClass';
+import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Types/Class/Consent').SaveObject_Consent} SaveObject_Consent
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Consent').SaveObject_Consent} SaveObject_Consent
  *
  * @typedef {'ok' | 'not-needed' | 'not-available'} ConsentPopupOSResult
  * @typedef {'loading' | 'error' | ConsentPopupOSResult} ConsentPopupResult

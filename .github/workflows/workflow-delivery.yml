@@ -55,6 +55,7 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       test-client: true
       test-resource: true
+      test-tls-pinning: true
 
   update-version:
     name: '📝 Update version'

@@ -1,15 +1,15 @@
 import dataManager from 'Managers/DataManager';
-import { IUserData } from 'Types/Interface/IUserData';
+import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/App/Items').Slot} Slot
  * @typedef {import('Data/App/Titles').Title} Title
- * @typedef {import('Types/Data/User/Inventory').Stuff} Stuff
- * @typedef {import('Types/Data/User/Inventory').AvatarObject} AvatarObject
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
  *
- * @typedef {import('Types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
  */
 
 /** @extends {IUserData<SaveObject_Inventory>} */

@@ -4,14 +4,14 @@ import { ScrollView } from 'react-native';
 import styles from './style';
 import BackSettings from './back';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
+// import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button, /*SwitchText,*/ ComboBox } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class Settings extends BackSettings {
     render = () => {
-        const { cbSelectedLang, sendingMail, devicesLoading, waitingConsentPopup } = this.state;
+        const { cbSelectedLang, sendingMail, devicesLoading, waitingConsentPopup, serverTCPState } = this.state;
 
         //const langThemes = langManager.curr['themes'];
         const lang = langManager.curr['settings'];
@@ -102,6 +102,19 @@ class Settings extends BackSettings {
                     {lang['input-beta']}
                 </Button>
 
+                {/* Reconnect TCP */}
+                {serverTCPState !== 'connected' && (
+                    <>
+                        <Text style={styles.title} color='border'>
+                            {lang['section-offline-mode']}
+                        </Text>
+
+                        <Button style={styles.margin} onPress={this.reconnectTCP} throttleTime={3000}>
+                            {lang['input-reconnect-tcp']}
+                        </Button>
+                    </>
+                )}
+
                 <Text style={styles.title} color='border'>
                     {lang['section-security-privacy']}
                 </Text>
@@ -113,23 +126,11 @@ class Settings extends BackSettings {
                 <Button
                     style={styles.margin}
                     appearance='outline'
-                    onPress={this.disconnectAll}
+                    onPress={this.disconnectOtherDevices}
                     loading={devicesLoading}
                 >
-                    {lang['input-disconnect-all']}
+                    {lang['input-disconnect-other']}
                 </Button>
-
-                {
-                    // TODO: Add this button in multiplayer page ?
-                }
-                {/* Reconnect TCP */}
-                {/* {user.server.IsConnected() &&
-                    this.state.serverTCPState !== 'connected' &&
-                    this.state.serverTCPState !== 'idle' && (
-                        <Button style={styles.margin} onPress={this.reconnectTCP}>
-                            {lang['input-reconnect-tcp']}
-                        </Button>
-                    )} */}
 
                 {
                     // TODO: Restart tutorial (keep or remove ?)

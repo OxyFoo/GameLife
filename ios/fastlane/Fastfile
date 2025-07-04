@@ -223,23 +223,74 @@ platform :ios do
     environment = options[:environment] || "prod"
     ipa_path = "./build/GameLife-#{environment}.ipa"
 
-    # Use App Store Connect API with environment variables
-    app_store_connect_api_key(
-      key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
-      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
-      key_content: ENV['APP_STORE_CONNECT_API_KEY_KEY']
-    )
+    # Validate that IPA file exists
+    unless File.exist?(ipa_path)
+      UI.user_error! "❌ IPA file not found at: #{ipa_path}"
+    end
 
-    # Upload to App Store Connect using current API
-    upload_to_app_store(
-      ipa: ipa_path,
-      skip_binary_upload: false,
-      skip_screenshots: true,
-      skip_metadata: true,
-      force: true,
-      submit_for_review: false,
-      automatic_release: false
-    )
+    UI.message "📦 Uploading IPA: #{ipa_path}"
+
+    # Validate App Store Connect API credentials
+    api_key_id = ENV['APP_STORE_CONNECT_API_KEY_KEY_ID']
+    api_issuer_id = ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID']
+    api_key_content = ENV['APP_STORE_CONNECT_API_KEY_KEY']
+
+    if api_key_id.nil? || api_key_id.empty?
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY_ID environment variable is missing"
+    end
+
+    if api_issuer_id.nil? || api_issuer_id.empty?
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_ISSUER_ID environment variable is missing"
+    end
+
+    if api_key_content.nil? || api_key_content.empty?
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY environment variable is missing"
+    end
+
+    UI.message "🔑 API Key ID: #{api_key_id}"
+    UI.message "🏢 Issuer ID: #{api_issuer_id}"
+    UI.message "📝 Private key content length: #{api_key_content.length} characters"
+
+    # Validate that the private key looks like a valid P8 key
+    unless api_key_content.include?('BEGIN PRIVATE KEY') && api_key_content.include?('END PRIVATE KEY')
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY does not appear to be a valid P8 private key format"
+    end
+
+    # Create temporary file for the private key to avoid issues with key content formatting
+    require 'tempfile'
+    
+    temp_key_file = Tempfile.new(['api_key', '.p8'])
+    begin
+      # Write the key content to temporary file
+      temp_key_file.write(api_key_content)
+      temp_key_file.close
+
+      UI.message "🔐 Using temporary key file: #{temp_key_file.path}"
+
+      # Use App Store Connect API with file path instead of content
+      app_store_connect_api_key(
+        key_id: api_key_id,
+        issuer_id: api_issuer_id,
+        key_filepath: temp_key_file.path
+      )
+
+      # Upload to App Store Connect using current API
+      upload_to_app_store(
+        ipa: ipa_path,
+        skip_binary_upload: false,
+        skip_screenshots: true,
+        skip_metadata: true,
+        force: true,
+        submit_for_review: false,
+        automatic_release: false
+      )
+
+      UI.success "✅ Successfully uploaded to App Store Connect!"
+
+    ensure
+      # Clean up temporary file
+      temp_key_file.unlink if temp_key_file
+    end
   end
 
   desc "Build and upload to App Store"

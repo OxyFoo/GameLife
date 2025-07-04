@@ -71,9 +71,6 @@ jobs:
           # Build the app with environment variables passed as Gradle properties
           npm run build -- -PGAMELIFE_KEYSTORE_PASSWORD="${{ secrets.GAMELIFE_KEYSTORE_PASSWORD }}" -PGAMELIFE_KEY_PASSWORD="${{ secrets.GAMELIFE_KEY_PASSWORD }}"
 
-          # Clean types
-          npm run poststart
-
           # Move aab & mapping files to root
           mv android/app/build/outputs/bundle/release/app-release.aab ./${FILE_AAB}
           mv android/app/build/outputs/mapping/release/mapping.txt ./${FILE_MAPPING}

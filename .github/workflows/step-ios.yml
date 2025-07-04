@@ -261,6 +261,17 @@ jobs:
           name: ${{ env.FILE_IPA }}
           path: .
 
+      - name: 'Debug tree'
+        run: |
+          echo "::group::Workspace tree"
+          tree -L 2 || true
+          echo "::endgroup::"
+
+      - name: 'Place IPA where Fastlane expects it'
+        run: |
+          mkdir -p ios/build
+          mv build/${{ env.FILE_IPA }} ios/build/
+
       - name: 'Upload to App Store with Fastlane'
         env:
           APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}

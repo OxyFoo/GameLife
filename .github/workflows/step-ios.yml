@@ -259,7 +259,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.FILE_IPA }}
-          path: ios/build
+          path: .
 
       - name: 'Upload to App Store with Fastlane'
         env:

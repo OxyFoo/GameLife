@@ -221,13 +221,10 @@ platform :ios do
   desc "Upload to App Store Connect"
   lane :upload_to_appstore do |options|
     environment = options[:environment] || "prod"
-    ipa_path = "../build/GameLife-#{environment}.ipa"
+    ipa_path = "build/GameLife-#{environment}.ipa"
 
-    UI.message "📝 PWD = #{Dir.pwd}"
-    sh("ls -lR .")
-
-    UI.message "📝 ls build"
-    sh("ls -lR build")
+    UI.message "📝 PWD = #{Dir.pwd}/../.."
+    sh("ls -lR ../..")
 
     # Validate that IPA file exists
     unless File.exist?(ipa_path)

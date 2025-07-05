@@ -221,7 +221,13 @@ platform :ios do
   desc "Upload to App Store Connect"
   lane :upload_to_appstore do |options|
     environment = options[:environment] || "prod"
-    ipa_path = "ios/build/GameLife-#{environment}.ipa"
+    ipa_path = "../build/GameLife-#{environment}.ipa"
+
+    UI.message "📝 PWD = #{Dir.pwd}"
+    sh("ls -lR .")
+
+    UI.message "📝 PWD = #{Dir.pwd}/.."
+    sh("ls -lR ..")
 
     # Validate that IPA file exists
     unless File.exist?(ipa_path)
@@ -246,9 +252,6 @@ platform :ios do
     if api_key_content.nil? || api_key_content.empty?
       UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY environment variable is missing"
     end
-
-    UI.message "PWD = #{Dir.pwd}"
-    sh("ls -lR .")
 
     UI.message "🔑 API Key ID: #{api_key_id}"
     UI.message "🏢 Issuer ID: #{api_issuer_id}"

@@ -269,8 +269,8 @@ jobs:
 
       - name: 'Place IPA where Fastlane expects it'
         run: |
-          mkdir -p ios/build
-          mv ./${{ env.FILE_IPA }} ios/build/
+          mkdir -p build
+          mv "${{ env.FILE_IPA }}" build/
 
       - name: 'Upload to App Store with Fastlane'
         env:

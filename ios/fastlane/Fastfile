@@ -226,8 +226,8 @@ platform :ios do
     UI.message "📝 PWD = #{Dir.pwd}"
     sh("ls -lR .")
 
-    UI.message "📝 PWD = #{Dir.pwd}/.."
-    sh("ls -lR ..")
+    UI.message "📝 ls build"
+    sh("ls -lR build")
 
     # Validate that IPA file exists
     unless File.exist?(ipa_path)

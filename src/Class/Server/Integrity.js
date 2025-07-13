@@ -3,6 +3,8 @@ import { Platform } from 'react-native';
 import AppAttest from 'react-native-ios-appattest';
 import PlayIntegrity from 'react-native-google-play-integrity';
 
+import user from 'Managers/UserManager';
+
 /**
  * @typedef {import('@oxyfoo/gamelife-types').IntegrityToken} IntegrityToken
  */
@@ -37,8 +39,15 @@ export async function GetIntegrityToken(challenge) {
 
     // iOS - App Attest
     else if (Platform.OS === 'ios') {
-        const supported = await AppAttest.attestationSupported();
-        if (!supported) {
+        try {
+            const supported = await AppAttest.attestationSupported();
+            if (!supported) {
+                return 'unsupported';
+            }
+        } catch (e) {
+            user.interface.console?.AddLog('error', 'App Attest support check error - Error details:', {
+                error: e
+            });
             return 'unsupported';
         }
 
@@ -55,7 +64,9 @@ export async function GetIntegrityToken(challenge) {
                 type: 'appAttest'
             };
         } catch (e) {
-            // console.error('[GetIntegrityToken] App Attest error', e);
+            user.interface.console?.AddLog('error', 'App Attest request error - Error details:', {
+                error: e
+            });
             return 'error';
         }
     }

@@ -7,24 +7,15 @@ const styles = StyleSheet.create({
 
         flexDirection: 'column',
         alignItems: 'flex-start',
-        justifyContent: 'flex-start'
-    },
-    flexBetween: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    headerText: {
-        marginBottom: 8,
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold'
+        justifyContent: 'flex-start',
+
+        paddingHorizontal: 8,
+        paddingVertical: 12
     },
     notEnoughData: {
         width: '100%',
-        paddingVertical: 12,
-        paddingHorizontal: 16
+        paddingVertical: 8,
+        paddingHorizontal: 8
     },
     notEnoughDataText: {
         fontSize: 16

@@ -87,7 +87,7 @@ jobs:
       - name: 'Get TLS Pinning Key'
         id: get-tls-pinning-key
         run: |
-          echo "SSL_PINNING_PRIMARY_KEY=$(grep SSL_PINNING_PRIMARY_KEY .env.${{ inputs.environment }} | cut -d '=' -f2)" >> $GITHUB_ENV
+          echo "SSL_PINNING_PRIMARY_KEY=$(grep SSL_PINNING_PRIMARY_KEY .env.${{ inputs.environment }} | cut -d '=' -f2-)" >> $GITHUB_ENV
 
       - name: 'Run TLS Pinning Tests'
         run: |

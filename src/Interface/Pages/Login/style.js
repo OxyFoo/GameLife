@@ -41,6 +41,17 @@ const styles = StyleSheet.create({
         bottom: 0,
         margin: 24
     },
+    buttonGoogleSignin: {
+        width: 'auto',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 68,
+        margin: 24
+    },
+    buttonGoogleContent: {
+        justifyContent: 'space-between'
+    },
     buttonBack: {
         position: 'absolute',
         width: 64,

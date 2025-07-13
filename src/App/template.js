@@ -125,6 +125,66 @@ export function LoadTemplate_AppData(user) {
                 LogoID: 1,
                 Enabled: true,
                 Creator: ''
+            },
+            {
+                ID: 4,
+                Name: { fr: 'Lecture', en: 'Reading' },
+                CategoryID: 3,
+                XP: 100,
+                Stats: { int: 3, soc: 0, for: 0, sta: 0, dex: 0, agi: 0 },
+                LogoID: 1,
+                Enabled: true,
+                Creator: ''
+            },
+            {
+                ID: 5,
+                Name: { fr: 'Écriture', en: 'Writing' },
+                CategoryID: 3,
+                XP: 100,
+                Stats: { int: 2, soc: 0, for: 0, sta: 0, dex: 0, agi: 0 },
+                LogoID: 1,
+                Enabled: true,
+                Creator: ''
+            },
+            {
+                ID: 6,
+                Name: { fr: 'Programmation', en: 'Programming' },
+                CategoryID: 2,
+                XP: 100,
+                Stats: { int: 4, soc: 0, for: 0, sta: 0, dex: 0, agi: 0 },
+                LogoID: 1,
+                Enabled: true,
+                Creator: ''
+            },
+            {
+                ID: 7,
+                Name: { fr: 'Cuisine', en: 'Cooking' },
+                CategoryID: 4,
+                XP: 100,
+                Stats: { int: 1, soc: 2, for: 0, sta: 0, dex: 1, agi: 1 },
+                LogoID: 1,
+                Enabled: true,
+                Creator: ''
+            },
+            {
+                ID: 8,
+                Name: { fr: 'Jardinage', en: 'Gardening' },
+                CategoryID: 4,
+                XP: 100,
+                Stats: { int: 0, soc: 2, for: 1, sta: 1, dex: 1, agi: 1 },
+                LogoID: 1,
+                Enabled: true,
+                Creator: ''
+            },
+            {
+                ID: 9,
+                Name: { fr: 'Sortie entre pote', en: 'Go out with bro' },
+                CategoryID: 5,
+                XP: 100,
+                Stats: { int: 0, soc: 7, for: 0, sta: 0, dex: 0, agi: 0 },
+                LogoID: 1,
+                Enabled: true,
+                Creator: ''
             }
         ],
         skillIcons: [
@@ -142,8 +202,12 @@ export function LoadTemplate_AppData(user) {
             }
         ],
         skillCategories: [
+            { ID: 0, Name: { fr: 'Récent', en: 'Recent' }, Color: '#000000', LogoID: 1 },
             { ID: 1, Name: { fr: 'Bien-être', en: 'Well-being' }, Color: '#006DFF', LogoID: 1 },
-            { ID: 2, Name: { fr: 'Travail', en: 'Work' }, Color: '#A8C69F', LogoID: 2 }
+            { ID: 2, Name: { fr: 'Travail', en: 'Work' }, Color: '#A8C69F', LogoID: 2 },
+            { ID: 3, Name: { fr: 'Créativité', en: 'Creativity' }, Color: '#BDB2FA', LogoID: 1 },
+            { ID: 4, Name: { fr: 'Quotidien', en: 'Daily life' }, Color: '#FFA5BA', LogoID: 1 },
+            { ID: 5, Name: { fr: 'Social', en: 'Social' }, Color: '#8C2155', LogoID: 1 }
         ]
     });
     dataManager.titles.Load([
@@ -151,6 +215,75 @@ export function LoadTemplate_AppData(user) {
         { ID: 2, Name: { fr: 'Chasseur de rang A', en: 'A rank hunter' }, Value: 100, Buyable: false },
         { ID: 3, Name: { fr: 'Chasseur de rang S', en: 'S rank hunter' }, Value: 100, Buyable: false }
     ]);
+
+    user.multiplayer.Load({
+        friends: [
+            {
+                accountID: 1,
+                username: 'Friend1',
+                activities: {
+                    firstTime: 1700000000,
+                    length: 3600,
+                    totalDuration: 7200
+                },
+                achievements: [],
+                xp: 1000,
+                friendshipState: 'accepted',
+                avatar: {
+                    Top: 'top_01',
+                    Bottom: 'bottom_01',
+                    Skin: 'skin_01',
+                    SkinColor: 0,
+                    Hair: 'hair_01',
+                    Sexe: 'MALE',
+                    Shoes: 'shoes_01'
+                },
+                currentActivity: null,
+                stats: {
+                    agi: 10,
+                    dex: 10,
+                    for: 10,
+                    int: 10,
+                    soc: 10,
+                    sta: 10
+                },
+                status: 'online',
+                title: 0
+            },
+            {
+                accountID: 2,
+                username: 'Friend2',
+                activities: {
+                    firstTime: 1700000000,
+                    length: 3600,
+                    totalDuration: 7200
+                },
+                achievements: [],
+                xp: 1000,
+                friendshipState: 'accepted',
+                avatar: {
+                    Top: 'top_01',
+                    Bottom: 'bottom_01',
+                    Skin: 'skin_01',
+                    SkinColor: 0,
+                    Hair: 'hair_01',
+                    Sexe: 'MALE',
+                    Shoes: 'shoes_01'
+                },
+                currentActivity: null,
+                stats: {
+                    agi: 10,
+                    dex: 10,
+                    for: 10,
+                    int: 10,
+                    soc: 10,
+                    sta: 10
+                },
+                status: 'online',
+                title: 1
+            }
+        ]
+    });
 
     user.interface.console?.AddLog('info', 'App data: template load success');
 }

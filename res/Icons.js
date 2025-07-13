@@ -48,6 +48,7 @@ const Icons = {
     'flame':                    require('./icons/flame').default,
     'gift-outline':             require('./icons/gift-outline').default,
     'gift':                     require('./icons/gift').default,
+    'google':                   require('./icons/google').default,
     'graph-outline':            require('./icons/graph-outline').default,
     'graph':                    require('./icons/graph').default,
     'home-outline':             require('./icons/home-outline').default,

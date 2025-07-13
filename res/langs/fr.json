@@ -448,9 +448,7 @@
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
 
-        "chart-today-recap": "Activités sur 24h",
         "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher les graphiques",
-        "chart-today-notmuch-button": "Ajouter",
         "chart-total-text": "Total",
 
         "news-myquests-title": "Quêtes à faire",
@@ -488,6 +486,7 @@
         "input-cgu-text": "J'ai lu et j'accepte les %conditions générales%.",
         "button-login-text": "Suivant",
         "button-signin-text": "S'inscrire",
+        "button-google-signin": "Se connecter avec Google",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
         "error-signin-server": "Une erreur est survenue. ({})",

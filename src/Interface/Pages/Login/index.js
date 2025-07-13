@@ -3,9 +3,10 @@ import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
+import GoogleSignIn from 'Utils/GoogleSignIn';
 import langManager from 'Managers/LangManager';
 
-import { Text, Button, InputText, CheckBox, ComboBox } from 'Interface/Components';
+import { Text, Button, InputText, CheckBox, ComboBox, Icon } from 'Interface/Components';
 
 class Login extends BackLogin {
     render() {
@@ -116,15 +117,34 @@ class Login extends BackLogin {
                     hideChevron
                 />
 
+                {/* Google Sign-In Button - Only show when not in signin mode and when configured */}
+                {GoogleSignIn.shouldShowButton() && !signinMode && (
+                    <Button
+                        style={styles.buttonGoogleSignin}
+                        styleContent={!loading && styles.buttonGoogleContent}
+                        appearance='outline'
+                        fontColor='white'
+                        onPress={this.googleSignIn}
+                        loading={loading}
+                    >
+                        <Icon icon='google' color='main1' size={20} />
+                        <Text color='white' fontSize={16}>
+                            {lang['button-google-signin']}
+                        </Text>
+                        <Icon icon='google' color='main1' size={20} show={false} />
+                    </Button>
+                )}
+
                 {/* Buttons */}
                 <Button
                     style={styles.buttonLoginSignin}
                     styleAnimation={{ left: btnLoginX }}
-                    onPress={signinMode ? this.signin : this.loginOrGoToSignin}
+                    onPress={signinMode ? this.onSignin : this.onLogin}
                     loading={loading}
                 >
                     {signinMode ? lang['button-signin-text'] : lang['button-login-text']}
                 </Button>
+
                 <Button
                     style={styles.buttonBack}
                     styleAnimation={{ transform: [{ translateX: btnBackX }] }}

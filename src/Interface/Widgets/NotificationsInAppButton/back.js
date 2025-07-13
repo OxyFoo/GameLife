@@ -38,6 +38,7 @@ class BackNotificationsInApp extends React.Component {
         if (this.timeoutShowedCount) {
             clearTimeout(this.timeoutShowedCount);
         }
+        user.notificationsInApp.notifications.RemoveListener(this.listener);
     }
 
     /**

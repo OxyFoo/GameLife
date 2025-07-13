@@ -26,8 +26,9 @@
         "noUnusedParameters": true
     },
     "include": [
-        "src",
-        "index.d.ts"
+        "index.d.ts",
+        "App.js",
+        "src"
     ],
     "exclude": [
         "node_modules"

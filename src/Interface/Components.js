@@ -11,6 +11,7 @@ export { InputText } from './Components/InputText';
 export { KeyboardSpacerView } from './Components/KeyboardSpacerView';
 export { KPI } from './Components/KPI';
 export { LineChartSvg } from './Components/LineChartSvg';
+import { PieChart } from './Components/PieChart';
 export { ProgressBar } from './Components/ProgressBar';
 export { Reward } from './Components/Reward';
 export { Separator } from './Components/Separator';
@@ -24,7 +25,6 @@ export { Zap } from './Components/Zap';
 // TODO: Reimplements old components
 import Frame from './OldComponents/Character/Frame';
 import Character from './OldComponents/Character/Character';
-import PieChart from './OldComponents/PieChart';
 import StreakChart from './OldComponents/StreakChart';
 
 export { Frame, Character, PieChart, StreakChart };

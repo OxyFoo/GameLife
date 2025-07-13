@@ -3,7 +3,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 
 // Graphical components
-import { Icon } from 'Interface/Components';
+import { Icon } from '../../Icon';
 
 describe('[Component] Icon', () => {
     it('renders correctly', () => {

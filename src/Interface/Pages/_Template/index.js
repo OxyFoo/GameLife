@@ -6,7 +6,11 @@ import BackNewPage from './back';
 
 class NewPage extends BackNewPage {
     render() {
-        return <View />;
+        return (
+            <View>
+                
+            </View>
+        );
     }
 }
 

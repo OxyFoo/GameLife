@@ -49,15 +49,16 @@ function DonutChart({
     const radius = (size - strokeWidth) / 2;
     const center = size / 2;
 
-    // Animation values for each segment - recreate when component mounts
-    /** @type {Animated.Value[]} */
+    /** @type {Animated.Value[]} Animation values for each segment - recreate when component mounts */
     const animationValues = useRef(data.map(() => new Animated.Value(0))).current;
+
+    const totalValue = data.reduce((sum, item) => sum + item.value, 0); // Calculate total value of hour segments
 
     // Ensure we have the right number of animation values and reset them when data changes
     useEffect(() => {
         // Reset all animation values to 0 first
         animationValues.forEach((animValue) => animValue.setValue(0));
-        
+
         // Adjust animation values array to match data length
         while (animationValues.length < data.length) {
             animationValues.push(new Animated.Value(0));
@@ -66,9 +67,6 @@ function DonutChart({
             animationValues.pop();
         }
     }, [animationValues, data.length]);
-
-    // Calculate total value
-    const totalValue = data.reduce((sum, item) => sum + item.value, 0);
 
     useEffect(() => {
         // Start animations with delay
@@ -84,7 +82,7 @@ function DonutChart({
 
         // Cancel any existing animations before starting new ones
         animationValues.forEach((animValue) => animValue.stopAnimation());
-        
+
         Animated.parallel(animations).start();
     }, [animationValues, data, delay, duration, easing]);
 

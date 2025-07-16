@@ -9,12 +9,13 @@ const styles = StyleSheet.create({
     },
     separatorText: {
         textAlign: 'center',
-        fontSize: 12
+        fontSize: 12,
+        paddingHorizontal: 6
     },
     separatorButton: {
         width: 'auto',
         paddingVertical: 6,
-        paddingHorizontal: 0
+        paddingHorizontal: 6
     },
     separatorEmptyView: {
         height: 12

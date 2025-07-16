@@ -6,8 +6,8 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     container: {
-        paddingHorizontal: 8,
-        paddingVertical: 8,
+        paddingHorizontal: 4,
+        paddingVertical: 4,
         marginBottom: 4
     },
 
@@ -16,22 +16,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 12
+        marginBottom: 8
     },
     title: {
         color: 'white',
-        fontSize: 16
+        fontSize: 16,
+        paddingVertical: 4,
+        paddingHorizontal: 4
     },
     sectionTitleAddButton: {
         width: 'auto',
-        paddingVertical: 0,
-        paddingHorizontal: 0
+        paddingVertical: 4,
+        paddingHorizontal: 4
     },
 
     content: {
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 4
     },
 
     notEnoughData: {

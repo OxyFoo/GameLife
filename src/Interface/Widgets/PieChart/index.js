@@ -6,8 +6,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Text } from '../Text';
-import { DonutChart } from '../DonutChart';
+import { Button, DonutChart, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData
@@ -19,25 +18,6 @@ import { DonutChart } from '../DonutChart';
  */
 
 class PieChart extends BackPieChart {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showDonutChart: true, // true pour donut chart, false pour flat list
-            donutKey: 0 // compteur pour forcer le remount du donut chart
-        };
-    }
-
-    /**
-     * Bascule entre le donut chart et la flat list
-     */
-    toggleDisplay = () => {
-        this.setState((prevState) => ({
-            showDonutChart: !prevState.showDonutChart,
-            // Incrémenter le donutKey quand on bascule vers le donut chart pour forcer le remount
-            donutKey: !prevState.showDonutChart ? prevState.donutKey + 1 : prevState.donutKey
-        }));
-    };
-
     /**
      * Renders a colored dot used for legends or markers.
      * @param {string} color The color of the dot.
@@ -107,7 +87,7 @@ class PieChart extends BackPieChart {
 
         return (
             <View style={styles.centerLabel}>
-                {/* TODO : BOLD TEXT mais il veut pas */}
+                {/* TODO : BOLD TEXT is not working on any iOS device, need to understand why */}
                 <Text fontSize={16} color='white' style={styles.centerLabelText}>
                     {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
                 </Text>
@@ -135,7 +115,7 @@ class PieChart extends BackPieChart {
 
     render() {
         const { style, data, focusedActivity } = this.props;
-        const { showDonutChart, donutKey } = this.state;
+        const { isDonutView } = this.state;
 
         if (!data || !focusedActivity) {
             return null;
@@ -145,28 +125,26 @@ class PieChart extends BackPieChart {
         const convertedData = this.convertDataForDonutChart(data);
 
         return (
-            <TouchableOpacity
+            <Button
                 style={[styles.pieChartContainer, style]}
                 onPress={this.toggleDisplay}
-                activeOpacity={0.8}
+                appearance='uniform'
+                color='transparent'
             >
-                {showDonutChart ? (
+                {isDonutView ? (
                     // Affichage du donut chart
-                    <>
-                        <View style={styles.pieChart}>
-                            <DonutChart
-                                key={`donut-${donutKey}`}
-                                data={convertedData}
-                                size={110}
-                                strokeWidth={8}
-                                strokeLinecap='round'
-                                delay={0}
-                                segmentGap={12}
-                            >
-                                {this.renderCenterLabelComponentFullDay()}
-                            </DonutChart>
-                        </View>
-                    </>
+                    <View style={styles.pieChart}>
+                        <DonutChart
+                            data={convertedData}
+                            size={110}
+                            strokeWidth={8}
+                            strokeLinecap='round'
+                            delay={0}
+                            segmentGap={12}
+                        >
+                            {this.renderCenterLabelComponentFullDay()}
+                        </DonutChart>
+                    </View>
                 ) : (
                     // Affichage de la flat list
                     <View style={styles.legendContainerFullScreen}>
@@ -179,7 +157,7 @@ class PieChart extends BackPieChart {
                         />
                     </View>
                 )}
-            </TouchableOpacity>
+            </Button>
         );
     }
 

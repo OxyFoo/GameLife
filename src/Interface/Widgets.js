@@ -6,6 +6,7 @@ export { Missions } from './Widgets/Missions';
 export { QuestsList } from './Widgets/QuestsList';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';
+export { PieChart } from './Widgets/PieChart';
 export { TodoList } from './Widgets/TodoList';
 
 import BlockMonth from './Widgets/BlockMonth';

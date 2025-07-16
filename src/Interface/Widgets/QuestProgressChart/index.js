@@ -35,7 +35,9 @@ class QuestProgressChart extends QuestProgressChartBack {
             >
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>{lang['today-quest']}</Text>
+                        <Text fontSize={16} color='white' style={styles.title}>
+                            {lang['today-quest']}
+                        </Text>
                         <Button
                             style={styles.sectionTitleAddButton}
                             appearance='uniform'

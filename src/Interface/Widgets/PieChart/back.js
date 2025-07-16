@@ -10,6 +10,9 @@ import React from 'react';
  *
  * @typedef {Object} itemType // object from lib gifted-charts
  * @typedef {{ id: number, value: number, name: string }} FocusedActivity
+ *
+ * @typedef {Object} PieChartState
+ * @property {boolean} isDonutView - true pour donut chart, false pour flat list
  */
 
 const PieChartProps = {
@@ -29,7 +32,24 @@ const PieChartProps = {
     insideBackgroundColor: 'dataBigKpi'
 };
 
-class BackPieChart extends React.Component {}
+class BackPieChart extends React.Component {
+    /** @type {PieChartState} */
+    state = {
+        isDonutView: true // true pour donut chart, false pour flat list
+    };
+
+    /**
+     * Bascule entre le donut chart et la flat list
+     **/
+    toggleDisplay = () => {
+        this.setState(
+            /** @param {PieChartState} prevState */
+            (prevState) => ({
+                isDonutView: !prevState.isDonutView
+            })
+        );
+    };
+}
 
 BackPieChart.prototype.props = PieChartProps;
 BackPieChart.defaultProps = PieChartProps;

@@ -7,7 +7,8 @@ import TodayPieChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, PieChart } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
+import { PieChart } from 'Interface/Widgets/PieChart';
 
 class TodayPieChart extends TodayPieChartBack {
     render() {
@@ -26,7 +27,7 @@ class TodayPieChart extends TodayPieChartBack {
             >
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text fontSize={16} color='white'>
+                        <Text fontSize={16} color='white' style={styles.title}>
                             {lang['today-activity']}
                         </Text>
                         <Button

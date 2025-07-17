@@ -415,7 +415,6 @@
     },
 
     "calendar": {
-        "summary-title": "Summary of the day",
         "activities-title": "Activities of {}",
         "add-activity": "Add an activity",
         "hour-min": "h",

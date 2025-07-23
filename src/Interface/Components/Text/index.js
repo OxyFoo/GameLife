@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Text as RNText, TouchableOpacity, StyleSheet } from 'react-native';
+import { Animated, Text as RNText, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
@@ -23,6 +23,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText} color
  * @property {boolean} animated
+ * @property {boolean} bold
  */
 
 const AnimatedRNText = Animated.createAnimatedComponent(RNText);
@@ -33,7 +34,8 @@ const TextProps = {
     containerStyle: {},
     fontSize: 18,
     color: 'primary',
-    animated: false
+    animated: false,
+    bold: false
 };
 
 class Text extends React.Component {
@@ -50,17 +52,20 @@ class Text extends React.Component {
     }
 
     render() {
-        const { style, animated, containerStyle, color, fontSize, onPress, children, ...props } = this.props;
+        const { style, animated, containerStyle, color, fontSize, onPress, children, bold, ...props } = this.props;
 
         /** @type {StyleProp} */
-        const basicColor = {
+        const fontStyle = {
             fontSize,
+            // TODO: Temporary fix for bold text on iOS - needs proper font weight implementation
+            fontFamily: Platform.OS === 'ios' && bold ? 'System' : MAIN_FONT_NAME,
+            fontWeight: bold ? 'bold' : 'normal',
             color: typeof color === 'string' ? themeManager.GetColor(color) : color
         };
 
         const RawText = animated ? AnimatedRNText : RNText;
         let component = (
-            <RawText style={[styles.text, basicColor, style]} {...props}>
+            <RawText style={[styles.text, fontStyle, style]} {...props}>
                 {children}
             </RawText>
         );
@@ -84,8 +89,7 @@ const styles = StyleSheet.create({
     text: {
         margin: 0,
         padding: 0,
-        textAlign: 'center',
-        fontFamily: MAIN_FONT_NAME
+        textAlign: 'center'
     }
 });
 

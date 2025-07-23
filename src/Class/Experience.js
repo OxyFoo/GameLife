@@ -33,8 +33,8 @@ const XPOptions = {
         increaseRatio: 0.8
     },
     skill: {
-        xpPerLevel: 15,
-        increaseRatio: 0.6
+        xpPerLevel: 20,
+        increaseRatio: 0.59
     }
 };
 

@@ -1,11 +1,11 @@
 export { ActivityTimeline } from './Components/ActivityTimeline';
 export { Button } from './Components/Button';
+export { Icon } from './Components/Icon';
 export { CheckBox } from './Components/CheckBox';
 export { ComboBox } from './Components/ComboBox';
 export { Container } from './Components/Container';
 export { Digit } from './Components/Digit';
 export { HeatMap } from './Components/HeatMap';
-export { Icon } from './Components/Icon';
 export { IconCheckable } from './Components/IconCheckable';
 export { InputText } from './Components/InputText';
 export { KeyboardSpacerView } from './Components/KeyboardSpacerView';

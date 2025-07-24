@@ -8,6 +8,7 @@ class NewPage extends BackNewPage {
     render() {
         return (
             <View>
+                
             </View>
         );
     }

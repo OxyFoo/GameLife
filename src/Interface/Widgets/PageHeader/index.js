@@ -1,10 +1,12 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
-import styles from './style';
 import langManager from 'Managers/LangManager';
 
 import { Text, Icon, Button } from 'Interface/Components';
+import themeManager from 'Managers/ThemeManager';
+
+import styles from './style';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -21,6 +23,7 @@ import { Text, Icon, Button } from 'Interface/Components';
  * @property {IconsName} [secondaryIcon]
  * @property {ThemeColor | ThemeText | 'gradient'} [secondaryIconColor]
  * @property {(event: GestureResponderEvent) => void} [onSecondaryIconPress]
+ * @property {boolean} [isBeta]
  */
 
 /** @type {PageHeaderPropsType} */
@@ -30,17 +33,19 @@ const PageHeaderProps = {
     onBackPress: () => {},
     secondaryIcon: 'info-circle-outline',
     secondaryIconColor: 'white',
-    onSecondaryIconPress: undefined
+    onSecondaryIconPress: undefined,
+    isBeta: false
 };
 
-class PageHeader extends React.Component {
+class PageHeader extends Component {
     render() {
         const {
             title,
             onBackPress,
             secondaryIcon: helpIcon,
             secondaryIconColor,
-            onSecondaryIconPress: onHelpPress
+            onSecondaryIconPress: onHelpPress,
+            isBeta
         } = this.props;
         const text = title ?? langManager.curr['modal']['back'];
 
@@ -55,13 +60,25 @@ class PageHeader extends React.Component {
                         angle={-90}
                     />
 
-                    {title === null ? <Text fontSize={16}>{text}</Text> : <Text style={styles.text}>{text}</Text>}
+                    {title === null ? (
+                        <Text fontSize={16}>{text}</Text>
+                    ) : (
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>{text}</Text>
+                            {isBeta && (
+                                <Text style={[styles.beta, { backgroundColor: themeManager.GetColor('main3') }]}>
+                                    BETA
+                                </Text>
+                            )}
+                        </View>
+                    )}
                 </TouchableOpacity>
                 {onHelpPress && (
                     <Button
                         style={styles.secondaryButton}
                         appearance='uniform'
                         color='transparent'
+                        // @ts-ignore
                         onPress={(e) => onHelpPress(e)}
                     >
                         <Icon icon={helpIcon} color={secondaryIconColor} size={30} />

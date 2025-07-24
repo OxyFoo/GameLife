@@ -14,7 +14,8 @@
         "Backups/",
         "android/",
         "ios/",
-        "build/"
+        "build/",
+        "src/Interface/Components/_Template/"
     ],
     "rules": {
         "semi": ["warn", "always"],

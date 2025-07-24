@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { AppState } from 'react-native';
+import { Component, createRef } from 'react'
+import { AppState } from 'react-native'
 
 import user from './src/Managers/UserManager';
 import FlowEngine from './src/Interface/FlowEngine';
@@ -55,7 +55,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <FlowEngine ref={this.ref} testID='FlowEngine' />;
+        return <FlowEngine ref={this.ref} testID='FlowEngine' />
     }
 }
 

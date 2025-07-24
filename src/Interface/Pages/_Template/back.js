@@ -1,19 +1,15 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 const BackNewPageProps = {
-    args: {
-    }
+    args: {}
 };
 
 class BackNewPage extends PageBase {
-    state = {
-    }
+    state = {};
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
-    componentWillUnmount() {
-    }
+    componentWillUnmount() {}
 }
 
 BackNewPage.defaultProps = BackNewPageProps;

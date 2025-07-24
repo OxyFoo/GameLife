@@ -2,17 +2,21 @@ const Color = {
     main1: '#9095FF', // Purple
     main2: '#DBA1FF', // Pink
     main3: '#8CF7FF', // Blue
+    
     white: '#FFFFFF', // White
     black: '#000000', // Black
     grey: '#384065', // Grey
+
     border: '#999EB5', // Grey
     borderLight: '#D0D0D0', // Light grey
+
     background: '#0E1247', // Dark purple
     backgroundCard: '#384065', // Transparent purple
     backgroundGrey: '#222740', // Grey
     backgroundDark: '#0B112F', // Dark (background)
     backgroundInput: '#1F2540DD', // Transparent blue
     backgroundTransparent: '#FFFFFF33', // Transparent white
+    
     success: '#27AE60', // Green
     danger: '#C0392B', // Red
     unfocused: '#6e6e6e', // Grey

@@ -26,6 +26,7 @@
         "noUnusedParameters": true
     },
     "include": [
+        "index.d.ts",
         "App.js",
         "src"
     ],

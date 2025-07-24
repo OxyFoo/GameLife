@@ -1,7 +1,8 @@
-import { envEnum, envNumber, envString } from './function';
+import { envBool, envEnum, envNumber, envString } from './function';
 
 export const env = {
     ENV: envEnum('ENV', ['dev', 'test', 'prod']),
+    SHOW_PAGE_TEST: envBool('SHOW_PAGE_TEST', false) || false,
     VPS_PROTOCOL: envEnum('VPS_PROTOCOL', ['none', 'ws', 'wss']),
     VPS_HOST: envString('VPS_HOST', false),
     VPS_PORT: envNumber('VPS_PORT', false),

@@ -7,7 +7,7 @@ import App from '../App';
 import { render, waitFor } from '@testing-library/react-native';
 
 it('should load app correctly', async () => {
-    const { findByTestId } = render(<App />);
+    const { findByTestId } = render(<App test />);
 
     const element = await waitFor(() => findByTestId('FlowEngine'));
 

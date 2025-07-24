@@ -27,8 +27,9 @@
         "noUnusedParameters": true
     },
     "include": [
-        "App.js",
-        "src"
+        "src",
+        "./App.js",
+        "./__tests__"
     ],
     "exclude": [
         "res",

@@ -14,7 +14,14 @@
         "Backups/",
         "android/",
         "ios/",
-        "build/"
+        "build/",
+
+        // Code that does not need to be linted
+        "**/Pages/Test/",
+        "_Template/",
+
+        // Temporary files
+        "Shop"
     ],
     "rules": {
         "semi": ["warn", "always"],

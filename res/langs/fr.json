@@ -1055,7 +1055,9 @@
         "wait-email-sending": "Envoi en cours...",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-sent": "Mail envoyé !",
-        "wait-email-resend": "Renvoyer le mail de confirmation"
+        "wait-email-resend": "Renvoyer le mail de confirmation",
+        "wait-email-resend-confirm-title": "Renvoyer le mail de confirmation",
+        "wait-email-resend-confirm-message": "Avant de renvoyer le mail, assure-toi d'avoir vérifié :\n\n• Tes dossiers spam/courrier indésirable\n• L'orthographe de ton adresse email : {}\n• Que ta boîte email n'est pas pleine\n• Que ton fournisseur d'email ne bloque pas les mails automatiques\n\nSouhaites-tu vraiment renvoyer le mail de confirmation ?"
     },
 
     "tuto": {

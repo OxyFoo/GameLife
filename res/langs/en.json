@@ -1055,7 +1055,9 @@
         "wait-email-sending": "Sending email...",
         "wait-email-remain": "Mail sent again in {}m{}s",
         "wait-email-sent": "Mail sent !",
-        "wait-email-resend": "Resend the confirmation email"
+        "wait-email-resend": "Resend the confirmation email",
+        "wait-email-resend-confirm-title": "Resend confirmation email",
+        "wait-email-resend-confirm-message": "Before resending the email, make sure you have checked:\n\n• Your spam/junk folders\n• The spelling of your email address: {}\n• That your mailbox is not full\n• That your email provider doesn't block automatic emails\n\nDo you really want to resend the confirmation email?"
     },
 
     "tuto": {

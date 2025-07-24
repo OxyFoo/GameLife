@@ -93,6 +93,7 @@ npm run android   # Pour Android
 
 ### 📦 Our packages
 * [OxyFoo GameLife Types](https://github.com/OxyFoo/GameLife-Types)
+* [Dotenv-Oxy](https://github/com/Gerem66/dotenv-oxy) (with React Native Config)
 * [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws)
 * [React Native App Control](https://github.com/Gerem66/react-native-app-control)
 

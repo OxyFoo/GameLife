@@ -28,6 +28,7 @@
     "@react-native-google-signin/google-signin": "^14.0.1",
     "@react-native-masked-view/masked-view": "^0.3.2",
     "crypto-js": "^4.2.0",
+    "dotenv-oxy": "^1.0.4",
     "jest-raw-loader": "^1.0.1",
     "react": "19.0.0",
     "react-native": "0.79.2",

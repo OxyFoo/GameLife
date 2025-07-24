@@ -17,8 +17,9 @@
         "build/",
 
         // Code that does not need to be linted
-        "**/Pages/Test/",
+        "res/",
         "_Template/",
+        "**/Pages/Test/",
 
         // Temporary files
         "Shop"

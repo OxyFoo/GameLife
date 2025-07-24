@@ -3,6 +3,7 @@
         "jsx": "react-native",
         "target": "es2022",
         "checkJs": true,
+        "maxNodeModuleJsDepth": 0,
         "strict": true,
         "resolveJsonModule": true,
         "module": "NodeNext",
@@ -30,6 +31,7 @@
         "src"
     ],
     "exclude": [
+        "res",
         "node_modules"
     ]
 }

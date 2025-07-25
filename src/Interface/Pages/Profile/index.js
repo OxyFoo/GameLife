@@ -4,7 +4,8 @@ import { Animated, View, ScrollView, FlatList, Dimensions } from 'react-native';
 import styles from './style';
 import BackProfile from './back';
 import { Header } from './Header';
-import EditorAvatar from './EditAvatar';
+// TODO: Reimplement avatar editor
+// import EditorAvatar from './EditAvatar';
 import { RenderStatistic } from './Components/statistic';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';

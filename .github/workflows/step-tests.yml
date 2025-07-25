@@ -59,6 +59,9 @@ jobs:
           ENVFILE: .env.test
         run: npm test
 
+      - name: 'Run linter'
+        run: npm run lint
+
   test-ressource:
     name: '📦 Resources'
     if: ${{ inputs.test-resource }}

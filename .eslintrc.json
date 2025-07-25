@@ -22,7 +22,8 @@
         "**/Pages/Test/",
 
         // Temporary files
-        "Shop"
+        "Shop",
+        "EditAvatar"
     ],
     "rules": {
         "semi": ["warn", "always"],

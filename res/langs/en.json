@@ -723,6 +723,7 @@
         "input-notifications": "Notifications",
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
+        "input-notif-optional-updates": "Optional updates",
         "input-report": "Report",
         "input-beta": "Beta",
         "input-ad-consent": "Ad consent popup",

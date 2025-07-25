@@ -3,15 +3,15 @@ export { ActivitiesChart } from './Widgets/ActivitiesChart';
 export { AddActivity } from './PageView/AddActivity';
 export { DailyQuest } from './Widgets/DailyQuest';
 export { Missions } from './Widgets/Missions';
-export { QuestsList } from './Widgets/QuestsList';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';
+export { QuestsList } from './Widgets/QuestsList';
+export { StatsBar, StatsBarTextOnly } from './Widgets/StatsBars';
 export { TodoList } from './Widgets/TodoList';
 
 import BlockMonth from './Widgets/BlockMonth';
-import StatsBars from './Widgets/StatsBars';
 import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 import TodayPieChart from './Widgets/TodayPieChart';
 
-export { BlockMonth, StatsBars, SkillChart, SkillsGroup, TodayPieChart };
+export { BlockMonth, SkillChart, SkillsGroup, TodayPieChart };

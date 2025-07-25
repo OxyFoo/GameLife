@@ -6,13 +6,12 @@ import BackProfile from './back';
 import { Header } from './Header';
 // TODO: Reimplement avatar editor
 // import EditorAvatar from './EditAvatar';
-import { RenderStatistic } from './Components/statistic';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
 import { Text, ProgressBar, Button } from 'Interface/Components';
-import { PageHeader } from 'Interface/Widgets';
+import { PageHeader, StatsBar } from 'Interface/Widgets';
 
 // @ts-ignore
 const avatarPlaceholder = require('../../../../res/items/avatar_placeholder.png');
@@ -62,6 +61,7 @@ class Profile extends BackProfile {
                     onChangeState={(opened) => this.setState({ editorOpened: opened })}
                 /> */}
 
+                {/** Avatar placeholder */}
                 <View style={[styles.avatarView, { transform: [{ translateY: infoHeaderHeight }] }]}>
                     <Animated.Image
                         style={[
@@ -90,16 +90,18 @@ class Profile extends BackProfile {
                     </Text>
                 </View>
 
+                {/** Statistics */}
                 <Animated.View style={[styles.statsView, styleParallax2_5]}>
                     <FlatList
                         style={styles.statsFlatList}
                         data={experienceStats}
-                        renderItem={RenderStatistic}
+                        renderItem={StatsBar}
                         keyExtractor={(item) => `user-stat-${item.statKey}`}
                         scrollEnabled={false}
                     />
                 </Animated.View>
 
+                {/** Buttons */}
                 <View style={styles.buttons}>
                     <Button style={styles.button} enabled={false}>
                         {lang['btn-edit-profile']}

@@ -886,6 +886,7 @@
             "name": "Expérience",
             "small": "EXP"
         },
+        "points": "points",
         "names": {
             "int": "Intelligence",
             "soc": "Social",

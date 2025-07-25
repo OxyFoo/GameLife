@@ -11,7 +11,8 @@ import { StartActivityNow } from 'Utils/Activities';
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').XPInfo} XPInfo
- * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
+ * @typedef {import('Interface/Widgets/StatsBars/index').StatsBarTextOnlyProps} StatsBarTextOnlyProps
  */
 
 const BackProfileFriendProps = {
@@ -27,8 +28,11 @@ class BackProfileFriend extends React.Component {
         /** @type {XPInfo | null} */
         xpInfo: null,
 
-        /** @type {Stats} */
-        statsInfo: user.experience.GetEmptyExperience(),
+        /** @type {StatsBarTextOnlyProps[]} */
+        statsInfo: user.experience.statsKey.map((statKey) => ({
+            statKey: statKey,
+            stats: user.experience.GetEmptyExperience()
+        })),
 
         activities: {
             totalDays: 0,
@@ -62,12 +66,10 @@ class BackProfileFriend extends React.Component {
         this.state.friend = friend;
         this.state.xpInfo = user.experience.getXPDict(friend.xp, 'user');
         if (friend.friendshipState === 'accepted') {
-            this.state.statsInfo = Object.assign(
-                {},
-                ...user.experience.statsKey.map((i) => ({
-                    [i]: user.experience.getXPDict(friend.stats[i], 'stat')
-                }))
-            );
+            this.state.statsInfo = user.experience.statsKey.map((statKey) => ({
+                statKey: statKey,
+                stats: friend.stats
+            }));
         }
 
         if (friend.friendshipState === 'accepted') {
@@ -120,12 +122,10 @@ class BackProfileFriend extends React.Component {
             if (friend.activities.firstTime) {
                 totalDays = Math.floor((GetGlobalTime() - friend.activities.firstTime) / (24 * 60 * 60));
             }
-            const statsInfo = Object.assign(
-                {},
-                ...user.experience.statsKey.map((i) => ({
-                    [i]: user.experience.getXPDict(friend.stats[i], 'stat')
-                }))
-            );
+            const statsInfo = user.experience.statsKey.map((statKey) => ({
+                statKey: statKey,
+                stats: friend.stats
+            }));
 
             this.setState({
                 friend: newFriend,

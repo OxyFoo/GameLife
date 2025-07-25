@@ -15,8 +15,16 @@ const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(nu
 class Calendar extends BackCalendar {
     render() {
         const lang = langManager.curr['calendar'];
-        const { activities, todayStrDate, selectedDay, selectedMonth, days, animSummaryY, animTodayButton } =
-            this.state;
+        const {
+            activities,
+            todayStrDate,
+            selectedDay,
+            selectedMonth,
+            days,
+            animSummaryY,
+            animTodayButton,
+            selectedIsToday
+        } = this.state;
 
         const summaryStyle = {
             marginTop: animSummaryY
@@ -39,7 +47,11 @@ class Calendar extends BackCalendar {
                         </Text>
                     </View>
 
-                    <ActivityTimeline activities={activities.map((i) => i.activity)} day={selectedDay?.day} />
+                    <ActivityTimeline
+                        activities={activities.map((i) => i.activity)}
+                        day={selectedDay?.day}
+                        isToday={selectedIsToday}
+                    />
                 </Animated.View>
 
                 {/** Activities list */}

@@ -23,6 +23,14 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0
+    },
+    currentTimeIndicator: {
+        position: 'absolute',
+        top: -2,
+        width: 2,
+        height: 16,
+        borderRadius: 1,
+        zIndex: 10
     }
 });
 

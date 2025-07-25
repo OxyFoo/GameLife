@@ -348,6 +348,7 @@ const colors = themeManager.GetColors();
 3. **❌ Logique métier dans l'UI** : Séparer dans les classes métier
 4. **❌ État partagé dans composants** : Utiliser les managers
 5. **❌ Appels serveur directs** : Passer par UserManager.server2
+6. **❌ Fichiers d'exemple** : Ne jamais créer de fichiers EXAMPLE.md, README.md ou autres fichiers de documentation
 
 ## Types et interfaces
 

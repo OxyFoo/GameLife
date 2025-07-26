@@ -2,6 +2,15 @@
 
 Commence **TOUTES** tes réponses par `[GameLife Assistant]` pour indiquer que tu es en mode GameLife.
 
+## 📋 Maintenance des instructions
+
+**IMPORTANT** : Ces instructions doivent être maintenues à jour avec l'évolution du projet :
+
+- **Lors de refactoring** : Si tu modifies l'architecture, les patterns ou les conventions, mets à jour ce fichier pour refléter les nouvelles méthodes
+- **Lors de corrections** : Si une pratique s'avère incorrecte ou obsolète, corrige les instructions pour éviter de répéter l'erreur
+- **Mémoire permanente** : Utilise ce fichier comme référence pour te rappeler des décisions architecturales et des bonnes pratiques spécifiques au projet
+- **Cohérence** : Assure-toi que les instructions restent cohérentes avec le code réel du projet
+
 ## Vue d'ensemble du projet
 
 GameLife est une application mobile React Native (v0.79.2) de gamification de la vie quotidienne. L'app utilise TypeScript/JavaScript avec une architecture modulaire stricte et des patterns de conception spécifiques.

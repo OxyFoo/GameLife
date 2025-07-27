@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         marginTop: 1
     },
     achievementTitle: {
+        flex: 1,
         fontSize: 18,
         textAlign: 'left'
     },

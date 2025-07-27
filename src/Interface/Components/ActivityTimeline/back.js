@@ -24,6 +24,7 @@ import { GetDate } from 'Utils/Time';
  * @property {StyleProp} style
  * @property {number | null} day Day in month of the timeline (default day is startTime of the first activity)
  * @property {Activity[]} activities
+ * @property {boolean} [isToday] Whether the selected day is today (enables current time indicator)
  */
 
 const SECONDS_IN_DAY = 24 * 60 * 60;
@@ -32,14 +33,24 @@ const SECONDS_IN_DAY = 24 * 60 * 60;
 const ActivityTimelineProps = {
     style: {},
     day: null,
-    activities: []
+    activities: [],
+    isToday: false
 };
 
 class ActivityTimelineBack extends React.Component {
     state = {
         activities: [],
-        timelineWidth: 0
+        timelineWidth: 0,
+        currentTimePosition: null
     };
+
+    componentDidMount() {
+        this.setupCurrentTimeInterval();
+    }
+
+    componentWillUnmount() {
+        this.clearCurrentTimeInterval();
+    }
 
     /** @param {ActivityTimelinePropsType} prevProps */
     componentDidUpdate(prevProps) {
@@ -52,7 +63,18 @@ class ActivityTimelineBack extends React.Component {
         const oldActivities = JSON.stringify(prevProps.activities);
         const newActivities = JSON.stringify(this.props.activities);
         if (oldActivities !== newActivities) {
-            this.setState({ activities: this.prepareActivities() });
+            this.setState({
+                activities: this.prepareActivities(),
+                currentTimePosition: this.calculateCurrentTimePosition()
+            });
+        }
+
+        // isToday prop has changed
+        if (prevProps.isToday !== this.props.isToday) {
+            this.setState({
+                currentTimePosition: this.calculateCurrentTimePosition()
+            });
+            this.setupCurrentTimeInterval();
         }
     }
 
@@ -66,7 +88,8 @@ class ActivityTimelineBack extends React.Component {
 
         this.setState({
             activities: this.prepareActivities(width),
-            timelineWidth: width
+            timelineWidth: width,
+            currentTimePosition: this.calculateCurrentTimePosition(width)
         });
     };
 
@@ -132,6 +155,50 @@ class ActivityTimelineBack extends React.Component {
         }
 
         return activities;
+    }
+
+    /**
+     * Calculate the position of the current time indicator on the timeline
+     * @param {number} timelineWidth
+     * @returns {number | null} Position in pixels, or null if not today
+     */
+    calculateCurrentTimePosition(timelineWidth = this.state.timelineWidth) {
+        if (!this.props.isToday || timelineWidth === 0) {
+            return null;
+        }
+
+        const now = new Date();
+        const currentTimeInSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        const positionRatio = currentTimeInSeconds / SECONDS_IN_DAY;
+
+        return positionRatio * timelineWidth;
+    }
+
+    /**
+     * Setup interval to update current time position every minute
+     */
+    setupCurrentTimeInterval() {
+        this.clearCurrentTimeInterval();
+
+        if (this.props.isToday) {
+            this.timeInterval = setInterval(() => {
+                if (this.props.isToday) {
+                    this.setState({
+                        currentTimePosition: this.calculateCurrentTimePosition()
+                    });
+                }
+            }, 60000); // Update every minute
+        }
+    }
+
+    /**
+     * Clear the current time interval
+     */
+    clearCurrentTimeInterval() {
+        if (this.timeInterval) {
+            clearInterval(this.timeInterval);
+            this.timeInterval = null;
+        }
     }
 }
 

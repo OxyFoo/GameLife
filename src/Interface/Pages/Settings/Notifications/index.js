@@ -10,7 +10,7 @@ import { PageHeader } from 'Interface/Widgets';
 
 class SettingsNotifications extends BackSettings {
     render = () => {
-        const { switchEveningNotifs, switchMorningNotifs } = this.state;
+        const { switchEveningNotifs, switchMorningNotifs, switchOptionalUpdatesNotifs } = this.state;
 
         const lang = langManager.curr['settings'];
         const langNotifs = langManager.curr['notifications'];
@@ -31,6 +31,15 @@ class SettingsNotifications extends BackSettings {
                 <View style={styles.inline}>
                     <Text style={styles.inlineText}>{lang['input-notif-evening']}</Text>
                     <Switch value={switchEveningNotifs} onChangeValue={this.onChangeEveningNotifications} />
+                </View>
+
+                {/* Notifications: Optional Updates */}
+                <View style={styles.inline}>
+                    <Text style={styles.inlineText}>{lang['input-notif-optional-updates']}</Text>
+                    <Switch
+                        value={switchOptionalUpdatesNotifs}
+                        onChangeValue={this.onChangeOptionalUpdatesNotifications}
+                    />
                 </View>
 
                 {/* <Text style={styles.title}>{langNotifs['notif-user']}</Text> */}

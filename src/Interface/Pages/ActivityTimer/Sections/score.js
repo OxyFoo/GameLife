@@ -15,8 +15,8 @@ import { GetLocalTime } from 'Utils/Time';
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').CurrentActivity} CurrentActivity
- * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
- * @typedef {import('react-native').ListRenderItem<keyof Stats>} ListRenderItemStat
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
+ * @typedef {import('react-native').ListRenderItem<keyof StatsXP>} ListRenderItemStat
  *
  * @typedef {{ key: string, value: number }} Stat
  */
@@ -28,7 +28,7 @@ const ActivityTimerScoreProps = {
 
 class ActivityTimerScore extends React.Component {
     state = {
-        /** @type {Array<keyof Stats>} */
+        /** @type {Array<keyof StatsXP>} */
         data: [],
 
         /** @type {number} Used to show estimated stats */

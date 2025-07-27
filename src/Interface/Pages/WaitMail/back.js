@@ -49,6 +49,7 @@ class BackWaitmail extends PageBase {
 
     onResend = () => {
         const { email } = this.props.args;
+        const langWait = langManager.curr['wait'];
 
         // Check if email is set
         if (!email) {
@@ -65,6 +66,27 @@ class BackWaitmail extends PageBase {
             return;
         }
 
+        // Show confirmation popup before resending
+        user.interface.popup?.OpenT({
+            type: 'yesno',
+            data: {
+                title: langWait['wait-email-resend-confirm-title'],
+                message: langWait['wait-email-resend-confirm-message'].replace('{}', email)
+            },
+            callback: (result) => {
+                if (result === 'yes') {
+                    this.performResend(email);
+                }
+            },
+            cancelable: true
+        });
+    };
+
+    /**
+     * Perform the actual email resend
+     * @param {string} email - The email address to resend to
+     */
+    performResend = (email) => {
         const sended = user.server2.tcp.Send({
             action: 'wait-mail',
             email: email,

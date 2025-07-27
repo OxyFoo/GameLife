@@ -238,8 +238,16 @@ class BackLogin extends PageBase {
             // Handle error
             this.setState({
                 loading: false,
-                errorEmail: lang['error-signin-server'].replace('{}', result.error)
+                errorEmail: lang['error-signin-server'].replace('{}', result.errorMessage)
             });
+
+            // Log the error
+            user.interface.console?.AddLog(
+                'error',
+                `[Google Sign-In] Login failed: ${result.errorMessage}`,
+                JSON.stringify(result.error, null, 2)
+            );
+
             return;
         }
 

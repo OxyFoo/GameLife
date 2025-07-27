@@ -15,8 +15,16 @@ const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(nu
 class Calendar extends BackCalendar {
     render() {
         const lang = langManager.curr['calendar'];
-        const { activities, todayStrDate, selectedDay, selectedMonth, days, animSummaryY, animTodayButton } =
-            this.state;
+        const {
+            activities,
+            todayStrDate,
+            selectedDay,
+            selectedMonth,
+            days,
+            animSummaryY,
+            animTodayButton,
+            selectedIsToday
+        } = this.state;
 
         const summaryStyle = {
             marginTop: animSummaryY
@@ -27,7 +35,7 @@ class Calendar extends BackCalendar {
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
                     <Text style={styles.summaryTitle} color='secondary'>
-                        {lang['summary-title']}
+                        {lang['activities-title'].replace('{}', todayStrDate)}
                     </Text>
 
                     <View style={styles.summaryHoursContent}>
@@ -39,17 +47,15 @@ class Calendar extends BackCalendar {
                         </Text>
                     </View>
 
-                    <ActivityTimeline activities={activities.map((i) => i.activity)} day={selectedDay?.day} />
+                    <ActivityTimeline
+                        activities={activities.map((i) => i.activity)}
+                        day={selectedDay?.day}
+                        isToday={selectedIsToday}
+                    />
                 </Animated.View>
 
                 {/** Activities list */}
                 <View style={styles.activityList}>
-                    <View style={styles.activityTitleContent}>
-                        <Text style={styles.activityTitle} color='secondary'>
-                            {lang['activities-title'].replace('{}', todayStrDate)}
-                        </Text>
-                    </View>
-
                     <FlatList
                         data={activities}
                         keyExtractor={(activity) => `${activity.activity.startTime}`}

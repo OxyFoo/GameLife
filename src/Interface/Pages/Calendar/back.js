@@ -61,6 +61,9 @@ class BackCalendar extends PageBase {
 
         todayStrDate: '',
 
+        /** @type {boolean} */
+        selectedIsToday: false,
+
         /** @type {DayDataType[]} */
         days: Array(TOTAL_DAYS_COUNT)
             .fill(0)
@@ -287,7 +290,7 @@ class BackCalendar extends PageBase {
 
         const todayStrDate = `${strDay} ${strMonth} ${strYear}`;
 
-        this.setState({ selectedDay, todayStrDate }, this.updateActivities);
+        this.setState({ selectedDay, todayStrDate, selectedIsToday }, this.updateActivities);
 
         // Scroll to the selected day
         if (scrollToSelection) {

@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import ProfileFriend from 'Interface/PageView/ProfileFriend';
-import { Text, Button, Frame, Character, Icon } from 'Interface/Components';
+import { Text, Button, /*Frame, Character,*/ Icon } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
 
 /**
@@ -24,7 +24,7 @@ import { Gradient } from 'Interface/Primitives';
 // @ts-ignore
 const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
 
-/** @type {Character | null} */
+// /** @type {Character | null} */
 // const DEFAULT_CHARACTER = null;
 
 /**

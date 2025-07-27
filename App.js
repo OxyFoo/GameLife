@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { AppState } from 'react-native';
 
-import user from './src/Managers/UserManager';
-import FlowEngine from './src/Interface/FlowEngine';
-import GoogleSignIn from './src/Utils/GoogleSignIn';
+import user from 'Managers/UserManager';
+import FlowEngine from 'Interface/FlowEngine';
+import { env } from 'Utils/Env';
+import GoogleSignIn from 'Utils/GoogleSignIn';
 
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus
  */
 
-const TEST_PAGE = false;
+const AppProps = {
+    test: false
+};
 
 class App extends React.Component {
     /** @type {React.RefObject<FlowEngine | null>} */
@@ -31,7 +34,7 @@ class App extends React.Component {
         GoogleSignIn.Configure();
 
         // Open the test page
-        if (TEST_PAGE) {
+        if (this.props.test || env.SHOW_PAGE_TEST) {
             this.ref.current?.ChangePage('test');
             return;
         }
@@ -58,5 +61,8 @@ class App extends React.Component {
         return <FlowEngine ref={this.ref} testID='FlowEngine' />;
     }
 }
+
+App.defaultProps = AppProps;
+App.prototype.props = AppProps;
 
 export default App;

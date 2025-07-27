@@ -13,15 +13,8 @@ import { GetLocalTime } from 'Utils/Time';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
+ * @typedef {import('Interface/Widgets/PieChart/back').UpdatingData} UpdatingData
  * @typedef {import('Interface/Widgets/PieChart/back').FocusedActivity} FocusedActivity
- *
- * @typedef {object} UpdatingData
- * @property {number} id
- * @property {number} value
- * @property {string} name
- * @property {number} valueMinutes
- * @property {string} color
- * @property {string} gradientCenterColor
  *
  * @typedef {object} InputPropsType
  * @property {StyleProp} style
@@ -46,7 +39,10 @@ class TodayPieChartBack extends React.Component {
         /** @type {FocusedActivity | null} */
         focusedActivityFullDay: null,
 
-        layoutWidth: 0
+        layoutWidth: 0,
+
+        /** @type {boolean} True if the donut chart, false to show legends */
+        showDonut: true
     };
 
     /** @type {Symbol | null} */
@@ -243,6 +239,11 @@ class TodayPieChartBack extends React.Component {
     /** @param {LayoutChangeEvent} event */
     onLayout = (event) => {
         this.setState({ layoutWidth: event.nativeEvent.layout.width });
+    };
+
+    switchDonutLegends = () => {
+        const prevState = this.state.showDonut;
+        this.setState({ showDonut: !prevState });
     };
 }
 

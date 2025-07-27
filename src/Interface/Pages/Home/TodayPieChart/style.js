@@ -10,13 +10,18 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         marginBottom: 4
     },
+    button: {
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    },
 
     header: {
+        position: 'absolute',
         width: '100%',
+        padding: 4,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 8
+        justifyContent: 'space-between'
     },
     title: {
         color: 'white',
@@ -27,13 +32,16 @@ const styles = StyleSheet.create({
     sectionTitleAddButton: {
         width: 'auto',
         paddingVertical: 4,
-        paddingHorizontal: 4
+        paddingHorizontal: 4,
+        zIndex: 10,
+        elevation: 10
     },
 
     content: {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 32,
         marginBottom: 4
     },
 
@@ -44,10 +52,6 @@ const styles = StyleSheet.create({
     },
     notEnoughDataText: {
         fontSize: 16
-    },
-    notEnoughDataButton: {
-        marginTop: 12,
-        paddingVertical: 12
     }
 });
 

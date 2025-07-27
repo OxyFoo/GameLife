@@ -8,40 +8,21 @@ const styles = StyleSheet.create({
         marginRight: 4,
         marginLeft: 8
     },
-    pieChartContainer: {
-        paddingHorizontal: 0,
-        paddingVertical: 0
-    },
     pieChart: {
         width: '40%',
         alignItems: 'center',
         justifyContent: 'center',
-        minWidth: 120, // Taille minimale pour éviter l'écrasement
-        maxWidth: 140, // Taille maximale pour garder la compacité
+        minWidth: 120, // Minimum size to avoid crushing
+        maxWidth: 140, // Maximum size to keep compactness
         overflow: 'visible'
     },
-    pieChartFullDay: {
-        position: 'absolute',
-        top: 0,
-        left: '50%',
-        right: 0,
-        bottom: 0
-    },
 
-    flatlist: {},
-    legendContainer: {
-        width: '100%',
-        flex: 1,
-        justifyContent: 'center',
-        textAlign: 'left'
-    },
     legendContainerFullScreen: {
         width: '100%',
+        marginTop: 6,
+        height: 110 - 6, // Same as the pie chart size (hardcoded in index.js) - margin (title height)
+        alignItems: 'center',
         justifyContent: 'center'
-    },
-    legendContainerFullDay: {
-        width: '50%',
-        marginTop: 8
     },
     legendItem: {
         flexDirection: 'row',
@@ -54,14 +35,6 @@ const styles = StyleSheet.create({
     },
     centerLabelText: {
         fontWeight: 'bold'
-    },
-
-    questsFlatlist: {
-        width: '100%'
-    },
-    QuestsText: {
-        width: '100%',
-        textAlign: 'left'
     }
 });
 

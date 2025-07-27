@@ -1,23 +1,33 @@
 import React from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import BackPieChart from './back';
 import styles from './style';
-import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Button, DonutChart, Text } from 'Interface/Components';
+import { DonutChart, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').UpdatingData} UpdatingData
  * @typedef {import('react-native').ListRenderItem<UpdatingData>} ListRenderItem
- *
- * @typedef {import('@oxyfoo/gamelife-types/Data/User/Quests').Quest} Quest
- * @typedef {import('react-native').ListRenderItem<Quest>} FlatListQuestProps
- *
  */
 
 class PieChart extends BackPieChart {
+    render() {
+        const { data, focusedActivity } = this.props;
+        const { isDonutView } = this.props;
+
+        if (!data || !focusedActivity) {
+            return null;
+        }
+
+        if (!isDonutView) {
+            return this.renderLegend();
+        }
+
+        return this.renderCenterLabelComponentFullDay();
+    }
+
     /**
      * Renders a colored dot used for legends or markers.
      * @param {string} color The color of the dot.
@@ -32,16 +42,6 @@ class PieChart extends BackPieChart {
                 }
             ]}
         />
-    );
-
-    /** @type {ListRenderItem} */
-    renderLegendItemFullDay = ({ item, index }) => (
-        <View key={index} style={styles.legendItem}>
-            {this.renderDot(item.color)}
-            <Text fontSize={14} color='white'>
-                {`${item.name}: ${item.value}%`}
-            </Text>
-        </View>
     );
 
     /** @type {ListRenderItem} */
@@ -63,118 +63,52 @@ class PieChart extends BackPieChart {
      * Renders the center label component. (biggest activity value + name)
      * @returns {JSX.Element} A View component styled as a center label component.
      */
-    renderCenterLabelComponent = () => (
-        <View style={styles.centerLabel}>
-            <Text fontSize={16} color='white'>
-                {this.props.focusedActivity?.value + '%'}
-            </Text>
-            <Text fontSize={10} color='white'>
-                {this.props.focusedActivity?.name}
-            </Text>
-        </View>
-    );
-
-    /**
-     * Renders the center label component. (biggest activity value + name)
-     * @returns {JSX.Element} A View component styled as a center label component.
-     */
     renderCenterLabelComponentFullDay = () => {
         const langDates = langManager.curr['dates']['names'];
         const lang = langManager.curr['home'];
+        const { data } = this.props;
+
         const totalMinutes = this.props.data.reduce((acc, cur) => acc + cur.valueMinutes, 0);
         const hour = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
 
+        const convertedData = this.convertDataForDonutChart(data);
+
         return (
-            <View style={styles.centerLabel}>
-                {/* TODO : BOLD TEXT is not working on any iOS device, need to understand why */}
-                <Text fontSize={16} color='white' style={styles.centerLabelText}>
-                    {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
-                </Text>
-                <Text fontSize={10} color='white'>
-                    {lang['chart-click-me']}
-                </Text>
+            <View style={styles.pieChart}>
+                <DonutChart
+                    data={convertedData}
+                    size={110}
+                    strokeWidth={8}
+                    strokeLinecap='round'
+                    delay={0}
+                    segmentGap={12}
+                >
+                    <View style={styles.centerLabel}>
+                        <Text fontSize={16} color='white' style={styles.centerLabelText}>
+                            {`${hour}${langDates['hours-min']} ${minutes}${langDates['minutes-min']}`}
+                        </Text>
+                        <Text fontSize={10} color='white'>
+                            {lang['chart-click-me']}
+                        </Text>
+                    </View>
+                </DonutChart>
             </View>
         );
     };
 
-    /**
-     * Converts the data format to our custom DonutChart format
-     * @param {Array<UpdatingData>} data - The original data array
-     * @returns {Array<{label: string, value: number, stroke: string}>} Converted data for DonutChart
-     */
-    convertDataForDonutChart = (data) => {
-        return data
-            .filter((item) => item.value > 0) // Filter out items with 0 value
-            .map((item) => ({
-                label: item.name || 'Unknown',
-                value: item.value,
-                stroke: item.color || '#000000'
-            }));
-    };
-
-    render() {
-        const { style, data, focusedActivity } = this.props;
-        const { isDonutView } = this.state;
-
-        if (!data || !focusedActivity) {
-            return null;
-        }
-
-        // Convert data for the new DonutChart
-        const convertedData = this.convertDataForDonutChart(data);
+    renderLegend = () => {
+        const { data } = this.props;
 
         return (
-            <Button
-                style={[styles.pieChartContainer, style]}
-                onPress={this.toggleDisplay}
-                appearance='uniform'
-                color='transparent'
-            >
-                {isDonutView ? (
-                    // Affichage du donut chart
-                    <View style={styles.pieChart}>
-                        <DonutChart
-                            data={convertedData}
-                            size={110}
-                            strokeWidth={8}
-                            strokeLinecap='round'
-                            delay={0}
-                            segmentGap={12}
-                        >
-                            {this.renderCenterLabelComponentFullDay()}
-                        </DonutChart>
-                    </View>
-                ) : (
-                    // Affichage de la flat list
-                    <View style={styles.legendContainerFullScreen}>
-                        <FlatList
-                            data={data}
-                            style={styles.flatlist}
-                            renderItem={this.renderLegendItem}
-                            keyExtractor={(item) => `piechart-legend-${item.name}`}
-                            scrollEnabled={false}
-                        />
-                    </View>
-                )}
-            </Button>
-        );
-    }
-
-    // TODO: Unused ?
-    /** @type {FlatListQuestProps} */
-    renderQuest = ({ item: quest }) => {
-        const daysQuest = user.quests.GetDays(quest);
-        const questToday = daysQuest.find((day) => day.isToday);
-
-        if (!questToday) {
-            return null;
-        }
-
-        return (
-            <Text style={styles.QuestsText} fontSize={14}>
-                {`- ${quest.title}: ${questToday.progress}%`}
-            </Text>
+            <View style={styles.legendContainerFullScreen}>
+                <FlatList
+                    data={data}
+                    renderItem={this.renderLegendItem}
+                    keyExtractor={(item) => `piechart-legend-${item.name}`}
+                    scrollEnabled={false}
+                />
+            </View>
         );
     };
 }

@@ -56,10 +56,6 @@ const styles = StyleSheet.create({
     },
     notEnoughDataText: {
         fontSize: 16
-    },
-    notEnoughDataButton: {
-        marginTop: 12,
-        paddingVertical: 12
     }
 });
 

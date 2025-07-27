@@ -85,6 +85,7 @@ function DonutChart({
 
                         return (
                             <DonutSegment
+                                key={item.label}
                                 index={index}
                                 item={item}
                                 size={size}

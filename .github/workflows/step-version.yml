@@ -10,7 +10,7 @@ on:
 
 jobs:
   update-versions:
-    name: '📝 Update versions (Prod & Dev)'
+    name: '📝 Update version'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
@@ -20,31 +20,18 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.CICD_PAT }}
 
-      - name: 'Update version for both branches'
+      - name: 'Update version'
         env:
           ACTION_UPDATE: ${{ github.event.inputs.action-update }}
         run: |
-          # Array of branches to update
-          BRANCHES=("prod" "test" "dev")
+          # Update version for current branch
+          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
+          echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
+          ./Tools/Version/version.sh $ACTION_UPDATE --force
 
-          for BRANCH in "${BRANCHES[@]}"; do
-            echo "Updating version for branch: $BRANCH"
-
-            # Checkout branch
-            git fetch origin $BRANCH
-            git checkout $BRANCH
-
-            # Update version
-            NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
-            echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
-            ./Tools/Version/version.sh $ACTION_UPDATE --force
-
-            # Commit changes
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git add .
-            git commit -m "📝 Update version to $NEWVERSION for branch $BRANCH"
-            git push origin $BRANCH
-
-            echo "Version updated for branch: $BRANCH"
-          done
+          # Commit changes
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "📝 Update version to $NEWVERSION"
+          git push

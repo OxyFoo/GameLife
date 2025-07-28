@@ -88,14 +88,6 @@ function CollapsiblePopup({ title, sections }) {
 }
 
 /**
- * PopupContent pour afficher les informations sur les activités et récap du jour
- */
-function RecapInfoPopupContent() {
-    const lang = langManager.curr['app-explain'];
-    return <CollapsiblePopup title={lang['recap']['popup-title']} sections={lang['recap']['content']} />;
-}
-
-/**
  * PopupContent pour afficher les informations sur les quêtes
  */
 function QuestsInfoPopupContent() {
@@ -103,4 +95,4 @@ function QuestsInfoPopupContent() {
     return <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />;
 }
 
-export { RecapInfoPopupContent, QuestsInfoPopupContent };
+export { QuestsInfoPopupContent };

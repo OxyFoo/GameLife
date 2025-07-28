@@ -1147,25 +1147,6 @@
     },
 
     "app-explain" : {
-        "recap": {
-            "popup-title": "Recapitulatif du jour",
-
-            "content": [
-                {
-                    "title": "Graphique Activités",
-                    "text": [
-                        "Le graphique des activités vous montre le temps total où vous avez réalisé des activités aujourd'hui. Vous pouvez y voir jusqu'à 5 couleurs différentes, chacune représentant une catégorie différente.",
-                        "Pour voir les correspondances de couleurs et comprendre quelle catégorie est associée à quelle couleur, je vous invite à cliquer sur le graphique !",
-                    ]
-                },
-                {
-                    "title": "Graphique Quêtes",
-                    "text": [
-                        "Le graphique des quêtes vous montre le nombre de quêtes que vous devez et avez accomplies aujourd'hui. Les quêtes que vous devez accomplir sont affichées juste en dessous dans la catégorie 'Quêtes du jour'."
-                    ]
-                }
-            ]
-        },
         "quest": {
             "popup-title": "Les quêtes",
 

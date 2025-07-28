@@ -40,16 +40,7 @@ class Home extends BackHome {
                 <Missions />
 
                 {/* Today recap */}
-                <Title ref={this.refQuestsTitle} title={lang['section-today-performance']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='info-circle-outline'
-                        fontColor='gradient'
-                        onPress={this.infoRecap}
-                    />
-                </Title>
+                <Title ref={this.refQuestsTitle} title={lang['section-today-performance']} />
 
                 <View style={styles.chartsContainer}>
                     {/* Today Pie Chart */}

@@ -5,8 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import { AddActivity } from 'Interface/Widgets';
-import { RecapInfoPopupContent, QuestsInfoPopupContent } from './popup';
+import { QuestsInfoPopupContent } from './popup';
 
 /**
  * @typedef {import('react-native').View} View
@@ -82,15 +81,6 @@ class BackHome extends PageBase {
     infoQuests = () => {
         user.interface.popup?.Open({
             content: <QuestsInfoPopupContent />
-        });
-    };
-
-    /**
-     * Affiche des informations sur les graphiques de performance
-     */
-    infoRecap = () => {
-        user.interface.popup?.Open({
-            content: <RecapInfoPopupContent />
         });
     };
 

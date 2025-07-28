@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Animated, Easing } from 'react-native';
+import { Svg, Circle, G } from 'react-native-svg';
 
 import styles from './style';
-
-import { Svg, Circle, G } from 'react-native-svg';
 
 /**
  * @typedef {Object} ProgressDonutChartProps

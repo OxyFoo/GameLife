@@ -7,20 +7,16 @@ import QuestProgressChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Button, ProgressDonutChart, Text } from 'Interface/Components';
+import { Text, Button, ProgressDonutChart } from 'Interface/Components';
 
 class QuestProgressChart extends QuestProgressChartBack {
     render() {
         const lang = langManager.curr['home'];
 
-        const { size = 110, progressColor = '#4CAF50' } = this.props;
+        const { size, progressColor, completedColor } = this.props;
         const { completedQuests, totalQuests, allCompleted } = this.state;
 
-        // Format progress text
-        const progressText = `${completedQuests}/${totalQuests}`;
-
-        // Calculate colors - use white like PieChart
-        const chartProgressColor = allCompleted ? '#4CAF50' : progressColor;
+        const chartProgressColor = themeManager.GetColor(allCompleted ? completedColor : progressColor);
 
         return (
             <LinearGradient
@@ -64,16 +60,11 @@ class QuestProgressChart extends QuestProgressChartBack {
                                 delay={0}
                             >
                                 <View style={styles.centerContent}>
-                                    {/* TODO : BOLD TEXT mais il veut pas */}
-                                    <Text
-                                        style={[
-                                            styles.progressText,
-                                            {
-                                                fontSize: size * 0.15
-                                            }
-                                        ]}
-                                    >
-                                        {progressText}
+                                    {/**
+                                     * // TODO: Régler le * 0.15
+                                     */}
+                                    <Text fontSize={size * 0.15} bold>
+                                        {`${completedQuests}/${totalQuests}`}
                                     </Text>
                                 </View>
                             </ProgressDonutChart>

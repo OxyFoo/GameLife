@@ -2,10 +2,32 @@ import * as React from 'react';
 import { View, ScrollView, TouchableOpacity, Animated } from 'react-native';
 
 import stylesPopup from './stylePopup';
-import langManager from 'Managers/LangManager';
 
 import { Text, Icon } from 'Interface/Components';
 
+/**
+ * @typedef {Object} PopupSection
+ * @property {string} title - Le titre de la section
+ * @property {string[]} text - Les lignes de texte de la section
+ */
+
+/**
+ * @typedef {Object} CollapsibleSectionProps
+ * @property {PopupSection} section - Les données de la section
+ * @property {boolean} isExpanded - État d'expansion de la section
+ * @property {() => void} onToggle - Fonction appelée lors du toggle
+ */
+
+/**
+ * @typedef {Object} CollapsiblePopupProps
+ * @property {string} title - Le titre principal du popup
+ * @property {PopupSection[]} sections - Les sections du popup
+ */
+
+/**
+ * Section repliable avec animation
+ * @param {CollapsibleSectionProps} props - Les propriétés du composant
+ */
 function CollapsibleSection({ section, isExpanded, onToggle }) {
     const animatedHeight = React.useRef(new Animated.Value(0)).current;
     const rotateValue = React.useRef(new Animated.Value(0)).current;
@@ -65,7 +87,12 @@ function CollapsibleSection({ section, isExpanded, onToggle }) {
     );
 }
 
-function CollapsiblePopup({ title, sections }) {
+/**
+ * Popup avec sections repliables
+ * @param {CollapsiblePopupProps} props - Les propriétés du composant
+ */
+export function CollapsiblePopup({ title, sections }) {
+    /** @type {[{[key: number]: boolean}, React.Dispatch<React.SetStateAction<{[key: number]: boolean}>>]} */
     const [expanded, setExpanded] = React.useState({});
 
     return (
@@ -86,13 +113,3 @@ function CollapsiblePopup({ title, sections }) {
         </View>
     );
 }
-
-/**
- * PopupContent pour afficher les informations sur les quêtes
- */
-function QuestsInfoPopupContent() {
-    const lang = langManager.curr['app-explain'];
-    return <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />;
-}
-
-export { QuestsInfoPopupContent };

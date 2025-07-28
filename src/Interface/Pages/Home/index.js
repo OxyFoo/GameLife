@@ -5,10 +5,11 @@ import styles from './style';
 import BackHome from './back';
 import { Title } from './title';
 import TodayPieChart from './TodayPieChart';
+import QuestProgressChart from './QuestProgressChart';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
-import { QuestProgressChart, Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
+import { Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {

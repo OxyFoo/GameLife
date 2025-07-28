@@ -1,11 +1,11 @@
 import React from 'react';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
+import { CollapsiblePopup } from './popup';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import { QuestsInfoPopupContent } from './popup';
 
 /**
  * @typedef {import('react-native').View} View
@@ -79,8 +79,10 @@ class BackHome extends PageBase {
      * Affiche des informations sur les quêtes
      */
     infoQuests = () => {
+        const lang = langManager.curr['app-explain'];
+
         user.interface.popup?.Open({
-            content: <QuestsInfoPopupContent />
+            content: <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />
         });
     };
 

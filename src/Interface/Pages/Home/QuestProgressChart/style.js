@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
         marginBottom: 8
     },
     title: {
-        color: 'white',
         fontSize: 16,
         paddingVertical: 4,
         paddingHorizontal: 4
@@ -38,15 +37,6 @@ const styles = StyleSheet.create({
     },
     centerContent: {
         alignItems: 'center'
-    },
-    progressText: {
-        fontWeight: 'bold',
-        color: 'white'
-    },
-    subtitleText: {
-        color: 'white',
-        marginTop: 2,
-        opacity: 0.8
     },
 
     notEnoughData: {

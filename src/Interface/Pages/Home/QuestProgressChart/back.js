@@ -7,23 +7,23 @@ import langManager from 'Managers/LangManager';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  *
  * @typedef {object} InputPropsType
  * @property {StyleProp} style
- * @property {number} [size] - Size of the donut chart
- * @property {string} [progressColor] - Color of progress
- * @property {string} [backgroundColor] - Background color
+ * @property {number} size - Size of the donut chart
+ * @property {ThemeColor} progressColor - Color of progress
+ * @property {ThemeColor} completedColor - Color of completed quests
+ * @property {ThemeColor} backgroundColor - Background color
  */
 
+/** @type {InputPropsType} */
 const InputProps = {
-    /** @type {StyleProp} */
     style: {},
-    /** @type {number} */
     size: 110,
-    /** @type {string} */
-    progressColor: '#4CAF50',
-    /** @type {string} */
-    backgroundColor: '#E0E0E0'
+    progressColor: 'success',
+    completedColor: 'success',
+    backgroundColor: 'borderLight'
 };
 
 class QuestProgressChartBack extends React.Component {

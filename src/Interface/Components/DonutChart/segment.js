@@ -19,7 +19,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
  * @property {number} currentAngle - Current angle for the segment
  * @property {number} [delay] - Animation delay in milliseconds
  * @property {number} [duration] - Animation duration in milliseconds
- * @property {(value: number) => number} [easing] - Easing function for animation
+ * @property {((value: number) => number) | null} [easing] - Easing function for animation
  * @property {number} [index] - Index of the segment for staggered animation
  */
 
@@ -38,7 +38,7 @@ function DonutSegment({
     strokeLinecap,
     delay = 0,
     duration = 1500,
-    easing = Easing.out(Easing.exp),
+    easing = null,
     index = 0
 }) {
     const animationValue = useRef(new Animated.Value(0)).current;
@@ -52,7 +52,7 @@ function DonutSegment({
             toValue: 1,
             duration,
             delay: delay + index * 100, // Stagger each segment slightly
-            easing,
+            easing: easing ?? Easing.out(Easing.exp),
             useNativeDriver: false
         });
 

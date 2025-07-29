@@ -4,8 +4,8 @@ import { View, ScrollView } from 'react-native';
 import styles from './style';
 import BackHome from './back';
 import { Title } from './title';
-import TodayPieChart from './TodayPieChart';
-import QuestProgressChart from './QuestProgressChart';
+import ActivitiesProgressChart from './ActivitiesProgressChartBack';
+import QuestsProgressChart from './QuestsProgressChart';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
@@ -46,12 +46,12 @@ class Home extends BackHome {
                 <View style={styles.chartsContainer}>
                     {/* Today Pie Chart */}
                     <View style={styles.chartItem}>
-                        <TodayPieChart style={styles.todayPieChart} />
+                        <ActivitiesProgressChart />
                     </View>
 
                     {/* Quest Progress Chart */}
                     <View style={styles.chartItem}>
-                        <QuestProgressChart style={styles.questProgressChart} />
+                        <QuestsProgressChart />
                     </View>
                 </View>
 

@@ -3,6 +3,11 @@ import { View, Animated, Easing } from 'react-native';
 import { Svg, Circle, G } from 'react-native-svg';
 
 import styles from './style';
+import themeManager from 'Managers/ThemeManager';
+
+/**
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ */
 
 /**
  * @typedef {Object} ProgressDonutChartProps
@@ -17,8 +22,9 @@ import styles from './style';
  * @property {Function} [onMeasure] - Callback with graph dimensions
  * @property {React.ReactNode} [children] - Content to display in center
  * @property {number} [size] - Size of the donut chart in pixels
- * @property {string} [progressColor] - Color of the progress segment
- * @property {string} [backgroundTrackColor] - Color of the background track
+ * @property {ThemeColor} [progressColor] - Color of the progress segment
+ * @property {ThemeColor} [backgroundTrackColor] - Color of the background track
+ * @property {number} [backgroundTrackColorTransparency] - Transparency of the background track (0-100)
  */
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -39,8 +45,9 @@ function ProgressDonutChart({
     onMeasure,
     children,
     size = 110,
-    progressColor = '#4CAF50',
-    backgroundTrackColor = '#E0E0E050'
+    progressColor = 'success',
+    backgroundTrackColor = 'borderLight',
+    backgroundTrackColorTransparency = 30
 }) {
     const radius = (size - strokeWidth) / 2;
     const center = size / 2;
@@ -80,7 +87,9 @@ function ProgressDonutChart({
                         cx={center}
                         cy={center}
                         r={radius}
-                        stroke={backgroundTrackColor}
+                        stroke={themeManager.GetColor(backgroundTrackColor, {
+                            opacity: backgroundTrackColorTransparency / 100
+                        })}
                         strokeWidth={strokeWidth}
                         strokeLinecap={strokeLinecap}
                         fill='transparent'
@@ -91,7 +100,7 @@ function ProgressDonutChart({
                         cx={center}
                         cy={center}
                         r={radius}
-                        stroke={progressColor}
+                        stroke={themeManager.GetColor(progressColor)}
                         strokeWidth={strokeWidth}
                         strokeLinecap={strokeLinecap}
                         fill='transparent'

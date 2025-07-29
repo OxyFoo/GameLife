@@ -51,19 +51,12 @@ const styles = StyleSheet.create({
     // Styles for main content
     chartsContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'stretch',
+        justifyContent: 'space-between',
         gap: 12
     },
     chartItem: {
-        flex: 1, // Les deux charts prendront la même largeur
-        alignItems: 'center'
-    },
-    todayPieChart: {
-        width: '100%'
-    },
-    questProgressChart: {
-        width: '100%'
+        flex: 1
     },
     quests: {
         marginTop: 0

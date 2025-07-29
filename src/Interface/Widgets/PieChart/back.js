@@ -1,35 +1,36 @@
 import React from 'react';
 
 /**
- * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ *
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
+ * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  *
  * @typedef {object} UpdatingData
  * @property {number} id
  * @property {number} value
  * @property {string} name
  * @property {number} valueMinutes
- * @property {string} color
- * @property {string} gradientCenterColor
+ * @property {string} color Hexadecimal color code
+ * @property {string} gradientCenterColor Hexadecimal color code for gradient center
  *
- * @typedef {object} itemType // object from lib gifted-charts
  * @typedef {{ id: number, value: number, name: string }} FocusedActivity
+ *
+ * @typedef {object} PieChartProps
+ * @param {StyleProp} style Style for the pie chart container
+ * @property {Array<UpdatingData>} data Array of data to display in the pie chart
+ * @property {boolean} isDonutView True to display donut chart, false for flat list
+ * @property {FocusedActivity | null} focusedActivity Currently focused activity, null if none
+ * @property {ThemeColor | ThemeText} insideBackgroundColor Background color for the inside of
  */
 
+/** @typedef {PieChartProps} */
 const PieChartProps = {
-    /** @type {Array<UpdatingData>} */
-    data: [],
-
-    /** @type {boolean} True to display donut chart, false for flat list */
+    style: /** @type {StyleProp} */ ({}),
+    data: /** @type {Array<UpdatingData>} */ ([]),
     isDonutView: true,
-
-    /** @type {FocusedActivity | null} */
-    focusedActivity: null,
-
-    /** @type {FocusedActivity | null} */
-    focusedActivityFullDay: null,
-
-    /** @type {ThemeColor | ThemeText} */
+    focusedActivity: /** @type {FocusedActivity | null} */ (null),
     insideBackgroundColor: 'dataBigKpi'
 };
 

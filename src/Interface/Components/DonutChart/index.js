@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Svg, G } from 'react-native-svg';
 
@@ -29,7 +29,6 @@ import { Sum } from 'Utils/Functions';
  * @property {number} [strokeWidth] - Width of the donut stroke
  * @property {'round' | 'square' | 'butt'} [strokeLinecap] - Line cap style
  * @property {StyleViewProp} [style] - Container styles
- * @property {Function} [onMeasure] - Callback with graph dimensions
  * @property {React.ReactNode} [children] - Content to display in center
  * @property {number} [segmentGap] - Gap between segments in degrees
  * @property {number} [size] - Size of the donut chart in pixels
@@ -46,17 +45,10 @@ function DonutChart({
     strokeWidth = 8,
     strokeLinecap = 'round',
     style,
-    onMeasure,
     children,
     segmentGap = 4, // Gap between segments in degrees
     size = 100 // Allow size to be configurable
 }) {
-    useEffect(() => {
-        if (onMeasure) {
-            onMeasure(size);
-        }
-    }, [size, onMeasure]);
-
     // Calculate total value of hour segments
     const values = data.map((item) => item.value);
     const totalValue = Sum(values);

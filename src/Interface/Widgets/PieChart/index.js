@@ -14,61 +14,35 @@ import { DonutChart, Text } from 'Interface/Components';
 
 class PieChart extends BackPieChart {
     render() {
-        const { data, focusedActivity } = this.props;
-        const { isDonutView } = this.props;
+        const { style, data, focusedActivity, isDonutView } = this.props;
 
         if (!data || !focusedActivity) {
             return null;
         }
 
-        if (!isDonutView) {
-            return this.renderLegend();
-        }
-
-        return this.renderCenterLabelComponentFullDay();
-    }
-
-    /**
-     * Renders a colored dot used for legends or markers.
-     * @param {string} color The color of the dot.
-     * @returns {JSX.Element} A View component styled as a colored dot.
-     */
-    renderDot = (color) => (
-        <View
-            style={[
-                styles.dot,
-                {
-                    backgroundColor: color
-                }
-            ]}
-        />
-    );
-
-    /** @type {ListRenderItem} */
-    renderLegendItem = ({ item, index }) => {
-        const lang = langManager.curr['dates']['names'];
-        const hour = Math.floor(item.valueMinutes / 60);
-        const minutes = item.valueMinutes % 60;
         return (
-            <View key={index} style={styles.legendItem}>
-                {this.renderDot(item.color)}
-                <Text fontSize={14} color='white'>
-                    {`${item.name}: ${hour}${lang['hours-min']} ${minutes}${lang['minutes-min']}`}
-                </Text>
+            <View style={style}>
+                {isDonutView ? (
+                    // Render the donut chart if isDonutView is true
+                    <this.renderDonut />
+                ) : (
+                    // Render the legend if isDonutView is false
+                    <this.renderLegend />
+                )}
             </View>
         );
-    };
+    }
 
     /**
      * Renders the center label component. (biggest activity value + name)
      * @returns {JSX.Element} A View component styled as a center label component.
      */
-    renderCenterLabelComponentFullDay = () => {
-        const langDates = langManager.curr['dates']['names'];
+    renderDonut = () => {
         const lang = langManager.curr['home'];
+        const langDates = langManager.curr['dates']['names'];
         const { data } = this.props;
 
-        const totalMinutes = this.props.data.reduce((acc, cur) => acc + cur.valueMinutes, 0);
+        const totalMinutes = data.reduce((acc, cur) => acc + cur.valueMinutes, 0);
         const hour = Math.floor(totalMinutes / 60);
         const minutes = totalMinutes % 60;
 
@@ -108,6 +82,29 @@ class PieChart extends BackPieChart {
                     keyExtractor={(item) => `piechart-legend-${item.name}`}
                     scrollEnabled={false}
                 />
+            </View>
+        );
+    };
+
+    /** @type {ListRenderItem} */
+    renderLegendItem = ({ item, index }) => {
+        const lang = langManager.curr['dates']['names'];
+        const hour = Math.floor(item.valueMinutes / 60);
+        const minutes = item.valueMinutes % 60;
+
+        const dotColorStyle = {
+            backgroundColor: item.color
+        };
+
+        return (
+            <View key={index} style={styles.legendItem}>
+                {/* Render the dot with the item's color */}
+                <View style={[styles.dot, dotColorStyle]} />
+
+                {/* Render the text with the item's name and time */}
+                <Text fontSize={14} color='white'>
+                    {`${item.name}: ${hour}${lang['hours-min']} ${minutes}${lang['minutes-min']}`}
+                </Text>
             </View>
         );
     };

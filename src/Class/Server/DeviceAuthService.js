@@ -24,6 +24,9 @@ class DeviceAuthService {
     /** @type {DynamicVar<DeviceAuthState>} */
     state = new DynamicVar(/** @type {DeviceAuthState} */ ('not-connected'));
 
+    /** @type {boolean} */
+    devMode = false;
+
     /**
      * @param {UserManager} user
      * @param {TCP} tcp
@@ -375,6 +378,12 @@ class DeviceAuthService {
                 `[DeviceAuthService] Authentication failed, invalid response (${response.result})`
             );
             return null;
+        }
+
+        this.devMode = !!response.devMode;
+
+        if (this.devMode) {
+            this.#user.interface.console?.Enable();
         }
 
         this.state.Set('authenticated');

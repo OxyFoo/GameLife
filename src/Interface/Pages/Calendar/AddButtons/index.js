@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 import styles from './style';
 import { createSeparatorText } from './utils';
-import langManager from 'Managers/LangManager';
 
 import { Button, Text } from 'Interface/Components';
 import { GetDate, GetGlobalTime, GetMidnightTime } from 'Utils/Time';
@@ -14,26 +13,22 @@ import { GetDate, GetGlobalTime, GetMidnightTime } from 'Utils/Time';
  */
 
 function Separator({ text = '', onPress = () => {} }) {
-    const lang = langManager.curr['calendar'];
-
     return (
         <View style={styles.separator}>
-            {/** Separator text for symmetry */}
-            {!!text && (
-                <Text style={styles.separatorText} color='transparent'>
-                    {text}
-                </Text>
-            )}
-
-            <Button style={styles.separatorButton} appearance='outline' fontColor='primary' onPress={onPress}>
-                {lang['add-activity']}
-            </Button>
-
             {!!text && (
                 <Text style={styles.separatorText} color='light'>
                     {text}
                 </Text>
             )}
+
+            <Button
+                style={styles.separatorButton}
+                appearance='uniform'
+                color='transparent'
+                icon='add-outline'
+                fontColor='gradient'
+                onPress={onPress}
+            />
         </View>
     );
 }

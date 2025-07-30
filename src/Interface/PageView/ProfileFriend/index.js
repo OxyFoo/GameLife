@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View, ScrollView, FlatList } from 'react-native';
 
 import styles from './style';
 import BackProfileFriend from './back';
@@ -8,7 +8,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
-import { AchievementsGroup, StatsBars } from 'Interface/Widgets';
+import { AchievementsGroup, StatsBarTextOnly } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 
 class ProfileFriend extends BackProfileFriend {
@@ -90,11 +90,19 @@ class ProfileFriend extends BackProfileFriend {
                     <Container
                         text={lang['container-stats-title']}
                         style={styles.topSpace}
+                        styleContainer={styles.statsContainer}
                         type='rollable'
                         opened={friend.accountID === 0}
                         backgroundColor='dataBigKpi'
                     >
-                        <StatsBars data={statsInfo} />
+                        <FlatList
+                            data={statsInfo}
+                            renderItem={StatsBarTextOnly}
+                            keyExtractor={(item) => `stat-${item.statKey}`}
+                            numColumns={2}
+                            scrollEnabled={false}
+                            nestedScrollEnabled={false}
+                        />
                     </Container>
                 )}
 

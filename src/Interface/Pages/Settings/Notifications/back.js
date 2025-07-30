@@ -3,7 +3,6 @@ import user from 'Managers/UserManager';
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 /**
- * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request').ConnectionState} ConnectionState
  * @typedef {import('Managers/ThemeManager').ThemeName} ThemeName
  * @typedef {import('Interface/Components/ComboBox').ComboBoxItem} ComboBoxItem
  */
@@ -11,7 +10,8 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 class BackSettingsNotifications extends PageBase {
     state = {
         switchMorningNotifs: user.settings.morningNotifications,
-        switchEveningNotifs: user.settings.eveningNotifications
+        switchEveningNotifs: user.settings.eveningNotifications,
+        switchOptionalUpdatesNotifs: user.settings.optionalUpdatesNotifications
     };
 
     onBack = () => user.interface.BackHandle();
@@ -33,6 +33,13 @@ class BackSettingsNotifications extends PageBase {
         // else Notifications.Evening.Disable();
         this.setState({ switchEveningNotifs: enabled });
         user.settings.eveningNotifications = enabled;
+        user.settings.IndependentSave();
+    };
+
+    /** @param {boolean} enabled */
+    onChangeOptionalUpdatesNotifications = (enabled) => {
+        this.setState({ switchOptionalUpdatesNotifs: enabled });
+        user.settings.optionalUpdatesNotifications = enabled;
         user.settings.IndependentSave();
     };
 }

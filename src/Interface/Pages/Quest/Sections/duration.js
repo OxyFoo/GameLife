@@ -73,7 +73,7 @@ class SectionDuration extends React.Component {
         const duration = quest.schedule.duration;
 
         return (
-            <View ref={(ref) => (this.refHelp1 = ref)} style={styles.schedulePanel}>
+            <View style={styles.schedulePanel}>
                 <Digit
                     style={styles.digitHour}
                     minDigitWidth={30}

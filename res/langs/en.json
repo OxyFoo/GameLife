@@ -310,7 +310,7 @@
 
         "sort-text": "Sort by: ",
         "sort-list": [
-            "progresson"
+            "progression"
         ],
 
         "popup-condition-text": "Condition: ",
@@ -415,9 +415,8 @@
     },
 
     "calendar": {
-        "summary-title": "Summary of the day",
         "activities-title": "Activities of {}",
-        "add-activity": "Add activity",
+        "add-activity": "Add an activity",
         "hour-min": "h",
         "start": "Start of the day",
         "end": "End of the day",
@@ -728,6 +727,7 @@
         "input-notifications": "Notifications",
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
+        "input-notif-optional-updates": "Optional updates",
         "input-report": "Report",
         "input-beta": "Beta",
         "input-ad-consent": "Ad consent popup",
@@ -890,6 +890,7 @@
             "name": "Expérience",
             "small": "XP"
         },
+        "points": "points",
         "names": {
             "int": "Intelligence",
             "soc": "Social",
@@ -981,9 +982,6 @@
 
         "popup-all-categories": "All categories",
 
-        "input-panel-activity": "Select an activity",
-        "input-panel-category": "Select a category",
-
         "text-hint-select": "Press and hold to select the column",
         "text-hint-frequency": "How often do you want to do your activities?",
 
@@ -1060,7 +1058,9 @@
         "wait-email-sending": "Sending email...",
         "wait-email-remain": "Mail sent again in {}m{}s",
         "wait-email-sent": "Mail sent !",
-        "wait-email-resend": "Resend the confirmation email"
+        "wait-email-resend": "Resend the confirmation email",
+        "wait-email-resend-confirm-title": "Resend confirmation email",
+        "wait-email-resend-confirm-message": "Before resending the email, make sure you have checked:\n\n• Your spam/junk folders\n• The spelling of your email address: {}\n• That your mailbox is not full\n• That your email provider doesn't block automatic emails\n\nDo you really want to resend the confirmation email?"
     },
 
     "tuto": {

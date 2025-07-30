@@ -19,11 +19,8 @@ class SkillChart extends SkillChartBack {
         return (
             <View>
                 <View style={[styleContainer, styles.container, this.props.style]}>
-                    <View style={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                    <View style={styles.titleView}>
                         <Text color='primary' fontSize={16} bold>
-                            {
-                                // TODO : le bold marche pas ici c'est pas normal (iOS)
-                            }
                             {lang['history-activity']}
                         </Text>
                     </View>

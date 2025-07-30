@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
         "jsx": "react-native",
-        "target": "ES6",
+        "target": "es2022",
         "checkJs": true,
+        "maxNodeModuleJsDepth": 0,
         "strict": true,
         "resolveJsonModule": true,
         "module": "NodeNext",
@@ -26,10 +27,12 @@
         "noUnusedParameters": true
     },
     "include": [
-        "App.js",
-        "src"
+        "src",
+        "./App.js",
+        "./__tests__"
     ],
     "exclude": [
+        "res",
         "node_modules"
     ]
 }

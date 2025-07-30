@@ -23,7 +23,7 @@ const OnlineFriends = ({ style, friends }) => {
         <FlatList
             style={[styles.flatList, style]}
             data={friends}
-            keyExtractor={(item) => 'multi-player-' + item.accountID}
+            keyExtractor={(item) => `multi-player-${item.accountID}`}
             renderItem={FriendItem}
             ListEmptyComponent={RenderEmpty}
         />

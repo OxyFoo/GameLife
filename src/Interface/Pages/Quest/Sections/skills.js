@@ -33,26 +33,9 @@ const SectionSkillProps = {
 };
 
 class SectionSkill extends React.Component {
-    // TODO: Unused ?
-    OpenCategoriesSelection = () => {
-        const title = langManager.curr['quest']['input-panel-category'];
-        const data = dataManager.skills.categories.map((category) => ({
-            id: category.ID,
-            value: langManager.GetText(category.Name)
-        }));
-
-        // TODO: Replace by bottomPanel ? If usefull
-        // user.interface.screenList?.Open(title, data, (id) => {
-        //     setTimeout(() => {
-        //         this.OpenSkillSelection(id);
-        //     }, 100);
-        // });
-    };
-
     /** @param {number} categoryID */
     OpenSkillSelection = (categoryID) => {
-        const title = langManager.curr['quest']['input-panel-activity'];
-
+        /** @type {Array<{ id: number, value: string }>} */
         let data = [];
 
         // If category is 'Recent'
@@ -79,17 +62,6 @@ class SectionSkill extends React.Component {
                 id: skill.ID,
                 value: langManager.GetText(skill.Name)
             }));
-        }
-
-        if (data.length !== 0) {
-            // TODO: Replace by bottomPanel ? If usefull
-            // user.interface.screenList?.Open(title, data, (id) => {
-            //     const { quest, onChangeQuest } = this.props;
-            //     if (quest === null || quest.skills.length >= MAX_SKILLS || quest.skills.includes(id)) {
-            //         return;
-            //     }
-            //     onChangeQuest({ ...quest, skills: [...quest.skills, id] });
-            // });
         }
     };
 
@@ -165,7 +137,7 @@ class SectionSkill extends React.Component {
 
         const RenderSkills = this.renderSkills;
         return (
-            <View ref={(ref) => (this.refHelp1 = ref)}>
+            <View>
                 {/* No skills selected */}
                 {selectedSkills.length === 0 && <Text>{lang['input-activity-title']}</Text>}
 

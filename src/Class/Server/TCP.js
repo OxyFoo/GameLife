@@ -35,6 +35,9 @@ class TCP {
     /** @type {string | null} */
     #lastError = null;
 
+    /** @type {boolean} */
+    #connecting = false;
+
     /**
      * @description Callback => If True is returned, the callback will be removed
      * @type {Record<string, (data: TCPServerRequest) => boolean | Promise<boolean>>}
@@ -56,16 +59,24 @@ class TCP {
 
     /**
      * @param {boolean} [connectAsNewUser] Whether to connect as a new user
-     * @returns {Promise<'connected' | 'already-connected' | 'wrong-ssl-pinning' | 'timeout' | 'error'>} Whether the connection was successful, or if it was already connected
+     * @returns {Promise<'connected' | 'connecting' | 'already-connected' | 'wrong-ssl-pinning' | 'timeout' | 'error'>} Whether the connection was successful, or if it was already connected
      */
     Connect = async (connectAsNewUser = false) => {
         if (this.settings === null) {
             return 'error';
         }
 
+        // If already connected, return immediately
         if (this.IsConnected()) {
             return 'already-connected';
         }
+
+        // Prevent multiple simultaneous connection attempts only if we're actually connecting
+        if (this.#connecting || this.state.Get() === 'connecting' || this.socket) {
+            return 'connecting';
+        }
+
+        this.#connecting = true;
 
         const url = `${this.settings.protocol}://${this.settings.host}:${this.settings.port}`;
         const protocol = !connectAsNewUser ? 'gamelife-client' : 'gamelife-client-new';
@@ -111,6 +122,7 @@ class TCP {
             const finish = (state) => {
                 clearTimeout(_timeout);
                 this.state.RemoveListener(_listenerId);
+                this.#connecting = false;
                 resolve(state);
             };
 
@@ -142,10 +154,32 @@ class TCP {
     };
 
     Disconnect = () => {
-        if (this.IsConnected()) {
-            this.socket?.close();
+        // Reset connecting flag
+        this.#connecting = false;
+
+        if (this.socket) {
+            // Remove event listeners to prevent memory leaks
+            this.socket.removeEventListener('open', this.#onOpen);
+            this.socket.removeEventListener('message', this.#onMessage);
+            this.socket.removeEventListener('error', this.#onError);
+            this.socket.removeEventListener('close', this.#onClose);
+
+            // Close the connection if it's still open
+            if (this.IsConnected()) {
+                this.socket.close();
+            }
+
+            // Call cleanup to ensure proper resource disposal (especially for Android Release)
+            this.socket.cleanup();
+            this.socket = null;
         }
-        this.socket = null;
+
+        // Clear any pending callbacks
+        this.#callbacks = {};
+        this.#callbacksActions = {};
+
+        // Reset state
+        this.state.Set('disconnected');
     };
 
     GetLastError = () => {

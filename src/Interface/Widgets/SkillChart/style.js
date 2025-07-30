@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
         paddingBottom: 0,
         borderRadius: 20
     },
+    titleView: {
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start'
+    },
     headerText: {
         fontWeight: 'bold',
         marginVertical: 10

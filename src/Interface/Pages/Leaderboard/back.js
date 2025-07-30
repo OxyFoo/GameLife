@@ -139,8 +139,8 @@ class BackLeaderboard extends PageBase {
 
             // Define label & ranks
             newRanking.forEach((player, index) => {
-                const statExp = user.experience.getXPDict(player.stats[statKey], 'stat');
-                player.label = `${statExp.lvl} ${langStats['names'][statKey]}`;
+                const statPoints = player.stats[statKey];
+                player.label = `${statPoints} ${langStats['names'][statKey]}`;
                 player.rank = index + 1;
             });
         }

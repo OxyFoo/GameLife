@@ -19,23 +19,23 @@ platform :ios do
   desc "Build the app without uploading"
   lane :build do |options|
     environment = options[:environment] || "dev"
-    
+
     # Handle empty environment string
     if environment.nil? || environment.empty?
       environment = "dev"
       UI.important "⚠️ Empty environment provided, defaulting to 'dev'"
     end
-    
+
     # Validate environment
     unless ['dev', 'test', 'prod'].include?(environment)
       UI.user_error! "❌ Invalid environment '#{environment}'. Must be 'dev', 'test', or 'prod'"
     end
-    
+
     UI.message "🏗️ Building for environment: #{environment}"
-    
+
     # Get app identifier based on environment
     app_identifier = ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife"
-    
+
     # Set provisioning profile name based on environment
     case environment
     when 'prod'
@@ -47,10 +47,26 @@ platform :ios do
     else
       UI.user_error! "❌ Unknown environment: #{environment}"
     end
-    
+
     UI.message "📱 App Identifier: #{app_identifier}"
     UI.message "🔐 Provisioning Profile: #{profile_name}"
-    
+
+    # Get actual provisioning profile info from environment (set by CI)
+    actual_profile_name = ENV["PROVISION_PROFILE_NAME_ACTUAL"]
+    profile_uuid = ENV["PROVISION_PROFILE_UUID"]
+
+    # Use the UUID if available for more reliable matching
+    if profile_uuid && !profile_uuid.empty?
+      UI.message "🆔 Using profile UUID: #{profile_uuid}"
+      # Don't replace profile_name with UUID, keep the actual name but store UUID separately
+      actual_profile_uuid = profile_uuid
+    end
+
+    if actual_profile_name && !actual_profile_name.empty?
+      UI.message "📋 Using actual profile name from CI: #{actual_profile_name}"
+      profile_name = actual_profile_name
+    end
+
     # Verify provisioning profile exists
     UI.message "🔍 Checking provisioning profiles..."
     Dir.glob("#{Dir.home}/Library/MobileDevice/Provisioning Profiles/*.mobileprovision") do |profile_path|
@@ -70,33 +86,63 @@ platform :ios do
         UI.message "  Could not read profile details: #{e.message}"
       end
     end
-    
+
     # Verify certificates
     UI.message "🔍 Checking available certificates..."
-    sh("security find-identity -v -p codesigning") rescue UI.error("Could not list certificates")
-    
+    begin
+      sh("security find-identity -v -p codesigning")
+
+      # Check for specific certificate that matches our profile
+      team_id = ENV["TEAM_ID"] || "54ZUH596XX"
+      cert_search_result = sh("security find-identity -v -p codesigning | grep 'Apple Distribution.*#{team_id}' || echo 'NONE'", log: false).strip
+
+      if cert_search_result == "NONE"
+        UI.error "❌ No Apple Distribution certificate found for Team ID: #{team_id}"
+        UI.error "Available certificates:"
+        sh("security find-identity -v -p codesigning")
+        UI.user_error! "Required certificate not found. Please check your certificate installation."
+      else
+        UI.success "✅ Found compatible certificate: #{cert_search_result}"
+      end
+    rescue => e
+      UI.error("Could not list certificates: #{e.message}")
+    end
+
     # Update app identifier in project if needed
     update_app_identifier(
       xcodeproj: "GameLife.xcodeproj",
       plist_path: "GameLife/Info.plist",
       app_identifier: app_identifier
     )
-    
+
     UI.success "Updated app identifier to: #{app_identifier}"
     UI.success "Using provisioning profile: #{profile_name}"
-    
-    # Update code signing settings for manual signing
+
+    # Update code signing settings
+    use_automatic_signing = ENV["USE_AUTOMATIC_SIGNING"] == "true"
+
+    # Force automatic signing first, then fallback to manual if it fails
+    UI.message "🤖 Trying automatic code signing first..."
     update_code_signing_settings(
-      use_automatic_signing: false,
+      use_automatic_signing: use_automatic_signing,
       path: "GameLife.xcodeproj",
       team_id: ENV["TEAM_ID"] || "54ZUH596XX",
-      targets: ["GameLife"],
-      code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)"
+      targets: ["GameLife"]
     )
-    
+
     # Build the app
     begin
-      UI.message "🔨 Starting build process..."
+      UI.message "🔨 Starting build process with automatic signing..."
+
+      export_options_hash = {
+        method: "app-store",
+        teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+        uploadSymbols: true,
+        signingStyle: "automatic"
+      }
+
+      UI.message "🔧 Export options: #{export_options_hash}"
+
       build_app(
         workspace: "GameLife.xcworkspace", 
         scheme: "GameLife",
@@ -106,34 +152,68 @@ platform :ios do
         output_name: "GameLife-#{environment}.ipa",
         clean: true,
         archive_path: "./build/GameLife.xcarchive",
-        export_options: {
-          method: "app-store",
-          teamID: ENV["TEAM_ID"] || "54ZUH596XX",
-          signingStyle: "manual",
-          provisioningProfiles: {
-            (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => profile_name
-          },
-          uploadSymbols: true
-        },
+        export_options: export_options_hash,
         # Additional xcodebuild settings to ensure proper deployment target
-        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0"
+        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0 -allowProvisioningUpdates",
+        disable_xcpretty: true
       )
     rescue => e
-      UI.error "Build failed with error: #{e.message}"
-      UI.error "Full error: #{e.backtrace.join("\n")}" if e.backtrace
-      
-      # Try to read the detailed log
-      log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
-      if File.exist?(log_path)
-        UI.message "📋 Detailed build log:"
-        log_content = File.read(log_path)
-        # Show last 50 lines of the log
-        UI.message log_content.split("\n").last(50).join("\n")
+      UI.important "⚠️ Automatic signing failed: #{e.message}"
+      UI.important "🔄 Retrying with manual signing..."
+
+      # Retry with manual signing
+      update_code_signing_settings(
+        use_automatic_signing: false,
+        path: "GameLife.xcodeproj",
+        team_id: ENV["TEAM_ID"] || "54ZUH596XX",
+        targets: ["GameLife"],
+        code_sign_identity: "Apple Distribution: Oxy Foo (54ZUH596XX)",
+        profile_name: profile_name
+      )
+
+      export_options_hash = {
+        method: "app-store",
+        teamID: ENV["TEAM_ID"] || "54ZUH596XX",
+        uploadSymbols: true,
+        signingStyle: "manual",
+        provisioningProfiles: {
+          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (actual_profile_uuid && !actual_profile_uuid.empty?) ? actual_profile_uuid : profile_name
+        }
+      }
+
+      UI.message "🔧 Retry with manual signing, export options: #{export_options_hash}"
+
+      begin
+        build_app(
+          workspace: "GameLife.xcworkspace", 
+          scheme: "GameLife",
+          configuration: "Release",
+          export_method: "app-store",
+          output_directory: "./build",
+          output_name: "GameLife-#{environment}.ipa",
+          clean: true,
+          archive_path: "./build/GameLife.xcarchive",
+          export_options: export_options_hash,
+          xcargs: "IPHONEOS_DEPLOYMENT_TARGET=12.0",
+          disable_xcpretty: true
+        )
+      rescue => retry_error
+        UI.error "Build failed with manual signing: #{retry_error.message}"
+        UI.error "Full error: #{retry_error.backtrace.join("\n")}" if retry_error.backtrace
+
+        # Try to read the detailed log
+        log_path = "/Users/runner/Library/Logs/gym/GameLife-GameLife.log"
+        if File.exist?(log_path)
+          UI.message "📋 Detailed build log:"
+          log_content = File.read(log_path)
+          # Show last 50 lines of the log
+          UI.message log_content.split("\n").last(50).join("\n")
+        end
+
+        raise retry_error
       end
-      
-      raise e
     end
-    
+
     # Output the final build info
     UI.success "Built #{environment} version: GameLife-#{environment}.ipa"
   end
@@ -141,30 +221,86 @@ platform :ios do
   desc "Upload to App Store Connect"
   lane :upload_to_appstore do |options|
     environment = options[:environment] || "prod"
-    ipa_path = "./build/GameLife-#{environment}.ipa"
-    
-    # Use App Store Connect API with environment variables
-    app_store_connect_api_key(
-      key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
-      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
-      key_content: ENV['APP_STORE_CONNECT_API_KEY_KEY']
-    )
+    ipa_path = File.expand_path("../../build/GameLife-#{environment}.ipa", __dir__)
 
-    upload_to_app_store(
-      skip_waiting_for_build_processing: true,
-      skip_screenshots: true,
-      skip_metadata: true,
-      force: true,
-      ipa: ipa_path,
-      submit_for_review: false,
-      automatic_release: false
-    )
+    UI.message "📝 PWD = #{Dir.pwd}/../.."
+    sh("ls -lR ../..")
+
+    # Validate that IPA file exists
+    unless File.exist?(ipa_path)
+      UI.user_error! "❌ IPA file not found at: #{ipa_path}"
+    end
+
+    UI.message "📦 Uploading IPA: #{ipa_path}"
+
+    # Validate App Store Connect API credentials
+    api_key_id = ENV['APP_STORE_CONNECT_API_KEY_KEY_ID']
+    api_issuer_id = ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID']
+    api_key_content = ENV['APP_STORE_CONNECT_API_KEY_KEY']
+
+    if api_key_id.nil? || api_key_id.empty?
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY_ID environment variable is missing"
+    end
+
+    if api_issuer_id.nil? || api_issuer_id.empty?
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_ISSUER_ID environment variable is missing"
+    end
+
+    if api_key_content.nil? || api_key_content.empty?
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY environment variable is missing"
+    end
+
+    UI.message "🔑 API Key ID: #{api_key_id}"
+    UI.message "🏢 Issuer ID: #{api_issuer_id}"
+    UI.message "📝 Private key content length: #{api_key_content.length} characters"
+
+    # Validate that the private key looks like a valid P8 key
+    unless api_key_content.include?('BEGIN PRIVATE KEY') && api_key_content.include?('END PRIVATE KEY')
+      UI.user_error! "❌ APP_STORE_CONNECT_API_KEY_KEY does not appear to be a valid P8 private key format"
+    end
+
+    # Create temporary file for the private key to avoid issues with key content formatting
+    require 'tempfile'
+    
+    temp_key_file = Tempfile.new(['api_key', '.p8'])
+    begin
+      # Write the key content to temporary file
+      temp_key_file.write(api_key_content)
+      temp_key_file.close
+
+      UI.message "🔐 Using temporary key file: #{temp_key_file.path}"
+
+      # Use App Store Connect API with file path instead of content
+      app_store_connect_api_key(
+        key_id: api_key_id,
+        issuer_id: api_issuer_id,
+        key_filepath: temp_key_file.path
+      )
+
+      # Upload to App Store Connect using current API
+      upload_to_app_store(
+        ipa: ipa_path,
+        skip_binary_upload: false,
+        skip_screenshots: true,
+        skip_metadata: true,
+        force: true,
+        submit_for_review: false,
+        automatic_release: false,
+        run_precheck_before_submit: false
+      )
+
+      UI.success "✅ Successfully uploaded to App Store Connect!"
+
+    ensure
+      # Clean up temporary file
+      temp_key_file.unlink if temp_key_file
+    end
   end
 
   desc "Build and upload to App Store"
   lane :release do |options|
     environment = options[:environment] || "prod"
-    
+
     build(environment: environment)
     upload_to_appstore(environment: environment) if environment != "dev"
   end
@@ -173,5 +309,3 @@ platform :ios do
     UI.error "Error in lane #{lane}: #{exception}"
   end
 end
-
-

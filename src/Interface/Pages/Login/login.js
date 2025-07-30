@@ -9,15 +9,13 @@ import langManager from 'Managers/LangManager';
  * Login function that handles user authentication
  * @this {LoginPage}
  * @param {string} email
- * @returns {Promise<boolean>} Returns true if signin is required (free account), false if login was handled (success or failure)
+ * @returns {Promise<void>}
  */
 async function Login(email) {
     const lang = langManager.curr['login'];
 
-    let signinMode = false;
-
     this.setState({ loading: true });
-    const status = await user.server2.userAuth.Login(email);
+    const status = await user.server2.userAuth.Login(email, true);
     await new Promise((resolve) => this.setState({ loading: false }, () => resolve(null)));
 
     // Logged in
@@ -28,7 +26,6 @@ async function Login(email) {
     // No account, go to signin
     else if (status === 'free') {
         this.goToSignin();
-        signinMode = true;
     }
 
     // New device or mail unconfirmed
@@ -58,9 +55,6 @@ async function Login(email) {
             errorEmail: lang['error-signin-server'].replace('{}', status)
         });
     }
-
-    // Return true if signin is required (free account), false if login was handled (success or failure)
-    return signinMode;
 }
 
 /**
@@ -78,7 +72,8 @@ async function Signin(email, username) {
 
     // Signin success
     if (signinStatus === 'ok') {
-        await Login.call(this, email);
+        await user.server2.userAuth.SetEmail(email);
+        user.interface.ChangePage('loading', { storeInHistory: false });
         return;
     }
 
@@ -109,7 +104,7 @@ async function Signin(email, username) {
         this.setState({
             username: '',
             errorUsername: '',
-            errorEmail: lang['error-signin-server']
+            errorEmail: lang['error-signin-server'].replace('{}', `${signinStatus}`)
         });
         this.backToLogin();
     }

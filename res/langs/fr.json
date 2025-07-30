@@ -310,7 +310,7 @@
 
         "sort-text": "Trier par : ",
         "sort-list": [
-            "progresson"
+            "progression"
         ],
 
         "popup-condition-text": "Condition : ",
@@ -415,7 +415,6 @@
     },
 
     "calendar": {
-        "summary-title": "Résumé de la journée",
         "activities-title": "Activités du {}",
         "add-activity": "Ajouter une activité",
         "hour-min": "h",
@@ -728,6 +727,7 @@
         "input-notifications": "Notifications",
         "input-notif-morning": "Notifications matinales",
         "input-notif-evening": "Notifications sérotinales",
+        "input-notif-optional-updates": "Mises à jour optionnelles",
         "input-report": "Report",
         "input-beta": "Beta",
         "input-ad-consent": "Consentement de la publicité",
@@ -890,6 +890,7 @@
             "name": "Expérience",
             "small": "EXP"
         },
+        "points": "points",
         "names": {
             "int": "Intelligence",
             "soc": "Social",
@@ -981,9 +982,6 @@
 
         "popup-all-categories": "Toutes les catégories",
 
-        "input-panel-activity": "Sélectionne une activité",
-        "input-panel-category": "Sélectionne une catégorie",
-
         "text-hint-select": "Reste appuyé pour sélectionner un colonne",
         "text-hint-frequency": "À quelle fréquence tu veux faire tes activités",
 
@@ -1060,7 +1058,9 @@
         "wait-email-sending": "Envoi en cours...",
         "wait-email-remain": "Renvoi du mail dans {}m{}s",
         "wait-email-sent": "Mail envoyé !",
-        "wait-email-resend": "Renvoyer le mail de confirmation"
+        "wait-email-resend": "Renvoyer le mail de confirmation",
+        "wait-email-resend-confirm-title": "Renvoyer le mail de confirmation",
+        "wait-email-resend-confirm-message": "Avant de renvoyer le mail, assure-toi d'avoir vérifié :\n\n• Tes dossiers spam/courrier indésirable\n• L'orthographe de ton adresse email : {}\n• Que ta boîte email n'est pas pleine\n• Que ton fournisseur d'email ne bloque pas les mails automatiques\n\nSouhaites-tu vraiment renvoyer le mail de confirmation ?"
     },
 
     "tuto": {

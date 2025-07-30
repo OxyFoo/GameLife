@@ -8,7 +8,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import ProfileFriend from 'Interface/PageView/ProfileFriend';
-import { Text, Button, Frame, Character, Icon } from 'Interface/Components';
+import { Text, Button, /*Frame, Character,*/ Icon } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
 
 /**
@@ -24,11 +24,8 @@ import { Gradient } from 'Interface/Primitives';
 // @ts-ignore
 const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
 
-/** @type {Character | null} */
+// /** @type {Character | null} */
 // const DEFAULT_CHARACTER = null;
-
-/** @type {string | null} */
-const DEFAULT_TITLE = null;
 
 /**
  * @param {object} param0
@@ -41,7 +38,7 @@ function UserOnlineElement({ style, friend }) {
     const lang = langManager.curr['multiplayer'];
 
     // const [character, setCharacter] = React.useState(DEFAULT_CHARACTER);
-    const [friendTitle, setFriendTitle] = React.useState(DEFAULT_TITLE);
+    const [friendTitle, setFriendTitle] = React.useState(/** @type {string | null} */ (null));
     const [statusStyle, setStatusStyle] = React.useState({});
 
     React.useEffect(() => {

@@ -60,9 +60,7 @@ class QuestsProgressChart extends QuestsProgressChartBack {
                                 </View>
                             ) : (
                                 <ProgressDonut
-                                    style={styles.donut}
-                                    current={completedQuests}
-                                    goal={totalQuests}
+                                    value={completedQuests / totalQuests}
                                     size={size}
                                     progressColor={chartProgressColor}
                                     strokeWidth={8}

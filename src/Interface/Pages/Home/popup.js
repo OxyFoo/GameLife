@@ -4,6 +4,7 @@ import { View, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import stylesPopup from './stylePopup';
 
 import { Text, Icon } from 'Interface/Components';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {Object} PopupSection
@@ -23,69 +24,6 @@ import { Text, Icon } from 'Interface/Components';
  * @property {string} title - Le titre principal du popup
  * @property {PopupSection[]} sections - Les sections du popup
  */
-
-/**
- * Section repliable avec animation
- * @param {CollapsibleSectionProps} props - Les propriétés du composant
- */
-function CollapsibleSection({ section, isExpanded, onToggle }) {
-    const animatedHeight = React.useRef(new Animated.Value(0)).current;
-    const rotateValue = React.useRef(new Animated.Value(0)).current;
-
-    React.useEffect(() => {
-        Animated.parallel([
-            Animated.timing(animatedHeight, {
-                toValue: isExpanded ? 1 : 0,
-                duration: 250,
-                useNativeDriver: false
-            }),
-            Animated.timing(rotateValue, {
-                toValue: isExpanded ? 1 : 0,
-                duration: 250,
-                useNativeDriver: true
-            })
-        ]).start();
-    }, [isExpanded, animatedHeight, rotateValue]);
-
-    const rotateStyle = {
-        transform: [
-            {
-                rotate: rotateValue.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['0deg', '90deg']
-                })
-            }
-        ]
-    };
-
-    const contentStyle = {
-        opacity: animatedHeight,
-        maxHeight: animatedHeight.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 500]
-        })
-    };
-
-    return (
-        <View style={stylesPopup.section}>
-            <TouchableOpacity style={stylesPopup.titleContainer} onPress={onToggle} activeOpacity={0.7}>
-                <Text fontSize={18} style={stylesPopup.title}>
-                    {section.title}
-                </Text>
-                <Animated.View style={rotateStyle}>
-                    <Icon icon='chevron' size={16} />
-                </Animated.View>
-            </TouchableOpacity>
-            <Animated.View style={[stylesPopup.content, contentStyle]}>
-                {section.text.map((text, i) => (
-                    <Text key={i} fontSize={14} style={stylesPopup.text}>
-                        {text}
-                    </Text>
-                ))}
-            </Animated.View>
-        </View>
-    );
-}
 
 /**
  * Popup avec sections repliables
@@ -110,6 +48,61 @@ export function CollapsiblePopup({ title, sections }) {
                     />
                 ))}
             </ScrollView>
+        </View>
+    );
+}
+
+/**
+ * Section repliable avec animation
+ * @param {CollapsibleSectionProps} props - Les propriétés du composant
+ */
+function CollapsibleSection({ section, isExpanded, onToggle }) {
+    const animShowSection = React.useRef(new Animated.Value(0)).current;
+    const animChevron = React.useRef(new Animated.Value(0)).current;
+
+    React.useEffect(() => {
+        Animated.parallel([
+            TimingAnimation(animShowSection, isExpanded ? 1 : 0, 250, false),
+            TimingAnimation(animChevron, isExpanded ? 1 : 0, 250)
+        ]).start();
+    }, [isExpanded, animShowSection, animChevron]);
+
+    const chevronStyle = {
+        transform: [
+            {
+                rotate: animChevron.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '90deg']
+                })
+            }
+        ]
+    };
+
+    const contentStyle = {
+        opacity: animShowSection,
+        maxHeight: animShowSection.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 500]
+        })
+    };
+
+    return (
+        <View style={stylesPopup.section}>
+            <TouchableOpacity style={stylesPopup.titleContainer} onPress={onToggle} activeOpacity={0.7}>
+                <Text fontSize={18} style={stylesPopup.title} bold>
+                    {section.title}
+                </Text>
+                <Animated.View style={chevronStyle}>
+                    <Icon icon='chevron' size={16} />
+                </Animated.View>
+            </TouchableOpacity>
+            <Animated.View style={[stylesPopup.content, contentStyle]}>
+                {section.text.map((text, i) => (
+                    <Text key={i} fontSize={14} style={stylesPopup.text}>
+                        {text}
+                    </Text>
+                ))}
+            </Animated.View>
         </View>
     );
 }

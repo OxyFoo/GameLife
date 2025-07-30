@@ -11,8 +11,7 @@ import themeManager from 'Managers/ThemeManager';
 
 /**
  * @typedef {Object} ProgressDonutChartProps
- * @property {number} current - Current progress value
- * @property {number} goal - Goal/target value
+ * @property {number} value - Progress value [0-1]
  * @property {number} [delay] - Animation delay in milliseconds
  * @property {number} [duration] - Animation duration in milliseconds
  * @property {number} [strokeWidth] - Width of the donut stroke
@@ -24,7 +23,7 @@ import themeManager from 'Managers/ThemeManager';
  * @property {number} [size] - Size of the donut chart in pixels
  * @property {ThemeColor} [progressColor] - Color of the progress segment
  * @property {ThemeColor} [backgroundTrackColor] - Color of the background track
- * @property {number} [backgroundTrackColorTransparency] - Transparency of the background track (0-100)
+ * @property {number} [backgroundTrackColorTransparency] - Transparency of the background track [0-1]
  */
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -34,20 +33,18 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
  * @param {ProgressDonutChartProps} props
  */
 function ProgressDonut({
-    current,
-    goal,
+    value,
     delay = 0,
     duration = 1500,
     strokeWidth = 8,
     strokeLinecap = 'round',
     style,
     easing = Easing.out(Easing.exp),
-    onMeasure,
     children,
     size = 110,
     progressColor = 'success',
     backgroundTrackColor = 'borderLight',
-    backgroundTrackColorTransparency = 30
+    backgroundTrackColorTransparency = 0.3
 }) {
     const radius = (size - strokeWidth) / 2;
     const center = size / 2;
@@ -56,27 +53,18 @@ function ProgressDonut({
     // Animation value for progress
     const animationValue = useRef(new Animated.Value(0)).current;
 
-    // Calculate progress percentage (0-1)
-    const progressPercentage = goal > 0 ? Math.min(current / goal, 1) : 0;
-
     useEffect(() => {
         // Reset and start animation
         animationValue.setValue(0);
 
         Animated.timing(animationValue, {
-            toValue: progressPercentage,
+            toValue: value,
             duration,
             delay,
             easing,
             useNativeDriver: false
         }).start();
-    }, [animationValue, progressPercentage, delay, duration, easing]);
-
-    useEffect(() => {
-        if (onMeasure) {
-            onMeasure(size);
-        }
-    }, [size, onMeasure]);
+    }, [animationValue, value, delay, duration, easing]);
 
     return (
         <View style={[{ width: size, height: size }, styles.parent, style]}>
@@ -88,7 +76,7 @@ function ProgressDonut({
                         cy={center}
                         r={radius}
                         stroke={themeManager.GetColor(backgroundTrackColor, {
-                            opacity: backgroundTrackColorTransparency / 100
+                            opacity: backgroundTrackColorTransparency
                         })}
                         strokeWidth={strokeWidth}
                         strokeLinecap={strokeLinecap}

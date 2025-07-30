@@ -12,7 +12,6 @@ import { Sum } from 'Utils/Functions';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
  * @typedef {import('Interface/Widgets/PieChart/back').UpdatingData} UpdatingData
  * @typedef {import('Interface/Widgets/PieChart/back').FocusedActivity} FocusedActivity

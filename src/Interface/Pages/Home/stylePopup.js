@@ -2,10 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const stylesPopup = StyleSheet.create({
     container: {
-        padding: 16,
-        maxHeight: '90%',
         width: '100%',
-        flex: 1
+        padding: 16
     },
     popupTitle: {
         textAlign: 'center',
@@ -22,8 +20,6 @@ const stylesPopup = StyleSheet.create({
         paddingVertical: 8
     },
     title: {
-        fontSize: 18,
-        fontWeight: '600',
         flex: 1,
         textAlign: 'left'
     },

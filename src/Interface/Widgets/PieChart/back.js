@@ -31,7 +31,7 @@ const PieChartProps = {
     data: /** @type {Array<UpdatingData>} */ ([]),
     isDonutView: true,
     focusedActivity: /** @type {FocusedActivity | null} */ (null),
-    insideBackgroundColor: 'dataBigKpi'
+    insideBackgroundColor: /** @type {ThemeColor | ThemeText} */ ('dataBigKpi')
 };
 
 class BackPieChart extends React.Component {

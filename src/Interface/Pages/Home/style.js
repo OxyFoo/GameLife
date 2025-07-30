@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
 
     // Styles for progress bar and XP header
     progressbar: {
-        marginTop: 0,
         marginBottom: 6
     },
     XPHeader: {
@@ -24,21 +23,6 @@ const styles = StyleSheet.create({
     },
     experience: {
         fontSize: 16
-    },
-
-    // Styles for title.js file
-    sectionContainer: {
-        marginTop: 12,
-        marginBottom: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    sectionTitle: {
-        paddingVertical: 6,
-        fontSize: 21,
-        textAlign: 'left',
-        textTransform: 'uppercase'
     },
 
     // Special styles for section title and add button
@@ -58,14 +42,11 @@ const styles = StyleSheet.create({
     chartItem: {
         flex: 1
     },
-    quests: {
-        marginTop: 0
-    },
-    dailyQuests: {
-        marginTop: 0
-    },
     todoList: {
         marginBottom: 24
+    },
+    dailyQuest: {
+        marginBottom: 48
     }
 });
 

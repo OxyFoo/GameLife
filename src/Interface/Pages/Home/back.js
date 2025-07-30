@@ -86,6 +86,18 @@ class BackHome extends PageBase {
         });
     };
 
+    infoDailyQuests = () => {
+        const lang = langManager.curr['home'];
+
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['section-today-quest'],
+                message: lang['section-today-quest-detail']
+            }
+        });
+    };
+
     addTodo = () => {
         const lang = langManager.curr['todos'];
         if (user.todos.IsMax()) {

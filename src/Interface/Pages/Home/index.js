@@ -66,7 +66,7 @@ class Home extends BackHome {
                         onPress={this.infoQuests}
                     />
                 </Title>
-                <QuestsList style={styles.quests} />
+                <QuestsList />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>
@@ -82,8 +82,17 @@ class Home extends BackHome {
                 <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
 
                 {/* Quest of the day */}
-                <Title title={lang['section-today-quest']} />
-                <DailyQuest style={styles.dailyQuests} />
+                <Title title={lang['section-today-quest']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='info-circle-outline'
+                        fontColor='gradient'
+                        onPress={this.infoDailyQuests}
+                    />
+                </Title>
+                <DailyQuest style={styles.dailyQuest} />
             </ScrollView>
         );
     }

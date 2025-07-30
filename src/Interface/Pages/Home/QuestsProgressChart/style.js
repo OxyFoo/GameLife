@@ -43,9 +43,6 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
 
-    donut: {
-        marginBottom: 0
-    },
     centerContent: {
         alignItems: 'center'
     },

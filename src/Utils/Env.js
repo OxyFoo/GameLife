@@ -3,6 +3,7 @@ import { getEnvVar } from 'dotenv-oxy/react-native';
 export const env = {
     ENV: getEnvVar('ENV', 'enum', ['dev', 'test', 'prod']),
     SHOW_PAGE_TEST: getEnvVar('SHOW_PAGE_TEST', 'boolean', false) || false,
+    SHOW_CONSOLE_IN_APP: getEnvVar('SHOW_CONSOLE_IN_APP', 'boolean', false) || false,
     VPS_PROTOCOL: getEnvVar('VPS_PROTOCOL', 'enum', ['none', 'ws', 'wss']),
     VPS_HOST: getEnvVar('VPS_HOST', 'string', false),
     VPS_PORT: getEnvVar('VPS_PORT', 'number', false),

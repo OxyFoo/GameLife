@@ -27,7 +27,7 @@ import { LoadTemplate_AppData, LoadTemplate_UserData } from './template';
  * @param {(error: ErrorMessages) => void} callbackError Used to display an error message
  */
 async function Initialisation(fe, nextStep, nextPage, callbackError) {
-    if (__DEV__) {
+    if (__DEV__ && env.SHOW_CONSOLE_IN_APP) {
         await user.interface.console?.Enable();
     }
 

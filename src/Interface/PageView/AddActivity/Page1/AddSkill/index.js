@@ -122,6 +122,8 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
         user.interface.popup?.Close(skillAdded ? 'success' : 'close');
     };
 
+    const statsKeys = user.experience.statsKey.filter((key) => generatedSkill.Stats[key] !== 0);
+
     return (
         <View>
             <Text style={styles.title}>{lang['skill-add-title']}</Text>
@@ -130,18 +132,17 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
 
             <View style={styles.detailsFlatList}>
                 <FlatList
-                    data={user.experience.statsKey}
+                    data={statsKeys}
                     keyExtractor={(item) => item}
-                    renderItem={({ item }) =>
-                        generatedSkill.Stats[item] === 0 ? null : (
-                            <Text style={styles.details} color='secondary'>
-                                {langStats[item]}: {generatedSkill.Stats[item]}
-                            </Text>
-                        )
-                    }
+                    renderItem={({ item }) => (
+                        <Text style={styles.details} color='secondary'>
+                            {langStats[item]}: {generatedSkill.Stats[item]}
+                        </Text>
+                    )}
                     numColumns={2}
                     columnWrapperStyle={styles.columnWrapper}
                     contentContainerStyle={styles.listContent}
+                    scrollEnabled={false}
                 />
             </View>
 

@@ -13,6 +13,5 @@ export { TodoList } from './Widgets/TodoList';
 import BlockMonth from './Widgets/BlockMonth';
 import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
-import ZapGPT from './Widgets/ZapGPT';
 
-export { BlockMonth, SkillChart, SkillsGroup, ZapGPT };
+export { BlockMonth, SkillChart, SkillsGroup };

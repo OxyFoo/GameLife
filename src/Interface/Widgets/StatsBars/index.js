@@ -37,8 +37,10 @@ function StatsBar({ item }) {
     const title = langStats[item.statKey];
     const experience = user.experience.experience.Get();
 
-    const pointsValue = item.points < 1000 ? item.points : Math.floor(item.points / 1000);
+    const pointsRaw = item.points;
+    const pointsValue = pointsRaw < 1000 ? pointsRaw : Math.floor(pointsRaw / 1000);
     const pointsSize = pointsValue < 10 ? 18 : pointsValue < 100 ? 14 : 12;
+    const pointsText = `${pointsValue}${pointsRaw < 1000 ? '' : ' k'}`;
 
     /** @type {StyleProp} */
     const statStyle = {
@@ -53,7 +55,7 @@ function StatsBar({ item }) {
         >
             <View style={[styles.statsCount, statStyle]}>
                 <Text style={styles.statsText} fontSize={pointsSize} color='backgroundCard'>
-                    {`${pointsValue}${pointsValue < 1000 ? '' : ' k'}`}
+                    {pointsText}
                 </Text>
             </View>
             <Text color='border'>{title}</Text>
@@ -75,8 +77,8 @@ function StatsBarTextOnly({ item }) {
         return null;
     }
 
-    const statPoints = stats[statKey];
-    const statText = statPoints < 1000 ? statPoints : Math.floor(statPoints / 1000) + ' K';
+    const pointsValue = stats[statKey];
+    const pointsText = pointsValue < 1000 ? pointsValue : Math.floor(pointsValue / 1000) + ' K';
 
     return (
         <TouchableOpacity
@@ -87,7 +89,7 @@ function StatsBarTextOnly({ item }) {
         >
             <View style={styles.toStatsRow}>
                 <Text>{langStats[statKey]}</Text>
-                <Text fontSize={20}>{`${statText}`}</Text>
+                <Text fontSize={20}>{`${pointsText}`}</Text>
             </View>
         </TouchableOpacity>
     );

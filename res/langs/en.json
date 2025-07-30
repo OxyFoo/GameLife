@@ -198,7 +198,9 @@
             "ssl-pinning-failed": "Security verification failed."
         },
         "loading-error-button": "Restart",
-        "help-discord-message": "Having trouble? Join {our Discord} to see if there's information available or to report the issue!"
+        "help-discord-message": "Having trouble? Join {our Discord} to see if there's information available or to report the issue!",
+        "alert-link-error-title": "Error",
+        "alert-link-error-message": "An error has occurred, please try again later."
     },
 
     "navbar": {
@@ -378,8 +380,6 @@
         "alert-error-message": "An error has occurred, please try again later ({}).",
         "alert-skill-already-exist-title": "Error",
         "alert-skill-already-exist-message": "This skill already exists, please choose another one.",
-        "alert-discord-link-error-title": "Error",
-        "alert-discord-link-error-message": "An error has occurred, please try again later.",
 
         "timer-launch": "Launch time:",
         "timer-gain": "Current gains: {}",

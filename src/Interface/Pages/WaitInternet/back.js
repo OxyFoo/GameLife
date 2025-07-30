@@ -3,6 +3,9 @@ import { Linking } from 'react-native';
 import user from 'Managers/UserManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
+import langManager from 'Managers/LangManager';
+
+import { env } from 'Utils/Env';
 
 const REFRESH_DELAY_SECONDS = 30;
 
@@ -44,7 +47,20 @@ class BackWaitinternet extends PageBase {
     };
 
     goToWebsite = () => {
-        Linking.openURL('https://oxyfoo.fr');
+        Linking.openURL(env.LINK_WEBSITE).catch((err) => {
+            const lang = langManager.curr['app'];
+
+            user.interface.console?.AddLog('error', `[BackWaitinternet] Failed to open website link: ${err}`);
+
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-link-error-title'],
+                    message: lang['alert-link-error-message']
+                },
+                priority: true
+            });
+        });
     };
 }
 

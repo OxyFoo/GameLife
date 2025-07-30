@@ -23,9 +23,9 @@ class BackAbout extends PageBase {
         this.versionText = langManager.curr['about']['text-version'].replace('{}', versionName);
     }
 
-    TiktokPress = () => Linking.openURL('https://www.tiktok.com/@pierre_mrsaaaaa');
-    InstaPress = () => Linking.openURL('https://www.instagram.com/pierre_mrsaaaa/');
-    DiscordPress = () => Linking.openURL(env.LINK_DISCORD);
+    TiktokPress = () => this.OpenLink('https://www.tiktok.com/@pierre_mrsaaaaa');
+    InstaPress = () => this.OpenLink('https://www.instagram.com/pierre_mrsaaaa/');
+    DiscordPress = () => this.OpenLink(env.LINK_DISCORD);
     GamelifePress = () => {
         // TODO: Manage langages for the website
         // const websiteAvailableLang = ['fr', 'en'];
@@ -34,7 +34,25 @@ class BackAbout extends PageBase {
         //     langKey = langManager.currentLangageKey;
         // }
 
-        Linking.openURL(`https://oxyfoo.fr`);
+        Linking.openURL(env.LINK_WEBSITE);
+    };
+
+    /** @param {string} link */
+    OpenLink = (link) => {
+        Linking.openURL(link).catch((err) => {
+            const lang = langManager.curr['app'];
+
+            user.interface.console?.AddLog('error', `[BackAbout] Failed to open link: ${err}`);
+
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-link-error-title'],
+                    message: lang['alert-link-error-message']
+                },
+                priority: true
+            });
+        });
     };
 
     onBackPress = () => user.interface.BackHandle();

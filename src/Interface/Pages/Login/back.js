@@ -9,6 +9,7 @@ import GoogleSignIn from 'Utils/GoogleSignIn';
 import { IsEmail } from 'Utils/String';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
+import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
@@ -119,7 +120,7 @@ class BackLogin extends PageBase {
         //     langKey = langManager.currentLangageKey;
         // }
 
-        Linking.openURL(`https://oxyfoo.fr/legal/terms-of-service`);
+        Linking.openURL(`${env.LINK_WEBSITE}/legal/terms-of-service`);
     }
 
     onLogin = async () => {

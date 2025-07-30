@@ -6,6 +6,7 @@ export const env = {
     SHOW_PAGE_TEST: getEnvVar('SHOW_PAGE_TEST', 'boolean', false) || false,
     SHOW_CONSOLE_IN_APP: getEnvVar('SHOW_CONSOLE_IN_APP', 'boolean', false) || false,
 
+    LINK_WEBSITE: getEnvVar('LINK_WEBSITE', 'string', false) || 'https://oxyfoo.fr',
     LINK_DISCORD: getEnvVar('LINK_DISCORD', 'string', false) || 'https://discord.com/invite/FfJRxjNAwS',
 
     VPS_PROTOCOL: getEnvVar('VPS_PROTOCOL', 'enum', ['none', 'ws', 'wss']),

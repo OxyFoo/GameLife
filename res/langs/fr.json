@@ -198,7 +198,9 @@
             "ssl-pinning-failed": "La vérification de sécurité a échoué."
         },
         "loading-error-button": "Redémarrer",
-        "help-discord-message": "Tu rencontres un problème ? Rejoins {notre Discord} pour voir s'il y a des informations ou pour nous signaler le souci !"
+        "help-discord-message": "Tu rencontres un problème ? Rejoins {notre Discord} pour voir s'il y a des informations ou pour nous signaler le souci !",
+        "alert-link-error-title": "Erreur",
+        "alert-link-error-message": "Une erreur est survenue, réessaye plus tard."
     },
 
     "navbar": {
@@ -378,8 +380,6 @@
         "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
         "alert-skill-already-exist-title": "Erreur",
         "alert-skill-already-exist-message": "Il semble que cette compétence existe déjà, réessaye avec une autre.",
-        "alert-discord-link-error-title": "Erreur",
-        "alert-discord-link-error-message": "Une erreur est survenue, réessaye plus tard.",
 
         "timer-launch": "Heure de lancement :",
         "timer-gain": "Gains actuel: {}",

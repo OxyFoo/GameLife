@@ -193,12 +193,15 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
 
 function DiscordPress() {
     Linking.openURL(env.LINK_DISCORD).catch((err) => {
+        const lang = langManager.curr['app'];
+
         user.interface.console?.AddLog('error', `[AddSkill] Failed to open Discord link: ${err}`);
+
         user.interface.popup?.OpenT({
             type: 'ok',
             data: {
-                title: langManager.curr['activity']['alert-discord-link-error-title'],
-                message: langManager.curr['activity']['alert-discord-link-error-message']
+                title: lang['alert-link-error-title'],
+                message: lang['alert-link-error-message']
             },
             priority: true
         });

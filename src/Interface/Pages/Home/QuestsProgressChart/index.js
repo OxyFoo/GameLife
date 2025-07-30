@@ -7,7 +7,7 @@ import QuestsProgressChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, ProgressDonutChart } from 'Interface/Components';
+import { Text, Button, ProgressDonut } from 'Interface/Components';
 
 class QuestsProgressChart extends QuestsProgressChartBack {
     render() {
@@ -59,7 +59,7 @@ class QuestsProgressChart extends QuestsProgressChartBack {
                                     <Text style={styles.notEnoughDataText}>{lang['chart-quest-notmuch']}</Text>
                                 </View>
                             ) : (
-                                <ProgressDonutChart
+                                <ProgressDonut
                                     style={styles.donut}
                                     current={completedQuests}
                                     goal={totalQuests}
@@ -73,7 +73,7 @@ class QuestsProgressChart extends QuestsProgressChartBack {
                                             {`${completedQuests}/${totalQuests}`}
                                         </Text>
                                     </View>
-                                </ProgressDonutChart>
+                                </ProgressDonut>
                             )}
                         </View>
                     </LinearGradient>

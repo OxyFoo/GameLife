@@ -33,7 +33,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
  * Progress DonutChart component with animation support
  * @param {ProgressDonutChartProps} props
  */
-function ProgressDonutChart({
+function ProgressDonut({
     current,
     goal,
     delay = 0,
@@ -120,4 +120,4 @@ function ProgressDonutChart({
     );
 }
 
-export { ProgressDonutChart };
+export { ProgressDonut };

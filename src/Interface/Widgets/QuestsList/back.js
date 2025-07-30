@@ -53,6 +53,10 @@ class BackQuestsList extends React.Component {
     /** @param {Quest | QuestSaved} item */
     keyExtractor = (item) => (this.isSavedQuest(item) ? `quest-${item.ID}` : `quest-${item.title}`);
 
+    addQuest = () => {
+        user.interface.ChangePage('quest', { storeInHistory: false });
+    };
+
     openQuests = () => user.interface.ChangePage('quests');
 }
 

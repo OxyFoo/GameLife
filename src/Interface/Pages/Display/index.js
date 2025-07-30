@@ -7,7 +7,7 @@ import { Text, Icon, Button } from 'Interface/Components';
 
 class Display extends BackDisplay {
     render() {
-        const { icon, text, button, button2 } = this.props.args;
+        const { icon, text, button, button2, additionalContent } = this.props.args;
 
         return (
             <View style={styles.page}>
@@ -18,6 +18,8 @@ class Display extends BackDisplay {
                     <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                         <Text style={styles.title}>{text}</Text>
                     </Animated.View>
+
+                    {additionalContent && <View style={styles.additionalContent}>{additionalContent}</View>}
                 </View>
 
                 {this.quote !== null && (
@@ -64,6 +66,9 @@ const styles = StyleSheet.create({
         marginTop: 16,
         fontSize: 24,
         fontWeight: 'bold'
+    },
+    additionalContent: {
+        marginTop: 24
     },
 
     doubleButtons: {

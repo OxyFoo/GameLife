@@ -1,19 +1,19 @@
 import { Animated, Linking } from 'react-native';
 import Config from 'react-native-config';
-import AppControl from 'react-native-app-control';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
+import { handleLoadingError } from './handleError';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Initialisation } from 'App/Loading';
 import { SpringAnimation } from 'Utils/Animations';
+import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Ressources/Icons').IconsName} IconsName
- * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
  */
 
 class BackLoading extends PageBase {
@@ -32,7 +32,7 @@ class BackLoading extends PageBase {
 
     componentDidMount() {
         this.intervalId = setInterval(this.setRandomSentence, 3 * 1000);
-        Initialisation(this.fe, this.nextStep, this.nextPage, this.handleError);
+        Initialisation(this.fe, this.nextStep, this.nextPage, handleLoadingError);
     }
 
     componentWillUnmount() {
@@ -66,21 +66,7 @@ class BackLoading extends PageBase {
     };
 
     handleDiscordRedirection = () => {
-        Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
-    };
-
-    /** @param {ErrorMessages} message */
-    handleError = (message) => {
-        const lang = langManager.curr['app'];
-        this.fe.ChangePage('display', {
-            args: {
-                icon: 'close-filled',
-                text: lang['loading-error-message'][message],
-                button: lang['loading-error-button'],
-                action: AppControl.Restart
-            },
-            storeInHistory: false
-        });
+        Linking.openURL(env.LINK_DISCORD);
     };
 
     nextStep = () => {

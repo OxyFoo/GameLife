@@ -4,6 +4,7 @@ import { Linking } from 'react-native';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
+import { env } from 'Utils/Env';
 
 const { versionName } = require('../../../../package.json');
 
@@ -24,7 +25,7 @@ class BackAbout extends PageBase {
 
     TiktokPress = () => Linking.openURL('https://www.tiktok.com/@pierre_mrsaaaaa');
     InstaPress = () => Linking.openURL('https://www.instagram.com/pierre_mrsaaaa/');
-    DiscordPress = () => Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
+    DiscordPress = () => Linking.openURL(env.LINK_DISCORD);
     GamelifePress = () => {
         // TODO: Manage langages for the website
         // const websiteAvailableLang = ['fr', 'en'];

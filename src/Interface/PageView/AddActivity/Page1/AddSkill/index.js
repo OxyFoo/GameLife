@@ -7,6 +7,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, CheckBox, Text } from 'Interface/Components';
+import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
@@ -191,7 +192,17 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
 }
 
 function DiscordPress() {
-    Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
+    Linking.openURL(env.LINK_DISCORD).catch((err) => {
+        user.interface.console?.AddLog('error', `[AddSkill] Failed to open Discord link: ${err}`);
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: langManager.curr['activity']['alert-discord-link-error-title'],
+                message: langManager.curr['activity']['alert-discord-link-error-message']
+            },
+            priority: true
+        });
+    });
 }
 
 async function ClosePopup() {

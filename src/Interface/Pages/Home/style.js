@@ -5,8 +5,9 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 24
     },
+
+    // Styles for progress bar and XP header
     progressbar: {
-        marginTop: 12,
         marginBottom: 6
     },
     XPHeader: {
@@ -24,35 +25,28 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
 
-    sectionContainer: {
-        marginTop: 24,
-        marginBottom: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    sectionTitle: {
-        paddingVertical: 6,
-        fontSize: 21,
-        textAlign: 'left',
-        textTransform: 'uppercase'
-    },
-    dailyQuests: {
-        marginTop: 24
-    },
+    // Special styles for section title and add button
     sectionTitleAddButton: {
         width: 'auto',
         paddingVertical: 8,
         paddingHorizontal: 8
     },
 
-    todayPieChart: {
-        width: '100%',
-        borderRadius: 8
+    // Styles for main content
+    chartsContainer: {
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        justifyContent: 'space-between',
+        gap: 12
     },
-
+    chartItem: {
+        flex: 1
+    },
     todoList: {
         marginBottom: 24
+    },
+    dailyQuest: {
+        marginBottom: 48
     }
 });
 

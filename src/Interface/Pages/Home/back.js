@@ -1,11 +1,11 @@
 import React from 'react';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
+import { CollapsiblePopup } from './popup';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import { AddActivity } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').View} View
@@ -75,29 +75,27 @@ class BackHome extends PageBase {
         this.setState({ scrollable });
     };
 
-    addActivity = () => {
-        this.fe.bottomPanel?.Open({
-            content: <AddActivity />
+    /**
+     * Affiche des informations sur les quêtes
+     */
+    infoQuests = () => {
+        const lang = langManager.curr['app-explain'];
+
+        user.interface.popup?.Open({
+            content: <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />
         });
     };
 
-    /**
-     * Add a new quest to the list and open the quest page\
-     * Max 10 quests
-     */
-    addQuest = () => {
-        const lang = langManager.curr['quests'];
-        if (user.quests.IsMax()) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-questslimit-title'],
-                    message: lang['alert-questslimit-message']
-                }
-            });
-            return;
-        }
-        user.interface.ChangePage('quest', { storeInHistory: false });
+    infoDailyQuests = () => {
+        const lang = langManager.curr['home'];
+
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['section-today-quest'],
+                message: lang['section-today-quest-detail']
+            }
+        });
     };
 
     addTodo = () => {

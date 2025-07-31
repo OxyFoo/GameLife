@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: 'Choose environment to deploy (dev, test, prod)'
+        description: 'Choose environment to deploy (dev, prod)'
         required: true
         type: string
       delivery:
@@ -64,9 +64,13 @@ jobs:
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 -d > ./android/app/gamelife.keystore
           echo ${{ secrets.GOOGLE_PLAY_SERVICES_JSON_BASE64 }} | base64 -d > ${{ env.FILE_GOOGLE_SERVICES_JSON }}
 
+      - name: 'Set .env file'
+        run: |
+          ./Tools/Env/env.sh ${{ inputs.environment }}
+
       - name: 'Build app'
         env:
-          ENVFILE: .env.${{ inputs.environment }}
+          ENVFILE: .env
         run: |
           # Build the app with environment variables passed as Gradle properties
           npm run build -- -PGAMELIFE_KEYSTORE_PASSWORD="${{ secrets.GAMELIFE_KEYSTORE_PASSWORD }}" -PGAMELIFE_KEY_PASSWORD="${{ secrets.GAMELIFE_KEY_PASSWORD }}"
@@ -148,7 +152,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: ./serviceAccount.json
-          packageName: ${{ inputs.environment == 'test' && 'com.gamelife.test' || 'com.gamelife' }}
+          packageName: 'com.gamelife'
           releaseFiles: ./${{ env.FILE_AAB }}
           track: production
           whatsNewDirectory: distribution/whatsnew

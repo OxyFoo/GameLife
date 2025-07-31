@@ -82,11 +82,13 @@ class SkillChartBack extends React.Component {
      * @returns
      */
     fillMissingDates = (data) => {
+        /** @param {string} dateString */
         const parseDate = (dateString) => {
             const [day, month, year] = dateString.split('/').map(Number);
             return new Date(year, month - 1, day);
         };
 
+        /** @param {Date} date */
         const formatDate = (date) => {
             const day = date.getDate().toString().padStart(2, '0');
             const month = (date.getMonth() + 1).toString().padStart(2, '0');

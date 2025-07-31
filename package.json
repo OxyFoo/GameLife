@@ -8,6 +8,7 @@
     "build": "cd android && ./gradlew bundleRelease",
     "test": "jest --detectOpenHandles",
     "lint": "eslint ./src",
+    "typecheck": "npx -p typescript tsc --noEmit --project jsconfig.typecheck.json",
     "podi": "if [ \"$(uname)\" != \"Darwin\" ]; then echo 'Not macOS, aborting pod install' ; else cd ios ; pod deintegrate && rm -rf Podfile.lock Pods/ && pod install ; fi",
     "android": "npx react-native run-android",
     "android:release": "cd android && ./gradlew installRelease",

@@ -195,6 +195,47 @@ class DeviceAuthService {
         /** @type {IntegrityToken | null} */
         const integrityToken = await SecureStorage.Load('INTEGRITY_TOKEN');
 
+        /** @type {string | null} */
+        const integrityTokenTimestamp = await SecureStorage.Load('INTEGRITY_TOKEN_TIMESTAMP');
+
+        // Check if we have a cached token and if it's still valid (24h)
+        if (integrityToken && integrityTokenTimestamp) {
+            const tokenTimestamp = new Date(integrityTokenTimestamp);
+            const now = new Date();
+            const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+            if (tokenTimestamp > twentyFourHoursAgo) {
+                this.#user.interface.console?.AddLog(
+                    'info',
+                    '[DeviceAuthService] Using cached integrity token (valid for 24h)'
+                );
+                // Token is still valid, use cached version
+                const response = await this.#tcp.SendAndWait({
+                    action: 'check-integrity',
+                    integrityToken: integrityToken
+                });
+
+                if (
+                    response !== 'not-sent' &&
+                    response !== 'timeout' &&
+                    response !== 'interrupted' &&
+                    response.status === 'check-integrity' &&
+                    response.result === 'ok'
+                ) {
+                    this.#user.interface.console?.AddLog(
+                        'info',
+                        '[DeviceAuthService] Cached integrity token accepted by server'
+                    );
+                    return integrityToken;
+                }
+            } else {
+                this.#user.interface.console?.AddLog(
+                    'info',
+                    '[DeviceAuthService] Cached integrity token expired (>24h), will generate new one'
+                );
+            }
+        }
+
         const response = await this.#tcp.SendAndWait({
             action: 'check-integrity',
             integrityToken: integrityToken
@@ -317,6 +358,13 @@ class DeviceAuthService {
         const saved = await SecureStorage.Save('INTEGRITY_TOKEN', newIntegrityToken);
         if (!saved) {
             this.#user.interface.console?.AddLog('error', '[DeviceAuthService] Integrity token not saved');
+            return false;
+        }
+
+        // Save the current timestamp for cache validation
+        const timestampSaved = await SecureStorage.Save('INTEGRITY_TOKEN_TIMESTAMP', Date.now().toString());
+        if (!timestampSaved) {
+            this.#user.interface.console?.AddLog('error', '[DeviceAuthService] Integrity token timestamp not saved');
             return false;
         }
 

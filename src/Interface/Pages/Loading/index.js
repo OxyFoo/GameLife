@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Animated, View } from 'react-native';
-import Config from 'react-native-config';
 
 import styles from './style';
 import BackLoading from './back';
@@ -8,6 +7,7 @@ import IconLoading from './IconLoading';
 import langManager from 'Managers/LangManager';
 
 import { Button, Text, Icon, Zap } from 'Interface/Components';
+import { env } from 'Utils/Env';
 
 class Loading extends BackLoading {
     render() {
@@ -59,15 +59,14 @@ class Loading extends BackLoading {
     }
 
     renderVersionText() {
-        if (!Config?.ENV || Config.ENV === 'prod') {
+        if (env.ENV === 'prod') {
             return null;
         }
 
-        const env = Config.ENV.toUpperCase();
+        const environment = env.ENV.toUpperCase();
         const mode = __DEV__ ? 'DEBUG' : 'RELEASE';
-        const bottomText = env + ' MODE - ' + mode;
 
-        return <Text>{bottomText}</Text>;
+        return <Text>{`${environment} MODE - ${mode}`}</Text>;
     }
 }
 

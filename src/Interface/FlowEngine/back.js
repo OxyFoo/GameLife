@@ -29,7 +29,7 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PageMemory
+ * @typedef {object} PageMemory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
  * @property {React.RefObject<InstanceType<PAGES[T]> | null>} ref
@@ -40,14 +40,14 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PageHistory
+ * @typedef {object} PageHistory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
  */
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PageOptions
+ * @typedef {object} PageOptions
  * @property {PAGES[T]['prototype']['props']['args']} [args]
  * @property {boolean} [storeInHistory]
  * @property {Transitions} [transition]
@@ -55,7 +55,7 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 
 /**
- * @typedef {Object} PageOptionsBack
+ * @typedef {object} PageOptionsBack
  * @property {any} [args] Pass args to callback function
  * @property {Transitions} [transition]
  * @property {() => void} [callback] Callback after page changed
@@ -66,7 +66,7 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 
 /**
- * @typedef {Object} FlowEnginePropsType
+ * @typedef {object} FlowEnginePropsType
  * @property {string} [testID]
  */
 

@@ -7,6 +7,7 @@ import Rewards from 'Class/Rewards';
 import Server from 'Class/Server';
 import Settings from 'Class/Settings';
 import Shop from 'Class/Shop';
+import Statistics from 'Class/Statistics';
 import Achievements from 'Data/User/Achievements';
 import Activities from 'Data/User/Activities/index';
 import DailyQuest from 'Data/User/DailyQuests';
@@ -48,6 +49,7 @@ class UserManager {
         this.server2 = new Server(this);
         this.settings = new Settings(this);
         this.shop = new Shop(this);
+        this.statistics = new Statistics(this);
         this.informations = new Informations(this);
 
         // Data
@@ -70,6 +72,7 @@ class UserManager {
             this.server2,
             this.settings,
             this.shop,
+            this.statistics,
             this.informations
         ];
 
@@ -115,10 +118,18 @@ class UserManager {
         // Check achievements every 20 seconds
         this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
+
+        // Initializes & Send statistics every 5 minutes
+        this.statistics.Initialize();
+        this.intervalStatistics = setInterval(this.statistics.SendAllSessionStatistics, 5 * 60 * 1000);
     }
 
     async onUnmount() {
         clearInterval(this.intervalAchievements);
+        clearInterval(this.intervalStatistics);
+
+        // Final dispatch of statistics before closing
+        this.statistics.SendAllSessionStatistics();
 
         for (const _class of this.CLASS) {
             await _class.Unmount();

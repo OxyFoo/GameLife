@@ -47,20 +47,45 @@ class BackWaitinternet extends PageBase {
     };
 
     goToWebsite = () => {
-        Linking.openURL(env.LINK_WEBSITE).catch((err) => {
-            const lang = langManager.curr['app'];
+        Linking.openURL(env.LINK_WEBSITE)
+            .catch((err) => {
+                const lang = langManager.curr['app'];
 
-            user.interface.console?.AddLog('error', `[BackWaitinternet] Failed to open website link: ${err}`);
+                user.interface.console?.AddLog('error', `[BackWaitinternet] Failed to open website link: ${err}`);
 
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-link-error-title'],
-                    message: lang['alert-link-error-message']
-                },
-                priority: true
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-link-error-title'],
+                        message: lang['alert-link-error-message']
+                    },
+                    priority: true
+                });
+            })
+            .then(() => {
+                user.statistics.RecordLinkClick(env.LINK_WEBSITE);
             });
-        });
+    };
+
+    goToDiscord = () => {
+        Linking.openURL(env.LINK_DISCORD)
+            .catch((err) => {
+                const lang = langManager.curr['app'];
+
+                user.interface.console?.AddLog('error', `[BackWaitinternet] Failed to open Discord link: ${err}`);
+
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-link-error-title'],
+                        message: lang['alert-link-error-message']
+                    },
+                    priority: true
+                });
+            })
+            .then(() => {
+                user.statistics.RecordLinkClick(env.LINK_DISCORD);
+            });
     };
 }
 

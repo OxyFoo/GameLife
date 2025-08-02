@@ -1,5 +1,4 @@
 import { Animated, Linking } from 'react-native';
-import Config from 'react-native-config';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import { handleLoadingError } from './handleError';
@@ -76,7 +75,7 @@ class BackLoading extends PageBase {
     nextPage = async () => {
         // If test release, go to test page
         const { showTestMessage } = this.state;
-        const isTestMode = Config.ENV === 'test' && !__DEV__;
+        const isTestMode = env.ENV === 'test' && !__DEV__;
 
         // Loading finished & test mode (release) => go to "test message"
         if (isTestMode && !showTestMessage) {

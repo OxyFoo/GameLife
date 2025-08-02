@@ -5,6 +5,7 @@ import AppControl from 'react-native-app-control';
 
 import PageBase from './PageBase';
 import PAGES from 'Interface/Pages';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
@@ -515,6 +516,11 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     pageDidUpdate = (pageName) => {
+        // Save the page visit for statistics
+        if (user.statistics && user.appIsLoaded) {
+            user.statistics.RecordPageVisit(pageName);
+        }
+
         // Update user header visibility
         const showUserHeader = PAGES[pageName].feShowUserHeader;
         if (showUserHeader && this.userHeader.current?.show === false) {

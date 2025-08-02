@@ -211,7 +211,15 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     console.log(time_text);
     user.interface.console?.AddLog('info', time_text);
     user.appIsLoaded = true;
-    user.server2.tcp.Send({ action: 'send-statistics', stats: { LoadingTimeMs: time_total }, anonymous: false });
+
+    // Manages the end of loading and the sending of statistics
+    user.statistics.HandleAppLoaded(time_total);
+
+    // Displays a summary of statistics in Debug mode
+    if (__DEV__ && env.ENV === 'dev') {
+        const statsSummary = user.statistics.GetSummary();
+        user.interface.console?.AddLog('info', 'Statistics Summary:', statsSummary);
+    }
 
     // Maintenance message
     if (user.server2.serverState.status === 'maintenance') {

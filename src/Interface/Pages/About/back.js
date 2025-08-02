@@ -34,25 +34,29 @@ class BackAbout extends PageBase {
         //     langKey = langManager.currentLangageKey;
         // }
 
-        Linking.openURL(env.LINK_WEBSITE);
+        this.OpenLink(env.LINK_WEBSITE);
     };
 
     /** @param {string} link */
     OpenLink = (link) => {
-        Linking.openURL(link).catch((err) => {
-            const lang = langManager.curr['app'];
+        Linking.openURL(link)
+            .catch((err) => {
+                const lang = langManager.curr['app'];
 
-            user.interface.console?.AddLog('error', `[BackAbout] Failed to open link: ${err}`);
+                user.interface.console?.AddLog('error', `[BackAbout] Failed to open link: ${err}`);
 
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-link-error-title'],
-                    message: lang['alert-link-error-message']
-                },
-                priority: true
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-link-error-title'],
+                        message: lang['alert-link-error-message']
+                    },
+                    priority: true
+                });
+            })
+            .then(() => {
+                user.statistics.RecordLinkClick(link);
             });
-        });
     };
 
     onBackPress = () => user.interface.BackHandle();

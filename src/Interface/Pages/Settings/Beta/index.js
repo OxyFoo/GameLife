@@ -35,6 +35,12 @@ class SettingsBeta extends BackSettingsBeta {
                 <Button onPress={this.restartApp}>
                     [Redémarrer l'application pour appliquer entièrement le thème]
                 </Button>
+
+                <Text style={[styles.title, styles.newSection]}>[Test - Intégrité]</Text>
+
+                <Button throttleTime={5000} onPress={this.getIntegrityCode}>
+                    [Obtenir le code d'intégrité]
+                </Button>
             </View>
         );
     };

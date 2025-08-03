@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     },
     marginBottom: {
         marginBottom: 16
+    },
+    newSection: {
+        marginTop: 24
     }
 });
 

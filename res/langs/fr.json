@@ -7,7 +7,6 @@
     },
 
     "notifications": {
-        "title": "Notifications générales",
         "notif-user": "Notifications utilisateur",
 
         "regular": {
@@ -58,6 +57,8 @@
             }
         },
         "in-app": {
+            "name": "Notifications dans l'app",
+
             "achievement-pending-text": "Succès dévérouillé: {}",
             "achievement-pending-claim": "Claim",
 

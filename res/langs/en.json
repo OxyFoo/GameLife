@@ -7,7 +7,6 @@
     },
 
     "notifications": {
-        "title": "General notifications",
         "notif-user": "User notifications",
 
         "regular": {
@@ -58,6 +57,8 @@
             }
         },
         "in-app": {
+            "name": "In-app notifications",
+
             "achievement-pending-text": "You have unlocked the achievement: {}",
             "achievement-pending-claim": "Claim",
 

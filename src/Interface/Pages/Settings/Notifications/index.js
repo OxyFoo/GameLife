@@ -19,7 +19,8 @@ class SettingsNotifications extends BackSettings {
             <View style={styles.page}>
                 <PageHeader title={lang['input-notifications']} onBackPress={this.onBack} />
 
-                <Text style={styles.title}>{langNotifs['title']}</Text>
+                {/* Section: Push Notifications */}
+                <Text style={styles.title}>{langNotifs['regular']['name']}</Text>
 
                 {/* Notifications: Morning */}
                 <View style={styles.inline}>
@@ -32,6 +33,9 @@ class SettingsNotifications extends BackSettings {
                     <Text style={styles.inlineText}>{lang['input-notif-evening']}</Text>
                     <Switch value={switchEveningNotifs} onChangeValue={this.onChangeEveningNotifications} />
                 </View>
+
+                {/* Section: In-App Notifications */}
+                <Text style={styles.title}>{langNotifs['in-app']['name']}</Text>
 
                 {/* Notifications: Optional Updates */}
                 <View style={styles.inline}>

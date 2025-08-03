@@ -7,6 +7,7 @@ import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {'authenticated' | 'already-authenticated' | 'wrong-ssl-pinning' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'} InitResultCodes
  *
  * @typedef {{
  *   status: 'not-connected' | 'up-to-date' | 'maintenance' | 'update' | 'update-optional' | 'downdate',
@@ -77,7 +78,7 @@ class Server extends IUserClass {
 
     /**
      * @description Initialize the server connection and device authentication
-     * @returns {Promise<'authenticated' | 'already-authenticated' | 'wrong-ssl-pinning' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
+     * @returns {Promise<InitResultCodes>}
      */
     Initialize = async () => {
         if (env.VPS_PROTOCOL === 'none') {
@@ -157,6 +158,10 @@ class Server extends IUserClass {
         return 'authenticated';
     };
 
+    /**
+     * @description Reconnect to the server if not already connected
+     * @returns {Promise<InitResultCodes>}
+     */
     Reconnect = () => {
         const serverState = this.tcp.state.Get();
         if (serverState !== 'error' && serverState !== 'disconnected') {

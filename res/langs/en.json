@@ -243,9 +243,7 @@
         "alert-aderror-nomore-message": "There are no more ads available. Try again tomorrow!",
 
         "alert-adempty-title": "No ads available",
-        "alert-adempty-message": "You have no more ads available for today.",
-        "alert-error-title": "Error",
-        "alert-error-message": "An error has occurred, please try again later."
+        "alert-adempty-message": "You have no more ads available for today."
     },
 
     "onboarding": {
@@ -739,8 +737,8 @@
         "input-statistics-description": "Help us improve the app by sending anonymous usage data. You can disable this option at any time.",
         "input-ad-consent-description": "Manage your consent preferences for personalized advertising.",
         "input-privacy": "Privacy",
-        "input-report": "Report",
-        "input-beta": "Beta",
+        "input-report": "User Feedback",
+        "input-beta": "Beta features",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-other": "Disconnect from other devices",

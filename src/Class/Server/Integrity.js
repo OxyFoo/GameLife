@@ -5,6 +5,8 @@ import PlayIntegrity from 'react-native-google-play-integrity';
 
 import user from 'Managers/UserManager';
 
+import { SerializeError } from 'Utils/Types';
+
 /**
  * @typedef {import('@oxyfoo/gamelife-types').IntegrityToken} IntegrityToken
  */
@@ -32,7 +34,7 @@ export async function GetIntegrityToken(challenge) {
                 type: 'playIntegrity'
             };
         } catch (e) {
-            console.error('[GetIntegrityToken] Play Integrity error', e);
+            user.interface.console?.AddLog('error', '[GetIntegrityToken] Play Integrity error', SerializeError(e));
             return 'error';
         }
     }
@@ -45,9 +47,11 @@ export async function GetIntegrityToken(challenge) {
                 return 'unsupported';
             }
         } catch (e) {
-            user.interface.console?.AddLog('error', 'App Attest support check error - Error details:', {
-                error: e
-            });
+            user.interface.console?.AddLog(
+                'error',
+                'App Attest support check error - Error details:',
+                SerializeError(e)
+            );
             return 'unsupported';
         }
 
@@ -64,9 +68,7 @@ export async function GetIntegrityToken(challenge) {
                 type: 'appAttest'
             };
         } catch (e) {
-            user.interface.console?.AddLog('error', 'App Attest request error - Error details:', {
-                error: e
-            });
+            user.interface.console?.AddLog('error', 'App Attest request error - Error details:', SerializeError(e));
             return 'error';
         }
     }

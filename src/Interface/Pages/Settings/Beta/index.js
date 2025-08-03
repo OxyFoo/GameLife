@@ -25,13 +25,14 @@ class SettingsBeta extends BackSettingsBeta {
                 <Text style={styles.title}>[Thème des couleurs principales]</Text>
 
                 <ComboBox
+                    style={styles.marginBottom}
                     title='[Variation du thème]'
                     data={variants}
                     selectedValue={selectedVariantText}
                     onSelect={this.onSelectVariantTheme}
                 />
 
-                <Button style={styles.button} onPress={this.restartApp}>
+                <Button onPress={this.restartApp}>
                     [Redémarrer l'application pour appliquer entièrement le thème]
                 </Button>
             </View>

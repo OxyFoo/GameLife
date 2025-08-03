@@ -5,12 +5,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
     title: {
-        marginBottom: 24,
+        marginBottom: 16,
         fontSize: 24,
         textAlign: 'left'
     },
-    button: {
-        marginTop: 24
+    marginBottom: {
+        marginBottom: 16
     }
 });
 

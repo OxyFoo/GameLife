@@ -243,9 +243,7 @@
         "alert-aderror-nomore-message": "Il n'y a plus de pubs disponibles. Réessaye demain !",
 
         "alert-adempty-title": "Plus de pubs",
-        "alert-adempty-message": "Il n'y a plus de pubs disponibles pour aujourd'hui.",
-        "alert-error-title": "Erreur",
-        "alert-error-message": "Une erreur est survenue, réessaye plus tard."
+        "alert-adempty-message": "Il n'y a plus de pubs disponibles pour aujourd'hui."
     },
 
     "onboarding": {
@@ -739,8 +737,8 @@
         "input-statistics-description": "Nous aide à améliorer l'application en envoyant des données d'utilisation anonymes. Tu peux désactiver cette option à tout moment.",
         "input-ad-consent-description": "Gère tes préférences de consentement pour la publicité personnalisée.",
         "input-privacy": "Confidentialité",
-        "input-report": "Report",
-        "input-beta": "Beta",
+        "input-report": "Retour utilisateur",
+        "input-beta": "Fonctionnalités bêta",
         "input-ad-consent": "Consentement de la publicité",
         "input-disconnect": "Se déconnecter",
         "input-disconnect-other": "Se déconnecter des autres appareils",

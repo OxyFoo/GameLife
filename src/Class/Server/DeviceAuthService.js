@@ -184,6 +184,7 @@ class DeviceAuthService {
         }
 
         this.#user.interface.console?.AddLog('info', '[DeviceAuthService] Handshake succeeded');
+
         return 'ok';
     };
 

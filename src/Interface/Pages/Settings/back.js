@@ -24,9 +24,7 @@ class BackSettings extends PageBase {
         devicesLoading: false,
 
         /** @param {ConnectionState} state */
-        serverTCPState: user.server2.tcp.state.Get(),
-
-        waitingConsentPopup: false
+        serverTCPState: user.server2.tcp.state.Get()
     };
 
     /** @type {ComboBoxItem[]} */
@@ -38,32 +36,13 @@ class BackSettings extends PageBase {
     /** @type {Symbol | null} */
     listenerTCP = null;
 
-    /** @type {NodeJS.Timeout | null} Manage consent popup loading */
-    intervalConsentChecking = null;
-
     componentDidMount() {
         // Listen to TCP state
         this.listenerTCP = user.server2.tcp.state.AddListener(this.onTCPStateChange);
-
-        // Check if consent popup is loading
-        if (user.consent.loading) {
-            this.setState({ waitingConsentPopup: true });
-            this.intervalConsentChecking = setInterval(() => {
-                if (!user.consent.loading) {
-                    this.setState({ waitingConsentPopup: false });
-                    if (this.intervalConsentChecking !== null) {
-                        clearInterval(this.intervalConsentChecking);
-                    }
-                }
-            }, 100);
-        }
     }
 
     componentWillUnmount() {
         user.server2.tcp.state.RemoveListener(this.listenerTCP);
-        if (this.intervalConsentChecking !== null) {
-            clearInterval(this.intervalConsentChecking);
-        }
     }
 
     /** @param {ConnectionState} state */
@@ -75,6 +54,7 @@ class BackSettings extends PageBase {
     openAbout = () => user.interface.ChangePage('about', { storeInHistory: false });
     openReport = () => user.interface.ChangePage('report', { storeInHistory: false });
     openBeta = () => user.interface.ChangePage('settings_beta', { storeInHistory: false });
+    openPrivacy = () => user.interface.ChangePage('settings_privacy', { storeInHistory: false });
     openNotifications = () => user.interface.ChangePage('settings_notifications', { storeInHistory: false });
 
     /** @param {ComboBoxItem | null} lang */
@@ -95,32 +75,6 @@ class BackSettings extends PageBase {
         const newTheme = themes[themeIndex];
         if (themeManager.SetTheme(newTheme)) {
             user.settings.IndependentSave();
-        }
-    };
-
-    openConsentPopup = async () => {
-        const lang = langManager.curr['settings'];
-
-        this.setState({ waitingConsentPopup: true });
-        const consentStatus = await user.consent.ShowTrackingPopup(true);
-        this.setState({ waitingConsentPopup: false });
-
-        if (consentStatus === 'error') {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-consent-error-title'],
-                    message: lang['alert-consent-error-message']
-                }
-            });
-        } else if (consentStatus === 'not-available') {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-consent-not-available-title'],
-                    message: lang['alert-consent-not-available-message']
-                }
-            });
         }
     };
 

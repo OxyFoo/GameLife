@@ -145,6 +145,14 @@ class Statistics extends IUserClass {
     SendLoadingStatistics(loadingTimeMs) {
         if (!this.user?.server2?.tcp) return;
 
+        if (!this.user.settings.statisticsEnabled) {
+            this.user.interface.console?.AddLog(
+                'info',
+                '[Statistics] Statistics disabled by user, not sending loading time'
+            );
+            return;
+        }
+
         this.user.server2.tcp.Send({
             action: 'send-statistics',
             stats: { LoadingTimeMs: loadingTimeMs },
@@ -156,7 +164,17 @@ class Statistics extends IUserClass {
      * Send page statistics to server
      */
     SendPageStatistics() {
-        if (!this.user?.server2?.tcp || this.currentSessionStats.pages.size === 0) return;
+        if (!this.user?.server2?.tcp || this.currentSessionStats.pages.size === 0) {
+            return;
+        }
+
+        if (!this.user.settings.statisticsEnabled) {
+            this.user.interface.console?.AddLog(
+                'info',
+                '[Statistics] Statistics disabled by user, not sending page statistics'
+            );
+            return;
+        }
 
         const sessionPages = Array.from(this.currentSessionStats.pages.entries()).map(([name, count]) => ({
             name,
@@ -175,7 +193,17 @@ class Statistics extends IUserClass {
      * @param {string} linkName - Name of the clicked link
      */
     SendLinkStatistics(linkName) {
-        if (!this.user?.server2?.tcp || !linkName) return;
+        if (!this.user?.server2?.tcp || !linkName) {
+            return;
+        }
+
+        if (!this.user.settings.statisticsEnabled) {
+            this.user.interface.console?.AddLog(
+                'info',
+                '[Statistics] Statistics disabled by user, not sending link click'
+            );
+            return;
+        }
 
         this.user.server2.tcp.Send({
             action: 'send-statistics',
@@ -187,9 +215,9 @@ class Statistics extends IUserClass {
     /**
      * Send all session statistics to server
      */
-    SendAllSessionStatistics() {
+    SendAllSessionStatistics = () => {
         this.SendPageStatistics();
-    }
+    };
 
     /**
      * Clean old statistics data

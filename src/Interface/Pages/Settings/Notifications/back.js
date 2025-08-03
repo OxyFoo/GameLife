@@ -41,6 +41,7 @@ class BackSettingsNotifications extends PageBase {
         this.setState({ switchOptionalUpdatesNotifs: enabled });
         user.settings.optionalUpdatesNotifications = enabled;
         user.settings.IndependentSave();
+        user.notificationsInApp.Update();
     };
 }
 

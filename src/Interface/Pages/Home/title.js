@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
-
-import styles from './style';
+import { View, StyleSheet } from 'react-native';
 
 import { Text } from 'Interface/Components';
 
@@ -24,5 +22,22 @@ const Title = React.forwardRef(
         );
     }
 );
+
+const styles = StyleSheet.create({
+    sectionContainer: {
+        marginTop: 12,
+        marginBottom: 12,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between'
+    },
+    sectionTitle: {
+        flexShrink: 1,
+        paddingVertical: 6,
+        fontSize: 21,
+        textAlign: 'left',
+        textTransform: 'uppercase'
+    }
+});
 
 export { Title };

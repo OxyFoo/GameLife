@@ -7,6 +7,7 @@ import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {'authenticated' | 'already-authenticated' | 'wrong-ssl-pinning' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'} InitResultCodes
  *
  * @typedef {{
  *   status: 'not-connected' | 'up-to-date' | 'maintenance' | 'update' | 'update-optional' | 'downdate',
@@ -77,7 +78,7 @@ class Server extends IUserClass {
 
     /**
      * @description Initialize the server connection and device authentication
-     * @returns {Promise<'authenticated' | 'already-authenticated' | 'wrong-ssl-pinning' | 'authenticated-failed' | 'not-connected' | 'maintenance' | 'update'>}
+     * @returns {Promise<InitResultCodes>}
      */
     Initialize = async () => {
         if (env.VPS_PROTOCOL === 'none') {
@@ -157,15 +158,36 @@ class Server extends IUserClass {
         return 'authenticated';
     };
 
-    Reconnect = () => {
+    /**
+     * @description Reconnect to the server if not already connected
+     * @returns {Promise<InitResultCodes | 'user-authentication-failed'>} If returns 'user-authentication-failed', the user is not logged and should be disconnected
+     */
+    Reconnect = async () => {
         const serverState = this.tcp.state.Get();
         if (serverState !== 'error' && serverState !== 'disconnected') {
             this.#user.interface.console?.AddLog('info', '[Server] Already connected to the server');
             return Promise.resolve('already-authenticated');
+        } else {
+            this.#user.interface.console?.AddLog('info', '[Server] Reconnecting to the server...');
         }
 
-        this.#user.interface.console?.AddLog('info', '[Server] Reconnecting to the server...');
-        return this.Initialize();
+        // Reconnect TCP connection & authenticate device
+        const initState = await this.Initialize();
+        if (initState !== 'authenticated') {
+            return initState;
+        }
+
+        // Reconnect user authentication
+        const isServerEnabled = env.VPS_PROTOCOL !== 'none';
+        const email = this.#user.server2.userAuth.GetEmail() ?? this.#user.settings.waitingEmail;
+        const loggedState = isServerEnabled ? await this.#user.server2.userAuth.Login(email) : 'authenticated-offline';
+
+        // User is not logged, disconnect
+        if (loggedState !== 'authenticated') {
+            return 'user-authentication-failed';
+        }
+
+        return 'authenticated';
     };
 
     Unmount = () => {

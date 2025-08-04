@@ -589,6 +589,18 @@ class Achievements extends IUserData {
                 case 'SelfFriend': // Asking self friend
                     value = this.#user.informations.achievementSelfFriend ? 1 : 0;
                     break;
+
+                case 'AccountAge': // Account age in years
+                    const accountAge = this.#user.informations.accountAge;
+                    value = accountAge;
+                    break;
+
+                default:
+                    this.#user.interface.console?.AddLog(
+                        'error',
+                        `[Achievements] Unknown condition type: ${Condition.Comparator.Type}`
+                    );
+                    continue;
             }
 
             if (value !== null && typeof Condition.Value === 'number') {

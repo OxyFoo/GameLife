@@ -41,6 +41,15 @@ class QuestsList extends BackQuestsList {
 
     renderFooter = () => {
         const lang = langManager.curr['quests'];
+        const { quests } = this.state;
+
+        if (quests.length === 0) {
+            return (
+                <Button style={styles.buttonOpenQuest} onPress={this.addQuest}>
+                    {lang['button-add-quest']}
+                </Button>
+            );
+        }
 
         return (
             <Button style={styles.buttonOpenQuest} appearance='outline' onPress={this.openQuests}>

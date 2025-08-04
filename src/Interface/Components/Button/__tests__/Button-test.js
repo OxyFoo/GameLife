@@ -43,7 +43,15 @@ describe('[Component] Button', () => {
         );
 
         const button = getByTestId('button');
-        fireEvent.press(button);
+
+        // Simulez les événements tactiles comme dans le test précédent
+        fireEvent(button, 'touchStart', {
+            nativeEvent: { pageX: 100, pageY: 100, locationX: 50, locationY: 50 }
+        });
+
+        fireEvent(button, 'touchEnd', {
+            nativeEvent: { pageX: 100, pageY: 100 }
+        });
 
         expect(button).toBeTruthy();
         expect(onPress).toHaveBeenCalledTimes(0);

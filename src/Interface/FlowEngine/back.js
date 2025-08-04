@@ -5,6 +5,7 @@ import AppControl from 'react-native-app-control';
 
 import PageBase from './PageBase';
 import PAGES from 'Interface/Pages';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import DynamicVar from 'Utils/DynamicVar';
@@ -28,7 +29,7 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PageMemory
+ * @typedef {object} PageMemory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
  * @property {React.RefObject<InstanceType<PAGES[T]> | null>} ref
@@ -39,14 +40,14 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PageHistory
+ * @typedef {object} PageHistory
  * @property {T} pageName
  * @property {PAGES[T]['prototype']['props']['args']} args
  */
 
 /**
  * @template {PageNames} T
- * @typedef {Object} PageOptions
+ * @typedef {object} PageOptions
  * @property {PAGES[T]['prototype']['props']['args']} [args]
  * @property {boolean} [storeInHistory]
  * @property {Transitions} [transition]
@@ -54,7 +55,7 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 
 /**
- * @typedef {Object} PageOptionsBack
+ * @typedef {object} PageOptionsBack
  * @property {any} [args] Pass args to callback function
  * @property {Transitions} [transition]
  * @property {() => void} [callback] Callback after page changed
@@ -65,7 +66,7 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 
 /**
- * @typedef {Object} FlowEnginePropsType
+ * @typedef {object} FlowEnginePropsType
  * @property {string} [testID]
  */
 
@@ -515,6 +516,11 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     pageDidUpdate = (pageName) => {
+        // Save the page visit for statistics
+        if (user.statistics && user.appIsLoaded) {
+            user.statistics.RecordPageVisit(pageName);
+        }
+
         // Update user header visibility
         const showUserHeader = PAGES[pageName].feShowUserHeader;
         if (showUserHeader && this.userHeader.current?.show === false) {

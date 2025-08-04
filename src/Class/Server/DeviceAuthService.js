@@ -24,6 +24,9 @@ class DeviceAuthService {
     /** @type {DynamicVar<DeviceAuthState>} */
     state = new DynamicVar(/** @type {DeviceAuthState} */ ('not-connected'));
 
+    /** @type {boolean} */
+    devMode = false;
+
     /**
      * @param {UserManager} user
      * @param {TCP} tcp
@@ -181,6 +184,7 @@ class DeviceAuthService {
         }
 
         this.#user.interface.console?.AddLog('info', '[DeviceAuthService] Handshake succeeded');
+
         return 'ok';
     };
 
@@ -191,6 +195,47 @@ class DeviceAuthService {
     #checkIntegrityAndGenerateIfNeeded = async () => {
         /** @type {IntegrityToken | null} */
         const integrityToken = await SecureStorage.Load('INTEGRITY_TOKEN');
+
+        /** @type {string | null} */
+        const integrityTokenTimestamp = await SecureStorage.Load('INTEGRITY_TOKEN_TIMESTAMP');
+
+        // Check if we have a cached token and if it's still valid (24h)
+        if (integrityToken && integrityTokenTimestamp) {
+            const tokenTimestamp = new Date(integrityTokenTimestamp);
+            const now = new Date();
+            const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+            if (tokenTimestamp > twentyFourHoursAgo) {
+                this.#user.interface.console?.AddLog(
+                    'info',
+                    '[DeviceAuthService] Using cached integrity token (valid for 24h)'
+                );
+                // Token is still valid, use cached version
+                const response = await this.#tcp.SendAndWait({
+                    action: 'check-integrity',
+                    integrityToken: integrityToken
+                });
+
+                if (
+                    response !== 'not-sent' &&
+                    response !== 'timeout' &&
+                    response !== 'interrupted' &&
+                    response.status === 'check-integrity' &&
+                    response.result === 'ok'
+                ) {
+                    this.#user.interface.console?.AddLog(
+                        'info',
+                        '[DeviceAuthService] Cached integrity token accepted by server'
+                    );
+                    return integrityToken;
+                }
+            } else {
+                this.#user.interface.console?.AddLog(
+                    'info',
+                    '[DeviceAuthService] Cached integrity token expired (>24h), will generate new one'
+                );
+            }
+        }
 
         const response = await this.#tcp.SendAndWait({
             action: 'check-integrity',
@@ -317,6 +362,13 @@ class DeviceAuthService {
             return false;
         }
 
+        // Save the current timestamp for cache validation
+        const timestampSaved = await SecureStorage.Save('INTEGRITY_TOKEN_TIMESTAMP', Date.now().toString());
+        if (!timestampSaved) {
+            this.#user.interface.console?.AddLog('error', '[DeviceAuthService] Integrity token timestamp not saved');
+            return false;
+        }
+
         this.#user.interface.console?.AddLog('info', '[DeviceAuthService] Integrity token saved');
         return true;
     };
@@ -375,6 +427,12 @@ class DeviceAuthService {
                 `[DeviceAuthService] Authentication failed, invalid response (${response.result})`
             );
             return null;
+        }
+
+        this.devMode = !!response.devMode;
+
+        if (this.devMode) {
+            this.#user.interface.console?.Enable();
         }
 
         this.state.Set('authenticated');

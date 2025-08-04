@@ -21,9 +21,6 @@ class UserAuthService {
     email = new DynamicVar(/** @type {string | null} */ (null));
 
     /** @type {boolean} */
-    devMode = false;
-
-    /** @type {boolean} */
     isBanned = false;
 
     /**
@@ -149,12 +146,7 @@ class UserAuthService {
             return response.result;
         }
 
-        this.devMode = response.result.devMode ?? false;
         this.isBanned = response.result.banned ?? false;
-
-        if (this.devMode) {
-            await this.#user.interface.console?.Enable();
-        }
 
         // Check current date
         const dateIsOk = await CheckDate(this.#tcp);

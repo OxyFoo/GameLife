@@ -23,7 +23,7 @@ on:
         - android
         - ios
       action-update:
-        description: 'Update app version'
+        description: 'Update app version (applied before build)'
         required: true
         default: 'none'
         type: choice

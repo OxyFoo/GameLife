@@ -11,27 +11,35 @@ import { Character, Frame } from 'Interface/Components';
 /**
  * @typedef {import('Data/User/Inventory').Stuff} Stuff
  * @typedef {import('Interface/OldComponents/Character/Frame').BodyView} BodyView
+ *
+ * @typedef {object} ItemCardProps
+ * @property {Stuff | null} stuff - The item to display.
+ * @property {boolean} isSelected - Whether the item is selected.
+ * @property {boolean} isEquipped - Whether the item is equipped.
+ * @property {(param: Stuff | null) => void} onPress - Callback when the item is pressed.
  */
 
+/** @type {ItemCardProps} */
 const ItemCardProps = {
-    /** @type {Stuff | null} */
     stuff: null,
-
-    /** @type {boolean} */
     isSelected: false,
-
-    /** @type {boolean} Show border if item is equipped */
     isEquipped: false,
-
-    /** @param {Stuff | null} stuff */
-    onPress: (stuff) => {}
+    onPress: () => {}
 };
 
+/** @extends {React.PureComponent<ItemCardProps>} */
 class ItemCard extends React.PureComponent {
+    /** @param {ItemCardProps} props */
     constructor(props) {
         super(props);
 
         const { stuff } = this.props;
+
+        if (stuff === null) {
+            user.interface.console?.AddLog('warn', '[ItemCard] No stuff provided');
+            return;
+        }
+
         const item = dataManager.items.GetByID(stuff.ItemID);
         if (item !== null) {
             this.character = new Character(
@@ -51,6 +59,8 @@ class ItemCard extends React.PureComponent {
 
     render() {
         const { stuff, isEquipped, isSelected } = this.props;
+
+        if (stuff === null) return null;
 
         const item = dataManager.items.GetByID(stuff.ItemID);
         if (item === null) return null;

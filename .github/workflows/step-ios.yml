@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: 'Choose environment to deploy (dev, test, prod)'
+        description: 'Choose environment to deploy (dev or prod)'
         required: true
         type: string
       delivery:
@@ -170,6 +170,10 @@ jobs:
         run: |
           echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
 
+      - name: 'Set .env file'
+        run: |
+          ./Tools/Env/env.sh ${{ inputs.environment }}
+
       - name: 'Setup Bundle ID for test environment'
         if: inputs.environment == 'test'
         run: |
@@ -190,7 +194,7 @@ jobs:
 
       - name: 'Build with Fastlane'
         env:
-          ENVFILE: .env.${{ inputs.environment }}
+          ENVFILE: .env
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
           APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}

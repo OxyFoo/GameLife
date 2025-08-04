@@ -11,8 +11,8 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Data/App/Quotes').Quote} Quote
  *
- * @typedef {Object} BackDisplayPropsType
- * @property {Object} args
+ * @typedef {object} BackDisplayPropsType
+ * @property {object} args
  * @property {IconsName} args.icon
  * @property {number} [args.iconWidth]
  * @property {string} args.text
@@ -21,6 +21,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {(() => void) | null} [args.action]
  * @property {(() => void) | null} [args.action2]
  * @property {Quote | null} [args.quote]
+ * @property {React.ReactNode} [args.additionalContent]
  */
 
 /** @type {BackDisplayPropsType} */
@@ -35,7 +36,8 @@ const BackDisplayProps = {
         button2: '',
         action: null,
         action2: null,
-        quote: undefined
+        quote: undefined,
+        additionalContent: undefined
     }
 };
 

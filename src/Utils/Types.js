@@ -8,4 +8,18 @@ function IsNotNull(value) {
     return value !== null && value !== undefined;
 }
 
-export { IsNotNull };
+/** @param {Error | unknown} error */
+function SerializeError(error) {
+    if (!(error instanceof Error)) {
+        return error;
+    }
+
+    return {
+        message: error?.message,
+        name: error?.name,
+        stack: error?.stack,
+        cause: error?.cause
+    };
+}
+
+export { IsNotNull, SerializeError };

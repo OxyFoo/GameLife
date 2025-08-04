@@ -7,7 +7,6 @@
     },
 
     "notifications": {
-        "title": "General notifications",
         "notif-user": "User notifications",
 
         "regular": {
@@ -58,6 +57,8 @@
             }
         },
         "in-app": {
+            "name": "In-app notifications",
+
             "achievement-pending-text": "You have unlocked the achievement: {}",
             "achievement-pending-claim": "Claim",
 
@@ -197,7 +198,10 @@
             "userdata-not-saved": "User data could not be saved",
             "ssl-pinning-failed": "Security verification failed."
         },
-        "loading-error-button": "Restart"
+        "loading-error-button": "Restart",
+        "help-discord-message": "Having trouble? Join {our Discord} to see if there's information available or to report the issue!",
+        "alert-link-error-title": "Error",
+        "alert-link-error-message": "An error has occurred, please try again later."
     },
 
     "navbar": {
@@ -239,9 +243,7 @@
         "alert-aderror-nomore-message": "There are no more ads available. Try again tomorrow!",
 
         "alert-adempty-title": "No ads available",
-        "alert-adempty-message": "You have no more ads available for today.",
-        "alert-error-title": "Error",
-        "alert-error-message": "An error has occurred, please try again later."
+        "alert-adempty-message": "You have no more ads available for today."
     },
 
     "onboarding": {
@@ -430,15 +432,20 @@
         "title-hello": "Hello {}",
 
         "section-missions": "Discovery missions",
-        "section-today-performance": "My activities of the day",
-        "section-today-quests": "My quests",
+        "section-today-performance": "Recap of the day",
+        "today-activity": "Activities",
+        "today-quest": "Quests",
+        "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
+        "section-today-quest": "Community objective of the day",
+        "section-today-quest-detail": "Each day a category is chosen randomly for everyone, performs activities in this category to win rewards!",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-notmuch": "Add an activity today to display the graphics",
-        "chart-total-text": "Total",
+        "chart-today-notmuch": "Add an activity today to display the graphic",
+        "chart-quest-notmuch": "You need to have a quest today to display the graphic",
+        "chart-click-me": "click-me!",
 
         "news-myquests-title": "Quests to do",
 
@@ -715,6 +722,9 @@
         "section-support-feedback": "SUPPORT AND FEEDBACK",
         "section-offline-mode": "OFFLINE MODE",
         "section-security-privacy": "SECURITY AND PRIVACY",
+        "section-privacy-analytics": "PRIVACY AND ANALYTICS",
+        "section-privacy": "PRIVACY",
+        "section-advertising-consent": "ADVERTISING CONSENT",
 
         "input-about": "About us",
         "input-langage": "Langages",
@@ -723,8 +733,12 @@
         "input-notif-morning": "Morning notifications",
         "input-notif-evening": "Evening notifications",
         "input-notif-optional-updates": "Optional updates",
-        "input-report": "Report",
-        "input-beta": "Beta",
+        "input-statistics-enabled": "Send anonymous statistics",
+        "input-statistics-description": "Help us improve the app by sending anonymous usage data. You can disable this option at any time.",
+        "input-ad-consent-description": "Manage your consent preferences for personalized advertising.",
+        "input-privacy": "Privacy",
+        "input-report": "User Feedback",
+        "input-beta": "Beta features",
         "input-ad-consent": "Ad consent popup",
         "input-disconnect": "Disconnect",
         "input-disconnect-other": "Disconnect from other devices",
@@ -751,6 +765,8 @@
         "alert-deletedmailtooearly-message": "A confirmation e-mail has already been sent to you, so please wait a few minutes before sending another, and don't forget to check your spam.",
         "alert-deletedfailed-title": "Failure",
         "alert-deletedfailed-message": "The email was not sent, please check your internet connection or try again later.",
+        "alert-disable-statistics-title": "Disable Statistics",
+        "alert-disable-statistics-message": "Do you really want to disable sending anonymous statistics? This helps us improve the application.",
         "alert-consent-not-available-title": "Error",
         "alert-consent-not-available-message": "The consents are not available in your geographic area.",
         "alert-consent-error-title": "Error",
@@ -1138,6 +1154,36 @@
             "request-timeout": "Request time limit exceeded",
             "no-activities": "No activities generated",
             "limit-reached": "You have reached the use limit for today"
+        }
+    },
+
+    "app-explain" : {
+        "quest": {
+            "popup-title": "Quests",
+
+            "content": [
+                {
+                    "title": "What are quests ?",
+                    "text": [
+                        "In GameLife, quests are a way to motivate you to do activities regularly. You can create your own quests, which will be validated when you complete them.",
+                        "Imagine, for example, that you want to do 15 minutes of sport every day. You can create a quest called \"Daily Sport\" and add activities like running, cycling, or going to the gym.",
+                        "When you complete these activities (and input it in the app), your quest will be validated!"
+                    ]
+                }, 
+                {
+                    "title": "What's the point of quests ?",
+                    "text": [
+                        "Quests are a great way to stay motivated and keep track of your progress. They help you set goals and achieve them, while also making it fun to do activities."
+                    ]
+                },
+                {
+                    "title": "No imposed quests like in Solo Leveling?",
+                    "text": [
+                        "In GameLife, we believe in freedom and flexibility. We don't impose quests on you like in Solo Leveling, where you have to complete specific tasks to progress. Especially because the one in Solo Leveling are often too difficult or unrealistic for most people.",
+                        "Instead, you can create your own quests based on your interests and goals. This way, you can enjoy the game while also improving your real-life skills and habits."
+                    ]
+                }
+            ]
         }
     }
 }

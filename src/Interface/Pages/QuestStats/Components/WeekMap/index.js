@@ -60,7 +60,7 @@ class WeekMap extends WeekMapBack {
             dayTextColor = 'main1';
         }
 
-        /** @type {AnimatedInterpolationStringNumber | undefined} */
+        /** @type {AnimatedInterpolationStringNumber} */
         const animatedColor = animBackground.interpolate({
             inputRange: [0, 1],
             outputRange: [themeManager.GetColor(dayTextColor), themeManager.GetColor('primary')]
@@ -91,7 +91,7 @@ class WeekMap extends WeekMapBack {
                 />
 
                 {day.progress >= 1 ? (
-                    <Text style={[styles.dayText, decorationStyle, { color: animatedColor }]} animated>
+                    <Text style={[styles.dayText, decorationStyle]} animatedStyle={{ color: animatedColor }}>
                         {langDates['days-min'][day.day]}
                     </Text>
                 ) : (

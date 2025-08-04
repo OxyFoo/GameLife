@@ -8,8 +8,8 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
 /**
  * @typedef {import('react-native').TextStyle} TextStyle
  * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle>} TextStyleProp
  * @typedef {import('react-native').Animated.AnimatedProps<TextStyle>} AnimatedTextStyle
- * @typedef {import('react-native').StyleProp<ViewStyle | TextStyle | AnimatedTextStyle>} TextStyleProp
  * @typedef {import('react-native').StyleProp<ViewStyle>} ViewStyleProp
  * @typedef {import('react-native').TextProps} TextProps
  * @typedef {import('react-native').StyleProp<TextStyle>} StyleProp
@@ -19,10 +19,10 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  *
  * @typedef {Object} TextPropsType
  * @property {TextStyleProp} style
+ * @property {AnimatedTextStyle} [animatedStyle]
  * @property {ViewStyleProp} containerStyle Style of touchable opacity for onPress text
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText} color
- * @property {boolean} animated
  * @property {boolean} bold
  */
 
@@ -31,10 +31,10 @@ const AnimatedRNText = Animated.createAnimatedComponent(RNText);
 /** @type {TextProps & TextPropsType} */
 const TextProps = {
     style: {},
+    animatedStyle: undefined,
     containerStyle: {},
     fontSize: 18,
     color: 'primary',
-    animated: false,
     bold: false
 };
 
@@ -43,16 +43,16 @@ class Text extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             this.props.style !== nextProps.style ||
+            this.props.animatedStyle !== nextProps.animatedStyle ||
             this.props.children !== nextProps.children ||
             this.props.color !== nextProps.color ||
             this.props.fontSize !== nextProps.fontSize ||
-            this.props.animated !== nextProps.animated ||
             this.props.onPress !== nextProps.onPress
         );
     }
 
     render() {
-        const { style, animated, containerStyle, color, fontSize, onPress, children, bold, ...props } = this.props;
+        const { style, animatedStyle, containerStyle, color, fontSize, onPress, children, bold, ...props } = this.props;
 
         /** @type {StyleProp} */
         const fontStyle = {
@@ -63,11 +63,14 @@ class Text extends React.Component {
             color: typeof color === 'string' ? themeManager.GetColor(color) : color
         };
 
-        const RawText = animated ? AnimatedRNText : RNText;
-        let component = (
-            <RawText style={[styles.text, fontStyle, style]} {...props}>
+        let component = animatedStyle ? (
+            <AnimatedRNText style={[styles.text, fontStyle, style, animatedStyle]} {...props}>
                 {children}
-            </RawText>
+            </AnimatedRNText>
+        ) : (
+            <RNText style={[styles.text, fontStyle, style]} {...props}>
+                {children}
+            </RNText>
         );
 
         if (onPress) {

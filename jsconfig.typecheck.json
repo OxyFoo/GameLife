@@ -1,0 +1,8 @@
+{
+    "extends": "./jsconfig.json",
+    "compilerOptions": {
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "paths": {}
+    }
+}

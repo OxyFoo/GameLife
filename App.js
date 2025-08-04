@@ -44,8 +44,17 @@ class App extends React.Component {
 
     /** @param {AppStateStatus} state */
     async componentChangeState(state) {
+        user.interface.console?.AddLog('info', `AppState changed: "${state}"`);
+
         if (state === 'active') {
-            await user.server2.Reconnect();
+            const reconnection = await user.server2.Reconnect();
+
+            // If the user is not logged, disconnect the account
+            if (reconnection === 'user-authentication-failed') {
+                user.Disconnect();
+            } else if (reconnection !== 'already-authenticated') {
+                user.interface.console?.AddLog('info', 'Reconnecting to the server:', reconnection);
+            }
         } else if (state === 'background' || state === 'inactive') {
             (await user.SaveOnline()) || (await user.SaveLocal());
         }

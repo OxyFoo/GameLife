@@ -80,11 +80,10 @@ class Profile extends BackProfile {
                             {
                                 textShadowColor: themeManager.GetColor('main2')
                             },
-                            styles.avatarComingSoon,
-                            styleParallax2
+                            styles.avatarComingSoon
                         ]}
+                        animatedStyle={styleParallax2}
                         color='secondary'
-                        animated
                     >
                         {lang['coming-soon']}
                     </Text>

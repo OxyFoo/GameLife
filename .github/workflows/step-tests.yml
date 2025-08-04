@@ -112,4 +112,4 @@ jobs:
           echo "VPS Host: $VPS_HOST"
           echo "VPS Port: $VPS_PORT"
 
-          cd Tools/SSLPinning/test_ssl_pinning.sh "$SSL_PINNING_PRIMARY_KEY" "$VPS_HOST" "$VPS_PORT"
+          ./Tools/SSLPinning/test_ssl_pinning.sh "$SSL_PINNING_PRIMARY_KEY" "$VPS_HOST" "$VPS_PORT"

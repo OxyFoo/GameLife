@@ -48,7 +48,11 @@ class App extends React.Component {
 
         if (state === 'active') {
             const reconnection = await user.server2.Reconnect();
-            if (reconnection !== 'already-authenticated') {
+
+            // If the user is not logged, disconnect the account
+            if (reconnection === 'user-authentication-failed') {
+                user.Disconnect();
+            } else if (reconnection !== 'already-authenticated') {
                 user.interface.console?.AddLog('info', 'Reconnecting to the server:', reconnection);
             }
         } else if (state === 'background' || state === 'inactive') {

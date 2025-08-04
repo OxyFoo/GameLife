@@ -195,6 +195,11 @@ class BackSettings extends PageBase {
                     message: lang['alert-reconnect-failed-message'].replace('{}', result)
                 }
             });
+
+            // If user is not logged, disconnect
+            if (result === 'user-authentication-failed') {
+                user.Disconnect();
+            }
         });
     };
 

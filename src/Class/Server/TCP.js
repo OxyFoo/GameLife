@@ -284,11 +284,11 @@ class TCP {
             ID = RandomString(8);
         }
 
-        if (this.Send({ ...message, callbackID: ID })) {
-            return this.WaitForCallback(ID, callback, timeout);
+        if (!this.Send({ ...message, callbackID: ID })) {
+            return 'not-sent';
         }
 
-        return 'not-sent';
+        return this.WaitForCallback(ID, callback, timeout);
     };
 
     /**
@@ -297,7 +297,7 @@ class TCP {
      * @param {(data: TCPServerRequest) => boolean | Promise<boolean>} [callback] The callback to call when the response is received, return true to remove the callback and send the response to the promise
      * @param {number} [timeout] in milliseconds
      * @param {AbortSignal} [signal] Optional abort signal to cancel the wait
-     * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | 'alreadyExist' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
+     * @returns {Promise<'timeout' | 'interrupted' | 'not-sent' | 'alreadyExist' | TCPServerRequest>}
      */
     SendAndWaitWithoutCallback = async (
         message,
@@ -316,42 +316,59 @@ class TCP {
      * @param {string} callbackID The callback ID to wait for (or the action if useCallbackID is false)
      * @param {(data: TCPServerRequest) => boolean | Promise<boolean>} callback The callback to call when the response is received, return true to remove the callback and send the response to the promise
      * @param {number} [timeout] in milliseconds, -1 to disable
-     * @returns {Promise<'timeout' | 'interrupted' | TCPServerRequest>} The result of the callback or 'timeout' if it took too long
+     * @returns {Promise<'timeout' | 'interrupted' | TCPServerRequest>}
      */
     WaitForCallback = (callbackID, callback = () => true, timeout = SERVER_TIMEOUT_MS) => {
         return new Promise((resolve, _reject) => {
-            // Init the timeout timer
-            /** @type {NodeJS.Timeout | null} */
-            let timer = null;
-            if (timeout !== -1) {
-                timer = setTimeout(() => {
-                    resolve('timeout');
-                }, timeout);
-            }
+            // Init the timeout timer & timeout/callback functions
+            let timer = /** @type {NodeJS.Timeout | null} */ (null);
 
-            // Reset the timeout timer
-            const resetTimeout = () => {
-                if (timeout === -1 || timer === null) {
-                    return;
-                }
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    resolve('timeout');
-                }, timeout);
+            const cleanupCallback = () => {
+                delete this.#callbacks[callbackID]; // Clean up the callback
             };
+
+            const cleanupTimeout = () => {
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+            };
+
+            const updateTimeout = () => {
+                cleanupTimeout();
+
+                if (timeout > 0) {
+                    timer = setTimeout(() => {
+                        resolve('timeout');
+                        cleanupCallback();
+                    }, timeout);
+                }
+            };
+
+            // Set the initial timeout
+            updateTimeout();
 
             // Set the callback
             this.#callbacks[callbackID] = async (data) => {
-                if (timer !== null) {
-                    clearTimeout(timer);
-                }
                 const finished = await callback(data); // Result from caller
+
                 if (finished) {
-                    resolve(data); // Send the response to the promise
-                    return true; // Remove the callback
+                    // Send the response to the promise
+                    resolve(data);
+
+                    // Clean up the callback and timeout
+                    cleanupTimeout();
+                    cleanupCallback();
+
+                    // Remove the callback
+                    return true;
                 }
-                resetTimeout(); // Reset the timer
-                return false; // Keep the callback
+
+                // If not finished, reset the timeout
+                updateTimeout();
+
+                // Keep the callback
+                return false;
             };
         });
     };

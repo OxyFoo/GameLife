@@ -293,7 +293,8 @@
             "Ca": "Atteindre le niveau {} dans la catégorie \"{}\"",
             "ItemCount": "Posséder {} items",
             "Ad": "Avoir vu {} pubs",
-            "SelfFriend": "Se demander soi-même en ami"
+            "SelfFriend": "Se demander soi-même en ami",
+            "AccountAge": "Avoir créé un compte depuis {} an[s]"
         },
         "rewards": {
             "title": "Nouveau titre : {}",

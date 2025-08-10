@@ -72,6 +72,7 @@ class Informations extends IUserData {
         this.zapGPT = { remaining: 0, total: 0 };
         this.achievementSelfFriend = false;
         this.purchasedCount = 0;
+        this.accountAge = 0;
     };
 
     /** @param {Partial<SaveObject_UserInformations>} data */

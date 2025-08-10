@@ -293,7 +293,8 @@
             "Ca": "Reach level {} in category {}",
             "ItemCount": "Have {} items",
             "Ad": "Watch {} ads",
-            "SelfFriend": "Ask yourself as a friend"
+            "SelfFriend": "Ask yourself as a friend",
+            "AccountAge": "Have created an account from {} year[s]"
         },
         "rewards": {
             "title": "New title: {}",

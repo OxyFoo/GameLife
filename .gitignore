@@ -73,6 +73,7 @@ buck-out/
 
 # Credentials
 app.json
+gamelife.keystore
 google-services.json
 
 # VSCode

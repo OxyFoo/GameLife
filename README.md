@@ -68,7 +68,7 @@ npm run android   # Pour Android
 * [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws) 📦
 
 ### 💰 Monétisation & achats in-app
-* [React Native IAP](https://github.com/dooboolab-community/react-native-iap)
+* [React Native IAP](https://github.com/dooboolab-community/react-native-iap) [Removed, will be replaced]
 * [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
 
 ### 🎨 UI & graphisme

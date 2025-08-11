@@ -81,18 +81,25 @@ class DeviceAuthService {
 
     /**
      * @description Authenticate the device with the server & define the server state (in server class)
-     * @returns {Promise<boolean>}
+     * @returns {Promise<'authenticated' | 'not-connected' | 'update' | 'error'>}
      */
     Authenticate = async () => {
         // If the device is already authenticated, return true
         if (this.IsAuthenticated()) {
-            return true;
+            return 'authenticated';
         }
 
         // Step 1: Do the handshake
         const handshakeResult = await this.#handshake();
         if (handshakeResult === 'not-connected' || handshakeResult === 'error') {
-            return false;
+            return handshakeResult;
+        }
+
+        // Update needed, blocking step
+        else if (handshakeResult === 'update') {
+            this.state.Set('not-authenticated');
+            this.#user.interface.console?.AddLog('warn', '[DeviceAuthService] Update required');
+            return 'update';
         }
 
         // Step 2: Get the integrity token if needed
@@ -102,7 +109,7 @@ class DeviceAuthService {
         if (integrityToken !== null) {
             const saveResult = await this.#saveIntegrityToken(integrityToken);
             if (!saveResult) {
-                return false;
+                return 'error';
             }
         } else {
             this.#user.interface.console?.AddLog(
@@ -114,7 +121,7 @@ class DeviceAuthService {
         // Step 3: Authenticate the device
         const authenticateResult = await this.#authenticate();
         if (authenticateResult === null) {
-            return false;
+            return 'error';
         }
 
         // Step 4: Save the session token in the secure storage
@@ -123,14 +130,14 @@ class DeviceAuthService {
             authenticateResult.sessionToken
         );
         if (!saveCredentialsResult) {
-            return false;
+            return 'error';
         }
 
-        return true;
+        return 'authenticated';
     };
 
     /**
-     * @returns {Promise<'ok' | 'not-connected' | 'error'>}
+     * @returns {Promise<'ok' | 'not-connected' | 'update' | 'error'>}
      */
     #handshake = async () => {
         if (!this.#tcp.IsConnected()) {
@@ -164,8 +171,19 @@ class DeviceAuthService {
         // Update the server state
         if (response.result === 'ok') {
             this.#user.server2.serverState.status = 'up-to-date';
-        } else if (
-            response.result === 'update' ||
+        }
+
+        // Update required, blocking step
+        else if (response.result === 'update') {
+            this.#user.server2.serverState.status = 'update';
+            if (typeof response.serverVersion === 'string') {
+                this.#user.server2.serverState.version = response.serverVersion;
+            }
+            return 'update';
+        }
+
+        // Maintenance mode, optional update or downgrade, non-blocking step
+        else if (
             response.result === 'update-optional' ||
             response.result === 'maintenance' ||
             response.result === 'downdate'

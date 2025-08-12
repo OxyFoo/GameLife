@@ -36,8 +36,8 @@ import * as React from 'react';
  * @property {number} iconAngle
  * @property {boolean} loading
  * @property {boolean} enabled
- * @property {() => void} onPress
- * @property {() => void} onLongPress
+ * @property {(event: GestureResponderEvent) => void} onPress
+ * @property {(event: GestureResponderEvent) => void} onLongPress
  * @property {'none' | 'auto' | 'box-none' | 'box-only'} pointerEvents
  * @property {(event: GestureResponderEvent) => void} onTouchStart
  * @property {(event: GestureResponderEvent) => void} onTouchMove
@@ -170,9 +170,9 @@ class ButtonBack extends React.Component {
         if (isPress && !loading && enabled) {
             this.last = now;
             if (deltaT < 500) {
-                onPress();
+                onPress(event);
             } else if (deltaT < 3000) {
-                onLongPress();
+                onLongPress(event);
             }
         }
     };

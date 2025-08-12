@@ -114,8 +114,8 @@ android {
         applicationId "com.gamelife"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 30010
-        versionName "2.1.2"
+        versionCode 30011
+        versionName "2.1.3"
         missingDimensionStrategy "store", "play"
     }
     signingConfigs {

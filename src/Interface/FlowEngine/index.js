@@ -26,19 +26,14 @@ class FlowEnginePagesRender extends BackFlowEngine {
         const { testID } = this.props;
         const { customResponsive } = this.state;
 
-        const styleBackground = {
-            backgroundColor: themeManager.GetColor('ground1')
-        };
-
         return (
             <SafeAreaWithResponsive
                 testID={testID}
-                style={styleBackground}
                 onLayout={this.onLayout}
                 customResponsive={customResponsive}
+                background={<DynamicBackground opacity={0.15} backgroundColor={themeManager.GetColor('ground1')} />}
             >
                 <KeyboardAvoidingView style={styles.fullscreen} behavior='padding'>
-                    <DynamicBackground opacity={0.15} />
                     {this.renderPages()}
                     <UserHeader ref={this.userHeader} />
                     <BottomPanel ref={this.bottomPanel} />

@@ -32,14 +32,15 @@ const PATH2 = [
  * @param {object} props
  * @param {StyleProp} [props.style]
  * @param {number} [props.opacity] Between 0 and 1, default: 0.2
+ * @param {ViewStyle['backgroundColor']} [props.backgroundColor] Color of the radial background
  * @returns {JSX.Element | null}
  */
-function DynamicBackground(props) {
+function DynamicBackground({ style, opacity = 0.2, backgroundColor = '#000000' }) {
     const [layout, setLayout] = React.useState({ width: 0, height: 0 });
 
     return (
         <View
-            style={[styles.parent, props.style]}
+            style={[styles.parent, { backgroundColor }, style]}
             onLayout={(e) => setLayout(e.nativeEvent.layout)}
             pointerEvents='none'
         >
@@ -47,14 +48,14 @@ function DynamicBackground(props) {
                 color='main1'
                 animPath={PATH1}
                 size={{ width: layout.width, height: layout.height }}
-                opacity={props.opacity || 0.2}
+                opacity={opacity}
                 duration={30000}
             />
             <Radial
                 color='main2'
                 animPath={PATH2}
                 size={{ width: layout.width, height: layout.height }}
-                opacity={props.opacity || 0.2}
+                opacity={opacity}
                 duration={30000}
             />
         </View>
@@ -63,12 +64,8 @@ function DynamicBackground(props) {
 
 const styles = StyleSheet.create({
     parent: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        overflow: 'hidden'
+        width: '100%',
+        height: '100%'
     }
 });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, Dimensions, StyleSheet, Platform } from 'react-native';
+import { View, SafeAreaView, Dimensions, StyleSheet, Platform } from 'react-native';
 import SafeArea from 'react-native-safe-area';
 import SafeAreaNative, { DEFAULT_INSETS } from 'Utils/SafeAreaNative';
 
@@ -27,12 +27,13 @@ const DEFAULT_responsive = {
  * @param {string} [props.testID]
  * @param {StyleProp} [props.style]
  * @param {JSX.Element} props.children
+ * @param {JSX.Element} [props.background] - Optional background element
  * @param {(event: LayoutChangeEvent) => void} [props.onLayout]
  * @param {ResponsiveSettings} [props.customResponsive] - Custom responsive settings
  * @param {SafeAreaInsets} [props.customInsets] - Safe area insets, automatically detected if not provided
  * @returns {JSX.Element}
  */
-const SafeAreaWithResponsive = ({ testID, style, children, onLayout, customResponsive, customInsets }) => {
+const SafeAreaWithResponsive = ({ testID, style, children, background, onLayout, customResponsive, customInsets }) => {
     const [nativeInsets, setNativeInsets] = React.useState(DEFAULT_INSETS);
 
     React.useEffect(() => {
@@ -97,16 +98,26 @@ const SafeAreaWithResponsive = ({ testID, style, children, onLayout, customRespo
     }
 
     return (
-        <SafeAreaView
-            style={[styles.safeView, style, offsetStyle]}
-            testID={testID}
-            onLayout={onLayout}
-            children={children}
-        />
+        <>
+            {background && <View style={styles.backgroundContainer}>{background}</View>}
+            <SafeAreaView
+                style={[styles.safeView, style, offsetStyle]}
+                testID={testID}
+                onLayout={onLayout}
+                children={children}
+            />
+        </>
     );
 };
 
 const styles = StyleSheet.create({
+    backgroundContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
     safeView: {
         width: '100%',
         height: '100%'

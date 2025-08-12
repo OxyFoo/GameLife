@@ -6,11 +6,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
 
-    safeView: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#000000'
-    },
     parent: {
         position: 'absolute',
         top: 0,

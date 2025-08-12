@@ -38,7 +38,7 @@ class BottomPanel extends BottomPanelBack {
             minHeight: opened ? this.mover.panel.height : undefined,
             maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
-            paddingBottom: navbarHeight + offset * 2 + (Platform.select({ ios: 100, android: 0 }) ?? 0),
+            paddingBottom: navbarHeight + offset * 2 + (Platform.select({ ios: 50, android: 0 }) ?? 0), // iOS has a bottom inset for the keyboard ?
             transform: [
                 {
                     translateY: Animated.add(

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { View, SafeAreaView, Dimensions, StyleSheet, Platform } from 'react-native';
-import SafeArea from 'react-native-safe-area';
+import { View, SafeAreaView, Dimensions, StyleSheet } from 'react-native';
 import SafeAreaNative, { DEFAULT_INSETS } from 'Utils/SafeAreaNative';
 
 /**
@@ -38,29 +37,10 @@ const SafeAreaWithResponsive = ({ testID, style, children, background, onLayout,
 
     React.useEffect(() => {
         // Get native insets
-        if (Platform.OS === 'android' && SafeAreaNative.isAvailable()) {
-            SafeAreaNative.getSafeAreaInsets()
-                .then((detailedInsets) => {
-                    console.log('Native Safe Area Insets:', detailedInsets);
-                    setNativeInsets({
-                        top: detailedInsets.top,
-                        left: detailedInsets.left,
-                        right: detailedInsets.right,
-                        bottom: detailedInsets.bottom
-                    });
-                })
-                .catch((error) => {
-                    console.warn('Failed to get native insets:', error);
-                });
-        }
-
-        // Fallback to the old method for iOS or if the native module is not available
-        else {
-            SafeArea.getSafeAreaInsetsForRootView().then((fallbackInsets) => {
-                setNativeInsets(fallbackInsets.safeAreaInsets);
-            });
-        }
-    }, [customInsets]);
+        SafeAreaNative.getSafeAreaInsets().then((insets) => {
+            setNativeInsets({ ...insets });
+        });
+    }, []);
 
     const insets = { ...nativeInsets, ...customInsets };
     const responsive = { ...DEFAULT_responsive, ...customResponsive };

@@ -1,4 +1,5 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
+import SafeArea from 'react-native-safe-area';
 
 /**
  * @typedef {object} SafeAreaInsets
@@ -6,17 +7,6 @@ import { NativeModules } from 'react-native';
  * @property {number} left - Left inset
  * @property {number} right - Right inset
  * @property {number} bottom - Bottom inset
- */
-
-/**
- * @typedef {object} DetailedSafeAreaInsets
- * @property {number} top - Top inset (system bars combined)
- * @property {number} left - Left inset (system bars combined)
- * @property {number} right - Right inset (system bars combined)
- * @property {number} bottom - Bottom inset (system bars combined)
- * @property {SafeAreaInsets} navigationBars - Navigation bar specific insets
- * @property {SafeAreaInsets} statusBars - Status bar specific insets
- * @property {SafeAreaInsets} displayCutout - Display cutout specific insets
  */
 
 /** @type {SafeAreaInsets} */
@@ -40,14 +30,54 @@ class SafeAreaNative {
      * @returns {boolean} True if the module is available
      */
     isAvailable() {
-        return !!this.module;
+        // OS incompatible
+        if (Platform.OS !== 'android' && Platform.OS !== 'ios') {
+            return false;
+        }
+
+        // Module not available
+        if (!this.module) {
+            console.warn('SafeAreaNative module is not available');
+            return false;
+        }
+
+        // Check if the module has the required method
+        if (typeof this.module.getSafeAreaInsets !== 'function') {
+            console.warn('SafeAreaNative module does not have getSafeAreaInsets method');
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Retrieves detailed safe area insets from the Android native module
-     * @returns {Promise<DetailedSafeAreaInsets>} Promise containing detailed insets
+     * @returns {Promise<SafeAreaInsets>} Promise containing detailed insets
      */
     async getSafeAreaInsets() {
+        if (!this.isAvailable()) {
+            return DEFAULT_INSETS;
+        }
+
+        /** @type {SafeAreaInsets | null} */
+        let insets = null;
+
+        // Fetch insets based android native module
+        if (Platform.OS === 'android') {
+            insets = await this.#fetchSafeAreaInsetsFromAndroid();
+        }
+
+        // Fetch insets based on library for iOS or android fallback
+        else if (Platform.OS === 'ios' || insets === null) {
+            insets = await this.#fetchSafeAreaInsetsFromLib();
+        }
+
+        // Fallback to default insets if null
+        return insets ?? DEFAULT_INSETS;
+    }
+
+    /** @returns {Promise<SafeAreaInsets | null>} */
+    async #fetchSafeAreaInsetsFromAndroid() {
         try {
             if (!this.module) {
                 throw new Error('SafeAreaModule not available');
@@ -57,14 +87,22 @@ class SafeAreaNative {
             return insets;
         } catch (error) {
             console.warn('Failed to get native safe area insets:', error);
+            return null;
+        }
+    }
 
-            // Return default values in case of error
-            return {
-                ...DEFAULT_INSETS,
-                navigationBars: DEFAULT_INSETS,
-                statusBars: DEFAULT_INSETS,
-                displayCutout: DEFAULT_INSETS
-            };
+    /** @returns {Promise<SafeAreaInsets | null>} */
+    async #fetchSafeAreaInsetsFromLib() {
+        try {
+            if (!this.module) {
+                throw new Error('SafeAreaModule not available');
+            }
+
+            const insets = await SafeArea.getSafeAreaInsetsForRootView();
+            return insets.safeAreaInsets;
+        } catch (error) {
+            console.warn('Failed to get native safe area insets:', error);
+            return null;
         }
     }
 }

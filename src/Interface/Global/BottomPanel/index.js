@@ -15,7 +15,7 @@ import { DynamicBackground } from 'Interface/Primitives';
 
 class BottomPanel extends BottomPanelBack {
     render() {
-        const { state, current, animOpacity } = this.state;
+        const { state, current, animOpacity, bottomInset } = this.state;
 
         // Offset used to avoid animation void space at the bottom of the screen
         const offset = 24;
@@ -38,9 +38,14 @@ class BottomPanel extends BottomPanelBack {
             minHeight: opened ? this.mover.panel.height : undefined,
             maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
-            paddingBottom: navbarHeight + offset + (Platform.select({ ios: 100, android: 0 }) ?? 0),
+            paddingBottom: navbarHeight + offset * 2 + (Platform.select({ ios: 100, android: 0 }) ?? 0),
             transform: [
-                { translateY: Animated.add(this.mover.panel.posAnimY, offset + (user.interface?.size?.height || 0)) }
+                {
+                    translateY: Animated.add(
+                        this.mover.panel.posAnimY,
+                        (user.interface?.size?.height || 0) - bottomInset
+                    )
+                }
             ],
             backgroundColor: themeManager.GetColor('ground1')
         };

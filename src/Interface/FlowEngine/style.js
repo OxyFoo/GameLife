@@ -2,8 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     fullscreen: {
-        height: '100%',
-        overflow: 'hidden'
+        height: '100%'
     },
 
     parent: {

@@ -41,9 +41,6 @@ class SafeAreaModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
             }
 
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val navigationBarsInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            val statusBarsInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val displayCutoutInsets = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
 
             // Get screen density to convert physical px to dp
             val density = reactApplicationContext.resources.displayMetrics.density
@@ -60,28 +57,6 @@ class SafeAreaModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
             result.putDouble("left", (systemBarsInsets.left / density).toDouble())
             result.putDouble("right", (systemBarsInsets.right / density).toDouble())
             result.putDouble("bottom", (systemBarsInsets.bottom / density).toDouble())
-            
-            // Specific insets - converted to dp
-            val navigationBars: WritableMap = Arguments.createMap()
-            navigationBars.putDouble("top", (navigationBarsInsets.top / density).toDouble())
-            navigationBars.putDouble("left", (navigationBarsInsets.left / density).toDouble())
-            navigationBars.putDouble("right", (navigationBarsInsets.right / density).toDouble())
-            navigationBars.putDouble("bottom", (navigationBarsInsets.bottom / density).toDouble())
-            result.putMap("navigationBars", navigationBars)
-            
-            val statusBars: WritableMap = Arguments.createMap()
-            statusBars.putDouble("top", (statusBarsInsets.top / density).toDouble())
-            statusBars.putDouble("left", (statusBarsInsets.left / density).toDouble())
-            statusBars.putDouble("right", (statusBarsInsets.right / density).toDouble())
-            statusBars.putDouble("bottom", (statusBarsInsets.bottom / density).toDouble())
-            result.putMap("statusBars", statusBars)
-            
-            val displayCutout: WritableMap = Arguments.createMap()
-            displayCutout.putDouble("top", (displayCutoutInsets.top / density).toDouble())
-            displayCutout.putDouble("left", (displayCutoutInsets.left / density).toDouble())
-            displayCutout.putDouble("right", (displayCutoutInsets.right / density).toDouble())
-            displayCutout.putDouble("bottom", (displayCutoutInsets.bottom / density).toDouble())
-            result.putMap("displayCutout", displayCutout)
 
             promise.resolve(result)
         } catch (e: Exception) {

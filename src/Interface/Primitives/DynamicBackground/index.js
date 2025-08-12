@@ -35,7 +35,7 @@ const PATH2 = [
  * @param {ViewStyle['backgroundColor']} [props.backgroundColor] Color of the radial background
  * @returns {JSX.Element | null}
  */
-function DynamicBackground({ style, opacity = 0.2, backgroundColor = '#000000' }) {
+function DynamicBackground({ style, opacity = 0.2, backgroundColor = 'transparent' }) {
     const [layout, setLayout] = React.useState({ width: 0, height: 0 });
 
     return (
@@ -64,8 +64,12 @@ function DynamicBackground({ style, opacity = 0.2, backgroundColor = '#000000' }
 
 const styles = StyleSheet.create({
     parent: {
-        width: '100%',
-        height: '100%'
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        overflow: 'hidden'
     }
 });
 

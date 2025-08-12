@@ -34,6 +34,7 @@ class ActivitiesProgressChart extends ActivitiesProgressChartBack {
                     onPress={this.switchDonutLegends}
                 >
                     <LinearGradient
+                        key={`gradient-${this.state.showDonut}`}
                         style={[styles.gradientContainer, this.props.style]}
                         colors={[
                             themeManager.GetColor('main1', { opacity: 0.45 }),

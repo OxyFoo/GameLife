@@ -1,6 +1,6 @@
 import Crypto from 'crypto-js';
 import { Platform } from 'react-native';
-import AppAttest from 'react-native-ios-appattest';
+import * as AppAttest from 'react-native-ios-appattest';
 import PlayIntegrity from 'react-native-google-play-integrity';
 
 import user from 'Managers/UserManager';
@@ -41,9 +41,15 @@ export async function GetIntegrityToken(challenge) {
 
     // iOS - App Attest
     else if (Platform.OS === 'ios') {
+        if (!AppAttest || typeof AppAttest.attestationSupported !== 'function') {
+            user.interface.console?.AddLog('error', '[GetIntegrityToken] App Attest not available');
+            return 'unsupported';
+        }
+
         try {
             const supported = await AppAttest.attestationSupported();
             if (!supported) {
+                user.interface.console?.AddLog('error', '[GetIntegrityToken] App Attest not supported');
                 return 'unsupported';
             }
         } catch (e) {
@@ -75,6 +81,7 @@ export async function GetIntegrityToken(challenge) {
 
     // Other platforms - Not supported
     else {
+        user.interface.console?.AddLog('error', '[GetIntegrityToken] Unsupported platform');
         return 'error';
     }
 }

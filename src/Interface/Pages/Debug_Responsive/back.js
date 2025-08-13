@@ -5,11 +5,17 @@ import PageBase from 'Interface/FlowEngine/PageBase';
  */
 
 class BackResponsive extends PageBase {
-    state = {
-        scaleValue: this.fe.responsive.Get().scale.toString(),
-        paddingVerticalValue: this.fe.responsive.Get().paddingVertical.toString(),
-        paddingHorizontalValue: this.fe.responsive.Get().paddingHorizontal.toString()
-    };
+    /** @param {object} props */
+    constructor(props) {
+        super(props);
+
+        const responsive = this.fe.GetResponsive();
+        this.state = {
+            scaleValue: responsive.scale.toString(),
+            paddingVerticalValue: responsive.paddingVertical.toString(),
+            paddingHorizontalValue: responsive.paddingHorizontal.toString()
+        };
+    }
 
     /** @type {ComboBox['props']['onSelect']} */
     handleChangeAspectRatio = (item) => {
@@ -18,10 +24,7 @@ class BackResponsive extends PageBase {
         }
 
         this.setState({ scaleValue: item?.value }, () => {
-            this.fe.responsive.Set({
-                ...this.fe.responsive.Get(),
-                scale: parseFloat(item?.value) || 1
-            });
+            this.fe.SetResponsive({ scale: parseFloat(item?.value) || 1 });
         });
     };
 
@@ -32,10 +35,7 @@ class BackResponsive extends PageBase {
         }
 
         this.setState({ paddingVerticalValue: item?.value }, () => {
-            this.fe.responsive.Set({
-                ...this.fe.responsive.Get(),
-                paddingVertical: parseFloat(item?.value) || 0
-            });
+            this.fe.SetResponsive({ paddingVertical: parseFloat(item?.value) || 0 });
         });
     };
 
@@ -46,10 +46,7 @@ class BackResponsive extends PageBase {
         }
 
         this.setState({ paddingHorizontalValue: item?.value }, () => {
-            this.fe.responsive.Set({
-                ...this.fe.responsive.Get(),
-                paddingHorizontal: parseFloat(item?.value) || 0
-            });
+            this.fe.SetResponsive({ paddingHorizontal: parseFloat(item?.value) || 0 });
         });
     };
 

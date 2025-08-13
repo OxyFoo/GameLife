@@ -6,8 +6,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0,
-        overflow: 'hidden'
+        bottom: 0
     },
     panel: {
         top: 0,
@@ -26,7 +25,8 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: '#000000'
+        backgroundColor: '#000000',
+        transform: [{ scale: 2 }]
     }
 });
 

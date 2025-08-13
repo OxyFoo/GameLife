@@ -71,7 +71,6 @@ class Server extends IUserClass {
         this.#listenerTCP = this.tcp.state.AddListener((state) => {
             if (state === 'disconnected' || state === 'error') {
                 this.serverState.status = 'not-connected';
-                this.serverState.version = null;
             }
         });
     }
@@ -121,7 +120,7 @@ class Server extends IUserClass {
         // 2. Authenticate the device
         if (!this.deviceAuth.IsAuthenticated()) {
             const deviceAuthenticated = await this.deviceAuth.Authenticate();
-            if (!deviceAuthenticated) {
+            if (deviceAuthenticated === 'not-connected' || deviceAuthenticated === 'error') {
                 this.#user.interface.console?.AddLog('error', '[Server] Device authentication failed');
                 this.tcp.Disconnect();
                 return 'authenticated-failed';

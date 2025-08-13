@@ -6,6 +6,7 @@ import DynamicVar from 'Utils/DynamicVar';
 import { MinMax, Round } from 'Utils/Functions';
 import { IsNotNull } from 'Utils/Types';
 import { GetBattery } from 'Utils/Device';
+import { ParsePlural } from 'Utils/String';
 import { GetGlobalTime } from 'Utils/Time';
 
 /**
@@ -416,6 +417,18 @@ class Achievements extends IUserData {
 
                 output = condText['SelfFriend'].replace('{}', valueStr);
                 break;
+
+            case 'AccountAge':
+                if (valueStr === null || valueNum === null || isNaN(valueNum)) {
+                    this.#user.interface.console?.AddLog(
+                        'error',
+                        '[Achievements] Account age condition with string value'
+                    );
+                    break;
+                }
+
+                output = ParsePlural(condText['AccountAge'].replace('{}', valueStr), valueNum > 1);
+                break;
         }
 
         return output;
@@ -603,7 +616,7 @@ class Achievements extends IUserData {
                     continue;
             }
 
-            if (value !== null && typeof Condition.Value === 'number') {
+            if (value !== null) {
                 switch (Condition.Operator) {
                     case 'None':
                         if (value >= 1) {
@@ -611,12 +624,12 @@ class Achievements extends IUserData {
                         }
                         break;
                     case 'GT':
-                        if (value >= Condition.Value) {
+                        if (typeof Condition.Value === 'number' && value >= Condition.Value) {
                             completed = true;
                         }
                         break;
                     case 'LT':
-                        if (value < Condition.Value) {
+                        if (typeof Condition.Value === 'number' && value < Condition.Value) {
                             completed = true;
                         }
                         break;

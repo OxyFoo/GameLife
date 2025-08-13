@@ -24,6 +24,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Global').UserHeader} UserHeader
  * @typedef {import('Interface/Global').NavBar} NavBar
  * @typedef {import('Interface/Global').NotificationsInApp} NotificationsInApp
+ * @typedef {import('Interface/FlowEngine/SafeAreaWithResponsive').ResponsiveSettings} ResponsiveSettings
  * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
 
@@ -106,7 +107,14 @@ class BackFlowEngine extends React.Component {
         currentTransition: 'auto',
 
         /** @type {Array<PageMemory<PageNames>>} */
-        mountedPages: []
+        mountedPages: [],
+
+        /** @type {ResponsiveSettings} */
+        customResponsive: {
+            scale: 1,
+            paddingVertical: 0,
+            paddingHorizontal: 0
+        }
     };
 
     responsive = new DynamicVar({
@@ -174,6 +182,7 @@ class BackFlowEngine extends React.Component {
     }
 
     componentDidMount() {
+        // Set public properties
         this._public.popup = this.popup.current;
         this._public.screenTuto = this.screenTuto.current;
         this._public.console = this.console.current;
@@ -183,6 +192,7 @@ class BackFlowEngine extends React.Component {
         this._public.navBar = this.navBar.current;
         this._public.notificationsInApp = this.notificationsInApp.current;
 
+        // Set back button handler
         this.nativeEventSubscription = BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
     }
 
@@ -196,7 +206,11 @@ class BackFlowEngine extends React.Component {
      * @returns {boolean}
      */
     shouldComponentUpdate(_nextProps, nextState) {
-        return this.state.selectedPage !== nextState.selectedPage || this.state.mountedPages !== nextState.mountedPages;
+        return (
+            this.state.selectedPage !== nextState.selectedPage ||
+            this.state.mountedPages !== nextState.mountedPages ||
+            this.state.customResponsive !== nextState.customResponsive
+        );
     }
 
     /** @param {LayoutChangeEvent} event */
@@ -204,6 +218,24 @@ class BackFlowEngine extends React.Component {
         const { width, height } = event.nativeEvent.layout;
         this.size.width = width;
         this.size.height = height;
+    };
+
+    /** @returns {ResponsiveSettings} */
+    GetResponsive = () => this.state.customResponsive;
+
+    /**
+     * @description Set responsive settings
+     * @param {Partial<ResponsiveSettings>} responsive
+     * @public
+     */
+    SetResponsive = (responsive) => {
+        const currentResponsive = this.GetResponsive();
+        const customResponsive = {
+            scale: responsive.scale ?? currentResponsive.scale,
+            paddingVertical: responsive.paddingVertical ?? currentResponsive.paddingVertical,
+            paddingHorizontal: responsive.paddingHorizontal ?? currentResponsive.paddingHorizontal
+        };
+        this.setState({ customResponsive });
     };
 
     /**
@@ -652,7 +684,9 @@ class BackFlowEngine extends React.Component {
 
         history: this.history,
         size: this.size,
-        responsive: this.responsive,
+
+        GetResponsive: this.GetResponsive,
+        SetResponsive: this.SetResponsive,
 
         ClearHistory: this.ClearHistory,
         Reload: this.Reload,

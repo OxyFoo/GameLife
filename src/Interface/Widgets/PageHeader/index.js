@@ -35,17 +35,11 @@ const PageHeaderProps = {
 
 class PageHeader extends React.Component {
     render() {
-        const {
-            title,
-            onBackPress,
-            secondaryIcon: helpIcon,
-            secondaryIconColor,
-            onSecondaryIconPress: onHelpPress
-        } = this.props;
+        const { title, onBackPress, secondaryIcon, secondaryIconColor, onSecondaryIconPress } = this.props;
         const text = title ?? langManager.curr['modal']['back'];
 
         return (
-            <View style={[styles.header, onHelpPress && styles.headerWithIcon, this.props.style]}>
+            <View style={[styles.header, this.props.style]}>
                 <TouchableOpacity style={styles.headerLeft} activeOpacity={0.5} onPress={onBackPress}>
                     <Icon
                         style={styles.headerLeftArrow}
@@ -57,14 +51,14 @@ class PageHeader extends React.Component {
 
                     {title === null ? <Text fontSize={16}>{text}</Text> : <Text style={styles.text}>{text}</Text>}
                 </TouchableOpacity>
-                {onHelpPress && (
+                {onSecondaryIconPress && (
                     <Button
                         style={styles.secondaryButton}
                         appearance='uniform'
                         color='transparent'
-                        onPress={(e) => onHelpPress(e)}
+                        onPress={onSecondaryIconPress}
                     >
-                        <Icon icon={helpIcon} color={secondaryIconColor} size={30} />
+                        <Icon icon={secondaryIcon} color={secondaryIconColor} size={30} />
                     </Button>
                 )}
             </View>

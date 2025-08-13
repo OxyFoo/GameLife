@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        marginTop: 36,
+        marginTop: 12,
         marginBottom: 36,
 
         display: 'flex',
@@ -13,9 +13,6 @@ const styles = StyleSheet.create({
 
         elevation: 1000,
         zIndex: 1000
-    },
-    headerWithIcon: {
-        marginTop: 28
     },
     headerLeft: {
         flexDirection: 'row',

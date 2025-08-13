@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         opacity: 0.8,
-        backgroundColor: '#000000'
+        backgroundColor: '#000000',
+        transform: [{ scale: 2 }]
     },
 
     container: {

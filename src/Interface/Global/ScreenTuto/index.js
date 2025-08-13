@@ -25,6 +25,7 @@ class ScreenTuto extends ScreenTutoBack {
         return (
             <View style={styles.parent}>
                 {/** Background */}
+                {/* TODO: Fix insets spaces in background */}
                 {this.renderTopPanel()}
                 {this.renderLeftPanel()}
                 {this.renderRightPanel()}

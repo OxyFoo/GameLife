@@ -23,14 +23,17 @@ import { KeyboardSpacerView } from 'Interface/Components';
 
 class FlowEnginePagesRender extends BackFlowEngine {
     render() {
-        const styleBackground = {
-            backgroundColor: themeManager.GetColor('ground1')
-        };
+        const { testID } = this.props;
+        const { customResponsive } = this.state;
 
         return (
-            <SafeAreaWithResponsive onLayout={this.onLayout} testID={this.props.testID}>
-                <KeyboardAvoidingView style={[styles.fullscreen, styleBackground]} behavior='padding'>
-                    <DynamicBackground opacity={0.15} />
+            <SafeAreaWithResponsive
+                testID={testID}
+                onLayout={this.onLayout}
+                customResponsive={customResponsive}
+                background={<DynamicBackground opacity={0.15} backgroundColor={themeManager.GetColor('ground1')} />}
+            >
+                <KeyboardAvoidingView style={styles.fullscreen} behavior='padding'>
                     {this.renderPages()}
                     <UserHeader ref={this.userHeader} />
                     <BottomPanel ref={this.bottomPanel} />

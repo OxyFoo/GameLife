@@ -23,6 +23,7 @@ class NavBar extends BottomBarBack {
 
         /** @type {StyleViewProp} */
         const animStyle = {
+            opacity: animationNavBar,
             transform: [
                 {
                     translateY: animationNavBar.interpolate({

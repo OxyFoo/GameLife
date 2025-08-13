@@ -6,7 +6,7 @@ on:
       environment:
         description: 'Choose environment to build'
         required: true
-        default: 'prod'
+        default: 'dev'
         type: choice
         options:
         - dev
@@ -15,7 +15,7 @@ on:
       actions:
         description: 'Choose platform to build'
         required: true
-        default: 'both'
+        default: 'none'
         type: choice
         options:
         - none

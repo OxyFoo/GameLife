@@ -491,6 +491,7 @@
         "error-signin-pseudoUsed": "Ce pseudo est déjà utilisé.",
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
+        "error-google-signin-unavailable": "La connexion avec Google n'est pas encore configurée, réessaye plus tard.",
 
         "error-connection": "Échec de la connexion au serveur",
 

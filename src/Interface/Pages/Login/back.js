@@ -222,6 +222,17 @@ class BackLogin extends PageBase {
     googleSignIn = async () => {
         const lang = langManager.curr['login'];
 
+        if (!GoogleSignIn.shouldShowButton()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['error-google-signin-unavailable']
+                }
+            });
+            return;
+        }
+
         this.setState({ loading: true });
 
         // Wait for animations to finish

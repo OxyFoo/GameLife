@@ -491,6 +491,7 @@
         "error-signin-pseudoUsed": "This username is already in use.",
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
+        "error-google-signin-unavailable": "The connection with Google is not yet configured, please try again later.",
 
         "error-connection": "Connection to the server failed",
 

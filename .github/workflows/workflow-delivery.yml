@@ -22,19 +22,6 @@ on:
         - both
         - android
         - ios
-      action-update:
-        description: 'Update app version (applied before build)'
-        required: true
-        default: 'none'
-        type: choice
-        options:
-        - none
-        - build
-        - build-android
-        - build-ios
-        - patch
-        - minor
-        - major
       delivery:
         description: 'Delivery to stores (test & prod only)'
         required: true
@@ -57,26 +44,12 @@ jobs:
       test-resource: true
       test-tls-pinning: true
 
-  update-version:
-    name: '📝 Update version'
-    uses: ./.github/workflows/step-version.yml
-    if: github.event.inputs.action-update != 'none'
-    secrets: inherit
-    with:
-      action-update: ${{ github.event.inputs.action-update }}
-
   android:
     name: '🤖 Android'
-    needs:
-      - tests
-      - update-version
+    needs: tests
     if: >
       always() &&
       (needs.tests.result == 'success') &&
-      (
-        needs.update-version.result == 'success' ||
-        needs.update-version.result == 'skipped'
-      ) &&
       (
         github.event.inputs.actions == 'both' ||
         github.event.inputs.actions == 'android'
@@ -90,16 +63,10 @@ jobs:
 
   ios:
     name: '🍏 iOS'
-    needs:
-      - tests
-      - update-version
+    needs: tests
     if: >
       always() &&
       (needs.tests.result == 'success') &&
-      (
-        needs.update-version.result == 'success' ||
-        needs.update-version.result == 'skipped'
-      ) &&
       (
         github.event.inputs.actions == 'both' ||
         github.event.inputs.actions == 'ios'

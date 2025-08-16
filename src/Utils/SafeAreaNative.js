@@ -59,10 +59,16 @@ class SafeAreaNative {
             return DEFAULT_INSETS;
         }
 
+        // If the platform is iOS or Android with version < 35, use default insets
+        // Because they are already included in the native SafeArea
+        if (Platform.OS === 'ios' || (Platform.OS === 'android' && Platform.Version < 35)) {
+            return DEFAULT_INSETS;
+        }
+
         /** @type {SafeAreaInsets | null} */
         let insets = null;
 
-        // Fetch insets based android native module
+        // Fetch insets based on Android native module
         if (Platform.OS === 'android') {
             insets = await this.#fetchSafeAreaInsetsFromAndroid();
         }

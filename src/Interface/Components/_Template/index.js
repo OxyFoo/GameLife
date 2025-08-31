@@ -6,7 +6,10 @@ import BackNewComponent from './back';
 
 class NewComponent extends BackNewComponent {
     render() {
-        return <View />;
+        return (
+            <View>
+            </View>
+        );
     }
 }
 

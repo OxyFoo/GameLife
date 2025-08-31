@@ -2,20 +2,19 @@ import dataManager from 'Managers/DataManager';
 
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import DynamicVar from 'Utils/DynamicVar';
-import { MinMax, Round, Sum } from 'Utils/Functions';
+import { MinMax, Sum } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
  * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').XPInfo} XPInfo
- * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').Stats} Stats
  * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
  * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').EnrichedXPInfo} EnrichedXPInfo
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
  */
 
 /**
- * @typedef {'user' | 'stat' | 'skill'} XPTypes
+ * @typedef {'user' | 'skill'} XPTypes
  *
  * @typedef {object} XPOptions
  * @property {number} xpPerLevel
@@ -27,10 +26,6 @@ const XPOptions = {
     user: {
         xpPerLevel: 20,
         increaseRatio: 0.5
-    },
-    stat: {
-        xpPerLevel: 6,
-        increaseRatio: 0.8
     },
     skill: {
         xpPerLevel: 20,
@@ -44,7 +39,7 @@ class Experience extends IUserClass {
 
     /**
      * @readonly
-     * @type {Array<keyof Stats>}
+     * @type {Array<keyof StatsXP>}
      */
     statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
 
@@ -76,7 +71,7 @@ class Experience extends IUserClass {
         this.experience.Set({ stats: this.GetEmptyExperience(), xpInfo: this.getXPDict(0) });
     };
 
-    /** @returns {Stats} */
+    /** @returns {StatsXP} */
     GetEmptyExperience() {
         const stats = this.statsKey.map((i) => ({ [i]: this.getXPDict() }));
         return Object.assign({}, ...stats);
@@ -84,7 +79,7 @@ class Experience extends IUserClass {
 
     /**
      * @param {string} key
-     * @returns {key is keyof Stats}
+     * @returns {key is keyof StatsXP}
      */
     KeyIsStats(key) {
         // @ts-ignore
@@ -96,7 +91,7 @@ class Experience extends IUserClass {
 
         let XP = 0;
 
-        /** @type {Stats} */
+        /** @type {StatsXP} */
         const stats = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: null })));
 
         /** @type {{ [key: string]: number }} */
@@ -123,15 +118,14 @@ class Experience extends IUserClass {
 
         for (let k in this.statsKey) {
             const key = this.statsKey[k];
-            stats[key] = this.getXPDict(statValues[key], 'stat');
+            stats[key] = statValues[key];
         }
 
         this.experience.Set({ stats, xpInfo: this.getXPDict(XP, 'user') });
     };
 
     GetStatsNumber = () => {
-        const experience = this.experience.Get();
-        return Object.assign({}, ...this.statsKey.map((key) => ({ [key]: Round(experience.stats[key].totalXP, 2) })));
+        return this.experience.Get().stats;
     };
 
     /**

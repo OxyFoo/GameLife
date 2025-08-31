@@ -5,17 +5,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginVertical: 12
+        marginVertical: 8
     },
     separatorText: {
-        width: 80,
-        textAlign: 'right',
-        fontSize: 12
+        textAlign: 'center',
+        fontSize: 12,
+        paddingHorizontal: 6
     },
     separatorButton: {
         width: 'auto',
         paddingVertical: 6,
-        paddingHorizontal: 16
+        paddingHorizontal: 6
     },
     separatorEmptyView: {
         height: 12

@@ -11,6 +11,8 @@ const styles = StyleSheet.create({
         fontSize: 22
     },
     detailsFlatList: {
+        flex: 1,
+        flexGrow: 0,
         marginBottom: 12,
         paddingHorizontal: 24
     },
@@ -22,8 +24,7 @@ const styles = StyleSheet.create({
     },
     details: {
         width: '50%',
-        textAlign: 'left',
-        marginBottom: 0
+        textAlign: 'left'
     },
     info: {
         textAlign: 'left',

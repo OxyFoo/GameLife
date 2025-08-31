@@ -26,6 +26,10 @@ class Waitinternet extends BackWaitinternet {
                     <Text style={styles.link} onPress={this.goToWebsite} color='main1'>
                         oxyfoo.fr
                     </Text>
+
+                    <Text style={styles.link} onPress={this.goToDiscord} color='main1'>
+                        Discord
+                    </Text>
                 </View>
 
                 <View style={styles.bottomView}>

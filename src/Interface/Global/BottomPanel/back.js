@@ -5,6 +5,7 @@ import Mover from './Mover';
 import user from 'Managers/UserManager';
 
 import { TimingAnimation } from 'Utils/Animations';
+import SafeAreaNative from 'Utils/SafeAreaNative';
 
 /**
  * @typedef {import('react-native').FlatList} FlatList
@@ -33,7 +34,9 @@ class BottomPanelBack extends React.Component {
         /** @type {BottomPanelParamsType | null} */
         current: null,
 
-        animOpacity: new Animated.Value(0)
+        animOpacity: new Animated.Value(0),
+
+        bottomInset: 0
     };
 
     mover = new Mover();
@@ -43,6 +46,14 @@ class BottomPanelBack extends React.Component {
      * @private
      */
     opening = false;
+
+    componentDidMount() {
+        if (SafeAreaNative.isAvailable()) {
+            SafeAreaNative.getSafeAreaInsets().then((detailedInsets) => {
+                this.setState({ bottomInset: detailedInsets.bottom });
+            });
+        }
+    }
 
     /**
      * Open the screen list

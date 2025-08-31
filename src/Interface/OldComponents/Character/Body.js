@@ -81,7 +81,7 @@ class Body {
     __applyAnimation = (translation, partsRotations) => {
         // Rotations
         Object.keys(partsRotations).forEach((partName) => {
-            const part = this.getChilds(this.firstPart).find((part) => part.name === partName) || null;
+            const part = this.getChilds(this.firstPart).find((_part) => _part.name === partName) || null;
             part?.rotation.Update(partsRotations[partName]);
         });
 
@@ -100,7 +100,7 @@ class Body {
         const topHalf_partToRemove = ['left_thigh', 'right_thigh', 'left_forearm', 'right_forearm'];
 
         if (size === 'head' && part.name === head_partToRemove) {
-            return [part.childs[0], ...part.childs[0].childs.map((part) => this.getChilds(part, 'full')).flat()];
+            return [part.childs[0], ...part.childs[0].childs.map((_part) => this.getChilds(_part, 'full')).flat()];
         } else if (size === 'topHalf' && topHalf_partToRemove.includes(part.name)) {
             return [];
         }

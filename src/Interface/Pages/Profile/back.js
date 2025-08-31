@@ -12,7 +12,6 @@ import { GetStringLength } from 'Utils/String';
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
  *
  * @typedef {import('./EditAvatar').default} EditorAvatar
- * @typedef {import('./Components/statistic').StatsValues} StatsValues
  */
 
 class BackProfile extends PageBase {
@@ -53,8 +52,9 @@ class BackProfile extends PageBase {
     }
 
     getUpdatedExperience() {
+        const exp = user.experience.experience.Get();
         return {
-            experienceUser: user.experience.experience.Get().xpInfo,
+            experienceUser: exp.xpInfo,
             experienceStats: user.experience.statsKey
                 .sort(
                     (a, b) =>
@@ -63,7 +63,7 @@ class BackProfile extends PageBase {
                 )
                 .map((statKey) => ({
                     statKey,
-                    experience: user.experience.experience.Get().stats[statKey]
+                    points: exp.stats[statKey]
                 }))
         };
     }

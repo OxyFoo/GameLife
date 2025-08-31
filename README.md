@@ -14,12 +14,14 @@ GameLife est une application mobile innovante qui gamifie ta productivité perso
 - **👥 Interagir en multijoueur** avec d'autres utilisateurs
 - **🎨 Personnaliser ton avatar** et explorer le shop in-app
 
-## 📲 Télécharger GameLife
+## 📲 Télécharger GameLife & Rejoindre la communauté
 
 <div align="center">
   <a href="https://play.google.com/store/apps/details?id=com.gamelife&hl=fr&gl=US"><img src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white" alt="Télécharger sur Google Play" height="60"/></a>
   &nbsp;&nbsp;&nbsp;
   <a href="https://apps.apple.com/fr/app/game-life/id1587486522"><img src="https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white" alt="Télécharger sur l'App Store" height="60"/></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://discord.gg/FfJRxjNAwS"><img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Rejoindre le Discord" height="60"/></a>
 </div>
 
 ## 📖 Documentation
@@ -66,7 +68,7 @@ npm run android   # Pour Android
 * [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws) 📦
 
 ### 💰 Monétisation & achats in-app
-* [React Native IAP](https://github.com/dooboolab-community/react-native-iap)
+* [React Native IAP](https://github.com/dooboolab-community/react-native-iap) [Removed, will be replaced]
 * [React Native Google Mobile Ads](https://github.com/invertase/react-native-google-mobile-ads)
 
 ### 🎨 UI & graphisme
@@ -91,6 +93,7 @@ npm run android   # Pour Android
 
 ### 📦 Our packages
 * [OxyFoo GameLife Types](https://github.com/OxyFoo/GameLife-Types)
+* [Dotenv-Oxy](https://github/com/Gerem66/dotenv-oxy) (with React Native Config)
 * [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws)
 * [React Native App Control](https://github.com/Gerem66/react-native-app-control)
 

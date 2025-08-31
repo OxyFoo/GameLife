@@ -47,10 +47,16 @@ class BackShopDyes extends React.Component {
         const rarities = [0.75, 0.18, 0.6, 0.1];
         const allBuyableDyes = dataManager.items.GetBuyable();
 
-        const ownItems = user.inventory.stuffs.map((item) => ({
-            StuffID: item.ID,
-            ...dataManager.items.GetByID(item.ItemID)
-        }));
+        const ownItems = user.inventory.stuffs.map((item) => {
+            const stuff = dataManager.items.GetByID(item.ItemID);
+            if (stuff === null) return null;
+            return {
+                StuffID: item.ID,
+                ...stuff
+            };
+        })
+            .filter((i) => i !== null);
+
         const altItems = ownItems.filter((i) => dataManager.items.GetDyables(i.ID, allBuyableDyes).length > 0);
         const altItemsProbas = ArrayToDict(altItems.map((i) => ({ [i.ID]: rarities[i.Rarity] })));
         const buyableItemsID = GetRandomIndexesByDay(altItemsProbas, SHOP_NUMBER_DYE);
@@ -101,8 +107,9 @@ class BackShopDyes extends React.Component {
     /** @param {BuyableDye} dye */
     openDyePopup = (dye) => {
         const callback = this.refreshDye.bind(this);
-        const render = () => renderDyePopup.bind(this)(dye, callback);
-        user.interface.popup.Open('custom', render);
+        user.interface.popup?.Open({
+            content: renderDyePopup.bind(this)(dye, callback)
+        });
     };
 }
 

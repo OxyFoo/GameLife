@@ -37,6 +37,8 @@ class Settings extends IUserClass {
     regularNotificationsLastRefresh = 0;
     morningNotifications = true;
     eveningNotifications = true;
+    optionalUpdatesNotifications = true;
+    statisticsEnabled = true;
 
     themeVariant = 0;
 
@@ -50,6 +52,8 @@ class Settings extends IUserClass {
         this.regularNotificationsLastRefresh = 0;
         this.morningNotifications = true;
         this.eveningNotifications = true;
+        this.optionalUpdatesNotifications = true;
+        this.statisticsEnabled = true;
 
         this.themeVariant = 0;
     };
@@ -82,6 +86,12 @@ class Settings extends IUserClass {
         if (typeof settings.eveningNotifications !== 'undefined') {
             this.eveningNotifications = settings.eveningNotifications;
         }
+        if (typeof settings.optionalUpdatesNotifications !== 'undefined') {
+            this.optionalUpdatesNotifications = settings.optionalUpdatesNotifications;
+        }
+        if (typeof settings.statisticsEnabled !== 'undefined') {
+            this.statisticsEnabled = settings.statisticsEnabled;
+        }
         if (typeof settings.musicLinks !== 'undefined') this.musicLinks = settings.musicLinks;
         if (typeof settings.themeVariant !== 'undefined') this.themeVariant = settings.themeVariant;
 
@@ -103,6 +113,8 @@ class Settings extends IUserClass {
             regularNotificationsLastRefresh: this.regularNotificationsLastRefresh,
             morningNotifications: this.morningNotifications,
             eveningNotifications: this.eveningNotifications,
+            optionalUpdatesNotifications: this.optionalUpdatesNotifications,
+            statisticsEnabled: this.statisticsEnabled,
             musicLinks: this.musicLinks,
             themeVariant: this.themeVariant
         };

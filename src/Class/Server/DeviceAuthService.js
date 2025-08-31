@@ -24,6 +24,9 @@ class DeviceAuthService {
     /** @type {DynamicVar<DeviceAuthState>} */
     state = new DynamicVar(/** @type {DeviceAuthState} */ ('not-connected'));
 
+    /** @type {boolean} */
+    devMode = false;
+
     /**
      * @param {UserManager} user
      * @param {TCP} tcp
@@ -78,18 +81,25 @@ class DeviceAuthService {
 
     /**
      * @description Authenticate the device with the server & define the server state (in server class)
-     * @returns {Promise<boolean>}
+     * @returns {Promise<'authenticated' | 'not-connected' | 'update' | 'error'>}
      */
     Authenticate = async () => {
         // If the device is already authenticated, return true
         if (this.IsAuthenticated()) {
-            return true;
+            return 'authenticated';
         }
 
         // Step 1: Do the handshake
         const handshakeResult = await this.#handshake();
         if (handshakeResult === 'not-connected' || handshakeResult === 'error') {
-            return false;
+            return handshakeResult;
+        }
+
+        // Update needed, blocking step
+        else if (handshakeResult === 'update') {
+            this.state.Set('not-authenticated');
+            this.#user.interface.console?.AddLog('warn', '[DeviceAuthService] Update required');
+            return 'update';
         }
 
         // Step 2: Get the integrity token if needed
@@ -99,7 +109,7 @@ class DeviceAuthService {
         if (integrityToken !== null) {
             const saveResult = await this.#saveIntegrityToken(integrityToken);
             if (!saveResult) {
-                return false;
+                return 'error';
             }
         } else {
             this.#user.interface.console?.AddLog(
@@ -111,7 +121,7 @@ class DeviceAuthService {
         // Step 3: Authenticate the device
         const authenticateResult = await this.#authenticate();
         if (authenticateResult === null) {
-            return false;
+            return 'error';
         }
 
         // Step 4: Save the session token in the secure storage
@@ -120,14 +130,14 @@ class DeviceAuthService {
             authenticateResult.sessionToken
         );
         if (!saveCredentialsResult) {
-            return false;
+            return 'error';
         }
 
-        return true;
+        return 'authenticated';
     };
 
     /**
-     * @returns {Promise<'ok' | 'not-connected' | 'error'>}
+     * @returns {Promise<'ok' | 'not-connected' | 'update' | 'error'>}
      */
     #handshake = async () => {
         if (!this.#tcp.IsConnected()) {
@@ -161,8 +171,19 @@ class DeviceAuthService {
         // Update the server state
         if (response.result === 'ok') {
             this.#user.server2.serverState.status = 'up-to-date';
-        } else if (
-            response.result === 'update' ||
+        }
+
+        // Update required, blocking step
+        else if (response.result === 'update') {
+            this.#user.server2.serverState.status = 'update';
+            if (typeof response.serverVersion === 'string') {
+                this.#user.server2.serverState.version = response.serverVersion;
+            }
+            return 'update';
+        }
+
+        // Maintenance mode, optional update or downgrade, non-blocking step
+        else if (
             response.result === 'update-optional' ||
             response.result === 'maintenance' ||
             response.result === 'downdate'
@@ -181,6 +202,7 @@ class DeviceAuthService {
         }
 
         this.#user.interface.console?.AddLog('info', '[DeviceAuthService] Handshake succeeded');
+
         return 'ok';
     };
 
@@ -191,6 +213,47 @@ class DeviceAuthService {
     #checkIntegrityAndGenerateIfNeeded = async () => {
         /** @type {IntegrityToken | null} */
         const integrityToken = await SecureStorage.Load('INTEGRITY_TOKEN');
+
+        /** @type {string | null} */
+        const integrityTokenTimestamp = await SecureStorage.Load('INTEGRITY_TOKEN_TIMESTAMP');
+
+        // Check if we have a cached token and if it's still valid (24h)
+        if (integrityToken && integrityTokenTimestamp) {
+            const tokenTimestamp = new Date(integrityTokenTimestamp);
+            const now = new Date();
+            const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+            if (tokenTimestamp > twentyFourHoursAgo) {
+                this.#user.interface.console?.AddLog(
+                    'info',
+                    '[DeviceAuthService] Using cached integrity token (valid for 24h)'
+                );
+                // Token is still valid, use cached version
+                const response = await this.#tcp.SendAndWait({
+                    action: 'check-integrity',
+                    integrityToken: integrityToken
+                });
+
+                if (
+                    response !== 'not-sent' &&
+                    response !== 'timeout' &&
+                    response !== 'interrupted' &&
+                    response.status === 'check-integrity' &&
+                    response.result === 'ok'
+                ) {
+                    this.#user.interface.console?.AddLog(
+                        'info',
+                        '[DeviceAuthService] Cached integrity token accepted by server'
+                    );
+                    return integrityToken;
+                }
+            } else {
+                this.#user.interface.console?.AddLog(
+                    'info',
+                    '[DeviceAuthService] Cached integrity token expired (>24h), will generate new one'
+                );
+            }
+        }
 
         const response = await this.#tcp.SendAndWait({
             action: 'check-integrity',
@@ -317,6 +380,13 @@ class DeviceAuthService {
             return false;
         }
 
+        // Save the current timestamp for cache validation
+        const timestampSaved = await SecureStorage.Save('INTEGRITY_TOKEN_TIMESTAMP', Date.now().toString());
+        if (!timestampSaved) {
+            this.#user.interface.console?.AddLog('error', '[DeviceAuthService] Integrity token timestamp not saved');
+            return false;
+        }
+
         this.#user.interface.console?.AddLog('info', '[DeviceAuthService] Integrity token saved');
         return true;
     };
@@ -375,6 +445,12 @@ class DeviceAuthService {
                 `[DeviceAuthService] Authentication failed, invalid response (${response.result})`
             );
             return null;
+        }
+
+        this.devMode = !!response.devMode;
+
+        if (this.devMode) {
+            this.#user.interface.console?.Enable();
         }
 
         this.state.Set('authenticated');

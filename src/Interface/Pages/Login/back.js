@@ -9,6 +9,7 @@ import GoogleSignIn from 'Utils/GoogleSignIn';
 import { IsEmail } from 'Utils/String';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
+import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').ConnectionState} ConnectionState
@@ -119,7 +120,7 @@ class BackLogin extends PageBase {
         //     langKey = langManager.currentLangageKey;
         // }
 
-        Linking.openURL(`https://oxyfoo.fr/legal/terms-of-service`);
+        Linking.openURL(`${env.LINK_WEBSITE}/legal/terms-of-service`);
     }
 
     onLogin = async () => {
@@ -221,6 +222,17 @@ class BackLogin extends PageBase {
     googleSignIn = async () => {
         const lang = langManager.curr['login'];
 
+        if (!GoogleSignIn.shouldShowButton()) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['error-google-signin-unavailable']
+                }
+            });
+            return;
+        }
+
         this.setState({ loading: true });
 
         // Wait for animations to finish
@@ -238,8 +250,16 @@ class BackLogin extends PageBase {
             // Handle error
             this.setState({
                 loading: false,
-                errorEmail: lang['error-signin-server'].replace('{}', result.error)
+                errorEmail: lang['error-signin-server'].replace('{}', result.errorMessage)
             });
+
+            // Log the error
+            user.interface.console?.AddLog(
+                'error',
+                `[Google Sign-In] Login failed: ${result.errorMessage}`,
+                JSON.stringify(result.error, null, 2)
+            );
+
             return;
         }
 

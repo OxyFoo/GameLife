@@ -3,8 +3,11 @@ import { View, FlatList } from 'react-native';
 
 import styles from './style';
 import ActivityTimelineBack from './back';
+import themeManager from 'Managers/ThemeManager';
 
 /**
+ * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('./back').ActivityTimelineItem} ActivityTimelineItem
  * @typedef {import('react-native').ListRenderItem<ActivityTimelineItem>} ListRenderItemActivityTimelineItem
  */
@@ -23,6 +26,7 @@ class ActivityTimeline extends ActivityTimelineBack {
                     scrollEnabled={false}
                     horizontal={true}
                 />
+                {this.renderCurrentTimeIndicator()}
             </View>
         );
     }
@@ -43,6 +47,22 @@ class ActivityTimeline extends ActivityTimelineBack {
                 ]}
             />
         );
+    };
+
+    renderCurrentTimeIndicator = () => {
+        const { currentTimePosition } = this.state;
+
+        if (currentTimePosition === null || currentTimePosition === undefined) {
+            return null;
+        }
+
+        /** @type {StyleProp} */
+        const indicatorStyles = {
+            left: currentTimePosition,
+            backgroundColor: themeManager.GetColor('main2')
+        };
+
+        return <View style={[styles.currentTimeIndicator, indicatorStyles]} />;
     };
 }
 

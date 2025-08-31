@@ -25,14 +25,21 @@ class SettingsBeta extends BackSettingsBeta {
                 <Text style={styles.title}>[Thème des couleurs principales]</Text>
 
                 <ComboBox
+                    style={styles.marginBottom}
                     title='[Variation du thème]'
                     data={variants}
                     selectedValue={selectedVariantText}
                     onSelect={this.onSelectVariantTheme}
                 />
 
-                <Button style={styles.button} onPress={this.restartApp}>
+                <Button onPress={this.restartApp}>
                     [Redémarrer l'application pour appliquer entièrement le thème]
+                </Button>
+
+                <Text style={[styles.title, styles.newSection]}>[Test - Intégrité]</Text>
+
+                <Button throttleTime={5000} onPress={this.getIntegrityCode}>
+                    [Obtenir le code d'intégrité]
                 </Button>
             </View>
         );

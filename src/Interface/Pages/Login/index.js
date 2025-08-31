@@ -3,7 +3,6 @@ import { Animated, View } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
-import GoogleSignIn from 'Utils/GoogleSignIn';
 import langManager from 'Managers/LangManager';
 
 import { Text, Button, InputText, CheckBox, ComboBox, Icon } from 'Interface/Components';
@@ -118,7 +117,7 @@ class Login extends BackLogin {
                 />
 
                 {/* Google Sign-In Button - Only show when not in signin mode and when configured */}
-                {GoogleSignIn.shouldShowButton() && !signinMode && (
+                {!signinMode && (
                     <Button
                         style={styles.buttonGoogleSignin}
                         styleContent={!loading && styles.buttonGoogleContent}

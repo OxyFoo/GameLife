@@ -37,6 +37,10 @@ const styles = StyleSheet.create({
     topSpace: {
         marginTop: 24
     },
+    statsContainer: {
+        paddingVertical: 12,
+        paddingHorizontal: 0
+    },
     botSpace: {
         marginBottom: 24
     },

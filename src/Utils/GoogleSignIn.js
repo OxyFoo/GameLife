@@ -16,7 +16,8 @@ import { env } from 'Utils/Env';
 /**
  * @typedef {Object} GoogleSignInError
  * @property {false} success - Indicates failed sign-in
- * @property {string} error - Error message
+ * @property {Error | unknown | null} error - Error
+ * @property {string} errorMessage - Error message
  * @property {GoogleSignInErrorType} errorType - Error type for handling different scenarios
  */
 
@@ -105,8 +106,9 @@ async function performGoogleSignIn() {
         if (userInfo.type === 'cancelled' || userInfo.type !== 'success') {
             return {
                 success: false,
-                error: `Google sign-in cancelled - ${userInfo.type}`,
-                errorType: 'cancelled'
+                error: null,
+                errorType: 'cancelled',
+                errorMessage: `Google sign-in cancelled - ${userInfo.type}`
             };
         }
 
@@ -119,8 +121,9 @@ async function performGoogleSignIn() {
         } else {
             return {
                 success: false,
-                error: 'Google sign-in failed - no email or token returned',
-                errorType: 'no_email_or_token'
+                error: null,
+                errorType: 'no_email_or_token',
+                errorMessage: 'Google sign-in failed - no email or token returned'
             };
         }
     } catch (error) {
@@ -146,8 +149,9 @@ async function performGoogleSignIn() {
 
         return {
             success: false,
-            error: errorMessage,
-            errorType
+            error: error,
+            errorType,
+            errorMessage: errorMessage
         };
     }
 }

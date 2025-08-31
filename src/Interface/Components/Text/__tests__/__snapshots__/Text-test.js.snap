@@ -5,14 +5,15 @@ exports[`[Component] Text should render correctly 1`] = `
   style={
     [
       {
-        "fontFamily": "Hind Vadodara",
         "margin": 0,
         "padding": 0,
         "textAlign": "center",
       },
       {
         "color": "#ECECEC",
+        "fontFamily": "Hind Vadodara",
         "fontSize": 18,
+        "fontWeight": "normal",
       },
       {},
     ]

@@ -5,6 +5,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native').EmitterSubscription} EmitterSubscription
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  * @typedef {import('react-native').KeyboardEventListener} KeyboardEventListener
  * @typedef {import('Interface/Components').InputText} InputText
@@ -38,13 +39,24 @@ class ScreenInputBack extends React.Component {
     timer = 0;
     layoutHeight = 0;
 
+    /** @type {EmitterSubscription | null} */
+    keyboardDidShowListener = null;
+
+    /** @type {EmitterSubscription | null} */
+    keyboardDidHideListener = null;
+
     componentDidMount() {
-        Keyboard.addListener('keyboardDidShow', this.onKeyboardShow);
-        Keyboard.addListener('keyboardDidHide', this.onKeyboardHide);
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.onKeyboardShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.onKeyboardHide);
     }
+
     componentWillUnmount() {
-        Keyboard.removeAllListeners('keyboardDidShow');
-        Keyboard.removeAllListeners('keyboardDidHide');
+        if (this.keyboardDidShowListener) {
+            this.keyboardDidShowListener.remove();
+        }
+        if (this.keyboardDidHideListener) {
+            this.keyboardDidHideListener.remove();
+        }
     }
 
     /** @param {LayoutChangeEvent} event */

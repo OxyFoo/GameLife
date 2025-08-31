@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Animated, FlatList } from 'react-native';
+import { Animated, FlatList } from 'react-native';
 
 import styles from './style';
 import ConsoleBack from './back';
@@ -43,6 +43,9 @@ class Console extends ConsoleBack {
         const translateY = {
             transform: [{ translateY: animation.interpolate(interY) }]
         };
+        const contentOpacity = {
+            opacity: animation
+        };
         const buttonFirstRow = {
             opacity: animation,
             transform: [{ translateY: Animated.multiply(-72, animationDeleteButtons) }]
@@ -54,14 +57,14 @@ class Console extends ConsoleBack {
 
         return (
             <Animated.View style={[styles.console, translateY]} pointerEvents={'box-none'}>
-                <View style={styles.content}>
+                <Animated.View style={[styles.content, contentOpacity]}>
                     <FlatList
                         ref={this.refDebug}
                         data={debug}
                         renderItem={this.renderText}
                         keyExtractor={(item, index) => 'debug-' + item.type + '-' + index}
                     />
-                </View>
+                </Animated.View>
 
                 <Button
                     style={styles.buttonOpen}

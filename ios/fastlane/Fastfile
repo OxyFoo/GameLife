@@ -221,7 +221,10 @@ platform :ios do
   desc "Upload to App Store Connect"
   lane :upload_to_appstore do |options|
     environment = options[:environment] || "prod"
-    ipa_path = "./build/GameLife-#{environment}.ipa"
+    ipa_path = File.expand_path("../../build/GameLife-#{environment}.ipa", __dir__)
+
+    UI.message "📝 PWD = #{Dir.pwd}/../.."
+    sh("ls -lR ../..")
 
     # Validate that IPA file exists
     unless File.exist?(ipa_path)
@@ -282,7 +285,8 @@ platform :ios do
         skip_metadata: true,
         force: true,
         submit_for_review: false,
-        automatic_release: false
+        automatic_release: false,
+        run_precheck_before_submit: false
       )
 
       UI.success "✅ Successfully uploaded to App Store Connect!"

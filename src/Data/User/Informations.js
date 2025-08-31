@@ -44,6 +44,9 @@ class Informations extends IUserData {
     /** @type {number | null} Null if disabled or unix timestamp (global UTC) */
     UNSAVED_birthTime = null;
 
+    /** @type {number} Account age in years (decimal) */
+    accountAge = 0;
+
     xp = 0;
     ox = new DynamicVar(0);
     adRemaining = 0;
@@ -69,6 +72,7 @@ class Informations extends IUserData {
         this.zapGPT = { remaining: 0, total: 0 };
         this.achievementSelfFriend = false;
         this.purchasedCount = 0;
+        this.accountAge = 0;
     };
 
     /** @param {Partial<SaveObject_UserInformations>} data */
@@ -123,7 +127,7 @@ class Informations extends IUserData {
         }
 
         // Load data
-        const { Username, Lang, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth } = response.data;
+        const { Username, Lang, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, AccountAge } = response.data;
 
         this.username.Set(Username);
         this.usernameTime = LastChangeUsername;
@@ -132,6 +136,9 @@ class Informations extends IUserData {
         this.ox.Set(Ox);
         this.birthTime = Birthtime;
         this.lastBirthTime = LastChangeBirth;
+        this.accountAge = AccountAge;
+
+        this.user.interface.console?.AddLog('info', `[DEBUG] Loaded user data online: ${AccountAge} years old`);
 
         return true;
     };

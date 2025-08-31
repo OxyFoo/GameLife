@@ -7,6 +7,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, CheckBox, Text } from 'Interface/Components';
+import { env } from 'Utils/Env';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
@@ -122,6 +123,8 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
         user.interface.popup?.Close(skillAdded ? 'success' : 'close');
     };
 
+    const statsKeys = user.experience.statsKey.filter((key) => generatedSkill.Stats[key] !== 0);
+
     return (
         <View>
             <Text style={styles.title}>{lang['skill-add-title']}</Text>
@@ -130,18 +133,17 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
 
             <View style={styles.detailsFlatList}>
                 <FlatList
-                    data={user.experience.statsKey}
+                    data={statsKeys}
                     keyExtractor={(item) => item}
-                    renderItem={({ item }) =>
-                        generatedSkill.Stats[item] === 0 ? null : (
-                            <Text style={styles.details} color='secondary'>
-                                {langStats[item]}: {generatedSkill.Stats[item]}
-                            </Text>
-                        )
-                    }
+                    renderItem={({ item }) => (
+                        <Text style={styles.details} color='secondary'>
+                            {langStats[item]}: {generatedSkill.Stats[item]}
+                        </Text>
+                    )}
                     numColumns={2}
                     columnWrapperStyle={styles.columnWrapper}
                     contentContainerStyle={styles.listContent}
+                    scrollEnabled={false}
                 />
             </View>
 
@@ -190,7 +192,20 @@ function PopupConfirmSkill({ generatedSkill, encryptedSkill }) {
 }
 
 function DiscordPress() {
-    Linking.openURL('https://discord.com/invite/FfJRxjNAwS');
+    Linking.openURL(env.LINK_DISCORD).catch((err) => {
+        const lang = langManager.curr['app'];
+
+        user.interface.console?.AddLog('error', `[AddSkill] Failed to open Discord link: ${err}`);
+
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-link-error-title'],
+                message: lang['alert-link-error-message']
+            },
+            priority: true
+        });
+    });
 }
 
 async function ClosePopup() {

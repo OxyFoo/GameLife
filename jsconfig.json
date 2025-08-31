@@ -3,6 +3,7 @@
         "jsx": "react-native",
         "target": "es2022",
         "checkJs": true,
+        "maxNodeModuleJsDepth": 0,
         "strict": true,
         "resolveJsonModule": true,
         "module": "NodeNext",
@@ -26,10 +27,14 @@
         "noUnusedParameters": true
     },
     "include": [
-        "App.js",
-        "src"
+        "./App.js",
+        "src",
+        "scripts",
+        "./__tests__"
     ],
     "exclude": [
+        "**/_Template",
+        "res",
         "node_modules"
     ]
 }

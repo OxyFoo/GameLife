@@ -10,9 +10,11 @@ const styles = StyleSheet.create({
     },
     content: {
         width: '100%',
-        height: 256,
-        marginBottom: 24,
+        height: 256 + 200, // Extra space for safe area
+        marginTop: -200, // Safe area
+        marginBottom: 12,
         padding: 24,
+        paddingTop: 12 + 200, // Safe area
         backgroundColor: '#000'
     },
     text: {

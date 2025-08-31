@@ -1,24 +1,39 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    fullW: {
-        width: '100%'
-    },
-    XPHeader: {
-        marginBottom: 8,
-        paddingHorizontal: '5%',
+    // Stats Bar
+    statsView: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        alignItems: 'center',
+        paddingRight: 8,
+        marginHorizontal: 24,
+        marginBottom: 12
     },
-    XPHeaderSimplified: {
+    statsCount: {
+        minWidth: 32,
+        minHeight: 32,
+        paddingHorizontal: 0,
+        marginRight: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10
+    },
+    statsText: {
+        paddingHorizontal: 4,
+        fontWeight: 'bold'
+    },
+
+    // Stats Bar - Text Only
+    toStatsView: {
+        flex: 1
+    },
+    toStatsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: '10%'
     },
-    XPBar: {
-        marginBottom: 16
-    },
 
+    // Popup
     popupContent: {
         padding: 12
     },
@@ -39,8 +54,7 @@ const styles = StyleSheet.create({
         marginTop: 6
     },
     popupContentStat: {
-        paddingVertical: 12,
-        paddingHorizontal: 24
+        marginVertical: 14
     }
 });
 

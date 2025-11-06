@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Animated, View, ScrollView, FlatList, Dimensions } from 'react-native';
+import { AvatarFrame, AvatarCharacter } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import BackProfile from './back';
@@ -63,7 +64,25 @@ class Profile extends BackProfile {
 
                 {/** Avatar placeholder */}
                 <View style={[styles.avatarView, { transform: [{ translateY: infoHeaderHeight }] }]}>
-                    <Animated.Image
+                    <AvatarFrame
+                        width={300}
+                        height={300}
+                        backgroundColor='#00000000'
+                        style={{ transform: [{ scale: 2 }] }}
+                        // androidEnableZIndex
+                    >
+                        <AvatarCharacter
+                            body='human_00'
+                            bodyColor='#ffdbac'
+                            position={{ x: 0, y: 0 }}
+                            rotation={{ z: 0 }}
+                            scale={1.0}
+                            items={[{ id: 'face_00' }, { id: 'top_00', color: '#ff00ff' }]}
+                        />
+                    </AvatarFrame>
+
+                    {/** Hardcoded placeholder - TODELETE*/}
+                    {/* <Animated.Image
                         style={[
                             styles.avatarPlaceholder,
                             styleParallax,
@@ -86,7 +105,7 @@ class Profile extends BackProfile {
                         color='secondary'
                     >
                         {lang['coming-soon']}
-                    </Text>
+                    </Text> */}
                 </View>
 
                 {/** Statistics */}

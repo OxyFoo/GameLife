@@ -1,4 +1,5 @@
 import React from 'react';
+import { getTechnology } from '@oxyfoo/avatar-factory';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import { CollapsiblePopup } from './popup';
@@ -48,6 +49,9 @@ class BackHome extends PageBase {
     componentDidMount() {
         this.handleLevelsUpdate(user.experience.experience.Get());
         this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
+
+        const avatarVersion = getTechnology();
+        console.log(`Avatar technology version: ${avatarVersion}`);
     }
 
     componentWillUnmount() {

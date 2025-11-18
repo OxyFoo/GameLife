@@ -13,9 +13,13 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
+ * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  */
 
 class BackProfile extends PageBase {
+    /** @type {Array<{id: ItemName}>} */
+    avatarItems = [{ id: 'face_00' }, { id: 'hair_00' }, { id: 'top_00' }, { id: 'bottom_00' }, { id: 'shoes_00' }];
+
     state = {
         scrollY: new Animated.Value(0),
 
@@ -93,12 +97,32 @@ class BackProfile extends PageBase {
         user.interface.BackHandle();
     };
 
+    /**
+     * TODO: Temporary method
+     * Update avatar items
+     * @param {string} itemId - The new item id to equip
+     */
+    updateAvatarItem = (itemId) => {
+        const slotType = itemId.split('_')[0];
+        const index = this.avatarItems.findIndex((item) => item.id.startsWith(slotType));
+
+        if (index !== -1) {
+            this.avatarItems[index] = { id: /** @type {ItemName} */ (itemId) };
+            this.forceUpdate();
+        }
+    };
+
     openInventory = () => {
         this.enterEditMode();
 
         // Open bottom panel with category change callback
         user.interface.bottomPanel?.Open({
-            content: <InventoryPanel onSlotChange={this.adjustAvatarPositionForCategory} />,
+            content: (
+                <InventoryPanel
+                    onSlotChange={this.adjustAvatarPositionForCategory}
+                    onItemSelect={this.updateAvatarItem}
+                />
+            ),
             overlayColor: '#00000001',
             onClose: () => {
                 this.exitEditMode();

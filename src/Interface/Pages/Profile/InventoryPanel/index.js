@@ -43,8 +43,9 @@ const AVATAR_POSITION_IN_FRAME = {
 /**
  * @param {object} props
  * @param {(slot: InventorySlotType) => void} [props.onSlotChange] - Callback called when changing slot
+ * @param {(itemId: ItemName) => void} [props.onItemSelect] - Callback called when selecting an item
  */
-const InventoryPanel = ({ onSlotChange }) => {
+const InventoryPanel = ({ onSlotChange, onItemSelect }) => {
     /** @type {[InventorySlotType, React.Dispatch<React.SetStateAction<InventorySlotType>>]} */
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('all'));
 
@@ -103,7 +104,12 @@ const InventoryPanel = ({ onSlotChange }) => {
         }
 
         return (
-            <Button style={styles.itemButton} appearance='uniform' color='transparent'>
+            <Button
+                style={styles.itemButton}
+                appearance='uniform'
+                color='transparent'
+                onPress={() => onItemSelect?.(item.itemName)}
+            >
                 <AvatarFrame
                     key={`avatar-frame-${item.slot}-${item.itemName}-${Math.random()}`}
                     width={frameSize}

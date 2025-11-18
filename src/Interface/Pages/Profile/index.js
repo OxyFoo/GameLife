@@ -93,13 +93,7 @@ class Profile extends BackProfile {
                             position={{ x: 0, y: 0, z: 0 }}
                             rotation={{ x: 0, y: 0, z: 0 }}
                             scale={1}
-                            items={[
-                                { id: 'face_00' },
-                                { id: 'hair_00' },
-                                { id: 'top_00' },
-                                { id: 'bottom_00' },
-                                { id: 'shoes_00' }
-                            ]}
+                            items={this.avatarItems}
                         />
                     </AvatarFrame>
                 </Animated.View>

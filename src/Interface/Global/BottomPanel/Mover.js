@@ -242,6 +242,8 @@ class Mover {
 
         // Acceleration
         const deltaTime = (Date.now() - this.events.tickTime) / 1000;
+        if (deltaTime === 0) return; // Skip if no time has passed to prevent division by zero
+
         this.events.accX = MinMax(-5000, deltaX / deltaTime, 5000);
         this.events.accY = MinMax(-5000, deltaY / deltaTime, 5000);
         this.events.tickTime = Date.now();

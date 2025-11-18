@@ -579,7 +579,6 @@
         "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
 
-        "coming-soon": "Coming\nsoon",
         "btn-edit-profile": "Change my appearance",
         "btn-skills": "My skills",
         "btn-statistics": "My statistics",
@@ -587,6 +586,7 @@
         "btn-friends": "My friends",
 
         "title-profile": "My profile",
+        "title-edit-avatar": "Change my appearance",
         "title-statistics": "My statistics",
 
         "input-username": "Username",

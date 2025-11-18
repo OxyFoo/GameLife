@@ -44,6 +44,10 @@ const LOCAL_MODULES = [
         localPath: '../GameLife-Types/dist'
     },
     {
+        name: '@oxyfoo/avatar-factory',
+        localPath: '../../AvatarFactory'
+    },
+    {
         name: 'react-native-pinned-ws',
         localPath: '../react-native-pinned-ws'
     },
@@ -79,6 +83,13 @@ function createLocalModulesConfig() {
     return {
         watchFolders: availableModules.map((module) => module.absolutePath),
         resolver: {
+            blockList: [
+                // Exclure les node_modules des modules locaux pour éviter les conflits
+                /\/AvatarFactory\/node_modules\/.*/,
+                /\/GameLife-Types\/node_modules\/.*/,
+                /\/react-native-pinned-ws\/node_modules\/.*/,
+                /\/react-native-app-control\/node_modules\/.*/
+            ],
             extraNodeModules: new Proxy(
                 {},
                 {

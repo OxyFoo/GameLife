@@ -7,6 +7,16 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 24
     },
+    editorAvatarHeader: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        elevation: 100,
+        paddingHorizontal: 24
+    },
+
     pageHeader: {
         marginBottom: 12
     },
@@ -21,36 +31,20 @@ const styles = StyleSheet.create({
 
     statsView: {
         alignSelf: 'flex-start',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        marginLeft: 24,
+        zIndex: 100,
+        elevation: 100
     },
     statsFlatList: {
         flexGrow: 0
     },
 
-    avatarView: {
+    avatarContainer: {
         position: 'absolute',
-        width: '75%',
-        top: 0,
-        right: 0,
-        bottom: 0
-    },
-    avatarPlaceholder: {
-        resizeMode: 'contain'
-    },
-    avatarComingSoon: {
-        flex: 1,
-        flexWrap: 'wrap',
-        position: 'absolute',
-        textAlign: 'center',
-        top: 180,
-        right: 0,
-        width: '75%'
-    },
-    avatarComingSoonText: {
-        width: '100%',
-        fontSize: 24,
-        textShadowRadius: 10,
-        textShadowOffset: { width: 0, height: 0 }
+        top: 100,
+        zIndex: -100,
+        elevation: -100
     },
 
     buttons: {

@@ -15,7 +15,7 @@ import { DynamicBackground } from 'Interface/Primitives';
 
 class BottomPanel extends BottomPanelBack {
     render() {
-        const { state, current, animOpacity, bottomInset } = this.state;
+        const { state, current, animOpacity, bottomInset, isOverlayMode } = this.state;
 
         // Offset used to avoid animation void space at the bottom of the screen
         const offset = 24;
@@ -33,6 +33,11 @@ class BottomPanel extends BottomPanelBack {
             opacity: Animated.multiply(animOpacity, 0.8)
         };
 
+        // Apply custom overlay color if provided
+        if (current?.overlayColor) {
+            styleBackground.backgroundColor = current.overlayColor;
+        }
+
         /** @type {StyleProp} */
         const stylePanel = {
             minHeight: opened ? this.mover.panel.height : undefined,
@@ -47,18 +52,23 @@ class BottomPanel extends BottomPanelBack {
                     )
                 }
             ],
-            backgroundColor: themeManager.GetColor('ground1')
+            backgroundColor: current?.backgroundColor ?? themeManager.GetColor('ground1')
         };
 
         return (
-            <View style={[styles.parent, styleParent]} pointerEvents={opened ? 'box-none' : 'none'}>
+            <View
+                style={[styles.parent, styleParent]}
+                pointerEvents={opened ? (isOverlayMode ? 'box-none' : 'box-none') : 'none'}
+            >
                 {/* Background */}
-                <Animated.View
-                    style={[styles.background, styleBackground]}
-                    onTouchStart={this.mover.touchStart}
-                    onTouchMove={this.mover.touchMove}
-                    onTouchEnd={this.onTouchEndBackground}
-                />
+                {!isOverlayMode && (
+                    <Animated.View
+                        style={[styles.background, styleBackground]}
+                        onTouchStart={this.mover.touchStart}
+                        onTouchMove={this.mover.touchMove}
+                        onTouchEnd={this.onTouchEndBackground}
+                    />
+                )}
 
                 {/* Panel */}
                 <Animated.View

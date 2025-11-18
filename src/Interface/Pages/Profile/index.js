@@ -5,35 +5,36 @@ import { AvatarFrame, AvatarCharacter } from '@oxyfoo/avatar-factory';
 import styles from './style';
 import BackProfile from './back';
 import { Header } from './Header';
-// TODO: Reimplement avatar editor
-// import EditorAvatar from './EditAvatar';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
 import { Text, ProgressBar, Button } from 'Interface/Components';
 import { PageHeader, StatsBar } from 'Interface/Widgets';
 
-// @ts-ignore
-const avatarPlaceholder = require('../../../../res/items/avatar_placeholder.png');
-
 class Profile extends BackProfile {
     render() {
         const lang = langManager.curr['profile'];
-        const { editorOpened, infoHeaderHeight, experienceUser, experienceStats } = this.state;
+        const { experienceUser, experienceStats, editMode, avatarTranslateX, avatarTranslateY, avatarScale } =
+            this.state;
         const screenDim = Dimensions.get('window');
 
-        const interReverse = { inputRange: [0, 1], outputRange: [1, 0] };
-        const animAvatar = this.refAvatar.current?.state.editorAnim.interpolate(interReverse) || 1;
-        const headerOpacity = { opacity: animAvatar };
-        const headerPointer = this.refAvatar.current === null ? 'auto' : editorOpened ? 'none' : 'auto';
-        const styleParallax = { transform: [{ translateY: Animated.divide(this.state.scrollY, 2) }] };
+        // Edit mode animations
+        const editModeInverse = editMode.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
+        const uiOpacity = { opacity: editModeInverse };
+        const uiEditorAvatarOpacity = { opacity: editMode };
+
+        const styleAvatar = {
+            transform: [
+                { translateY: Animated.add(Animated.divide(this.state.scrollY, 2), avatarTranslateY) },
+                { translateX: Animated.multiply(avatarTranslateX, screenDim.width) },
+                { scale: avatarScale }
+            ]
+        };
         const styleParallax2_5 = { transform: [{ translateY: Animated.divide(this.state.scrollY, 5) }] };
-        const styleParallax2 = { transform: [{ translateY: Animated.divide(this.state.scrollY, 3) }] };
 
         return (
-            <ScrollView style={styles.page} onScroll={this.handleScroll}>
-                <View style={styles.header} onLayout={this.onLayoutHeader}>
+            <ScrollView ref={this.refScrollView} style={styles.page} onScroll={this.handleScroll}>
+                <Animated.View style={[styles.header, uiOpacity]}>
                     <PageHeader
                         style={styles.pageHeader}
                         title={lang['title-profile']}
@@ -43,73 +44,32 @@ class Profile extends BackProfile {
                         onSecondaryIconPress={this.openSettings}
                     />
 
-                    <Animated.View style={headerOpacity} pointerEvents={headerPointer}>
-                        <Header />
-                    </Animated.View>
+                    <Header />
 
-                    <Animated.View style={[styles.xpView, headerOpacity]}>
+                    <Animated.View style={styles.xpView}>
                         <ProgressBar color='main1' value={experienceUser.xp} maxValue={experienceUser.next} />
                         <View style={styles.xpRow}>
                             <Text>{langManager.curr['level']['level'] + ' ' + experienceUser.lvl}</Text>
                             <Text>{Round(experienceUser.xp) + '/' + experienceUser.next}</Text>
                         </View>
                     </Animated.View>
-                </View>
+                </Animated.View>
 
-                {/* <EditorAvatar
-                    ref={this.refAvatar}
-                    //refParent={this}
-                    onChangeState={(opened) => this.setState({ editorOpened: opened })}
-                /> */}
-
-                {/** Avatar placeholder */}
-                <View style={[styles.avatarView, { transform: [{ translateY: infoHeaderHeight }] }]}>
-                    <AvatarFrame
-                        width={300}
-                        height={300}
-                        backgroundColor='#00000000'
-                        style={{ transform: [{ scale: 2 }] }}
-                        // androidEnableZIndex
-                    >
-                        <AvatarCharacter
-                            body='human_00'
-                            bodyColor='#ffdbac'
-                            position={{ x: 0, y: 0 }}
-                            rotation={{ z: 0 }}
-                            scale={1.0}
-                            items={[{ id: 'face_00' }, { id: 'top_00', color: '#ff00ff' }]}
-                        />
-                    </AvatarFrame>
-
-                    {/** Hardcoded placeholder - TODELETE*/}
-                    {/* <Animated.Image
-                        style={[
-                            styles.avatarPlaceholder,
-                            styleParallax,
-                            {
-                                width: screenDim.width,
-                                height: screenDim.height * 0.9
-                            }
-                        ]}
-                        source={avatarPlaceholder}
+                {/** PageHeader: Editor Avatar */}
+                <Animated.View style={[styles.editorAvatarHeader, uiEditorAvatarOpacity]} pointerEvents='none'>
+                    <PageHeader
+                        style={styles.pageHeader}
+                        title={lang['title-edit-avatar']}
+                        onBackPress={this.closeInventory}
+                        // Fake settings button to align with main header
+                        secondaryIcon='settings-outline'
+                        secondaryIconColor='transparent'
+                        onSecondaryIconPress={() => {}}
                     />
-                    <Text
-                        style={[
-                            styles.avatarComingSoonText,
-                            {
-                                textShadowColor: themeManager.GetColor('main2')
-                            },
-                            styles.avatarComingSoon
-                        ]}
-                        animatedStyle={styleParallax2}
-                        color='secondary'
-                    >
-                        {lang['coming-soon']}
-                    </Text> */}
-                </View>
+                </Animated.View>
 
                 {/** Statistics */}
-                <Animated.View style={[styles.statsView, styleParallax2_5]}>
+                <Animated.View style={[styles.statsView, styleParallax2_5, uiOpacity]}>
                     <FlatList
                         style={styles.statsFlatList}
                         data={experienceStats}
@@ -119,9 +79,34 @@ class Profile extends BackProfile {
                     />
                 </Animated.View>
 
+                {/* Avatar Frame */}
+                <Animated.View style={[styles.avatarContainer, styleAvatar]}>
+                    <AvatarFrame
+                        width={screenDim.width * 2}
+                        height={screenDim.width * 2}
+                        // style={{ transform: [{ translateX: screenDim.width * 0.25 }] }}
+                        backgroundColor='#00000000'
+                    >
+                        <AvatarCharacter
+                            body={'human_00'}
+                            // bodyColor={'#f3e4d1'}
+                            position={{ x: 0, y: 0, z: 0 }}
+                            rotation={{ x: 0, y: 0, z: 0 }}
+                            scale={1}
+                            items={[
+                                { id: 'face_00' },
+                                { id: 'hair_00' },
+                                { id: 'top_00' },
+                                { id: 'bottom_00' },
+                                { id: 'shoes_00' }
+                            ]}
+                        />
+                    </AvatarFrame>
+                </Animated.View>
+
                 {/** Buttons */}
-                <View style={styles.buttons}>
-                    <Button style={styles.button} enabled={false}>
+                <Animated.View style={[styles.buttons, uiOpacity]}>
+                    <Button style={styles.button} onPress={this.openInventory}>
                         {lang['btn-edit-profile']}
                     </Button>
 
@@ -145,7 +130,7 @@ class Profile extends BackProfile {
                     <Button style={styles.button} appearance='outline-blur' icon='social' onPress={this.openFriends}>
                         {lang['btn-friends']}
                     </Button>
-                </View>
+                </Animated.View>
             </ScrollView>
         );
     }

@@ -579,7 +579,6 @@
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
 
-        "coming-soon": "Bientôt\ndisponible",
         "btn-edit-profile": "Modifier mon apparence",
         "btn-skills": "Mes compétences",
         "btn-statistics": "Mes statistiques",
@@ -587,6 +586,7 @@
         "btn-friends": "Mes amis",
 
         "title-profile": "Mon profil",
+        "title-edit-avatar": "Modifier mon apparence",
         "title-statistics": "Mes statistiques",
 
         "input-username": "Pseudo",

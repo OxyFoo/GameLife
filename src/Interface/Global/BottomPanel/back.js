@@ -24,6 +24,9 @@ import SafeAreaNative from 'Utils/SafeAreaNative';
  * @property {number} [zIndex] Default is 0
  * @property {React.RefObject<FlatList | null>} [refScroller]
  * @property {() => void} [onClose]
+ * @property {boolean} [overlay] If true, panel is displayed as an overlay without blocking interactions with the page behind (no background, no close on background click). Default is false
+ * @property {string} [backgroundColor] Background color of the panel. Default is 'ground1' theme color
+ * @property {string} [overlayColor] Color of the overlay background. Default is black with 0.8 opacity
  */
 
 class BottomPanelBack extends React.Component {
@@ -36,7 +39,10 @@ class BottomPanelBack extends React.Component {
 
         animOpacity: new Animated.Value(0),
 
-        bottomInset: 0
+        bottomInset: 0,
+
+        /** @type {boolean} Track if current panel is in overlay mode (persists during close animation) */
+        isOverlayMode: false
     };
 
     mover = new Mover();
@@ -78,7 +84,7 @@ class BottomPanelBack extends React.Component {
         // Open animation
         user.interface.navBar?.onOpenBottomPanel();
         TimingAnimation(this.state.animOpacity, 1, 200).start();
-        this.setState({ state: 'opening', current: params }, () => {
+        this.setState({ state: 'opening', current: params, isOverlayMode: params.overlay === true }, () => {
             this.opening = false;
         });
 
@@ -160,6 +166,11 @@ class BottomPanelBack extends React.Component {
 
     /** @param {GestureResponderEvent} event */
     onTouchEndBackground = (event) => {
+        // Skip background close if overlay mode
+        if (this.state.current?.overlay) {
+            return;
+        }
+
         // Short click on background
         if (
             event.target === event.currentTarget &&

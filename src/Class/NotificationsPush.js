@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import notifee, {
     AlarmType,
     AndroidImportance,
@@ -100,7 +101,7 @@ class NotificationsPush extends IUserClass {
 
         // Check if too many notifications
         try {
-            const notifications = await notifee.getTriggerNotifications();
+            const notifications = await this.GetTrigger();
             this.#user.interface.console?.AddLog(
                 'info',
                 '[PushNotifications] Loaded trigger notifications:',
@@ -152,7 +153,7 @@ class NotificationsPush extends IUserClass {
         await this.#user.notificationsPush.ScheduleActivitiesNotifs();
 
         // Log
-        const notifs = await notifee.getTriggerNotifications();
+        const notifs = await this.GetTrigger();
         const time_notifs_end = performance.now();
         const time_notifs = Round(time_notifs_end - time_notifs_start, 2);
         this.#user.interface.console?.AddLog(
@@ -239,6 +240,15 @@ class NotificationsPush extends IUserClass {
         }
     };
 
+    async GetTrigger() {
+        // TODO: Remove after notifee update (currently on 9.1.8)
+        if (Platform.OS === 'android' && Platform.Version >= 36) {
+            return [];
+        }
+
+        return notifee.getTriggerNotifications();
+    }
+
     /**
      * @param {ChannelId} channelId
      * @param {Notification} notif
@@ -246,6 +256,11 @@ class NotificationsPush extends IUserClass {
      * @returns {Promise<string | null>} Notification ID or null if error
      */
     async CreateTrigger(channelId, notif, timestamp = Date.now()) {
+        // TODO: Remove after notifee update (currently on 9.1.8)
+        if (Platform.OS === 'android' && Platform.Version >= 36) {
+            return null;
+        }
+
         // Check if the user has denied notifications
         if (this.#notificationPermissions?.authorizationStatus === AuthorizationStatus.DENIED) {
             this.#user.interface.console?.AddLog('warn', '[PushNotifications] Notifications denied');
@@ -322,7 +337,7 @@ class NotificationsPush extends IUserClass {
         }
 
         try {
-            const triggerNotifs = await notifee.getTriggerNotifications();
+            const triggerNotifs = await this.GetTrigger();
             const toRemove = triggerNotifs.filter(({ notification }) => notification.android?.channelId === channelId);
 
             for (const notif of toRemove) {

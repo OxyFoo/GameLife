@@ -57,7 +57,7 @@ class BackShopItems extends React.Component {
             if (item === null) return;
 
             const characterKey = `shop-character-${itemID.toString()}`;
-            const character = new Character(characterKey, user.character.sexe, 'skin_01', 0);
+            const character = new Character(characterKey, 'skin_01', 0);
             character.SetEquipment([itemID.toString()]);
 
             /** @type {BuyableItem} */

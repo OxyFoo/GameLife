@@ -38,8 +38,7 @@ class Inventory extends IUserData {
      * @type {AvatarObject}
      */
     avatar = {
-        sexe: 'MALE',
-        skin: 'skin_01',
+        skin: 'human_00',
         skinColor: 1,
         hair: 0,
         top: 0,
@@ -60,8 +59,7 @@ class Inventory extends IUserData {
         this.stuffs = [];
         this.titleIDs.Set([]);
         this.avatar = {
-            sexe: 'MALE',
-            skin: 'skin_01',
+            skin: 'human_00',
             skinColor: 1,
             hair: 0,
             top: 0,

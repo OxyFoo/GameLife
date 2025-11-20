@@ -32,7 +32,6 @@ function RankElement({ item }) {
 
         const _character = new Character(
             'character-player-' + item.accountID.toString(),
-            item.avatar.Sexe,
             item.avatar.Skin,
             item.avatar.SkinColor
         );

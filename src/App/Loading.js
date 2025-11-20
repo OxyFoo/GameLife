@@ -12,7 +12,6 @@ import {
 } from './popups';
 import { env } from 'Utils/Env';
 import { LoadTemplate_AppData, LoadTemplate_UserData } from './template';
-//import { Character } from 'Interface/Components';
 
 /**
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
@@ -167,14 +166,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     }
 
     // Loading: User character
-    // user.character = new Character(
-    //     'player',
-    //     user.inventory.avatar.sexe,
-    //     user.inventory.avatar.skin,
-    //     user.inventory.avatar.skinColor
-    // );
-    // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    // user.interface.userHeader?.ShowAvatar(true);
+    user.character = new Character('player', user.inventory.avatar.skin, user.inventory.avatar.skinColor);
+    user.character.SetEquipment(user.inventory.GetEquippedItemsID());
+    user.interface.userHeader?.ShowAvatar(true);
 
     // Setup Notifications
     user.notificationsPush.Initialize();

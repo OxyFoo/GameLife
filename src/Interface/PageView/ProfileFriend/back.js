@@ -84,7 +84,6 @@ class BackProfileFriend extends React.Component {
 
         const character = new Character(
             'character-player-' + friend.accountID.toString(),
-            friend.avatar.Sexe,
             friend.avatar.Skin,
             friend.avatar.SkinColor
         );

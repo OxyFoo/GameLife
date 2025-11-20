@@ -6,17 +6,13 @@ import themeManager from 'Managers/ThemeManager';
 import { Character, Frame } from 'Interface/Components';
 
 /**
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
- * @typedef {import('Ressources/items/humans/Characters').Sexes} Sexes
- * @typedef {import('Ressources/items/humans/Characters').CharactersName} CharactersName
  */
 
 const CharacterCardProps = {
-    /** @type {Sexes} */
-    characterSexe: 'MALE',
-
-    /** @type {CharactersName} */
-    characterName: 'skin_01',
+    /** @type {CharactersID} */
+    characterName: 'human_00',
 
     /** @type {number} */
     characterSkinColor: 0,
@@ -24,7 +20,7 @@ const CharacterCardProps = {
     /** @type {boolean} */
     isSelected: false,
 
-    /** @type {(sexe: Sexes, skin: string) => void} */
+    /** @type {(skin: string) => void} */
     onPress: () => {}
 };
 
@@ -33,20 +29,15 @@ class CharacterCard extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { characterSexe, characterName, characterSkinColor } = this.props;
-        if (characterSexe && characterName) {
-            this.character = new Character(
-                'itemcard-' + characterName,
-                characterSexe,
-                characterName,
-                characterSkinColor
-            );
+        const { characterName, characterSkinColor } = this.props;
+        if (characterName) {
+            this.character = new Character('itemcard-' + characterName, characterName, characterSkinColor);
         }
     }
 
     onPress = () => {
-        const { characterSexe, characterName } = this.props;
-        this.props.onPress(characterSexe, characterName);
+        const { characterName } = this.props;
+        this.props.onPress(characterName);
     };
 
     render() {

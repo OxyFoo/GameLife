@@ -117,13 +117,12 @@ class Multiplayer extends IUserData {
             },
             // TODO: Finish this
             avatar: {
-                Sexe: 'MALE',
-                Skin: 'skin_01',
+                Skin: 'human_00',
                 SkinColor: 0,
-                Hair: 'hair_01',
-                Top: 'top_01',
-                Bottom: 'bottom_01',
-                Shoes: 'shoes_01'
+                Hair: 'hair_00',
+                Top: 'top_00',
+                Bottom: 'bottom_00',
+                Shoes: 'shoes_00'
             },
             currentActivity: null,
             friendshipState: 'accepted',

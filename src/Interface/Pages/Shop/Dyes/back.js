@@ -74,8 +74,8 @@ class BackShopDyes extends React.Component {
 
             const characterBeforeKey = `shop-dye-character-before-${itemAfter.ID}`;
             const characterAfterKey = `shop-dye-character-after-${itemBefore.ID}`;
-            const characterBefore = new Character(characterBeforeKey, user.character.sexe, 'skin_01', 0);
-            const characterAfter = new Character(characterAfterKey, user.character.sexe, 'skin_01', 0);
+            const characterBefore = new Character(characterBeforeKey, 'skin_01', 0);
+            const characterAfter = new Character(characterAfterKey, 'skin_01', 0);
             characterBefore.SetEquipment([itemBefore.ID]);
             characterAfter.SetEquipment([itemAfter.ID]);
 

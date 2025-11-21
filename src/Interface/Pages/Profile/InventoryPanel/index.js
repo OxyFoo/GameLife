@@ -42,12 +42,13 @@ const AVATAR_POSITION_IN_FRAME = {
 
 /**
  * @param {object} props
+ * @param {Array<{id: ItemName}>} props.avatarItems - Current avatar items
  * @param {(slot: InventorySlotType) => void} [props.onSlotChange] - Callback called when changing slot
  * @param {(itemId: ItemName) => void} [props.onItemSelect] - Callback called when selecting an item
  */
-const InventoryPanel = ({ onSlotChange, onItemSelect }) => {
-    /** @type {[InventorySlotType, React.Dispatch<React.SetStateAction<InventorySlotType>>]} */
+const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect }) => {
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('all'));
+    const [tmpBottomItem, setTmpBottomItem] = useState(avatarItems[3].id);
 
     /**
      * Changes the selected inventory slot
@@ -108,10 +109,15 @@ const InventoryPanel = ({ onSlotChange, onItemSelect }) => {
                 style={styles.itemButton}
                 appearance='uniform'
                 color='transparent'
-                onPress={() => onItemSelect?.(item.itemName)}
+                onPress={() => {
+                    onItemSelect?.(item.itemName);
+
+                    // TODO: TEMP
+                    if (item.slot === 'bottom') setTmpBottomItem(item.itemName);
+                }}
             >
                 <AvatarFrame
-                    key={`avatar-frame-${item.slot}-${item.itemName}-${Math.random()}`}
+                    key={`avatar-frame-${item.slot}-${item.itemName}`}
                     width={frameSize}
                     height={frameSize}
                     backgroundColor='#00000000'
@@ -119,7 +125,11 @@ const InventoryPanel = ({ onSlotChange, onItemSelect }) => {
                     <AvatarCharacter
                         body='human_00'
                         // bodyColor='#d4d4d4'
-                        items={[{ id: item.itemName }]}
+                        items={
+                            item.slot !== 'top'
+                                ? [{ id: item.itemName }]
+                                : [{ id: item.itemName }, { id: tmpBottomItem }]
+                        }
                         position={AVATAR_POSITION_IN_FRAME[item.slot].pos}
                         scale={AVATAR_POSITION_IN_FRAME[item.slot].scale}
                         portraitMode={item.slot === 'hair'}
@@ -130,59 +140,36 @@ const InventoryPanel = ({ onSlotChange, onItemSelect }) => {
         );
     };
 
+    /**
+     * Renders a slot filter button
+     * @param {InventorySlotType} slot
+     * @param {string} label
+     * @param {boolean} [isLast]
+     */
+    const renderSlotButton = (slot, label, isLast = false) => {
+        const isSelected = selectedSlot === slot;
+        return (
+            <Button
+                style={isLast ? styles.slotButtonLast : styles.slotButton}
+                appearance={isSelected ? 'uniform' : 'outline'}
+                color={isSelected ? 'main1' : undefined}
+                borderColor={isSelected ? undefined : 'main1'}
+                fontColor={isSelected ? 'automatic' : 'main1'}
+                onPress={() => selectSlot(slot)}
+            >
+                {label}
+            </Button>
+        );
+    };
+
     return (
         <View>
             <ScrollView style={styles.scrollView} horizontal nestedScrollEnabled>
-                <Button
-                    style={styles.slotButton}
-                    appearance={selectedSlot === 'all' ? 'uniform' : 'outline'}
-                    color={selectedSlot === 'all' ? 'main1' : undefined}
-                    borderColor={selectedSlot === 'all' ? undefined : 'main1'}
-                    fontColor={selectedSlot === 'all' ? 'automatic' : 'main1'}
-                    onPress={() => selectSlot('all')}
-                >
-                    [TOUT]
-                </Button>
-                <Button
-                    style={styles.slotButton}
-                    appearance={selectedSlot === 'hair' ? 'uniform' : 'outline'}
-                    color={selectedSlot === 'hair' ? 'main1' : undefined}
-                    borderColor={selectedSlot === 'hair' ? undefined : 'main1'}
-                    fontColor={selectedSlot === 'hair' ? 'automatic' : 'main1'}
-                    onPress={() => selectSlot('hair')}
-                >
-                    [Cheveux]
-                </Button>
-                <Button
-                    style={styles.slotButton}
-                    appearance={selectedSlot === 'top' ? 'uniform' : 'outline'}
-                    color={selectedSlot === 'top' ? 'main1' : undefined}
-                    borderColor={selectedSlot === 'top' ? undefined : 'main1'}
-                    fontColor={selectedSlot === 'top' ? 'automatic' : 'main1'}
-                    onPress={() => selectSlot('top')}
-                >
-                    [Haut]
-                </Button>
-                <Button
-                    style={styles.slotButton}
-                    appearance={selectedSlot === 'bottom' ? 'uniform' : 'outline'}
-                    color={selectedSlot === 'bottom' ? 'main1' : undefined}
-                    borderColor={selectedSlot === 'bottom' ? undefined : 'main1'}
-                    fontColor={selectedSlot === 'bottom' ? 'automatic' : 'main1'}
-                    onPress={() => selectSlot('bottom')}
-                >
-                    [Bas]
-                </Button>
-                <Button
-                    style={styles.slotButtonLast}
-                    appearance={selectedSlot === 'shoes' ? 'uniform' : 'outline'}
-                    color={selectedSlot === 'shoes' ? 'main1' : undefined}
-                    borderColor={selectedSlot === 'shoes' ? undefined : 'main1'}
-                    fontColor={selectedSlot === 'shoes' ? 'automatic' : 'main1'}
-                    onPress={() => selectSlot('shoes')}
-                >
-                    [Chaussures]
-                </Button>
+                {renderSlotButton('all', '[TOUT]')}
+                {renderSlotButton('hair', '[Cheveux]')}
+                {renderSlotButton('top', '[Haut]')}
+                {renderSlotButton('bottom', '[Bas]')}
+                {renderSlotButton('shoes', '[Chaussures]', true)}
             </ScrollView>
 
             <FlatList

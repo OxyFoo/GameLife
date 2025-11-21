@@ -17,9 +17,6 @@ import { SpringAnimation } from 'Utils/Animations';
  */
 
 class BackProfile extends PageBase {
-    /** @type {Array<{id: ItemName}>} */
-    avatarItems = [{ id: 'face_00' }, { id: 'hair_00' }, { id: 'top_00' }, { id: 'bottom_00' }, { id: 'shoes_00' }];
-
     state = {
         scrollY: new Animated.Value(0),
 
@@ -28,6 +25,9 @@ class BackProfile extends PageBase {
         avatarTranslateX: new Animated.Value(-1 / 4), // Ratio of screenWidth
         avatarTranslateY: new Animated.Value(0),
         avatarScale: new Animated.Value(1), // Scale of avatar
+
+        /** @type {Array<{id: ItemName}>} */
+        avatarItems: [{ id: 'face_00' }, { id: 'hair_00' }, { id: 'top_00' }, { id: 'bottom_00' }, { id: 'shoes_00' }],
 
         ...this.getUpdatedExperience()
     };
@@ -44,6 +44,10 @@ class BackProfile extends PageBase {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({ ...this.getUpdatedExperience() });
         });
+
+        const userAvatar = user.inventory.avatar;
+        const userInventory = user.inventory.stuffs;
+        console.log('User inventory stuffs:', { userAvatar, userInventory });
     }
 
     componentWillUnmount() {
@@ -104,11 +108,12 @@ class BackProfile extends PageBase {
      */
     updateAvatarItem = (itemId) => {
         const slotType = itemId.split('_')[0];
-        const index = this.avatarItems.findIndex((item) => item.id.startsWith(slotType));
+        const index = this.state.avatarItems.findIndex((item) => item.id.startsWith(slotType));
 
         if (index !== -1) {
-            this.avatarItems[index] = { id: /** @type {ItemName} */ (itemId) };
-            this.forceUpdate();
+            const newAvatarItems = [...this.state.avatarItems];
+            newAvatarItems[index] = { id: /** @type {ItemName} */ (itemId) };
+            this.setState({ avatarItems: newAvatarItems });
         }
     };
 
@@ -119,6 +124,7 @@ class BackProfile extends PageBase {
         user.interface.bottomPanel?.Open({
             content: (
                 <InventoryPanel
+                    avatarItems={this.state.avatarItems}
                     onSlotChange={this.adjustAvatarPositionForCategory}
                     onItemSelect={this.updateAvatarItem}
                 />

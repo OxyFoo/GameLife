@@ -5,7 +5,7 @@ import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('Class/Shop').Chest} Chest
- * @typedef {import('Data/App/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').ItemID} ItemID
  *
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
@@ -24,7 +24,7 @@ class BackShop extends PageBase {
 
         loaded: false,
 
-        /** @type {StuffID[]} */
+        /** @type {ItemID[]} */
         dailyItemsID: [],
 
         /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */

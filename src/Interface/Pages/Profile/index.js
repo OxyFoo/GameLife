@@ -93,7 +93,7 @@ class Profile extends BackProfile {
                             position={{ x: 0, y: 0, z: 0 }}
                             rotation={{ x: 0, y: 0, z: 0 }}
                             scale={1}
-                            items={this.avatarItems}
+                            items={this.state.avatarItems}
                         />
                     </AvatarFrame>
                 </Animated.View>

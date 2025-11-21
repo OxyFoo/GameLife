@@ -1,9 +1,7 @@
 import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 /**
- * // TODO: Replace StuffID with ItemID in Types/Data/App/Items.js
- * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- *
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} Slot
  *
@@ -60,7 +58,7 @@ class Items extends IAppData {
     }
 
     /**
-     * @param {StuffID} itemID Item ID
+     * @param {ItemID} itemID Item ID
      * @param {Item[]} items List of items to get dyables items
      * @returns {Item[]} List of dyables items for the given item
      */
@@ -70,7 +68,7 @@ class Items extends IAppData {
     }
 
     /**
-     * @param {StuffID} ID
+     * @param {ItemID} ID
      * @returns {Item | null}
      */
     GetByID = (ID) => this.items.find((item) => item.ID === ID) || null;

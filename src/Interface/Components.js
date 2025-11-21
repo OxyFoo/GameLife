@@ -24,8 +24,8 @@ export { UserOnlineElement } from './Components/UserOnlineElement';
 export { Zap } from './Components/Zap';
 
 // TODO: Reimplements old components
-import Frame from './OldComponents/Character/Frame';
-import Character from './OldComponents/Character/Character';
+const Frame = null;
+const Character = null;
 import StreakChart from './OldComponents/StreakChart';
 
 export { Frame, Character, StreakChart };

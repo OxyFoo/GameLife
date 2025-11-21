@@ -10,7 +10,7 @@ import { Character } from 'Interface/Components';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
- * @typedef {import('Data/App/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').ItemID} ItemID
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  *
  * @typedef BuyableItem
@@ -26,7 +26,7 @@ import { Character } from 'Interface/Components';
  */
 
 const BackShopItemsProps = {
-    /** @type {StuffID[]} */
+    /** @type {ItemID[]} */
     dailyItemsID: []
 };
 
@@ -43,7 +43,7 @@ class BackShopItems extends React.Component {
         this.state.buyableItems = this.refreshItems(dailyItemsID);
     }
 
-    /** @param {StuffID[]} dailyItemsID */
+    /** @param {ItemID[]} dailyItemsID */
     refreshItems = (dailyItemsID) => {
         const allBuyableItems = dataManager.items.GetBuyable();
 

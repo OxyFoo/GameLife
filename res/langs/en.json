@@ -622,9 +622,7 @@
         "alert-birthtimewait-title": "Change of date of birth",
         "alert-birthtimewait-message": "You must wait {} days before you can change your date of birth again.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-message": "Are you {} years old?",
-
-        "temporary-avatars": "This avatar will soon be replaced ... better!"
+        "alert-birthconfirm-message": "Are you {} years old?"
     },
 
     "profile-avatar": {
@@ -1088,9 +1086,7 @@
         "widget-button-editTime": "Change",
         "widget-duration": "Duration",
         "widget-achievements-all": "All achievements",
-        "widget-skills-all": "All skills",
-        "sexe-male": "♂",
-        "sexe-female": "♀"
+        "widget-skills-all": "All skills"
     },
 
     "loading": [

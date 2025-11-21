@@ -11,12 +11,12 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Data/App/Items').StuffID} StuffID
+ * @typedef {import('Data/App/Items').ItemID} ItemID
  * @typedef {import('Class/Rewards').Rarities} Rarities
  *
  * @typedef {Object} ChestRewardProps
  * @property {Rarities} chestRarity
- * @property {StuffID} itemID
+ * @property {ItemID} itemID
  * @property {() => void} callback
  *
  * @typedef {Object} OxRewardProps

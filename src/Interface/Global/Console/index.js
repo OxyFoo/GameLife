@@ -37,7 +37,8 @@ class Console extends ConsoleBack {
             return null;
         }
 
-        const { opened, animation, animationDeleteButtons, debug } = this.state;
+        const { opened, debug } = this.state;
+        const { animation, animationDeleteButtons } = this;
 
         const interY = { inputRange: [0, 1], outputRange: [-256, 0] };
         const translateY = {

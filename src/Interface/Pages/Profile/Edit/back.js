@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dimensions } from 'react-native';
 
 import TitlesView from './titles';
 import user from 'Managers/UserManager';
@@ -123,7 +124,7 @@ class BackProfileEditor extends React.PureComponent {
 
         user.interface.bottomPanel?.Open({
             content: <TitlesView items={userTitlesItems} onTitleSelected={this.setTitle} />,
-            maxPosY: user.interface.size.height * 0.6,
+            maxPosY: Dimensions.get('window').height * 0.6,
             zIndex: 100
         });
     };

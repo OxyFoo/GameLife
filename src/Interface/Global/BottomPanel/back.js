@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
 import Mover from './Mover';
 import user from 'Managers/UserManager';
@@ -10,6 +10,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('react-native-safe-area-context').EdgeInsets} EdgeInsets
  */
 
 /**
@@ -38,8 +39,6 @@ class BottomPanelBack extends React.Component {
 
         animOpacity: new Animated.Value(0),
 
-        bottomInset: 0,
-
         /** @type {boolean} Track if current panel is in overlay mode (persists during close animation) */
         isOverlayMode: false
     };
@@ -61,12 +60,14 @@ class BottomPanelBack extends React.Component {
             return;
         }
 
+        const screenSize = Dimensions.get('window');
+
         this.opening = true;
         this.mover.scrollEnabled = true;
 
         // Set default values
         this.mover.panel.height = 0;
-        this.mover.panel.maxPosY = params.maxPosY ?? user.interface.size.height * 0.9;
+        this.mover.panel.maxPosY = params.maxPosY ?? screenSize.height * 0.9;
         this.mover.panel.minPosY = params.minPosY ?? this.mover.panel.maxPosY;
         if (this.mover.panel.minPosY > this.mover.panel.maxPosY) {
             this.mover.panel.minPosY = this.mover.panel.maxPosY;

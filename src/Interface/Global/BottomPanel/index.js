@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Animated, Platform } from 'react-native';
+import { View, Animated, Dimensions } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import styles from './style';
 import BottomPanelBack from './back';
@@ -11,16 +12,24 @@ import { DynamicBackground } from 'Interface/Primitives';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
+ * @typedef {import('react-native-safe-area-context').EdgeInsets} EdgeInsets
  */
 
 class BottomPanel extends BottomPanelBack {
+    static contextType = SafeAreaInsetsContext;
+
     render() {
-        const { state, current, animOpacity, bottomInset, isOverlayMode } = this.state;
+        const screenSize = Dimensions.get('window');
+        const insets = /** @type {EdgeInsets | null} */ (this.context);
+        const topInset = insets?.top || 0;
+        const bottomInset = insets?.bottom || 0;
+        const { state, current, animOpacity, isOverlayMode } = this.state;
 
         // Offset used to avoid animation void space at the bottom of the screen
         const offset = 24;
         const opened = state === 'opened';
-        const navbarHeight = user.interface?.navBar?.show ? (user.interface?.navBar?.state?.height ?? 24) : 24;
+        const navHeight = user.interface?.navBar?.state?.height ?? 24;
+        const navbarHeight = user.interface?.navBar?.show ? navHeight : 0;
 
         /** @type {StyleProp} */
         const styleParent = {
@@ -43,13 +52,10 @@ class BottomPanel extends BottomPanelBack {
             minHeight: opened ? this.mover.panel.height : undefined,
             maxHeight: this.mover.panel.maxPosY,
             opacity: animOpacity,
-            paddingBottom: navbarHeight + offset * 2 + (Platform.select({ ios: 50, android: 0 }) ?? 0), // iOS has a bottom inset for the keyboard ?
+            paddingBottom: navbarHeight + bottomInset + offset,
             transform: [
                 {
-                    translateY: Animated.add(
-                        this.mover.panel.posAnimY,
-                        (user.interface?.size?.height || 0) - bottomInset
-                    )
+                    translateY: Animated.add(this.mover.panel.posAnimY, (screenSize.height || 0) - topInset + offset)
                 }
             ],
             backgroundColor: current?.backgroundColor ?? themeManager.GetColor('ground1')

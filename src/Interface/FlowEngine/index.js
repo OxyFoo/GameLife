@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import styles from './style';
 import BackFlowEngine from './back';
-import SafeAreaWithResponsive from './SafeAreaWithResponsive';
+import DynamicArea from './DynamicArea';
 import PageWrapper from './wrapper';
 import themeManager from 'Managers/ThemeManager';
 
@@ -27,24 +28,22 @@ class FlowEnginePagesRender extends BackFlowEngine {
         const { customResponsive } = this.state;
 
         return (
-            <SafeAreaWithResponsive
-                testID={testID}
-                onLayout={this.onLayout}
-                customResponsive={customResponsive}
-                background={<DynamicBackground opacity={0.15} backgroundColor={themeManager.GetColor('ground1')} />}
-            >
-                <KeyboardAvoidingView style={styles.fullscreen} behavior='padding'>
-                    {this.renderPages()}
-                    <UserHeader ref={this.userHeader} />
-                    <BottomPanel ref={this.bottomPanel} />
-                    <NavBar ref={this.navBar} />
-                    <NotificationsInApp ref={this.notificationsInApp} />
-                    <ScreenTuto ref={this.screenTuto} />
-                    <Popup ref={this.popup} />
-                    <ScreenInput ref={this.screenInput} />
-                    <Console ref={this.console} />
-                </KeyboardAvoidingView>
-            </SafeAreaWithResponsive>
+            <SafeAreaProvider style={styles.fullscreen} testID={testID}>
+                <DynamicBackground opacity={0.15} backgroundColor={themeManager.GetColor('ground1')} />
+                <DynamicArea customResponsive={customResponsive}>
+                    <KeyboardAvoidingView style={styles.fullscreen} behavior='padding'>
+                        {this.renderPages()}
+                        <UserHeader ref={this.userHeader} />
+                        <BottomPanel ref={this.bottomPanel} />
+                        <NavBar ref={this.navBar} />
+                        <NotificationsInApp ref={this.notificationsInApp} />
+                        <ScreenTuto ref={this.screenTuto} />
+                        <Popup ref={this.popup} />
+                        <ScreenInput ref={this.screenInput} />
+                        <Console ref={this.console} />
+                    </KeyboardAvoidingView>
+                </DynamicArea>
+            </SafeAreaProvider>
         );
     }
 

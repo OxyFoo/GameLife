@@ -48,7 +48,7 @@
     "react-native-permissions": "^5.4.0",
     "react-native-pinned-ws": "^1.0.4",
     "react-native-reanimated": "^3.18.0",
-    "react-native-safe-area": "^0.5.1",
+    "react-native-safe-area-context": "^5.6.2",
     "react-native-shadow-2": "^7.1.1",
     "react-native-svg": "^15.12.0"
   },

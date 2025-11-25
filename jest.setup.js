@@ -35,10 +35,6 @@ jest.mock('react-native-permissions', () => {
     return mockPermissions;
 });
 
-jest.mock('react-native-safe-area', () => {
-    return null;
-});
-
 jest.mock('react-native-google-mobile-ads', () => ({
     TurboModuleRegistry: {
         getEnforcing: () => {
@@ -81,22 +77,6 @@ jest.mock('react-native-gifted-charts', () => ({
     LineChart: 'View',
     BarChart: 'View',
     PieChart: 'View'
-}));
-
-jest.mock('react-native-safe-area', () => ({
-    SafeAreaView: 'View'
-}));
-
-jest.mock('react-native-safe-area', () => ({
-    getSafeAreaInsetsForRootView: () =>
-        Promise.resolve({
-            safeAreaInsets: {
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0
-            }
-        })
 }));
 
 Animated.timing = () => ({

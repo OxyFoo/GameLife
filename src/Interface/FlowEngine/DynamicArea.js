@@ -1,12 +1,17 @@
 import * as React from 'react';
-import { View, SafeAreaView, Dimensions, StyleSheet } from 'react-native';
-import SafeAreaNative, { DEFAULT_INSETS } from 'Utils/SafeAreaNative';
+import { View, Dimensions, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- * @typedef {import('Utils/SafeAreaNative').SafeAreaInsets} SafeAreaInsets
+ *
+ * @typedef {object} AreaInsets
+ * @property {number} top
+ * @property {number} left
+ * @property {number} right
+ * @property {number} bottom
  *
  * @typedef {object} ResponsiveSettings
  * @property {number} scale - Scale factor for responsive design
@@ -25,34 +30,23 @@ const DEFAULT_responsive = {
  * @param {object} props
  * @param {string} [props.testID]
  * @param {StyleProp} [props.style]
- * @param {JSX.Element} props.children
- * @param {JSX.Element} [props.background] - Optional background element
+ * @param {React.ReactNode} props.children
  * @param {(event: LayoutChangeEvent) => void} [props.onLayout]
  * @param {ResponsiveSettings} [props.customResponsive] - Custom responsive settings
- * @param {SafeAreaInsets} [props.customInsets] - Safe area insets, automatically detected if not provided
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
-const SafeAreaWithResponsive = ({ testID, style, children, background, onLayout, customResponsive, customInsets }) => {
-    const [nativeInsets, setNativeInsets] = React.useState(DEFAULT_INSETS);
-
-    React.useEffect(() => {
-        // Get native insets
-        SafeAreaNative.getSafeAreaInsets().then((insets) => {
-            setNativeInsets({ ...insets });
-        });
-    }, []);
-
-    const insets = { ...nativeInsets, ...customInsets };
+const DynamicArea = ({ testID, style, children, onLayout, customResponsive }) => {
     const responsive = { ...DEFAULT_responsive, ...customResponsive };
     const neededOffset =
         responsive.scale !== 1 || responsive.paddingVertical !== 0 || responsive.paddingHorizontal !== 0;
+    const insets = useSafeAreaInsets();
 
     /** @type {StyleProp} */
     let offsetStyle = {
         paddingTop: insets.top,
-        paddingBottom: insets.bottom,
         paddingLeft: insets.left,
-        paddingRight: insets.right
+        paddingRight: insets.right,
+        paddingBottom: insets.bottom
     };
 
     if (neededOffset) {
@@ -78,31 +72,15 @@ const SafeAreaWithResponsive = ({ testID, style, children, background, onLayout,
     }
 
     return (
-        <>
-            {background && <View style={styles.backgroundContainer}>{background}</View>}
-            <SafeAreaView
-                style={[styles.safeView, style, offsetStyle]}
-                testID={testID}
-                onLayout={onLayout}
-                children={children}
-            />
-        </>
+        <View testID={testID} style={[styles.safeView, offsetStyle, style]} onLayout={onLayout} children={children} />
     );
 };
 
 const styles = StyleSheet.create({
-    backgroundContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-    },
     safeView: {
         width: '100%',
         height: '100%'
-        // backgroundColor: '#000000'
     }
 });
 
-export default SafeAreaWithResponsive;
+export default DynamicArea;

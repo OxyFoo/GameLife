@@ -18,7 +18,7 @@ import { FormatForSearch } from 'Utils/String';
 /** @type {ItemSkill[]} */
 const EMPTY_ITEMS_SKILLS = [];
 
-/** @returns {JSX.Element} */
+/** @returns {React.ReactNode} */
 function renderEmptyList() {
     const lang = langManager.curr['activity'];
 
@@ -31,7 +31,7 @@ function renderEmptyList() {
 
 /**
  * @param {{ item: ItemSkill }} param0
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function RenderSkill({ item }) {
     const { value, onPress } = item;

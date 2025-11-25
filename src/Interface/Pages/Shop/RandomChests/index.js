@@ -31,7 +31,7 @@ class ShopItems extends BackShopItems {
 
     /**
      * @param {{ item: BuyableItem }} item
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderItem = ({ item }) => {
         const lang = langManager.curr['shop']['randomChests'];

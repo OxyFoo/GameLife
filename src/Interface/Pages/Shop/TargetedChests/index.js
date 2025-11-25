@@ -43,7 +43,7 @@ class ShopItems extends BackShopItems {
 
     /**
      * @param {{ item: Target }} param0
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderCategory = ({ item }) => {
         const { id, icon, onPress } = item;
@@ -54,7 +54,7 @@ class ShopItems extends BackShopItems {
 
     /**
      * @param {{ item: BuyableTargetedChest }} item
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderItem = ({ item }) => {
         const disabled = user.shop.buyToday.items.includes(item.ID.toString());

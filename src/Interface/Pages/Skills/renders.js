@@ -20,7 +20,7 @@ import { Text, IconCheckable, Icon } from 'Interface/Components';
  * @param {SkillCategory | null} value
  * @param {number} _index
  * @param {Array<SkillCategory | null>} _array
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 function renderCategory(value, _index, _array) {
     if (value === null) {
@@ -48,7 +48,7 @@ function renderCategory(value, _index, _array) {
 /**
  * @this {SkillsPage}
  * @param {{item: EnrichedSkill}} item
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function renderSkill({ item }) {
     const { ID, LogoXML, FullName, Experience } = item;

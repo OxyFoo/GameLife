@@ -16,7 +16,7 @@ import { Icon } from '../Icon';
 
 /**
  * @param {{ item: RawReward }} props
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 const Reward = ({ item }) => {
     const styleReward = {

@@ -23,7 +23,7 @@ import { ACTIVITY_MINUTES_PER_DAY } from 'Data/User/DailyQuests';
  * @param {DailyQuestDay} props.item DailyQuestDay object
  * @param {DailyQuestData | null} props.claimList Current claim list or null if not available yet
  * @param {(index: number) => Promise<void>} [props.handleClaim] Function called when the user press the button
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 const DailyQuestDayItem = (props) => {
     const lang = langManager.curr['daily-quest'];

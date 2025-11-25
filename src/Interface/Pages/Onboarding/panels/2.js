@@ -17,7 +17,7 @@ const sentence = Math.random() > 0.5 ? 'second' : 'second-bis';
  * @param {number} props.index
  * @param {Animated.Value} props.anim
  * @param {() => void} [props.onNext]
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function RenderPage2({ index, anim, onNext }) {
     const lang = langManager.curr['onboarding'];

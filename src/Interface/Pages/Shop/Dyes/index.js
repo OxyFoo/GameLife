@@ -35,7 +35,7 @@ class ShopDyes extends BackShopDyes {
 
     /**
      * @param {{ item: BuyableDye }} item
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderDye = ({ item: dyer }) => {
         const { ItemBefore, ItemAfter } = dyer;

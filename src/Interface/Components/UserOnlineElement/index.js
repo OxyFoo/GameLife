@@ -31,7 +31,7 @@ const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.
  * @param {object} param0
  * @param {StyleViewProp} [param0.style]
  * @param {(Friend | UserOnline)} param0.friend
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function UserOnlineElement({ style, friend }) {
     const langExp = langManager.curr['level'];

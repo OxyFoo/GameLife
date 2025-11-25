@@ -34,7 +34,7 @@ class ShopDailyDeals extends BackShopItems {
 
     /**
      * @param {{ item: BuyableItem }} item
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderItem = ({ item }) => {
         const disabled = user.shop.buyToday.items.includes(item.ID.toString());

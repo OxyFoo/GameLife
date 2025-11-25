@@ -32,7 +32,7 @@ const handleFriendPress = (friend) => {
  * @param {Object} param0
  * @param {StyleViewProp} [param0.style]
  * @param {(Friend | UserOnline)[]} param0.friends Friends list sorted by rank
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 const TopFriends = ({ style, friends }) => {
     /** @type {StyleViewProp} */

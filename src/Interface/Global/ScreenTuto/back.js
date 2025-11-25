@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
 import { UpdatePositions } from './updatePos';
 import user from 'Managers/UserManager';
 
-import { GetAbsolutePosition } from 'Utils/UI';
 import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').View} View
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
+ * @typedef {import('react-native-safe-area-context').EdgeInsets} EdgeInsets
  *
  * @typedef {import('Interface/Components/Zap/back').ZapInclinaison} ZapInclinaison
  * @typedef {import('Interface/Components/Zap/back').ZapFace} ZapFace
@@ -52,7 +52,7 @@ class ScreenTutoBack extends React.Component {
         showSkipButton: true,
 
         component: {
-            /** @type {React.RefObject<any> | null} */
+            /** @type {React.RefObject<View> | null} */
             ref: null,
             position: { x: 0, y: 0 },
             size: { x: 0, y: 0 },
@@ -85,6 +85,9 @@ class ScreenTutoBack extends React.Component {
 
     /** @type {LayoutRectangle | null} */
     messageLayout = null;
+
+    /** @type {EdgeInsets} */
+    insets = { top: 0, right: 0, bottom: 0, left: 0 };
 
     componentWillUnmount() {
         clearTimeout(this.hinterval);
@@ -228,31 +231,26 @@ class ScreenTutoBack extends React.Component {
      */
     Show = async (element) => {
         const { component, text, showNextButton, showSkipButton, fontSize, positionY, zapInline } = element;
+        const screenSize = Dimensions.get('window');
 
         const position = {
-            x: user.interface.size.width / 2,
-            y: (user.interface.size.height * 2) / 3,
+            x: screenSize.width / 2,
+            y: (screenSize.height * 2) / 3,
             width: 0,
             height: 0
         };
 
-        let error = false;
         let showNext = true;
 
         // Get component position
         const _component = typeof component === 'function' ? component() : component;
-        if (_component !== null) {
-            const pos = await GetAbsolutePosition(_component);
-            if (!pos.width || !pos.height) {
-                error = true;
-            } else {
-                position.x = pos.x;
-                position.y = pos.y;
-                position.width = pos.width;
-                position.height = pos.height;
-                showNext = false;
-            }
-        }
+        _component?.current?.measureInWindow((x, y, width, height) => {
+            position.x = x;
+            position.y = y;
+            position.width = width;
+            position.height = height;
+            showNext = false;
+        });
 
         // Show next button manually
         if (showNextButton !== null) {
@@ -282,7 +280,7 @@ class ScreenTutoBack extends React.Component {
 
                     component: {
                         ...this.state.component,
-                        ref: error ? null : _component,
+                        ref: _component,
                         position: {
                             x: position.x,
                             y: position.y

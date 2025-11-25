@@ -34,7 +34,8 @@
     ],
     "exclude": [
         "**/_Template",
-        "res",
-        "node_modules"
+        "**/res",
+        "**/node_modules",
+        "**/Pods"
     ]
 }

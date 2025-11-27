@@ -5,35 +5,33 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import InventoryPanel from './InventoryPanel';
 import { GetStringLength } from 'Utils/String';
-import { SpringAnimation } from 'Utils/Animations';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {import('./AvatarEditor').AvatarEditorRef} AvatarEditorRef
  */
 
 class BackProfile extends PageBase {
     state = {
-        scrollY: new Animated.Value(0),
-
-        // Avatar edit mode
-        editMode: new Animated.Value(0), // 0 = normal, 1 = edit mode
-        avatarTranslateX: new Animated.Value(-1 / 4), // Ratio of screenWidth
-        avatarTranslateY: new Animated.Value(0),
-        avatarScale: new Animated.Value(1), // Scale of avatar
-
-        /** @type {Array<{id: ItemName}>} */
-        avatarItems: [{ id: 'face_00' }, { id: 'hair_00' }, { id: 'top_00' }, { id: 'bottom_00' }, { id: 'shoes_00' }],
-
+        editMode: false,
         ...this.getUpdatedExperience()
     };
 
+    // Avatar edit mode
+    avatarEditMode = new Animated.Value(0); // 0 = normal, 1 = edit mode
+
     /** @type {React.RefObject<ScrollView | null>} */
     refScrollView = React.createRef();
+
+    scrollY = new Animated.Value(0);
+
+    /** @type {React.RefObject<AvatarEditorRef | null>} */
+    refAvatarEditor = React.createRef();
 
     /** @type {Symbol | null} */
     activitiesListener = null;
@@ -74,7 +72,7 @@ class BackProfile extends PageBase {
     /** @param {NativeSyntheticScrollEvent} event */
     handleScroll = (event) => {
         const { y } = event.nativeEvent.contentOffset;
-        this.state.scrollY.setValue(y);
+        this.scrollY.setValue(y);
     };
 
     openSettings = () => {
@@ -101,106 +99,26 @@ class BackProfile extends PageBase {
         user.interface.BackHandle();
     };
 
-    /**
-     * TODO: Temporary method
-     * Update avatar items
-     * @param {string} itemId - The new item id to equip
-     */
-    updateAvatarItem = (itemId) => {
-        const slotType = itemId.split('_')[0];
-        const index = this.state.avatarItems.findIndex((item) => item.id.startsWith(slotType));
-
-        if (index !== -1) {
-            const newAvatarItems = [...this.state.avatarItems];
-            newAvatarItems[index] = { id: /** @type {ItemName} */ (itemId) };
-            this.setState({ avatarItems: newAvatarItems });
-        }
-    };
-
     openInventory = () => {
-        this.enterEditMode();
-
-        // Open bottom panel with category change callback
-        user.interface.bottomPanel?.Open({
-            content: (
-                <InventoryPanel
-                    avatarItems={this.state.avatarItems}
-                    onSlotChange={this.adjustAvatarPositionForCategory}
-                    onItemSelect={this.updateAvatarItem}
-                />
-            ),
-            overlayColor: '#00000001',
-            onClose: () => {
-                this.exitEditMode();
-            }
-        });
-    };
-
-    closeInventory = () => {
-        user.interface.bottomPanel?.Close();
-    };
-
-    /**
-     * Enter edit mode for avatar customization
-     * Hides UI and centers avatar with smooth animations
-     */
-    enterEditMode = () => {
         // Scroll page to top
         this.refScrollView.current?.scrollTo({ y: 0, animated: true });
 
-        // Move avatar to center
-        this.adjustAvatarPosition({ editMode: 1, x: -1 / 2, y: -100 });
+        // Open avatar editor
+        this.refAvatarEditor.current?.enterEditMode();
+
+        // Hide interface
+        TimingAnimation(this.avatarEditMode, 1, 300).start();
+
+        // Set edit mode state
+        this.setState({ editMode: true });
     };
 
-    /**
-     * Exit edit mode and restore normal view
-     */
-    exitEditMode = () => {
-        this.adjustAvatarPosition({ editMode: 0, x: -1 / 4, y: 0, scale: 1 });
-    };
+    closeInventory = () => {
+        // Show interface
+        TimingAnimation(this.avatarEditMode, 0, 300).start();
 
-    /**
-     * Adjust avatar vertical position based on selected category
-     * @param {'all' | 'hair' | 'top' | 'bottom' | 'shoes' | null} category
-     */
-    adjustAvatarPositionForCategory = (category) => {
-        switch (category) {
-            case 'hair':
-                this.adjustAvatarPosition({ y: 100, scale: 1.5 });
-                break;
-            case 'top':
-                this.adjustAvatarPosition({ y: -50, scale: 1.25 });
-                break;
-            case 'bottom':
-                this.adjustAvatarPosition({ y: -350, scale: 0.8 });
-                break;
-            case 'shoes':
-                this.adjustAvatarPosition({ y: -600, scale: 1.3 });
-                break;
-            case 'all':
-            default:
-                this.adjustAvatarPosition({ y: -100, scale: 1 });
-                break;
-        }
-    };
-
-    /**
-     * @param {object} newPos
-     * @param {number} [newPos.x] Position in ratio of screen width (-0.25 = center)
-     * @param {number} [newPos.y]
-     * @param {number} [newPos.scale]
-     * @param {number} [newPos.editMode]
-     */
-    adjustAvatarPosition = (newPos) => {
-        const { avatarTranslateX, avatarTranslateY, avatarScale } = this.state;
-
-        const animations = [];
-        if (newPos.x !== undefined) animations.push(SpringAnimation(avatarTranslateX, newPos.x));
-        if (newPos.y !== undefined) animations.push(SpringAnimation(avatarTranslateY, newPos.y));
-        if (newPos.scale !== undefined) animations.push(SpringAnimation(avatarScale, newPos.scale));
-        if (newPos.editMode !== undefined) animations.push(SpringAnimation(this.state.editMode, newPos.editMode));
-
-        Animated.parallel(animations).start();
+        // Unset edit mode state
+        this.setState({ editMode: false });
     };
 }
 

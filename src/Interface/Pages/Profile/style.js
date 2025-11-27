@@ -40,13 +40,6 @@ const styles = StyleSheet.create({
         flexGrow: 0
     },
 
-    avatarContainer: {
-        position: 'absolute',
-        top: 100,
-        zIndex: -100,
-        elevation: -100
-    },
-
     buttons: {
         marginTop: '30%',
         paddingHorizontal: 24,

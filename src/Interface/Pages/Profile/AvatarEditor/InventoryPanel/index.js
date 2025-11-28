@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, FlatList, Dimensions } from 'react-native';
+import React, { useState, useMemo, useCallback } from 'react';
+import { View, FlatList, useWindowDimensions } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
@@ -74,7 +74,7 @@ const InventoryPanel = ({
      * Retrieves the items to display according to the selected slot
      * @returns {(DisplayedItem | BodyColorItem | AvatarBodyItem | { isEmpty: true })[]}
      */
-    const getDisplayedItems = () => {
+    const displayedItems = useMemo(() => {
         /** @type {(DisplayedItem | BodyColorItem | AvatarBodyItem | { isEmpty: true })[]} */
         const items = [];
         if (selectedSlot === 'bodyColor') {
@@ -102,54 +102,87 @@ const InventoryPanel = ({
         }
 
         return items;
-    };
+    }, [selectedSlot]);
 
     /**
      * Renders an item in the inventory
      * @param {{item: DisplayedItem | BodyColorItem | AvatarBodyItem | { isEmpty: true }}} param
      */
-    const renderItem = ({ item }) => {
-        const screenWidth = Dimensions.get('window').width;
-        const frameSize = screenWidth / 4 - 12;
+    const { width: screenWidth } = useWindowDimensions();
+    const frameSize = useMemo(() => screenWidth / 4 - 12, [screenWidth]);
 
-        // Empty slot
-        if ('isEmpty' in item && item.isEmpty) {
-            return (
-                <View style={[styles.itemButton, styles.itemButtonNoBorder]}>
-                    <View style={{ width: frameSize, height: frameSize }} />
-                </View>
-            );
-        }
+    const renderItem = useCallback(
+        /** @param {{item: DisplayedItem | BodyColorItem | AvatarBodyItem | { isEmpty: true }}} param */
+        ({ item }) => {
+            // Empty slot
+            if ('isEmpty' in item && item.isEmpty) {
+                return (
+                    <View style={[styles.itemButton, styles.itemButtonNoBorder]}>
+                        <View style={{ width: frameSize, height: frameSize }} />
+                    </View>
+                );
+            }
 
-        // Body color item
-        if ('slot' in item && item.slot === 'bodyColor') {
-            const isSelected = panelBodyColor === item.color;
-            return (
-                <Button
-                    style={[styles.itemButton, styles.itemButtonNoBorder]}
-                    appearance='uniform'
-                    color='transparent'
-                    onPress={() => {
-                        setPanelBodyColor(item.color);
-                        onBodyColorSelect?.(item.color);
-                    }}
-                >
-                    <View
-                        style={[
-                            { width: frameSize, height: frameSize, backgroundColor: item.color },
-                            styles.colorSquare,
-                            styles.colorSquareBorder,
-                            isSelected ? styles.colorSquareSelected : null,
-                            isSelected ? { borderColor: themeManager.GetColor('main1') } : null
-                        ]}
-                    />
-                </Button>
-            );
-        }
+            // Body color item
+            if ('slot' in item && item.slot === 'bodyColor') {
+                const isSelected = panelBodyColor === item.color;
+                return (
+                    <Button
+                        style={[styles.itemButton, styles.itemButtonNoBorder]}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={() => {
+                            setPanelBodyColor(item.color);
+                            onBodyColorSelect?.(item.color);
+                        }}
+                    >
+                        <View
+                            style={[
+                                { width: frameSize, height: frameSize, backgroundColor: item.color },
+                                styles.colorSquare,
+                                styles.colorSquareBorder,
+                                isSelected ? styles.colorSquareSelected : null,
+                                isSelected ? { borderColor: themeManager.GetColor('main1') } : null
+                            ]}
+                        />
+                    </Button>
+                );
+            }
 
-        // Avatar body item (full avatar)
-        if ('slot' in item && item.slot === 'avatar') {
-            const isSelected = selectedBody === item.bodyType;
+            // Avatar body item (full avatar)
+            if ('slot' in item && item.slot === 'avatar') {
+                const isSelected = selectedBody === item.bodyType;
+
+                return (
+                    <Button
+                        style={styles.itemButton}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={() => {
+                            setSelectedBody(item.bodyType);
+                            onBodyTypeSelect?.(item.bodyType);
+                        }}
+                    >
+                        <AvatarFrame
+                            key={`avatar-frame-body-${item.bodyType}`}
+                            width={frameSize}
+                            height={frameSize}
+                            backgroundColor={isSelected ? themeManager.GetColor('main1') : '#00000000'}
+                        >
+                            <AvatarCharacter
+                                body={item.bodyType}
+                                bodyColor={panelBodyColor}
+                                items={localAvatarItems.slice(1)}
+                                position={AVATAR_POSITION_CONFIG.avatar.pos}
+                                scale={AVATAR_POSITION_CONFIG.avatar.scale}
+                            />
+                        </AvatarFrame>
+                    </Button>
+                );
+            }
+
+            // Regular avatar item
+            const isSelected = localAvatarItems.some((avatarItem) => avatarItem.id === item.itemName);
 
             return (
                 <Button
@@ -157,76 +190,56 @@ const InventoryPanel = ({
                     appearance='uniform'
                     color='transparent'
                     onPress={() => {
-                        setSelectedBody(item.bodyType);
-                        onBodyTypeSelect?.(item.bodyType);
+                        // Update local state
+                        const slotType = item.itemName.split('_')[0];
+                        const index = localAvatarItems.findIndex((avatarItem) =>
+                            String(avatarItem.id).startsWith(slotType)
+                        );
+                        if (index !== -1) {
+                            const newItems = [...localAvatarItems];
+                            newItems[index] = { id: item.itemName };
+                            setLocalAvatarItems(newItems);
+                        }
+
+                        onItemSelect?.(item.itemName);
+
+                        // TODO: TEMP
+                        if (item.slot === 'bottom') setTmpBottomItem(item.itemName);
                     }}
                 >
                     <AvatarFrame
-                        key={`avatar-frame-body-${item.bodyType}`}
+                        key={`avatar-frame-${item.slot}-${item.itemName}`}
                         width={frameSize}
                         height={frameSize}
                         backgroundColor={isSelected ? themeManager.GetColor('main1') : '#00000000'}
                     >
                         <AvatarCharacter
-                            body={item.bodyType}
+                            body={selectedBody}
                             bodyColor={panelBodyColor}
-                            items={localAvatarItems.slice(1)}
-                            position={AVATAR_POSITION_CONFIG.avatar.pos}
-                            scale={AVATAR_POSITION_CONFIG.avatar.scale}
+                            items={
+                                item.slot !== 'top'
+                                    ? [{ id: item.itemName }]
+                                    : [{ id: item.itemName }, { id: tmpBottomItem }]
+                            }
+                            position={AVATAR_POSITION_CONFIG[item.slot].pos}
+                            scale={AVATAR_POSITION_CONFIG[item.slot].scale}
+                            portraitMode={item.slot === 'hair'}
                         />
                     </AvatarFrame>
                 </Button>
             );
-        }
-
-        // Regular avatar item
-        const isSelected = localAvatarItems.some((avatarItem) => avatarItem.id === item.itemName);
-
-        return (
-            <Button
-                style={styles.itemButton}
-                appearance='uniform'
-                color='transparent'
-                onPress={() => {
-                    // Update local state
-                    const slotType = item.itemName.split('_')[0];
-                    const index = localAvatarItems.findIndex((avatarItem) =>
-                        String(avatarItem.id).startsWith(slotType)
-                    );
-                    if (index !== -1) {
-                        const newItems = [...localAvatarItems];
-                        newItems[index] = { id: item.itemName };
-                        setLocalAvatarItems(newItems);
-                    }
-
-                    onItemSelect?.(item.itemName);
-
-                    // TODO: TEMP
-                    if (item.slot === 'bottom') setTmpBottomItem(item.itemName);
-                }}
-            >
-                <AvatarFrame
-                    key={`avatar-frame-${item.slot}-${item.itemName}`}
-                    width={frameSize}
-                    height={frameSize}
-                    backgroundColor={isSelected ? themeManager.GetColor('main1') : '#00000000'}
-                >
-                    <AvatarCharacter
-                        body={selectedBody}
-                        bodyColor={panelBodyColor}
-                        items={
-                            item.slot !== 'top'
-                                ? [{ id: item.itemName }]
-                                : [{ id: item.itemName }, { id: tmpBottomItem }]
-                        }
-                        position={AVATAR_POSITION_CONFIG[item.slot].pos}
-                        scale={AVATAR_POSITION_CONFIG[item.slot].scale}
-                        portraitMode={item.slot === 'hair'}
-                    />
-                </AvatarFrame>
-            </Button>
-        );
-    };
+        },
+        [
+            panelBodyColor,
+            localAvatarItems,
+            selectedBody,
+            tmpBottomItem,
+            onBodyColorSelect,
+            onBodyTypeSelect,
+            onItemSelect,
+            frameSize
+        ]
+    );
 
     return (
         <View style={styles.container}>
@@ -236,14 +249,14 @@ const InventoryPanel = ({
                 onLayout={user.interface.bottomPanel?.mover.onLayoutFlatList}
                 onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
                 contentContainerStyle={styles.itemsContainer}
-                data={getDisplayedItems()}
+                data={displayedItems}
                 extraData={{ panelBodyColor, localAvatarItems, selectedBody }}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => {
                     if ('isEmpty' in item && item.isEmpty) return `empty-${index}`;
                     if ('slot' in item && item.slot === 'bodyColor') return `color-${item.color}`;
                     if ('slot' in item && item.slot === 'avatar') return `avatar-${item.bodyType}`;
-                    return `${item.slot}-${item.itemName}-${index}`;
+                    return `${item.slot}-${item.itemName}`;
                 }}
                 removeClippedSubviews={false}
                 numColumns={4}

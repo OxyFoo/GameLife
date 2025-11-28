@@ -13,6 +13,7 @@ import { Button } from 'Interface/Components';
  * @typedef {import('./back').SlotType} SlotType
  * @typedef {import('./back').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  */
 
 /**
@@ -22,6 +23,7 @@ import { Button } from 'Interface/Components';
  * @property {InventorySlotType} selectedSlot
  * @property {Array<{id: ItemName}>} avatarItems
  * @property {string} bodyColor
+ * @property {AvatarName} [bodyType] - Current selected avatar body type
  * @property {(slotType: SlotType) => void} onPress
  */
 
@@ -30,7 +32,7 @@ import { Button } from 'Interface/Components';
  * @param {SlotButtonProps} props
  * @returns {React.ReactElement}
  */
-const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, onPress }) => {
+const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, bodyType, onPress }) => {
     const isSelected = selectedSlot === category;
     const bgColor = themeManager.GetColor(isSelected ? 'main1' : 'backgroundCard');
 
@@ -80,7 +82,7 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
         >
             <AvatarFrame width={64} height={64} backgroundColor={bgColor}>
                 <AvatarCharacter
-                    body={'human_00'}
+                    body={bodyType ?? 'human_00'}
                     bodyColor={bodyColor}
                     position={{ x: config.pos?.x ?? 0, y: config.pos?.y ?? 0, z: 0 }}
                     rotation={{ x: 0, y: 0, z: 0 }}

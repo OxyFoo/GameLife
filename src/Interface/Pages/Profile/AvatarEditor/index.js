@@ -261,6 +261,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
                         bodyColor={bodyColor}
+                        bodyType={bodyType}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -269,6 +270,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
                         bodyColor={bodyColor}
+                        bodyType={bodyType}
                         onPress={handleSlotPress}
                     />
                 </View>
@@ -281,6 +283,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
                         bodyColor={bodyColor}
+                        bodyType={bodyType}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -289,6 +292,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
                         bodyColor={bodyColor}
+                        bodyType={bodyType}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -297,6 +301,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
                         bodyColor={bodyColor}
+                        bodyType={bodyType}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -305,6 +310,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
                         bodyColor={bodyColor}
+                        bodyType={bodyType}
                         onPress={handleSlotPress}
                     />
                 </View>

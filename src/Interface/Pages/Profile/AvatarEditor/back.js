@@ -1,7 +1,7 @@
 /**
  * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
  * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
- * @typedef {'all' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
+ * @typedef {'all' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {{x?: number, y?: number, scale?: number}} AvatarPosition
@@ -79,6 +79,7 @@ export const getAvatarPositionForCategory = (category) => {
             return { y: -300, scale: 0.8 };
         case 'shoes':
             return { y: -400, scale: 0.7 };
+        case 'bodyColor':
         case 'all':
         default:
             return { y: -100, scale: 1 };

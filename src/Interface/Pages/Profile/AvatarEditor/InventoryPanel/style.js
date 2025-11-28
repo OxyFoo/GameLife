@@ -18,6 +18,20 @@ const styles = StyleSheet.create({
         marginLeft: 6,
         borderColor: '#8f8f8fff',
         borderWidth: 1
+    },
+    itemButtonNoBorder: {
+        borderWidth: 0
+    },
+    colorSquare: {
+        borderRadius: 6
+    },
+    colorSquareBorder: {
+        borderColor: '#8f8f8fff',
+        borderWidth: 1
+    },
+    colorSquareSelected: {
+        borderColor: '#ffffff',
+        borderWidth: 3
     }
 });
 

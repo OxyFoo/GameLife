@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         paddingVertical: 0,
         paddingHorizontal: 0
+    },
+    colorSquare: {
+        width: 64,
+        height: 64,
+        borderRadius: 6
     }
 });
 

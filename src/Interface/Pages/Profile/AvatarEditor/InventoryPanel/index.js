@@ -4,17 +4,23 @@ import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import user from 'Managers/UserManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Button } from 'Interface/Components';
 
 /**
  * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
- * @typedef {'all' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
+ * @typedef {'all' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}} DisplayedItem
+ * @typedef {{slot: 'bodyColor', color: string}} BodyColorItem
  * @typedef {{changeSlot: (slot: InventorySlotType) => void}} InventoryPanelRef
  */
+
+// TODO: Available body colors should come from backend / user profile / db ?
+/** Available body colors */
+const BODY_COLORS = ['#f3e4d1', '#f2d2bb', '#d5a283', '#bc9665', '#b5956f', '#6b3d1c'];
 
 /** @type {{ [key in ItemSlot]: ItemName[] }} */
 const AVAILABLE_ITEMS = {
@@ -47,13 +53,16 @@ const AVATAR_POSITION_IN_FRAME = {
 /**
  * @param {object} props
  * @param {Array<{id: ItemName}>} props.avatarItems - Current avatar items
+ * @param {string} props.bodyColor - Current body color
  * @param {(slot: InventorySlotType) => void} [props.onSlotChange] - Callback called when changing slot
  * @param {(itemId: ItemName) => void} [props.onItemSelect] - Callback called when selecting an item
+ * @param {(color: string) => void} [props.onBodyColorSelect] - Callback called when selecting a body color
  * @param {React.RefObject<InventoryPanelRef | null>} [props.forwardedRef] - Ref to expose changeSlot method
  */
-const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef }) => {
+const InventoryPanel = ({ avatarItems, bodyColor, onSlotChange, onItemSelect, onBodyColorSelect, forwardedRef }) => {
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
     const [tmpBottomItem, setTmpBottomItem] = useState(avatarItems[3].id);
+    const [panelBodyColor, setPanelBodyColor] = useState(bodyColor);
 
     // Expose changeSlot function to parent
     React.useImperativeHandle(forwardedRef, () => ({
@@ -68,21 +77,30 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef 
 
     /**
      * Retrieves the items to display according to the selected slot
-     * @returns {DisplayedItem[]}
+     * @returns {(DisplayedItem | BodyColorItem | {isEmpty: true})[]}
      */
     const getDisplayedItems = () => {
-        /** @type {DisplayedItem[]} */
+        /** @type {(DisplayedItem | BodyColorItem | {isEmpty: true})[]} */
         const items = [];
-        if (selectedSlot === 'all') {
+        if (selectedSlot === 'bodyColor') {
+            BODY_COLORS.forEach((color) => items.push({ slot: 'bodyColor', color }));
+        } else if (selectedSlot === 'all') {
+            // Show body colors
+            BODY_COLORS.forEach((color) => {
+                items.push({ slot: 'bodyColor', color });
+            });
+
+            // Show all items
             Object.entries(AVAILABLE_ITEMS).forEach(([slot, itemNames]) => {
                 itemNames.forEach((itemName) => {
                     items.push({ slot: /** @type {ItemSlot} */ (slot), itemName });
                 });
             });
         } else {
-            const itemNames = AVAILABLE_ITEMS[selectedSlot];
+            // Regular item slots
+            const itemNames = AVAILABLE_ITEMS[/** @type {ItemSlot} */ (selectedSlot)];
             itemNames.forEach((itemName) => {
-                items.push({ slot: selectedSlot, itemName });
+                items.push({ slot: /** @type {ItemSlot} */ (selectedSlot), itemName });
             });
         }
 
@@ -91,7 +109,7 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef 
         if (remainder !== 0) {
             const emptyItemsCount = 4 - remainder;
             for (let i = 0; i < emptyItemsCount; i++) {
-                items.push({ slot: 'hair', itemName: 'hair_00', isEmpty: true });
+                items.push({ isEmpty: true });
             }
         }
 
@@ -100,15 +118,45 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef 
 
     /**
      * Renders an item in the inventory
-     * @param {{item: DisplayedItem}} param
+     * @param {{item: DisplayedItem | BodyColorItem | {isEmpty: true}}} param
      */
     const renderItem = ({ item }) => {
         const screenWidth = Dimensions.get('window').width;
         const frameSize = screenWidth / 4 - 12;
 
         // Empty slot
-        if (item.isEmpty) {
-            return <View style={{ width: frameSize, height: frameSize }} />;
+        if ('isEmpty' in item && item.isEmpty) {
+            return (
+                <View style={[styles.itemButton, styles.itemButtonNoBorder]}>
+                    <View style={{ width: frameSize, height: frameSize }} />
+                </View>
+            );
+        }
+
+        // Body color item
+        if ('slot' in item && item.slot === 'bodyColor') {
+            const isSelected = panelBodyColor === item.color;
+            return (
+                <Button
+                    style={[styles.itemButton, styles.itemButtonNoBorder]}
+                    appearance='uniform'
+                    color='transparent'
+                    onPress={() => {
+                        setPanelBodyColor(item.color);
+                        onBodyColorSelect?.(item.color);
+                    }}
+                >
+                    <View
+                        style={[
+                            { width: frameSize, height: frameSize, backgroundColor: item.color },
+                            styles.colorSquare,
+                            styles.colorSquareBorder,
+                            isSelected ? styles.colorSquareSelected : null,
+                            isSelected ? { borderColor: themeManager.GetColor('main1') } : null
+                        ]}
+                    />
+                </Button>
+            );
         }
 
         return (
@@ -131,7 +179,7 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef 
                 >
                     <AvatarCharacter
                         body='human_00'
-                        // bodyColor='#d4d4d4'
+                        bodyColor={panelBodyColor}
                         items={
                             item.slot !== 'top'
                                 ? [{ id: item.itemName }]
@@ -140,7 +188,6 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef 
                         position={AVATAR_POSITION_IN_FRAME[item.slot].pos}
                         scale={AVATAR_POSITION_IN_FRAME[item.slot].scale}
                         portraitMode={item.slot === 'hair'}
-                        // showcaseMode
                     />
                 </AvatarFrame>
             </Button>
@@ -156,8 +203,13 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef 
                 onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
                 contentContainerStyle={styles.itemsContainer}
                 data={getDisplayedItems()}
+                extraData={panelBodyColor}
                 renderItem={renderItem}
-                keyExtractor={(item, index) => `${item.slot}-${item.itemName}-${index}`}
+                keyExtractor={(item, index) => {
+                    if ('isEmpty' in item && item.isEmpty) return `empty-${index}`;
+                    if ('slot' in item && item.slot === 'bodyColor') return `color-${item.color}`;
+                    return `${item.slot}-${item.itemName}-${index}`;
+                }}
                 removeClippedSubviews={false}
                 numColumns={4}
                 scrollEnabled={false}

@@ -51,6 +51,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     const screenDim = Dimensions.get('window');
 
     const [avatarItems, setAvatarItems] = useState(getInitialAvatarItems());
+    const [bodyColor, setBodyColor] = useState('#f3e4d1'); // TODO: default body color from user profile
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
     const inventoryPanelRef = useRef(/** @type {InventoryPanelRef | null} */ (null));
 
@@ -62,7 +63,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     /** @type {Record<SlotType, InventorySlotType>} */
     const SLOT_CATEGORY_MAP = {
         avatar: 'all',
-        bodyColor: 'all',
+        bodyColor: 'bodyColor',
         hair: 'hair',
         top: 'top',
         bottom: 'bottom',
@@ -122,6 +123,18 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
         []
     );
 
+    /**
+     * Update body color
+     * @param {string} color - The new body color
+     */
+    const handleBodyColorUpdate = useCallback(
+        /** @param {string} color */
+        (color) => {
+            setBodyColor(color);
+        },
+        []
+    );
+
     const styleAvatar = {
         transform: [
             { translateY: Animated.add(Animated.divide(scrollY, 2), avatarTranslateY) },
@@ -144,9 +157,11 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
             content: (
                 <InventoryPanel
                     avatarItems={avatarItems}
+                    bodyColor={bodyColor}
                     forwardedRef={inventoryPanelRef}
                     onSlotChange={adjustAvatarPositionForCategory}
                     onItemSelect={handleItemUpdate}
+                    onBodyColorSelect={handleBodyColorUpdate}
                 />
             ),
             // overlayColor: '#00000001',
@@ -209,6 +224,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                 <AvatarFrame width={screenDim.width * 2} height={screenDim.width * 2} backgroundColor='#00000000'>
                     <AvatarCharacter
                         body={'human_00'}
+                        bodyColor={bodyColor}
                         position={{ x: 0, y: 0, z: 0 }}
                         rotation={{ x: 0, y: 0, z: 0 }}
                         scale={1}
@@ -229,6 +245,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         category='all'
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
+                        bodyColor={bodyColor}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -236,6 +253,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         category='all'
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
+                        bodyColor={bodyColor}
                         onPress={handleSlotPress}
                     />
                 </View>
@@ -247,6 +265,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         category='hair'
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
+                        bodyColor={bodyColor}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -254,6 +273,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         category='top'
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
+                        bodyColor={bodyColor}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -261,6 +281,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         category='bottom'
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
+                        bodyColor={bodyColor}
                         onPress={handleSlotPress}
                     />
                     <SlotButton
@@ -268,6 +289,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         category='shoes'
                         selectedSlot={selectedSlot}
                         avatarItems={avatarItems}
+                        bodyColor={bodyColor}
                         onPress={handleSlotPress}
                     />
                 </View>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
@@ -18,6 +19,7 @@ import { Button } from 'Interface/Components';
  * @property {InventorySlotType} category
  * @property {InventorySlotType} selectedSlot
  * @property {Array<{id: ItemName}>} avatarItems
+ * @property {string} bodyColor
  * @property {(slotType: SlotType) => void} onPress
  */
 
@@ -26,7 +28,7 @@ import { Button } from 'Interface/Components';
  * @param {SlotButtonProps} props
  * @returns {React.ReactElement}
  */
-const SlotButton = ({ slotType, category, selectedSlot, avatarItems, onPress }) => {
+const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, onPress }) => {
     const isSelected = selectedSlot === category;
     const bgColor = themeManager.GetColor(isSelected ? 'main1' : 'backgroundCard');
 
@@ -69,6 +71,20 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, onPress }) 
 
     const config = getAvatarConfig();
 
+    // Special rendering for body color slot (simple color square View)
+    if (slotType === 'bodyColor') {
+        return (
+            <Button
+                style={styles.slotButton}
+                appearance='uniform'
+                color={isSelected ? 'main1' : 'backgroundCard'}
+                onPress={() => onPress(slotType)}
+            >
+                <View style={[styles.colorSquare, { backgroundColor: bodyColor }]} />
+            </Button>
+        );
+    }
+
     return (
         <Button
             style={styles.slotButton}
@@ -79,6 +95,7 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, onPress }) 
             <AvatarFrame width={64} height={64} backgroundColor={bgColor}>
                 <AvatarCharacter
                     body={'human_00'}
+                    bodyColor={bodyColor}
                     position={{ x: config.x, y: config.y, z: 0 }}
                     rotation={{ x: 0, y: 0, z: 0 }}
                     scale={config.scale}

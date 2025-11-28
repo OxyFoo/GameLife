@@ -2,6 +2,7 @@
  * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
  * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
  * @typedef {'all' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
+ * @typedef {'avatar' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} SlotType
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {{x?: number, y?: number, scale?: number}} AvatarPosition
@@ -67,22 +68,22 @@ export const updateAvatarItem = (currentItems, itemId) => {
 /**
  * Get avatar position configuration based on selected category
  * @param {InventorySlotType | null} category
- * @returns {Pick<Required<AvatarPosition>, 'y' | 'scale'>}
+ * @returns {Required<AvatarPosition>}
  */
 export const getAvatarPositionForCategory = (category) => {
     switch (category) {
         case 'hair':
-            return { y: 220, scale: 1.75 };
+            return { x: -1 / 2, y: 220, scale: 1.75 };
         case 'top':
-            return { y: -50, scale: 1.2 };
+            return { x: -1 / 2, y: -50, scale: 1.2 };
         case 'bottom':
-            return { y: -300, scale: 0.8 };
+            return { x: -1 / 2, y: -300, scale: 0.8 };
         case 'shoes':
-            return { y: -400, scale: 0.7 };
+            return { x: -1 / 2, y: -400, scale: 0.7 };
         case 'bodyColor':
         case 'all':
         default:
-            return { y: -100, scale: 1 };
+            return { x: -1 / 2, y: -100, scale: 1 };
     }
 };
 
@@ -92,12 +93,4 @@ export const getAvatarPositionForCategory = (category) => {
  */
 export const getDefaultAvatarPosition = () => {
     return { x: -1 / 4, y: 0, scale: 1 };
-};
-
-/**
- * Get edit mode avatar position configuration
- * @returns {Pick<Required<AvatarPosition>, 'x' | 'y'>}
- */
-export const getEditModeAvatarPosition = () => {
-    return { x: -1 / 2, y: -100 };
 };

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@notifee/react-native": "^9.1.8",
-    "@oxyfoo/avatar-factory": "^1.1.0",
+    "@oxyfoo/avatar-factory": "^1.1.1",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-community/datetimepicker": "^8.3.0",

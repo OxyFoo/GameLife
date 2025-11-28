@@ -7,7 +7,6 @@ import {
     getInitialAvatarItems,
     updateAvatarItem,
     getAvatarPositionForCategory,
-    getEditModeAvatarPosition,
     getDefaultAvatarPosition
 } from './back';
 import InventoryPanel from './InventoryPanel';
@@ -20,11 +19,12 @@ import { SpringAnimation } from 'Utils/Animations';
 
 /**
  * @typedef {import('./back').InventorySlotType} InventorySlotType
+ * @typedef {import('./back').SlotType} SlotType
  * @typedef {import('./back').AvatarPosition} AvatarPosition
  * @typedef {import('./back').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  * @typedef {import('./InventoryPanel').InventoryPanelRef} InventoryPanelRef
- * @typedef {'avatar' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} SlotType
  */
 
 /**
@@ -52,6 +52,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
 
     const [avatarItems, setAvatarItems] = useState(getInitialAvatarItems());
     const [bodyColor, setBodyColor] = useState('#f3e4d1'); // TODO: default body color from user profile
+    const [bodyType, setBodyType] = useState(/** @type {AvatarName} */ ('human_00')); // TODO: default body type from user profile
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
     const inventoryPanelRef = useRef(/** @type {InventoryPanelRef | null} */ (null));
 
@@ -105,8 +106,8 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     const adjustAvatarPositionForCategory = useCallback(
         /** @param {InventorySlotType | null} category */
         (category) => {
-            const { y, scale } = getAvatarPositionForCategory(category);
-            adjustAvatarPosition({ y, scale });
+            const { x, y, scale } = getAvatarPositionForCategory(category);
+            adjustAvatarPosition({ x, y, scale });
         },
         [adjustAvatarPosition]
     );
@@ -135,6 +136,17 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
         []
     );
 
+    /**
+     * Update body type
+     */
+    const handleBodyTypeUpdate = useCallback(
+        /** @param {AvatarName} body */
+        (body) => {
+            setBodyType(body);
+        },
+        []
+    );
+
     const styleAvatar = {
         transform: [
             { translateY: Animated.add(Animated.divide(scrollY, 2), avatarTranslateY) },
@@ -148,20 +160,23 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
      * Hides UI and centers avatar with smooth animations
      */
     const enterEditMode = () => {
-        // Move avatar to center
-        const { x, y } = getEditModeAvatarPosition();
-        adjustAvatarPosition({ x, y });
+        // Move avatar to center with appropriate zoom for selected slot
+        const { x, y, scale } = getAvatarPositionForCategory(selectedSlot);
+        adjustAvatarPosition({ x, y, scale });
 
         // Open bottom panel with category change callback
         user.interface.bottomPanel?.Open({
             content: (
                 <InventoryPanel
-                    avatarItems={avatarItems}
-                    bodyColor={bodyColor}
                     forwardedRef={inventoryPanelRef}
+                    bodyType={bodyType}
+                    bodyColor={bodyColor}
+                    avatarItems={avatarItems}
+                    selectedSlot={selectedSlot}
+                    onBodyTypeSelect={handleBodyTypeUpdate}
+                    onBodyColorSelect={handleBodyColorUpdate}
                     onSlotChange={adjustAvatarPositionForCategory}
                     onItemSelect={handleItemUpdate}
-                    onBodyColorSelect={handleBodyColorUpdate}
                 />
             ),
             // overlayColor: '#00000001',
@@ -223,7 +238,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
             <Animated.View style={[styles.avatarContainer, styleAvatar]}>
                 <AvatarFrame width={screenDim.width * 2} height={screenDim.width * 2} backgroundColor='#00000000'>
                     <AvatarCharacter
-                        body={'human_00'}
+                        body={bodyType}
                         bodyColor={bodyColor}
                         position={{ x: 0, y: 0, z: 0 }}
                         rotation={{ x: 0, y: 0, z: 0 }}

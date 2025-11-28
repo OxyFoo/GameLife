@@ -3,14 +3,16 @@ import { View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
+import { AVATAR_POSITION_CONFIG } from './avatarConstants';
 import themeManager from 'Managers/ThemeManager';
+
 import { Button } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').InventorySlotType} InventorySlotType
+ * @typedef {import('./back').SlotType} SlotType
  * @typedef {import('./back').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
- * @typedef {'avatar' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} SlotType
  */
 
 /**
@@ -53,23 +55,7 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
         return [foundItem];
     };
 
-    /**
-     * Get avatar position config for slot type
-     * @returns {{x: number, y: number, scale: number}}
-     */
-    const getAvatarConfig = () => {
-        const configs = {
-            avatar: { x: 0, y: 0, scale: 1 },
-            bodyColor: { x: 0, y: 0, scale: 1 },
-            hair: { x: 0, y: -3.5, scale: 5 },
-            top: { x: 0, y: -1, scale: 3 },
-            bottom: { x: 0, y: 0.5, scale: 2 },
-            shoes: { x: 0, y: 1.6, scale: 2.5 }
-        };
-        return configs[slotType];
-    };
-
-    const config = getAvatarConfig();
+    const config = AVATAR_POSITION_CONFIG[slotType];
 
     // Special rendering for body color slot (simple color square View)
     if (slotType === 'bodyColor') {
@@ -96,7 +82,7 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
                 <AvatarCharacter
                     body={'human_00'}
                     bodyColor={bodyColor}
-                    position={{ x: config.x, y: config.y, z: 0 }}
+                    position={{ x: config.pos?.x ?? 0, y: config.pos?.y ?? 0, z: 0 }}
                     rotation={{ x: 0, y: 0, z: 0 }}
                     scale={config.scale}
                     items={getPreviewItems()}

@@ -1,21 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    scrollView: {
-        width: '100%',
-        marginTop: 12,
-        paddingHorizontal: 12
+    container: {
+        paddingVertical: 16
     },
-    slotButton: {
-        width: 'auto',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        marginRight: 12
-    },
-    slotButtonLast: {
-        width: 'auto',
-        paddingVertical: 8,
-        paddingHorizontal: 16
+    flatList: {
+        height: Dimensions.get('window').height * 0.4
     },
     itemsContainer: {
         alignItems: 'center'

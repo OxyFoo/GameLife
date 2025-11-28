@@ -12,7 +12,6 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
- * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('./AvatarEditor').AvatarEditorRef} AvatarEditorRef
  */
 

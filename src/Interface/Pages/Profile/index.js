@@ -19,7 +19,6 @@ class Profile extends BackProfile {
         // Edit mode animations
         const avatarEditModeInverse = this.avatarEditMode.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
         const uiOpacity = { opacity: avatarEditModeInverse };
-        const uiEditorAvatarOpacity = { opacity: this.avatarEditMode };
 
         const styleParallax2_5 = { transform: [{ translateY: Animated.divide(this.scrollY, 5) }] };
 
@@ -51,24 +50,11 @@ class Profile extends BackProfile {
                     </Animated.View>
                 </Animated.View>
 
-                {/** PageHeader: Editor Avatar */}
-                <Animated.View
-                    style={[styles.editorAvatarHeader, uiEditorAvatarOpacity]}
-                    pointerEvents={editMode ? 'auto' : 'none'}
-                >
-                    <PageHeader
-                        style={styles.pageHeader}
-                        title={lang['title-edit-avatar']}
-                        onBackPress={this.refAvatarEditor.current?.exitEditMode}
-                        // Fake settings button to align with main header
-                        secondaryIcon='settings-outline'
-                        secondaryIconColor='transparent'
-                        onSecondaryIconPress={() => {}}
-                    />
-                </Animated.View>
-
                 {/** Statistics */}
-                <Animated.View style={[styles.statsView, styleParallax2_5, uiOpacity]}>
+                <Animated.View
+                    style={[styles.statsView, styleParallax2_5, uiOpacity]}
+                    pointerEvents={editMode ? 'none' : 'auto'}
+                >
                     <FlatList
                         style={styles.statsFlatList}
                         data={experienceStats}
@@ -79,10 +65,16 @@ class Profile extends BackProfile {
                 </Animated.View>
 
                 {/* Avatar Frame */}
-                <AvatarEditor ref={this.refAvatarEditor} scrollY={this.scrollY} onExitEditMode={this.closeInventory} />
+                <AvatarEditor
+                    ref={this.refAvatarEditor}
+                    editMode={editMode}
+                    animEditMode={this.avatarEditMode}
+                    scrollY={this.scrollY}
+                    onExitEditMode={this.closeInventory}
+                />
 
                 {/** Buttons */}
-                <Animated.View style={[styles.buttons, uiOpacity]}>
+                <Animated.View style={[styles.buttons, uiOpacity]} pointerEvents={editMode ? 'none' : 'auto'}>
                     <Button style={styles.button} onPress={this.openInventory}>
                         {lang['btn-edit-profile']}
                     </Button>

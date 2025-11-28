@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, ScrollView, FlatList, Dimensions } from 'react-native';
+import { View, FlatList, Dimensions } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
+import user from 'Managers/UserManager';
+
 import { Button } from 'Interface/Components';
 
 /**
@@ -10,6 +12,8 @@ import { Button } from 'Interface/Components';
  * @typedef {'all' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}} DisplayedItem
+ * @typedef {{changeSlot: (slot: InventorySlotType) => void}} InventoryPanelRef
  */
 
 /** @type {{ [key in ItemSlot]: ItemName[] }} */
@@ -45,26 +49,29 @@ const AVATAR_POSITION_IN_FRAME = {
  * @param {Array<{id: ItemName}>} props.avatarItems - Current avatar items
  * @param {(slot: InventorySlotType) => void} [props.onSlotChange] - Callback called when changing slot
  * @param {(itemId: ItemName) => void} [props.onItemSelect] - Callback called when selecting an item
+ * @param {React.RefObject<InventoryPanelRef | null>} [props.forwardedRef] - Ref to expose changeSlot method
  */
-const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect }) => {
-    const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('all'));
+const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect, forwardedRef }) => {
+    const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
     const [tmpBottomItem, setTmpBottomItem] = useState(avatarItems[3].id);
 
-    /**
-     * Changes the selected inventory slot
-     * @param {InventorySlotType} slot
-     */
-    const selectSlot = (slot) => {
-        setSelectedSlot(slot);
-        onSlotChange?.(slot);
-    };
+    // Expose changeSlot function to parent
+    React.useImperativeHandle(forwardedRef, () => ({
+        /**
+         * @param {InventorySlotType} slot
+         */
+        changeSlot: (slot) => {
+            setSelectedSlot(slot);
+            onSlotChange?.(slot);
+        }
+    }));
 
     /**
      * Retrieves the items to display according to the selected slot
-     * @returns {Array<{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}>}
+     * @returns {DisplayedItem[]}
      */
     const getDisplayedItems = () => {
-        /** @type {Array<{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}>} */
+        /** @type {DisplayedItem[]} */
         const items = [];
         if (selectedSlot === 'all') {
             Object.entries(AVAILABLE_ITEMS).forEach(([slot, itemNames]) => {
@@ -93,7 +100,7 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect }) => {
 
     /**
      * Renders an item in the inventory
-     * @param {{item: {slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}}} param
+     * @param {{item: DisplayedItem}} param
      */
     const renderItem = ({ item }) => {
         const screenWidth = Dimensions.get('window').width;
@@ -140,44 +147,20 @@ const InventoryPanel = ({ avatarItems, onSlotChange, onItemSelect }) => {
         );
     };
 
-    /**
-     * Renders a slot filter button
-     * @param {InventorySlotType} slot
-     * @param {string} label
-     * @param {boolean} [isLast]
-     */
-    const renderSlotButton = (slot, label, isLast = false) => {
-        const isSelected = selectedSlot === slot;
-        return (
-            <Button
-                style={isLast ? styles.slotButtonLast : styles.slotButton}
-                appearance={isSelected ? 'uniform' : 'outline'}
-                color={isSelected ? 'main1' : undefined}
-                borderColor={isSelected ? undefined : 'main1'}
-                fontColor={isSelected ? 'automatic' : 'main1'}
-                onPress={() => selectSlot(slot)}
-            >
-                {label}
-            </Button>
-        );
-    };
-
     return (
-        <View>
-            <ScrollView style={styles.scrollView} horizontal nestedScrollEnabled>
-                {renderSlotButton('all', '[TOUT]')}
-                {renderSlotButton('hair', '[Cheveux]')}
-                {renderSlotButton('top', '[Haut]')}
-                {renderSlotButton('bottom', '[Bas]')}
-                {renderSlotButton('shoes', '[Chaussures]', true)}
-            </ScrollView>
-
+        <View style={styles.container}>
             <FlatList
+                style={styles.flatList}
+                ref={user.interface.bottomPanel?.mover.SetScrollView}
+                onLayout={user.interface.bottomPanel?.mover.onLayoutFlatList}
+                onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
                 contentContainerStyle={styles.itemsContainer}
                 data={getDisplayedItems()}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => `${item.slot}-${item.itemName}-${index}`}
+                removeClippedSubviews={false}
                 numColumns={4}
+                scrollEnabled={false}
             />
         </View>
     );

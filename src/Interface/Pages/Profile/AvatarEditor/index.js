@@ -56,6 +56,11 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
     const inventoryPanelRef = useRef(/** @type {InventoryPanelRef | null} */ (null));
 
+    // Apply body color to face item
+    const avatarItemsWithFaceColor = avatarItems.map((item) =>
+        String(item.id).startsWith('face') ? { ...item, color: bodyColor } : item
+    );
+
     const avatarScale = useRef(new Animated.Value(1)).current;
     const avatarTranslateX = useRef(new Animated.Value(-1 / 4)).current;
     const avatarTranslateY = useRef(new Animated.Value(0)).current;
@@ -125,6 +130,19 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     );
 
     /**
+     * Handle item sell
+     * @param {string} itemId - The item id to sell
+     */
+    const handleItemSell = useCallback(
+        /** @param {string} itemId */
+        (itemId) => {
+            // TODO: Implement sell logic (call backend, update inventory, etc.)
+            console.log('Selling item:', itemId);
+        },
+        []
+    );
+
+    /**
      * Update body color
      * @param {string} color - The new body color
      */
@@ -177,6 +195,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                     onBodyColorSelect={handleBodyColorUpdate}
                     onSlotChange={adjustAvatarPositionForCategory}
                     onItemSelect={handleItemUpdate}
+                    onItemSell={handleItemSell}
                 />
             ),
             // overlayColor: '#00000001',
@@ -243,7 +262,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         position={{ x: 0, y: 0, z: 0 }}
                         rotation={{ x: 0, y: 0, z: 0 }}
                         scale={1}
-                        items={avatarItems}
+                        items={avatarItemsWithFaceColor}
                     />
                 </AvatarFrame>
             </Animated.View>

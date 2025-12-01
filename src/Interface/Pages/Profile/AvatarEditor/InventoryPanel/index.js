@@ -3,6 +3,7 @@ import { View, FlatList, useWindowDimensions } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
+import ItemDetailPanel from './ItemDetailPanel';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -40,6 +41,7 @@ const AVAILABLE_ITEMS = {
  * @param {(itemId: ItemName) => void} [props.onItemSelect] - Callback called when selecting an item
  * @param {(color: string) => void} [props.onBodyColorSelect] - Callback called when selecting a body color
  * @param {(body: AvatarName) => void} [props.onBodyTypeSelect] - Callback called when selecting a body type
+ * @param {(itemId: ItemName) => void} [props.onItemSell] - Callback called when selling an item
  * @param {React.RefObject<InventoryPanelRef | null>} [props.forwardedRef] - Ref to expose changeSlot method
  */
 const InventoryPanel = ({
@@ -51,7 +53,8 @@ const InventoryPanel = ({
     onBodyTypeSelect,
     onBodyColorSelect,
     onSlotChange,
-    onItemSelect
+    onItemSelect,
+    onItemSell
 }) => {
     const [selectedSlot, setSelectedSlot] = useState(initialSelectedSlot);
     const [tmpBottomItem, setTmpBottomItem] = useState(avatarItems[3].id);
@@ -190,21 +193,43 @@ const InventoryPanel = ({
                     appearance='uniform'
                     color='transparent'
                     onPress={() => {
-                        // Update local state
-                        const slotType = item.itemName.split('_')[0];
-                        const index = localAvatarItems.findIndex((avatarItem) =>
-                            String(avatarItem.id).startsWith(slotType)
-                        );
-                        if (index !== -1) {
-                            const newItems = [...localAvatarItems];
-                            newItems[index] = { id: item.itemName };
-                            setLocalAvatarItems(newItems);
-                        }
+                        // TODO: Mettre cette fonction dans le back
+                        // Open item detail panel with priority (stacked on top)
+                        user.interface.bottomPanel?.Open({
+                            priority: true,
+                            content: (
+                                <ItemDetailPanel
+                                    itemName={item.itemName}
+                                    slot={item.slot}
+                                    bodyType={selectedBody}
+                                    bodyColor={panelBodyColor}
+                                    isEquipped={isSelected}
+                                    onEquip={(itemId) => {
+                                        // Update local state
+                                        const slotType = itemId.split('_')[0];
+                                        const index = localAvatarItems.findIndex((avatarItem) =>
+                                            String(avatarItem.id).startsWith(slotType)
+                                        );
+                                        if (index !== -1) {
+                                            const newItems = [...localAvatarItems];
+                                            newItems[index] = { id: itemId };
+                                            setLocalAvatarItems(newItems);
+                                        }
 
-                        onItemSelect?.(item.itemName);
+                                        onItemSelect?.(itemId);
 
-                        // TODO: TEMP
-                        if (item.slot === 'bottom') setTmpBottomItem(item.itemName);
+                                        // TODO: TEMP ?
+                                        if (item.slot === 'bottom') setTmpBottomItem(itemId);
+                                    }}
+                                    onSell={(itemId) => {
+                                        onItemSell?.(itemId);
+                                    }}
+                                    onClose={() => {
+                                        user.interface.bottomPanel?.Close();
+                                    }}
+                                />
+                            )
+                        });
                     }}
                 >
                     <AvatarFrame
@@ -237,6 +262,7 @@ const InventoryPanel = ({
             onBodyColorSelect,
             onBodyTypeSelect,
             onItemSelect,
+            onItemSell,
             frameSize
         ]
     );

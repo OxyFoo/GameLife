@@ -4,6 +4,7 @@ import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import ItemDetailPanel from './ItemDetailPanel';
+import { EQUIPMENT_SLOTS } from '../back';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
@@ -17,20 +18,13 @@ import { AVATAR_BODIES, BODY_COLORS } from '../avatarConstants';
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
+ * @typedef {{slot: ItemSlot, itemName: ItemName, stuffID: number, item: Item}} OwnedSlotItem
  * @typedef {{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}} DisplayedItem
  * @typedef {{slot: 'bodyColor', color: string}} BodyColorItem
  * @typedef {{slot: 'avatar', bodyType: AvatarName}} AvatarBodyItem
  * @typedef {{changeSlot: (slot: InventorySlotType) => void}} InventoryPanelRef
  */
-
-// TODO: Available items should come from backend / user profile
-/** @type {{ [key in ItemSlot]: ItemName[] }} */
-const AVAILABLE_ITEMS = {
-    hair: ['hair_00', 'hair_01', 'hair_02'],
-    top: ['top_00', 'top_01', 'top_02'],
-    bottom: ['bottom_00', 'bottom_01', 'bottom_02'],
-    shoes: ['shoes_00', 'shoes_01', 'shoes_02']
-};
 
 /**
  * @param {object} props
@@ -75,28 +69,55 @@ const InventoryPanel = ({
     }));
 
     /**
+     * Build user-owned items grouped by slot
+     */
+    const ownedItemsBySlot = useMemo(() => {
+        /** @type {Record<ItemSlot, OwnedSlotItem[]>} */
+        const grouped = {
+            hair: [],
+            top: [],
+            bottom: [],
+            shoes: []
+        };
+
+        EQUIPMENT_SLOTS.forEach((slot) => {
+            const slotItems = [];
+            const stuffs = user.inventory.GetStuffsBySlot(slot);
+            for (const stuff of stuffs) {
+                const itemData = dataManager.items.GetByID(stuff.ItemID);
+                if (itemData === null) continue;
+
+                slotItems.push({
+                    slot,
+                    stuffID: stuff.ID,
+                    itemName: /** @type {ItemName} */ (stuff.ItemID),
+                    item: itemData
+                });
+            }
+            grouped[slot] = slotItems;
+        });
+
+        return grouped;
+    }, []);
+
+    /**
      * Retrieves the items to display according to the selected slot
-     * @returns {(DisplayedItem | BodyColorItem | AvatarBodyItem | { isEmpty: true })[]}
+     * @returns {(OwnedSlotItem | BodyColorItem | AvatarBodyItem | { isEmpty: true })[]}
      */
     const displayedItems = useMemo(() => {
-        /** @type {(DisplayedItem | BodyColorItem | AvatarBodyItem | { isEmpty: true })[]} */
+        /** @type {(OwnedSlotItem | BodyColorItem | AvatarBodyItem | { isEmpty: true })[]} */
         const items = [];
         if (selectedSlot === 'bodyColor') {
             BODY_COLORS.forEach((color) => items.push({ slot: 'bodyColor', color }));
         } else if (selectedSlot === 'all') {
-            // Show avatar bodies with full equipment
             AVATAR_BODIES.forEach((_bodyType) => {
                 items.push({ slot: 'avatar', bodyType: _bodyType });
             });
         } else {
-            // Regular item slots
-            const itemNames = AVAILABLE_ITEMS[/** @type {ItemSlot} */ (selectedSlot)];
-            itemNames.forEach((itemName) => {
-                items.push({ slot: /** @type {ItemSlot} */ (selectedSlot), itemName });
-            });
+            const slot = /** @type {ItemSlot} */ (selectedSlot);
+            ownedItemsBySlot[slot]?.forEach((ownedItem) => items.push(ownedItem));
         }
 
-        // Add empty items to have a multiple of 4
         const remainder = items.length % 4;
         if (remainder !== 0) {
             const emptyItemsCount = 4 - remainder;
@@ -106,7 +127,7 @@ const InventoryPanel = ({
         }
 
         return items;
-    }, [selectedSlot]);
+    }, [selectedSlot, ownedItemsBySlot]);
 
     /**
      * Renders an item in the inventory
@@ -188,9 +209,10 @@ const InventoryPanel = ({
                 );
             }
 
-            // Regular avatar item
-            const isSelected = localAvatarItems.some((avatarItem) => avatarItem.id === item.itemName);
-            const slotPreview = dataManager.items.GetContainerSize(item.slot);
+            // Regular avatar item owned by the user
+            const ownedItem = /** @type {OwnedSlotItem} */ (item);
+            const isSelected = localAvatarItems.some((avatarItem) => avatarItem.id === ownedItem.itemName);
+            const slotPreview = dataManager.items.GetContainerSize(ownedItem.slot);
             const slotPos = slotPreview.pos || { x: 0, y: 0 };
             const slotScale = slotPreview.scale || 1;
 
@@ -206,8 +228,8 @@ const InventoryPanel = ({
                             priority: true,
                             content: (
                                 <ItemDetailPanel
-                                    itemName={item.itemName}
-                                    slot={item.slot}
+                                    itemName={ownedItem.itemName}
+                                    slot={ownedItem.slot}
                                     bodyType={selectedBody}
                                     bodyColor={panelBodyColor}
                                     isEquipped={isSelected}
@@ -223,10 +245,11 @@ const InventoryPanel = ({
                                             setLocalAvatarItems(newItems);
                                         }
 
+                                        user.inventory.Equip(ownedItem.slot, ownedItem.stuffID);
                                         onItemSelect?.(itemId);
 
                                         // TODO: TEMP ?
-                                        if (item.slot === 'bottom') setTmpBottomItem(itemId);
+                                        if (ownedItem.slot === 'bottom') setTmpBottomItem(itemId);
                                     }}
                                     onSell={(itemId) => {
                                         onItemSell?.(itemId);
@@ -240,7 +263,7 @@ const InventoryPanel = ({
                     }}
                 >
                     <AvatarFrame
-                        key={`avatar-frame-${item.slot}-${item.itemName}`}
+                        key={`avatar-frame-${ownedItem.slot}-${ownedItem.itemName}`}
                         width={frameSize}
                         height={frameSize}
                         backgroundColor={isSelected ? themeManager.GetColor('main1') : '#00000000'}
@@ -249,13 +272,13 @@ const InventoryPanel = ({
                             body={selectedBody}
                             bodyColor={panelBodyColor}
                             items={
-                                item.slot !== 'top'
-                                    ? [{ id: item.itemName }]
-                                    : [{ id: item.itemName }, { id: tmpBottomItem }]
+                                ownedItem.slot !== 'top'
+                                    ? [{ id: ownedItem.itemName }]
+                                    : [{ id: ownedItem.itemName }, { id: tmpBottomItem }]
                             }
                             position={slotPos}
                             scale={slotScale}
-                            portraitMode={item.slot === 'hair'}
+                            portraitMode={ownedItem.slot === 'hair'}
                         />
                     </AvatarFrame>
                 </Button>
@@ -283,13 +306,13 @@ const InventoryPanel = ({
                 onContentSizeChange={user.interface.bottomPanel?.mover.onContentSizeChange}
                 contentContainerStyle={styles.itemsContainer}
                 data={displayedItems}
-                extraData={{ panelBodyColor, localAvatarItems, selectedBody }}
+                extraData={{ panelBodyColor, localAvatarItems, selectedBody, ownedItemsBySlot }}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => {
                     if ('isEmpty' in item && item.isEmpty) return `empty-${index}`;
                     if ('slot' in item && item.slot === 'bodyColor') return `color-${item.color}`;
                     if ('slot' in item && item.slot === 'avatar') return `avatar-${item.bodyType}`;
-                    return `${item.slot}-${item.itemName}`;
+                    return `${item.slot}-${'stuffID' in item ? item.stuffID : item.itemName}`;
                 }}
                 removeClippedSubviews={false}
                 numColumns={4}

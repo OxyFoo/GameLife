@@ -8,6 +8,7 @@ import DynamicVar from 'Utils/DynamicVar';
  * @typedef {import('Data/App/Titles').Title} Title
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
  */
@@ -127,18 +128,32 @@ class Inventory extends IUserData {
         return true;
     };
 
-    IsUnsaved = () => {
-        return this.avatarEdited;
-    };
+    SaveOnline = async () => {
+        if (!this.avatarEdited) {
+            return true;
+        }
 
-    GetUnsaved = () => {
-        return {
-            avatar: this.avatar
-        };
-    };
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'save-inventories',
+            avatar: this.avatar,
+            token: this.#token
+        });
 
-    Purge = () => {
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'save-inventories' ||
+            response.result === 'error'
+        ) {
+            this.user.interface.console?.AddLog('error', `[Inventory] Failed to save inventory (${response})`);
+            return false;
+        }
+
+        this.#token = response.result.token;
         this.avatarEdited = false;
+        this.user.interface.console?.AddLog('info', '[Inventory] Inventory saved successfully');
+        return true;
     };
 
     /**
@@ -156,9 +171,6 @@ class Inventory extends IUserData {
 
         this.avatar[slot] = stuffID;
         this.avatarEdited = true;
-
-        // Refresh user character
-        this.user.character?.SetEquipment(this.GetEquippedItemsID());
     };
 
     /** @returns {Title[]} */
@@ -211,6 +223,35 @@ class Inventory extends IUserData {
 
     /** @returns {string[]} */
     GetEquippedItemsID = () => this.GetEquipments().map((ID) => this.GetStuffByID(ID)?.ItemID || '[Default Item]');
+
+    /**
+     * Update avatar skin color index
+     * @param {number} colorIndex
+     */
+    SetSkinColor = (colorIndex) => {
+        if (typeof colorIndex !== 'number' || Number.isNaN(colorIndex)) {
+            return;
+        }
+        if (this.avatar.skinColor === colorIndex) {
+            return;
+        }
+
+        this.avatar.skinColor = colorIndex;
+        this.avatarEdited = true;
+    };
+
+    /**
+     * Update avatar skin (body type)
+     * @param {CharactersID} skinID
+     */
+    SetSkin = (skinID) => {
+        if (this.avatar.skin === skinID) {
+            return;
+        }
+
+        this.avatar.skin = skinID;
+        this.avatarEdited = true;
+    };
 }
 
 export default Inventory;

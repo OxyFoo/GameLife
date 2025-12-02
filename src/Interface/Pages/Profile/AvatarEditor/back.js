@@ -1,66 +1,115 @@
+import user from 'Managers/UserManager';
+import { BODY_COLORS } from './avatarConstants';
+
 /**
+ * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
- * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
+ *
  * @typedef {'all' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} InventorySlotType
  * @typedef {'avatar' | 'bodyColor' | 'hair' | 'top' | 'bottom' | 'shoes'} SlotType
- * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
- * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {{x?: number, y?: number, scale?: number}} AvatarPosition
  */
 
-/** @type {{ [key in ItemSlot]: ItemName[] }} */
-export const AVAILABLE_ITEMS = {
-    hair: ['hair_00', 'hair_01', 'hair_02'],
-    top: ['top_00', 'top_01', 'top_02'],
-    bottom: ['bottom_00', 'bottom_01', 'bottom_02'],
-    shoes: ['shoes_00', 'shoes_01', 'shoes_02']
+/** @type {ItemSlot[]} */
+export const EQUIPMENT_SLOTS = ['hair', 'top', 'bottom', 'shoes'];
+
+/** @type {{ [key in ItemSlot]: ItemName }} */
+const DEFAULT_ITEMS_BY_SLOT = {
+    hair: 'hair_00',
+    top: 'top_00',
+    bottom: 'bottom_00',
+    shoes: 'shoes_00'
 };
 
-/** @type {{ [key in ItemSlot]: { pos: AvatarCharacterProps['position'], scale: AvatarCharacterProps['scale'] } }} */
-export const AVATAR_POSITION_IN_FRAME = {
-    hair: {
-        pos: { x: 0, y: -3.5 },
-        scale: 5
-    },
-    top: {
-        pos: { x: 0, y: -1 },
-        scale: 3
-    },
-    bottom: {
-        pos: { x: 0, y: 0.5 },
-        scale: 2
-    },
-    shoes: {
-        pos: { x: 0, y: 1.6 },
-        scale: 2.5
-    }
-};
+/** @type {ItemName} */
+const FACE_ITEM_ID = 'face_00';
 
 /**
- * TODO: Connecter au back
- * Get initial avatar items configuration
+ * Return avatar item configs reflecting the current backend state
  * @returns {ItemConfig[]}
  */
 export const getInitialAvatarItems = () => {
-    return [{ id: 'face_00' }, { id: 'hair_00' }, { id: 'top_00' }, { id: 'bottom_00' }, { id: 'shoes_00' }];
+    const equippedItems = EQUIPMENT_SLOTS.map((slot) => createItemConfig(getEquippedItemID(slot)));
+    return [createItemConfig(FACE_ITEM_ID), ...equippedItems];
 };
 
 /**
- * TODO: Remplacer par une vrai fonction qui gère les différents slots
- * Update avatar items with a new item
- * @param {ItemConfig[]} currentItems - Current avatar items
- * @param {string} itemId - The new item id to equip
- * @returns {ItemConfig[]} Updated avatar items
+ * Update avatar preview configuration locally
+ * @param {ItemConfig[]} currentItems
+ * @param {ItemName} itemId
+ * @returns {ItemConfig[]}
  */
 export const updateAvatarItem = (currentItems, itemId) => {
-    const slotType = itemId.split('_')[0];
-    const index = currentItems.findIndex((item) => String(item.id).startsWith(slotType));
-
-    if (index !== -1) {
-        const newAvatarItems = [...currentItems];
-        newAvatarItems[index] = { id: /** @type {ItemName} */ (itemId) };
-        return newAvatarItems;
+    const slotType = /** @type {ItemSlot} */ (itemId.split('_')[0]);
+    if (!slotType) {
+        return currentItems;
     }
 
-    return currentItems;
+    const slotIndex = EQUIPMENT_SLOTS.indexOf(slotType);
+    if (slotIndex === -1) {
+        return currentItems;
+    }
+
+    const newAvatarItems = [...currentItems];
+    newAvatarItems[slotIndex + 1] = createItemConfig(itemId);
+    return newAvatarItems;
 };
+
+/**
+ * Get hex body color currently stored for the user
+ * @returns {string}
+ */
+export const getBodyColorHexFromUser = () => {
+    const colorIndex = user.inventory.avatar.skinColor;
+    return BODY_COLORS[colorIndex] || BODY_COLORS[0];
+};
+
+/**
+ * Persist a body color selection back to the user inventory
+ * @param {string} colorHex
+ */
+export const setBodyColorHexOnUser = (colorHex) => {
+    const nextIndex = BODY_COLORS.findIndex((color) => color.toLowerCase() === colorHex.toLowerCase());
+    if (nextIndex === -1) {
+        return;
+    }
+    user.inventory.SetSkinColor(nextIndex);
+};
+
+/**
+ * Retrieve currently selected avatar body type
+ * @returns {AvatarName}
+ */
+export const getBodyTypeFromUser = () => {
+    return user.inventory.avatar.skin || 'human_00';
+};
+
+/**
+ * Persist avatar body type change
+ * @param {AvatarName} bodyType
+ */
+export const setBodyTypeOnUser = (bodyType) => {
+    user.inventory.SetSkin(bodyType);
+};
+
+/**
+ * @param {ItemSlot} slot
+ * @returns {ItemName}
+ */
+const getEquippedItemID = (slot) => {
+    const equippedStuffID = user.inventory.avatar[slot];
+    const stuff = user.inventory.GetStuffByID(equippedStuffID);
+    if (stuff !== null && typeof stuff !== 'undefined') {
+        return stuff.ItemID;
+    }
+
+    return DEFAULT_ITEMS_BY_SLOT[slot];
+};
+
+/**
+ * @param {ItemName} itemId
+ * @returns {ItemConfig}
+ */
+const createItemConfig = (itemId) => ({ id: itemId });

@@ -3,7 +3,14 @@ import { Animated, Dimensions, View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
-import { getInitialAvatarItems, updateAvatarItem } from './back';
+import {
+    getInitialAvatarItems,
+    updateAvatarItem,
+    getBodyColorHexFromUser,
+    setBodyColorHexOnUser,
+    getBodyTypeFromUser,
+    setBodyTypeOnUser
+} from './back';
 import { getAvatarPositionForCategory, getDefaultAvatarPosition } from './avatarConstants';
 import InventoryPanel from './InventoryPanel';
 import SlotButton from './SlotButton';
@@ -46,9 +53,9 @@ import { SpringAnimation } from 'Utils/Animations';
 const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode }, ref) => {
     const screenDim = Dimensions.get('window');
 
-    const [avatarItems, setAvatarItems] = useState(getInitialAvatarItems());
-    const [bodyColor, setBodyColor] = useState('#f3e4d1'); // TODO: default body color from user profile
-    const [bodyType, setBodyType] = useState(/** @type {AvatarName} */ ('human_00')); // TODO: default body type from user profile
+    const [avatarItems, setAvatarItems] = useState(() => getInitialAvatarItems());
+    const [bodyColor, setBodyColor] = useState(() => getBodyColorHexFromUser());
+    const [bodyType, setBodyType] = useState(() => /** @type {AvatarName} */ (getBodyTypeFromUser()));
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
     const inventoryPanelRef = useRef(/** @type {InventoryPanelRef | null} */ (null));
 
@@ -115,10 +122,10 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
 
     /**
      * Update avatar items
-     * @param {string} itemId - The new item id to equip
+     * @param {ItemName} itemId - The new item id to equip
      */
     const handleItemUpdate = useCallback(
-        /** @param {string} itemId */
+        /** @param {ItemName} itemId */
         (itemId) => {
             setAvatarItems((currentItems) => updateAvatarItem(currentItems, itemId));
         },
@@ -146,6 +153,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
         /** @param {string} color */
         (color) => {
             setBodyColor(color);
+            setBodyColorHexOnUser(color);
         },
         []
     );
@@ -157,9 +165,16 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
         /** @param {AvatarName} body */
         (body) => {
             setBodyType(body);
+            setBodyTypeOnUser(body);
         },
         []
     );
+
+    const refreshAvatarFromUser = useCallback(() => {
+        setAvatarItems(getInitialAvatarItems());
+        setBodyColor(getBodyColorHexFromUser());
+        setBodyType(getBodyTypeFromUser());
+    }, []);
 
     const styleAvatar = {
         transform: [
@@ -174,6 +189,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
      * Hides UI and centers avatar with smooth animations
      */
     const enterEditMode = () => {
+        refreshAvatarFromUser();
         // Move avatar to center with appropriate zoom for selected slot
         const { x, y, scale } = getAvatarPositionForCategory(selectedSlot);
         adjustAvatarPosition({ x, y, scale });

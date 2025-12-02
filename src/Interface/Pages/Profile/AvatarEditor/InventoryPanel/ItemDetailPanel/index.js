@@ -4,6 +4,7 @@ import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button } from 'Interface/Components';
@@ -12,6 +13,7 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  */
 
 /**
@@ -36,9 +38,9 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
     const previewPos = slotPreview.pos || { x: 0, y: 0 };
     const previewScale = slotPreview.scale || 1;
 
-    // Get item info (TODO: get from data manager when available)
-    const itemTitle = itemName.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase());
-    const itemDescription = `Un bel item de type ${slot}.`; // TODO: Get from item data
+    const itemData = dataManager.items.GetByID(/** @type {ItemID} */ (itemName));
+    const itemTitle = itemData ? langManager.GetText(itemData.Name) : itemName;
+    const itemDescription = itemData ? langManager.GetText(itemData.Description) : `Item ${slot}`;
 
     const handleEquip = () => {
         onEquip(itemName);

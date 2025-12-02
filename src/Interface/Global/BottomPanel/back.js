@@ -37,6 +37,7 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {Animated.Value} animOpacity
  * @property {'opened' | 'opening' | 'closing' | 'closed'} state
  * @property {number} height
+ * @property {() => boolean} backHandler - Unique back handler for this panel
  */
 
 class BottomPanelBack extends React.Component {
@@ -98,13 +99,20 @@ class BottomPanelBack extends React.Component {
             newMover.panel.minPosY = newMover.panel.maxPosY;
         }
 
+        // Create a unique back handler for this specific panel
+        const panelBackHandler = () => {
+            this.Close(true);
+            return false;
+        };
+
         /** @type {BottomPanelStackItem} */
         const stackItem = {
             params,
             mover: newMover,
             animOpacity: new Animated.Value(0),
             state: 'opening',
-            height: 0
+            height: 0,
+            backHandler: panelBackHandler
         };
 
         // Open animation
@@ -122,7 +130,7 @@ class BottomPanelBack extends React.Component {
             }
         );
 
-        user.interface.AddCustomBackHandler(this._close);
+        user.interface.AddCustomBackHandler(panelBackHandler);
     };
 
     /**
@@ -169,7 +177,9 @@ class BottomPanelBack extends React.Component {
         if (!triggerNavbarRefresh) {
             currentItem.mover.events.isClosing = true;
         }
-        user.interface.RemoveCustomBackHandler(this._close);
+
+        // Remove the unique back handler for this specific panel
+        user.interface.RemoveCustomBackHandler(currentItem.backHandler);
 
         // Wait for animation to complete before removing from stack
         return new Promise((resolve) => {
@@ -187,9 +197,6 @@ class BottomPanelBack extends React.Component {
                         // Only trigger navbar refresh if this was the last panel
                         if (this.state.stack.length === 0) {
                             user.interface.navBar?.onCloseBottomPanel();
-                        } else {
-                            // Re-add back handler for remaining panels
-                            user.interface.AddCustomBackHandler(this._close);
                         }
 
                         resolve();

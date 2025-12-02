@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button } from 'Interface/Components';
-import { AVATAR_POSITION_CONFIG } from '../../avatarConstants';
 
 /**
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
@@ -32,6 +32,9 @@ import { AVATAR_POSITION_CONFIG } from '../../avatarConstants';
  */
 const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEquip, onSell, onClose }) => {
     const frameSize = 120;
+    const slotPreview = dataManager.items.GetContainerSize(slot);
+    const previewPos = slotPreview.pos || { x: 0, y: 0 };
+    const previewScale = slotPreview.scale || 1;
 
     // Get item info (TODO: get from data manager when available)
     const itemTitle = itemName.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase());
@@ -56,8 +59,8 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
                         body={bodyType}
                         bodyColor={bodyColor}
                         items={[{ id: itemName }]}
-                        position={AVATAR_POSITION_CONFIG[slot]?.pos || { x: 0, y: 0 }}
-                        scale={AVATAR_POSITION_CONFIG[slot]?.scale || 1}
+                        position={previewPos}
+                        scale={previewScale}
                         portraitMode={slot === 'hair'}
                     />
                 </AvatarFrame>
@@ -74,6 +77,16 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
                 <Button
                     style={styles.button}
                     appearance='uniform'
+                    color={isEquipped ? 'transparent' : 'ground2'}
+                    disabled={isEquipped}
+                    onPress={handleSell}
+                >
+                    <Text style={[styles.buttonText, isEquipped && styles.buttonTextDisabled]}>Vendre</Text>
+                </Button>
+
+                <Button
+                    style={styles.button}
+                    appearance='uniform'
                     color={isEquipped ? 'transparent' : 'main1'}
                     disabled={isEquipped}
                     onPress={handleEquip}
@@ -81,16 +94,6 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
                     <Text style={[styles.buttonText, isEquipped && styles.buttonTextDisabled]}>
                         {isEquipped ? 'Équipé' : 'Équiper'}
                     </Text>
-                </Button>
-
-                <Button
-                    style={styles.button}
-                    appearance='uniform'
-                    color={isEquipped ? 'transparent' : 'ground2'}
-                    disabled={isEquipped}
-                    onPress={handleSell}
-                >
-                    <Text style={[styles.buttonText, isEquipped && styles.buttonTextDisabled]}>Vendre</Text>
                 </Button>
             </View>
         </View>

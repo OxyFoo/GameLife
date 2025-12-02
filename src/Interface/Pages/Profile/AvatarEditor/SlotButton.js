@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
-import { AVATAR_POSITION_CONFIG } from './avatarConstants';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button } from 'Interface/Components';
@@ -57,7 +57,9 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
         return [foundItem];
     };
 
-    const config = AVATAR_POSITION_CONFIG[slotType];
+    const slotPreview = dataManager.items.GetContainerSize(slotType);
+    const avatarPos = slotPreview.pos ?? { x: 0, y: 0 };
+    const avatarScale = slotPreview.scale ?? 1;
 
     // Special rendering for body color slot (simple color square View)
     if (slotType === 'bodyColor') {
@@ -84,9 +86,9 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
                 <AvatarCharacter
                     body={bodyType ?? 'human_00'}
                     bodyColor={bodyColor}
-                    position={{ x: config.pos?.x ?? 0, y: config.pos?.y ?? 0, z: 0 }}
+                    position={avatarPos}
                     rotation={{ x: 0, y: 0, z: 0 }}
-                    scale={config.scale}
+                    scale={avatarScale}
                     items={getPreviewItems()}
                 />
             </AvatarFrame>

@@ -3,12 +3,8 @@ import { Animated, Dimensions, View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
-import {
-    getInitialAvatarItems,
-    updateAvatarItem,
-    getAvatarPositionForCategory,
-    getDefaultAvatarPosition
-} from './back';
+import { getInitialAvatarItems, updateAvatarItem } from './back';
+import { getAvatarPositionForCategory, getDefaultAvatarPosition } from './avatarConstants';
 import InventoryPanel from './InventoryPanel';
 import SlotButton from './SlotButton';
 import user from 'Managers/UserManager';

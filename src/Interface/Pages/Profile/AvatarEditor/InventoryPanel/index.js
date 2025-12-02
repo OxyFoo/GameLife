@@ -5,10 +5,11 @@ import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 import styles from './style';
 import ItemDetailPanel from './ItemDetailPanel';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button } from 'Interface/Components';
-import { AVATAR_POSITION_CONFIG, AVATAR_BODIES, BODY_COLORS } from '../avatarConstants';
+import { AVATAR_BODIES, BODY_COLORS } from '../avatarConstants';
 
 /**
  * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
@@ -155,6 +156,9 @@ const InventoryPanel = ({
             // Avatar body item (full avatar)
             if ('slot' in item && item.slot === 'avatar') {
                 const isSelected = selectedBody === item.bodyType;
+                const avatarPreview = dataManager.items.GetContainerSize('avatar');
+                const avatarPos = avatarPreview.pos || { x: 0, y: 0 };
+                const avatarScale = avatarPreview.scale || 1;
 
                 return (
                     <Button
@@ -176,8 +180,8 @@ const InventoryPanel = ({
                                 body={item.bodyType}
                                 bodyColor={panelBodyColor}
                                 items={localAvatarItems.slice(1)}
-                                position={AVATAR_POSITION_CONFIG.avatar.pos}
-                                scale={AVATAR_POSITION_CONFIG.avatar.scale}
+                                position={avatarPos}
+                                scale={avatarScale}
                             />
                         </AvatarFrame>
                     </Button>
@@ -186,6 +190,9 @@ const InventoryPanel = ({
 
             // Regular avatar item
             const isSelected = localAvatarItems.some((avatarItem) => avatarItem.id === item.itemName);
+            const slotPreview = dataManager.items.GetContainerSize(item.slot);
+            const slotPos = slotPreview.pos || { x: 0, y: 0 };
+            const slotScale = slotPreview.scale || 1;
 
             return (
                 <Button
@@ -246,8 +253,8 @@ const InventoryPanel = ({
                                     ? [{ id: item.itemName }]
                                     : [{ id: item.itemName }, { id: tmpBottomItem }]
                             }
-                            position={AVATAR_POSITION_CONFIG[item.slot].pos}
-                            scale={AVATAR_POSITION_CONFIG[item.slot].scale}
+                            position={slotPos}
+                            scale={slotScale}
                             portraitMode={item.slot === 'hair'}
                         />
                     </AvatarFrame>

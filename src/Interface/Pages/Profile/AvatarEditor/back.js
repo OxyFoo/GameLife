@@ -64,33 +64,3 @@ export const updateAvatarItem = (currentItems, itemId) => {
 
     return currentItems;
 };
-
-/**
- * Get avatar position configuration based on selected category
- * @param {InventorySlotType | null} category
- * @returns {Required<AvatarPosition>}
- */
-export const getAvatarPositionForCategory = (category) => {
-    switch (category) {
-        case 'hair':
-            return { x: -1 / 2, y: 220, scale: 1.75 };
-        case 'top':
-            return { x: -1 / 2, y: -50, scale: 1.2 };
-        case 'bottom':
-            return { x: -1 / 2, y: -300, scale: 0.8 };
-        case 'shoes':
-            return { x: -1 / 2, y: -400, scale: 0.7 };
-        case 'bodyColor':
-        case 'all':
-        default:
-            return { x: -1 / 2, y: -100, scale: 1 };
-    }
-};
-
-/**
- * Get default avatar position configuration
- * @returns {Required<AvatarPosition>}
- */
-export const getDefaultAvatarPosition = () => {
-    return { x: -1 / 4, y: 0, scale: 1 };
-};

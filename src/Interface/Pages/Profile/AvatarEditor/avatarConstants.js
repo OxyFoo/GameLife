@@ -1,7 +1,7 @@
 /**
  * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
- * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
- * @typedef {import('./back').SlotType} SlotType
+ * @typedef {import('./back').InventorySlotType} InventorySlotType
+ * @typedef {{x?: number, y?: number, scale?: number}} AvatarPosition
  */
 
 /** Available avatar body types */
@@ -13,32 +13,31 @@ export const AVATAR_BODIES = ['human_00', 'human_01'];
 export const BODY_COLORS = ['#FFF5E1', '#FFDAB9', '#E8B89A', '#D1A684', '#B5866B', '#8D5524', '#5C4033', '#3B2414'];
 
 /**
- * Avatar position and scale configuration for each slot type
- * @type {{ [key in SlotType]: { pos: AvatarCharacterProps['position'], scale: AvatarCharacterProps['scale'] } }}
+ * Get avatar position configuration based on selected category
+ * @param {InventorySlotType | null} category
+ * @returns {Required<AvatarPosition>}
  */
-export const AVATAR_POSITION_CONFIG = {
-    avatar: {
-        pos: { x: 0, y: -0.7 },
-        scale: 2
-    },
-    bodyColor: {
-        pos: { x: 0, y: 0 },
-        scale: 1
-    },
-    hair: {
-        pos: { x: 0, y: -3.5 },
-        scale: 5
-    },
-    top: {
-        pos: { x: 0, y: -1 },
-        scale: 3
-    },
-    bottom: {
-        pos: { x: 0, y: 0.5 },
-        scale: 2
-    },
-    shoes: {
-        pos: { x: 0, y: 1.6 },
-        scale: 2.5
+export const getAvatarPositionForCategory = (category) => {
+    switch (category) {
+        case 'hair':
+            return { x: -1 / 2, y: 220, scale: 1.75 };
+        case 'top':
+            return { x: -1 / 2, y: -50, scale: 1.2 };
+        case 'bottom':
+            return { x: -1 / 2, y: -300, scale: 0.8 };
+        case 'shoes':
+            return { x: -1 / 2, y: -400, scale: 0.7 };
+        case 'bodyColor':
+        case 'all':
+        default:
+            return { x: -1 / 2, y: -100, scale: 1 };
     }
+};
+
+/**
+ * Get default avatar position configuration
+ * @returns {Required<AvatarPosition>}
+ */
+export const getDefaultAvatarPosition = () => {
+    return { x: -1 / 4, y: 0, scale: 1 };
 };

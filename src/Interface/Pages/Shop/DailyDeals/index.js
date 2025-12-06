@@ -9,10 +9,12 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Button, Text, Frame } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 /**
  * @typedef {import('./back').BuyableItem} BuyableItem
+ * @typedef {import('react-native').ListRenderItem<BuyableItem>} ListRenderItemBuyableItem
  */
 
 class ShopDailyDeals extends BackShopItems {
@@ -32,10 +34,7 @@ class ShopDailyDeals extends BackShopItems {
         );
     }
 
-    /**
-     * @param {{ item: BuyableItem }} item
-     * @returns {React.ReactNode}
-     */
+    /** @type {ListRenderItemBuyableItem} */
     renderItem = ({ item }) => {
         const disabled = user.shop.buyToday.items.includes(item.ID.toString());
         const rarityText = langManager.curr['rarities'][item.Rarity];
@@ -54,12 +53,13 @@ class ShopDailyDeals extends BackShopItems {
 
                         {/** Item frame */}
                         <View style={styles.itemFrameContainer}>
-                            <Frame
-                                style={styles.itemFrame}
-                                characters={[item.Character]}
-                                onlyItems={true}
-                                size={item.Size}
-                            />
+                            {/* TODO: Nouveau Frame */}
+                            {/* <Frame style={styles.itemFrame} size={item.Size} /> */}
+                            <AvatarFrame>
+                                <AvatarCharacter
+                                    body='human_00' // TODO: Same as user
+                                />
+                            </AvatarFrame>
                         </View>
 
                         {/** Item price */}

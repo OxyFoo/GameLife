@@ -6,9 +6,8 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Character } from 'Interface/Components';
-
 /**
+ * @typedef {import('@oxyfoo/gamelife-types').Rarities} Rarities
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').ItemID} ItemID
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
@@ -17,48 +16,60 @@ import { Character } from 'Interface/Components';
  * @property {string | number} ID
  * @property {string} Name
  * @property {number} Price
- * @property {number} Rarity
+ * @property {Rarities} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
- * @property {Character} Character Character to display item
  * @property {CharacterContainerSize} Size Item size in pixels for the character
  * @property {() => void} OnPress
  */
 
+/**
+ * @typedef {object} BackShopItemsPropsType
+ * @property {ItemID[]} dailyItemsID
+ */
+
+/** @type {BackShopItemsPropsType} */
 const BackShopItemsProps = {
-    /** @type {ItemID[]} */
     dailyItemsID: []
 };
 
 class BackShopItems extends React.Component {
     state = {
-        /** @type {Array<BuyableItem>} */
+        /** @type {BuyableItem[]} */
         buyableItems: []
     };
 
+    /** @param {BackShopItemsPropsType} props */
     constructor(props) {
         super(props);
 
         const { dailyItemsID } = this.props;
-        this.state.buyableItems = this.refreshItems(dailyItemsID);
+        const newItems = this.refreshItems(dailyItemsID)
+        if (newItems !== null) {
+            this.state.buyableItems = newItems;
+        }
     }
 
-    /** @param {ItemID[]} dailyItemsID */
+    /**
+     * @param {ItemID[]} dailyItemsID
+     * @returns {BuyableItem[] | null}
+     */
     refreshItems = (dailyItemsID) => {
         const allBuyableItems = dataManager.items.GetBuyable();
 
-        if (dailyItemsID === null) return;
+        if (dailyItemsID === null) return null;
 
         // Create characters & get data for each item
         /** @type {BuyableItem[]} */
         const buyableItems = [];
-        dailyItemsID.forEach((itemID, index) => {
+        dailyItemsID.forEach((itemID) => {
             const item = allBuyableItems.find((i) => i.ID == itemID) || null;
             if (item === null) return;
 
-            const characterKey = `shop-character-${itemID.toString()}`;
-            const character = new Character(characterKey, 'skin_01', 0);
-            character.SetEquipment([itemID.toString()]);
+            // TODO: Supprimer Character
+            // const characterKey = `shop-character-${itemID.toString()}`;
+            // const character = new Character(characterKey, 'skin_01', 0);
+            // character.SetEquipment([itemID.toString()]);
 
             /** @type {BuyableItem} */
             const buyableItem = {
@@ -68,7 +79,6 @@ class BackShopItems extends React.Component {
                 Rarity: item.Rarity,
                 Colors: themeManager.GetRariryColors(item.Rarity),
                 BackgroundColor: themeManager.GetColor('backgroundCard'),
-                Character: character,
                 Size: dataManager.items.GetContainerSize(item.Slot),
                 OnPress: () => this.openItemPopup(item)
             };
@@ -80,8 +90,9 @@ class BackShopItems extends React.Component {
 
     /** @param {Item} item */
     openItemPopup = (item) => {
-        const render = () => renderItemPopup.call(this, item);
-        user.interface.popup.Open('custom', render);
+        user.interface.popup?.Open({
+            content: renderItemPopup.call(this, item)
+        });
     };
 }
 

@@ -16,6 +16,7 @@ import user from 'Managers/UserManager';
  */
 
 class BackShop extends PageBase {
+    static feKeepMounted = true;
     static feShowNavBar = true;
     static feShowUserHeader = true;
 
@@ -53,30 +54,27 @@ class BackShop extends PageBase {
     refDyes = React.createRef();
 
     componentDidMount() {
-        this.componentDidFocused(this.props);
-        // TODO: Reimplement get-shop
-        // Old request: getDailyDeals
-        // user.server
-        //     .GetShopContent()
-        //     .then((shopInfo) => {
-        //         this.setState({
-        //             loaded: true,
-        //             dailyItemsID: shopInfo.dailyDeals,
-        //             randomChestsStats: {
-        //                 common: shopInfo.chestsStats.random.common,
-        //                 rare: shopInfo.chestsStats.random.rare,
-        //                 epic: shopInfo.chestsStats.random.epic
-        //             },
-        //             targetChestsStats: {
-        //                 common: shopInfo.chestsStats.target.common,
-        //                 rare: shopInfo.chestsStats.target.rare,
-        //                 epic: shopInfo.chestsStats.target.epic
-        //             }
-        //         });
-        //     })
-        //     .catch((error) => {
-        //         user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
-        //     });
+        user.shop
+            .GetShopContent()
+            .then((shopInfo) => {
+                this.setState({
+                    loaded: true,
+                    dailyItemsID: shopInfo.dailyDeals,
+                    randomChestsStats: {
+                        common: shopInfo.chestsStats.random.common,
+                        rare: shopInfo.chestsStats.random.rare,
+                        epic: shopInfo.chestsStats.random.epic
+                    },
+                    targetChestsStats: {
+                        common: shopInfo.chestsStats.target.common,
+                        rare: shopInfo.chestsStats.target.rare,
+                        epic: shopInfo.chestsStats.target.epic
+                    }
+                });
+            })
+            .catch((error) => {
+                user.interface.console?.AddLog('error', '[Shop] Failed to load shop content', error);
+            });
     }
 }
 

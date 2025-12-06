@@ -9,6 +9,12 @@ const styles = StyleSheet.create({
     errorText: {
         padding: 12
     },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 24
+    },
 
     // Daily deals
     itemParent: {

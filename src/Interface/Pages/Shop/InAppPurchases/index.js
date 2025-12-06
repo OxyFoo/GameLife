@@ -17,6 +17,22 @@ import { Button, Text } from 'Interface/Components';
  */
 
 class ShopIAP extends BackShopIAP {
+    render() {
+        const { iapItems } = this.state;
+
+        return (
+            <FlatList
+                style={styles.flatlist}
+                data={iapItems}
+                ListEmptyComponent={this.renderEmpty}
+                numColumns={3}
+                renderItem={this.renderItem}
+                keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
+                scrollEnabled={false}
+            />
+        );
+    }
+
     /** @type {ListRenderItemIAPItem} */
     renderItem = ({ item }) => {
         const backgroundStyle = { backgroundColor: themeManager.GetColor('backgroundCard') };
@@ -50,22 +66,6 @@ class ShopIAP extends BackShopIAP {
 
         return <Text style={styles.errorText}>{lang['error-no-items']}</Text>;
     };
-
-    render() {
-        const { iapItems } = this.state;
-
-        return (
-            <FlatList
-                style={styles.flatlist}
-                data={iapItems}
-                ListEmptyComponent={this.renderEmpty}
-                numColumns={3}
-                renderItem={this.renderItem}
-                keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
-                scrollEnabled={false}
-            />
-        );
-    }
 }
 
 export default ShopIAP;

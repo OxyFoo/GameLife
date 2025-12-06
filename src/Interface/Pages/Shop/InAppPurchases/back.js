@@ -1,29 +1,27 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
-// import {
-//     initConnection,
-//     endConnection,
-//     requestPurchase,
-//     PurchaseStateAndroid,
-//     flushFailedPurchasesCachedAsPendingAndroid,
-//     getProducts,
-//     finishTransaction,
-//     purchaseUpdatedListener,
-//     purchaseErrorListener,
-//     ErrorCode,
-//     clearProductsIOS
-// } from 'react-native-iap';
+import {
+    initConnection,
+    endConnection,
+    requestPurchase,
+    fetchProducts,
+    validateReceipt,
+    finishTransaction,
+    purchaseUpdatedListener,
+    purchaseErrorListener,
+    clearTransactionIOS,
+    ErrorCode
+} from 'react-native-iap';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Sleep } from 'Utils/Functions';
-import { Character } from 'Interface/Components';
 
 /**
- * @typedef {import('react-native-iap').Product} Product
  * @typedef {import('react-native-iap').Purchase} Purchase
  * @typedef {import('react-native-iap').PurchaseError} PurchaseError
+ * @typedef {import('react-native-iap').EventSubscription} EventSubscription
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
@@ -36,7 +34,6 @@ import { Character } from 'Interface/Components';
  * @property {number} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {string} BackgroundColor Background color
- * @property {Character} Character Character to display item
  * @property {CharacterContainerSize} Size Item size in pixels for the character
  * @property {() => void} OnPress
  *
@@ -50,26 +47,26 @@ import { Character } from 'Interface/Components';
 
 class BackShopIAP extends React.Component {
     state = {
-        /** @type {Array<BuyableItem>} */
+        /** @type {BuyableItem[]} */
         buyableItems: [],
 
-        /** @type {Array<IAPItem>} */
+        /** @type {IAPItem[]} */
         iapItems: []
     };
 
+    /** @type {EventSubscription | null} */
     purchaseUpdateSubscription = null;
+
+    /** @type {EventSubscription | null} */
     purchaseErrorSubscription = null;
 
     componentDidMount() {
         initConnection()
             .then((canMakePaymentIOS) => {
-                if (Platform.OS === 'android') {
-                    // We make sure that "ghost" pending payment are removed
-                    // (ghost = failed pending payment that are still marked as pending in Google's native Vending module cache)
-                    return flushFailedPurchasesCachedAsPendingAndroid();
-                } else if (Platform.OS === 'ios' && canMakePaymentIOS) {
-                    return clearProductsIOS().then(() => true);
+                if (Platform.OS === 'ios' && canMakePaymentIOS) {
+                    return clearTransactionIOS();
                 }
+                return true;
             })
             .then(() => {
                 this.purchaseUpdateSubscription = purchaseUpdatedListener(this.purchaseDidUpdate);
@@ -101,11 +98,11 @@ class BackShopIAP extends React.Component {
     }
 
     LoadIAP = async () => {
-        const allIAP = await getProducts({
+        const allIAP = await fetchProducts({
             skus: user.shop.IAP_IDs
         }).catch((error) => {
             user.interface.console?.AddLog('error', '[IAP] Error fetching products', error);
-            return /** @type {Array<Product>} */ [];
+            return [];
         });
 
         if (allIAP === null || allIAP.length === 0) {
@@ -122,37 +119,44 @@ class BackShopIAP extends React.Component {
             return title;
         };
 
-        /** @type {Array<IAPItem>} */
         const iapItems = allIAP
-            .map((product, index) => ({
-                ID: product.productId,
-                Name: getTitle(product.title),
-                Price: product.localizedPrice,
-                Description: product.description,
-                OnPress: () => this.purchase(product.productId)
-            }))
-            .sort((a, b) => a.ID.localeCompare(b.ID));
+            .map(
+                (product) =>
+                    /** @type {IAPItem} */ ({
+                        ID: product.id,
+                        Name: getTitle(product.title),
+                        Price: product.displayPrice,
+                        Description: product.description,
+                        OnPress: () => this.purchase(product.id)
+                    })
+            )
+            .sort((a, b) => {
+                // Sort by server order (IAP_IDs array order)
+                const indexA = user.shop.IAP_IDs.indexOf(a.ID);
+                const indexB = user.shop.IAP_IDs.indexOf(b.ID);
+                return indexA - indexB;
+            });
 
         this.setState({ iapItems });
     };
 
     /** @param {Purchase} purchase */
     purchaseDidUpdate = async (purchase) => {
-        if (Platform.OS === 'android') {
-            // If purchase is pending, we should just wait
-            if (purchase.purchaseStateAndroid === PurchaseStateAndroid.PENDING) {
-                const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
-                user.interface.popup.Open('ok', [title, message], undefined, true);
-                return;
-            }
-
-            if (purchase.purchaseStateAndroid !== PurchaseStateAndroid.PURCHASED) {
-                // Handle pending purchase, just wait
-                return;
-            }
+        if (purchase.purchaseState === 'pending') {
+            const { title, message } = langManager.curr['shop']['popup-purchase']['purchase-pending'];
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title, message }
+            });
+            return;
         }
 
-        if (!purchase.transactionReceipt) {
+        if (purchase.purchaseState !== 'purchased') {
+            user.interface.console?.AddLog('warn', `[IAP] Purchase not completed yet: ${purchase.purchaseState}`);
+            return;
+        }
+
+        if (!purchase.transactionId) {
             // Handle error
             this.handleError('no-receipt', 'No receipt', purchase);
             return;
@@ -172,17 +176,16 @@ class BackShopIAP extends React.Component {
         }
 
         // Show reward
-        user.interface.ChangePage(
-            'chestreward',
-            {
+        user.interface.ChangePage('chestreward', {
+            args: {
                 chestRarity: 'ox',
                 oxCount: addedOx,
                 callback: () => {
                     user.interface.BackHandle();
                 }
             },
-            true
-        );
+            storeInHistory: false
+        });
 
         // Finish transaction
         finishTransaction({
@@ -195,7 +198,7 @@ class BackShopIAP extends React.Component {
 
     /** @param {PurchaseError} error */
     purchaseDidError = (error) => {
-        if (error.code === ErrorCode.E_USER_CANCELLED) {
+        if (error.code === ErrorCode.UserCancelled) {
             return;
         }
 
@@ -204,17 +207,21 @@ class BackShopIAP extends React.Component {
 
     /** @param {string} sku Product ID */
     purchase = (sku) => {
-        if (Platform.OS === 'ios') {
+        if (Platform.OS === 'ios' || Platform.OS === 'android') {
             return requestPurchase({
-                sku: sku,
-                andDangerouslyFinishTransactionAutomaticallyIOS: false
-            });
-        } else if (Platform.OS === 'android') {
-            return requestPurchase({
-                skus: [sku]
+                type: 'in-app',
+                request: {
+                    android: {
+                        skus: [sku]
+                    },
+                    ios: {
+                        sku: sku
+                    }
+                }
             });
         } else {
             this.handleError('wrong-platform', 'Platform not supported', Platform.OS);
+            return null;
         }
     };
 
@@ -223,24 +230,27 @@ class BackShopIAP extends React.Component {
      * @returns {Promise<number | false>} Added ox count or false if error
      */
     handlePurchase = async (purchase) => {
-        let transactionReceipt = null;
-        if (Platform.OS === 'android') {
-            transactionReceipt = purchase.transactionReceipt;
-        } else if (Platform.OS === 'ios') {
-            transactionReceipt = JSON.stringify({
-                ...purchase,
-                quantity: 1
-            });
-        }
+        const transactionReceipt = await validateReceipt({
+            sku: purchase.productId
+            // androidOptions: {
+            //     productToken: purchase.purchaseToken ?? '',
+            //     packageName: '',
+            //     accessToken: ''
+            // }
+        });
 
-        const result = await user.server.Request('buyOx', { transactionReceipt });
-        if (result === null || result?.status !== 'ok') {
-            return false;
-        }
+        transactionReceipt;
+        return false;
 
-        user.informations.purchasedCount++;
-        user.informations.ox.Set(result.ox);
-        return result.addedOx;
+        // TODO: Re-enable server validation when server IAP is ready
+        // const result = await user.server2.tcp.SendAndWait('buyOx', { transactionReceipt });
+        // if (result === null || result?.status !== 'ok') {
+        //     return false;
+        // }
+
+        // user.informations.purchasedCount++;
+        // user.informations.ox.Set(result.ox);
+        // return result.addedOx;
     };
 
     /**
@@ -250,9 +260,12 @@ class BackShopIAP extends React.Component {
      * @param {*} error
      */
     handleError = (errorKey, errorName, error) => {
-        user.interface.console.AddLog('error', `[IAP] ${errorName}:`, error);
+        user.interface.console?.AddLog('error', `[IAP] ${errorName}:`, error);
         const { title, message } = langManager.curr['shop']['popup-purchase'][errorKey];
-        user.interface.popup.Open('ok', [title, message], undefined, true);
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: { title, message }
+        });
     };
 }
 

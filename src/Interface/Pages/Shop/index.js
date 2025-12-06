@@ -19,22 +19,14 @@ import { Text, Icon } from 'Interface/Components';
 class Shop extends BackShop {
     render() {
         const lang = langManager.curr['shop'];
+        const { loaded, dailyItemsID, randomChestsStats, targetChestsStats } = this.state;
 
-        return (
-            <View style={[styles.page, { alignItems: 'center', justifyContent: 'center' }]}>
-                {/* <ShopHeader ref={this.refHeader} style={styles.shopHeader} /> */}
-                <Text style={{ fontSize: 24 }}>{lang['temporary-message']}</Text>
-            </View>
-        );
-
-        /*
-        const { dailyItemsID, randomChestsStats, targetChestsStats } = this.state;
-
-        if (user.settings.email.toLowerCase() === 'gamelife-test@oxyfoo.fr') {
+        const email = user.server2.userAuth.GetEmail();
+        if (!!email && email.toLowerCase() === 'gamelife-test@oxyfoo.fr') {
             return this.renderForTesters();
-        } else if (!user.server.IsConnected(false)) {
+        } else if (!user.server2.IsAuthenticated()) {
             return this.renderNoInternet();
-        } else if (!this.state.loaded) {
+        } else if (!loaded) {
             return this.renderLoading();
         }
 
@@ -42,12 +34,12 @@ class Shop extends BackShop {
 
         return (
             <View style={styles.page}>
-                <ShopHeader ref={this.refHeader} refPage={this.refShopHeader} style={styles.shopHeader} />
+                <ShopHeader ref={this.refHeader} style={styles.shopHeader} />
 
                 <Text style={styles.title}>{lang['banner-header']}</Text>
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
-                <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
+                {/* <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} /> */}
 
                 <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
@@ -55,22 +47,21 @@ class Shop extends BackShop {
                 {randomChestsStats !== null && (
                     <>
                         <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
-                        <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} />
+                        {/* <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} /> */}
                     </>
                 )}
 
                 {targetChestsStats !== null && (
                     <>
                         <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
-                        <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} />
+                        {/* <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} /> */}
                     </>
                 )}
 
                 <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
-                <ShopDyes ref={this.refDyes} />
+                {/* <ShopDyes ref={this.refDyes} /> */}
             </View>
         );
-        */
     }
 
     renderLoading = () => {

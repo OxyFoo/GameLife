@@ -11,6 +11,7 @@ import { DateFormat } from 'Utils/Date';
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  *
  * @typedef {import('@oxyfoo/gamelife-types/Class/Shop').SaveObject_Shop} SaveObject_Shop
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_ServerToClient').ShopChestStats} ShopChestStats
  *
  * @typedef Chest
  * @property {number} priceOriginal
@@ -264,6 +265,68 @@ class Shop extends IUserClass {
             },
             storeInHistory: false
         });
+    };
+
+    /**
+     * @description Get shop content (daily deals and chest stats)
+     * @returns {Promise<{
+     *   dailyDeals: string[],
+     *   chestsStats: {
+     *     random: { common: Chest, rare: Chest, epic: Chest },
+     *     target: { common: Chest, rare: Chest, epic: Chest }
+     *   }
+     * }>}
+     * @throws {Error} If the server response is invalid
+     */
+    GetShopContent = async () => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-shop' });
+
+        // Check if response is valid
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'get-shop' ||
+            response.result !== 'ok'
+        ) {
+            this.user.interface.console?.AddLog('error', '[Server] Failed to get shop content from server', response);
+            throw new Error(`Failed to get shop content from server: ${response}`);
+        }
+
+        return {
+            dailyDeals: response.dailyDeals ?? [],
+            chestsStats: {
+                random: {
+                    common: this.#convertChestStats(response.chestsStats?.random?.common),
+                    rare: this.#convertChestStats(response.chestsStats?.random?.rare),
+                    epic: this.#convertChestStats(response.chestsStats?.random?.epic)
+                },
+                target: {
+                    common: this.#convertChestStats(response.chestsStats?.target?.common),
+                    rare: this.#convertChestStats(response.chestsStats?.target?.rare),
+                    epic: this.#convertChestStats(response.chestsStats?.target?.epic)
+                }
+            }
+        };
+    };
+
+    /**
+     * @param {ShopChestStats | undefined} stats
+     * @returns {Chest}
+     */
+    #convertChestStats = (stats) => {
+        if (!stats) {
+            return {
+                priceOriginal: 0,
+                priceDiscount: 0,
+                probas: { common: 0, rare: 0, epic: 0, legendary: 0 }
+            };
+        }
+        return {
+            priceOriginal: stats.priceOriginal,
+            priceDiscount: stats.priceDiscount,
+            probas: stats.probas
+        };
     };
 }
 

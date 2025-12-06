@@ -779,12 +779,10 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 
-        "banner-header": "Discount on all items before the arrival of new avatars!",
         "banner-daily": "Daily deals",
         "banner-iap": "In-app purchases",
         "banner-random-chest": "Random chests",
         "banner-targeted-chest": "Targeted chests",
-        "banner-dye": "Dyes",
 
         "dailyDeals": {
             "popup-item-button": "Buy for {} Ox",
@@ -799,9 +797,12 @@
         },
 
         "randomChests": {
-            "chest-random-common": "Simple chest",
-            "chest-random-rare": "Mysterious chest",
-            "chest-random-epic": "Chest of legends",
+            "chest-random": {
+                "common": "Simple chest",
+                "rare": "Mysterious chest",
+                "epic": "Epic chest",
+                "legendary": "Legendary chest"
+            },
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
             "popup-chest-button": "Open for {} Ox"
@@ -817,15 +818,6 @@
 
             "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
             "popup-chest-button": "Open for {} Ox"
-        },
-
-        "dyes": {
-            "popup-dyer-text": "Change the apparence of this item?",
-            "popup-dyer-button": "Dye for {} Ox",
-            "popup-dyesuccess-title": "Successful dyeing",
-            "popup-dyesuccess-text": "You successfully dyed item \"{}\" for {} Ox",
-
-            "error-no-dye": "There is no dye available, please buy items or try again."
         },
 
         "alert-code-title": "Use a code",

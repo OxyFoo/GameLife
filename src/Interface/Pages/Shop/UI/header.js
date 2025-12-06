@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Animated, View, Image, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Text, Button } from 'Interface/Components';
+import { Gradient } from 'Interface/Primitives';
+import { Text, Button, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -134,50 +134,56 @@ class ShopHeader extends React.Component {
         const lang = langManager.curr['shop'];
         const { style } = this.props;
         const { adState, oxAmount, oxGain } = this.state;
-        const oxAmountStr = oxAmount.toString();
 
-        /** @type {ViewStyle} */
-        const parentStyle = {
-            backgroundColor: themeManager.GetColor('ground1a')
-            // transform: [
-            //     {
-            //         translateY: Animated.subtract(0, refPage?.state?.positionY || 0)
-            //     }
-            // ]
-        };
+        const oxAmountStr = oxAmount.toString();
         const oxTextSize = oxAmountStr.length < 3 ? 16 : 16 + 2 - oxAmountStr.length;
-        const oxIconSize = oxAmountStr.length < 3 ? 20 : oxAmountStr.length < 5 ? 18 : 16;
 
         return (
-            <Animated.View style={[styles.parent, parentStyle, style]}>
+            <Animated.View style={[styles.parent, style]}>
                 <View style={styles.content}>
                     <Button
-                        ref={this.refTuto2}
                         style={styles.badge}
-                        //icon='media'
-                        //badgeJustifyContent='space-around'
+                        styleContent={adState !== 'wait' && styles.badgeContent}
+                        gradientColors={['#38406573', '#3840651F']}
+                        gradientColorsAngle={-45}
                         onPress={this.openAd}
                         loading={adState === 'wait'}
-                        disabled={!(user.server2.IsAuthenticated() && adState === 'ready')}
+                        disabled={!user.server2.IsAuthenticated()}
                     >
+                        <Gradient
+                            containerStyle={styles.badgeGradientContainer}
+                            style={styles.badgeGradient}
+                            colors={[themeManager.GetColor('main2'), themeManager.GetColor('main3')]}
+                            angle={45}
+                        >
+                            <Icon icon='gift' color='grey' />
+                        </Gradient>
                         <Text fontSize={16} color='main1'>
                             {lang['button-header-ad'].replace('{}', oxGain.toString())}
                         </Text>
-                        <Image style={styles.ox} source={IMG_OX} />
+                        <Icon style={styles.badgeIcon} icon='ox' />
                     </Button>
 
                     <Button
-                        ref={this.refTuto3}
                         style={styles.badge}
-                        //icon='addSquare'
-                        //badgeJustifyContent='space-around'
+                        styleContent={styles.badgeContent}
+                        gradientColors={['#38406573', '#3840651F']}
+                        gradientColorsAngle={-45}
                         onPress={this.openOxShop}
                         disabled={!user.server2.IsAuthenticated()}
                     >
+                        <Gradient
+                            containerStyle={styles.badgeGradientContainer}
+                            style={styles.badgeGradient}
+                            colors={[themeManager.GetColor('main2'), themeManager.GetColor('main3')]}
+                            angle={45}
+                        >
+                            <Icon icon='add' color='grey' />
+                        </Gradient>
                         <Text fontSize={oxTextSize} color='main1'>
                             {oxAmountStr}
                         </Text>
-                        <Image style={[styles.ox, { width: oxIconSize }]} source={IMG_OX} />
+                        <Icon style={styles.badgeIcon} icon='ox' />
                     </Button>
                 </View>
             </Animated.View>
@@ -204,12 +210,24 @@ const styles = StyleSheet.create({
         marginHorizontal: 24
     },
     badge: {
-        width: '32%'
+        width: '40%',
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        justifyContent: 'center'
     },
-    ox: {
-        width: 20,
+    badgeContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    badgeIcon: {
+        marginRight: 6
+    },
+    badgeGradientContainer: {
+        borderRadius: 8
+    },
+    badgeGradient: {
         aspectRatio: 1,
-        marginLeft: 2
+        padding: 8
     }
 });
 

@@ -2,80 +2,49 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     flatlist: {
-        //maxHeight: '35%', // Why ?
-        marginBottom: 24,
-        paddingHorizontal: 12
+        flexGrow: 0,
+        marginBottom: 24
     },
+    flatlistContent: {
+        alignItems: 'stretch',
+        gap: 12
+    },
+    flatlistColumnWrapper: {
+        gap: 12
+    },
+
     errorText: {
         padding: 12
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 24
     },
 
     // Daily deals
     itemParent: {
-        width: '33%',
-        aspectRatio: 1 / 1.3,
-        marginBottom: 8,
-        paddingBottom: 4,
-        paddingHorizontal: 6
+        flex: 1
     },
     itemButton: {
-        width: '100%',
-        height: '100%',
-        paddingHorizontal: 0,
-        borderRadius: 8
+        flex: 1,
+        paddingVertical: 12,
+        paddingHorizontal: 8
     },
     itemContent: {
         width: '100%',
         height: '100%',
-
-        display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-
-        borderRadius: 2,
-        overflow: 'hidden'
+        justifyContent: 'space-between'
     },
 
-    itemInfo: {
-        position: 'absolute',
-        top: 12,
-        left: 0,
-        right: 0,
-
-        alignContent: 'center',
-        justifyContent: 'center'
-    },
     itemName: {
-        fontSize: 14
+        fontSize: 16
+    },
+    itemIcon: {
+        marginVertical: 8
     },
     itemRarity: {
         fontSize: 11,
         fontWeight: 'bold'
     },
 
-    itemFrameContainer: {},
-    itemOxImage: {
-        height: 50,
-        width: 50,
-        aspectRatio: 1
-    },
-
-    itemPrice: {
-        position: 'absolute',
-        bottom: 12,
-        left: 0,
-        right: 0,
-
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
+    itemPrice: {},
     itemPriceOx: {
         fontSize: 16,
         marginRight: 4

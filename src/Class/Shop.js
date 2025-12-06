@@ -10,6 +10,7 @@ import { DateFormat } from 'Utils/Date';
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {'hair' | 'top' | 'bottom' | 'shoes'} Slot
  *
+ * @typedef {import('@oxyfoo/gamelife-types').Rarities} Rarities
  * @typedef {import('@oxyfoo/gamelife-types/Class/Shop').SaveObject_Shop} SaveObject_Shop
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_ServerToClient').ShopChestStats} ShopChestStats
  *
@@ -25,13 +26,11 @@ import { DateFormat } from 'Utils/Date';
  * @typedef BuyableRandomChest
  * @property {string} ref
  * @property {string | number} ID
- * @property {string} LangName
  * @property {ImageSourcePropType} Image
  * @property {number} PriceOriginal
  * @property {number} PriceDiscount
- * @property {number} Rarity
+ * @property {Rarities} Rarity
  * @property {string[]} Colors Colors from rarity
- * @property {string} BackgroundColor Background color
  * @property {() => void} OnPress
  *
  * @typedef Target
@@ -47,9 +46,8 @@ import { DateFormat } from 'Utils/Date';
  * @property {ImageSourcePropType} Image
  * @property {number} PriceOriginal
  * @property {number} PriceDiscount
- * @property {number} Rarity
+ * @property {Rarities} Rarity
  * @property {string[]} Colors Colors from rarity
- * @property {string} BackgroundColor Background color
  * @property {() => void} OnPress
  */
 

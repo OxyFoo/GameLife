@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import { Button, Icon, Text } from 'Interface/Components';
 
@@ -25,22 +24,15 @@ class Banner extends React.Component {
         const { id, title } = this.props;
 
         return (
-            <Button style={styles.banner} onPress={this.onPress}>
-                <LinearGradient
-                    style={styles.gradient}
-                    colors={['#B839FE50', '#8A3DFE50']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                >
-                    <Text style={styles.title}>{title}</Text>
+            <View style={styles.container}>
+                <Text style={styles.title}>{title}</Text>
 
-                    {id !== '' && (
-                        <View style={styles.help}>
-                            <Icon icon='info-circle' size={24} />
-                        </View>
-                    )}
-                </LinearGradient>
-            </Button>
+                {id !== '' && (
+                    <Button style={styles.helpButton} appearance='uniform' color='transparent' onPress={this.onPress}>
+                        <Icon icon='info-circle-outline' color='main1' size={28} />
+                    </Button>
+                )}
+            </View>
         );
     }
 }
@@ -49,31 +41,22 @@ Banner.prototype.props = BannerProps;
 Banner.defaultProps = BannerProps;
 
 const styles = StyleSheet.create({
-    banner: {
-        width: '100%',
-        height: 50,
-        marginBottom: 24,
-        paddingHorizontal: 0,
-        borderRadius: 4
-    },
-    gradient: {
-        width: '100%',
-        height: '100%',
-
-        display: 'flex',
+    container: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-between',
+        marginBottom: 12
     },
     title: {
         fontSize: 30,
         fontWeight: 'bold'
     },
-    help: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 12,
-        justifyContent: 'center'
+    helpButton: {
+        width: 'auto',
+        aspectRatio: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 8,
+        borderRadius: 4
     }
 });
 

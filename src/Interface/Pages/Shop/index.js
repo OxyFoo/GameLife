@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 
 import BackShop from './back';
 import ShopHeader from './UI/header';
@@ -8,7 +8,6 @@ import Banner from './UI/banner';
 import ShopDailyDeals from './DailyDeals';
 import ShopRandomChests from './RandomChests';
 import ShopTargetedChests from './TargetedChests';
-import ShopDyes from './Dyes';
 import ShopIAP from './InAppPurchases';
 
 import user from 'Managers/UserManager';
@@ -33,34 +32,29 @@ class Shop extends BackShop {
         const Help = () => {};
 
         return (
-            <View style={styles.page}>
+            <ScrollView style={styles.page} ref={this.refPage}>
                 <ShopHeader ref={this.refHeader} style={styles.shopHeader} />
 
-                <Text style={styles.title}>{lang['banner-header']}</Text>
-
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} />
-                {/* <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} /> */}
+                <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
 
                 <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
 
-                {randomChestsStats !== null && (
-                    <>
-                        <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
-                        {/* <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} /> */}
-                    </>
-                )}
-
                 {targetChestsStats !== null && (
                     <>
                         <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
-                        {/* <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} /> */}
+                        <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} />
                     </>
                 )}
 
-                <Banner id='dyes' onPress={Help} title={lang['banner-dye']} />
-                {/* <ShopDyes ref={this.refDyes} /> */}
-            </View>
+                {randomChestsStats !== null && (
+                    <>
+                        <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
+                        <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} />
+                    </>
+                )}
+            </ScrollView>
         );
     }
 
@@ -91,7 +85,7 @@ class Shop extends BackShop {
 
         return (
             <View style={styles.page}>
-                <ShopHeader ref={this.refHeader} style={styles.shopHeader} /*refPage={this.state.refPage}*/ />
+                <ShopHeader ref={this.refHeader} style={styles.shopHeader} />
 
                 <Banner title={lang['banner-iap']} />
                 <ShopIAP ref={this.refIAP} />
@@ -102,22 +96,10 @@ class Shop extends BackShop {
 
 const styles = StyleSheet.create({
     page: {
-        height: '100%',
         paddingHorizontal: 24
-    },
-    pageFill: {
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     shopHeader: {
         marginBottom: 12
-    },
-    title: {
-        marginBottom: 12,
-        paddingHorizontal: 16,
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center'
     },
     noInternetContainer: {
         width: '100%',

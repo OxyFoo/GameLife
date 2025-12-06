@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import BackShopIAP from './back';
 import styles from './style';
@@ -7,11 +7,9 @@ import styles from './style';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Button, Text } from 'Interface/Components';
+import { Button, Icon, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('./back').BuyableItem} BuyableItem
  * @typedef {import('./back').IAPItem} IAPItem
  * @typedef {import('react-native').ListRenderItem<IAPItem>} ListRenderItemIAPItem
  */
@@ -23,11 +21,13 @@ class ShopIAP extends BackShopIAP {
         return (
             <FlatList
                 style={styles.flatlist}
+                contentContainerStyle={styles.flatlistContent}
+                columnWrapperStyle={styles.flatlistColumnWrapper}
                 data={iapItems}
                 ListEmptyComponent={this.renderEmpty}
                 numColumns={3}
                 renderItem={this.renderItem}
-                keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
+                keyExtractor={(item) => `buyable-item-${item.ID}`}
                 scrollEnabled={false}
             />
         );
@@ -35,21 +35,20 @@ class ShopIAP extends BackShopIAP {
 
     /** @type {ListRenderItemIAPItem} */
     renderItem = ({ item }) => {
-        const backgroundStyle = { backgroundColor: themeManager.GetColor('backgroundCard') };
-
         return (
             <View style={styles.itemParent}>
-                <Button style={styles.itemButton} onPress={item.OnPress}>
-                    <View style={[styles.itemContent, backgroundStyle]}>
+                <Button
+                    style={styles.itemButton}
+                    onPress={item.OnPress}
+                    gradientColors={[themeManager.GetColor('background'), themeManager.GetColor('backgroundCard')]}
+                    gradientColorsAngle={0}
+                >
+                    <View style={styles.itemContent}>
                         {/** Item name & rarity */}
-                        <View style={styles.itemInfo}>
-                            <Text style={styles.itemName}>{item.Name}</Text>
-                        </View>
+                        <Text style={styles.itemName}>{item.Name}</Text>
 
                         {/** Item Image */}
-                        <View style={styles.itemFrameContainer}>
-                            <Image style={styles.itemOxImage} source={IMG_OX} />
-                        </View>
+                        <Icon style={styles.itemIcon} icon='ox' size={48} />
 
                         {/** Item price */}
                         <View style={styles.itemPrice}>

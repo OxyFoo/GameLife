@@ -7,12 +7,12 @@ import user from 'Managers/UserManager';
  * @typedef {import('Class/Shop').Chest} Chest
  * @typedef {import('Data/App/Items').ItemID} ItemID
  *
+ * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('./UI/header').default} ShopHeader
  * @typedef {import('./DailyDeals').default} ShopDailyDeals
  * @typedef {import('./InAppPurchases').default} InAppPurchases
  * @typedef {import('./RandomChests').default} ShopRandomChests
  * @typedef {import('./TargetedChests').default} ShopTargetedChests
- * @typedef {import('./Dyes').default} ShopDyes
  */
 
 class BackShop extends PageBase {
@@ -21,8 +21,6 @@ class BackShop extends PageBase {
     static feShowUserHeader = true;
 
     state = {
-        refPage: null,
-
         loaded: false,
 
         /** @type {ItemID[]} */
@@ -34,6 +32,9 @@ class BackShop extends PageBase {
         /** @type {{ common: Chest, rare: Chest, epic: Chest } | null} */
         targetChestsStats: null
     };
+
+    /** @type {React.RefObject<ScrollView | null>} */
+    refPage = React.createRef();
 
     /** @type {React.RefObject<ShopHeader | null>} */
     refHeader = React.createRef();
@@ -49,9 +50,6 @@ class BackShop extends PageBase {
 
     /** @type {React.RefObject<ShopTargetedChests | null>} */
     refTargetedChests = React.createRef();
-
-    /** @type {React.RefObject<ShopDyes | null>} */
-    refDyes = React.createRef();
 
     componentDidMount() {
         user.shop

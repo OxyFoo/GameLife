@@ -9,17 +9,19 @@ import themeManager from 'Managers/ThemeManager';
 /**
  * @typedef {import('@oxyfoo/gamelife-types').Rarities} Rarities
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
+ * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
  * @typedef {import('Data/App/Items').ItemID} ItemID
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  *
  * @typedef BuyableItem
- * @property {string | number} ID
+ * @property {ItemID} ID
  * @property {string} Name
  * @property {number} Price
  * @property {Rarities} Rarity
  * @property {string[]} Colors Colors from rarity
- * @property {string} BackgroundColor Background color
  * @property {CharacterContainerSize} Size Item size in pixels for the character
+ * @property {ItemSlot} Slot Item slot type
  * @property {() => void} OnPress
  */
 
@@ -44,11 +46,32 @@ class BackShopItems extends React.Component {
         super(props);
 
         const { dailyItemsID } = this.props;
-        const newItems = this.refreshItems(dailyItemsID)
+        const newItems = this.refreshItems(dailyItemsID);
         if (newItems !== null) {
             this.state.buyableItems = newItems;
         }
     }
+
+    /**
+     * Get items to display in item preview
+     * For 'top' items, also show the user's bottom item
+     * @param {BuyableItem} item
+     * @returns {ItemConfig[]}
+     */
+    getPreviewItems = (item) => {
+        /** @type {ItemConfig[]} */
+        const baseItems = [{ id: item.ID }];
+
+        // For 'top' items, also show bottom item (like in avatar editor slots)
+        if (item.Slot === 'top') {
+            const bottomStuffID = user.inventory.avatar.bottom;
+            const bottomStuff = user.inventory.GetStuffByID(bottomStuffID);
+            const bottomItemID = bottomStuff ? bottomStuff.ItemID : 'bottom_00';
+            baseItems.push({ id: bottomItemID });
+        }
+
+        return baseItems;
+    };
 
     /**
      * @param {ItemID[]} dailyItemsID
@@ -63,13 +86,8 @@ class BackShopItems extends React.Component {
         /** @type {BuyableItem[]} */
         const buyableItems = [];
         dailyItemsID.forEach((itemID) => {
-            const item = allBuyableItems.find((i) => i.ID == itemID) || null;
+            const item = allBuyableItems.find((i) => i.ID === itemID) || null;
             if (item === null) return;
-
-            // TODO: Supprimer Character
-            // const characterKey = `shop-character-${itemID.toString()}`;
-            // const character = new Character(characterKey, 'skin_01', 0);
-            // character.SetEquipment([itemID.toString()]);
 
             /** @type {BuyableItem} */
             const buyableItem = {
@@ -78,8 +96,8 @@ class BackShopItems extends React.Component {
                 Price: item.Value,
                 Rarity: item.Rarity,
                 Colors: themeManager.GetRariryColors(item.Rarity),
-                BackgroundColor: themeManager.GetColor('backgroundCard'),
                 Size: dataManager.items.GetContainerSize(item.Slot),
+                Slot: item.Slot,
                 OnPress: () => this.openItemPopup(item)
             };
             buyableItems.push(buyableItem);

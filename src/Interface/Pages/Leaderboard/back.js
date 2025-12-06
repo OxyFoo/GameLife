@@ -146,7 +146,7 @@ class BackLeaderboard extends PageBase {
 
         // Error ?
         else {
-            user.interface.console.AddLog('error', 'Leaderboard sort index unknown:', sortIndex);
+            user.interface.console?.AddLog('error', 'Leaderboard sort index unknown:', sortIndex);
         }
 
         // Search filter

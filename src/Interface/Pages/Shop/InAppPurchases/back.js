@@ -75,7 +75,7 @@ class BackShopIAP extends React.Component {
             })
             .catch((exception) => {
                 // Nothing to do here
-                user.interface.console.AddLog(
+                user.interface.console?.AddLog(
                     'error',
                     '[IAP] Error flushing failed purchases cached as pending',
                     exception

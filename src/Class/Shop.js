@@ -55,11 +55,14 @@ import { DateFormat } from 'Utils/Date';
 
 /** @extends {IUserClass<SaveObject_Shop>} */
 class Shop extends IUserClass {
+    /** @type {UserManager} */
+    #user;
+
     /** @param {UserManager} user */
     constructor(user) {
         super('shop');
 
-        this.user = user;
+        this.#user = user;
     }
 
     buyToday = {
@@ -100,7 +103,7 @@ class Shop extends IUserClass {
             const today = DateFormat(new Date(), 'DD/MM/YYYY');
             this.buyToday = inventory['buyToday'];
             this.buyToday.day = today;
-            this.user.SaveLocal();
+            this.#user.SaveLocal();
         }
     }
 
@@ -124,7 +127,7 @@ class Shop extends IUserClass {
             this.buyToday.day = today;
             this.buyToday.items = [];
             this.buyToday.dyes = [];
-            this.user.SaveLocal();
+            this.#user.SaveLocal();
         }
     };
 
@@ -150,8 +153,8 @@ class Shop extends IUserClass {
         const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
         // Check Ox Amount
-        if (this.user.informations.ox.Get() < price) {
-            this.user.interface.popup?.OpenT({
+        if (this.#user.informations.ox.Get() < price) {
+            this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: lang['popup-notenoughox-title'],
@@ -163,12 +166,12 @@ class Shop extends IUserClass {
 
         // Buy chest
         const data = { rarity: chest.Rarity };
-        const result = await this.user.server.Request('buyRandomChest', data);
+        const result = await this.#user.server.Request('buyRandomChest', data);
         if (result === null) return;
 
         // Check error
         if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
-            this.user.interface.popup?.OpenT({
+            this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: lang['reward-failed-title'],
@@ -180,25 +183,25 @@ class Shop extends IUserClass {
 
         // Update Ox amount
         if (result.hasOwnProperty('ox')) {
-            this.user.informations.ox.Set(result['ox']);
+            this.#user.informations.ox.Set(result['ox']);
         }
 
         // Update inventory
         const newItem = result['newItem'];
-        this.user.inventory.stuffs.push(newItem);
+        this.#user.inventory.stuffs.push(newItem);
 
         // Save inventory
-        this.user.SaveLocal();
+        this.#user.SaveLocal();
 
         // Update mission
-        this.user.missions.SetMissionState('mission3', 'completed');
+        this.#user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
-        this.user.interface.ChangePage('chestreward', {
+        this.#user.interface.ChangePage('chestreward', {
             args: {
                 itemID: newItem['ItemID'],
                 chestRarity: chest.Rarity,
-                callback: this.user.interface.BackHandle
+                callback: this.#user.interface.BackHandle
             },
             storeInHistory: false
         });
@@ -210,8 +213,8 @@ class Shop extends IUserClass {
         const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
         // Check Ox Amount
-        if (this.user.informations.ox.Get() < price) {
-            this.user.interface.popup?.OpenT({
+        if (this.#user.informations.ox.Get() < price) {
+            this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: lang['popup-notenoughox-title'],
@@ -226,12 +229,12 @@ class Shop extends IUserClass {
             rarity: chest.Rarity,
             slot: chest.Slot
         };
-        const result = await this.user.server.Request('buyTargetedChest', data);
+        const result = await this.#user.server.Request('buyTargetedChest', data);
         if (result === null) return;
 
         // Check error
         if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
-            this.user.interface.popup?.OpenT({
+            this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
                     title: lang['reward-failed-title'],
@@ -243,25 +246,25 @@ class Shop extends IUserClass {
 
         // Update Ox amount
         if (result.hasOwnProperty('ox')) {
-            this.user.informations.ox.Set(result['ox']);
+            this.#user.informations.ox.Set(result['ox']);
         }
 
         // Update inventory
         const newItem = result['newItem'];
-        this.user.inventory.stuffs.push(newItem);
+        this.#user.inventory.stuffs.push(newItem);
 
         // Save inventory
-        this.user.SaveLocal();
+        this.#user.SaveLocal();
 
         // Update mission
-        this.user.missions.SetMissionState('mission3', 'completed');
+        this.#user.missions.SetMissionState('mission3', 'completed');
 
         // Show chest opening
-        this.user.interface.ChangePage('chestreward', {
+        this.#user.interface.ChangePage('chestreward', {
             args: {
                 itemID: newItem['ItemID'],
                 chestRarity: chest.Rarity,
-                callback: this.user.interface.BackHandle
+                callback: this.#user.interface.BackHandle
             },
             storeInHistory: false
         });
@@ -279,7 +282,7 @@ class Shop extends IUserClass {
      * @throws {Error} If the server response is invalid
      */
     GetShopContent = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-shop' });
+        const response = await this.#user.server2.tcp.SendAndWait({ action: 'get-shop' });
 
         // Check if response is valid
         if (
@@ -289,7 +292,7 @@ class Shop extends IUserClass {
             response.status !== 'get-shop' ||
             response.result !== 'ok'
         ) {
-            this.user.interface.console?.AddLog('error', '[Server] Failed to get shop content from server', response);
+            this.#user.interface.console?.AddLog('error', '[Server] Failed to get shop content from server', response);
             throw new Error(`Failed to get shop content from server: ${response}`);
         }
 

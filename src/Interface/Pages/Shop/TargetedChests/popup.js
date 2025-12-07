@@ -13,12 +13,13 @@ import { Text, Button } from 'Interface/Components';
  */
 
 /**
- * @param {BuyableTargetedChest} item
- * @param {() => void} closePopup
+ * @param {Object} props
+ * @param {BuyableTargetedChest} props.item
+ * @param {() => void} props.closePopup
  */
-function renderBuyPopup(item, closePopup) {
+function BuyPopup({ item, closePopup }) {
     const lang = langManager.curr['shop']['targetedChests'];
-    let [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const price = item.PriceDiscount < 0 ? item.PriceOriginal : item.PriceDiscount;
     const itemDescription = lang['popup-chest-text']
@@ -47,4 +48,4 @@ function renderBuyPopup(item, closePopup) {
     );
 }
 
-export { renderBuyPopup };
+export { BuyPopup };

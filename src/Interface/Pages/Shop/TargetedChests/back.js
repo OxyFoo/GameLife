@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderBuyPopup } from './popup';
+import { BuyPopup } from './popup';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -110,7 +110,7 @@ class BackShopItems extends React.Component {
         if (!chest) return;
 
         user.interface.popup?.Open({
-            content: renderBuyPopup.call(this, chest, user.interface.popup?.Close)
+            content: <BuyPopup item={chest} closePopup={user.interface.popup?.Close} />
         });
     };
 }

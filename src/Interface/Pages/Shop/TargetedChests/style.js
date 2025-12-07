@@ -29,7 +29,9 @@ const styles = StyleSheet.create({
         borderWidth: 2
     },
     itemContent: {
-        flex: 1
+        flex: 1,
+        height: '100%',
+        justifyContent: 'space-between'
     },
 
     itemInfo: {

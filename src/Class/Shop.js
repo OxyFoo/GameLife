@@ -29,7 +29,7 @@ import { DateFormat } from 'Utils/Date';
  * @property {ImageSourcePropType} Image
  * @property {number} PriceOriginal
  * @property {number} PriceDiscount
- * @property {Rarities} Rarity
+ * @property {Exclude<Rarities, 'legendary'>} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {() => void} OnPress
  *
@@ -46,7 +46,7 @@ import { DateFormat } from 'Utils/Date';
  * @property {ImageSourcePropType} Image
  * @property {number} PriceOriginal
  * @property {number} PriceDiscount
- * @property {Rarities} Rarity
+ * @property {Exclude<Rarities, 'legendary'>} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {() => void} OnPress
  */
@@ -150,7 +150,7 @@ class Shop extends IUserClass {
         const lang = langManager.curr['shop'];
         const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
-        // Check Ox Amount
+        // Check Ox Amount (local validation)
         if (this.#user.informations.ox.Get() < price) {
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
@@ -162,13 +162,53 @@ class Shop extends IUserClass {
             return;
         }
 
-        // Buy chest
-        const data = { rarity: chest.Rarity };
-        const result = await this.#user.server.Request('buyRandomChest', data);
-        if (result === null) return;
+        // Buy chest using TCP protocol
+        const response = await this.#user.server2.tcp.SendAndWait({
+            action: 'buy-random-chest',
+            rarity: chest.Rarity
+        });
 
-        // Check error
-        if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
+        // Check for connection errors
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'buy-random-chest'
+        ) {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return;
+        }
+
+        // Handle response
+        if (response.result === 'not-enough-ox') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
+            return;
+        }
+
+        if (response.result === 'invalid-rarity') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return;
+        }
+
+        if (response.result !== 'ok' || !response.newItem) {
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
@@ -180,13 +220,12 @@ class Shop extends IUserClass {
         }
 
         // Update Ox amount
-        if (result.hasOwnProperty('ox')) {
-            this.#user.informations.ox.Set(result['ox']);
+        if (response.ox !== undefined) {
+            this.#user.informations.ox.Set(response.ox);
         }
 
         // Update inventory
-        const newItem = result['newItem'];
-        this.#user.inventory.stuffs.push(newItem);
+        this.#user.inventory.stuffs.push(response.newItem);
 
         // Save inventory
         this.#user.SaveLocal();
@@ -197,7 +236,7 @@ class Shop extends IUserClass {
         // Show chest opening
         this.#user.interface.ChangePage('chestreward', {
             args: {
-                itemID: newItem['ItemID'],
+                itemID: response.newItem.ItemID,
                 chestRarity: chest.Rarity,
                 callback: this.#user.interface.BackHandle
             },
@@ -210,7 +249,7 @@ class Shop extends IUserClass {
         const lang = langManager.curr['shop'];
         const price = chest.PriceDiscount < 0 ? chest.PriceOriginal : chest.PriceDiscount;
 
-        // Check Ox Amount
+        // Check Ox Amount (local validation)
         if (this.#user.informations.ox.Get() < price) {
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
@@ -222,16 +261,65 @@ class Shop extends IUserClass {
             return;
         }
 
-        // Buy chest
-        const data = {
+        // Buy chest using TCP protocol
+        const response = await this.#user.server2.tcp.SendAndWait({
+            action: 'buy-targeted-chest',
             rarity: chest.Rarity,
             slot: chest.Slot
-        };
-        const result = await this.#user.server.Request('buyTargetedChest', data);
-        if (result === null) return;
+        });
 
-        // Check error
-        if (result['status'] !== 'ok' || !result.hasOwnProperty('newItem')) {
+        // Check for connection errors
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'buy-targeted-chest'
+        ) {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return;
+        }
+
+        // Handle response
+        if (response.result === 'not-enough-ox') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
+            return;
+        }
+
+        if (response.result === 'invalid-rarity' || response.result === 'invalid-slot') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return;
+        }
+
+        if (response.result === 'no-items-available') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return;
+        }
+
+        if (response.result !== 'ok' || !response.newItem) {
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
@@ -243,13 +331,12 @@ class Shop extends IUserClass {
         }
 
         // Update Ox amount
-        if (result.hasOwnProperty('ox')) {
-            this.#user.informations.ox.Set(result['ox']);
+        if (response.ox !== undefined) {
+            this.#user.informations.ox.Set(response.ox);
         }
 
         // Update inventory
-        const newItem = result['newItem'];
-        this.#user.inventory.stuffs.push(newItem);
+        this.#user.inventory.stuffs.push(response.newItem);
 
         // Save inventory
         this.#user.SaveLocal();
@@ -260,7 +347,7 @@ class Shop extends IUserClass {
         // Show chest opening
         this.#user.interface.ChangePage('chestreward', {
             args: {
-                itemID: newItem['ItemID'],
+                itemID: response.newItem.ItemID,
                 chestRarity: chest.Rarity,
                 callback: this.#user.interface.BackHandle
             },

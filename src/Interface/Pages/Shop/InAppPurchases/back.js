@@ -5,7 +5,6 @@ import {
     endConnection,
     requestPurchase,
     fetchProducts,
-    validateReceipt,
     finishTransaction,
     purchaseUpdatedListener,
     purchaseErrorListener,
@@ -221,27 +220,64 @@ class BackShopIAP extends React.Component {
      * @returns {Promise<number | false>} Added ox count or false if error
      */
     handlePurchase = async (purchase) => {
-        const transactionReceipt = await validateReceipt({
-            sku: purchase.productId
-            // androidOptions: {
-            //     productToken: purchase.purchaseToken ?? '',
-            //     packageName: '',
-            //     accessToken: ''
-            // }
+        if (Platform.OS !== 'android' && Platform.OS !== 'ios') {
+            user.interface.console?.AddLog('error', '[IAP] Unsupported platform', Platform.OS);
+            return false;
+        }
+
+        // Get purchase token based on platform
+        // Android: purchaseToken, iOS: transactionId (receipt is base64 encoded in purchase object)
+        const purchaseToken =
+            Platform.OS === 'android' ? (purchase.purchaseToken ?? '') : (purchase.transactionId ?? '');
+
+        // Validate required data
+        if (!purchase.transactionId || !purchaseToken) {
+            user.interface.console?.AddLog('error', '[IAP] Missing transaction data', {
+                hasTransactionId: !!purchase.transactionId,
+                hasPurchaseToken: !!purchaseToken
+            });
+            return false;
+        }
+
+        // Send purchase to server for validation
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'buy-iap',
+            sku: purchase.productId,
+            platform: Platform.OS,
+            transactionId: purchase.transactionId,
+            purchaseToken: purchaseToken
         });
 
-        transactionReceipt;
-        return false;
+        // Handle connection errors
+        if (response === 'interrupted' || response === 'not-sent' || response === 'timeout') {
+            user.interface.console?.AddLog('error', '[IAP] Server connection error', response);
+            return false;
+        }
 
-        // TODO: Re-enable server validation when server IAP is ready
-        // const result = await user.server2.tcp.SendAndWait('buyOx', { transactionReceipt });
-        // if (result === null || result?.status !== 'ok') {
-        //     return false;
-        // }
+        // Handle server response
+        if (response.status !== 'buy-iap') {
+            user.interface.console?.AddLog('error', '[IAP] Unexpected server response', response);
+            return false;
+        }
 
-        // user.informations.purchasedCount++;
-        // user.informations.ox.Set(result.ox);
-        // return result.addedOx;
+        // Handle specific error cases
+        if (response.result !== 'ok') {
+            user.interface.console?.AddLog('error', '[IAP] Server rejected purchase', {
+                result: response.result,
+                sku: purchase.productId
+            });
+            return false;
+        }
+
+        // Update local state with server values
+        if (typeof response.ox === 'number') {
+            user.informations.ox.Set(response.ox);
+        }
+
+        user.informations.purchasedCount++;
+        user.SaveLocal();
+
+        return response.addedOx ?? 0;
     };
 
     /** @param {PurchaseError} error */

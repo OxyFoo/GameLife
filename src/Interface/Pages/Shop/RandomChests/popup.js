@@ -12,15 +12,16 @@ import { Text, Button } from 'Interface/Components';
  */
 
 /**
- * @param {BuyableRandomChest} item
- * @param {() => void} closePopup
+ * @param {Object} props
+ * @param {BuyableRandomChest} props.item
+ * @param {() => void} props.closePopup
  */
-function renderBuyPopup(item, closePopup) {
+function BuyPopup({ item, closePopup }) {
     const lang = langManager.curr['shop']['randomChests'];
-    let [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const price = item.PriceDiscount < 0 ? item.PriceOriginal : item.PriceDiscount;
-    const itemName = lang[item.LangName];
+    const itemName = lang['chest-random'][item.Rarity];
     const itemDescription = lang['popup-chest-text'].replace('{}', itemName).replace('{}', price.toString());
     const buttonText = lang['popup-chest-button'].replace('{}', price.toString());
 
@@ -44,4 +45,4 @@ function renderBuyPopup(item, closePopup) {
     );
 }
 
-export { renderBuyPopup };
+export { BuyPopup };

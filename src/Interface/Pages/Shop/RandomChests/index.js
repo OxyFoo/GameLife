@@ -7,8 +7,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Button, Text } from 'Interface/Components';
+import { Button, Icon, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').BuyableRandomChest} BuyableRandomItem
@@ -71,7 +70,7 @@ class ShopItems extends BackShopItems {
             return (
                 <View style={styles.itemPrice}>
                     <Text style={styles.itemPriceOx}>{item.PriceOriginal.toString()}</Text>
-                    <Image style={styles.itemOxImage} source={IMG_OX} />
+                    <Icon icon='ox' size={16} />
                 </View>
             );
         }
@@ -83,7 +82,7 @@ class ShopItems extends BackShopItems {
                     <Text style={styles.itemPriceOxEditedOld}>{item.PriceOriginal.toString()}</Text>
                     <Text style={styles.itemPriceOxEditedNew}>{item.PriceDiscount.toString()}</Text>
                 </View>
-                <Image style={styles.itemOxImageEdited} source={IMG_OX} />
+                <Icon icon='ox' style={styles.itemOxImageEdited} size={16} />
             </View>
         );
     };

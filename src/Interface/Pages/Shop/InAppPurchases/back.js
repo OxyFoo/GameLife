@@ -140,6 +140,26 @@ class BackShopIAP extends React.Component {
         this.setState({ iapItems });
     };
 
+    /** @param {string} sku Product ID */
+    purchase = (sku) => {
+        if (Platform.OS === 'ios' || Platform.OS === 'android') {
+            return requestPurchase({
+                type: 'in-app',
+                request: {
+                    android: {
+                        skus: [sku]
+                    },
+                    ios: {
+                        sku: sku
+                    }
+                }
+            });
+        } else {
+            this.handleError('wrong-platform', 'Platform not supported', Platform.OS);
+            return null;
+        }
+    };
+
     /** @param {Purchase} purchase */
     purchaseDidUpdate = async (purchase) => {
         if (purchase.purchaseState === 'pending') {
@@ -196,35 +216,6 @@ class BackShopIAP extends React.Component {
         });
     };
 
-    /** @param {PurchaseError} error */
-    purchaseDidError = (error) => {
-        if (error.code === ErrorCode.UserCancelled) {
-            return;
-        }
-
-        this.handleError('purchase-error', 'Error purchasing item', error);
-    };
-
-    /** @param {string} sku Product ID */
-    purchase = (sku) => {
-        if (Platform.OS === 'ios' || Platform.OS === 'android') {
-            return requestPurchase({
-                type: 'in-app',
-                request: {
-                    android: {
-                        skus: [sku]
-                    },
-                    ios: {
-                        sku: sku
-                    }
-                }
-            });
-        } else {
-            this.handleError('wrong-platform', 'Platform not supported', Platform.OS);
-            return null;
-        }
-    };
-
     /**
      * @param {Purchase} purchase
      * @returns {Promise<number | false>} Added ox count or false if error
@@ -251,6 +242,15 @@ class BackShopIAP extends React.Component {
         // user.informations.purchasedCount++;
         // user.informations.ox.Set(result.ox);
         // return result.addedOx;
+    };
+
+    /** @param {PurchaseError} error */
+    purchaseDidError = (error) => {
+        if (error.code === ErrorCode.UserCancelled) {
+            return;
+        }
+
+        this.handleError('purchase-error', 'Error purchasing item', error);
     };
 
     /**

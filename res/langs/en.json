@@ -776,6 +776,8 @@
     },
 
     "shop": {
+        "loading": "Loading...",
+
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
 

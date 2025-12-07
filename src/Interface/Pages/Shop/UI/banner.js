@@ -3,31 +3,34 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Icon, Text } from 'Interface/Components';
 
+/**
+ * @typedef {object} BannerProps
+ * @property {string} id Used to call onPress with id
+ * @property {string} title
+ * @property {(id: string) => void} [onPress]
+ */
+
+/** @type {BannerProps} */
 const BannerProps = {
-    /** @type {string} Used to call onPress with id */
     id: '',
-
-    /** @type {string} */
     title: '',
-
-    /** @type {(id: string) => void} */
-    onPress: () => {}
+    onPress: undefined
 };
 
 class Banner extends React.Component {
     onPress = () => {
         const { id, onPress } = this.props;
-        onPress(id);
+        onPress?.(id);
     };
 
     render() {
-        const { id, title } = this.props;
+        const { id, title, onPress } = this.props;
 
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>{title}</Text>
 
-                {id !== '' && (
+                {id !== '' && !!onPress && (
                     <Button style={styles.helpButton} appearance='uniform' color='transparent' onPress={this.onPress}>
                         <Icon icon='info-circle-outline' color='main1' size={28} />
                     </Button>

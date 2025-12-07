@@ -59,6 +59,21 @@ class App extends React.Component {
         }
     }
 
+    /**
+     * @param {Error} error
+     * @param {import('react').ErrorInfo} info
+     */
+    componentDidCatch(error, info) {
+        user.interface.console?.AddLog('error', 'Uncaught error in App component:', error, info);
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: 'Uncaught error',
+                message: `An unexpected error occurred:\n\n${error.toString()}\n\nInfo:\n${info.componentStack}`
+            }
+        });
+    }
+
     componentWillUnmount() {
         // Remove the app state listener
         this.appStateSubscription?.remove();

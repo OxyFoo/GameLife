@@ -68,13 +68,7 @@ const styles = StyleSheet.create({
     itemPriceOxEditedNew: {
         marginRight: 4
     },
-    itemOxImage: {
-        width: 16,
-        aspectRatio: 1
-    },
     itemOxImageEdited: {
-        width: 16,
-        aspectRatio: 1,
         marginTop: 24
     },
 

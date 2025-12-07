@@ -6,20 +6,23 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { Character } from 'Interface/Components';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 
 /**
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('Data/App/Items').ItemID} ItemID
  * @typedef {import('Class/Rewards').Rarities} Rarities
+ * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
+ * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
  *
- * @typedef {Object} ChestRewardProps
+ * @typedef {object} ChestRewardProps
  * @property {Rarities} chestRarity
  * @property {ItemID} itemID
  * @property {() => void} callback
  *
- * @typedef {Object} OxRewardProps
+ * @typedef {object} OxRewardProps
  * @property {'ox'} chestRarity
  * @property {number} oxCount
  * @property {() => void} callback
@@ -43,7 +46,7 @@ class BackChestReward extends PageBase {
         animItem: new Animated.Value(0),
         animInteractions: new Animated.Value(0),
 
-        layoutFrameOx: {
+        layoutFrame: {
             width: 0,
             height: 0
         }
@@ -51,8 +54,14 @@ class BackChestReward extends PageBase {
 
     buttonEnabled = false;
 
-    /** @type {Character | null} */
-    character = null;
+    /** @type {ItemConfig[]} */
+    avatarItems = [];
+    /** @type {CharacterContainerSize | null} */
+    avatarPosition = null;
+    /** @type {AvatarName} */
+    avatarBody = 'human_00';
+    /** @type {string} */
+    avatarBodyColor = BODY_COLORS[0];
     oxCount = 0;
     callback = () => {};
 
@@ -65,10 +74,6 @@ class BackChestReward extends PageBase {
 
         if (props.args.chestRarity === undefined || props.args.callback === undefined) {
             throw new Error('[ChestReward] Missing arguments');
-        }
-
-        if (user.character === null) {
-            throw new Error('[ChestReward] User character is null');
         }
 
         /** @type {ChestRewardArgs['chestRarity']} */
@@ -94,9 +99,12 @@ class BackChestReward extends PageBase {
         this.text = langManager.GetText(item.Name);
         this.textSecondary = langManager.curr['rarities'][item.Rarity];
         this.rarityColor = themeManager.GetRariryColors(item.Rarity)[0];
-        this.character = new Character('character-reward', 'skin_01', 0);
-        this.character.SetEquipment([itemID.toString()]);
-        this.characterSize = dataManager.items.GetContainerSize(item.Slot);
+
+        // Configuration du nouvel avatar
+        this.avatarBody = user.inventory.avatar.skin || 'human_00';
+        this.avatarBodyColor = BODY_COLORS[user.inventory.avatar.skinColor] || BODY_COLORS[0];
+        this.avatarItems = this.getPreviewItems(item);
+        this.avatarPosition = dataManager.items.GetContainerSize(item.Slot);
         this.callback = props.args.callback;
     }
 
@@ -117,14 +125,35 @@ class BackChestReward extends PageBase {
     }
 
     /** @param {LayoutChangeEvent} layout */
-    onOxLayout = (layout) => {
+    onFrameLayout = (layout) => {
         const { width, height } = layout.nativeEvent.layout;
-        this.setState({ layoutFrameOx: { width, height } });
+        this.setState({ layoutFrame: { width, height } });
     };
 
     onPress = () => {
         if (this.buttonEnabled === false) return;
         this.callback?.();
+    };
+
+    /**
+     * Get items to display in avatar preview
+     * For 'top' items, also show the user's bottom item
+     * @param {import('@oxyfoo/gamelife-types/Data/App/Items').Item} item
+     * @returns {ItemConfig[]}
+     */
+    getPreviewItems = (item) => {
+        /** @type {ItemConfig[]} */
+        const baseItems = [{ id: item.ID }];
+
+        // For 'top' items, also show bottom item (like in avatar editor slots)
+        if (item.Slot === 'top') {
+            const bottomStuffID = user.inventory.avatar.bottom;
+            const bottomStuff = user.inventory.GetStuffByID(bottomStuffID);
+            const bottomItemID = bottomStuff ? bottomStuff.ItemID : 'bottom_00';
+            baseItems.push({ id: bottomItemID });
+        }
+
+        return baseItems;
     };
 }
 

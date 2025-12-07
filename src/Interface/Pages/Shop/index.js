@@ -29,7 +29,7 @@ class Shop extends BackShop {
             return this.renderLoading();
         }
 
-        const Help = () => {};
+        const Help = undefined; //() => {};
 
         return (
             <ScrollView style={styles.page} ref={this.refPage}>
@@ -59,9 +59,10 @@ class Shop extends BackShop {
     }
 
     renderLoading = () => {
+        const lang = langManager.curr['shop'];
         return (
             <View style={styles.page}>
-                <Text>Loading...</Text>
+                <Text>{lang['loading']}</Text>
             </View>
         );
     };
@@ -80,6 +81,9 @@ class Shop extends BackShop {
         );
     };
 
+    /**
+     * Render shop for testers, with all IAPs only
+     */
     renderForTesters = () => {
         const lang = langManager.curr['shop'];
 

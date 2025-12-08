@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { View, FlatList, useWindowDimensions } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import ItemDetailPanel from './ItemDetailPanel';
@@ -221,6 +222,9 @@ const InventoryPanel = ({
             const slotPos = slotPreview.pos || { x: 0, y: 0 };
             const slotScale = slotPreview.scale || 1;
 
+            // Get rarity colors for the item
+            const rarityColors = themeManager.GetRariryColors(ownedItem.item.Rarity);
+
             return (
                 <Button
                     style={styles.itemButton}
@@ -287,6 +291,12 @@ const InventoryPanel = ({
                             portraitMode={ownedItem.slot === 'hair'}
                         />
                     </AvatarFrame>
+                    <LinearGradient
+                        style={styles.itemRarityBar}
+                        colors={rarityColors}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                    />
                 </Button>
             );
         },

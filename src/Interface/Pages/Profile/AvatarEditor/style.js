@@ -42,6 +42,23 @@ const styles = StyleSheet.create({
         width: 64,
         height: 64,
         borderRadius: 6
+    },
+    oxContainer: {
+        position: 'absolute',
+        top: -40,
+        left: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        backgroundColor: '#38406573',
+        borderRadius: 8
+    },
+    oxText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginRight: 6
     }
 });
 

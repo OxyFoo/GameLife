@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
+import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback, useEffect } from 'react';
 import { Animated, Dimensions, View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
@@ -21,6 +21,7 @@ import langManager from 'Managers/LangManager';
 
 import { PageHeader } from 'Interface/Widgets';
 import { SpringAnimation } from 'Utils/Animations';
+import { Icon, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').InventorySlotType} InventorySlotType
@@ -59,7 +60,18 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     const [bodyColor, setBodyColor] = useState(() => getBodyColorHexFromUser());
     const [bodyType, setBodyType] = useState(() => /** @type {AvatarName} */ (getBodyTypeFromUser()));
     const [selectedSlot, setSelectedSlot] = useState(/** @type {InventorySlotType} */ ('hair'));
+    const [oxAmount, setOxAmount] = useState(() => user.informations.ox.Get());
     const inventoryPanelRef = useRef(/** @type {InventoryPanelRef | null} */ (null));
+
+    // Listen to Ox changes
+    useEffect(() => {
+        const listener = user.informations.ox.AddListener((newOx) => {
+            setOxAmount(newOx);
+        });
+        return () => {
+            user.informations.ox.RemoveListener(listener);
+        };
+    }, []);
 
     // Apply body color to face item
     const avatarItemsWithFaceColor = avatarItems.map((item) =>
@@ -343,6 +355,12 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                 style={[styles.slotsContainer, uiEditorAvatarOpacity]}
                 pointerEvents={editMode ? 'auto' : 'none'}
             >
+                {/** Ox display - top left corner */}
+                <View style={styles.oxContainer}>
+                    <Text style={styles.oxText}>{oxAmount.toString()}</Text>
+                    <Icon icon='ox' size={24} />
+                </View>
+
                 {/** Left slots: Avatar, Body color */}
                 <View>
                     <SlotButton

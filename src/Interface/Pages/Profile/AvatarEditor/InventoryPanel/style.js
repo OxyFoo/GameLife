@@ -32,6 +32,15 @@ const styles = StyleSheet.create({
     colorSquareSelected: {
         borderColor: '#ffffff',
         borderWidth: 3
+    },
+    itemRarityBar: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 3,
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6
     }
 });
 

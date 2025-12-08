@@ -16,15 +16,19 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  */
 
+/** Sell price factor - player gets 75% of item value when selling */
+const SELL_PRICE_FACTOR = 0.75;
+
 /**
  * @typedef {object} ItemDetailPanelProps
+ * @property {number} stuffID - The stuff ID (inventory item ID)
  * @property {ItemName} itemName - The item to display details for
  * @property {ItemSlot} slot - The slot type of the item
  * @property {AvatarName} bodyType - Current body type for preview
  * @property {string} bodyColor - Current body color for preview
  * @property {boolean} isEquipped - Whether the item is currently equipped
  * @property {(itemName: ItemName) => void} onEquip - Callback when equip button is pressed
- * @property {(itemName: ItemName) => void} onSell - Callback when sell button is pressed
+ * @property {(stuffID: number) => void} onSell - Callback when sell button is pressed
  * @property {() => void} onClose - Callback to close the panel
  */
 
@@ -32,7 +36,7 @@ import { Text, Button } from 'Interface/Components';
  * Panel showing item details with equip/sell buttons
  * @param {ItemDetailPanelProps} props
  */
-const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEquip, onSell, onClose }) => {
+const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquipped, onEquip, onSell, onClose }) => {
     const frameSize = 120;
     const slotPreview = dataManager.items.GetContainerSize(slot);
     const previewPos = slotPreview.pos || { x: 0, y: 0 };
@@ -41,6 +45,7 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
     const itemData = dataManager.items.GetByID(/** @type {ItemID} */ (itemName));
     const itemTitle = itemData ? langManager.GetText(itemData.Name) : itemName;
     const itemDescription = itemData ? langManager.GetText(itemData.Description) : `Item ${slot}`;
+    const sellPrice = itemData ? Math.ceil(itemData.Value * SELL_PRICE_FACTOR) : 0;
 
     const handleEquip = () => {
         onEquip(itemName);
@@ -48,8 +53,9 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
     };
 
     const handleSell = () => {
-        onSell(itemName);
-        onClose();
+        // Guard: cannot sell equipped items
+        if (isEquipped) return;
+        onSell(stuffID);
     };
 
     return (
@@ -74,30 +80,18 @@ const ItemDetailPanel = ({ itemName, slot, bodyType, bodyColor, isEquipped, onEq
                 <Text style={styles.description}>{itemDescription}</Text>
             </View>
 
-            {/* Action Buttons */}
-            <View style={styles.buttonsContainer}>
-                <Button
-                    style={styles.button}
-                    appearance='uniform'
-                    color={isEquipped ? 'transparent' : 'ground2'}
-                    disabled={isEquipped}
-                    onPress={handleSell}
-                >
-                    <Text style={[styles.buttonText, isEquipped && styles.buttonTextDisabled]}>Vendre</Text>
-                </Button>
+            {/* Action Buttons - hidden when equipped */}
+            {!isEquipped && (
+                <View style={styles.buttonsContainer}>
+                    <Button style={styles.button} appearance='uniform' color='ground2' onPress={handleSell}>
+                        <Text style={styles.buttonText}>{`Vendre (${sellPrice} Ox)`}</Text>
+                    </Button>
 
-                <Button
-                    style={styles.button}
-                    appearance='uniform'
-                    color={isEquipped ? 'transparent' : 'main1'}
-                    disabled={isEquipped}
-                    onPress={handleEquip}
-                >
-                    <Text style={[styles.buttonText, isEquipped && styles.buttonTextDisabled]}>
-                        {isEquipped ? 'Équipé' : 'Équiper'}
-                    </Text>
-                </Button>
-            </View>
+                    <Button style={styles.button} appearance='uniform' color='main1' onPress={handleEquip}>
+                        <Text style={styles.buttonText}>Équiper</Text>
+                    </Button>
+                </View>
+            )}
         </View>
     );
 };

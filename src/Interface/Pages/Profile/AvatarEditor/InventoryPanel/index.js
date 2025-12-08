@@ -23,7 +23,7 @@ import { AVATAR_BODIES, BODY_COLORS } from '../avatarConstants';
  * @typedef {{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}} DisplayedItem
  * @typedef {{slot: 'bodyColor', color: string}} BodyColorItem
  * @typedef {{slot: 'avatar', bodyType: AvatarName}} AvatarBodyItem
- * @typedef {{changeSlot: (slot: InventorySlotType) => void}} InventoryPanelRef
+ * @typedef {{changeSlot: (slot: InventorySlotType) => void, refreshInventory: () => void}} InventoryPanelRef
  */
 
 /**
@@ -36,7 +36,7 @@ import { AVATAR_BODIES, BODY_COLORS } from '../avatarConstants';
  * @param {(itemId: ItemName) => void} [props.onItemSelect] - Callback called when selecting an item
  * @param {(color: string) => void} [props.onBodyColorSelect] - Callback called when selecting a body color
  * @param {(body: AvatarName) => void} [props.onBodyTypeSelect] - Callback called when selecting a body type
- * @param {(itemId: ItemName) => void} [props.onItemSell] - Callback called when selling an item
+ * @param {(stuffID: number) => void} [props.onItemSell] - Callback called when selling an item
  * @param {React.RefObject<InventoryPanelRef | null>} [props.forwardedRef] - Ref to expose changeSlot method
  */
 const InventoryPanel = ({
@@ -57,28 +57,13 @@ const InventoryPanel = ({
     const [localAvatarItems, setLocalAvatarItems] = useState(avatarItems);
     const [selectedBody, setSelectedBody] = useState(bodyType);
 
-    // Expose changeSlot function to parent
-    React.useImperativeHandle(forwardedRef, () => ({
-        /**
-         * @param {InventorySlotType} slot
-         */
-        changeSlot: (slot) => {
-            setSelectedSlot(slot);
-            onSlotChange?.(slot);
-        }
-    }));
-
     /**
-     * Build user-owned items grouped by slot
+     * Build user-owned items grouped by slot from current inventory
+     * @returns {Record<ItemSlot, OwnedSlotItem[]>}
      */
-    const ownedItemsBySlot = useMemo(() => {
+    const buildOwnedItemsBySlot = useCallback(() => {
         /** @type {Record<ItemSlot, OwnedSlotItem[]>} */
-        const grouped = {
-            hair: [],
-            top: [],
-            bottom: [],
-            shoes: []
-        };
+        const grouped = { hair: [], top: [], bottom: [], shoes: [] };
 
         EQUIPMENT_SLOTS.forEach((slot) => {
             const slotItems = [];
@@ -99,6 +84,25 @@ const InventoryPanel = ({
 
         return grouped;
     }, []);
+
+    const [ownedItemsBySlot, setOwnedItemsBySlot] = useState(buildOwnedItemsBySlot);
+
+    // Expose changeSlot and refreshInventory functions to parent
+    React.useImperativeHandle(forwardedRef, () => ({
+        /**
+         * @param {InventorySlotType} slot
+         */
+        changeSlot: (slot) => {
+            setSelectedSlot(slot);
+            onSlotChange?.(slot);
+        },
+        /**
+         * Refresh inventory items from user data (after selling)
+         */
+        refreshInventory: () => {
+            setOwnedItemsBySlot(buildOwnedItemsBySlot());
+        }
+    }));
 
     /**
      * Retrieves the items to display according to the selected slot
@@ -211,7 +215,8 @@ const InventoryPanel = ({
 
             // Regular avatar item owned by the user
             const ownedItem = /** @type {OwnedSlotItem} */ (item);
-            const isSelected = localAvatarItems.some((avatarItem) => avatarItem.id === ownedItem.itemName);
+            const equippedStuffID = user.inventory.avatar[ownedItem.slot];
+            const isSelected = ownedItem.stuffID === equippedStuffID;
             const slotPreview = dataManager.items.GetContainerSize(ownedItem.slot);
             const slotPos = slotPreview.pos || { x: 0, y: 0 };
             const slotScale = slotPreview.scale || 1;
@@ -228,6 +233,7 @@ const InventoryPanel = ({
                             priority: true,
                             content: (
                                 <ItemDetailPanel
+                                    stuffID={ownedItem.stuffID}
                                     itemName={ownedItem.itemName}
                                     slot={ownedItem.slot}
                                     bodyType={selectedBody}
@@ -251,8 +257,8 @@ const InventoryPanel = ({
                                         // TODO: TEMP ?
                                         if (ownedItem.slot === 'bottom') setTmpBottomItem(itemId);
                                     }}
-                                    onSell={(itemId) => {
-                                        onItemSell?.(itemId);
+                                    onSell={(stuffID) => {
+                                        onItemSell?.(stuffID);
                                     }}
                                     onClose={() => {
                                         user.interface.bottomPanel?.Close();

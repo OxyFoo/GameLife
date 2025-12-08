@@ -14,7 +14,9 @@ import {
 import { getAvatarPositionForCategory, getDefaultAvatarPosition } from './avatarConstants';
 import InventoryPanel from './InventoryPanel';
 import SlotButton from './SlotButton';
+import SellPopup from './SellPopup';
 import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { PageHeader } from 'Interface/Widgets';
@@ -134,13 +136,70 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
 
     /**
      * Handle item sell
-     * @param {string} itemId - The item id to sell
+     * @param {number} stuffID - The stuff ID to sell
      */
     const handleItemSell = useCallback(
-        /** @param {string} itemId */
-        (itemId) => {
-            // TODO: Implement sell logic (call backend, update inventory, etc.)
-            console.log('Selling item:', itemId);
+        /** @param {number} stuffID */
+        async (stuffID) => {
+            const lang = langManager.curr['profile-avatar'];
+
+            // Check if item is equipped - cannot sell equipped items
+            const equippedStuffs = user.inventory.GetEquipments();
+            if (equippedStuffs.includes(stuffID)) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-isequipped-title'],
+                        message: lang['alert-isequipped-text']
+                    }
+                });
+                return;
+            }
+
+            // Get stuff info
+            const stuff = user.inventory.GetStuffByID(stuffID);
+            if (stuff === null) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-sellfailed-title'],
+                        message: lang['alert-sellfailed-text']
+                    }
+                });
+                return;
+            }
+
+            // Get item info for price calculation
+            const item = dataManager.items.GetByID(stuff.ItemID);
+            if (item === null) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-sellfailed-title'],
+                        message: lang['alert-sellfailed-text']
+                    }
+                });
+                return;
+            }
+
+            // Open sell popup with loading support
+            user.interface.popup?.Open({
+                content: (
+                    <SellPopup
+                        stuffID={stuffID}
+                        item={item}
+                        onSold={() => {
+                            // Refresh inventory panel to remove sold item
+                            inventoryPanelRef.current?.refreshInventory();
+                            // Close the priority panel (ItemDetailPanel) after successful sale
+                            user.interface.bottomPanel?.Close();
+                            // Refresh avatar items
+                            setAvatarItems(getInitialAvatarItems());
+                        }}
+                    />
+                ),
+                cancelable: true
+            });
         },
         []
     );

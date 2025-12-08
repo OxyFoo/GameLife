@@ -252,6 +252,44 @@ class Inventory extends IUserData {
         this.avatar.skin = skinID;
         this.avatarEdited = true;
     };
+
+    /**
+     * Sell a stuff item from inventory
+     * @param {number} stuffID - The stuff ID to sell (inventory item ID)
+     * @returns {Promise<'ok' | 'invalid-item' | 'item-not-found' | 'item-equipped' | 'error'>}
+     */
+    SellStuff = async (stuffID) => {
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'sell-stuff',
+            stuffID: stuffID
+        });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'sell-stuff'
+        ) {
+            this.user.interface.console?.AddLog('error', `[Inventory] Failed to sell stuff (${response})`);
+            return 'error';
+        }
+
+        if (response.result !== 'ok') {
+            this.user.interface.console?.AddLog('warn', `[Inventory] Sell stuff failed: ${response.result}`);
+            return response.result;
+        }
+
+        // Update local inventory
+        this.stuffs = this.stuffs.filter((stuff) => stuff.ID !== stuffID);
+
+        // Update Ox amount
+        if (typeof response.ox === 'number') {
+            this.user.informations.ox.Set(response.ox);
+        }
+
+        this.user.interface.console?.AddLog('info', `[Inventory] Stuff ${stuffID} sold successfully`);
+        return 'ok';
+    };
 }
 
 export default Inventory;

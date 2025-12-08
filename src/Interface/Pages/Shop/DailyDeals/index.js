@@ -38,7 +38,7 @@ class ShopDailyDeals extends BackShopItems {
 
     /** @type {ListRenderItemBuyableItem} */
     renderItem = ({ item }) => {
-        const disabled = user.shop.buyToday.items.includes(item.ID.toString());
+        const disabled = this.isItemPurchased(item.ID);
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
 

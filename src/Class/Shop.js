@@ -356,6 +356,115 @@ class Shop extends IUserClass {
     };
 
     /**
+     * Buy a daily deal item
+     * @param {string} itemID - The item ID to buy
+     * @param {number} price - The item price (already with price factor applied)
+     * @returns {Promise<boolean>} - True if purchase was successful
+     */
+    BuyDailyDeal = async (itemID, price) => {
+        const lang = langManager.curr['shop'];
+
+        // Check Ox Amount (local validation)
+        if (this.#user.informations.ox.Get() < price) {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
+            return false;
+        }
+
+        // Buy item using TCP protocol
+        const response = await this.#user.server2.tcp.SendAndWait({
+            action: 'buy-daily-deal',
+            itemID: itemID
+        });
+
+        // Check for connection errors
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'buy-daily-deal'
+        ) {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return false;
+        }
+
+        // Handle response
+        if (response.result === 'not-enough-ox') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['popup-notenoughox-title'],
+                    message: lang['popup-notenoughox-message']
+                }
+            });
+            return false;
+        }
+
+        if (response.result === 'already-purchased') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return false;
+        }
+
+        if (response.result === 'invalid-item' || response.result === 'item-not-available') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return false;
+        }
+
+        if (response.result !== 'ok' || !response.newItem) {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-failed-title'],
+                    message: lang['reward-failed-message']
+                }
+            });
+            return false;
+        }
+
+        // Update Ox amount
+        if (response.ox !== undefined) {
+            this.#user.informations.ox.Set(response.ox);
+        }
+
+        // Update inventory
+        this.#user.inventory.stuffs.push(response.newItem);
+
+        // Mark as purchased today
+        this.buyToday.items.push(itemID);
+
+        // Save inventory
+        this.#user.SaveLocal();
+
+        // Update mission
+        this.#user.missions.SetMissionState('mission3', 'completed');
+
+        return true;
+    };
+
+    /**
      * @description Get shop content (daily deals and chest stats)
      * @returns {Promise<{
      *   dailyDeals: string[],

@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { CountdownTimer } from './countdowntimer';
 import { Button, Icon, Text } from 'Interface/Components';
 
 /**
  * @typedef {object} BannerProps
  * @property {string} id Used to call onPress with id
  * @property {string} title
+ * @property {boolean} [showTimer] Whether to show the countdown timer
  * @property {(id: string) => void} [onPress]
  */
 
@@ -14,6 +16,7 @@ import { Button, Icon, Text } from 'Interface/Components';
 const BannerProps = {
     id: '',
     title: '',
+    showTimer: false,
     onPress: undefined
 };
 
@@ -24,11 +27,14 @@ class Banner extends React.Component {
     };
 
     render() {
-        const { id, title, onPress } = this.props;
+        const { id, title, showTimer, onPress } = this.props;
 
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>{title}</Text>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>{title}</Text>
+                    {showTimer && <CountdownTimer />}
+                </View>
 
                 {id !== '' && !!onPress && (
                     <Button style={styles.helpButton} appearance='uniform' color='transparent' onPress={this.onPress}>
@@ -49,6 +55,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 12
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12
     },
     title: {
         fontSize: 30,

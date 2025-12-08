@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderItemPopup } from './popup';
+import { BuyPopup } from './popup';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
@@ -38,7 +38,9 @@ const BackShopItemsProps = {
 class BackShopItems extends React.Component {
     state = {
         /** @type {BuyableItem[]} */
-        buyableItems: []
+        buyableItems: [],
+        /** @type {string[]} Items purchased in this session (for immediate UI update) */
+        purchasedItems: [...user.shop.buyToday.items]
     };
 
     /** @param {BackShopItemsPropsType} props */
@@ -51,6 +53,25 @@ class BackShopItems extends React.Component {
             this.state.buyableItems = newItems;
         }
     }
+
+    /**
+     * Called when an item is purchased to update UI immediately
+     * @param {string} itemID
+     */
+    onItemPurchased = (itemID) => {
+        this.setState((/** @type {this['state']} */ prevState) => ({
+            purchasedItems: [...prevState.purchasedItems, itemID]
+        }));
+    };
+
+    /**
+     * Check if an item is purchased (either from server data or current session)
+     * @param {string} itemID
+     * @returns {boolean}
+     */
+    isItemPurchased = (itemID) => {
+        return this.state.purchasedItems.includes(itemID.toString());
+    };
 
     /**
      * Get items to display in item preview
@@ -109,7 +130,13 @@ class BackShopItems extends React.Component {
     /** @param {Item} item */
     openItemPopup = (item) => {
         user.interface.popup?.Open({
-            content: renderItemPopup.call(this, item)
+            content: (
+                <BuyPopup
+                    item={item}
+                    closePopup={user.interface.popup?.Close}
+                    onPurchased={() => this.onItemPurchased(item.ID)}
+                />
+            )
         });
     };
 }

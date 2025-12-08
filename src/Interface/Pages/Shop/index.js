@@ -33,12 +33,14 @@ class Shop extends BackShop {
 
         return (
             <ScrollView style={styles.page} ref={this.refPage}>
-                <ShopHeader ref={this.refHeader} style={styles.shopHeader} />
+                <ShopHeader ref={this.refHeader} style={styles.shopHeader} onScrollToIAP={this.scrollToIAP} />
 
                 <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} showTimer />
                 <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
 
-                <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
+                <View onLayout={(e) => (this.iapSectionY = e.nativeEvent.layout.y)}>
+                    <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
+                </View>
                 <ShopIAP ref={this.refIAP} />
 
                 {targetChestsStats !== null && (

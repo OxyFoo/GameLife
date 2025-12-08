@@ -17,9 +17,11 @@ import { Text, Button, Icon } from 'Interface/Components';
  * @typedef {import('Class/Ads').AdEventFunction} AdEventFunction
  */
 
+/** @type {{ style: StyleViewProp, onScrollToIAP?: () => void }} */
 const ShopHeaderPropTypes = {
     /** @type {StyleViewProp} */
-    style: {}
+    style: {},
+    onScrollToIAP: undefined
 };
 
 class ShopHeader extends React.Component {
@@ -101,8 +103,7 @@ class ShopHeader extends React.Component {
     openOxShop = () => {
         if (!user.server2.IsAuthenticated()) return;
 
-        // TODO: ???
-        // user.interface.GetCurrentPage()?.refPage?.GotoY(400);
+        this.props.onScrollToIAP?.();
     };
 
     /** @type {AdEventFunction} */

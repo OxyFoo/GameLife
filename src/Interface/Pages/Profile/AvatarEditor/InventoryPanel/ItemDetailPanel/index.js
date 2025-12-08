@@ -37,6 +37,7 @@ const SELL_PRICE_FACTOR = 0.75;
  * @param {ItemDetailPanelProps} props
  */
 const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquipped, onEquip, onSell, onClose }) => {
+    const lang = langManager.curr['profile-avatar'];
     const frameSize = 120;
     const slotPreview = dataManager.items.GetContainerSize(slot);
     const previewPos = slotPreview.pos || { x: 0, y: 0 };
@@ -46,6 +47,7 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
     const itemTitle = itemData ? langManager.GetText(itemData.Name) : itemName;
     const itemDescription = itemData ? langManager.GetText(itemData.Description) : `Item ${slot}`;
     const sellPrice = itemData ? Math.ceil(itemData.Value * SELL_PRICE_FACTOR) : 0;
+    const sellButtonText = lang['button-sell'].replace('{}', sellPrice.toString());
 
     const handleEquip = () => {
         onEquip(itemName);
@@ -84,11 +86,11 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
             {!isEquipped && (
                 <View style={styles.buttonsContainer}>
                     <Button style={styles.button} appearance='uniform' color='ground2' onPress={handleSell}>
-                        <Text style={styles.buttonText}>{`Vendre (${sellPrice} Ox)`}</Text>
+                        <Text style={styles.buttonText}>{sellButtonText}</Text>
                     </Button>
 
                     <Button style={styles.button} appearance='uniform' color='main1' onPress={handleEquip}>
-                        <Text style={styles.buttonText}>Équiper</Text>
+                        <Text style={styles.buttonText}>{lang['button-equip']}</Text>
                     </Button>
                 </View>
             )}

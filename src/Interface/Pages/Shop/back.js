@@ -51,6 +51,16 @@ class BackShop extends PageBase {
     /** @type {React.RefObject<ShopTargetedChests | null>} */
     refTargetedChests = React.createRef();
 
+    /** @type {number} */
+    iapSectionY = 0;
+
+    /**
+     * Scroll to the IAP section
+     */
+    scrollToIAP = () => {
+        this.refPage.current?.scrollTo({ y: this.iapSectionY, animated: true });
+    };
+
     componentDidMount() {
         user.shop
             .GetShopContent()

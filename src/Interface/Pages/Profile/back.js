@@ -114,6 +114,9 @@ class BackProfile extends PageBase {
 
         // Unset edit mode state
         this.setState({ editMode: false });
+
+        // Refresh avatar in UserHeader
+        user.interface.userHeader?.RefreshAvatar();
     };
 }
 

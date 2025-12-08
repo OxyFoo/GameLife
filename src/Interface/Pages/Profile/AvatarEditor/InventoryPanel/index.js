@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import ItemDetailPanel from './ItemDetailPanel';
-import { EQUIPMENT_SLOTS } from '../back';
+import { EQUIPMENT_SLOTS } from 'Data/User/Inventory';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';

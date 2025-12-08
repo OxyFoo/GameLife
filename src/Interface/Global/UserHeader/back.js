@@ -10,9 +10,9 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {import('Interface/Components').Frame} Frame
  * @typedef {import('Interface/Components').Button} Button
  * @typedef {import('Interface/Widgets').NotificationsInAppButton} NotificationsInAppButton
+ * @typedef {import('Data/User/Inventory').AvatarRenderData} AvatarRenderData
  *
  * @typedef {object} UserHeaderPropsType
  * @property {StyleProp} style
@@ -29,7 +29,9 @@ class UserHeaderBack extends React.Component {
         username: user.informations.username.Get(),
         titleID: user.informations.title.Get(),
         animPosY: new Animated.Value(-128),
-        showAvatar: false
+        showAvatar: false,
+        /** @type {AvatarRenderData | null} */
+        avatarData: null
     };
 
     /** @type {boolean} */
@@ -37,9 +39,6 @@ class UserHeaderBack extends React.Component {
 
     /** @type {React.RefObject<Button | null>} */
     refContainer = React.createRef();
-
-    /** @type {React.RefObject<Frame | null>} */
-    refFrame = React.createRef();
 
     /** @type {React.RefObject<NotificationsInAppButton | null>} */
     refBellButton = React.createRef();
@@ -53,6 +52,7 @@ class UserHeaderBack extends React.Component {
     componentDidMount() {
         this.nameListener = user.informations.username.AddListener(this.update);
         this.titleListener = user.informations.title.AddListener(this.update);
+        this.initAvatar();
     }
     componentWillUnmount() {
         user.informations.username.RemoveListener(this.nameListener);
@@ -89,7 +89,15 @@ class UserHeaderBack extends React.Component {
         });
     };
 
-    ShowAvatar = (value = false) => this.setState({ showAvatar: value });
+    initAvatar = () => {
+        const avatarData = user.inventory.GetAvatarRenderData();
+        this.setState({ showAvatar: true, avatarData });
+    };
+
+    /** Refresh avatar display - call this after inventory data is loaded */
+    RefreshAvatar = () => {
+        this.initAvatar();
+    };
 }
 
 UserHeaderBack.prototype.props = UserHeaderProps;

@@ -16,8 +16,7 @@ import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
  * @property {number} agi
  * @property {number} dex
  *
- * @typedef {'avatar' | 'bodyColor' | Slot} SlotType
- * @typedef {'all' | 'bodyColor' | Slot} InventorySlotType
+ * @typedef {'avatar' | 'bodyColor' | 'profile' | Slot} SlotType
  * @typedef {{ x?: number, y?: number, scale?: number }} AvatarPosition
  */
 
@@ -30,6 +29,10 @@ const avatarPreviewConfig = {
     bodyColor: {
         pos: { x: 0, y: 0 },
         scale: 1
+    },
+    profile: {
+        pos: { x: 0, y: -3.1 },
+        scale: 5
     },
     hair: {
         pos: { x: 0, y: -3.5 },
@@ -100,7 +103,7 @@ class Items extends IAppData {
 
     /**
      * Retrieve avatar preview configuration for a slot
-     * @param {'avatar' | 'bodyColor' | Slot | 'all'} slot
+     * @param {SlotType | 'all'} slot
      * @returns {CharacterContainerSize}
      */
     GetContainerSize = (slot = 'avatar') => {

@@ -1,6 +1,7 @@
 import dataManager from 'Managers/DataManager';
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -9,9 +10,33 @@ import DynamicVar from 'Utils/DynamicVar';
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
+ *
+ * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
+ *
+ * @typedef {object} AvatarRenderData
+ * @property {AvatarName} skin
+ * @property {string} skinColor
+ * @property {ItemConfig[]} items
  */
+
+/** @type {ItemSlot[]} */
+const EQUIPMENT_SLOTS = ['hair', 'top', 'bottom', 'shoes'];
+
+/** @type {{ [key in ItemSlot]: ItemName }} */
+const DEFAULT_ITEMS_BY_SLOT = {
+    hair: 'hair_00',
+    top: 'top_00',
+    bottom: 'bottom_00',
+    shoes: 'shoes_00'
+};
+
+/** @type {ItemName} */
+const FACE_ITEM_ID = 'face_00';
 
 /** @extends {IUserData<SaveObject_Inventory>} */
 class Inventory extends IUserData {
@@ -171,6 +196,9 @@ class Inventory extends IUserData {
 
         this.avatar[slot] = stuffID;
         this.avatarEdited = true;
+
+        // Refresh avatar in UserHeader
+        this.user.interface.userHeader?.RefreshAvatar();
     };
 
     /** @returns {Title[]} */
@@ -238,6 +266,9 @@ class Inventory extends IUserData {
 
         this.avatar.skinColor = colorIndex;
         this.avatarEdited = true;
+
+        // Refresh avatar in UserHeader
+        this.user.interface.userHeader?.RefreshAvatar();
     };
 
     /**
@@ -251,6 +282,9 @@ class Inventory extends IUserData {
 
         this.avatar.skin = skinID;
         this.avatarEdited = true;
+
+        // Refresh avatar in UserHeader
+        this.user.interface.userHeader?.RefreshAvatar();
     };
 
     /**
@@ -290,6 +324,80 @@ class Inventory extends IUserData {
         this.user.interface.console?.AddLog('info', `[Inventory] Stuff ${stuffID} sold successfully`);
         return 'ok';
     };
+
+    /**
+     * Get avatar render data for AvatarFrame/AvatarCharacter components
+     * @returns {AvatarRenderData}
+     */
+    GetAvatarRenderData = () => {
+        /** @type {AvatarName} */
+        const skin = this.avatar.skin || 'human_00';
+        const skinColor = BODY_COLORS[this.avatar.skinColor] || BODY_COLORS[0];
+        const items = this.GetAvatarItems();
+
+        return { skin, skinColor, items };
+    };
+
+    /**
+     * Get hex body color currently stored for the user
+     * @returns {string}
+     */
+    GetBodyColorHex = () => {
+        return BODY_COLORS[this.avatar.skinColor] || BODY_COLORS[0];
+    };
+
+    /**
+     * Persist a body color selection back to the user inventory
+     * @param {string} colorHex
+     */
+    SetBodyColorHex = (colorHex) => {
+        const nextIndex = BODY_COLORS.findIndex((color) => color.toLowerCase() === colorHex.toLowerCase());
+        if (nextIndex === -1) {
+            return;
+        }
+        this.SetSkinColor(nextIndex);
+    };
+
+    /**
+     * Retrieve currently selected avatar body type
+     * @returns {AvatarName}
+     */
+    GetBodyType = () => {
+        return this.avatar.skin || 'human_00';
+    };
+
+    /**
+     * Persist avatar body type change
+     * @param {AvatarName} bodyType
+     */
+    SetBodyType = (bodyType) => {
+        this.SetSkin(bodyType);
+    };
+
+    /**
+     * Get equipped item ID for a specific slot
+     * @param {ItemSlot} slot
+     * @returns {ItemName}
+     */
+    GetEquippedItemID = (slot) => {
+        const equippedStuffID = this.avatar[slot];
+        const stuff = this.GetStuffByID(equippedStuffID);
+        if (stuff !== null && typeof stuff !== 'undefined') {
+            return stuff.ItemID;
+        }
+        return DEFAULT_ITEMS_BY_SLOT[slot];
+    };
+
+    /**
+     * Get initial avatar items for AvatarCharacter component
+     * @returns {ItemConfig[]}
+     */
+    GetAvatarItems = () => {
+        /** @type {ItemConfig[]} */
+        const equippedItems = EQUIPMENT_SLOTS.map((slot) => ({ id: this.GetEquippedItemID(slot) }));
+        return [{ id: FACE_ITEM_ID }, ...equippedItems];
+    };
 }
 
+export { EQUIPMENT_SLOTS, DEFAULT_ITEMS_BY_SLOT, FACE_ITEM_ID };
 export default Inventory;

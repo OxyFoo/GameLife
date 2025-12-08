@@ -165,10 +165,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    // Loading: User character
-    // user.character = new Character('player', user.inventory.avatar.skin, user.inventory.avatar.skinColor);
-    // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    // user.interface.userHeader?.ShowAvatar(true);
+    // Update user avatar
+    user.interface.userHeader?.RefreshAvatar();
 
     // Setup Notifications
     user.notificationsPush.Initialize();

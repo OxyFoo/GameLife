@@ -41,10 +41,6 @@ class BackProfile extends PageBase {
         this.activitiesListener = user.activities.allActivities.AddListener(() => {
             this.setState({ ...this.getUpdatedExperience() });
         });
-
-        const userAvatar = user.inventory.avatar;
-        const userInventory = user.inventory.stuffs;
-        console.log('User inventory stuffs:', { userAvatar, userInventory });
     }
 
     componentWillUnmount() {

@@ -629,6 +629,8 @@
         "button-sell": "Vendre +{} Ox",
         "button-equip": "Équiper",
 
+        "alert-notconnected-title": "Non connecté",
+        "alert-notconnected-text": "Tu dois être connecté au serveur pour pouvoir vendre un item.",
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "Tu dois équiper un autre item pour pouvoir vendre celui-ci.",
         "alert-sellconfirm-title": "Vendre",

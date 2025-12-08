@@ -155,6 +155,18 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
         async (stuffID) => {
             const lang = langManager.curr['profile-avatar'];
 
+            // Check if connected to server
+            if (!user.server2.IsAuthenticated()) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-notconnected-title'],
+                        message: lang['alert-notconnected-text']
+                    }
+                });
+                return;
+            }
+
             // Check if item is equipped - cannot sell equipped items
             const equippedStuffs = user.inventory.GetEquipments();
             if (equippedStuffs.includes(stuffID)) {

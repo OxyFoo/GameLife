@@ -175,7 +175,7 @@ class BackShopIAP extends React.Component {
             return;
         }
 
-        if (!purchase.transactionId) {
+        if (!purchase.id) {
             // Handle error
             this.handleError('no-receipt', 'No receipt', purchase);
             return;
@@ -226,15 +226,17 @@ class BackShopIAP extends React.Component {
         }
 
         // Get purchase token based on platform
-        // Android: purchaseToken, iOS: transactionId (receipt is base64 encoded in purchase object)
-        const purchaseToken =
-            Platform.OS === 'android' ? (purchase.purchaseToken ?? '') : (purchase.transactionId ?? '');
+        // Android: purchaseToken from Google Play Billing
+        // iOS: purchaseToken contains JWS (JSON Web Signature) since StoreKit 2
+        // Both platforms use the unified purchaseToken field
+        const purchaseToken = purchase.purchaseToken ?? '';
 
         // Validate required data
-        if (!purchase.transactionId || !purchaseToken) {
+        if (!purchase.id || !purchaseToken) {
             user.interface.console?.AddLog('error', '[IAP] Missing transaction data', {
-                hasTransactionId: !!purchase.transactionId,
-                hasPurchaseToken: !!purchaseToken
+                hasTransactionId: !!purchase.id,
+                hasPurchaseToken: !!purchaseToken,
+                platform: Platform.OS
             });
             return false;
         }
@@ -244,7 +246,7 @@ class BackShopIAP extends React.Component {
             action: 'buy-iap',
             sku: purchase.productId,
             platform: Platform.OS,
-            transactionId: purchase.transactionId,
+            transactionId: purchase.id,
             purchaseToken: purchaseToken
         });
 

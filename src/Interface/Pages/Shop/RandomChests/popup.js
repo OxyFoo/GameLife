@@ -14,7 +14,7 @@ import { Text, Button } from 'Interface/Components';
 /**
  * @param {Object} props
  * @param {BuyableRandomChest} props.item
- * @param {() => void} props.closePopup
+ * @param {(reason: string) => void} props.closePopup
  */
 function BuyPopup({ item, closePopup }) {
     const lang = langManager.curr['shop']['randomChests'];
@@ -27,9 +27,9 @@ function BuyPopup({ item, closePopup }) {
 
     const buy = async () => {
         setLoading(true);
+        user.interface.popup?.SetCancelable(false);
         await user.shop.BuyRandomChest(item);
-        setLoading(false);
-        closePopup();
+        closePopup('purchased');
     };
 
     return (

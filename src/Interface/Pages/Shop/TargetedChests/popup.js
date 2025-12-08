@@ -15,7 +15,7 @@ import { Text, Button } from 'Interface/Components';
 /**
  * @param {Object} props
  * @param {BuyableTargetedChest} props.item
- * @param {() => void} props.closePopup
+ * @param {(reason: string) => void} props.closePopup
  */
 function BuyPopup({ item, closePopup }) {
     const lang = langManager.curr['shop']['targetedChests'];
@@ -30,9 +30,9 @@ function BuyPopup({ item, closePopup }) {
 
     const buy = async () => {
         setLoading(true);
+        user.interface.popup?.SetCancelable(false);
         await user.shop.BuyTargetedChest(item);
-        setLoading(false);
-        closePopup();
+        closePopup('purchased');
     };
 
     return (

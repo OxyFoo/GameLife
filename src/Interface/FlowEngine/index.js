@@ -52,16 +52,21 @@ class FlowEnginePagesRender extends BackFlowEngine {
             const { selectedPage, currentTransition } = this.state;
 
             const Page = PAGES[page.pageName];
+            const isActive = selectedPage === page.pageName;
 
             return (
-                <PageWrapper key={'page-' + page.pageName} ref={page.wrapperRef} transition={currentTransition}>
+                <PageWrapper
+                    key={'page-' + page.pageName}
+                    ref={page.wrapperRef}
+                    transition={currentTransition}
+                    pointerEvents={isActive ? 'auto' : 'none'}
+                >
                     <View
                         style={[
                             styles.parent,
                             Page.feShowUserHeader && { top: this.userHeader.current?.state.height },
                             Page.feShowNavBar && { bottom: this.navBar.current?.state.height }
                         ]}
-                        pointerEvents={selectedPage === page.pageName ? 'auto' : 'none'}
                     >
                         <Page ref={page.ref} args={page.args} flowEngine={this._public} />
                         {Platform.OS === 'ios' && <KeyboardSpacerView offset={96} />}

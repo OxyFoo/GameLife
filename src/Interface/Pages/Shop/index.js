@@ -32,31 +32,33 @@ class Shop extends BackShop {
         const Help = undefined; //() => {};
 
         return (
-            <ScrollView style={styles.page} ref={this.refPage}>
+            <View style={styles.container}>
                 <ShopHeader ref={this.refHeader} style={styles.shopHeader} onScrollToIAP={this.scrollToIAP} />
 
-                <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} showTimer />
-                <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
+                <ScrollView style={styles.page} ref={this.refPage}>
+                    <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} showTimer />
+                    <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
 
-                <View onLayout={(e) => (this.iapSectionY = e.nativeEvent.layout.y)}>
-                    <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
-                </View>
-                <ShopIAP ref={this.refIAP} />
+                    <View onLayout={(e) => (this.iapSectionY = e.nativeEvent.layout.y)}>
+                        <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
+                    </View>
+                    <ShopIAP ref={this.refIAP} />
 
-                {targetChestsStats !== null && (
-                    <>
-                        <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
-                        <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} />
-                    </>
-                )}
+                    {targetChestsStats !== null && (
+                        <>
+                            <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
+                            <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} />
+                        </>
+                    )}
 
-                {randomChestsStats !== null && (
-                    <>
-                        <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
-                        <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} />
-                    </>
-                )}
-            </ScrollView>
+                    {randomChestsStats !== null && (
+                        <>
+                            <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
+                            <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} />
+                        </>
+                    )}
+                </ScrollView>
+            </View>
         );
     }
 
@@ -90,19 +92,25 @@ class Shop extends BackShop {
         const lang = langManager.curr['shop'];
 
         return (
-            <View style={styles.page}>
+            <View style={styles.container}>
                 <ShopHeader ref={this.refHeader} style={styles.shopHeader} />
 
-                <Banner title={lang['banner-iap']} />
-                <ShopIAP ref={this.refIAP} />
+                <ScrollView style={styles.page}>
+                    <Banner title={lang['banner-iap']} />
+                    <ShopIAP ref={this.refIAP} />
+                </ScrollView>
             </View>
         );
     };
 }
 
 const styles = StyleSheet.create({
-    page: {
+    container: {
+        flex: 1,
         paddingHorizontal: 24
+    },
+    page: {
+        flex: 1
     },
     shopHeader: {
         marginBottom: 12

@@ -782,6 +782,7 @@
 
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
+        "button-header-ad-unavailable": "Unavailable",
 
         "banner-daily": "Daily deals",
         "banner-iap": "In-app purchases",

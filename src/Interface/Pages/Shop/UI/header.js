@@ -49,6 +49,11 @@ class ShopHeader extends React.Component {
         });
 
         this.rewardedShop = user.ads.Get('shop', this.onAdStateChange);
+
+        // If the ad is not found, display error status
+        if (this.rewardedShop === null) {
+            this.setState({ adState: 'error' });
+        }
     }
 
     componentWillUnmount() {
@@ -137,33 +142,59 @@ class ShopHeader extends React.Component {
         const { adState, oxAmount, oxGain } = this.state;
 
         const oxAmountStr = oxAmount.toString();
-        const oxTextSize = oxAmountStr.length < 3 ? 16 : 16 + 2 - oxAmountStr.length;
+        const oxTextSize = oxAmountStr.length < 3 ? 16 : 20 - oxAmountStr.length;
+
+        const isAdError = adState === 'error' || adState === 'notAvailable';
+        const isAdLoading = adState === 'wait';
+        const isAdReady = adState === 'ready';
 
         return (
             <Animated.View style={[styles.parent, style]}>
                 <View style={styles.content}>
-                    <Button
-                        style={styles.badge}
-                        styleContent={adState !== 'wait' && styles.badgeContent}
-                        gradientColors={['#38406573', '#3840651F']}
-                        gradientColorsAngle={-45}
-                        onPress={this.openAd}
-                        loading={adState === 'wait'}
-                        disabled={!user.server2.IsAuthenticated()}
-                    >
-                        <Gradient
-                            containerStyle={styles.badgeGradientContainer}
-                            style={styles.badgeGradient}
-                            colors={[themeManager.GetColor('main2'), themeManager.GetColor('main3')]}
-                            angle={45}
+                    {isAdError ? (
+                        <Button
+                            style={styles.badge}
+                            styleContent={styles.badgeContent}
+                            gradientColors={['#65383840', '#65383820']}
+                            gradientColorsAngle={-45}
+                            disabled
                         >
-                            <Icon icon='gift' color='grey' />
-                        </Gradient>
-                        <Text fontSize={16} color='main1'>
-                            {lang['button-header-ad'].replace('{}', oxGain.toString())}
-                        </Text>
-                        <Icon style={styles.badgeIcon} icon='ox' />
-                    </Button>
+                            <Gradient
+                                containerStyle={styles.badgeGradientContainer}
+                                style={styles.badgeGradient}
+                                colors={['#45353580', '#35252580']}
+                                angle={45}
+                            >
+                                <Icon icon='close' color='error' />
+                            </Gradient>
+                            <Text style={styles.badgeTextCenter} fontSize={14} color='white'>
+                                {lang['button-header-ad-unavailable']}
+                            </Text>
+                        </Button>
+                    ) : (
+                        <Button
+                            style={styles.badge}
+                            styleContent={isAdReady && styles.badgeContent}
+                            gradientColors={['#38406573', '#3840651F']}
+                            gradientColorsAngle={-45}
+                            onPress={this.openAd}
+                            loading={isAdLoading}
+                            disabled={!user.server2.IsAuthenticated()}
+                        >
+                            <Gradient
+                                containerStyle={styles.badgeGradientContainer}
+                                style={styles.badgeGradient}
+                                colors={[themeManager.GetColor('main2'), themeManager.GetColor('main3')]}
+                                angle={45}
+                            >
+                                <Icon icon='gift' color='grey' />
+                            </Gradient>
+                            <Text fontSize={16} color='white'>
+                                {lang['button-header-ad'].replace('{}', oxGain.toString())}
+                            </Text>
+                            <Icon style={styles.badgeIcon} icon='ox' />
+                        </Button>
+                    )}
 
                     <Button
                         style={styles.badge}
@@ -181,7 +212,7 @@ class ShopHeader extends React.Component {
                         >
                             <Icon icon='add' color='grey' />
                         </Gradient>
-                        <Text fontSize={oxTextSize} color='main1'>
+                        <Text fontSize={oxTextSize} color='white'>
                             {oxAmountStr}
                         </Text>
                         <Icon style={styles.badgeIcon} icon='ox' />
@@ -197,7 +228,6 @@ ShopHeader.defaultProps = ShopHeaderPropTypes;
 
 const styles = StyleSheet.create({
     parent: {
-        paddingVertical: 6,
         marginBottom: 24,
 
         zIndex: 100,
@@ -207,11 +237,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-
-        marginHorizontal: 24
+        gap: 24
     },
     badge: {
-        width: '40%',
+        flex: 1,
         paddingVertical: 0,
         paddingHorizontal: 0,
         justifyContent: 'center'
@@ -222,6 +251,10 @@ const styles = StyleSheet.create({
     },
     badgeIcon: {
         marginRight: 6
+    },
+    badgeTextCenter: {
+        flex: 1,
+        textAlign: 'center'
     },
     badgeGradientContainer: {
         borderRadius: 8

@@ -35,9 +35,6 @@ const DEFAULT_ITEMS_BY_SLOT = {
     shoes: 'shoes_00'
 };
 
-/** @type {ItemName} */
-const FACE_ITEM_ID = 'face_00';
-
 /** @extends {IUserData<SaveObject_Inventory>} */
 class Inventory extends IUserData {
     /** @param {UserManager} user */
@@ -102,6 +99,7 @@ class Inventory extends IUserData {
             titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
             avatar: this.avatar,
+            avatarEdited: this.avatarEdited,
             token: this.#token
         };
     };
@@ -111,6 +109,7 @@ class Inventory extends IUserData {
         if (typeof data.titleIDs !== 'undefined') this.titleIDs.Set(data.titleIDs);
         if (typeof data.stuffs !== 'undefined') this.stuffs = data.stuffs;
         if (typeof data.avatar !== 'undefined') this.avatar = data.avatar;
+        if (typeof data.avatarEdited !== 'undefined') this.avatarEdited = data.avatarEdited;
         if (typeof data.token !== 'undefined') this.#token = data.token;
     };
 
@@ -120,6 +119,7 @@ class Inventory extends IUserData {
             titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
             avatar: this.avatar,
+            avatarEdited: this.avatarEdited,
             token: this.#token
         };
     };
@@ -199,6 +199,10 @@ class Inventory extends IUserData {
 
         // Refresh avatar in UserHeader
         this.user.interface.userHeader?.RefreshAvatar();
+
+        // Save
+        this.user.SaveLocal();
+        this.SaveOnline();
     };
 
     /** @returns {Title[]} */
@@ -269,6 +273,10 @@ class Inventory extends IUserData {
 
         // Refresh avatar in UserHeader
         this.user.interface.userHeader?.RefreshAvatar();
+
+        // Save
+        this.user.SaveLocal();
+        this.SaveOnline();
     };
 
     /**
@@ -285,6 +293,10 @@ class Inventory extends IUserData {
 
         // Refresh avatar in UserHeader
         this.user.interface.userHeader?.RefreshAvatar();
+
+        // Save
+        this.user.SaveLocal();
+        this.SaveOnline();
     };
 
     /**
@@ -395,9 +407,13 @@ class Inventory extends IUserData {
     GetAvatarItems = () => {
         /** @type {ItemConfig[]} */
         const equippedItems = EQUIPMENT_SLOTS.map((slot) => ({ id: this.GetEquippedItemID(slot) }));
-        return [{ id: FACE_ITEM_ID }, ...equippedItems];
+
+        /** @type {ItemConfig[]} */
+        const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: this.GetBodyColorHex() }];
+
+        return [...faceItems, ...equippedItems];
     };
 }
 
-export { EQUIPMENT_SLOTS, DEFAULT_ITEMS_BY_SLOT, FACE_ITEM_ID };
+export { EQUIPMENT_SLOTS, DEFAULT_ITEMS_BY_SLOT };
 export default Inventory;

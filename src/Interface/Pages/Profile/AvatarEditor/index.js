@@ -1,11 +1,10 @@
-import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback, useEffect, useMemo } from 'react';
 import { Animated, Dimensions, View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import {
     getInitialAvatarItems,
-    updateAvatarItem,
     getBodyColorHexFromUser,
     setBodyColorHexOnUser,
     getBodyTypeFromUser,
@@ -27,8 +26,6 @@ import { Icon, Text } from 'Interface/Components';
  * @typedef {import('./back').InventorySlotType} InventorySlotType
  * @typedef {import('./back').SlotType} SlotType
  * @typedef {import('./back').AvatarPosition} AvatarPosition
- * @typedef {import('./back').ItemSlot} ItemSlot
- * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  * @typedef {import('./InventoryPanel').InventoryPanelRef} InventoryPanelRef
  */
@@ -73,10 +70,9 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
         };
     }, []);
 
-    // Apply body color to face item
-    const avatarItemsWithFaceColor = avatarItems.map((item) =>
-        String(item.id).startsWith('face') ? { ...item, color: bodyColor } : item
-    );
+    // Recalculate avatar items when bodyColor changes to update ears color
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const avatarItemsForRender = useMemo(() => user.inventory.GetAvatarItems(), [avatarItems, bodyColor]);
 
     const avatarScale = useRef(new Animated.Value(1)).current;
     const avatarTranslateX = useRef(new Animated.Value(-1 / 4)).current;
@@ -135,16 +131,11 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
     );
 
     /**
-     * Update avatar items
-     * @param {ItemName} itemId - The new item id to equip
+     * Refresh avatar items from inventory after an item is equipped
      */
-    const handleItemUpdate = useCallback(
-        /** @param {ItemName} itemId */
-        (itemId) => {
-            setAvatarItems((currentItems) => updateAvatarItem(currentItems, itemId));
-        },
-        []
-    );
+    const refreshAvatarItems = useCallback(() => {
+        setAvatarItems(getInitialAvatarItems());
+    }, []);
 
     /**
      * Handle item sell
@@ -289,7 +280,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                     onBodyTypeSelect={handleBodyTypeUpdate}
                     onBodyColorSelect={handleBodyColorUpdate}
                     onSlotChange={adjustAvatarPositionForCategory}
-                    onItemSelect={handleItemUpdate}
+                    onItemSelect={refreshAvatarItems}
                     onItemSell={handleItemSell}
                 />
             ),
@@ -357,7 +348,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                         position={{ x: 0, y: 0, z: 0 }}
                         rotation={{ x: 0, y: 0, z: 0 }}
                         scale={1}
-                        items={avatarItemsWithFaceColor}
+                        items={avatarItemsForRender}
                     />
                 </AvatarFrame>
             </Animated.View>

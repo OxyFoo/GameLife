@@ -9,8 +9,8 @@
 | Fichier | Chemin | Rôle |
 |---------|--------|------|
 | `app.json` | `GameLife/` | IDs AdMob |
-| `google-services.json` | `GameLife/android/app/` | Firebase Android |
-| `GoogleService-Info.plist` | `GameLife/ios/` | Firebase iOS |
+| `google-services.json` | `GameLife/android/app/` | Google Services Android (Sign-In) |
+| `GoogleService-Info.plist` | `GameLife/ios/` | Google Services iOS (Sign-In) |
 | `local.properties` | `GameLife/android/` | Mots de passe keystore |
 | `gamelife.keystore` | `GameLife/android/app/` | Signature Play Store |
 

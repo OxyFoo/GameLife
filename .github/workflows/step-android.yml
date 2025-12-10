@@ -144,7 +144,7 @@ jobs:
         with:
           name: ${{ env.FILE_MAPPING }}
 
-      - name: 'Get google-services.json - firebase-adminsdk secret'
+      - name: 'Get Google Play Service Account'
         run: |
           echo ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 }} | base64 -d > ./serviceAccount.json
 

@@ -32,7 +32,7 @@ Pour les contributeurs, vous trouverez des guides détaillés sur la contributio
 
 Pour une installation détaillée, consultez la section [Installation](https://github.com/OxyFoo/GameLife/wiki/Setup).
 
-Pour la configuration des fichiers secrets (AdMob, Firebase, keystore...), voir [CONFIG.md](CONFIG.md).
+Pour la configuration des fichiers secrets (AdMob, Google Sign-In, keystore...), voir [CONFIG.md](CONFIG.md).
 
 ## 🚀 Installation rapide
 

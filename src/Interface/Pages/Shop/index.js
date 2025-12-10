@@ -35,7 +35,7 @@ class Shop extends BackShop {
             <View style={styles.container}>
                 <ShopHeader ref={this.refHeader} style={styles.shopHeader} onScrollToIAP={this.scrollToIAP} />
 
-                <ScrollView style={styles.page} ref={this.refPage}>
+                <ScrollView style={styles.page} ref={this.refPage} showsVerticalScrollIndicator={false}>
                     <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} showTimer />
                     <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
 

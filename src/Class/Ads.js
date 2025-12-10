@@ -68,7 +68,7 @@ class Ads extends IUserClass {
                     keywords: AD_KEYWORDS
                 });
                 const newAd = new AdEvent(adMeta, ad);
-                // newAd.ad.load();
+                newAd.ad.load();
                 this.adEvents.push(newAd);
             }
 
@@ -121,8 +121,10 @@ class Ads extends IUserClass {
 
         // Load ad if not loaded
         if (!adEvent.ad.loaded) {
-            // TODO: Fix ads loading
-            // adEvent.ad.load();
+            adEvent.ad.load();
+        } else {
+            // Ad already loaded, call callback immediately
+            callback(adEvent.meta, 'ready');
         }
 
         return adEvent;

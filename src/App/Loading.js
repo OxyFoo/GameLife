@@ -176,10 +176,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load admob
     //await user.consent.ShowTrackingPopup();
 
-    // TODO: Fix ads
     // Load ads
-    //const ads = dataManager.ads.Get();
-    //user.ads.LoadAds(ads);
+    const ads = dataManager.ads.Get();
+    user.ads.LoadAds(ads);
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {

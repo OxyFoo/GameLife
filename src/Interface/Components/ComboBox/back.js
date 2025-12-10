@@ -1,11 +1,8 @@
-import * as React from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { Animated } from 'react-native';
-
-import user from 'Managers/UserManager';
 
 import { FormatForSearch } from 'Utils/String';
 import { SpringAnimation } from 'Utils/Animations';
-import { GetAbsolutePosition } from 'Utils/UI';
 
 /**
  * @typedef {import('react-native').View} View
@@ -21,21 +18,21 @@ import { GetAbsolutePosition } from 'Utils/UI';
  * @property {string} value
  *
  * @typedef {Object} ComboBoxPropsType
- * @property {StyleProp} style
- * @property {StyleProp} inputStyle
- * @property {number} maxContentHeight
- * @property {string} title
- * @property {ThemeColor} activeColor
- * @property {Array<ComboBoxItem>} data
- * @property {string} selectedValue
- * @property {boolean} enableSearchBar
- * @property {(item: ComboBoxItem | null) => void} onSelect
- * @property {boolean} enabled
- * @property {boolean} hideChevron
+ * @property {StyleProp} [style]
+ * @property {StyleProp} [inputStyle]
+ * @property {number} [maxContentHeight]
+ * @property {string} [title]
+ * @property {ThemeColor} [activeColor]
+ * @property {Array<ComboBoxItem>} [data]
+ * @property {string} [selectedValue]
+ * @property {boolean} [enableSearchBar]
+ * @property {(item: ComboBoxItem | null) => void} [onSelect]
+ * @property {boolean} [enabled]
+ * @property {boolean} [hideChevron]
  */
 
 /** @type {ComboBoxPropsType} */
-const ComboBoxProps = {
+const ComboBoxDefaultProps = {
     style: {},
     inputStyle: {},
     maxContentHeight: 256,
@@ -49,111 +46,140 @@ const ComboBoxProps = {
     hideChevron: false
 };
 
-class ComboBoxBack extends React.Component {
-    state = {
-        /** @type {LayoutRectangle} */
-        parent: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0
-        },
+/**
+ * @param {ComboBoxPropsType} props
+ */
+const ComboBoxBack = (props) => {
+    const {
+        style,
+        inputStyle,
+        maxContentHeight,
+        title,
+        activeColor,
+        data: propsData,
+        selectedValue,
+        enableSearchBar,
+        onSelect,
+        enabled,
+        hideChevron
+    } = { ...ComboBoxDefaultProps, ...props };
 
-        anim: new Animated.Value(0),
+    /** @type {[LayoutRectangle, React.Dispatch<React.SetStateAction<LayoutRectangle>>]} */
+    const [parent, setParent] = useState({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+    });
 
-        data: this.props.data,
-        selectionMode: false,
-        search: ''
-    };
+    const [anim] = useState(new Animated.Value(0));
+    const [data, setData] = useState(propsData);
+    const [selectionMode, setSelectionMode] = useState(false);
+    const [search, setSearch] = useState('');
 
     /** @type {React.RefObject<View | null>} */
-    refParent = React.createRef();
+    const refParent = useRef(null);
 
     /** @type {React.RefObject<FlatList | null>} */
-    refFlatlist = React.createRef();
+    const refFlatlist = useRef(null);
 
-    /**
-     * @param {ComboBoxProps} nextProps
-     * @param {ComboBoxBack['state']} nextState
-     */
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-            this.props.data !== nextProps.data ||
-            this.props.selectedValue !== nextProps.selectedValue ||
-            this.props.enabled !== nextProps.enabled ||
-            this.state.selectionMode !== nextState.selectionMode ||
-            this.state.search !== nextState.search
-        );
-    }
+    // Update data when props.data changes
+    useEffect(() => {
+        setData(propsData);
+        setSearch('');
+    }, [propsData]);
 
-    /** @param {ComboBoxProps} prevProps */
-    componentDidUpdate(prevProps) {
-        // Data changed, update data and reset search
-        if (prevProps.data !== this.props.data) {
-            this.setState({
-                data: this.props.data,
-                search: ''
-            });
-        }
-    }
+    const closeSelection = useCallback(() => {
+        SpringAnimation(anim, 0).start();
+        setSelectionMode(false);
+    }, [anim]);
 
-    onPress = () => {
-        if (!this.props.enabled || this.refParent.current === null) {
+    const onPress = useCallback(() => {
+        if (!enabled || refParent.current === null) {
             return;
         }
 
-        if (this.state.selectionMode) {
-            this.closeSelection();
+        if (selectionMode) {
+            closeSelection();
             return;
         }
 
         // Scroll to top
-        this.refFlatlist.current?.scrollToOffset({
+        refFlatlist.current?.scrollToOffset({
             offset: 0,
             animated: false
         });
 
         // Open selection
-        GetAbsolutePosition(this.refParent).then((rect) => {
-            rect.x += user.interface.size.insets.left;
-            rect.y += user.interface.size.insets.top;
-            this.setState({ parent: rect, selectionMode: true }, () => {
-                SpringAnimation(this.state.anim, 1).start();
-            });
+        refParent.current?.measureInWindow((x, y, width, height) => {
+            setParent({ x, y, width, height });
+            setSelectionMode(true);
+            SpringAnimation(anim, 1).start();
         });
-    };
+    }, [enabled, selectionMode, closeSelection, anim]);
 
-    closeSelection = () => {
-        SpringAnimation(this.state.anim, 0).start();
-        this.setState({ selectionMode: false });
-    };
-
-    resetSelection = () => {
-        if (!this.props.enabled) {
+    const resetSelection = useCallback(() => {
+        if (!enabled) {
             return;
         }
-        this.props.onSelect(null);
-        if (this.state.selectionMode) {
-            this.closeSelection();
+        onSelect?.(null);
+        if (selectionMode) {
+            closeSelection();
         }
-    };
+    }, [enabled, onSelect, selectionMode, closeSelection]);
 
-    refreshSearch = (text = '') => {
-        const textLowerCase = FormatForSearch(text);
-        this.setState({
-            data: this.props.data.filter((item) => FormatForSearch(item.value).includes(textLowerCase)),
-            search: text
-        });
-    };
+    const refreshSearch = useCallback(
+        (text = '') => {
+            const textLowerCase = FormatForSearch(text);
+            setData(
+                propsData?.filter((/** @type {ComboBoxItem} */ item) =>
+                    FormatForSearch(item.value).includes(textLowerCase)
+                )
+            );
+            setSearch(text);
+        },
+        [propsData]
+    );
 
     /** @param {ComboBoxItem} item */
-    onItemPress = (item) => {
-        this.props.onSelect(item);
-        this.closeSelection();
-    };
-}
+    const onItemPress = useCallback(
+        (/** @type {ComboBoxItem} */ item) => {
+            onSelect?.(item);
+            closeSelection();
+        },
+        [onSelect, closeSelection]
+    );
 
-ComboBoxBack.prototype.props = ComboBoxProps;
-ComboBoxBack.defaultProps = ComboBoxProps;
+    return {
+        // State
+        parent,
+        anim,
+        data,
+        selectionMode,
+        search,
+
+        // Refs
+        refParent,
+        refFlatlist,
+
+        // Methods
+        onPress,
+        closeSelection,
+        resetSelection,
+        refreshSearch,
+        onItemPress,
+
+        // Props
+        style,
+        inputStyle,
+        maxContentHeight,
+        title,
+        activeColor,
+        selectedValue,
+        enableSearchBar,
+        enabled,
+        hideChevron
+    };
+};
 
 export default ComboBoxBack;

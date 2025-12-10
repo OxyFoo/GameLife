@@ -8,8 +8,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Button, Text, Zap } from 'Interface/Components';
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
+import { Button, Icon, Text, Zap } from 'Interface/Components';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
 import { Title } from 'Interface/Pages/Home/title';
 
@@ -34,7 +33,7 @@ class Missions extends BackMissions {
         const stepReward = missionsData[step];
 
         const styleReward = {
-            backgroundColor: themeManager.GetColor('main1')
+            backgroundColor: themeManager.GetColor('backgroundGrey')
         };
         const styleAnimation = {
             opacity: this.state.animReward.interpolate({
@@ -149,7 +148,7 @@ class Missions extends BackMissions {
         if (firstReward.Type === 'OX') {
             return (
                 <>
-                    <Image style={styles.rewardImage} source={IMG_OX} />
+                    <Icon icon='ox' size='100%' />
                     {!hideOxText && (
                         <Text style={styles.rewardValue} fontSize={14}>
                             {`x${firstReward.Amount}`}

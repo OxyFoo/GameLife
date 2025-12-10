@@ -100,7 +100,11 @@ class UserManager {
     // @ts-ignore Because "interface" is necessarily defined, without it nothing works in all cases
     interface = null;
 
-    /** @type {Character | null} */
+    /**
+     * TODO: Remove this deprecated field
+     * @type {Character | null}
+     * @deprecated
+     */
     character = null;
 
     appIsLoaded = false;

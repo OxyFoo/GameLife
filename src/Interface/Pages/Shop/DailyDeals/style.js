@@ -2,73 +2,48 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     flatlist: {
-        maxHeight: '35%', // Why ?
-        marginBottom: 24,
-        paddingHorizontal: 12
+        flexGrow: 0,
+        marginBottom: 24
+    },
+    flatlistContent: {
+        alignItems: 'stretch',
+        gap: 12
+    },
+    flatlistColumnWrapper: {
+        gap: 12
     },
     errorText: {
         padding: 12
     },
 
     // Daily deals
-    itemParent: {
-        width: '33%',
-        aspectRatio: 1 / 1.3,
-        paddingBottom: 4,
-        paddingHorizontal: 6
-    },
     itemButton: {
-        width: '100%',
-        height: '100%',
-        paddingHorizontal: 0,
-        borderRadius: 8
+        flex: 1,
+        paddingVertical: 0,
+        paddingHorizontal: 0
     },
     itemContent: {
-        width: '100%',
-        height: '100%',
-
-        display: 'flex',
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
-
-        borderRadius: 2,
-        overflow: 'hidden'
+        justifyContent: 'center'
     },
 
     itemInfo: {
-        position: 'absolute',
-        top: 12,
-        left: 0,
-        right: 0,
-
         alignContent: 'center',
         justifyContent: 'center'
     },
     itemName: {
+        marginBottom: 4,
         fontSize: 14
     },
     itemRarity: {
+        marginTop: 4,
         fontSize: 11,
         fontWeight: 'bold'
     },
 
-    itemFrameContainer: {
-        width: '90%',
-        aspectRatio: 1 / 1,
-        zIndex: -10,
-        elevation: -10
-    },
-    itemFrame: {
-        width: '100%',
-        height: '100%'
-    },
-
     itemPrice: {
-        position: 'absolute',
-        bottom: 12,
-        left: 0,
-        right: 0,
-
+        marginVertical: 8,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
@@ -85,15 +60,6 @@ const styles = StyleSheet.create({
     },
     itemPriceOxEditedNew: {
         marginRight: 4
-    },
-    itemOxImage: {
-        width: 16,
-        aspectRatio: 1
-    },
-    itemOxImageEdited: {
-        width: 16,
-        aspectRatio: 1,
-        marginTop: 24
     },
 
     itemDecoration: {

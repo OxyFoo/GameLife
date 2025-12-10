@@ -20,7 +20,7 @@ import { Defs, RadialGradient, Rect, Stop, Svg } from 'react-native-svg';
  * @param {{ width: number, height: number }} [props.size] Default: screen size
  * @param {{ x: number, y: number }[]} props.animPath
  * @param {number} [props.duration] Duration for each animation in ms
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 function Radial(props) {
     const screenSize = Dimensions.get('window');

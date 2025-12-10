@@ -5,7 +5,6 @@ import styles from './style';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS from 'Ressources/items/chests/chests';
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
 
 import { Text } from '../Text';
 import { Icon } from '../Icon';
@@ -16,7 +15,7 @@ import { Icon } from '../Icon';
 
 /**
  * @param {{ item: RawReward }} props
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 const Reward = ({ item }) => {
     const styleReward = {
@@ -28,7 +27,7 @@ const Reward = ({ item }) => {
         case 'OX':
             return (
                 <View style={styleReward}>
-                    <Image style={styles.rewardImage} source={IMG_OX} />
+                    <Icon size='100%' icon='ox' />
                     <Text style={styles.rewardValue}>{'x' + item.Amount.toString()}</Text>
                 </View>
             );

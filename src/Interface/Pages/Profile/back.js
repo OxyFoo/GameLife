@@ -6,24 +6,31 @@ import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 import { GetStringLength } from 'Utils/String';
+import { TimingAnimation } from 'Utils/Animations';
 
 /**
+ * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
  * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
- *
- * @typedef {import('./EditAvatar').default} EditorAvatar
+ * @typedef {import('./AvatarEditor').AvatarEditorRef} AvatarEditorRef
  */
 
 class BackProfile extends PageBase {
     state = {
-        scrollY: new Animated.Value(0),
-        editorOpened: false,
-        infoHeaderHeight: 258, // Arbitrary value to reduce the glitch on the first render
+        editMode: false,
         ...this.getUpdatedExperience()
     };
 
-    /** @type {React.RefObject<EditorAvatar | null>} */
-    refAvatar = React.createRef();
+    // Avatar edit mode
+    avatarEditMode = new Animated.Value(0); // 0 = normal, 1 = edit mode
+
+    /** @type {React.RefObject<ScrollView | null>} */
+    refScrollView = React.createRef();
+
+    scrollY = new Animated.Value(0);
+
+    /** @type {React.RefObject<AvatarEditorRef | null>} */
+    refAvatarEditor = React.createRef();
 
     /** @type {Symbol | null} */
     activitiesListener = null;
@@ -35,17 +42,6 @@ class BackProfile extends PageBase {
             this.setState({ ...this.getUpdatedExperience() });
         });
     }
-
-    componentDidFocused = (/*args*/) => {
-        // Update the avatar
-        // TODO: Don't update the avatar if the user didn't change anything
-        this.refAvatar.current?.updateEquippedItems();
-        this.refAvatar.current?.forceUpdate();
-        if (this.refAvatar.current?.state.slotSelected !== null) {
-            this.refAvatar.current?.selectSlot(this.refAvatar.current?.state.slotSelected);
-        }
-        this.refAvatar.current?.refFrame.forceUpdate();
-    };
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
@@ -68,16 +64,10 @@ class BackProfile extends PageBase {
         };
     }
 
-    /** @param {any} event */
-    onLayoutHeader = (event) => {
-        const { height } = event.nativeEvent.layout;
-        this.setState({ infoHeaderHeight: height });
-    };
-
     /** @param {NativeSyntheticScrollEvent} event */
     handleScroll = (event) => {
         const { y } = event.nativeEvent.contentOffset;
-        this.state.scrollY.setValue(y);
+        this.scrollY.setValue(y);
     };
 
     openSettings = () => {
@@ -101,11 +91,32 @@ class BackProfile extends PageBase {
     };
 
     onBack = () => {
-        if (this.refAvatar.current !== null && this.refAvatar.current.state.editorOpened) {
-            this.refAvatar.current.CloseEditor();
-        } else {
-            user.interface.BackHandle();
-        }
+        user.interface.BackHandle();
+    };
+
+    openInventory = () => {
+        // Scroll page to top
+        this.refScrollView.current?.scrollTo({ y: 0, animated: true });
+
+        // Open avatar editor
+        this.refAvatarEditor.current?.enterEditMode();
+
+        // Hide interface
+        TimingAnimation(this.avatarEditMode, 1, 300).start();
+
+        // Set edit mode state
+        this.setState({ editMode: true });
+    };
+
+    closeInventory = () => {
+        // Show interface
+        TimingAnimation(this.avatarEditMode, 0, 300).start();
+
+        // Unset edit mode state
+        this.setState({ editMode: false });
+
+        // Refresh avatar in UserHeader
+        user.interface.userHeader?.RefreshAvatar();
     };
 }
 

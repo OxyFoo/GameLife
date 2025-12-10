@@ -35,7 +35,7 @@ class PieChart extends BackPieChart {
 
     /**
      * Renders the center label component. (biggest activity value + name)
-     * @returns {JSX.Element} A View component styled as a center label component.
+     * @returns {React.ReactNode} A View component styled as a center label component.
      */
     renderDonut = () => {
         const lang = langManager.curr['home'];

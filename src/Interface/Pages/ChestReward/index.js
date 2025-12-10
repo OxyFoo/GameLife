@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Animated, View, Image } from 'react-native';
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import OxObject from './OxObject';
@@ -8,12 +9,13 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS, { IMG_CHEST_OX } from 'Ressources/items/chests/chests';
-import { Frame, Text, Button } from 'Interface/Components';
+import { Text, Button } from 'Interface/Components';
 import { WithInterpolation } from 'Utils/Animations';
 
 class ChestReward extends BackChestReward {
     render() {
         const langM = langManager.curr['modal'];
+        const { layoutFrame, animChest, animItem, animInteractions, animGlobal } = this.state;
 
         // Default chest image
         let chestImage = IMG_CHESTS.common;
@@ -24,15 +26,14 @@ class ChestReward extends BackChestReward {
         }
 
         const itemBackgroundStyle = {
-            borderColor: this.rarityColor,
-            backgroundColor: themeManager.GetColor('backgroundCard')
+            borderColor: this.rarityColor
         };
 
         // Shake the chest
         const styleChestAnimation = {
             transform: [
                 {
-                    rotateZ: this.state.animChest.interpolate({
+                    rotateZ: animChest.interpolate({
                         inputRange: [0, 1, 2, 3, 4],
                         outputRange: ['0deg', '1deg', '-1deg', '1deg', '0deg']
                     })
@@ -41,15 +42,15 @@ class ChestReward extends BackChestReward {
         };
 
         const styleText = {
-            opacity: this.state.animItem,
-            transform: [{ translateY: WithInterpolation(this.state.animItem, 20, 0) }]
+            opacity: animItem,
+            transform: [{ translateY: WithInterpolation(animItem, 20, 0) }]
         };
         const styleTextSecondary = {
             color: this.rarityColor
         };
         const styleButton = {
-            opacity: this.state.animInteractions,
-            transform: [{ translateY: WithInterpolation(this.state.animInteractions, 20, 0) }]
+            opacity: animInteractions,
+            transform: [{ translateY: WithInterpolation(animInteractions, 20, 0) }]
         };
 
         // Ox objects
@@ -60,32 +61,48 @@ class ChestReward extends BackChestReward {
             else if (this.oxCount > 1000) count = 100;
 
             for (let i = 0; i < count; i++) {
-                oxObjects.push(
-                    <OxObject key={`ox-obj-${i}`} index={i} total={count} parentLayout={this.state.layoutFrameOx} />
-                );
+                oxObjects.push(<OxObject key={`ox-obj-${i}`} index={i} total={count} parentLayout={layoutFrame} />);
             }
         }
 
+        const frameWidth = layoutFrame.width / 2;
+        const frameHeight = (layoutFrame.height - styles.frame.borderWidth * 2) / 2;
+
         return (
             <View style={styles.page}>
-                <Animated.View style={[styles.container, { transform: [{ scale: this.state.animGlobal }] }]}>
+                <Animated.View style={[styles.container, { transform: [{ scale: animGlobal }] }]}>
                     {/* Chest */}
                     <Animated.View style={[styleChestAnimation, styles.chestContainer]}>
                         <Image style={styles.chestImage} source={chestImage} />
                     </Animated.View>
 
                     {/* Item */}
-                    <Animated.View style={[styles.frameContainer, { transform: [{ scale: this.state.animItem }] }]}>
-                        {(this.chestRarity !== 'ox' && this.character !== null && (
-                            <Frame
-                                style={[styles.frame, itemBackgroundStyle]}
-                                characters={[this.character]}
-                                onlyItems={true}
-                                size={this.characterSize}
-                                loadingTime={0}
-                            />
-                        )) || (
-                            <View style={[styles.frameOX, itemBackgroundStyle]} onLayout={this.onOxLayout}>
+                    <Animated.View
+                        style={[styles.frameContainer, { transform: [{ scale: animItem }] }]}
+                        onLayout={this.onFrameLayout}
+                    >
+                        {(this.chestRarity !== 'ox' &&
+                            this.avatarPosition !== null &&
+                            layoutFrame.width &&
+                            layoutFrame.height && (
+                                <View style={[styles.frame, itemBackgroundStyle]}>
+                                    <AvatarFrame
+                                        style={styles.avatarFrame}
+                                        width={frameWidth}
+                                        height={frameHeight}
+                                        backgroundColor={themeManager.GetColor('backgroundCard')}
+                                    >
+                                        <AvatarCharacter
+                                            body={this.avatarBody}
+                                            bodyColor={this.avatarBodyColor}
+                                            position={this.avatarPosition.pos}
+                                            scale={this.avatarPosition.scale}
+                                            items={this.avatarItems}
+                                        />
+                                    </AvatarFrame>
+                                </View>
+                            )) || (
+                            <View style={[styles.frameOX, itemBackgroundStyle]} onLayout={this.onFrameLayout}>
                                 {oxObjects}
                             </View>
                         )}

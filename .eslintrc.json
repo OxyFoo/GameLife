@@ -19,11 +19,7 @@
         // Code that does not need to be linted
         "res/",
         "_Template/",
-        "**/Pages/Test/",
-
-        // Temporary files
-        "Shop",
-        "EditAvatar"
+        "**/Pages/Test/"
     ],
     "rules": {
         "semi": ["warn", "always"],

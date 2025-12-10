@@ -7,13 +7,15 @@ import styles from './style';
  * @typedef {import('./back').PageNames} PageNames
  * @typedef {import('./back').PageMemory<PageNames>} PageMemory
  * @typedef {import('./back').Transitions} Transitions
+ * @typedef {import('react-native').View['props']['pointerEvents']} PointerEvents
  * @typedef {import('react-native-reanimated').SharedValue<boolean>} SharedValueBool
  */
 
 /**
- * @typedef {Object} PageWrapperProps
+ * @typedef {object} PageWrapperProps
  * @property {Transitions} transition
  * @property {React.ReactNode} children
+ * @property {PointerEvents} [pointerEvents]
  */
 
 /**
@@ -24,7 +26,7 @@ import styles from './style';
 
 const PageWrapper = forwardRef(
     /** @param {PageWrapperProps} props @param {React.Ref<PageWrapperRef>} ref */
-    ({ transition, children }, ref) => {
+    ({ transition, children, pointerEvents = 'auto' }, ref) => {
         const transitionStart = useSharedValue(0);
         const transitionEnd = useSharedValue(0);
 
@@ -65,7 +67,11 @@ const PageWrapper = forwardRef(
             return { transform, opacity: transitionStart.value };
         });
 
-        return <Animated.View style={[styles.page, animatedStyle]}>{children}</Animated.View>;
+        return (
+            <Animated.View style={[styles.page, animatedStyle]} pointerEvents={pointerEvents}>
+                {children}
+            </Animated.View>
+        );
     }
 );
 

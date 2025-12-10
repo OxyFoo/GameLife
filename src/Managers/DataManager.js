@@ -24,6 +24,7 @@ class DataManager {
         ads: 0,
         contributors: 0,
         dailyQuestsRewards: 0,
+        iap: 0,
         items: 0,
         missions: 0,
         quotes: 0,
@@ -60,6 +61,7 @@ class DataManager {
             ads: 0,
             contributors: 0,
             dailyQuestsRewards: 0,
+            iap: 0,
             items: 0,
             missions: 0,
             quotes: 0,
@@ -123,6 +125,7 @@ class DataManager {
             ads: this.ads.Save(),
             contributors: this.contributors.Save(),
             dailyQuestsRewards: this.dailyQuestsRewards.Save(),
+            iap: [],
             items: this.items.Save(),
             missions: this.missions.Save(),
             quotes: this.quotes.Save(),
@@ -255,8 +258,11 @@ class DataManager {
         }
 
         // TODO: Load links => user.settings.LoadMusicLinks(reqMusicLinks);
-        // TODO: Load IAPs => user.shop.LoadIAPs(reqIAP);
-        // TODO: Load price factor => user.shop.priceFactor = priceFactor;
+
+        // Load IAPs
+        if (Array.isArray(response.iapSkus)) {
+            user.shop.LoadIAPs(response.iapSkus);
+        }
 
         user.interface.console?.EditLog(debugIndex, 'same', 'App data: online load success');
         return true;

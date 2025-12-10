@@ -1,6 +1,7 @@
 import dataManager from 'Managers/DataManager';
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -8,9 +9,31 @@ import DynamicVar from 'Utils/DynamicVar';
  * @typedef {import('Data/App/Titles').Title} Title
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
+ *
+ * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
+ * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
+ *
+ * @typedef {object} AvatarRenderData
+ * @property {AvatarName} skin
+ * @property {string} skinColor
+ * @property {ItemConfig[]} items
  */
+
+/** @type {ItemSlot[]} */
+const EQUIPMENT_SLOTS = ['hair', 'top', 'bottom', 'shoes'];
+
+/** @type {{ [key in ItemSlot]: ItemName }} */
+const DEFAULT_ITEMS_BY_SLOT = {
+    hair: 'hair_00',
+    top: 'top_00',
+    bottom: 'bottom_00',
+    shoes: 'shoes_00'
+};
 
 /** @extends {IUserData<SaveObject_Inventory>} */
 class Inventory extends IUserData {
@@ -38,8 +61,7 @@ class Inventory extends IUserData {
      * @type {AvatarObject}
      */
     avatar = {
-        sexe: 'MALE',
-        skin: 'skin_01',
+        skin: 'human_00',
         skinColor: 1,
         hair: 0,
         top: 0,
@@ -60,8 +82,7 @@ class Inventory extends IUserData {
         this.stuffs = [];
         this.titleIDs.Set([]);
         this.avatar = {
-            sexe: 'MALE',
-            skin: 'skin_01',
+            skin: 'human_00',
             skinColor: 1,
             hair: 0,
             top: 0,
@@ -78,6 +99,7 @@ class Inventory extends IUserData {
             titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
             avatar: this.avatar,
+            avatarEdited: this.avatarEdited,
             token: this.#token
         };
     };
@@ -87,6 +109,7 @@ class Inventory extends IUserData {
         if (typeof data.titleIDs !== 'undefined') this.titleIDs.Set(data.titleIDs);
         if (typeof data.stuffs !== 'undefined') this.stuffs = data.stuffs;
         if (typeof data.avatar !== 'undefined') this.avatar = data.avatar;
+        if (typeof data.avatarEdited !== 'undefined') this.avatarEdited = data.avatarEdited;
         if (typeof data.token !== 'undefined') this.#token = data.token;
     };
 
@@ -96,6 +119,7 @@ class Inventory extends IUserData {
             titleIDs: this.titleIDs.Get(),
             stuffs: this.stuffs,
             avatar: this.avatar,
+            avatarEdited: this.avatarEdited,
             token: this.#token
         };
     };
@@ -129,18 +153,32 @@ class Inventory extends IUserData {
         return true;
     };
 
-    IsUnsaved = () => {
-        return this.avatarEdited;
-    };
+    SaveOnline = async () => {
+        if (!this.avatarEdited) {
+            return true;
+        }
 
-    GetUnsaved = () => {
-        return {
-            avatar: this.avatar
-        };
-    };
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'save-inventories',
+            avatar: this.avatar,
+            token: this.#token
+        });
 
-    Purge = () => {
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'save-inventories' ||
+            response.result === 'error'
+        ) {
+            this.user.interface.console?.AddLog('error', `[Inventory] Failed to save inventory (${response})`);
+            return false;
+        }
+
+        this.#token = response.result.token;
         this.avatarEdited = false;
+        this.user.interface.console?.AddLog('info', '[Inventory] Inventory saved successfully');
+        return true;
     };
 
     /**
@@ -159,8 +197,12 @@ class Inventory extends IUserData {
         this.avatar[slot] = stuffID;
         this.avatarEdited = true;
 
-        // Refresh user character
-        this.user.character?.SetEquipment(this.GetEquippedItemsID());
+        // Refresh avatar in UserHeader
+        this.user.interface.userHeader?.RefreshAvatar();
+
+        // Save
+        this.user.SaveLocal();
+        this.SaveOnline();
     };
 
     /** @returns {Title[]} */
@@ -213,6 +255,165 @@ class Inventory extends IUserData {
 
     /** @returns {string[]} */
     GetEquippedItemsID = () => this.GetEquipments().map((ID) => this.GetStuffByID(ID)?.ItemID || '[Default Item]');
+
+    /**
+     * Update avatar skin color index
+     * @param {number} colorIndex
+     */
+    SetSkinColor = (colorIndex) => {
+        if (typeof colorIndex !== 'number' || Number.isNaN(colorIndex)) {
+            return;
+        }
+        if (this.avatar.skinColor === colorIndex) {
+            return;
+        }
+
+        this.avatar.skinColor = colorIndex;
+        this.avatarEdited = true;
+
+        // Refresh avatar in UserHeader
+        this.user.interface.userHeader?.RefreshAvatar();
+
+        // Save
+        this.user.SaveLocal();
+        this.SaveOnline();
+    };
+
+    /**
+     * Update avatar skin (body type)
+     * @param {CharactersID} skinID
+     */
+    SetSkin = (skinID) => {
+        if (this.avatar.skin === skinID) {
+            return;
+        }
+
+        this.avatar.skin = skinID;
+        this.avatarEdited = true;
+
+        // Refresh avatar in UserHeader
+        this.user.interface.userHeader?.RefreshAvatar();
+
+        // Save
+        this.user.SaveLocal();
+        this.SaveOnline();
+    };
+
+    /**
+     * Sell a stuff item from inventory
+     * @param {number} stuffID - The stuff ID to sell (inventory item ID)
+     * @returns {Promise<'ok' | 'invalid-item' | 'item-not-found' | 'item-equipped' | 'error'>}
+     */
+    SellStuff = async (stuffID) => {
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'sell-stuff',
+            stuffID: stuffID
+        });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'sell-stuff'
+        ) {
+            this.user.interface.console?.AddLog('error', `[Inventory] Failed to sell stuff (${response})`);
+            return 'error';
+        }
+
+        if (response.result !== 'ok') {
+            this.user.interface.console?.AddLog('warn', `[Inventory] Sell stuff failed: ${response.result}`);
+            return response.result;
+        }
+
+        // Update local inventory
+        this.stuffs = this.stuffs.filter((stuff) => stuff.ID !== stuffID);
+
+        // Update Ox amount
+        if (typeof response.ox === 'number') {
+            this.user.informations.ox.Set(response.ox);
+        }
+
+        this.user.interface.console?.AddLog('info', `[Inventory] Stuff ${stuffID} sold successfully`);
+        return 'ok';
+    };
+
+    /**
+     * Get avatar render data for AvatarFrame/AvatarCharacter components
+     * @returns {AvatarRenderData}
+     */
+    GetAvatarRenderData = () => {
+        /** @type {AvatarName} */
+        const skin = this.avatar.skin || 'human_00';
+        const skinColor = BODY_COLORS[this.avatar.skinColor] || BODY_COLORS[0];
+        const items = this.GetAvatarItems();
+
+        return { skin, skinColor, items };
+    };
+
+    /**
+     * Get hex body color currently stored for the user
+     * @returns {string}
+     */
+    GetBodyColorHex = () => {
+        return BODY_COLORS[this.avatar.skinColor] || BODY_COLORS[0];
+    };
+
+    /**
+     * Persist a body color selection back to the user inventory
+     * @param {string} colorHex
+     */
+    SetBodyColorHex = (colorHex) => {
+        const nextIndex = BODY_COLORS.findIndex((color) => color.toLowerCase() === colorHex.toLowerCase());
+        if (nextIndex === -1) {
+            return;
+        }
+        this.SetSkinColor(nextIndex);
+    };
+
+    /**
+     * Retrieve currently selected avatar body type
+     * @returns {AvatarName}
+     */
+    GetBodyType = () => {
+        return this.avatar.skin || 'human_00';
+    };
+
+    /**
+     * Persist avatar body type change
+     * @param {AvatarName} bodyType
+     */
+    SetBodyType = (bodyType) => {
+        this.SetSkin(bodyType);
+    };
+
+    /**
+     * Get equipped item ID for a specific slot
+     * @param {ItemSlot} slot
+     * @returns {ItemName}
+     */
+    GetEquippedItemID = (slot) => {
+        const equippedStuffID = this.avatar[slot];
+        const stuff = this.GetStuffByID(equippedStuffID);
+        if (stuff !== null && typeof stuff !== 'undefined') {
+            return stuff.ItemID;
+        }
+        return DEFAULT_ITEMS_BY_SLOT[slot];
+    };
+
+    /**
+     * Get initial avatar items for AvatarCharacter component
+     * @returns {ItemConfig[]}
+     */
+    GetAvatarItems = () => {
+        /** @type {ItemConfig[]} */
+        const equippedItems = EQUIPMENT_SLOTS.map((slot) => ({ id: this.GetEquippedItemID(slot) }));
+
+        /** @type {ItemConfig[]} */
+        const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: this.GetBodyColorHex() }];
+
+        return [...faceItems, ...equippedItems];
+    };
 }
 
+export { EQUIPMENT_SLOTS, DEFAULT_ITEMS_BY_SLOT };
 export default Inventory;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BackHandler } from 'react-native';
-import SafeArea from 'react-native-safe-area';
 import AppControl from 'react-native-app-control';
 
 import PageBase from './PageBase';
@@ -12,7 +11,6 @@ import DynamicVar from 'Utils/DynamicVar';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').NativeEventSubscription} NativeEventSubscription
  * @typedef {import('./wrapper').PageWrapperRef} PageWrapperRef
  * @typedef {import('Interface/Pages').PageNames} PageNames
@@ -24,7 +22,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @typedef {import('Interface/Global').UserHeader} UserHeader
  * @typedef {import('Interface/Global').NavBar} NavBar
  * @typedef {import('Interface/Global').NotificationsInApp} NotificationsInApp
- * @typedef {import('Interface/FlowEngine/SafeAreaWithResponsive').ResponsiveSettings} ResponsiveSettings
+ * @typedef {import('Interface/FlowEngine/DynamicArea').ResponsiveSettings} ResponsiveSettings
  * @typedef {'auto' | 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight' | 'fromCenter'} Transitions
  */
 
@@ -69,6 +67,7 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {object} FlowEnginePropsType
  * @property {string} [testID]
+ * @property {(instance: BackFlowEngine) => void} [onReady]
  */
 
 /** @type {FlowEnginePropsType} */
@@ -123,17 +122,6 @@ class BackFlowEngine extends React.Component {
         paddingHorizontal: 0
     });
 
-    size = {
-        width: 0,
-        height: 0,
-        insets: {
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0
-        }
-    };
-
     /** @type {NativeEventSubscription | null} */
     nativeEventSubscription = null;
 
@@ -175,25 +163,47 @@ class BackFlowEngine extends React.Component {
             // @ts-ignore
             this.availablePages.push(/** @type {PageNames} */ pageName);
         }
-
-        SafeArea.getSafeAreaInsetsForRootView().then(({ safeAreaInsets }) => {
-            this.size.insets = safeAreaInsets;
-        });
     }
 
+    // TODO: Unifier les composants globaux
     componentDidMount() {
-        // Set public properties
-        this._public.popup = this.popup.current;
-        this._public.screenTuto = this.screenTuto.current;
-        this._public.console = this.console.current;
-        this._public.screenInput = this.screenInput.current;
-        this._public.bottomPanel = this.bottomPanel.current;
-        this._public.userHeader = this.userHeader.current;
-        this._public.navBar = this.navBar.current;
-        this._public.notificationsInApp = this.notificationsInApp.current;
-
         // Set back button handler
         this.nativeEventSubscription = BackHandler.addEventListener('hardwareBackPress', this.BackHandle);
+
+        // Wait for refs to be mounted - SafeAreaProvider delays child mounting
+        const assignRefs = () => {
+            // Check if all refs are available
+            if (
+                !this.console.current ||
+                !this.popup.current ||
+                !this.screenTuto.current ||
+                !this.screenInput.current ||
+                !this.bottomPanel.current ||
+                !this.userHeader.current ||
+                !this.navBar.current ||
+                !this.notificationsInApp.current
+            ) {
+                requestAnimationFrame(assignRefs);
+                return;
+            }
+
+            // Set public properties
+            this._public.popup = this.popup.current;
+            this._public.screenTuto = this.screenTuto.current;
+            this._public.console = this.console.current;
+            this._public.screenInput = this.screenInput.current;
+            this._public.bottomPanel = this.bottomPanel.current;
+            this._public.userHeader = this.userHeader.current;
+            this._public.navBar = this.navBar.current;
+            this._public.notificationsInApp = this.notificationsInApp.current;
+
+            // Notify that refs are ready
+            if (this.props.onReady) {
+                this.props.onReady(this);
+            }
+        };
+
+        assignRefs();
     }
 
     componentWillUnmount() {
@@ -212,13 +222,6 @@ class BackFlowEngine extends React.Component {
             this.state.customResponsive !== nextState.customResponsive
         );
     }
-
-    /** @param {LayoutChangeEvent} event */
-    onLayout = (event) => {
-        const { width, height } = event.nativeEvent.layout;
-        this.size.width = width;
-        this.size.height = height;
-    };
 
     /** @returns {ResponsiveSettings} */
     GetResponsive = () => this.state.customResponsive;
@@ -683,7 +686,6 @@ class BackFlowEngine extends React.Component {
         notificationsInApp: null,
 
         history: this.history,
-        size: this.size,
 
         GetResponsive: this.GetResponsive,
         SetResponsive: this.SetResponsive,

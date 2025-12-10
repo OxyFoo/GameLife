@@ -122,7 +122,7 @@ class AddActivityPage1 extends BackActivityPage1 {
      * @param {ItemCategory | null} value
      * @param {number} _index
      * @param {(ItemCategory | null)[]} _array
-     * @returns {JSX.Element | null}
+     * @returns {React.ReactNode | null}
      */
     renderCategory = (value, _index, _array) => {
         // If there are preselected skills, do not show categories
@@ -169,7 +169,7 @@ class AddActivityPage1 extends BackActivityPage1 {
     };
 
     /**
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderEmptyList = () => {
         const lang = langManager.curr['activity'];

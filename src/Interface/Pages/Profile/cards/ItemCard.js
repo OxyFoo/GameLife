@@ -10,7 +10,6 @@ import { Character, Frame } from 'Interface/Components';
 
 /**
  * @typedef {import('Data/User/Inventory').Stuff} Stuff
- * @typedef {import('Interface/OldComponents/Character/Frame').BodyView} BodyView
  *
  * @typedef {object} ItemCardProps
  * @property {Stuff | null} stuff - The item to display.
@@ -42,12 +41,7 @@ class ItemCard extends React.PureComponent {
 
         const item = dataManager.items.GetByID(stuff.ItemID);
         if (item !== null) {
-            this.character = new Character(
-                'itemcard-' + item.ID,
-                user.character.sexe,
-                user.character.skin,
-                user.character.skinColor
-            );
+            this.character = new Character('itemcard-' + item.ID, user.character.skin, user.character.skinColor);
             this.character.SetEquipment([item.ID]);
         }
     }
@@ -79,7 +73,7 @@ class ItemCard extends React.PureComponent {
 
         // Only for bald representation...
         let onlyItems = true;
-        /** @type {BodyView} */
+        /** @type {'full' | 'head'} */
         let bodyView = 'full';
         if (item.ID === 'hair_01') {
             onlyItems = false;

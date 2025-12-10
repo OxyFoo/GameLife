@@ -17,7 +17,7 @@ let enabled = true;
  * @param {() => void} [props.onNext]
  * @param {LangKeys} props.selectedLangKey
  * @param {(lang: LangKeys) => void} props.selectLanguage
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function RenderPage0({ selectedLangKey, selectLanguage, onNext }) {
     const lang = langManager.curr['onboarding'];
@@ -59,7 +59,7 @@ function RenderPage0({ selectedLangKey, selectLanguage, onNext }) {
  * @param {IconsName} props.icon
  * @param {LangKeys} props.selectedLangKey
  * @param {(lang: LangKeys) => void} props.selectLanguage
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function RenderFlag({ langKey, icon, selectedLangKey, selectLanguage }) {
     // Prevent double click

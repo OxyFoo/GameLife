@@ -31,7 +31,7 @@ const avatarPreviewConfig = {
         scale: 1
     },
     profile: {
-        pos: { x: 0, y: -3.1 },
+        pos: { x: -0.05, y: -3.2 },
         scale: 5
     },
     hair: {

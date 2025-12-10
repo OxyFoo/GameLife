@@ -75,6 +75,9 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         transform: [{ rotateZ: '45deg' }]
     },
+    friendTopRankFirst: {
+        overflow: 'hidden'
+    },
     friendTopRankText: {
         transform: [{ rotateZ: '-45deg' }],
         fontWeight: 'bold'

@@ -11,6 +11,8 @@ import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstant
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  *
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
@@ -412,6 +414,28 @@ class Inventory extends IUserData {
         const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: this.GetBodyColorHex() }];
 
         return [...faceItems, ...equippedItems];
+    };
+
+    /**
+     * Get avatar items from a Friend or UserOnline object for AvatarCharacter component
+     * @param {Friend | UserOnline | null | undefined} friend
+     * @returns {ItemConfig[]}
+     */
+    static GetFriendAvatarItems = (friend) => {
+        if (!friend?.avatar) return [];
+        const skinColor = BODY_COLORS[friend.avatar.SkinColor] || BODY_COLORS[0];
+
+        /** @type {ItemConfig[]} */
+        const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: skinColor }];
+
+        /** @type {ItemConfig[]} */
+        const equipmentItems = [];
+        if (friend.avatar.Hair) equipmentItems.push({ id: friend.avatar.Hair });
+        if (friend.avatar.Top) equipmentItems.push({ id: friend.avatar.Top });
+        if (friend.avatar.Bottom) equipmentItems.push({ id: friend.avatar.Bottom });
+        if (friend.avatar.Shoes) equipmentItems.push({ id: friend.avatar.Shoes });
+
+        return [...faceItems, ...equipmentItems];
     };
 }
 

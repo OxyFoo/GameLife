@@ -13,9 +13,18 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'flex-start'
+    },
+    avatarContainer: {
+        width: 84,
+        height: 84,
+        marginRight: 12,
+        borderRadius: 12,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)'
     },
     content: {
+        flex: 1,
         justifyContent: 'center',
         height: 84
     },

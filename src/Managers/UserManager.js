@@ -23,7 +23,6 @@ import GoogleSignIn from 'Utils/GoogleSignIn';
 import { Sleep } from 'Utils/Functions';
 
 /**
- * @typedef {import('Interface/Components').Character} Character
  * @typedef {import('Interface/FlowEngine/back').default['_public']} FlowEngine
  */
 
@@ -99,13 +98,6 @@ class UserManager {
      */
     // @ts-ignore Because "interface" is necessarily defined, without it nothing works in all cases
     interface = null;
-
-    /**
-     * TODO: Remove this deprecated field
-     * @type {Character | null}
-     * @deprecated
-     */
-    character = null;
 
     appIsLoaded = false;
 

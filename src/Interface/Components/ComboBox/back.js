@@ -18,17 +18,17 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {string} value
  *
  * @typedef {Object} ComboBoxPropsType
- * @property {StyleProp} style
- * @property {StyleProp} inputStyle
- * @property {number} maxContentHeight
- * @property {string} title
- * @property {ThemeColor} activeColor
- * @property {Array<ComboBoxItem>} data
- * @property {string} selectedValue
- * @property {boolean} enableSearchBar
- * @property {(item: ComboBoxItem | null) => void} onSelect
- * @property {boolean} enabled
- * @property {boolean} hideChevron
+ * @property {StyleProp} [style]
+ * @property {StyleProp} [inputStyle]
+ * @property {number} [maxContentHeight]
+ * @property {string} [title]
+ * @property {ThemeColor} [activeColor]
+ * @property {Array<ComboBoxItem>} [data]
+ * @property {string} [selectedValue]
+ * @property {boolean} [enableSearchBar]
+ * @property {(item: ComboBoxItem | null) => void} [onSelect]
+ * @property {boolean} [enabled]
+ * @property {boolean} [hideChevron]
  */
 
 /** @type {ComboBoxPropsType} */
@@ -122,7 +122,7 @@ const ComboBoxBack = (props) => {
         if (!enabled) {
             return;
         }
-        onSelect(null);
+        onSelect?.(null);
         if (selectionMode) {
             closeSelection();
         }
@@ -132,7 +132,7 @@ const ComboBoxBack = (props) => {
         (text = '') => {
             const textLowerCase = FormatForSearch(text);
             setData(
-                propsData.filter((/** @type {ComboBoxItem} */ item) =>
+                propsData?.filter((/** @type {ComboBoxItem} */ item) =>
                     FormatForSearch(item.value).includes(textLowerCase)
                 )
             );
@@ -144,7 +144,7 @@ const ComboBoxBack = (props) => {
     /** @param {ComboBoxItem} item */
     const onItemPress = useCallback(
         (/** @type {ComboBoxItem} */ item) => {
-            onSelect(item);
+            onSelect?.(item);
             closeSelection();
         },
         [onSelect, closeSelection]

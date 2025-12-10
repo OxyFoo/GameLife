@@ -120,19 +120,19 @@ class InputText extends InputTextBack {
                 {/* Mask bar to hide border between text and input border */}
                 <Animated.View style={[styles.bar, barMaskStyle]} />
 
-                {/* Mask bar to hide counter */}
-                {textLength > 0 && (
+                {/* Mask bar and counter - only show when showCounter is true */}
+                {showCounter && (textLength > 0 || props.maxLength !== undefined) && (
                     <>
-                        {showCounter && <Animated.View style={[styles.barCounter, barCounterMaskStyle]} />}
+                        <Animated.View style={[styles.barCounter, barCounterMaskStyle]} />
 
                         {/* Counter Text */}
                         <Text
                             style={styles.counter}
-                            color={showCounter ? textColor : 'transparent'}
+                            color={textColor}
                             fontSize={12}
                             onLayout={this.onTextCounterLayout}
                         >
-                            {`${textLength}/${props.maxLength}`}
+                            {props.maxLength !== undefined ? `${textLength}/${props.maxLength}` : `${textLength}`}
                         </Text>
                     </>
                 )}

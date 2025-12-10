@@ -63,15 +63,13 @@ class BottomPanel extends BottomPanelBack {
         const isClosing = state === 'closing';
         const isOverlayMode = params?.overlay === true;
 
-        // Higher zIndex for stacked panels
-        const baseZIndex = params?.zIndex ?? 0;
-        const panelZIndex = baseZIndex + index + 1; // +1 to ensure panels are above other elements
+        // Only apply zIndex for stacked panels (index > 0) to keep proper layering with NavBar
+        const baseZIndex = params?.zIndex;
+        const needsZIndex = baseZIndex !== undefined || index > 0;
+        const panelZIndex = (baseZIndex ?? 0) + index;
 
         /** @type {StyleProp} */
-        const styleParent = {
-            zIndex: panelZIndex,
-            elevation: panelZIndex
-        };
+        const styleParent = needsZIndex ? { zIndex: panelZIndex, elevation: panelZIndex } : {};
 
         /** @type {StyleProp} */
         const styleBackground = {

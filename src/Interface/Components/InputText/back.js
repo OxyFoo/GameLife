@@ -9,12 +9,9 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').TextInput} TextInput
  * @typedef {import('react-native').TextInputProps} TextInputProps
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
- *
- * @typedef {import('react-native').TextInputSubmitEditingEventData} TextInputSubmitEditingEventData
- * @typedef {import('react-native').NativeSyntheticEvent<TextInputSubmitEditingEventData>} NativeSyntheticEvent
- *
- * @typedef {import('react-native').TextInputFocusEventData} TextInputFocusEventData
- * @typedef {import('react-native').NativeSyntheticEvent<TextInputFocusEventData>} NativeSyntheticEventFocus
+ * @typedef {import('react-native').BlurEvent} BlurEvent
+ * @typedef {import('react-native').FocusEvent} FocusEvent
+ * @typedef {import('react-native').TextInputSubmitEditingEvent} TextInputSubmitEditingEvent
  *
  * @typedef {import('Interface/Components/Icon/back').IconsName} IconsName
  * @typedef {import('Managers/ThemeManager').ThemeText} ThemeText
@@ -33,10 +30,10 @@ import { TimingAnimation } from 'Utils/Animations';
  * @property {TextContentType} type Type of content to handle.
  * @property {boolean} error If true, the TextInput has an error.
  * @property {boolean} enabled If true, the TextInput is enabled.
- * @property {boolean} showCounter If true, the TextInput shows a counter.
+ * @property {boolean} showCounter If true, the TextInput shows a character counter. Use with maxLength to display "xx/yy" format, otherwise displays "xx".
  * @property {boolean} forceActive If true, the TextInput is forced to be active.
  * @property {(e: LayoutChangeEvent) => void} onParentLayout Handler for the layout event.
- * @property {(e: NativeSyntheticEvent) => void} onSubmit Handler for the submit event.
+ * @property {(e: TextInputSubmitEditingEvent) => void} onSubmit Handler for the submit event.
  */
 
 /** @type {TextInputProps & InputTextPropsType} */
@@ -174,7 +171,7 @@ class InputTextBack extends React.Component {
         this.setState({ borderWidth: 1.6 });
     };
 
-    /** @param {NativeSyntheticEventFocus} event */
+    /** @param {FocusEvent} event */
     onFocusIn = (event) => {
         this.setState({ isFocused: true });
         this.movePlaceHolderBorder();
@@ -183,7 +180,7 @@ class InputTextBack extends React.Component {
         }
     };
 
-    /** @param {NativeSyntheticEventFocus} event */
+    /** @param {BlurEvent} event */
     onFocusOut = (event) => {
         this.setState({ isFocused: false });
         if (!this.props.value?.length) {

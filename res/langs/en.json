@@ -442,8 +442,8 @@
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-notmuch": "Add an activity today to display the graphic",
-        "chart-quest-notmuch": "You need to have a quest today to display the graphic",
+        "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
+        "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
         "chart-click-me": "click-me!",
 
         "news-myquests-title": "Quests to do",

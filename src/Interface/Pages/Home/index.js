@@ -9,7 +9,7 @@ import QuestsProgressChart from './QuestsProgressChart';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar, Button } from 'Interface/Components';
-import { Missions, DailyQuest, QuestsList, TodoList } from 'Interface/Widgets';
+import { Missions, QuestsList, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -80,19 +80,6 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
-
-                {/* Quest of the day */}
-                <Title title={lang['section-today-quest']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='info-circle-outline'
-                        fontColor='gradient'
-                        onPress={this.infoDailyQuests}
-                    />
-                </Title>
-                <DailyQuest style={styles.dailyQuest} />
             </ScrollView>
         );
     }

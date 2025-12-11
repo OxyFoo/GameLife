@@ -15,7 +15,7 @@ import { Button, Text } from 'Interface/Components';
  * @param {number} props.index
  * @param {Animated.Value} props.anim
  * @param {() => void} [props.onNext]
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function RenderPage1({ index, anim, onNext }) {
     const lang = langManager.curr['onboarding'];

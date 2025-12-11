@@ -10,7 +10,6 @@ import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
  * @typedef {Reward & { Type: 'Title' }} TitleReward
  * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
- * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  */
 
 /** @extends {IUserData<null>} */

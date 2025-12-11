@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     },
     buttonSortType: {
         flex: 1,
+        borderRadius: 8,
         paddingHorizontal: 12
     },
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, Dimensions, View } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import styles from './style';
 import ScreenTutoBack from './back';
@@ -11,6 +12,7 @@ import { Button, Text, Zap, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
+ * @typedef {import('react-native-safe-area-context').EdgeInsets} EdgeInsets
  */
 
 const ScreenTutoProps = {
@@ -23,33 +25,43 @@ class ScreenTuto extends ScreenTutoBack {
         if (!visible) return null;
 
         return (
-            <View style={styles.parent}>
-                {/** Background */}
-                {/* TODO: Fix insets spaces in background */}
-                {this.renderTopPanel()}
-                {this.renderLeftPanel()}
-                {this.renderRightPanel()}
-                {this.renderBottomPanel()}
+            <SafeAreaInsetsContext.Consumer>
+                {(insets) => {
+                    // Stocker les insets dans l'instance pour updatePos.js
+                    this.insets = insets || { top: 0, right: 0, bottom: 0, left: 0 };
 
-                {this.renderButtonOverlay()}
-                {this.renderDefaultButton()}
+                    return (
+                        <View style={styles.parent}>
+                            {/** Background */}
+                            {this.renderTopPanel()}
+                            {this.renderLeftPanel()}
+                            {this.renderRightPanel()}
+                            {this.renderBottomPanel()}
 
-                {this.renderZap()}
-                {this.renderZapMessage()}
+                            {this.renderButtonOverlay()}
+                            {this.renderDefaultButton()}
 
-                {this.renderSkipButton()}
-                {this.renderStepText()}
-            </View>
+                            {this.renderZap()}
+                            {this.renderZapMessage()}
+
+                            {this.renderSkipButton()}
+                            {this.renderStepText()}
+                        </View>
+                    );
+                }}
+            </SafeAreaInsetsContext.Consumer>
         );
     }
 
     renderTopPanel() {
         const { component } = this.state;
+        const screenSize = Dimensions.get('window');
 
         /** @type {ViewStyle} */
         const styleTopPanel = {
+            top: -this.insets.top,
             width: '100%',
-            height: component.ref !== null ? component.position.y : '100%',
+            height: (component.ref !== null ? component.position.y : screenSize.height) + this.insets.top,
             opacity: component.ref !== null ? 0.6 : 0.4
         };
 
@@ -59,8 +71,10 @@ class ScreenTuto extends ScreenTutoBack {
     renderBottomPanel() {
         const { component } = this.state;
         if (component.ref === null) return null;
+        const screenSize = Dimensions.get('window');
 
         const styleBottomPanel = {
+            height: screenSize.height + this.insets.bottom,
             transform: [
                 {
                     translateY: Animated.add(component.position.y, component.size.y)
@@ -75,8 +89,9 @@ class ScreenTuto extends ScreenTutoBack {
         if (component.ref === null) return null;
 
         const styleLeftPanel = {
+            left: -this.insets.left,
             top: component.position.y,
-            width: component.position.x,
+            width: component.position.x + this.insets.left,
             height: component.size.y
         };
         return <Animated.View style={[styles.background, styleLeftPanel]} />;
@@ -85,10 +100,12 @@ class ScreenTuto extends ScreenTutoBack {
     renderRightPanel() {
         const { component } = this.state;
         if (component.ref === null) return null;
+        const screenSize = Dimensions.get('window');
 
         const styleRightPanel = {
             top: component.position.y,
             left: Animated.add(component.position.x, component.size.x),
+            width: screenSize.width + this.insets.right,
             height: component.size.y
         };
         return <Animated.View style={[styles.background, styleRightPanel]} />;

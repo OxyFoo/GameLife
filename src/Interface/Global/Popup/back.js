@@ -179,6 +179,21 @@ class PopupBack extends React.PureComponent {
     };
 
     /**
+     * Set cancelable state for the current popup
+     * @param {boolean} cancelable
+     */
+    SetCancelable = (cancelable) => {
+        const { currents } = this.state;
+        if (currents.length === 0) return;
+
+        const current = currents[currents.length - 1];
+        if (current) {
+            current.cancelable = cancelable;
+            this.forceUpdate();
+        }
+    };
+
+    /**
      * Close popup
      * @param {string} [closeReason]
      * @returns {boolean | (() => void)} True if popup was closed

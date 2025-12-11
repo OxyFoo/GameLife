@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Image } from 'react-native';
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
-// import user from 'Managers/UserManager';
+import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
+import Inventory from 'Data/User/Inventory';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
+import { Button, Text } from 'Interface/Components';
+
 import { rank_purple } from 'Ressources/items/rank/rank';
-import { Button, Text, Character, Frame } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').RankedFriend} RankedFriend
@@ -17,39 +21,21 @@ import { Button, Text, Character, Frame } from 'Interface/Components';
  * @param {RankedFriend} param0.item
  */
 function RankElement({ item }) {
-    const [character, setCharacter] = useState(/** @type {Character | null} */ (null));
-    const [statusStyle, setStatusStyle] = useState({});
-    const [componentColor, setComponentColor] = useState({});
+    if (!item) return null;
 
-    useEffect(() => {
-        const isThisPlayer = item.accountID === 0;
-        const _componentColor = {
-            backgroundColor: themeManager.GetColor('darkBlue')
-        };
-        if (isThisPlayer) {
-            _componentColor.backgroundColor = themeManager.GetColor('black');
-        }
+    const isThisPlayer = item.accountID === 0;
+    const containerSize = dataManager.items.GetContainerSize('profile');
 
-        const _character = new Character(
-            'character-player-' + item.accountID.toString(),
-            item.avatar.Sexe,
-            item.avatar.Skin,
-            item.avatar.SkinColor
-        );
-        const stuff = [item.avatar.Hair, item.avatar.Top, item.avatar.Bottom, item.avatar.Shoes];
-        _character.SetEquipment(stuff);
+    const componentColor = {
+        backgroundColor: themeManager.GetColor(isThisPlayer ? 'black' : 'darkBlue')
+    };
 
-        const _statusStyle = {};
-        if (item.status === 'online' || isThisPlayer) {
-            _statusStyle.borderColor = themeManager.GetColor('success');
-        } else if (item.status === 'offline') {
-            _statusStyle.borderColor = themeManager.GetColor('disabled');
-        }
-
-        setCharacter(_character);
-        setStatusStyle(_statusStyle);
-        setComponentColor(_componentColor);
-    }, [item]);
+    const statusStyle = {};
+    if (item.status === 'online' || isThisPlayer) {
+        statusStyle.borderColor = themeManager.GetColor('success');
+    } else if (item.status === 'offline') {
+        statusStyle.borderColor = themeManager.GetColor('disabled');
+    }
 
     const onPress = () => {
         if (item.accountID === 0) return;
@@ -57,18 +43,20 @@ function RankElement({ item }) {
         // user.interface.ChangePage('profilefriend', { friendID: item.accountID });
     };
 
-    return !item ? null : (
+    return (
         <Button style={[styles.itemContainer, componentColor]} onPress={onPress}>
             <View style={[styles.frameBorder, statusStyle]}>
-                {character !== null && (
-                    <Frame
-                        style={styles.frame}
-                        characters={[character]}
-                        size={{ x: 200, y: 0, width: 500, height: 450 }}
-                        delayTime={0}
-                        loadingTime={0}
-                        bodyView={'topHalf'}
-                    />
+                {item.avatar && (
+                    <AvatarFrame width={44} height={44} backgroundColor='#00000000'>
+                        <AvatarCharacter
+                            body={item.avatar.Skin || 'human_00'}
+                            bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}
+                            position={containerSize.pos}
+                            scale={containerSize.scale}
+                            items={Inventory.GetFriendAvatarItems(item)}
+                            portraitMode
+                        />
+                    </AvatarFrame>
                 )}
             </View>
 

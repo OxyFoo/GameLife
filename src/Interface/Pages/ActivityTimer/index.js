@@ -65,7 +65,7 @@ class ActivityTimer extends BackActivityTimer {
      * @param {MusicLinksKeys} musicKey
      * @param {number} _index
      * @param {MusicLinksKeys[]} _array
-     * @returns {React.JSX.Element}
+     * @returns {React.ReactNode}
      */
     renderMusic = (musicKey, _index, _array) => {
         const animStyle = {

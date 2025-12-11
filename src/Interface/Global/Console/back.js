@@ -25,8 +25,6 @@ class ConsoleBack extends React.Component {
     state = {
         enabled: false,
         opened: false,
-        animation: new Animated.Value(-1),
-        animationDeleteButtons: new Animated.Value(0),
 
         /** @type {Array<ConsoleLine>} */
         debug: []
@@ -37,6 +35,10 @@ class ConsoleBack extends React.Component {
 
     /** @type {boolean} State of delete buttons */
     toggle = false;
+
+    /** Animations */
+    animation = new Animated.Value(-1);
+    animationDeleteButtons = new Animated.Value(0);
 
     /**
      * @private
@@ -67,20 +69,20 @@ class ConsoleBack extends React.Component {
             return;
         }
 
-        TimingAnimation(this.state.animation, 0, 400).start();
-
         return new Promise((resolve) => {
             this.setState({ enabled: true }, async () => {
+                TimingAnimation(this.animation, 0, 400).start();
                 await this.processQueue();
                 resolve(null);
             });
         });
     };
+
     Disable = () => {
         if (!this.state.enabled) {
             return;
         }
-        TimingAnimation(this.state.animation, -1, 400).start(() => {
+        TimingAnimation(this.animation, -1, 400).start(() => {
             this.setState({ enabled: false });
         });
     };
@@ -233,7 +235,7 @@ class ConsoleBack extends React.Component {
             return;
         }
         this.setState({ opened: true }, this.processQueue);
-        SpringAnimation(this.state.animation, 1).start();
+        SpringAnimation(this.animation, 1).start();
         this.refDebug?.current?.scrollToEnd();
         user.interface.AddCustomBackHandler(this.close);
     };
@@ -246,16 +248,16 @@ class ConsoleBack extends React.Component {
         }
 
         this.setState({ opened: false });
-        SpringAnimation(this.state.animation, 0).start();
-        TimingAnimation(this.state.animationDeleteButtons, 0).start();
+        SpringAnimation(this.animation, 0).start();
+        TimingAnimation(this.animationDeleteButtons, 0).start();
         return true;
     };
     toggleDeleteButtons = () => {
         this.toggle = !this.toggle;
         if (this.toggle) {
-            SpringAnimation(this.state.animationDeleteButtons, 1).start();
+            SpringAnimation(this.animationDeleteButtons, 1).start();
         } else {
-            TimingAnimation(this.state.animationDeleteButtons, 0).start();
+            TimingAnimation(this.animationDeleteButtons, 0).start();
         }
     };
 

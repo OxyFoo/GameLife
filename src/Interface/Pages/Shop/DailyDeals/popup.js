@@ -12,12 +12,14 @@ import { Text, Button } from 'Interface/Components';
  */
 
 /**
- * @param {Item} item
- * @param {() => void} [refreshCallback=() => {}] Callback to refresh the page
+ * @param {object} props
+ * @param {Item} props.item
+ * @param {(reason: string) => void} props.closePopup
+ * @param {() => void} [props.onPurchased] Callback when item is successfully purchased
  */
-function renderItemPopup(item, refreshCallback = () => {}) {
+function BuyPopup({ item, closePopup, onPurchased }) {
     const lang = langManager.curr['shop']['dailyDeals'];
-    let [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const price = Math.round(item.Value * user.shop.priceFactor);
     const itemName = langManager.GetText(item.Name);
@@ -25,13 +27,28 @@ function renderItemPopup(item, refreshCallback = () => {}) {
     const buttonText = lang['popup-item-button'].replace('{}', price.toString());
 
     const buy = async () => {
-        if (this.state.buying) return;
         setLoading(true);
-        this.setState({ buying: true });
-        await buyDailyDeals.call(this, item);
-        setLoading(false);
-        this.setState({ buying: false });
-        refreshCallback();
+        user.interface.popup?.SetCancelable(false);
+
+        const success = await user.shop.BuyDailyDeal(item.ID, price);
+
+        if (!success) {
+            closePopup('cancelled');
+            return;
+        }
+
+        // Notify parent to update UI immediately
+        onPurchased?.();
+
+        // Close popup and show item reward page
+        closePopup('purchased');
+        user.interface.ChangePage('itemreward', {
+            args: {
+                itemID: item.ID,
+                callback: () => user.interface.BackHandle()
+            },
+            storeInHistory: false
+        });
     };
 
     return (
@@ -47,45 +64,4 @@ function renderItemPopup(item, refreshCallback = () => {}) {
     );
 }
 
-/** @param {Item} item */
-const buyDailyDeals = async (item) => {
-    const lang = langManager.curr['shop'];
-
-    // Check Ox Amount
-    const price = Math.round(item.Value * user.shop.priceFactor);
-    if (user.informations.ox.Get() < price) {
-        const title = lang['popup-notenoughox-title'];
-        const text = lang['popup-notenoughox-message'];
-        user.interface.popup.ForceOpen('ok', [title, text]);
-        return;
-    }
-
-    // Buy item
-    const response = await user.server.Request('buyDailyDeals', { itemID: item.ID });
-    if (response === null) return;
-
-    // Request failed
-    if (response['status'] !== 'ok') {
-        const title = lang['reward-failed-title'];
-        const text = lang['reward-failed-message'];
-        user.interface.popup.ForceOpen('ok', [title, text]);
-        return;
-    }
-
-    // Update inventory & Ox amount
-    user.inventory.LoadOnline({ stuffs: response['stuffs'] });
-    user.informations.ox.Set(parseInt(response['ox'], 10));
-    user.shop.buyToday.items.push(item.ID);
-    user.SaveLocal();
-
-    // Update mission
-    user.missions.SetMissionState('mission3', 'completed');
-
-    // Show success message
-    const itemName = langManager.GetText(item.Name);
-    const title = lang['dailyDeals']['popup-buysuccess-title'];
-    const text = lang['dailyDeals']['popup-buysuccess-text'].replace('{}', itemName).replace('{}', price.toString());
-    user.interface.popup.ForceOpen('ok', [title, text], undefined, false);
-};
-
-export { renderItemPopup };
+export { BuyPopup };

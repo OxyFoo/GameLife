@@ -2,7 +2,8 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 const fs = require('fs');
 const path = require('path');
-const Obfuscator = require('obfuscator-io-metro-plugin');
+// TODO: Fix obfuscator-io-metro-plugin compatibility with Metro v0.83+
+// const Obfuscator = require('obfuscator-io-metro-plugin');
 
 /**
  * Metro configuration for React Native
@@ -10,6 +11,10 @@ const Obfuscator = require('obfuscator-io-metro-plugin');
  *
  * @format
  */
+// Obfuscation disabled due to compatibility issues with Metro v0.83+
+// The plugin creates files with 'undefined' names causing build failures
+// See: https://github.com/nicholaslee119/obfuscator-io-metro-plugin/issues
+/*
 const jsoMetroPlugin = Obfuscator(
     {
         // for these option look javascript-obfuscator library options from  above url
@@ -34,6 +39,7 @@ const jsoMetroPlugin = Obfuscator(
         // sourceMapLocation: "./index.android.bundle.map" // optional  only works if sourceMap: true in obfuscation option
     }
 );
+*/
 
 /**
  * Configuration for local development modules
@@ -42,6 +48,10 @@ const LOCAL_MODULES = [
     {
         name: '@oxyfoo/gamelife-types',
         localPath: '../GameLife-Types/dist'
+    },
+    {
+        name: '@oxyfoo/avatar-factory',
+        localPath: '../../AvatarFactory'
     },
     {
         name: 'react-native-pinned-ws',
@@ -79,6 +89,13 @@ function createLocalModulesConfig() {
     return {
         watchFolders: availableModules.map((module) => module.absolutePath),
         resolver: {
+            blockList: [
+                // Exclure les node_modules des modules locaux pour éviter les conflits
+                /\/AvatarFactory\/node_modules\/.*/,
+                /\/GameLife-Types\/node_modules\/.*/,
+                /\/react-native-pinned-ws\/node_modules\/.*/,
+                /\/react-native-app-control\/node_modules\/.*/
+            ],
             extraNodeModules: new Proxy(
                 {},
                 {
@@ -108,10 +125,11 @@ const config = {
     },
 
     // Apply local modules configuration
-    ...createLocalModulesConfig(),
+    ...createLocalModulesConfig()
 
-    // Apply obfuscation plugin
-    ...jsoMetroPlugin
+    // Apply obfuscation plugin (disabled due to compatibility issues with Metro v0.83+)
+    // TODO: Fix obfuscator-io-metro-plugin or replace with alternative
+    // ...jsoMetroPlugin
 };
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

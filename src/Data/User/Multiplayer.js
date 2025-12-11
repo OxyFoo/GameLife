@@ -11,6 +11,7 @@ const FRIENDS_LIMIT = 50;
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').SaveObject_Multiplayer} SaveObject_Multiplayer
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_ServerToClient').ServerRequestUpdateFriends} ServerRequestUpdateFriends
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  */
 
 /** @extends {IUserData<SaveObject_Multiplayer>} */
@@ -107,6 +108,19 @@ class Multiplayer extends IUserData {
     GetSelf = () => {
         const achievements = this.#user.achievements.Get();
         const activities = this.#user.activities.Get();
+        const userAvatar = this.#user.inventory.avatar;
+
+        /**
+         * Get equipped item IDs (convert stuff IDs to item IDs)
+         * @param {number} stuffID
+         * @param {ItemID} defaultItem
+         * @returns {ItemID}
+         */
+        const getItemID = (stuffID, defaultItem) => {
+            const stuff = this.#user.inventory.GetStuffByID(stuffID);
+            return stuff ? stuff.ItemID : defaultItem;
+        };
+
         return {
             accountID: 0,
             achievements: achievements,
@@ -115,15 +129,13 @@ class Multiplayer extends IUserData {
                 length: activities.length,
                 totalDuration: activities.reduce((acc, a) => acc + a.duration, 0)
             },
-            // TODO: Finish this
             avatar: {
-                Sexe: 'MALE',
-                Skin: 'skin_01',
-                SkinColor: 0,
-                Hair: 'hair_01',
-                Top: 'top_01',
-                Bottom: 'bottom_01',
-                Shoes: 'shoes_01'
+                Skin: userAvatar.skin || 'human_00',
+                SkinColor: userAvatar.skinColor || 2,
+                Hair: getItemID(userAvatar.hair, 'hair_00'),
+                Top: getItemID(userAvatar.top, 'top_00'),
+                Bottom: getItemID(userAvatar.bottom, 'bottom_00'),
+                Shoes: getItemID(userAvatar.shoes, 'shoes_00')
             },
             currentActivity: null,
             friendshipState: 'accepted',

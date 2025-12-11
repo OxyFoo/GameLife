@@ -1,77 +1,65 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    // Flatlists
     flatlistTargets: {
-        marginBottom: 24,
-        paddingHorizontal: 12,
-        paddingBottom: 4
+        marginBottom: 12
     },
     flatlistTargetsContent: {
-        flexDirection: 'row',
-        justifyContent: 'space-around'
+        gap: 12
     },
     flatlistChests: {
-        marginBottom: 24,
-        paddingHorizontal: 12,
-        paddingBottom: 4
+        marginBottom: 24
+    },
+    flatlistChestsContent: {
+        gap: 12
     },
 
+    // Category
     category: {
-        paddingHorizontal: 28,
-        paddingVertical: 28
+        paddingHorizontal: 12,
+        paddingVertical: 12
     },
 
     // Item
-    itemParent: {
-        width: '33%',
-        aspectRatio: 1 / 1.3,
-        paddingHorizontal: 6
-    },
     itemButton: {
-        width: '100%',
-        height: '100%',
+        flex: 1,
+        paddingVertical: 0,
         paddingHorizontal: 0,
-        borderRadius: 8
+        borderWidth: 2
     },
     itemContent: {
-        width: '100%',
+        flex: 1,
         height: '100%',
-        borderRadius: 2,
-        overflow: 'hidden'
+        justifyContent: 'space-between'
     },
 
     itemInfo: {
-        position: 'absolute',
-        top: 12,
-        left: 0,
-        right: 0,
-
         alignContent: 'center',
         justifyContent: 'center'
     },
     itemName: {
+        marginTop: 6,
         fontSize: 14
     },
     itemRarity: {
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: 'bold'
     },
 
     imageChest: {
         width: '100%',
-        height: '100%',
-        transform: [{ scale: 0.6 }]
+        height: 'auto',
+        aspectRatio: 1,
+        marginBottom: -24,
+        transform: [{ scale: 0.7 }, { translateY: -8 }]
     },
 
     itemPrice: {
-        position: 'absolute',
-        bottom: 12,
-        left: 0,
-        right: 0,
-
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 6
     },
     itemPriceOx: {
         fontSize: 16,
@@ -94,13 +82,6 @@ const styles = StyleSheet.create({
         width: 16,
         aspectRatio: 1,
         marginTop: 24
-    },
-
-    itemDecoration: {
-        position: 'absolute',
-        top: 0,
-        width: '100%',
-        height: 4
     },
 
     // Popup

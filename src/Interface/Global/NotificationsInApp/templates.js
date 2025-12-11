@@ -21,7 +21,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @param {object} props
  * @param {NotificationInApp} props.item
  * @param {number} props.index
- * @returns {React.JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 function NIA_Template({ item, index }) {
     const [fadeAnim] = React.useState(new Animated.Value(1));

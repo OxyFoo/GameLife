@@ -35,9 +35,14 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         borderWidth: 4,
-        borderRadius: 24
+        borderRadius: 24,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
     },
-
+    avatarFrame: {
+        transform: [{ scale: 2 }]
+    },
     frameOX: {
         width: '100%',
         height: '100%',

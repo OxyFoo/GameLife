@@ -16,16 +16,10 @@ export { ProgressBar } from './Components/ProgressBar';
 export { ProgressDonut } from './Components/ProgressDonut';
 export { Reward } from './Components/Reward';
 export { Separator } from './Components/Separator';
+export { StreakChart } from './Components/StreakChart';
 export { Swiper } from './Components/Swiper';
 export { Switch } from './Components/Switch';
 export { SwitchText } from './Components/SwitchText';
 export { Text } from './Components/Text';
 export { UserOnlineElement } from './Components/UserOnlineElement';
 export { Zap } from './Components/Zap';
-
-// TODO: Reimplements old components
-import Frame from './OldComponents/Character/Frame';
-import Character from './OldComponents/Character/Character';
-import StreakChart from './OldComponents/StreakChart';
-
-export { Frame, Character, StreakChart };

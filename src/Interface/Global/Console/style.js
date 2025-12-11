@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         marginTop: -200, // Safe area
         marginBottom: 12,
         padding: 24,
-        paddingTop: 12 + 200, // Safe area
+        paddingTop: 200, // Safe area
         backgroundColor: '#000'
     },
     text: {

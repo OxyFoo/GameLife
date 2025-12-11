@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Image, FlatList } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopItems from './back';
 import styles from './style';
@@ -8,11 +7,11 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Button, Text } from 'Interface/Components';
+import { Button, Icon, Text } from 'Interface/Components';
 
 /**
- * @typedef {import('./back').BuyableRandomChest} BuyableItem
+ * @typedef {import('./back').BuyableRandomChest} BuyableRandomItem
+ * @typedef {import('react-native').ListRenderItem<BuyableRandomItem>} ListRenderItemBuyableItem
  */
 
 class ShopItems extends BackShopItems {
@@ -20,6 +19,7 @@ class ShopItems extends BackShopItems {
         return (
             <FlatList
                 style={styles.flatlist}
+                columnWrapperStyle={styles.flatlistContent}
                 data={this.CHESTS}
                 numColumns={3}
                 renderItem={this.renderItem}
@@ -29,56 +29,48 @@ class ShopItems extends BackShopItems {
         );
     }
 
-    /**
-     * @param {{ item: BuyableItem }} item
-     * @returns {JSX.Element}
-     */
+    /** @type {ListRenderItemBuyableItem} */
     renderItem = ({ item }) => {
         const lang = langManager.curr['shop']['randomChests'];
-        const name = lang[item.LangName];
+        const name = lang['chest-random'][item.Rarity];
 
         const disabled = user.shop.buyToday.items.includes(item.ID.toString());
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
-        const backgroundStyle = { backgroundColor: item.BackgroundColor };
 
         return (
-            <View style={styles.itemParent} ref={(ref) => (this[item.ref] = ref)}>
-                <Button style={styles.itemButton} onPress={item.OnPress} enabled={!disabled}>
-                    <View style={[styles.itemContent, backgroundStyle]}>
-                        {/** Chest name & rarity */}
-                        <View style={styles.itemInfo}>
-                            <Text style={styles.itemName}>{name}</Text>
-                            <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
-                        </View>
-
-                        {/** Chest frame */}
-                        <Image style={styles.imageChest} source={item.Image} resizeMode='contain' />
-
-                        {/** Chest price */}
-                        {this.renderPrice(item)}
-
-                        {/** Decoration */}
-                        <LinearGradient
-                            style={styles.itemDecoration}
-                            colors={item.Colors}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                        />
+            <Button
+                style={[styles.itemButton, { borderColor: item.Colors[0] }]}
+                gradientColors={['#38406573', '#3840651F']}
+                gradientColorsAngle={-45}
+                onPress={item.OnPress}
+                enabled={!disabled}
+            >
+                <View style={styles.itemContent}>
+                    {/** Chest name & rarity */}
+                    <View style={styles.itemInfo}>
+                        <Text style={styles.itemName}>{name}</Text>
+                        <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
                     </View>
-                </Button>
-            </View>
+
+                    {/** Chest frame */}
+                    <Image style={styles.imageChest} source={item.Image} resizeMode='contain' />
+
+                    {/** Chest price */}
+                    {this.renderPrice(item)}
+                </View>
+            </Button>
         );
     };
 
-    /** @param {BuyableItem} item */
+    /** @param {BuyableRandomItem} item */
     renderPrice = (item) => {
         // Default price
         if (item.PriceDiscount < 0) {
             return (
                 <View style={styles.itemPrice}>
                     <Text style={styles.itemPriceOx}>{item.PriceOriginal.toString()}</Text>
-                    <Image style={styles.itemOxImage} source={IMG_OX} />
+                    <Icon icon='ox' size={16} />
                 </View>
             );
         }
@@ -90,7 +82,7 @@ class ShopItems extends BackShopItems {
                     <Text style={styles.itemPriceOxEditedOld}>{item.PriceOriginal.toString()}</Text>
                     <Text style={styles.itemPriceOxEditedNew}>{item.PriceDiscount.toString()}</Text>
                 </View>
-                <Image style={styles.itemOxImageEdited} source={IMG_OX} />
+                <Icon icon='ox' style={styles.itemOxImageEdited} size={16} />
             </View>
         );
     };

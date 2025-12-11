@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
+import { Icon } from 'Interface/Components';
 import { Random } from 'Utils/Functions';
 import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 
@@ -20,10 +20,10 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
 function OxObject({ index, total, parentLayout }) {
     const [show, setShow] = React.useState(false);
 
-    const [position] = React.useState(new Animated.ValueXY());
-    const [scale] = React.useState(new Animated.Value(index === 0 ? 1 : 0));
-    const [shake] = React.useState(new Animated.Value(0));
-    const [opacity] = React.useState(new Animated.Value(0));
+    const position = React.useRef(new Animated.ValueXY()).current;
+    const scale = React.useRef(new Animated.Value(index === 0 ? 1 : 0)).current;
+    const shake = React.useRef(new Animated.Value(0)).current;
+    const opacity = React.useRef(new Animated.Value(0)).current;
 
     // Random position
     React.useEffect(() => {
@@ -87,23 +87,29 @@ function OxObject({ index, total, parentLayout }) {
             },
             { scale: scale }
         ],
-        opacity: opacity
+        opacity: opacity.interpolate({
+            inputRange: [0, 0.8, 1],
+            outputRange: [0, 1, 0]
+        })
     };
 
     if (index === 0) {
+        style.opacity = 1;
         style.zIndex = 1000;
     }
 
-    return <Animated.Image source={IMG_OX} style={[styles.ox, style]} />;
+    return (
+        <Animated.View style={[styles.ox, style]}>
+            <Icon icon='ox' size={96} />
+        </Animated.View>
+    );
 }
 
 const styles = StyleSheet.create({
     ox: {
         position: 'absolute',
-        width: 75,
-        height: 75,
-        top: -75 / 2,
-        left: -75 / 2
+        top: -96 / 2,
+        left: -96 / 2
     }
 });
 

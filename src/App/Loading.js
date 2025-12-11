@@ -12,7 +12,6 @@ import {
 } from './popups';
 import { env } from 'Utils/Env';
 import { LoadTemplate_AppData, LoadTemplate_UserData } from './template';
-//import { Character } from 'Interface/Components';
 
 /**
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
@@ -166,15 +165,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    // Loading: User character
-    // user.character = new Character(
-    //     'player',
-    //     user.inventory.avatar.sexe,
-    //     user.inventory.avatar.skin,
-    //     user.inventory.avatar.skinColor
-    // );
-    // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    // user.interface.userHeader?.ShowAvatar(true);
+    // Update user avatar
+    user.interface.userHeader?.RefreshAvatar();
 
     // Setup Notifications
     user.notificationsPush.Initialize();
@@ -184,10 +176,9 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load admob
     //await user.consent.ShowTrackingPopup();
 
-    // TODO: Fix ads
     // Load ads
-    //const ads = dataManager.ads.Get();
-    //user.ads.LoadAds(ads);
+    const ads = dataManager.ads.Get();
+    user.ads.LoadAds(ads);
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {

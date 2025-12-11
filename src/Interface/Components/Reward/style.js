@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: -4,
         right: -4,
-        bottom: -2,
+        bottom: -6,
         fontSize: 16
     }
 });

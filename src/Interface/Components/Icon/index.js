@@ -30,7 +30,7 @@ class Icon extends IconBack {
                 const XML = Base64.Decode(xml).split('#ffffff').join(color).split('#FFFFFF').join(color);
                 output = (
                     <View style={[containerSize, style]}>
-                        <SvgXml xml={XML} width={size} height={size} />
+                        <SvgXml xml={XML} width={size?.toString()} height={size?.toString()} />
                     </View>
                 );
             }

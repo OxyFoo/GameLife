@@ -1,4 +1,4 @@
-import { Animated, Dimensions, FlatList } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
 import user from 'Managers/UserManager';
 
@@ -7,9 +7,32 @@ import { MinMax } from 'Utils/Functions';
 import { EasingAnimation, SpringAnimation } from 'Utils/Animations';
 
 /**
- * @typedef {import('react-native').ScrollView} ScrollView
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('react-native').FlatList} FlatList
+ * @typedef {import('react-native').ScrollView} ScrollView
+ *
+ * Scrollable component that can be controlled by the Mover
+ * Includes FlatList, ScrollView, and their Animated variants
+ * @typedef {FlatList | ScrollView | Animated.FlatList | Animated.ScrollView} ScrollableComponent
  */
+
+/**
+ * Check if the component has scrollToOffset method (FlatList behavior)
+ * @param {object} component
+ * @returns {component is FlatList}
+ */
+const hasFlatListScroll = (component) => {
+    return 'scrollToOffset' in component && typeof component.scrollToOffset === 'function';
+};
+
+/**
+ * Check if the component has scrollTo method (ScrollView behavior)
+ * @param {object} component
+ * @returns {component is ScrollView}
+ */
+const hasScrollViewScroll = (component) => {
+    return 'scrollTo' in component && typeof component.scrollTo === 'function';
+};
 
 class Mover {
     panel = {
@@ -22,7 +45,7 @@ class Mover {
     };
 
     scrollView = {
-        /** @type {Animated.FlatList | FlatList | ScrollView | null} */
+        /** @type {ScrollableComponent | null} */
         ref: null,
         height: 0,
         innerHeight: 0,
@@ -62,7 +85,7 @@ class Mover {
     /** @type {string | null} */
     animationListener = null;
 
-    /** @param {Animated.FlatList | FlatList | ScrollView | null} scrollView */
+    /** @param {ScrollableComponent | null} scrollView */
     SetScrollView = (scrollView) => {
         if (scrollView === null || scrollView === this.scrollView.ref) {
             return;
@@ -82,61 +105,17 @@ class Mover {
             return;
         }
 
-        const constructorName = Object.getPrototypeOf(scrollView).constructor.name;
-
-        // ScrollView is FlatList
-        if (scrollView instanceof FlatList && constructorName === 'FlatList') {
-            if (scrollView.props.scrollEnabled !== false) {
-                scrollView.setNativeProps({ scrollEnabled: false });
-            }
-
-            if (typeof scrollView.props.onLayout !== 'function') {
-                user.interface.console?.AddLog('warn', '[BottomPanel] onLayout is not set to Mover.onLayoutFlatList');
-            }
-
-            if (typeof scrollView.props.onContentSizeChange !== 'function') {
-                user.interface.console?.AddLog(
-                    'warn',
-                    '[BottomPanel] onContentSizeChange is not set to Mover.onContentSizeChange'
-                );
-            }
-
-            // Set scroll listener
+        // FlatList (or Animated.FlatList) - use scrollToOffset
+        if (hasFlatListScroll(scrollView)) {
             this.animationListener = this.scrollView.scrollAnimY.addListener(({ value }) => {
                 scrollView.scrollToOffset({ offset: value, animated: false });
             });
+            return;
         }
 
-        // ScrollView is ScrollView
-        else if (
-            constructorName === 'ReactNativeFiberHostComponent' ||
-            constructorName === 'ReactFabricHostComponent'
-        ) {
-            // TODO: Add types & check for ScrollView (scrollEnabled, onLayout, onContentSizeChange)
-
-            /** @type {ScrollView['props']} */
-            //const ref = scrollView.viewConfig.validAttributes;
-
-            //if (ref.scrollEnabled !== false) {
-            //    user.interface.console?.AddLog(
-            //        'error',
-            //        '[BottomPanel] ScrollView have to be scrollEnabled=false (' + ref.scrollEnabled + ')'
-            //    );
-            //    return;
-            //}
-
-            // if (scrollView.props.onLayout !== this.onLayoutFlatList) {
-            //     user.interface.console?.AddLog('error', '[BottomPanel] onLayout is not set to Mover.onLayoutFlatList');
-            // }
-            // if (scrollView.props.onContentSizeChange !== this.onContentSizeChange) {
-            //     user.interface.console?.AddLog(
-            //         'error',
-            //         '[BottomPanel] onContentSizeChange is not set to Mover.onContentSizeChange'
-            //     );
-            // }
-
+        // ScrollView (or Animated.ScrollView) - use scrollTo
+        if (hasScrollViewScroll(scrollView)) {
             this.animationListener = this.scrollView.scrollAnimY.addListener(({ value }) => {
-                // @ts-ignore
                 scrollView.scrollTo({ y: value, animated: false });
             });
         }
@@ -242,6 +221,8 @@ class Mover {
 
         // Acceleration
         const deltaTime = (Date.now() - this.events.tickTime) / 1000;
+        if (deltaTime === 0) return; // Skip if no time has passed to prevent division by zero
+
         this.events.accX = MinMax(-5000, deltaX / deltaTime, 5000);
         this.events.accY = MinMax(-5000, deltaY / deltaTime, 5000);
         this.events.tickTime = Date.now();

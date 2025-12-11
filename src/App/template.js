@@ -230,13 +230,12 @@ export function LoadTemplate_AppData(user) {
                 xp: 1000,
                 friendshipState: 'accepted',
                 avatar: {
-                    Top: 'top_01',
-                    Bottom: 'bottom_01',
-                    Skin: 'skin_01',
+                    Skin: 'human_00',
                     SkinColor: 0,
-                    Hair: 'hair_01',
-                    Sexe: 'MALE',
-                    Shoes: 'shoes_01'
+                    Hair: 'hair_00',
+                    Top: 'top_00',
+                    Bottom: 'bottom_00',
+                    Shoes: 'shoes_00'
                 },
                 currentActivity: null,
                 stats: {
@@ -262,13 +261,12 @@ export function LoadTemplate_AppData(user) {
                 xp: 1000,
                 friendshipState: 'accepted',
                 avatar: {
-                    Top: 'top_01',
-                    Bottom: 'bottom_01',
-                    Skin: 'skin_01',
+                    Skin: 'human_00',
                     SkinColor: 0,
-                    Hair: 'hair_01',
-                    Sexe: 'MALE',
-                    Shoes: 'shoes_01'
+                    Hair: 'hair_00',
+                    Top: 'top_00',
+                    Bottom: 'bottom_00',
+                    Shoes: 'shoes_00'
                 },
                 currentActivity: null,
                 stats: {

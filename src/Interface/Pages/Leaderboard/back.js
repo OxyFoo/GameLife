@@ -47,13 +47,12 @@ class BackLeaderboard extends PageBase {
             xp: experience.xpInfo.totalXP,
 
             avatar: {
-                Sexe: user.inventory.avatar.sexe,
                 Skin: user.inventory.avatar.skin,
                 SkinColor: user.inventory.avatar.skinColor,
-                Hair: user.inventory.GetStuffByID(user.inventory.avatar.hair).ItemID,
-                Top: user.inventory.GetStuffByID(user.inventory.avatar.top).ItemID,
-                Bottom: user.inventory.GetStuffByID(user.inventory.avatar.bottom).ItemID,
-                Shoes: user.inventory.GetStuffByID(user.inventory.avatar.shoes).ItemID
+                Hair: user.inventory.GetStuffByID(user.inventory.avatar.hair)?.ItemID ?? 'hair_00',
+                Top: user.inventory.GetStuffByID(user.inventory.avatar.top)?.ItemID ?? 'top_00',
+                Bottom: user.inventory.GetStuffByID(user.inventory.avatar.bottom)?.ItemID ?? 'bottom_00',
+                Shoes: user.inventory.GetStuffByID(user.inventory.avatar.shoes)?.ItemID ?? 'shoes_00'
             },
 
             activities: {
@@ -147,7 +146,7 @@ class BackLeaderboard extends PageBase {
 
         // Error ?
         else {
-            user.interface.console.AddLog('error', 'Leaderboard sort index unknown:', sortIndex);
+            user.interface.console?.AddLog('error', 'Leaderboard sort index unknown:', sortIndex);
         }
 
         // Search filter

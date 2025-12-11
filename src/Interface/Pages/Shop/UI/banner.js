@@ -1,46 +1,47 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
+import { CountdownTimer } from './countdowntimer';
 import { Button, Icon, Text } from 'Interface/Components';
 
+/**
+ * @typedef {object} BannerProps
+ * @property {string} id Used to call onPress with id
+ * @property {string} title
+ * @property {boolean} [showTimer] Whether to show the countdown timer
+ * @property {(id: string) => void} [onPress]
+ */
+
+/** @type {BannerProps} */
 const BannerProps = {
-    /** @type {string} Used to call onPress with id */
     id: '',
-
-    /** @type {string} */
     title: '',
-
-    /** @type {(id: string) => void} */
-    onPress: () => {}
+    showTimer: false,
+    onPress: undefined
 };
 
 class Banner extends React.Component {
     onPress = () => {
         const { id, onPress } = this.props;
-        onPress(id);
+        onPress?.(id);
     };
 
     render() {
-        const { id, title } = this.props;
+        const { id, title, showTimer, onPress } = this.props;
 
         return (
-            <Button style={styles.banner} onPress={this.onPress}>
-                <LinearGradient
-                    style={styles.gradient}
-                    colors={['#B839FE50', '#8A3DFE50']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                >
+            <View style={styles.container}>
+                <View style={styles.titleContainer}>
                     <Text style={styles.title}>{title}</Text>
+                    {showTimer && <CountdownTimer />}
+                </View>
 
-                    {id !== '' && (
-                        <View style={styles.help}>
-                            <Icon icon='info-circle' size={24} />
-                        </View>
-                    )}
-                </LinearGradient>
-            </Button>
+                {id !== '' && !!onPress && (
+                    <Button style={styles.helpButton} appearance='uniform' color='transparent' onPress={this.onPress}>
+                        <Icon icon='info-circle-outline' color='main1' size={28} />
+                    </Button>
+                )}
+            </View>
         );
     }
 }
@@ -49,31 +50,27 @@ Banner.prototype.props = BannerProps;
 Banner.defaultProps = BannerProps;
 
 const styles = StyleSheet.create({
-    banner: {
-        width: '100%',
-        height: 50,
-        marginBottom: 24,
-        paddingHorizontal: 0,
-        borderRadius: 4
-    },
-    gradient: {
-        width: '100%',
-        height: '100%',
-
-        display: 'flex',
+    container: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-between',
+        marginBottom: 12
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12
     },
     title: {
         fontSize: 30,
         fontWeight: 'bold'
     },
-    help: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 12,
-        justifyContent: 'center'
+    helpButton: {
+        width: 'auto',
+        aspectRatio: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 8,
+        borderRadius: 4
     }
 });
 

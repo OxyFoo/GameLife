@@ -8,6 +8,7 @@ const PAGES = {
     calendar:               require('./Pages/Calendar').default,
     chestreward:            require('./Pages/ChestReward').default,
     display:                require('./Pages/Display').default,
+    itemreward:             require('./Pages/ItemReward').default,
     friends:                require('./Pages/Friends').default,
     home:                   require('./Pages/Home').default,
     leaderboard:            require('./Pages/Leaderboard').default,

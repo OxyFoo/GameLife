@@ -19,15 +19,14 @@ class App extends React.Component {
     ref = React.createRef();
 
     componentDidMount() {
-        if (!this.ref.current) {
-            throw new Error('FlowEngine reference is not set');
-        }
-
         // Get the app state (active or background) to check the date
         this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
+    }
 
+    /** @param {import('Interface/FlowEngine/back').default} flowEngine */
+    onFlowEngineReady = (flowEngine) => {
         // Expose FlowEngine's public interface to UserManager for UI interactions
-        user.interface = this.ref.current._public;
+        user.interface = flowEngine._public;
 
         // Configure Google Sign-In
         GoogleSignIn.SetLogger(user.interface.console?.AddLog ?? null);
@@ -35,12 +34,12 @@ class App extends React.Component {
 
         // Open the test page
         if (this.props.test || env.SHOW_PAGE_TEST) {
-            this.ref.current?.ChangePage('test');
+            flowEngine.ChangePage('test');
             return;
         }
 
-        this.ref.current?.ChangePage('loading', { storeInHistory: false });
-    }
+        flowEngine.ChangePage('loading', { storeInHistory: false });
+    };
 
     /** @param {AppStateStatus} state */
     async componentChangeState(state) {
@@ -60,6 +59,21 @@ class App extends React.Component {
         }
     }
 
+    /**
+     * @param {Error} error
+     * @param {import('react').ErrorInfo} info
+     */
+    componentDidCatch(error, info) {
+        user.interface.console?.AddLog('error', 'Uncaught error in App component:', error, info);
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: 'Uncaught error',
+                message: `An unexpected error occurred:\n\n${error.toString()}\n\nInfo:\n${info.componentStack}`
+            }
+        });
+    }
+
     componentWillUnmount() {
         // Remove the app state listener
         this.appStateSubscription?.remove();
@@ -67,7 +81,7 @@ class App extends React.Component {
     }
 
     render() {
-        return <FlowEngine ref={this.ref} testID='FlowEngine' />;
+        return <FlowEngine ref={this.ref} testID='FlowEngine' onReady={this.onFlowEngineReady} />;
     }
 }
 

@@ -19,7 +19,7 @@ import themeManager from 'Managers/ThemeManager';
 
 /**
  * @param {HistoryActivitiesPropsType} props
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function HistoryView(props) {
     const lang = langManager.curr['skill'];

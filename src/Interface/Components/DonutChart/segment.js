@@ -26,7 +26,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 /**
  * Generates the SVG path for a donut segment
  * @param {DonutSegmentProps} props
- * @return {JSX.Element} Returns a JSX element representing the donut segment
+ * @return {React.ReactNode} Returns a JSX element representing the donut segment
  */
 function DonutSegment({
     item,

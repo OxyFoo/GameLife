@@ -22,7 +22,7 @@ import { Button, Icon, Text } from 'Interface/Components';
 const NavButton = React.forwardRef(
     /**
      * @param {NavButtonProps} props
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     ({ index, icon, iconSelect, text, anim, onPress }, ref) => {
         const inputRange = [index - 1, index - 0.5, index, index + 0.5, index + 1];

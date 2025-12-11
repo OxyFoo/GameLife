@@ -20,7 +20,7 @@ import { Button, Icon } from 'Interface/Components';
 const MidButton = React.forwardRef(
     /**
      * @param {MidButtonProps} props
-     * @returns {JSX.Element}
+     * @returns {React.ReactNode}
      */
     ({ animationNavBar, animationAddActivity, onPress }, ref) => {
         /** @type {StyleViewProp} */

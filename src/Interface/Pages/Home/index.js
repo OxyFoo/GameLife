@@ -56,17 +56,21 @@ class Home extends BackHome {
                 </View>
 
                 {/* Quests list */}
-                <Title title={lang['section-today-quests']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='info-circle-outline'
-                        fontColor='gradient'
-                        onPress={this.infoQuests}
-                    />
-                </Title>
-                <QuestsList />
+                {this.state.hasQuests && (
+                    <>
+                        <Title title={lang['section-today-quests']}>
+                            <Button
+                                style={styles.sectionTitleAddButton}
+                                appearance='uniform'
+                                color='transparent'
+                                icon='info-circle-outline'
+                                fontColor='gradient'
+                                onPress={this.infoQuests}
+                            />
+                        </Title>
+                        <QuestsList />
+                    </>
+                )}
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>

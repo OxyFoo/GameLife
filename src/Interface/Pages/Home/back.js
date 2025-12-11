@@ -33,7 +33,8 @@ class BackHome extends PageBase {
             currentXP: '0',
             nextLevelXP: '0'
         },
-        scrollable: true
+        scrollable: true,
+        hasQuests: false
     };
 
     /** @type {React.RefObject<ScrollView | null>} */
@@ -45,13 +46,22 @@ class BackHome extends PageBase {
     /** @type {Symbol | null} */
     listenerActivities = null;
 
+    /** @type {Symbol | null} */
+    listenerQuests = null;
+
     componentDidMount() {
         this.handleLevelsUpdate(user.experience.experience.Get());
         this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
+        
+        this.handleQuestsUpdate();
+        this.listenerQuests = user.quests.allQuests.AddListener(this.handleQuestsUpdate);
     }
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
+        if (this.listenerQuests) {
+            user.quests.allQuests.RemoveListener(this.listenerQuests);
+        }
     }
 
     /** @param {UserManager['experience']['experience']['var']} experience */
@@ -68,6 +78,11 @@ class BackHome extends PageBase {
                 nextLevelXP: next.toString()
             }
         });
+    };
+
+    handleQuestsUpdate = () => {
+        const allQuests = user.quests.Get();
+        this.setState({ hasQuests: allQuests.length > 0 });
     };
 
     /** @param {boolean} scrollable */

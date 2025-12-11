@@ -73,17 +73,21 @@ class Home extends BackHome {
                 )}
 
                 {/* My todos */}
-                <Title title={lang['section-my-todos']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='add-outline'
-                        fontColor='gradient'
-                        onPress={this.addTodo}
-                    />
-                </Title>
-                <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
+                {this.state.hasTodos && (
+                    <>
+                        <Title title={lang['section-my-todos']}>
+                            <Button
+                                style={styles.sectionTitleAddButton}
+                                appearance='uniform'
+                                color='transparent'
+                                icon='add-outline'
+                                fontColor='gradient'
+                                onPress={this.addTodo}
+                            />
+                        </Title>
+                        <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
+                    </>
+                )}
             </ScrollView>
         );
     }

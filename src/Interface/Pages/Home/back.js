@@ -34,7 +34,8 @@ class BackHome extends PageBase {
             nextLevelXP: '0'
         },
         scrollable: true,
-        hasQuests: false
+        hasQuests: false,
+        hasTodos: false
     };
 
     /** @type {React.RefObject<ScrollView | null>} */
@@ -49,18 +50,27 @@ class BackHome extends PageBase {
     /** @type {Symbol | null} */
     listenerQuests = null;
 
+    /** @type {Symbol | null} */
+    listenerTodos = null;
+
     componentDidMount() {
         this.handleLevelsUpdate(user.experience.experience.Get());
         this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
-        
+
         this.handleQuestsUpdate();
         this.listenerQuests = user.quests.allQuests.AddListener(this.handleQuestsUpdate);
+
+        this.handleTodosUpdate();
+        this.listenerTodos = user.todos.todos.AddListener(this.handleTodosUpdate);
     }
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.listenerActivities);
         if (this.listenerQuests) {
             user.quests.allQuests.RemoveListener(this.listenerQuests);
+        }
+        if (this.listenerTodos) {
+            user.todos.todos.RemoveListener(this.listenerTodos);
         }
     }
 
@@ -83,6 +93,11 @@ class BackHome extends PageBase {
     handleQuestsUpdate = () => {
         const allQuests = user.quests.Get();
         this.setState({ hasQuests: allQuests.length > 0 });
+    };
+
+    handleTodosUpdate = () => {
+        const allTodos = user.todos.Get();
+        this.setState({ hasTodos: allTodos.length > 0 });
     };
 
     /** @param {boolean} scrollable */

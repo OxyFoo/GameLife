@@ -35,7 +35,7 @@ class BackHome extends PageBase {
         },
         scrollable: true,
         hasQuests: false,
-        hasTodos: false
+        hasActivities: false
     };
 
     /** @type {React.RefObject<ScrollView | null>} */
@@ -45,32 +45,34 @@ class BackHome extends PageBase {
     refQuestsTitle = React.createRef();
 
     /** @type {Symbol | null} */
-    listenerActivities = null;
+    listenerExperience = null;
 
     /** @type {Symbol | null} */
     listenerQuests = null;
 
     /** @type {Symbol | null} */
-    listenerTodos = null;
+    listenerActivities = null;
 
     componentDidMount() {
         this.handleLevelsUpdate(user.experience.experience.Get());
-        this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
+        this.listenerExperience = user.experience.experience.AddListener(this.handleLevelsUpdate);
 
         this.handleQuestsUpdate();
         this.listenerQuests = user.quests.allQuests.AddListener(this.handleQuestsUpdate);
 
-        this.handleTodosUpdate();
-        this.listenerTodos = user.todos.todos.AddListener(this.handleTodosUpdate);
+        this.handleActivitiesUpdate();
+        this.listenerActivities = user.activities.allActivities.AddListener(this.handleActivitiesUpdate);
     }
 
     componentWillUnmount() {
-        user.activities.allActivities.RemoveListener(this.listenerActivities);
+        if (this.listenerExperience) {
+            user.experience.experience.RemoveListener(this.listenerExperience);
+        }
         if (this.listenerQuests) {
             user.quests.allQuests.RemoveListener(this.listenerQuests);
         }
-        if (this.listenerTodos) {
-            user.todos.todos.RemoveListener(this.listenerTodos);
+        if (this.listenerActivities) {
+            user.activities.allActivities.RemoveListener(this.listenerActivities);
         }
     }
 
@@ -95,9 +97,9 @@ class BackHome extends PageBase {
         this.setState({ hasQuests: allQuests.length > 0 });
     };
 
-    handleTodosUpdate = () => {
-        const allTodos = user.todos.Get();
-        this.setState({ hasTodos: allTodos.length > 0 });
+    handleActivitiesUpdate = () => {
+        const allActivities = user.activities.Get();
+        this.setState({ hasActivities: allActivities.length > 0 });
     };
 
     /** @param {boolean} scrollable */

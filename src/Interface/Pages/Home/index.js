@@ -73,7 +73,7 @@ class Home extends BackHome {
                 )}
 
                 {/* My todos */}
-                {this.state.hasTodos && (
+                {this.state.hasActivities && (
                     <>
                         <Title title={lang['section-my-todos']}>
                             <Button

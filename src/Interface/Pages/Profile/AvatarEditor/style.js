@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
+const smallScreen = Dimensions.get('window').height <= 900;
 
 const styles = StyleSheet.create({
     pageHeader: {
@@ -23,7 +25,7 @@ const styles = StyleSheet.create({
 
     slotsContainer: {
         position: 'absolute',
-        top: 130,
+        top: smallScreen ? 100 : 120,
         left: 0,
         right: 0,
         paddingHorizontal: 24,
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
     slotButton: {
         width: 64,
         aspectRatio: 1,
-        marginBottom: 16,
+        marginBottom: smallScreen ? 8 : 16,
         paddingVertical: 0,
         paddingHorizontal: 0
     },

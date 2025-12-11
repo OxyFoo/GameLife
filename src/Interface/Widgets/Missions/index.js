@@ -10,7 +10,6 @@ import themeManager from 'Managers/ThemeManager';
 
 import { Button, Icon, Text, Zap } from 'Interface/Components';
 import IMG_CHESTS from 'Ressources/items/chests/chests';
-import { Title } from 'Interface/Pages/Home/title';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Missions').MissionType} MissionType
@@ -52,8 +51,6 @@ class Missions extends BackMissions {
 
         return (
             <>
-                <Title title={langHome['section-missions']} />
-
                 <Button
                     style={[styles.buttonContainer, style]}
                     onPress={this.handleNextMission}
@@ -63,8 +60,8 @@ class Missions extends BackMissions {
                     <LinearGradient
                         style={styles.gradient}
                         colors={[
-                            themeManager.GetColor('main2', { opacity: 0.65 }),
-                            themeManager.GetColor('main2', { opacity: 0.25 })
+                            themeManager.GetColor('main1', { opacity: 0.75 }),
+                            themeManager.GetColor('main2', { opacity: 0.75 })
                         ]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
@@ -80,7 +77,7 @@ class Missions extends BackMissions {
                             <View style={styles.columnContent}>
                                 {(mission?.state === 'pending' && (
                                     <View>
-                                        <Text style={styles.text} fontSize={16}>
+                                        <Text style={styles.text} fontSize={16} bold>
                                             {lang['content'][missionsData[step].name].title}
                                         </Text>
 

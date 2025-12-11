@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         paddingVertical: 0,
         paddingHorizontal: 0,
-        borderRadius: 8
+        borderRadius: 8,
+        marginTop: 12
     },
     gradient: {
         flexDirection: 'row'

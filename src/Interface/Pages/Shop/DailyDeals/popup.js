@@ -32,20 +32,23 @@ function BuyPopup({ item, closePopup, onPurchased }) {
 
         const success = await user.shop.BuyDailyDeal(item.ID, price);
 
-        if (success) {
-            // Notify parent to update UI immediately
-            onPurchased?.();
-
-            // Show success message
-            const title = lang['popup-buysuccess-title'];
-            const message = lang['popup-buysuccess-text'].replace('{}', itemName).replace('{}', price.toString());
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: { title, message }
-            });
+        if (!success) {
+            closePopup('cancelled');
+            return;
         }
 
-        closePopup(success ? 'purchased' : 'cancelled');
+        // Notify parent to update UI immediately
+        onPurchased?.();
+
+        // Close popup and show item reward page
+        closePopup('purchased');
+        user.interface.ChangePage('itemreward', {
+            args: {
+                itemID: item.ID,
+                callback: () => user.interface.BackHandle()
+            },
+            storeInHistory: false
+        });
     };
 
     return (

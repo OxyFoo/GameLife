@@ -791,9 +791,6 @@
 
         "dailyDeals": {
             "popup-item-button": "Buy for {} Ox",
-            "popup-buysuccess-title": "Successful purchase",
-            "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
-
             "error-no-items": "An error occurred while loading the items for sale, please try again later."
         },
 

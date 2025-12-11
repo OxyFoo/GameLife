@@ -108,7 +108,11 @@ class Missions extends BackMissions {
                                     </Animated.View>
                                 </View>
 
-                                <Text style={styles.missionStep} fontSize={12}>{`${step + 1}/${stepLength}`}</Text>
+                                <Text style={styles.missionStep} fontSize={12}>
+                                    {lang['mission']}
+                                    {'\n'}
+                                    {`${step + 1}/${stepLength}`}
+                                </Text>
                             </View>
                         </View>
                     </LinearGradient>
@@ -144,14 +148,16 @@ class Missions extends BackMissions {
         const firstReward = item.rewards[0];
         if (firstReward.Type === 'OX') {
             return (
-                <>
-                    <Icon icon='ox' size='100%' />
+                <View style={styles.rewardContainer}>
+                    <View style={styles.rewardIconContainer}>
+                        <Icon icon='ox' size='100%' />
+                    </View>
                     {!hideOxText && (
-                        <Text style={styles.rewardValue} fontSize={14}>
+                        <Text style={styles.rewardValue} fontSize={12}>
                             {`x${firstReward.Amount}`}
                         </Text>
                     )}
-                </>
+                </View>
             );
         } else if (firstReward.Type === 'Chest') {
             return <Image style={styles.rewardImage} source={IMG_CHESTS[firstReward.ChestRarity]} />;

@@ -88,6 +88,7 @@
     },
 
     "missions": {
+        "mission": "Mission",
         "text-hint": "Press to do the mission",
         "text-claim": "Press to claim the reward",
 

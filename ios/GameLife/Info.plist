@@ -60,7 +60,11 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Hind Vadodara.ttf</string>
+		<string>HindVadodara-Light.ttf</string>
+		<string>HindVadodara-Regular.ttf</string>
+		<string>HindVadodara-Medium.ttf</string>
+		<string>HindVadodara-SemiBold.ttf</string>
+		<string>HindVadodara-Bold.ttf</string>
 		<string>FORCED SQUARE.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>

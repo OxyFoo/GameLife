@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Text as RNText, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { Animated, Text as RNText, TouchableOpacity, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
@@ -24,6 +24,7 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText} color
  * @property {boolean} bold
+ * @property {'300' | '400' | '500' | '600' | '700'} [fontWeight] Custom font weight (Light=300, Regular=400, Medium=500, SemiBold=600, Bold=700)
  */
 
 const AnimatedRNText = Animated.createAnimatedComponent(RNText);
@@ -35,7 +36,8 @@ const TextProps = {
     containerStyle: {},
     fontSize: 18,
     color: 'primary',
-    bold: false
+    bold: false,
+    fontWeight: undefined
 };
 
 class Text extends React.Component {
@@ -47,19 +49,20 @@ class Text extends React.Component {
             this.props.children !== nextProps.children ||
             this.props.color !== nextProps.color ||
             this.props.fontSize !== nextProps.fontSize ||
+            this.props.fontWeight !== nextProps.fontWeight ||
             this.props.onPress !== nextProps.onPress
         );
     }
 
     render() {
-        const { style, animatedStyle, containerStyle, color, fontSize, onPress, children, bold, ...props } = this.props;
+        const { style, animatedStyle, containerStyle, color, fontSize, onPress, children, bold, fontWeight, ...props } =
+            this.props;
 
         /** @type {StyleProp} */
         const fontStyle = {
             fontSize,
-            // TODO: Temporary fix for bold text on iOS - needs proper font weight implementation
-            fontFamily: Platform.OS === 'ios' && bold ? 'System' : MAIN_FONT_NAME,
-            fontWeight: bold ? 'bold' : 'normal',
+            fontFamily: MAIN_FONT_NAME,
+            fontWeight: fontWeight || (bold ? '700' : '400'),
             color: typeof color === 'string' ? themeManager.GetColor(color) : color
         };
 

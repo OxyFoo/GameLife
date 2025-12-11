@@ -18,11 +18,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     level: {
-        fontSize: 16,
-        fontWeight: 700
+        fontSize: 12,
+        fontWeight: 600
     },
     experience: {
-        fontSize: 16
+        fontSize: 12
     },
 
     // Special styles for section title and add button

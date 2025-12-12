@@ -31,7 +31,17 @@ class ChestReward extends BackChestReward {
 
         // Shake the chest
         const styleChestAnimation = {
+            opacity: animItem.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0]
+            }),
             transform: [
+                {
+                    scale: animItem.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, 0.5]
+                    })
+                },
                 {
                     rotateZ: animChest.interpolate({
                         inputRange: [0, 1, 2, 3, 4],

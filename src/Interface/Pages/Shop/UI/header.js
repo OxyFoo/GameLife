@@ -127,8 +127,7 @@ class ShopHeader extends React.Component {
                 data: {
                     title: lang['alert-adsuccess-title'],
                     message: lang['alert-adsuccess-message'].replace('{}', ad.RewardOx.toString())
-                },
-                cancelable: false
+                }
             });
             this.setState({ adState: 'wait' });
         } else {

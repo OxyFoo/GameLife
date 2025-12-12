@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
     noInternetContainer: {
-        width: '100%',
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     }

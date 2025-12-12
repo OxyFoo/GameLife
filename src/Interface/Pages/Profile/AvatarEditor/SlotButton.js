@@ -11,7 +11,7 @@ import { Button } from 'Interface/Components';
 /**
  * @typedef {import('./back').InventorySlotType} InventorySlotType
  * @typedef {import('./back').SlotType} SlotType
- * @typedef {import('./back').ItemSlot} ItemSlot
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  */

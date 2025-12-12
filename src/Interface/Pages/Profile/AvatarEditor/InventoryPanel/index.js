@@ -53,7 +53,7 @@ const InventoryPanel = ({
     onItemSell
 }) => {
     const [selectedSlot, setSelectedSlot] = useState(initialSelectedSlot);
-    const [tmpBottomItem, setTmpBottomItem] = useState(avatarItems[3].id);
+    const [tmpBottomItem, setTmpBottomItem] = useState(avatarItems[4].id);
     const [panelBodyColor, setPanelBodyColor] = useState(bodyColor);
     const [localAvatarItems, setLocalAvatarItems] = useState(avatarItems);
     const [selectedBody, setSelectedBody] = useState(bodyType);

@@ -73,12 +73,7 @@ class BackShopIAP extends React.Component {
                 return this.LoadIAP();
             })
             .catch((exception) => {
-                // Nothing to do here
-                user.interface.console?.AddLog(
-                    'error',
-                    '[IAP] Error flushing failed purchases cached as pending',
-                    exception
-                );
+                user.interface.console?.AddLog('error', '[IAP] Error initializing IAP connection', exception);
             });
     }
 

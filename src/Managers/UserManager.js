@@ -111,6 +111,9 @@ class UserManager {
         this.experience.onMount();
         this.dailyQuest.onMount();
 
+        // Initialize IAP listeners globally (handles pending purchases on app restart)
+        this.shop.InitIAP();
+
         // Check achievements every 20 seconds
         this.achievements.CheckAchievements();
         this.intervalAchievements = setInterval(this.achievements.CheckAchievements, 20 * 1000);
@@ -123,6 +126,9 @@ class UserManager {
     async onUnmount() {
         clearInterval(this.intervalAchievements);
         clearInterval(this.intervalStatistics);
+
+        // Cleanup IAP listeners
+        this.shop.CleanupIAP();
 
         // Final dispatch of statistics before closing
         this.statistics.SendAllSessionStatistics();

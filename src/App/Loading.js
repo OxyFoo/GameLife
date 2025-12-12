@@ -201,7 +201,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const time_text = `Initialisation done in ${time_total}ms (${time_ratio_1}/${time_ratio_2}/${time_ratio_3})`;
     console.log(time_text);
     user.interface.console?.AddLog('info', time_text);
-    user.appIsLoaded = true;
 
     // Manages the end of loading and the sending of statistics
     user.statistics.HandleAppLoaded(time_total);
@@ -218,6 +217,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     } else if (user.server2.serverState.status === 'downdate') {
         await showDowndatePopup();
     }
+
+    user.appIsLoaded = true;
 
     nextPage();
 }

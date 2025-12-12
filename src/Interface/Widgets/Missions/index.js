@@ -18,7 +18,6 @@ import IMG_CHESTS from 'Ressources/items/chests/chests';
 class Missions extends BackMissions {
     render() {
         const lang = langManager.curr['missions'];
-        const langHome = langManager.curr['home'];
         const { style } = this.props;
         const { mission } = this.state;
 

@@ -12,6 +12,7 @@ import { Round } from 'Utils/Functions';
  * @typedef {import('react-native').ScrollView} ScrollView
  *
  * @typedef {import('Managers/UserManager').UserManager} UserManager
+ * @typedef {import('Data/User/Quests').Quest} Quest
  */
 
 const BackHomeProps = {
@@ -53,17 +54,13 @@ class BackHome extends PageBase {
         this.handleLevelsUpdate(user.experience.experience.Get());
         this.listenerExperience = user.experience.experience.AddListener(this.handleLevelsUpdate);
 
-        this.handleQuestsUpdate();
+        this.handleQuestsUpdate(user.quests.Get());
         this.listenerQuests = user.quests.allQuests.AddListener(this.handleQuestsUpdate);
     }
 
     componentWillUnmount() {
-        if (this.listenerExperience) {
-            user.experience.experience.RemoveListener(this.listenerExperience);
-        }
-        if (this.listenerQuests) {
-            user.quests.allQuests.RemoveListener(this.listenerQuests);
-        }
+        user.experience.experience.RemoveListener(this.listenerExperience);
+        user.quests.allQuests.RemoveListener(this.listenerQuests);
     }
 
     /** @param {UserManager['experience']['experience']['var']} experience */
@@ -82,9 +79,9 @@ class BackHome extends PageBase {
         });
     };
 
-    handleQuestsUpdate = () => {
-        const allQuests = user.quests.Get();
-        this.setState({ hasQuests: allQuests.length > 0 });
+    /** @param {Quest[]} newQuests */
+    handleQuestsUpdate = (newQuests) => {
+        this.setState({ hasQuests: newQuests.length > 0 });
     };
 
     /** @param {boolean} scrollable */

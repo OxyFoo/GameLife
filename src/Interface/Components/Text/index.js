@@ -24,7 +24,6 @@ const MAIN_FONT_NAME = 'Hind Vadodara';
  * @property {number} fontSize
  * @property {ThemeColor | ThemeText} color
  * @property {boolean} bold
- * @property {'300' | '400' | '500' | '600' | '700'} [fontWeight] Custom font weight (Light=300, Regular=400, Medium=500, SemiBold=600, Bold=700)
  */
 
 const AnimatedRNText = Animated.createAnimatedComponent(RNText);
@@ -36,8 +35,7 @@ const TextProps = {
     containerStyle: {},
     fontSize: 18,
     color: 'primary',
-    bold: false,
-    fontWeight: undefined
+    bold: false
 };
 
 class Text extends React.Component {
@@ -49,20 +47,18 @@ class Text extends React.Component {
             this.props.children !== nextProps.children ||
             this.props.color !== nextProps.color ||
             this.props.fontSize !== nextProps.fontSize ||
-            this.props.fontWeight !== nextProps.fontWeight ||
             this.props.onPress !== nextProps.onPress
         );
     }
 
     render() {
-        const { style, animatedStyle, containerStyle, color, fontSize, onPress, children, bold, fontWeight, ...props } =
-            this.props;
+        const { style, animatedStyle, containerStyle, color, fontSize, onPress, children, bold, ...props } = this.props;
 
         /** @type {StyleProp} */
         const fontStyle = {
             fontSize,
             fontFamily: MAIN_FONT_NAME,
-            fontWeight: fontWeight || (bold ? '700' : '400'),
+            fontWeight: bold ? '700' : '400',
             color: typeof color === 'string' ? themeManager.GetColor(color) : color
         };
 

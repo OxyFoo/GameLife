@@ -61,7 +61,7 @@ class Missions extends BackMissions {
                         style={styles.gradient}
                         colors={[
                             themeManager.GetColor('main1', { opacity: 0.75 }),
-                            themeManager.GetColor('main2', { opacity: 0.75 })
+                            themeManager.GetColor('main2', { opacity: 0.45 })
                         ]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}

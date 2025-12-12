@@ -17,7 +17,8 @@ class Home extends BackHome {
         const {
             experience: { xpInfo },
             values: { currentLevel, currentXP, nextLevelXP },
-            scrollable
+            scrollable,
+            hasQuests
         } = this.state;
 
         return (
@@ -56,7 +57,7 @@ class Home extends BackHome {
                 </View>
 
                 {/* Quests list */}
-                {this.state.hasQuests && (
+                {hasQuests && (
                     <>
                         <Title title={lang['section-today-quests']}>
                             <Button
@@ -73,21 +74,17 @@ class Home extends BackHome {
                 )}
 
                 {/* My todos */}
-                {this.state.hasActivities && (
-                    <>
-                        <Title title={lang['section-my-todos']}>
-                            <Button
-                                style={styles.sectionTitleAddButton}
-                                appearance='uniform'
-                                color='transparent'
-                                icon='add-outline'
-                                fontColor='gradient'
-                                onPress={this.addTodo}
-                            />
-                        </Title>
-                        <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
-                    </>
-                )}
+                <Title title={lang['section-my-todos']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='add-outline'
+                        fontColor='gradient'
+                        onPress={this.addTodo}
+                    />
+                </Title>
+                <TodoList style={styles.todoList} changeScrollable={this.onChangeScrollable} />
             </ScrollView>
         );
     }

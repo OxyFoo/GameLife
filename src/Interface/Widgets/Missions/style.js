@@ -3,10 +3,10 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // Container
     buttonContainer: {
+        marginTop: 12,
         paddingVertical: 0,
         paddingHorizontal: 0,
-        borderRadius: 8,
-        marginTop: 12
+        borderRadius: 8
     },
     gradient: {
         flexDirection: 'row'

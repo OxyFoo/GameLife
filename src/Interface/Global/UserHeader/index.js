@@ -65,7 +65,7 @@ class UserHeader extends UserHeaderBack {
         return (
             <Button ref={this.refContainer} style={styles.avatar} onPress={openProfile}>
                 {showAvatar && avatarData && (
-                    <AvatarFrame width={48} height={48} backgroundColor='#00000000'>
+                    <AvatarFrame width={48} height={48} renderScale={2} backgroundColor='#00000000'>
                         <AvatarCharacter
                             body={avatarData.skin}
                             bodyColor={avatarData.skinColor}

@@ -60,6 +60,7 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
     const slotPreview = dataManager.items.GetContainerSize(slotType);
     const avatarPos = slotPreview.pos ?? { x: 0, y: 0 };
     const avatarScale = slotPreview.scale ?? 1;
+    const avatarRenderScale = avatarScale >= 3 ? 2 : 1;
 
     // Special rendering for body color slot (simple color square View)
     if (slotType === 'bodyColor') {
@@ -82,12 +83,11 @@ const SlotButton = ({ slotType, category, selectedSlot, avatarItems, bodyColor, 
             color={isSelected ? 'main1' : 'backgroundCard'}
             onPress={() => onPress(slotType)}
         >
-            <AvatarFrame width={64} height={64} backgroundColor={bgColor}>
+            <AvatarFrame width={64} height={64} renderScale={avatarRenderScale} backgroundColor={bgColor}>
                 <AvatarCharacter
                     body={bodyType ?? 'human_00'}
                     bodyColor={bodyColor}
                     position={avatarPos}
-                    rotation={{ x: 0, y: 0, z: 0 }}
                     scale={avatarScale}
                     items={getPreviewItems()}
                 />

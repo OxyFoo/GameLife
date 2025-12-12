@@ -182,7 +182,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
-        //user.interface.console?.AddLog('warn', 'No more ads available');
+        user.interface.console?.AddLog('warn', 'No more ads available');
     }
 
     // Render default pages

@@ -98,7 +98,8 @@ class BackShopIAP extends React.Component {
 
     LoadIAP = async () => {
         const allIAP = await fetchProducts({
-            skus: user.shop.IAP_IDs
+            skus: user.shop.IAP_IDs,
+            type: 'in-app'
         }).catch((error) => {
             user.interface.console?.AddLog('error', '[IAP] Error fetching products', error);
             return [];
@@ -145,12 +146,10 @@ class BackShopIAP extends React.Component {
             return requestPurchase({
                 type: 'in-app',
                 request: {
-                    android: {
-                        skus: [sku]
-                    },
-                    ios: {
-                        sku: sku
-                    }
+                    apple: { sku: sku },
+                    google: { skus: [sku] },
+                    ios: { sku: sku },
+                    android: { skus: [sku] }
                 }
             });
         } else {
@@ -284,7 +283,7 @@ class BackShopIAP extends React.Component {
 
     /** @param {PurchaseError} error */
     purchaseDidError = (error) => {
-        if (error.code === ErrorCode.UserCancelled) {
+        if (error.code === ErrorCode.UserCancelled || error.code === ErrorCode.AlreadyOwned) {
             return;
         }
 

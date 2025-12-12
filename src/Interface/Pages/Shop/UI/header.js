@@ -146,7 +146,6 @@ class ShopHeader extends React.Component {
 
         const isAdError = adState === 'error' || adState === 'notAvailable';
         const isAdLoading = adState === 'wait';
-        const isAdReady = adState === 'ready';
 
         return (
             <Animated.View style={[styles.parent, style]}>
@@ -174,7 +173,7 @@ class ShopHeader extends React.Component {
                     ) : (
                         <Button
                             style={styles.badge}
-                            styleContent={isAdReady && styles.badgeContent}
+                            styleContent={!isAdLoading && styles.badgeContent}
                             gradientColors={['#38406573', '#3840651F']}
                             gradientColorsAngle={-45}
                             onPress={this.openAd}

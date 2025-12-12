@@ -207,7 +207,7 @@ exports[`[Component] Input should render correctly 1`] = `
               "color": "#ECECEC",
               "fontFamily": "Hind Vadodara",
               "fontSize": 16,
-              "fontWeight": "normal",
+              "fontWeight": "400",
             },
             {},
           ]

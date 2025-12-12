@@ -98,7 +98,7 @@ exports[`[Component] Button renders correctly 1`] = `
             "color": "#384065",
             "fontFamily": "Hind Vadodara",
             "fontSize": 16,
-            "fontWeight": "normal",
+            "fontWeight": "400",
           },
           {},
         ]

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Text as RNText, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { Animated, Text as RNText, TouchableOpacity, StyleSheet } from 'react-native';
 
 import themeManager from 'Managers/ThemeManager';
 
@@ -57,9 +57,8 @@ class Text extends React.Component {
         /** @type {StyleProp} */
         const fontStyle = {
             fontSize,
-            // TODO: Temporary fix for bold text on iOS - needs proper font weight implementation
-            fontFamily: Platform.OS === 'ios' && bold ? 'System' : MAIN_FONT_NAME,
-            fontWeight: bold ? 'bold' : 'normal',
+            fontFamily: MAIN_FONT_NAME,
+            fontWeight: bold ? '700' : '400',
             color: typeof color === 'string' ? themeManager.GetColor(color) : color
         };
 

@@ -64,14 +64,17 @@ const styles = StyleSheet.create({
     },
     activityChild: {
         flex: 1,
+        minWidth: 0,
         flexDirection: 'row',
         alignItems: 'center'
     },
     activityTimes: {
+        flexShrink: 0,
         flexDirection: 'column',
         alignItems: 'flex-end'
     },
     activityName: {
+        flex: 1,
         marginLeft: 12,
         textAlign: 'left',
         fontSize: 18,

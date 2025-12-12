@@ -88,6 +88,7 @@
     },
 
     "missions": {
+        "mission": "Mission",
         "text-hint": "Press to do the mission",
         "text-claim": "Press to claim the reward",
 
@@ -432,20 +433,17 @@
     "home": {
         "title-hello": "Hello {}",
 
-        "section-missions": "Discovery missions",
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
         "today-quest": "Quests",
         "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
-        "section-today-quest": "Community objective of the day",
-        "section-today-quest-detail": "Each day a category is chosen randomly for everyone, performs activities in this category to win rewards!",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-notmuch": "Add an activity today to display the graphic",
-        "chart-quest-notmuch": "You need to have a quest today to display the graphic",
+        "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
+        "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
         "chart-click-me": "click-me!",
 
         "news-myquests-title": "Quests to do",

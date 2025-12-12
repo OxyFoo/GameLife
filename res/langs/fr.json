@@ -88,6 +88,7 @@
     },
 
     "missions": {
+        "mission": "Mission",
         "text-hint": "Appuie pour faire la mission",
         "text-claim": "Appuie pour obtenir la récompense",
 
@@ -432,20 +433,17 @@
     "home": {
         "title-hello": "Bonjour {}",
 
-        "section-missions": "Missions découverte",
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
         "today-quest": "Quêtes",
         "section-today-quests": "Quêtes du jour",
         "section-my-todos": "Mes listes",
-        "section-today-quest": "Objectif communautaire du jour",
-        "section-today-quest-detail": "Chaque jour une catégorie est choisie aléatoirement pour tout le monde, réalise des activités dans cette catégorie pour gagner des récompenses !",
 
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
 
-        "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher le graphique",
-        "chart-quest-notmuch": "Ajoute une quête aujourd'hui pour afficher le graphique",
+        "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
+        "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
         "chart-click-me": "clique ici !",
 
         "news-myquests-title": "Quêtes à faire",

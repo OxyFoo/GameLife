@@ -20,7 +20,8 @@ env:
 jobs:
   build:
     name: '🏗️ Build'
-    runs-on: macos-latest
+    runs-on: macos-15
+    timeout-minutes: 60
     steps:
       - name: '🚧 Check environment availability'
         run: |
@@ -156,17 +157,24 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: 'Install dependencies'
+      - name: 'Install Node dependencies'
+        run: npm ci
+
+      - name: 'Setup Ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ios
+
+      - name: 'Install CocoaPods'
         run: |
-          npm install
           cd ios
-          # Clean and reinstall pods to ensure proper deployment target configuration
-          pod deintegrate || true
-          rm -rf Pods Podfile.lock
+          # Clean pods to ensure fresh install
+          rm -rf Pods Podfile.lock build
           pod install --repo-update
-          # Install compatible Bundler version (fastlane requires < 3.0.0)
-          gem install bundler -v 2.6.7
-          bundle _2.6.7_ install
+        env:
+          NO_FLIPPER: 1
 
       - name: 'Get config files'
         run: |
@@ -194,6 +202,21 @@ jobs:
             grep -n "IPHONEOS_DEPLOYMENT_TARGET" Pods/Pods.xcodeproj/project.pbxproj | head -10
           fi
 
+      - name: 'Pre-build diagnostics'
+        run: |
+          echo "=== System Info ==="
+          sw_vers
+          xcodebuild -version
+          ruby --version
+          bundler --version
+          pod --version
+          echo "=== Available SDKs ==="
+          xcodebuild -showsdks
+          echo "=== Signing Identities ==="
+          security find-identity -v -p codesigning
+          echo "=== Provisioning Profiles ==="
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No profiles found"
+
       - name: 'Build with Fastlane'
         env:
           ENVFILE: .env
@@ -211,8 +234,10 @@ jobs:
           # Provisioning profile information
           PROVISION_PROFILE_UUID: ${{ env.PROVISION_PROFILE_UUID }}
           PROVISION_PROFILE_NAME_ACTUAL: ${{ env.PROVISION_PROFILE_NAME_ACTUAL }}
-          # Try automatic signing first
+          # Use manual signing for CI
           USE_AUTOMATIC_SIGNING: "false"
+          # Increase memory for xcodebuild
+          DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
         run: |
           cd ios
           ENVIRONMENT="${{ inputs.environment }}"
@@ -230,14 +255,33 @@ jobs:
           name: ${{ env.FILE_IPA }}
           path: ios/build/${{ env.FILE_IPA }}
           if-no-files-found: error
-          
+
+      - name: 'Upload build logs'
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-build-logs
+          path: |
+            ios/build/logs
+            ~/Library/Logs/gym
+          if-no-files-found: ignore
+
       - name: Dump gym log (tail)
         if: failure()
         run: |
+          echo "=== Xcode Build Logs ==="
+          if [ -d "ios/build/logs" ]; then
+            find ios/build/logs -name "*.log" -exec tail -n 100 {} \;
+          fi
+          echo ""
+          echo "=== Gym Logs ==="
           LG=$(ls -t ~/Library/Logs/gym 2>/dev/null | head -n1 || echo "")
           if [ -n "$LG" ]; then
             echo "=== 📝 $LG ==="
-            tail -n 250 ~/Library/Logs/gym/$LG
+            # Show errors specifically
+            grep -i "error:" ~/Library/Logs/gym/"$LG" | tail -50 || true
+            echo "=== Last 250 lines ==="
+            tail -n 250 ~/Library/Logs/gym/"$LG"
           else
             echo "No gym log produced"
           fi

@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { View, ScrollView, FlatList } from 'react-native';
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import BackProfileFriend from './back';
 import user from 'Managers/UserManager';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
+import Inventory from 'Data/User/Inventory';
 import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
 import { AchievementsGroup, StatsBarTextOnly } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
@@ -26,6 +29,11 @@ class ProfileFriend extends BackProfileFriend {
         const title = friend.title !== 0 ? dataManager.titles.GetByID(friend.title) : null;
         const titleText = title === null ? null : langManager.GetText(title.Name);
 
+        const avatarItems = Inventory.GetFriendAvatarItems(friend);
+        const avatarBody = friend.avatar?.Skin || 'human_00';
+        const avatarBodyColor = BODY_COLORS[friend.avatar?.SkinColor] || BODY_COLORS[0];
+        const containerSize = dataManager.items.GetContainerSize('profile');
+
         return (
             <ScrollView
                 ref={user.interface.bottomPanel?.mover.SetScrollView}
@@ -36,6 +44,18 @@ class ProfileFriend extends BackProfileFriend {
             >
                 {/** User Header */}
                 <View style={styles.header}>
+                    <View style={styles.avatarContainer}>
+                        <AvatarFrame width={84} height={84} renderScale={2} backgroundColor='#00000000'>
+                            <AvatarCharacter
+                                body={avatarBody}
+                                bodyColor={avatarBodyColor}
+                                position={containerSize.pos}
+                                scale={containerSize.scale}
+                                items={avatarItems}
+                                portraitMode
+                            />
+                        </AvatarFrame>
+                    </View>
                     <View style={styles.content}>
                         <View style={styles.usernameContainer}>
                             <Text style={styles.username} color='primary'>

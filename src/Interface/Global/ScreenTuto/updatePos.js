@@ -1,8 +1,5 @@
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
-import user from 'Managers/UserManager';
-
-import { GetAbsolutePosition } from 'Utils/UI';
 import { SpringAnimation } from 'Utils/Animations';
 
 /**
@@ -31,31 +28,35 @@ async function UpdatePositions() {
         return;
     }
 
+    const screenSize = Dimensions.get('window');
+
     // Default zap & message position target
     let targetPosition = {
-        x: user.interface.size.width / 2,
-        y: user.interface.size.height / 2,
+        x: screenSize.width / 2,
+        y: screenSize.height / 2,
         width: 0,
         height: 0
     };
 
-    // Auto component position
-    if (ref !== null) {
-        targetPosition = await GetAbsolutePosition(ref);
+    // Auto component position (if ref is view)
+    if (ref !== null && ref.current !== null) {
+        targetPosition = await new Promise((resolve) => {
+            ref.current.measureInWindow((x, y, width, height) => {
+                resolve({ x, y, width, height });
+            });
+        });
     }
 
     // Override component position
     if (positionY !== null) {
-        targetPosition.y = positionY * user.interface.size.height;
+        targetPosition.y = positionY * screenSize.height;
     }
 
     const componentMidX = targetPosition.x + targetPosition.width / 2;
     const componentMidY = targetPosition.y + targetPosition.height / 2;
-    const isOnTop = componentMidY < user.interface.size.height / 2;
+    const isOnTop = componentMidY < screenSize.height / 2;
 
-    const theta =
-        Math.PI / 2 +
-        Math.atan2(componentMidX - user.interface.size.width / 2, componentMidY - user.interface.size.height / 2);
+    const theta = Math.PI / 2 + Math.atan2(componentMidX - screenSize.width / 2, componentMidY - screenSize.height / 2);
 
     const offset = targetPosition.height / 2;
     const offsetX = +Math.cos(theta) * offset;
@@ -72,7 +73,7 @@ async function UpdatePositions() {
 
     let zapPosX = 0;
     let zapPosY = 0;
-    const quarterIndex = Math.floor(componentMidY / (user.interface.size.height / 4));
+    const quarterIndex = Math.floor(componentMidY / (screenSize.height / 4));
 
     // Zap side to message
     // So zap is on the left the message
@@ -86,8 +87,7 @@ async function UpdatePositions() {
     // So zap position is symetric to message from the component
     else {
         const thetaAuto =
-            Math.atan2(componentMidX - user.interface.size.width / 2, componentMidY - user.interface.size.height / 2) +
-            Math.PI / 2;
+            Math.atan2(componentMidX - screenSize.width / 2, componentMidY - screenSize.height / 2) + Math.PI / 2;
 
         // Invert zap & message position if component is on first or last quarter of the screen
         let distance = targetPosition.height / 2 + zapLayout.height;
@@ -102,9 +102,8 @@ async function UpdatePositions() {
         zapPosY = componentMidY + offsetYAuto - zapLayout.height / 2;
     }
 
-    const screenSize = user.interface.size;
-    const screenWidth = screenSize.width - screenSize.insets.left - screenSize.insets.right;
-    const screenHeight = screenSize.height - screenSize.insets.top - screenSize.insets.bottom;
+    const screenWidth = screenSize.width - this.insets.left - this.insets.right;
+    const screenHeight = screenSize.height - this.insets.top - this.insets.bottom;
 
     // Zap out of screen
     if (zapPosX < GLOBAL_MARGIN) {
@@ -142,7 +141,7 @@ async function UpdatePositions() {
 
     // Zap states
     const isTop = quarterIndex === 0 || quarterIndex === 2;
-    const isRight = targetPosition.x >= user.interface.size.width / 2 || inline;
+    const isRight = targetPosition.x >= screenSize.width / 2 || inline;
 
     /** @type {ZapInclinaison} */
     const inclinaison = isTop ? 'onTwoLegs' : 'onFourLegs';

@@ -32,6 +32,8 @@ Pour les contributeurs, vous trouverez des guides détaillés sur la contributio
 
 Pour une installation détaillée, consultez la section [Installation](https://github.com/OxyFoo/GameLife/wiki/Setup).
 
+Pour la configuration des fichiers secrets (AdMob, Google Sign-In, keystore...), voir [CONFIG.md](CONFIG.md).
+
 ## 🚀 Installation rapide
 
 Pour pouvoir développer et tester GameLife, il est nécessaire d'avoir installé [React Native](https://reactnative.dev/docs/set-up-your-environment).

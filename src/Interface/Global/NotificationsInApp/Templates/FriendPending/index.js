@@ -16,7 +16,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @param {object} props
  * @param {NotificationInApp} props.notif
  * @param {number} props.index
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function NIA_FriendPending({ notif }) {
     const lang = langManager.curr['notifications']['in-app'];

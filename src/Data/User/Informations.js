@@ -127,7 +127,8 @@ class Informations extends IUserData {
         }
 
         // Load data
-        const { Username, Lang, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, AccountAge } = response.data;
+        const { Username, Lang, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, AccountAge, AdRemaining } =
+            response.data;
 
         this.username.Set(Username);
         this.usernameTime = LastChangeUsername;
@@ -137,7 +138,9 @@ class Informations extends IUserData {
         this.birthTime = Birthtime;
         this.lastBirthTime = LastChangeBirth;
         this.accountAge = AccountAge;
+        this.adRemaining = AdRemaining;
 
+        this.user.interface.console?.AddLog('info', `[Ads] Ad remaining loaded: ${this.adRemaining}`);
         this.user.interface.console?.AddLog('info', `[DEBUG] Loaded user data online: ${AccountAge} years old`);
 
         return true;

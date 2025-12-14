@@ -3,6 +3,120 @@ import mockPermissions from 'react-native-permissions/mock';
 
 jest.useFakeTimers();
 
+// Mock UserManager with interface containing console
+jest.mock('Managers/UserManager', () => ({
+    __esModule: true,
+    default: {
+        interface: {
+            console: {
+                AddLog: jest.fn(() => 1),
+                EditLog: jest.fn(),
+                Enable: jest.fn(() => Promise.resolve())
+            },
+            size: {
+                insets: { left: 0, top: 0, right: 0, bottom: 0 }
+            },
+            ChangePage: jest.fn(),
+            ClearHistory: jest.fn()
+        },
+        settings: {
+            IndependentSave: jest.fn(() => Promise.resolve(true)),
+            musicLinks: {}
+        },
+        server2: {
+            IsAuthenticated: jest.fn(() => false),
+            tcp: {
+                SendAndWait: jest.fn(() => Promise.resolve({ status: 'ok' }))
+            }
+        },
+        onMount: jest.fn(),
+        onUnmount: jest.fn(() => Promise.resolve()),
+        SaveLocal: jest.fn(() => Promise.resolve(true)),
+        SaveOnline: jest.fn(() => Promise.resolve(true)),
+        LoadLocal: jest.fn(() => Promise.resolve(true)),
+        Clear: jest.fn(() => Promise.resolve()),
+        CLASS: [],
+        DATA: []
+    },
+    UserManager: class {}
+}));
+
+// Mock react-native-worklets first (dependency of reanimated)
+jest.mock('react-native-worklets', () => ({
+    createWorkletRuntime: jest.fn(),
+    runOnRuntime: jest.fn(),
+    makeShareableCloneRecursive: jest.fn(),
+    __workletHash: 0
+}));
+
+// Mock react-native-reanimated
+jest.mock('react-native-reanimated', () => {
+    const React = require('react');
+    const { View, Text } = require('react-native');
+
+    const mockSharedValue = (initialValue) => ({
+        value: initialValue,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        modify: jest.fn()
+    });
+
+    return {
+        default: {
+            createAnimatedComponent: (Component) => Component,
+            View,
+            Text,
+            call: jest.fn()
+        },
+        useSharedValue: mockSharedValue,
+        useAnimatedStyle: (fn) => fn(),
+        withSpring: (value) => value,
+        withTiming: (value) => value,
+        withDelay: (delay, value) => value,
+        withSequence: (...values) => values[0],
+        withRepeat: (value) => value,
+        runOnJS: (fn) => fn,
+        runOnUI: (fn) => fn,
+        Easing: {
+            linear: jest.fn(),
+            ease: jest.fn(),
+            quad: jest.fn(),
+            cubic: jest.fn(),
+            poly: jest.fn(),
+            sin: jest.fn(),
+            circle: jest.fn(),
+            exp: jest.fn(),
+            elastic: jest.fn(),
+            back: jest.fn(),
+            bounce: jest.fn(),
+            bezier: jest.fn(),
+            in: jest.fn(),
+            out: jest.fn(),
+            inOut: jest.fn()
+        },
+        interpolate: jest.fn(),
+        Extrapolation: {
+            CLAMP: 'clamp',
+            EXTEND: 'extend',
+            IDENTITY: 'identity'
+        },
+        useAnimatedGestureHandler: jest.fn(),
+        useAnimatedScrollHandler: jest.fn(),
+        useAnimatedRef: () => ({ current: null }),
+        useDerivedValue: (fn) => mockSharedValue(fn()),
+        useAnimatedProps: (fn) => fn(),
+        cancelAnimation: jest.fn(),
+        measure: jest.fn(),
+        scrollTo: jest.fn(),
+        FadeIn: { duration: jest.fn(() => ({ delay: jest.fn() })) },
+        FadeOut: { duration: jest.fn(() => ({ delay: jest.fn() })) },
+        SlideInRight: { duration: jest.fn() },
+        SlideOutLeft: { duration: jest.fn() },
+        Layout: { duration: jest.fn() },
+        LinearTransition: { duration: jest.fn() }
+    };
+});
+
 jest.mock('react-native-config', () => {
     return {
         ENV: 'dev',
@@ -33,10 +147,6 @@ jest.mock('react-native-device-info', () => ({
 
 jest.mock('react-native-permissions', () => {
     return mockPermissions;
-});
-
-jest.mock('react-native-safe-area', () => {
-    return null;
 });
 
 jest.mock('react-native-google-mobile-ads', () => ({
@@ -81,22 +191,6 @@ jest.mock('react-native-gifted-charts', () => ({
     LineChart: 'View',
     BarChart: 'View',
     PieChart: 'View'
-}));
-
-jest.mock('react-native-safe-area', () => ({
-    SafeAreaView: 'View'
-}));
-
-jest.mock('react-native-safe-area', () => ({
-    getSafeAreaInsetsForRootView: () =>
-        Promise.resolve({
-            safeAreaInsets: {
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0
-            }
-        })
 }));
 
 Animated.timing = () => ({
@@ -175,6 +269,32 @@ jest.mock('@react-native-google-signin/google-signin', () => ({
         IN_PROGRESS: 'IN_PROGRESS',
         PLAY_SERVICES_NOT_AVAILABLE: 'PLAY_SERVICES_NOT_AVAILABLE'
     }
+}));
+
+jest.mock('@oxyfoo/avatar-factory', () => ({
+    AvatarCharacter: 'View',
+    AvatarFrame: 'View',
+    RenderingTechnology: 'Canvas',
+    getRenderingTechnology: jest.fn(() => 'Canvas')
+}));
+
+jest.mock('react-native-iap', () => ({
+    initConnection: jest.fn(() => Promise.resolve(true)),
+    endConnection: jest.fn(() => Promise.resolve()),
+    requestPurchase: jest.fn(() => Promise.resolve()),
+    getProducts: jest.fn(() => Promise.resolve([])),
+    getSubscriptions: jest.fn(() => Promise.resolve([])),
+    getPurchaseHistory: jest.fn(() => Promise.resolve([])),
+    getAvailablePurchases: jest.fn(() => Promise.resolve([])),
+    finishTransaction: jest.fn(() => Promise.resolve()),
+    purchaseUpdatedListener: jest.fn(() => ({ remove: jest.fn() })),
+    purchaseErrorListener: jest.fn(() => ({ remove: jest.fn() })),
+    clearTransactionIOS: jest.fn(() => Promise.resolve()),
+    clearProductsIOS: jest.fn(() => Promise.resolve()),
+    flushFailedPurchasesCachedAsPendingAndroid: jest.fn(() => Promise.resolve()),
+    acknowledgePurchaseAndroid: jest.fn(() => Promise.resolve()),
+    consumePurchaseAndroid: jest.fn(() => Promise.resolve()),
+    isIosStorekit2: jest.fn(() => false)
 }));
 
 jest.mock('react-native-keychain', () => ({

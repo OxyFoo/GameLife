@@ -16,7 +16,7 @@ import { Text, UserOnlineElement } from 'Interface/Components';
  * @param {Object} param0
  * @param {Object} [param0.style]
  * @param {(Friend | UserOnline)[]} param0.friends
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 const OnlineFriends = ({ style, friends }) => {
     return (

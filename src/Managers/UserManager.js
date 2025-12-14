@@ -23,7 +23,6 @@ import GoogleSignIn from 'Utils/GoogleSignIn';
 import { Sleep } from 'Utils/Functions';
 
 /**
- * @typedef {import('Interface/Components').Character} Character
  * @typedef {import('Interface/FlowEngine/back').default['_public']} FlowEngine
  */
 
@@ -100,9 +99,6 @@ class UserManager {
     // @ts-ignore Because "interface" is necessarily defined, without it nothing works in all cases
     interface = null;
 
-    /** @type {Character | null} */
-    character = null;
-
     appIsLoaded = false;
 
     /** @type {boolean} */
@@ -114,6 +110,9 @@ class UserManager {
     onMount() {
         this.experience.onMount();
         this.dailyQuest.onMount();
+
+        // Initialize IAP listeners globally (handles pending purchases on app restart)
+        this.shop.InitIAP();
 
         // Check achievements every 20 seconds
         this.achievements.CheckAchievements();
@@ -127,6 +126,9 @@ class UserManager {
     async onUnmount() {
         clearInterval(this.intervalAchievements);
         clearInterval(this.intervalStatistics);
+
+        // Cleanup IAP listeners
+        this.shop.CleanupIAP();
 
         // Final dispatch of statistics before closing
         this.statistics.SendAllSessionStatistics();

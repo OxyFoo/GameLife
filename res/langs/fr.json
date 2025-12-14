@@ -88,6 +88,7 @@
     },
 
     "missions": {
+        "mission": "Mission",
         "text-hint": "Appuie pour faire la mission",
         "text-claim": "Appuie pour obtenir la récompense",
 
@@ -432,20 +433,17 @@
     "home": {
         "title-hello": "Bonjour {}",
 
-        "section-missions": "Missions découverte",
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
         "today-quest": "Quêtes",
         "section-today-quests": "Quêtes du jour",
         "section-my-todos": "Mes listes",
-        "section-today-quest": "Objectif communautaire du jour",
-        "section-today-quest-detail": "Chaque jour une catégorie est choisie aléatoirement pour tout le monde, réalise des activités dans cette catégorie pour gagner des récompenses !",
 
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
 
-        "chart-today-notmuch": "Ajoute une activité aujourd'hui pour afficher le graphique",
-        "chart-quest-notmuch": "Ajoute une quête aujourd'hui pour afficher le graphique",
+        "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
+        "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
         "chart-click-me": "clique ici !",
 
         "news-myquests-title": "Quêtes à faire",
@@ -491,6 +489,7 @@
         "error-signin-pseudoUsed": "Ce pseudo est déjà utilisé.",
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
+        "error-google-signin-unavailable": "La connexion avec Google n'est pas encore configurée, réessaye plus tard.",
 
         "error-connection": "Échec de la connexion au serveur",
 
@@ -578,7 +577,6 @@
         "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
 
-        "coming-soon": "Bientôt\ndisponible",
         "btn-edit-profile": "Modifier mon apparence",
         "btn-skills": "Mes compétences",
         "btn-statistics": "Mes statistiques",
@@ -586,6 +584,7 @@
         "btn-friends": "Mes amis",
 
         "title-profile": "Mon profil",
+        "title-edit-avatar": "Modifier mon apparence",
         "title-statistics": "Mes statistiques",
 
         "input-username": "Pseudo",
@@ -621,15 +620,15 @@
         "alert-birthtimewait-title": "Changement de date de naissance",
         "alert-birthtimewait-message": "Tu dois attendre {} jours avant de pouvoir modifier ta date de naissance à nouveau.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-message": "Tu as bien {} ans ?",
-
-        "temporary-avatars": "Cet avatar sera bientôt remplacé ... en mieux !"
+        "alert-birthconfirm-message": "Tu as bien {} ans ?"
     },
 
     "profile-avatar": {
         "button-sell": "Vendre +{} Ox",
         "button-equip": "Équiper",
 
+        "alert-notconnected-title": "Non connecté",
+        "alert-notconnected-text": "Tu dois être connecté au serveur pour pouvoir vendre un item.",
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "Tu dois équiper un autre item pour pouvoir vendre celui-ci.",
         "alert-sellconfirm-title": "Vendre",
@@ -777,23 +776,19 @@
     },
 
     "shop": {
+        "loading": "Chargement...",
+
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
+        "button-header-ad-unavailable": "Indisponible",
 
-        "temporary-message": "Le marché est en cours de refonte, il sera bientôt de retour !",
-
-        "banner-header": "Réduction sur tous les items avant l'arrivée des nouveaux avatars !",
         "banner-daily": "Deals du jour",
         "banner-iap": "Achats intégrés",
         "banner-random-chest": "Coffres aléatoires",
         "banner-targeted-chest": "Coffres ciblés",
-        "banner-dye": "Teintures",
 
         "dailyDeals": {
             "popup-item-button": "Acheter pour {} Ox",
-            "popup-buysuccess-title": "Achat réussi",
-            "popup-buysuccess-text": "Tu as bien acheté l'item \"{}\" pour {} Ox",
-
             "error-no-items": "Une erreur est survenue lors du chargement des items à vendre, réessaye plus tard."
         },
 
@@ -802,9 +797,12 @@
         },
 
         "randomChests": {
-            "chest-random-common": "Coffre simple",
-            "chest-random-rare": "Coffre mystérieux",
-            "chest-random-epic": "Coffre des légendes",
+            "chest-random": {
+                "common": "Coffre simple",
+                "rare": "Coffre mystérieux",
+                "epic": "Coffre mythique",
+                "legendary": "Coffre légendaire"
+            },
 
             "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
             "popup-chest-button": "Ouvrir pour {} Ox"
@@ -820,15 +818,6 @@
 
             "popup-chest-text": "Tu veux ouvrir un coffre {} pour obtenir un item de type \"{}\" pour {} Ox ?",
             "popup-chest-button": "Ouvrir pour {} Ox"
-        },
-
-        "dyes": {
-            "popup-dyer-text": "Changer l'apparence de cet item ?",
-            "popup-dyer-button": "Teindre pour {} Ox",
-            "popup-dyesuccess-title": "Teinture réussie",
-            "popup-dyesuccess-text": "Tu as bien teint l'item \"{}\" pour {} Ox",
-
-            "error-no-dye": "Il n'y a aucune teinture de disponible, achete des items ou réessaye plus tard."
         },
 
         "alert-code-title": "Utiliser un code",
@@ -1087,9 +1076,7 @@
         "widget-button-editTime": "Modifier",
         "widget-duration": "Durée",
         "widget-achievements-all": "Tous les succès",
-        "widget-skills-all": "Autres",
-        "sexe-male": "♂",
-        "sexe-female": "♀"
+        "widget-skills-all": "Autres"
     },
 
     "loading": [

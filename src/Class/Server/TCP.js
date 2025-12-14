@@ -241,13 +241,26 @@ class TCP {
             this.state.Set('error');
         }
 
-        this.Disconnect();
+        // Don't call Disconnect() - let #onClose handle cleanup after the close event
     };
 
     /** @param {WebSocketCloseEvent} _event */
     #onClose = (_event) => {
         this.state.Set('disconnected');
-        this.Disconnect();
+
+        // Cleanup socket without recursion
+        if (this.socket) {
+            const s = this.socket;
+            this.socket = null;
+            s.removeEventListener('open', this.#onOpen);
+            s.removeEventListener('message', this.#onMessage);
+            s.removeEventListener('error', this.#onError);
+            s.removeEventListener('close', this.#onClose);
+            s.cleanup();
+        }
+        this.#connecting = false;
+        this.#callbacks = {};
+        this.#callbacksActions = {};
     };
 
     /**

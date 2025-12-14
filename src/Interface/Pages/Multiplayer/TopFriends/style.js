@@ -5,6 +5,10 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row'
     },
+    avatarFrame: {
+        flex: 1,
+        aspectRatio: 1
+    },
     friendTop: {
         flex: 1,
         width: 'auto',
@@ -47,7 +51,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     friendTopView: {
-        //flex: 1,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center'
@@ -74,6 +77,9 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 6,
         transform: [{ rotateZ: '45deg' }]
+    },
+    friendTopRankFirst: {
+        overflow: 'hidden'
     },
     friendTopRankText: {
         transform: [{ rotateZ: '-45deg' }],

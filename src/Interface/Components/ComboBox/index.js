@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { View, Animated, TouchableHighlight, FlatList, Modal } from 'react-native';
 
 import styles from './style';
@@ -15,44 +15,61 @@ import { InputText } from '../InputText';
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('./back').ComboBoxItem} ComboBoxItem
+ * @typedef {import('./back').ComboBoxPropsType} ComboBoxPropsType
  */
 
-class ComboBox extends ComboBoxBack {
-    render() {
-        const { selectionMode } = this.state;
+/**
+ * @param {ComboBoxPropsType} props
+ */
+const ComboBox = (props) => {
+    const {
+        // State
+        parent,
+        anim,
+        data,
+        selectionMode,
+        search,
 
-        return (
-            <>
-                {this.renderElement()}
+        // Refs
+        refParent,
+        refFlatlist,
 
-                <Modal visible={selectionMode} transparent={true} animationType='fade'>
-                    {this.renderOverlay()}
-                    {this.renderContent()}
-                </Modal>
-            </>
-        );
-    }
+        // Methods
+        onPress,
+        closeSelection,
+        resetSelection,
+        refreshSearch,
+        onItemPress,
 
-    renderElement = () => {
-        const { style, inputStyle, title, activeColor, enabled, selectedValue, hideChevron } = this.props;
-        const { anim, selectionMode } = this.state;
+        // Props
+        style,
+        inputStyle,
+        maxContentHeight,
+        title,
+        activeColor,
+        selectedValue,
+        enableSearchBar,
+        enabled,
+        hideChevron
+    } = ComboBoxBack(props);
 
+    const renderElement = () => {
         const angle = anim.interpolate({
             inputRange: [0, 1],
             outputRange: ['0deg', '180deg']
         });
 
         return (
-            <View ref={this.refParent} style={[styles.parentContent, style]}>
+            <View ref={refParent} style={[styles.parentContent, style]}>
                 {/* Button for interaction (open combobox) */}
                 <Button
                     testID='combobox-button'
                     style={styles.hoverButton}
                     appearance='uniform'
                     color='transparent'
-                    onPress={this.onPress}
-                    onLongPress={this.resetSelection}
-                    onTouchMove={this.closeSelection}
+                    onPress={onPress}
+                    onLongPress={resetSelection}
+                    onTouchMove={closeSelection}
                 />
 
                 {/* InputText to show result */}
@@ -77,19 +94,15 @@ class ComboBox extends ComboBoxBack {
         );
     };
 
-    renderOverlay = () => {
-        const { selectionMode } = this.state;
-
+    const renderOverlay = () => {
         if (!selectionMode) {
             return null;
         }
 
-        return <View style={styles.overlayBackground} onTouchStart={this.closeSelection} />;
+        return <View style={[styles.overlayBackground]} onTouchStart={closeSelection} />;
     };
 
-    renderContent = () => {
-        const { enableSearchBar: setSearchBar, maxContentHeight: maxHeight, activeColor } = this.props;
-        const { parent, anim, data, selectionMode } = this.state;
+    const renderContent = () => {
         const { x, y, width, height } = parent;
 
         const animValue = anim.interpolate({
@@ -100,7 +113,7 @@ class ComboBox extends ComboBoxBack {
         /** @type {StyleProp} */
         const overlayStyle = {
             width: width,
-            maxHeight: maxHeight,
+            maxHeight: maxContentHeight,
             transform: [{ translateX: x }, { translateY: y + height }]
         };
 
@@ -128,16 +141,16 @@ class ComboBox extends ComboBoxBack {
                 >
                     <Animated.View style={[styles.overlayPanel, panelStyle]}>
                         <FlatList
-                            ref={this.refFlatlist}
+                            ref={refFlatlist}
                             ListHeaderComponent={
-                                !setSearchBar ? null : (
+                                !enableSearchBar ? null : (
                                     <View style={styles.parentSearchBar}>
                                         <InputText
                                             style={styles.search}
                                             containerStyle={styles.searchContainer}
                                             label={langManager.curr['modal']['search']}
-                                            value={this.state.search}
-                                            onChangeText={this.refreshSearch}
+                                            value={search}
+                                            onChangeText={refreshSearch}
                                         />
                                     </View>
                                 )
@@ -149,7 +162,7 @@ class ComboBox extends ComboBoxBack {
                                 }
                             ]}
                             data={data}
-                            renderItem={this.renderItem}
+                            renderItem={renderItem}
                             keyExtractor={(item, index) => `i-${item.key}-${index}`}
                         />
                     </Animated.View>
@@ -159,19 +172,26 @@ class ComboBox extends ComboBoxBack {
     };
 
     /** @param {{ item: ComboBoxItem }} param0 */
-    renderItem = ({ item }) => {
+    const renderItem = ({ item }) => {
         const backgroundColor = themeManager.GetColor('backgroundTransparent');
 
         return (
-            <TouchableHighlight
-                style={styles.item}
-                onPress={() => this.onItemPress(item)}
-                underlayColor={backgroundColor}
-            >
+            <TouchableHighlight style={styles.item} onPress={() => onItemPress(item)} underlayColor={backgroundColor}>
                 <Text style={styles.itemText}>{item.value}</Text>
             </TouchableHighlight>
         );
     };
-}
+
+    return (
+        <>
+            {renderElement()}
+
+            <Modal visible={selectionMode} transparent={true} animationType='fade'>
+                {renderOverlay()}
+                {renderContent()}
+            </Modal>
+        </>
+    );
+};
 
 export { ComboBox };

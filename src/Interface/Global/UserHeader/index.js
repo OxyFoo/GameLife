@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Image, View } from 'react-native';
+import { Animated, View } from 'react-native';
 
 import styles from './style';
 import UserHeaderBack from './back';
@@ -8,14 +8,9 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { OnlineView } from 'Interface/Primitives';
-import { Text, Icon, Button, Frame } from 'Interface/Components';
+import { Text, Icon, Button } from 'Interface/Components';
 import { NotificationsInAppButton } from 'Interface/Widgets';
-
-// TODO: Replace this with a real avatar
-// @ts-ignore
-const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
-
-const AVATAR_FRAME_SIZE = { x: 250, y: 50, width: 400, height: 350 };
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 class UserHeader extends UserHeaderBack {
     render() {
@@ -63,23 +58,24 @@ class UserHeader extends UserHeaderBack {
     };
 
     renderInteraction = () => {
-        const { showAvatar } = this.state;
+        const { showAvatar, avatarData } = this.state;
         const openProfile = () => user.interface.ChangePage('profile');
+        const containerSize = dataManager.items.GetContainerSize('profile');
 
         return (
             <Button ref={this.refContainer} style={styles.avatar} onPress={openProfile}>
-                {showAvatar && user.character && (
-                    // TODO: Real avatar
-                    <Frame
-                        ref={this.refFrame}
-                        characters={[user.character]}
-                        size={AVATAR_FRAME_SIZE}
-                        delayTime={0}
-                        loadingTime={0}
-                        bodyView={'topHalf'}
-                    />
+                {showAvatar && avatarData && (
+                    <AvatarFrame width={48} height={48} renderScale={2} backgroundColor='#00000000'>
+                        <AvatarCharacter
+                            body={avatarData.skin}
+                            bodyColor={avatarData.skinColor}
+                            position={containerSize.pos}
+                            scale={containerSize.scale}
+                            items={avatarData.items}
+                            portraitMode
+                        />
+                    </AvatarFrame>
                 )}
-                <Image style={styles.avatarImage} resizeMode='stretch' source={AVATAR_MIN_PLACEHOLDER} />
             </Button>
         );
     };

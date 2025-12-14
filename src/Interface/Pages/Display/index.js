@@ -3,7 +3,7 @@ import { View, Animated, StyleSheet } from 'react-native';
 
 import BackDisplay from './back';
 
-import { Text, Icon, Button } from 'Interface/Components';
+import { Text, Icon, Button, Zap } from 'Interface/Components';
 
 class Display extends BackDisplay {
     render() {
@@ -24,6 +24,9 @@ class Display extends BackDisplay {
 
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
+                        <Animated.View style={[styles.zapContainer, { transform: [{ scale: this.state.anim }] }]}>
+                            <Zap style={styles.zap} />
+                        </Animated.View>
                         <Text fontSize={16} color={'light'} style={styles.quote}>
                             {this.quote.text}
                         </Text>
@@ -82,6 +85,13 @@ const styles = StyleSheet.create({
         paddingVertical: 42,
         alignItems: 'center',
         justifyContent: 'flex-end'
+    },
+    zapContainer: {
+        marginBottom: 16
+    },
+    zap: {
+        width: 80,
+        height: 80
     },
     quote: {
         fontStyle: 'italic'

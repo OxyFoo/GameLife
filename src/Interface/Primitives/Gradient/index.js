@@ -16,7 +16,7 @@ import themeManager from 'Managers/ThemeManager';
  * @param {string[]} [param0.colors]
  * @param {number} [param0.angle]
  * @param {React.ReactNode} [param0.children]
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 
 function Gradient({ style, containerStyle, colors, angle, children }) {

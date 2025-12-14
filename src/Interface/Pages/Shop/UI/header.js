@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Animated, View, Image, StyleSheet } from 'react-native';
+import { Animated, View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Text, Button } from 'Interface/Components';
+import { Gradient } from 'Interface/Primitives';
+import { Text, Button, Icon } from 'Interface/Components';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -17,9 +17,11 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('Class/Ads').AdEventFunction} AdEventFunction
  */
 
+/** @type {{ style: StyleViewProp, onScrollToIAP?: () => void }} */
 const ShopHeaderPropTypes = {
     /** @type {StyleViewProp} */
-    style: {}
+    style: {},
+    onScrollToIAP: undefined
 };
 
 class ShopHeader extends React.Component {
@@ -47,6 +49,11 @@ class ShopHeader extends React.Component {
         });
 
         this.rewardedShop = user.ads.Get('shop', this.onAdStateChange);
+
+        // If the ad is not found, display error status
+        if (this.rewardedShop === null) {
+            this.setState({ adState: 'error' });
+        }
     }
 
     componentWillUnmount() {
@@ -101,8 +108,7 @@ class ShopHeader extends React.Component {
     openOxShop = () => {
         if (!user.server2.IsAuthenticated()) return;
 
-        // TODO: ???
-        // user.interface.GetCurrentPage()?.refPage?.GotoY(400);
+        this.props.onScrollToIAP?.();
     };
 
     /** @type {AdEventFunction} */
@@ -121,8 +127,7 @@ class ShopHeader extends React.Component {
                 data: {
                     title: lang['alert-adsuccess-title'],
                     message: lang['alert-adsuccess-message'].replace('{}', ad.RewardOx.toString())
-                },
-                cancelable: false
+                }
             });
             this.setState({ adState: 'wait' });
         } else {
@@ -134,50 +139,81 @@ class ShopHeader extends React.Component {
         const lang = langManager.curr['shop'];
         const { style } = this.props;
         const { adState, oxAmount, oxGain } = this.state;
-        const oxAmountStr = oxAmount.toString();
 
-        /** @type {ViewStyle} */
-        const parentStyle = {
-            backgroundColor: themeManager.GetColor('ground1a')
-            // transform: [
-            //     {
-            //         translateY: Animated.subtract(0, refPage?.state?.positionY || 0)
-            //     }
-            // ]
-        };
-        const oxTextSize = oxAmountStr.length < 3 ? 16 : 16 + 2 - oxAmountStr.length;
-        const oxIconSize = oxAmountStr.length < 3 ? 20 : oxAmountStr.length < 5 ? 18 : 16;
+        const oxAmountStr = oxAmount.toString();
+        const oxTextSize = oxAmountStr.length < 3 ? 16 : 20 - oxAmountStr.length;
+
+        const isAdError = adState === 'error' || adState === 'notAvailable';
+        const isAdLoading = adState === 'wait';
 
         return (
-            <Animated.View style={[styles.parent, parentStyle, style]}>
+            <Animated.View style={[styles.parent, style]}>
                 <View style={styles.content}>
-                    <Button
-                        ref={this.refTuto2}
-                        style={styles.badge}
-                        //icon='media'
-                        //badgeJustifyContent='space-around'
-                        onPress={this.openAd}
-                        loading={adState === 'wait'}
-                        disabled={!(user.server2.IsAuthenticated() && adState === 'ready')}
-                    >
-                        <Text fontSize={16} color='main1'>
-                            {lang['button-header-ad'].replace('{}', oxGain.toString())}
-                        </Text>
-                        <Image style={styles.ox} source={IMG_OX} />
-                    </Button>
+                    {isAdError ? (
+                        <Button
+                            style={styles.badge}
+                            styleContent={styles.badgeContent}
+                            gradientColors={['#65383840', '#65383820']}
+                            gradientColorsAngle={-45}
+                            disabled
+                        >
+                            <Gradient
+                                containerStyle={styles.badgeGradientContainer}
+                                style={styles.badgeGradient}
+                                colors={['#45353580', '#35252580']}
+                                angle={45}
+                            >
+                                <Icon icon='close' color='error' />
+                            </Gradient>
+                            <Text style={styles.badgeTextCenter} fontSize={14} color='white'>
+                                {lang['button-header-ad-unavailable']}
+                            </Text>
+                        </Button>
+                    ) : (
+                        <Button
+                            style={styles.badge}
+                            styleContent={!isAdLoading && styles.badgeContent}
+                            gradientColors={['#38406573', '#3840651F']}
+                            gradientColorsAngle={-45}
+                            onPress={this.openAd}
+                            loading={isAdLoading}
+                            disabled={!user.server2.IsAuthenticated()}
+                        >
+                            <Gradient
+                                containerStyle={styles.badgeGradientContainer}
+                                style={styles.badgeGradient}
+                                colors={[themeManager.GetColor('main2'), themeManager.GetColor('main3')]}
+                                angle={45}
+                            >
+                                <Icon icon='gift' color='grey' />
+                            </Gradient>
+                            <Text fontSize={16} color='white'>
+                                {lang['button-header-ad'].replace('{}', oxGain.toString())}
+                            </Text>
+                            <Icon style={styles.badgeIcon} icon='ox' />
+                        </Button>
+                    )}
 
                     <Button
-                        ref={this.refTuto3}
                         style={styles.badge}
-                        //icon='addSquare'
-                        //badgeJustifyContent='space-around'
+                        styleContent={styles.badgeContent}
+                        gradientColors={['#38406573', '#3840651F']}
+                        gradientColorsAngle={-45}
                         onPress={this.openOxShop}
                         disabled={!user.server2.IsAuthenticated()}
                     >
-                        <Text fontSize={oxTextSize} color='main1'>
+                        <Gradient
+                            containerStyle={styles.badgeGradientContainer}
+                            style={styles.badgeGradient}
+                            colors={[themeManager.GetColor('main2'), themeManager.GetColor('main3')]}
+                            angle={45}
+                        >
+                            <Icon icon='add' color='grey' />
+                        </Gradient>
+                        <Text fontSize={oxTextSize} color='white'>
                             {oxAmountStr}
                         </Text>
-                        <Image style={[styles.ox, { width: oxIconSize }]} source={IMG_OX} />
+                        <Icon style={styles.badgeIcon} icon='ox' />
                     </Button>
                 </View>
             </Animated.View>
@@ -190,7 +226,6 @@ ShopHeader.defaultProps = ShopHeaderPropTypes;
 
 const styles = StyleSheet.create({
     parent: {
-        paddingVertical: 6,
         marginBottom: 24,
 
         zIndex: 100,
@@ -200,16 +235,31 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-
-        marginHorizontal: 24
+        gap: 24
     },
     badge: {
-        width: '32%'
+        flex: 1,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        justifyContent: 'center'
     },
-    ox: {
-        width: 20,
+    badgeContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    badgeIcon: {
+        marginRight: 6
+    },
+    badgeTextCenter: {
+        flex: 1,
+        textAlign: 'center'
+    },
+    badgeGradientContainer: {
+        borderRadius: 8
+    },
+    badgeGradient: {
         aspectRatio: 1,
-        marginLeft: 2
+        padding: 8
     }
 });
 

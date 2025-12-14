@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // Container
     buttonContainer: {
+        marginTop: 12,
         paddingVertical: 0,
         paddingHorizontal: 0,
         borderRadius: 8
@@ -51,14 +52,25 @@ const styles = StyleSheet.create({
     },
     rewardCard: {
         width: 48,
-        height: 48,
+        height: 56,
         borderRadius: 6,
         overflow: 'visible'
     },
     rewardItem: {
         width: 48,
-        height: 48,
+        height: 56,
         padding: 6
+    },
+    rewardContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    rewardIconContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     rewardImage: {
         width: '100%',
@@ -72,11 +84,7 @@ const styles = StyleSheet.create({
         borderRadius: 100
     },
     rewardValue: {
-        position: 'absolute',
-        textAlign: 'right',
-        left: -12,
-        right: -12,
-        bottom: -12
+        textAlign: 'center'
     },
     missionStep: {
         textAlign: 'center',

@@ -12,6 +12,7 @@ import { Round } from 'Utils/Functions';
  * @typedef {import('react-native').ScrollView} ScrollView
  *
  * @typedef {import('Managers/UserManager').UserManager} UserManager
+ * @typedef {import('Data/User/Quests').Quest} Quest
  */
 
 const BackHomeProps = {
@@ -33,7 +34,8 @@ class BackHome extends PageBase {
             currentXP: '0',
             nextLevelXP: '0'
         },
-        scrollable: true
+        scrollable: true,
+        hasQuests: false
     };
 
     /** @type {React.RefObject<ScrollView | null>} */
@@ -43,15 +45,22 @@ class BackHome extends PageBase {
     refQuestsTitle = React.createRef();
 
     /** @type {Symbol | null} */
-    listenerActivities = null;
+    listenerExperience = null;
+
+    /** @type {Symbol | null} */
+    listenerQuests = null;
 
     componentDidMount() {
         this.handleLevelsUpdate(user.experience.experience.Get());
-        this.listenerActivities = user.experience.experience.AddListener(this.handleLevelsUpdate);
+        this.listenerExperience = user.experience.experience.AddListener(this.handleLevelsUpdate);
+
+        this.handleQuestsUpdate(user.quests.Get());
+        this.listenerQuests = user.quests.allQuests.AddListener(this.handleQuestsUpdate);
     }
 
     componentWillUnmount() {
-        user.activities.allActivities.RemoveListener(this.listenerActivities);
+        user.experience.experience.RemoveListener(this.listenerExperience);
+        user.quests.allQuests.RemoveListener(this.listenerQuests);
     }
 
     /** @param {UserManager['experience']['experience']['var']} experience */
@@ -70,6 +79,11 @@ class BackHome extends PageBase {
         });
     };
 
+    /** @param {Quest[]} newQuests */
+    handleQuestsUpdate = (newQuests) => {
+        this.setState({ hasQuests: newQuests.length > 0 });
+    };
+
     /** @param {boolean} scrollable */
     onChangeScrollable = (scrollable) => {
         this.setState({ scrollable });
@@ -83,18 +97,6 @@ class BackHome extends PageBase {
 
         user.interface.popup?.Open({
             content: <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />
-        });
-    };
-
-    infoDailyQuests = () => {
-        const lang = langManager.curr['home'];
-
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: lang['section-today-quest'],
-                message: lang['section-today-quest-detail']
-            }
         });
     };
 

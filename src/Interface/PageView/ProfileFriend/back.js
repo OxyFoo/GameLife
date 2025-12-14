@@ -3,7 +3,6 @@ import React from 'react';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { Character } from 'Interface/Components';
 import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
 
@@ -81,16 +80,6 @@ class BackProfileFriend extends React.Component {
             this.state.activities.activitiesLength = friend.activities.length;
             this.state.activities.durationHours = Math.floor(friend.activities.totalDuration / 60);
         }
-
-        const character = new Character(
-            'character-player-' + friend.accountID.toString(),
-            friend.avatar.Sexe,
-            friend.avatar.Skin,
-            friend.avatar.SkinColor
-        );
-        const stuff = [friend.avatar.Hair, friend.avatar.Top, friend.avatar.Bottom, friend.avatar.Shoes];
-        character.SetEquipment(stuff);
-        this.character = character;
     }
 
     componentDidMount() {

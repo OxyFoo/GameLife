@@ -16,7 +16,7 @@ import { Button, Text } from 'Interface/Components';
  * @param {object} props
  * @param {NotificationInAppAchievements} props.notif
  * @param {number} props.index
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 function NIA_AchievementPending({ notif }) {
     const lang = langManager.curr['notifications']['in-app'];

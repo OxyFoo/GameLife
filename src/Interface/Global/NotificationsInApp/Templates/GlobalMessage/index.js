@@ -19,7 +19,7 @@ let claimLoading = false;
  * @param {object} props
  * @param {NotificationInApp} props.notif
  * @param {number} props.index
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function NIA_GlobalMessage({ notif }) {
     const title = langManager.GetText(notif.data.message);

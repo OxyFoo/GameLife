@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import BackShopItems from './back';
 import styles from './style';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { IMG_OX } from 'Ressources/items/currencies/currencies';
-import { Button, Text, Frame } from 'Interface/Components';
+import { Button, Icon, Text } from 'Interface/Components';
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 /**
  * @typedef {import('./back').BuyableItem} BuyableItem
+ * @typedef {import('react-native').ListRenderItem<BuyableItem>} ListRenderItemBuyableItem
  */
 
 class ShopDailyDeals extends BackShopItems {
@@ -22,59 +24,63 @@ class ShopDailyDeals extends BackShopItems {
         return (
             <FlatList
                 style={styles.flatlist}
+                contentContainerStyle={styles.flatlistContent}
+                columnWrapperStyle={styles.flatlistColumnWrapper}
                 data={buyableItems}
                 ListEmptyComponent={this.renderEmpty}
                 numColumns={3}
                 renderItem={this.renderItem}
-                keyExtractor={(item, index) => `buyable-item-${item.ID}-${index}`}
+                keyExtractor={(item) => `buyable-item-${item.ID}`}
                 scrollEnabled={false}
             />
         );
     }
 
-    /**
-     * @param {{ item: BuyableItem }} item
-     * @returns {JSX.Element}
-     */
+    /** @type {ListRenderItemBuyableItem} */
     renderItem = ({ item }) => {
-        const disabled = user.shop.buyToday.items.includes(item.ID.toString());
+        const disabled = this.isItemPurchased(item.ID);
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
-        const backgroundStyle = { backgroundColor: item.BackgroundColor };
+        const avatarRenderScale = item.Size.scale && item.Size.scale >= 3 ? 2 : 1;
 
         return (
-            <View style={styles.itemParent}>
-                <Button style={styles.itemButton} onPress={item.OnPress} enabled={!disabled}>
-                    <View style={[styles.itemContent, backgroundStyle]}>
-                        {/** Item name & rarity */}
-                        <View style={styles.itemInfo}>
-                            <Text style={styles.itemName}>{item.Name}</Text>
-                            <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
-                        </View>
-
-                        {/** Item frame */}
-                        <View style={styles.itemFrameContainer}>
-                            <Frame
-                                style={styles.itemFrame}
-                                characters={[item.Character]}
-                                onlyItems={true}
-                                size={item.Size}
-                            />
-                        </View>
-
-                        {/** Item price */}
-                        {this.renderPrice(item)}
-
-                        {/** Decoration */}
-                        <LinearGradient
-                            style={styles.itemDecoration}
-                            colors={item.Colors}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                        />
+            <Button
+                style={styles.itemButton}
+                gradientColors={['#38406573', '#3840651F']}
+                gradientColorsAngle={-45}
+                onPress={item.OnPress}
+                enabled={!disabled}
+            >
+                <View style={styles.itemContent}>
+                    {/** Item name & rarity */}
+                    <View style={styles.itemInfo}>
+                        <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
+                        <Text style={styles.itemName}>{item.Name}</Text>
                     </View>
-                </Button>
-            </View>
+
+                    {/** Item frame */}
+                    <AvatarFrame width={72} height={72} renderScale={avatarRenderScale} backgroundColor='#00000000'>
+                        <AvatarCharacter
+                            body={user.inventory.avatar.skin || 'human_00'}
+                            bodyColor={BODY_COLORS[user.inventory.avatar.skinColor] || BODY_COLORS[0]}
+                            position={item.Size.pos}
+                            scale={item.Size.scale}
+                            items={this.getPreviewItems(item)}
+                        />
+                    </AvatarFrame>
+
+                    {/** Item price */}
+                    {this.renderPrice(item)}
+
+                    {/** Decoration */}
+                    <LinearGradient
+                        style={styles.itemDecoration}
+                        colors={item.Colors}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                    />
+                </View>
+            </Button>
         );
     };
 
@@ -91,7 +97,7 @@ class ShopDailyDeals extends BackShopItems {
             return (
                 <View style={styles.itemPrice}>
                     <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
-                    <Image style={styles.itemOxImage} source={IMG_OX} />
+                    <Icon size={20} icon='ox' />
                 </View>
             );
         }
@@ -105,7 +111,7 @@ class ShopDailyDeals extends BackShopItems {
                         {Math.round(item.Price * user.shop.priceFactor).toString()}
                     </Text>
                 </View>
-                <Image style={styles.itemOxImageEdited} source={IMG_OX} />
+                <Icon size={20} icon='ox' />
             </View>
         );
     };

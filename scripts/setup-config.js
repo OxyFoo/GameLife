@@ -26,7 +26,12 @@ const CONFIG_FILES = [
     {
         template: 'android/app/google-services.json.template',
         target: 'android/app/google-services.json',
-        description: 'Google Services Android Configuration'
+        description: 'Google Services Android Configuration (Sign-In)'
+    },
+    {
+        template: 'android/local.properties.template',
+        target: 'android/local.properties',
+        description: 'Android Local Properties Configuration'
     }
 ];
 

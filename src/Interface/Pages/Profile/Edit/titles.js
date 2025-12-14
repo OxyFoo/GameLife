@@ -20,7 +20,7 @@ import { Button, Text } from 'Interface/Components';
 
 /**
  * @param {TitlesPanelPropsType} props
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function TitlesView(props) {
     const lang = langManager.curr['profile'];

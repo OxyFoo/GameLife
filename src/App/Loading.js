@@ -12,7 +12,6 @@ import {
 } from './popups';
 import { env } from 'Utils/Env';
 import { LoadTemplate_AppData, LoadTemplate_UserData } from './template';
-//import { Character } from 'Interface/Components';
 
 /**
  * @typedef {keyof import('Managers/LangManager').Lang['app']['loading-error-message']} ErrorMessages
@@ -166,15 +165,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    // Loading: User character
-    // user.character = new Character(
-    //     'player',
-    //     user.inventory.avatar.sexe,
-    //     user.inventory.avatar.skin,
-    //     user.inventory.avatar.skinColor
-    // );
-    // user.character.SetEquipment(user.inventory.GetEquippedItemsID());
-    // user.interface.userHeader?.ShowAvatar(true);
+    // Update user avatar
+    user.interface.userHeader?.RefreshAvatar();
 
     // Setup Notifications
     user.notificationsPush.Initialize();
@@ -184,14 +176,13 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load admob
     //await user.consent.ShowTrackingPopup();
 
-    // TODO: Fix ads
     // Load ads
-    //const ads = dataManager.ads.Get();
-    //user.ads.LoadAds(ads);
+    const ads = dataManager.ads.Get();
+    user.ads.LoadAds(ads);
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {
-        //user.interface.console?.AddLog('warn', 'No more ads available');
+        user.interface.console?.AddLog('warn', 'No more ads available');
     }
 
     // Render default pages
@@ -210,7 +201,6 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     const time_text = `Initialisation done in ${time_total}ms (${time_ratio_1}/${time_ratio_2}/${time_ratio_3})`;
     console.log(time_text);
     user.interface.console?.AddLog('info', time_text);
-    user.appIsLoaded = true;
 
     // Manages the end of loading and the sending of statistics
     user.statistics.HandleAppLoaded(time_total);
@@ -227,6 +217,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     } else if (user.server2.serverState.status === 'downdate') {
         await showDowndatePopup();
     }
+
+    user.appIsLoaded = true;
 
     nextPage();
 }

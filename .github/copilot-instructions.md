@@ -11,6 +11,16 @@ Commence **TOUTES** tes réponses par `[GameLife Assistant]` pour indiquer que t
 - **Mémoire permanente** : Utilise ce fichier comme référence pour te rappeler des décisions architecturales et des bonnes pratiques spécifiques au projet
 - **Cohérence** : Assure-toi que les instructions restent cohérentes avec le code réel du projet
 
+## 📝 Workflow de développement
+
+- **Proposition de commit** : Après avoir développé une feature complète ou un fix, propose systématiquement un nom de commit au format conventionnel :
+  - `feat(scope): description` pour une nouvelle fonctionnalité
+  - `fix(scope): description` pour une correction de bug
+  - `refactor(scope): description` pour un refactoring
+  - `docs(scope): description` pour la documentation
+  - `style(scope): description` pour le formatage
+  - `chore(scope): description` pour les tâches de maintenance
+
 ## Vue d'ensemble du projet
 
 GameLife est une application mobile React Native (v0.79.2) de gamification de la vie quotidienne. L'app utilise TypeScript/JavaScript avec une architecture modulaire stricte et des patterns de conception spécifiques.

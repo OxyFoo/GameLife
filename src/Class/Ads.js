@@ -30,6 +30,9 @@ class AdEvent {
 
     /** @type {(() => void) | null} */
     unsubscriber = null;
+
+    /** @type {AdEventFunction | null} Current callback from Get() */
+    callback = null;
 }
 
 class Ads extends IUserClass {
@@ -68,7 +71,13 @@ class Ads extends IUserClass {
                     keywords: AD_KEYWORDS
                 });
                 const newAd = new AdEvent(adMeta, ad);
-                // newAd.ad.load();
+
+                // Single listener for all events
+                newAd.unsubscriber = ad.addAdEventsListener(({ type, payload }) => {
+                    this.HandleAdEvent(newAd, type, payload);
+                });
+
+                newAd.ad.load();
                 this.adEvents.push(newAd);
             }
 
@@ -80,9 +89,46 @@ class Ads extends IUserClass {
                     keywords: AD_KEYWORDS
                 });
                 const newAd = new AdEvent(adMeta, ad);
+
+                // Single listener for all events
+                newAd.unsubscriber = ad.addAdEventsListener(({ type, payload }) => {
+                    this.HandleAdEvent(newAd, type, payload);
+                });
+
                 newAd.ad.load();
                 this.adEvents.push(newAd);
             }
+        }
+    };
+
+    /**
+     * Centralized event handler for all ad events
+     * @param {AdEvent} adEvent
+     * @param {AdEventType | RewardedAdEventType} type
+     * @param {Error | import('react-native-google-mobile-ads').RewardedAdReward | undefined} payload
+     */
+    HandleAdEvent = (adEvent, type, payload) => {
+        // Handle ERROR
+        if (type === AdEventType.ERROR) {
+            const errorMsg = payload instanceof Error ? payload.message : JSON.stringify(payload);
+            this.user.interface.console?.AddLog('error', `Ads: "${adEvent.meta.Name}" error: ${errorMsg}`);
+            if (adEvent.callback) {
+                adEvent.callback(adEvent.meta, 'error');
+            }
+            return;
+        }
+
+        // Handle LOADED - notify callback if set
+        if (type === AdEventType.LOADED || type === RewardedAdEventType.LOADED) {
+            if (adEvent.callback) {
+                adEvent.callback(adEvent.meta, 'ready');
+            }
+            return;
+        }
+
+        // Handle other events only if callback is set (from Get())
+        if (adEvent.callback) {
+            this.EventOx(type, adEvent, adEvent.callback);
         }
     };
 
@@ -92,37 +138,22 @@ class Ads extends IUserClass {
      * @returns {AdEvent | null}
      */
     Get = (adName, callback) => {
-        // Get ad index
+        // Get ad
         const adEvent = this.adEvents.find((a) => a.meta.Name === adName);
         if (adEvent === undefined) {
             this.user.interface.console?.AddLog('error', `Ad error: Ad not found (${adName})`);
             return null;
         }
 
-        // Clear events
-        this.ClearEvents(adEvent);
+        // Store callback for event handling
+        adEvent.callback = callback;
 
-        // Set events
-        if (adEvent.ad instanceof RewardedAd) {
-            const unsubscriber = adEvent.ad.addAdEventsListener(({ type, payload: _payload }) => {
-                callback(adEvent.meta, adEvent.ad.loaded ? 'ready' : 'wait');
-                this.EventOx(type, adEvent, callback);
-            });
-            adEvent.unsubscriber = unsubscriber;
-        } else if (adEvent.ad instanceof InterstitialAd) {
-            const unsubscriber = adEvent.ad.addAdEventsListener(() => {
-                callback(adEvent.meta, adEvent.ad.loaded ? 'ready' : 'wait');
-            });
-            adEvent.unsubscriber = unsubscriber;
+        // Callback with current state
+        if (adEvent.ad.loaded) {
+            callback(adEvent.meta, 'ready');
         } else {
-            this.user.interface.console?.AddLog('error', `Ad error: Ad type unknown (${adName})`);
-            return null;
-        }
-
-        // Load ad if not loaded
-        if (!adEvent.ad.loaded) {
-            // TODO: Fix ads loading
-            // adEvent.ad.load();
+            callback(adEvent.meta, 'wait');
+            adEvent.ad.load();
         }
 
         return adEvent;
@@ -165,7 +196,11 @@ class Ads extends IUserClass {
                 }
 
                 this.user.informations.ox.Set(response.ox);
-                this.user.informations.DecrementAdRemaining();
+                if (typeof response.adRemaining === 'number') {
+                    this.user.informations.adRemaining = response.adRemaining;
+                } else {
+                    this.user.informations.DecrementAdRemaining();
+                }
                 callback(ad.meta, 'watched');
 
                 break;
@@ -185,10 +220,7 @@ class Ads extends IUserClass {
 
     /** @param {AdEvent} ad */
     ClearEvents(ad) {
-        if (ad.unsubscriber !== null) {
-            ad.unsubscriber();
-            ad.unsubscriber = null;
-        }
+        ad.callback = null;
     }
 }
 

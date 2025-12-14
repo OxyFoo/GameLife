@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, FlatList } from 'react-native';
+import { Animated, View, FlatList } from 'react-native';
 
 import styles from './style';
 import { NIA_Template } from './templates';
@@ -117,11 +117,8 @@ class NotificationsInApp extends React.Component {
         };
 
         return (
-            <Animated.View
-                style={[styles.background, animOpacity]}
-                onTouchStart={this.backgroundPressHandler}
-                pointerEvents={pointerEvent}
-            >
+            <Animated.View style={[styles.parent, animOpacity]} pointerEvents={pointerEvent}>
+                <View style={styles.background} onTouchStart={this.backgroundPressHandler} />
                 <Animated.View style={[styles.container, animStyle]}>
                     <FlatList
                         style={styles.flatlist}

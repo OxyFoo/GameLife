@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Image, Platform, View } from 'react-native';
+import { Dimensions, Platform, View } from 'react-native';
+import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import user from 'Managers/UserManager';
@@ -8,36 +9,29 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import ProfileFriend from 'Interface/PageView/ProfileFriend';
-import { Text, Button, /*Frame, Character,*/ Icon } from 'Interface/Components';
+import Inventory from 'Data/User/Inventory';
+import { Text, Button, Icon } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
+import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleViewProp
  *
- * @typedef {import('Class/Experience').XPInfo} XPInfo
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
-
-// TODO: Replace this with a real avatar
-// @ts-ignore
-const AVATAR_MIN_PLACEHOLDER = require('Ressources/items/avatar_min_placeholder.png');
-
-// /** @type {Character | null} */
-// const DEFAULT_CHARACTER = null;
 
 /**
  * @param {object} param0
  * @param {StyleViewProp} [param0.style]
  * @param {(Friend | UserOnline)} param0.friend
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function UserOnlineElement({ style, friend }) {
     const langExp = langManager.curr['level'];
     const lang = langManager.curr['multiplayer'];
 
-    // const [character, setCharacter] = React.useState(DEFAULT_CHARACTER);
     const [friendTitle, setFriendTitle] = React.useState(/** @type {string | null} */ (null));
     const [statusStyle, setStatusStyle] = React.useState({});
 
@@ -56,15 +50,6 @@ function UserOnlineElement({ style, friend }) {
             }
         }
 
-        // const newCharacter = new Character(
-        //     'character-player-' + friend.accountID.toString(),
-        //     friend.avatar.Sexe,
-        //     friend.avatar.Skin,
-        //     friend.avatar.SkinColor
-        // );
-        // const stuff = [friend.avatar.Hair, friend.avatar.Top, friend.avatar.Bottom, friend.avatar.Shoes];
-        // newCharacter.SetEquipment(stuff);
-
         const newStatusStyle = {};
         if (friend.status === 'online') {
             newStatusStyle.borderColor = themeManager.GetColor('success');
@@ -72,39 +57,46 @@ function UserOnlineElement({ style, friend }) {
             newStatusStyle.borderColor = themeManager.GetColor('disabled');
         }
 
-        // setCharacter(newCharacter);
         setFriendTitle(newFriendTitle);
         setStatusStyle(newStatusStyle);
     }, [friend, lang]);
 
     const onPress = () => {
+        const screen = Dimensions.get('window');
         user.interface.bottomPanel?.Open({
-            content: <ProfileFriend friendID={friend.accountID} />
+            content: <ProfileFriend friendID={friend.accountID} />,
+            maxPosY: screen.height * 0.8
         });
     };
 
     const friendExperience = user.experience.getXPDict(friend.xp);
+
+    const frameWidth = styles.frameBorder.width - 2 * styles.frameBorder.borderWidth;
+    const frameHeight = styles.frameBorder.height - 2 * styles.frameBorder.borderWidth;
+    const containerSize = dataManager.items.GetContainerSize('profile');
 
     return (
         <Button style={[styles.friendButton, style]} onPress={onPress} appearance='uniform' color='transparent'>
             <Gradient style={styles.friendGradient} colors={['#38406573', '#38406526']} angle={100}>
                 <View style={styles.friendInfo}>
                     <View style={[styles.frameBorder, statusStyle]}>
-                        {/* {character !== null && (
-                            <Frame
-                                style={styles.frame}
-                                characters={[character]}
-                                size={{ x: 200, y: 0, width: 500, height: 450 }}
-                                delayTime={0}
-                                loadingTime={0}
-                                bodyView={'topHalf'}
-                            />
-                        )} */}
-                        <Image
-                            style={styles.friendTopPlaceholder}
-                            resizeMode='stretch'
-                            source={AVATAR_MIN_PLACEHOLDER}
-                        />
+                        {friend?.avatar ? (
+                            <AvatarFrame
+                                width={frameWidth}
+                                height={frameHeight}
+                                renderScale={2}
+                                backgroundColor='#00000000'
+                            >
+                                <AvatarCharacter
+                                    body={friend.avatar.Skin || 'human_00'}
+                                    bodyColor={BODY_COLORS[friend.avatar.SkinColor] || BODY_COLORS[0]}
+                                    position={containerSize.pos}
+                                    scale={containerSize.scale}
+                                    items={Inventory.GetFriendAvatarItems(friend)}
+                                    portraitMode
+                                />
+                            </AvatarFrame>
+                        ) : null}
                     </View>
 
                     <View style={styles.friendInfoTitle}>

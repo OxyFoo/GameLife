@@ -23,7 +23,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
  * @param {number} [props.strokeWidth]
  * @param {number} [props.borderRadius]
  * @param {ThemeColor | ThemeText} [props.color]
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 const AnimBorder = ({
     style = {},

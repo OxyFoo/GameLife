@@ -1,13 +1,12 @@
 import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
 
 /**
- * // TODO: Replace StuffID with ItemID in Types/Data/App/Items.js
- * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
- *
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} Slot
+ * @typedef {import('@oxyfoo/avatar-factory').AvatarCharacterProps} AvatarCharacterProps
  *
- * @typedef {{ x: number, y: number, width: number, height: number }} CharacterContainerSize
+ * @typedef {{ pos: AvatarCharacterProps['position'], scale: AvatarCharacterProps['scale'] }} CharacterContainerSize
  *
  * @typedef {object} Buff
  * @property {number} int
@@ -16,14 +15,41 @@ import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
  * @property {number} sta
  * @property {number} agi
  * @property {number} dex
+ *
+ * @typedef {'avatar' | 'bodyColor' | 'profile' | Slot} SlotType
+ * @typedef {{ x?: number, y?: number, scale?: number }} AvatarPosition
  */
 
-const itemContainerSize = {
-    default: { x: 0, y: 0, width: 1000, height: 1000 },
-    hair: { x: 100, y: -50, width: 700, height: 550 },
-    top: { x: 180, y: 200, width: 400, height: 550 },
-    bottom: { x: 200, y: 320, width: 600, height: 400 },
-    shoes: { x: 300, y: 600, width: 400, height: 400 }
+/** @type {{ [key in SlotType]: CharacterContainerSize }} */
+const avatarPreviewConfig = {
+    avatar: {
+        pos: { x: 0, y: -0.7 },
+        scale: 2
+    },
+    bodyColor: {
+        pos: { x: 0, y: 0 },
+        scale: 1
+    },
+    profile: {
+        pos: { x: 0, y: -3.2 },
+        scale: 5
+    },
+    hair: {
+        pos: { x: 0, y: -3.5 },
+        scale: 5
+    },
+    top: {
+        pos: { x: 0, y: -1 },
+        scale: 3
+    },
+    bottom: {
+        pos: { x: 0, y: 0.5 },
+        scale: 2
+    },
+    shoes: {
+        pos: { x: 0, y: 1.6 },
+        scale: 2.5
+    }
 };
 
 /** @extends {IAppData<Item[]>} */
@@ -60,7 +86,7 @@ class Items extends IAppData {
     }
 
     /**
-     * @param {StuffID} itemID Item ID
+     * @param {ItemID} itemID Item ID
      * @param {Item[]} items List of items to get dyables items
      * @returns {Item[]} List of dyables items for the given item
      */
@@ -70,16 +96,23 @@ class Items extends IAppData {
     }
 
     /**
-     * @param {StuffID} ID
+     * @param {ItemID} ID
      * @returns {Item | null}
      */
     GetByID = (ID) => this.items.find((item) => item.ID === ID) || null;
 
     /**
-     * @param {'default'|Slot} slot
+     * Retrieve avatar preview configuration for a slot
+     * @param {SlotType | 'all'} slot
      * @returns {CharacterContainerSize}
      */
-    GetContainerSize = (slot) => itemContainerSize[slot];
+    GetContainerSize = (slot = 'avatar') => {
+        if (slot === 'all') {
+            return avatarPreviewConfig.avatar;
+        }
+
+        return avatarPreviewConfig[slot] || avatarPreviewConfig.avatar;
+    };
 }
 
 export default Items;

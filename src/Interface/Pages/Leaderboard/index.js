@@ -33,7 +33,6 @@ class Leaderboard extends BackLeaderboard {
                     />
                     <Button
                         style={styles.buttonSortType}
-                        borderRadius={8}
                         color='backgroundCard'
                         icon='filter'
                         onPress={this.onSwitchSort}

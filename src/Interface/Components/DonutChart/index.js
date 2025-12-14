@@ -73,6 +73,7 @@ function DonutChart({
 
                         // Calculate cumulative angle for this segment
                         const angle = percentage * availableAngle;
+                        const segmentStartAngle = currentAngle; // Store start angle before updating
                         currentAngle += angle + segmentGap; // Add gap after each segment
 
                         return (
@@ -83,7 +84,7 @@ function DonutChart({
                                 size={size}
                                 totalValue={totalValue}
                                 strokeWidth={strokeWidth}
-                                currentAngle={currentAngle}
+                                currentAngle={segmentStartAngle}
                                 strokeLinecap={strokeLinecap}
                                 availableAngle={availableAngle}
                                 delay={delay}

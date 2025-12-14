@@ -71,7 +71,8 @@ class ScreenInputBack extends React.Component {
 
         //const offset = Platform.OS === 'android' ? -24 : -height;
         const offset = screenHeight - height - this.layoutHeight - (Platform.OS === 'android' ? 48 : 48 + 24);
-        SpringAnimation(this.state.keyboardHeight, offset).start();
+        const safeOffset = Math.min(offset, screenHeight - this.layoutHeight - 86);
+        SpringAnimation(this.state.keyboardHeight, safeOffset).start();
     };
 
     /** @type {KeyboardEventListener} event */

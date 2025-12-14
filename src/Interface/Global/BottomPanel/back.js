@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 
 import Mover from './Mover';
 import user from 'Managers/UserManager';
 
 import { TimingAnimation } from 'Utils/Animations';
-import SafeAreaNative from 'Utils/SafeAreaNative';
 
 /**
  * @typedef {import('react-native').FlatList} FlatList
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
+ * @typedef {import('react-native-safe-area-context').EdgeInsets} EdgeInsets
  */
 
 /**
@@ -24,21 +24,29 @@ import SafeAreaNative from 'Utils/SafeAreaNative';
  * @property {number} [zIndex] Default is 0
  * @property {React.RefObject<FlatList | null>} [refScroller]
  * @property {() => void} [onClose]
+ * @property {boolean} [overlay] If true, panel is displayed as an overlay without blocking interactions with the page behind (no background, no close on background click). Default is false
+ * @property {string} [backgroundColor] Background color of the panel. Default is 'ground1' theme color
+ * @property {string} [overlayColor] Color of the overlay background. Default is black with 0.8 opacity
+ * @property {boolean} [priority] If true, panel will be stacked on top of existing panels instead of replacing them
+ */
+
+/**
+ * @typedef {object} BottomPanelStackItem
+ * @property {BottomPanelParamsType} params
+ * @property {Mover} mover
+ * @property {Animated.Value} animOpacity
+ * @property {'opened' | 'opening' | 'closing' | 'closed'} state
+ * @property {number} height
+ * @property {() => boolean} backHandler - Unique back handler for this panel
  */
 
 class BottomPanelBack extends React.Component {
     state = {
-        /** @type {'opened' | 'opening' | 'closed'} */
-        state: 'closed',
-
-        /** @type {BottomPanelParamsType | null} */
-        current: null,
-
-        animOpacity: new Animated.Value(0),
-
-        bottomInset: 0
+        /** @type {BottomPanelStackItem[]} */
+        stack: []
     };
 
+    /** @deprecated Use stack[0].mover instead for base panel */
     mover = new Mover();
 
     /**
@@ -47,42 +55,91 @@ class BottomPanelBack extends React.Component {
      */
     opening = false;
 
-    componentDidMount() {
-        if (SafeAreaNative.isAvailable()) {
-            SafeAreaNative.getSafeAreaInsets().then((detailedInsets) => {
-                this.setState({ bottomInset: detailedInsets.bottom });
-            });
-        }
-    }
-
     /**
      * Open the screen list
      * @param {BottomPanelParamsType} params
      */
     Open = (params) => {
-        if (this.opening || this.state.state !== 'closed') {
+        const { stack } = this.state;
+        const isPriority = params.priority === true;
+
+        // If priority panel, stack it on top without closing existing ones
+        if (isPriority && stack.length > 0) {
+            this._openStackedPanel(params);
             return;
         }
 
-        this.opening = true;
-        this.mover.scrollEnabled = true;
-
-        // Set default values
-        this.mover.panel.height = 0;
-        this.mover.panel.maxPosY = params.maxPosY ?? user.interface.size.height * 0.9;
-        this.mover.panel.minPosY = params.minPosY ?? this.mover.panel.maxPosY;
-        if (this.mover.panel.minPosY > this.mover.panel.maxPosY) {
-            this.mover.panel.minPosY = this.mover.panel.maxPosY;
+        // Regular panel opening (replaces existing)
+        if (this.opening || stack.length > 0) {
+            return;
         }
 
-        // Open animation
-        user.interface.navBar?.onOpenBottomPanel();
-        TimingAnimation(this.state.animOpacity, 1, 200).start();
-        this.setState({ state: 'opening', current: params }, () => {
-            this.opening = false;
-        });
+        this._openPanel(params, false);
+    };
 
-        user.interface.AddCustomBackHandler(this._close);
+    /**
+     * Open a panel (base or stacked)
+     * @private
+     * @param {BottomPanelParamsType} params
+     * @param {boolean} isStacked
+     */
+    _openPanel = (params, isStacked) => {
+        const screenSize = Dimensions.get('window');
+
+        this.opening = true;
+
+        const newMover = isStacked ? new Mover() : this.mover;
+        newMover.scrollEnabled = true;
+
+        // Set default values
+        newMover.panel.height = 0;
+        newMover.panel.maxPosY = params.maxPosY ?? screenSize.height * 0.9;
+        newMover.panel.minPosY = params.minPosY ?? newMover.panel.maxPosY;
+        if (newMover.panel.minPosY > newMover.panel.maxPosY) {
+            newMover.panel.minPosY = newMover.panel.maxPosY;
+        }
+
+        // Create a unique back handler for this specific panel
+        const panelBackHandler = () => {
+            this.Close(true);
+            return false;
+        };
+
+        /** @type {BottomPanelStackItem} */
+        const stackItem = {
+            params,
+            mover: newMover,
+            animOpacity: new Animated.Value(0),
+            state: 'opening',
+            height: 0,
+            backHandler: panelBackHandler
+        };
+
+        // Open animation
+        if (!isStacked) {
+            user.interface.navBar?.onOpenBottomPanel();
+        }
+        TimingAnimation(stackItem.animOpacity, 1, 200).start();
+
+        this.setState(
+            (/** @type {typeof this.state} */ prevState) => ({
+                stack: [...prevState.stack, stackItem]
+            }),
+            () => {
+                this.opening = false;
+            }
+        );
+
+        user.interface.AddCustomBackHandler(panelBackHandler);
+    };
+
+    /**
+     * Open a stacked panel on top of existing ones
+     * @private
+     * @param {BottomPanelParamsType} params
+     */
+    _openStackedPanel = (params) => {
+        this._openPanel(params, true);
     };
 
     _close = () => {
@@ -91,87 +148,158 @@ class BottomPanelBack extends React.Component {
     };
 
     /**
-     * Close the screen list
+     * Close the topmost panel
      * @param {boolean} [triggerNavbarRefresh] Trigger navbar refresh
      * @returns {Promise<void>}
      */
     Close = async (triggerNavbarRefresh = false) => {
-        if (this.state.state !== 'opened') {
+        const { stack } = this.state;
+        if (stack.length === 0) {
             return;
         }
 
+        const currentIndex = stack.length - 1;
+        const currentItem = stack[currentIndex];
+
+        // Prevent double close
+        if (currentItem.state !== 'opened') {
+            return;
+        }
+
+        // Mark as closing to prevent further interactions
+        const newStack = [...stack];
+        newStack[currentIndex] = { ...currentItem, state: 'closing' };
+        this.setState({ stack: newStack });
+
         // Close animation
-        this.mover.GotoY(0);
-        TimingAnimation(this.state.animOpacity, 0, 200).start();
+        currentItem.mover.GotoY(0);
 
         if (!triggerNavbarRefresh) {
-            this.mover.events.isClosing = true;
+            currentItem.mover.events.isClosing = true;
         }
-        user.interface.RemoveCustomBackHandler(this._close);
-        this.mover.UnsetScrollView();
 
-        // Close state to enable click through
+        // Remove the unique back handler for this specific panel
+        user.interface.RemoveCustomBackHandler(currentItem.backHandler);
+
+        // Wait for animation to complete before removing from stack
         return new Promise((resolve) => {
-            this.setState({ state: 'closed' }, () => {
-                this.state.current?.onClose?.();
-                user.interface.navBar?.onCloseBottomPanel();
+            TimingAnimation(currentItem.animOpacity, 0, 200).start(() => {
+                currentItem.mover.UnsetScrollView();
+                currentItem.mover.events.isClosing = false;
 
-                setTimeout(() => {
-                    // Reset state (wait for the animation to finish)
-                    this.setState({ current: null }, () => {
+                this.setState(
+                    (/** @type {typeof this.state} */ prevState) => ({
+                        stack: prevState.stack.filter((_, i) => i !== currentIndex)
+                    }),
+                    () => {
+                        currentItem.params?.onClose?.();
+
+                        // Only trigger navbar refresh if this was the last panel
+                        if (this.state.stack.length === 0) {
+                            user.interface.navBar?.onCloseBottomPanel();
+                        }
+
                         resolve();
-                    });
-                    this.mover.events.isClosing = false;
-                }, 150);
+                    }
+                );
             });
         });
     };
 
-    IsOpened = () => this.state.state === 'opened' || this.state.state === 'opening';
+    /**
+     * Close all panels
+     * @returns {Promise<void>}
+     */
+    CloseAll = async () => {
+        while (this.state.stack.length > 0) {
+            await this.Close(true);
+        }
+    };
 
-    EnableScroll = () => (this.mover.scrollEnabled = true);
+    IsOpened = () =>
+        this.state.stack.length > 0 &&
+        this.state.stack.some(
+            (item) => item.state === 'opened' || item.state === 'opening' || item.state === 'closing'
+        );
 
-    DisableScroll = () => (this.mover.scrollEnabled = false);
+    EnableScroll = () => {
+        const { stack } = this.state;
+        if (stack.length > 0) {
+            stack[stack.length - 1].mover.scrollEnabled = true;
+        }
+    };
 
-    /** @param {LayoutChangeEvent} event */
-    onLayoutPanel = (event) => {
+    DisableScroll = () => {
+        const { stack } = this.state;
+        if (stack.length > 0) {
+            stack[stack.length - 1].mover.scrollEnabled = false;
+        }
+    };
+
+    /**
+     * @param {LayoutChangeEvent} event
+     * @param {number} stackIndex
+     */
+    onLayoutPanel = (event, stackIndex) => {
         const { height } = event.nativeEvent.layout;
+        const { stack } = this.state;
 
-        if (this.state.state === 'opening') {
-            this.mover.panel.height = height;
+        if (stackIndex >= stack.length) return;
 
-            this.setState({ state: 'opened' }, () => {
-                const { current } = this.state;
+        const stackItem = stack[stackIndex];
 
-                if (current?.movable === false) {
-                    this.mover.scrollEnabled = false;
+        if (stackItem.state === 'opening') {
+            stackItem.mover.panel.height = height;
+            stackItem.height = height;
+
+            const newStack = [...stack];
+            newStack[stackIndex] = { ...stackItem, state: 'opened' };
+
+            this.setState({ stack: newStack }, () => {
+                const { params } = stackItem;
+
+                if (params?.movable === false) {
+                    stackItem.mover.scrollEnabled = false;
                 }
 
-                if (current?.refScroller?.current) {
-                    this.mover.SetScrollView(current.refScroller.current);
+                if (params?.refScroller?.current) {
+                    stackItem.mover.SetScrollView(params.refScroller.current);
                 }
 
-                const ratio = this.state.current?.defaultPosY ?? 0;
-                const newPosY = this.mover.panel.maxPosY * ratio + this.mover.panel.minPosY;
-                this.mover.GotoY(newPosY);
+                const ratio = params?.defaultPosY ?? 0;
+                const newPosY = stackItem.mover.panel.maxPosY * ratio + stackItem.mover.panel.minPosY;
+                stackItem.mover.GotoY(newPosY);
             });
         }
     };
 
-    /** @param {GestureResponderEvent} event */
-    onTouchEndBackground = (event) => {
+    /**
+     * @param {GestureResponderEvent} event
+     * @param {number} stackIndex
+     */
+    onTouchEndBackground = (event, stackIndex) => {
+        const { stack } = this.state;
+        if (stackIndex >= stack.length) return;
+
+        const stackItem = stack[stackIndex];
+
+        // Skip background close if overlay mode
+        if (stackItem.params?.overlay) {
+            return;
+        }
+
         // Short click on background
         if (
             event.target === event.currentTarget &&
-            Date.now() - this.mover.events.tickTime < 200 &&
-            Math.abs(this.mover.events.accX) < 5 &&
-            Math.abs(this.mover.events.accY) < 5
+            Date.now() - stackItem.mover.events.tickTime < 200 &&
+            Math.abs(stackItem.mover.events.accX) < 5 &&
+            Math.abs(stackItem.mover.events.accY) < 5
         ) {
             this.Close(true);
             return;
         }
 
-        this.mover.touchEnd(event);
+        stackItem.mover.touchEnd(event);
     };
 }
 

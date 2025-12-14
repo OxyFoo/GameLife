@@ -3,12 +3,19 @@ import { StyleSheet, Dimensions } from 'react-native';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    background: {
+    parent: {
         position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
-        height: '100%',
+        height: '100%'
+    },
+    background: {
+        position: 'absolute',
+        top: -1000,
+        left: -1000,
+        right: -1000,
+        bottom: -1000,
         backgroundColor: '#00000060'
     },
     container: {

@@ -15,7 +15,7 @@ import { OpenStore } from 'Utils/Store';
  * @param {object} props
  * @param {NotificationInAppOptionalUpdate} props.notif
  * @param {number} props.index
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 function NIA_OptionalUpdate({ notif }) {
     const lang = langManager.curr['notifications']['in-app'];

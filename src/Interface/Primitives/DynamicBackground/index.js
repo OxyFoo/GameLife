@@ -33,7 +33,7 @@ const PATH2 = [
  * @param {StyleProp} [props.style]
  * @param {number} [props.opacity] Between 0 and 1, default: 0.2
  * @param {ViewStyle['backgroundColor']} [props.backgroundColor] Color of the radial background
- * @returns {JSX.Element | null}
+ * @returns {React.ReactNode | null}
  */
 function DynamicBackground({ style, opacity = 0.2, backgroundColor = 'transparent' }) {
     const [layout, setLayout] = React.useState({ width: 0, height: 0 });

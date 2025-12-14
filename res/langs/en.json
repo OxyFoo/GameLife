@@ -88,6 +88,7 @@
     },
 
     "missions": {
+        "mission": "Mission",
         "text-hint": "Press to do the mission",
         "text-claim": "Press to claim the reward",
 
@@ -432,20 +433,17 @@
     "home": {
         "title-hello": "Hello {}",
 
-        "section-missions": "Discovery missions",
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
         "today-quest": "Quests",
         "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
-        "section-today-quest": "Community objective of the day",
-        "section-today-quest-detail": "Each day a category is chosen randomly for everyone, performs activities in this category to win rewards!",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
 
-        "chart-today-notmuch": "Add an activity today to display the graphic",
-        "chart-quest-notmuch": "You need to have a quest today to display the graphic",
+        "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
+        "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
         "chart-click-me": "click-me!",
 
         "news-myquests-title": "Quests to do",
@@ -491,6 +489,7 @@
         "error-signin-pseudoUsed": "This username is already in use.",
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
+        "error-google-signin-unavailable": "The connection with Google is not yet configured, please try again later.",
 
         "error-connection": "Connection to the server failed",
 
@@ -578,7 +577,6 @@
         "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
 
-        "coming-soon": "Coming\nsoon",
         "btn-edit-profile": "Change my appearance",
         "btn-skills": "My skills",
         "btn-statistics": "My statistics",
@@ -586,6 +584,7 @@
         "btn-friends": "My friends",
 
         "title-profile": "My profile",
+        "title-edit-avatar": "Change my appearance",
         "title-statistics": "My statistics",
 
         "input-username": "Username",
@@ -621,15 +620,15 @@
         "alert-birthtimewait-title": "Change of date of birth",
         "alert-birthtimewait-message": "You must wait {} days before you can change your date of birth again.",
         "alert-birthconfirm-title": "Confirmation",
-        "alert-birthconfirm-message": "Are you {} years old?",
-
-        "temporary-avatars": "This avatar will soon be replaced ... better!"
+        "alert-birthconfirm-message": "Are you {} years old?"
     },
 
     "profile-avatar": {
         "button-sell": "Sell +{} Ox",
         "button-equip": "Equip",
 
+        "alert-notconnected-title": "Not connected",
+        "alert-notconnected-text": "You must be connected to the server to sell an item.",
         "alert-isequipped-title": "Impossible",
         "alert-isequipped-text": "You must equip another item in order to sell this one.",
         "alert-sellconfirm-title": "Sell",
@@ -777,23 +776,19 @@
     },
 
     "shop": {
+        "loading": "Loading...",
+
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
+        "button-header-ad-unavailable": "Unavailable",
 
-        "temporary-message": "This shop will soon be replaced by a new one, better!",
-
-        "banner-header": "Discount on all items before the arrival of new avatars!",
         "banner-daily": "Daily deals",
         "banner-iap": "In-app purchases",
         "banner-random-chest": "Random chests",
         "banner-targeted-chest": "Targeted chests",
-        "banner-dye": "Dyes",
 
         "dailyDeals": {
             "popup-item-button": "Buy for {} Ox",
-            "popup-buysuccess-title": "Successful purchase",
-            "popup-buysuccess-text": "You have successfully purshased item \"{}\" for {} Ox",
-
             "error-no-items": "An error occurred while loading the items for sale, please try again later."
         },
 
@@ -802,9 +797,12 @@
         },
 
         "randomChests": {
-            "chest-random-common": "Simple chest",
-            "chest-random-rare": "Mysterious chest",
-            "chest-random-epic": "Chest of legends",
+            "chest-random": {
+                "common": "Simple chest",
+                "rare": "Mysterious chest",
+                "epic": "Epic chest",
+                "legendary": "Legendary chest"
+            },
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
             "popup-chest-button": "Open for {} Ox"
@@ -820,15 +818,6 @@
 
             "popup-chest-text": "You want to open a {} chest to get an item of type \"{}\" for {} Ox?",
             "popup-chest-button": "Open for {} Ox"
-        },
-
-        "dyes": {
-            "popup-dyer-text": "Change the apparence of this item?",
-            "popup-dyer-button": "Dye for {} Ox",
-            "popup-dyesuccess-title": "Successful dyeing",
-            "popup-dyesuccess-text": "You successfully dyed item \"{}\" for {} Ox",
-
-            "error-no-dye": "There is no dye available, please buy items or try again."
         },
 
         "alert-code-title": "Use a code",
@@ -1087,9 +1076,7 @@
         "widget-button-editTime": "Change",
         "widget-duration": "Duration",
         "widget-achievements-all": "All achievements",
-        "widget-skills-all": "All skills",
-        "sexe-male": "♂",
-        "sexe-female": "♀"
+        "widget-skills-all": "All skills"
     },
 
     "loading": [

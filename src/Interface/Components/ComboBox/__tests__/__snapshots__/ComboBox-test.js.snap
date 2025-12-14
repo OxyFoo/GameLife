@@ -126,20 +126,15 @@ exports[`[Component] Input should render correctly 1`] = `
     onLayout={[Function]}
     pointerEvents="none"
     style={
-      [
-        {
-          "borderRadius": 8,
-          "width": "100%",
-        },
-        {
-          "backgroundColor": "#00000000",
-          "borderColor": "#D0D0D0",
-          "borderWidth": 1.2,
-          "opacity": 1,
-          "paddingRight": 0,
-        },
-        {},
-      ]
+      {
+        "backgroundColor": "#00000000",
+        "borderColor": "#D0D0D0",
+        "borderRadius": 8,
+        "borderWidth": 1.2,
+        "opacity": 1,
+        "paddingRight": 0,
+        "width": "100%",
+      }
     }
   >
     <View
@@ -212,7 +207,7 @@ exports[`[Component] Input should render correctly 1`] = `
               "color": "#ECECEC",
               "fontFamily": "Hind Vadodara",
               "fontSize": 16,
-              "fontWeight": "normal",
+              "fontWeight": "400",
             },
             {},
           ]

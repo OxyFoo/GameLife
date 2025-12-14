@@ -6,8 +6,8 @@
         "maxNodeModuleJsDepth": 0,
         "strict": true,
         "resolveJsonModule": true,
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
+        "module": "esnext",
+        "moduleResolution": "bundler",
         "baseUrl": "src",
         "types": [
             "react",
@@ -34,7 +34,8 @@
     ],
     "exclude": [
         "**/_Template",
-        "res",
-        "node_modules"
+        "**/res",
+        "**/node_modules",
+        "**/Pods"
     ]
 }

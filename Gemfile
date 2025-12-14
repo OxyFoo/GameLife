@@ -16,4 +16,4 @@ gem 'benchmark'
 gem 'mutex_m'
 
 # Fastlane for iOS deployment
-gem 'fastlane'
+gem 'fastlane', '>= 2.220.0'

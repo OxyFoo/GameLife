@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Animated } from 'react-native';
-import { BlurView } from '@react-native-community/blur';
 import MaskedView from '@react-native-masked-view/masked-view';
 
 import styles from './style';
@@ -10,6 +9,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Text } from '../Text';
 import { Icon } from '../Icon';
 import { Gradient, Ripple } from 'Interface/Primitives';
+import { BlurView } from 'Interface/Primitives/BlurView';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -235,19 +235,14 @@ class Button extends ButtonBack {
                 </MaskedView>
             );
         } else if (appearance === 'outline-blur') {
+            const fallbackColor = themeManager.GetColor('darkBlue', { opacity: 0.7 });
             return (
                 <>
                     <BlurView
-                        style={[
-                            styles.absolute,
-                            styles.backgroundBlur,
-                            {
-                                backgroundColor: themeManager.GetColor('darkBlue', {
-                                    opacity: 0.25
-                                })
-                            }
-                        ]}
+                        style={[styles.absolute, styles.backgroundBlur]}
                         blurAmount={20}
+                        blurType='dark'
+                        fallbackColor={fallbackColor}
                     />
                     <MaskedView
                         style={styles.absolute}

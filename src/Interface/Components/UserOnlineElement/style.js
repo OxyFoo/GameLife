@@ -27,17 +27,13 @@ const styles = StyleSheet.create({
     title: {
         marginTop: -2
     },
-    frame: {
-        paddingVertical: 0,
-        paddingHorizontal: 0
-    },
     frameBorder: {
         width: 42,
         height: 42,
-        aspectRatio: 1,
         borderRadius: 6,
         borderWidth: 2,
-        borderColor: '#00000050'
+        borderColor: '#00000050',
+        overflow: 'hidden'
     },
     friendTopPlaceholder: {
         width: '100%',

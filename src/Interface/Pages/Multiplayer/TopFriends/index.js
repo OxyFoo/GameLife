@@ -41,7 +41,7 @@ const renderAvatar = (friend, size) => {
     const containerSize = dataManager.items.GetContainerSize('profile');
 
     return (
-        <AvatarFrame width={size} height={size} backgroundColor='#00000000'>
+        <AvatarFrame style={styles.avatarFrame} width={size} height={size} renderScale={2} backgroundColor='#00000000'>
             <AvatarCharacter
                 body={body}
                 bodyColor={bodyColor}

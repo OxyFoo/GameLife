@@ -33,6 +33,7 @@ class ItemReward extends BackItemReward {
 
         const frameWidth = layoutFrame.width / 2;
         const frameHeight = (layoutFrame.height - styles.frame.borderWidth * 2) / 2;
+        const avatarRenderScale = this.avatarPosition?.scale && this.avatarPosition.scale >= 3 ? 2 : 1;
 
         return (
             <View style={styles.page}>
@@ -48,6 +49,7 @@ class ItemReward extends BackItemReward {
                                     style={styles.avatarFrame}
                                     width={frameWidth}
                                     height={frameHeight}
+                                    renderScale={avatarRenderScale}
                                     backgroundColor={themeManager.GetColor('backgroundCard')}
                                 >
                                     <AvatarCharacter

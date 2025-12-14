@@ -2,6 +2,7 @@ import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
+import { Sleep } from 'Utils/Functions';
 
 const FRIENDS_LIMIT = 50;
 
@@ -72,9 +73,24 @@ class Multiplayer extends IUserData {
     };
 
     /** @param {ServerRequestUpdateFriends} response */
-    #updateFriends = (response) => {
+    #updateFriends = async (response) => {
         if (response.result === 'error') {
             return true;
+        }
+
+        // Wait for app to be loaded
+        let i = 0;
+        while (!this.#user.appIsLoaded) {
+            await Sleep(1000);
+
+            if (i < 10) {
+                i++;
+            } else {
+                this.#user.interface.console?.AddLog(
+                    'warn',
+                    '[Multiplayer] App not loaded after 10 seconds while updating friends.'
+                );
+            }
         }
 
         let friends = this.friends.Get();

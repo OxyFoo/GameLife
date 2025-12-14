@@ -32,7 +32,7 @@ class Multiplayer extends BackMultiplayer {
 
                 {/** Bottom buttons: Add friend / Leaderboard */}
                 <Gradient
-                    style={styles.leaderboardButtonContainer}
+                    containerStyle={styles.leaderboardButtonContainer}
                     angle={140}
                     colors={[
                         themeManager.GetColor('main1', { opacity: 0.45 }),
@@ -51,7 +51,7 @@ class Multiplayer extends BackMultiplayer {
                 </Gradient>
 
                 <Gradient
-                    style={styles.addFriendButtonContainer}
+                    containerStyle={styles.addFriendButtonContainer}
                     angle={140}
                     colors={[
                         themeManager.GetColor('main1', { opacity: 0.45 }),

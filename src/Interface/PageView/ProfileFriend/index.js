@@ -45,7 +45,7 @@ class ProfileFriend extends BackProfileFriend {
                 {/** User Header */}
                 <View style={styles.header}>
                     <View style={styles.avatarContainer}>
-                        <AvatarFrame width={84} height={84} backgroundColor='#00000000'>
+                        <AvatarFrame width={84} height={84} renderScale={2} backgroundColor='#00000000'>
                             <AvatarCharacter
                                 body={avatarBody}
                                 bodyColor={avatarBodyColor}

@@ -51,7 +51,7 @@ const LOCAL_MODULES = [
     },
     {
         name: '@oxyfoo/avatar-factory',
-        localPath: '../../AvatarFactory'
+        localPath: '../AvatarFactory'
     },
     {
         name: 'react-native-pinned-ws',

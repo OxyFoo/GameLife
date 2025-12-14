@@ -78,7 +78,6 @@ npm run android   # Pour Android
 * [React Native Reanimated](https://npmjs.com/package/react-native-reanimated)
 * [React Native Linear Gradient](https://github.com/react-native-linear-gradient/react-native-linear-gradient)
 * [React Native Shadow 2](https://www.npmjs.com/package/react-native-shadow-2)
-* [React Native Community Blur](https://www.npmjs.com/package/@react-native-community/blur)
 * [React Native Masked View](https://www.npmjs.com/package/@react-native-masked-view/masked-view)
 * [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker) depends on [React Native Datetimepicker](https://github.com/react-native-community/react-native-datetimepicker)
 * [React Native Gifted Charts](https://www.npmjs.com/package/react-native-gifted-charts)

@@ -164,7 +164,9 @@ jobs:
           pod deintegrate || true
           rm -rf Pods Podfile.lock
           pod install --repo-update
-          bundle install
+          # Install compatible Bundler version (fastlane requires < 3.0.0)
+          gem install bundler -v 2.6.7
+          bundle _2.6.7_ install
 
       - name: 'Get config files'
         run: |

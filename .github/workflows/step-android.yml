@@ -48,6 +48,11 @@ jobs:
         with:
           node-version: '22.x'
 
+      - name: 'Configure npm for GitHub Packages'
+        run: |
+          echo "@oxyfoo:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.CICD_PAT }}" >> .npmrc
+
       - name: 'Install Dependencies'
         run: npm ci
 

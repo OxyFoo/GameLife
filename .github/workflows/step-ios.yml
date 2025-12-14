@@ -177,7 +177,7 @@ jobs:
           cd ios
           # Clean pods to ensure fresh install
           rm -rf Pods Podfile.lock build
-          pod install --repo-update
+          bundle exec pod install --repo-update
         env:
           NO_FLIPPER: 1
 
@@ -322,6 +322,13 @@ jobs:
           ls -lsR
           echo "::endgroup::"
 
+      - name: 'Setup Ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ios
+
       - name: 'Place IPA where Fastlane expects it'
         run: |
           mkdir -p build
@@ -341,5 +348,4 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
         run: |
           cd ios
-          bundle install
           bundle exec fastlane upload_to_appstore environment:${{ inputs.environment }}

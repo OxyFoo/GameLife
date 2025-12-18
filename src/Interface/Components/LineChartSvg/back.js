@@ -77,6 +77,15 @@ class LineChartSvgBack extends React.Component {
         this.compute(width);
     };
 
+    /**
+     * @param {typeof LineChartSvgProps} prevProps
+     */
+    componentDidUpdate(prevProps) {
+        if (prevProps.data !== this.props.data && this.state.layoutWidth > 0) {
+            this.compute(this.state.layoutWidth);
+        }
+    }
+
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
         let maxValue = 100;

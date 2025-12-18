@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Svg, Polyline, Line, Text, Circle, Path } from 'react-native-svg';
 
 import LineChartSvgBack from './back';
@@ -11,8 +11,8 @@ class LineChartSvg extends LineChartSvgBack {
         const { layoutWidth, maxValue, yAxisValues } = this.state;
 
         return (
-            <View>
-                <Svg height={graphHeight + 40} width={'100%'} onLayout={this.onLayout}>
+            <View style={styles.svgContainer} onLayout={this.onLayout}>
+                <Svg height={graphHeight + 40} width={'100%'}>
                     {/* Y-axis lines and labels */}
                     {maxValue > 0 &&
                         layoutWidth !== 0 &&
@@ -98,5 +98,11 @@ class LineChartSvg extends LineChartSvgBack {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    svgContainer: {
+        width: '100%'
+    }
+});
 
 export { LineChartSvg };

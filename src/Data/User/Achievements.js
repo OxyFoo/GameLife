@@ -14,7 +14,6 @@ import { GetGlobalTime } from 'Utils/Time';
  * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').Reward} Reward
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Achievements').Condition} Condition
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Achievements').Achievement} Achievement
- * @typedef {import('Ressources/items/stuffs/Stuffs').StuffID} StuffID
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Achievements').AchievementItem} AchievementItem
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Achievements').SaveObject_Achievements} SaveObject_Achievements
  * @typedef {import('@oxyfoo/gamelife-types/Class/NotificationsInApp').NotificationInApp<'achievement-pending'>} NotificationInAppAchievementPending

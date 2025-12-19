@@ -6,7 +6,7 @@ import styles from './style';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Inventory from 'Data/User/Inventory';
+import Avatar from 'Data/User/Avatar';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import { Button, Text } from 'Interface/Components';
 
@@ -53,7 +53,7 @@ function RankElement({ item }) {
                             bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}
                             position={containerSize.pos}
                             scale={containerSize.scale}
-                            items={Inventory.GetFriendAvatarItems(item)}
+                            items={Avatar.GetFriendAvatarItems(item)}
                             portraitMode
                         />
                     </AvatarFrame>

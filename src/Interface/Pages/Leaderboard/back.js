@@ -47,12 +47,12 @@ class BackLeaderboard extends PageBase {
             xp: experience.xpInfo.totalXP,
 
             avatar: {
-                Skin: user.inventory.avatar.skin,
-                SkinColor: user.inventory.avatar.skinColor,
-                Hair: user.inventory.GetStuffByID(user.inventory.avatar.hair)?.ItemID ?? 'hair_00',
-                Top: user.inventory.GetStuffByID(user.inventory.avatar.top)?.ItemID ?? 'top_00',
-                Bottom: user.inventory.GetStuffByID(user.inventory.avatar.bottom)?.ItemID ?? 'bottom_00',
-                Shoes: user.inventory.GetStuffByID(user.inventory.avatar.shoes)?.ItemID ?? 'shoes_00'
+                Skin: user.avatar.avatar.skin,
+                SkinColor: user.avatar.avatar.skinColor,
+                Hair: user.inventory.GetStuffByID(user.avatar.avatar.hair)?.ItemID ?? 'hair_00',
+                Top: user.inventory.GetStuffByID(user.avatar.avatar.top)?.ItemID ?? 'top_00',
+                Bottom: user.inventory.GetStuffByID(user.avatar.avatar.bottom)?.ItemID ?? 'bottom_00',
+                Shoes: user.inventory.GetStuffByID(user.avatar.avatar.shoes)?.ItemID ?? 'shoes_00'
             },
 
             activities: {

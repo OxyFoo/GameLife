@@ -90,7 +90,7 @@ class UserHeaderBack extends React.Component {
     };
 
     initAvatar = () => {
-        const avatarData = user.inventory.GetAvatarRenderData();
+        const avatarData = user.avatar.GetAvatarRenderData();
         this.setState({ showAvatar: true, avatarData });
     };
 

@@ -72,7 +72,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
 
     // Recalculate avatar items when bodyColor changes to update ears color
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const avatarItemsForRender = useMemo(() => user.inventory.GetAvatarItems(), [avatarItems, bodyColor]);
+    const avatarItemsForRender = useMemo(() => user.avatar.GetAvatarItems(), [avatarItems, bodyColor]);
 
     const avatarScale = useRef(new Animated.Value(1)).current;
     const avatarTranslateX = useRef(new Animated.Value(-1 / 4)).current;
@@ -159,7 +159,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
             }
 
             // Check if item is equipped - cannot sell equipped items
-            const equippedStuffs = user.inventory.GetEquipments();
+            const equippedStuffs = user.avatar.GetEquipments();
             if (equippedStuffs.includes(stuffID)) {
                 user.interface.popup?.OpenT({
                     type: 'ok',

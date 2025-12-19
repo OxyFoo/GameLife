@@ -10,6 +10,7 @@ import Shop from 'Class/Shop';
 import Statistics from 'Class/Statistics';
 import Achievements from 'Data/User/Achievements';
 import Activities from 'Data/User/Activities/index';
+import Avatar from 'Data/User/Avatar';
 import DailyQuest from 'Data/User/DailyQuests';
 import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
@@ -54,6 +55,7 @@ class UserManager {
         // Data
         this.achievements = new Achievements(this);
         this.activities = new Activities(this);
+        this.avatar = new Avatar(this);
         this.dailyQuest = new DailyQuest(this);
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
@@ -79,6 +81,7 @@ class UserManager {
         this.DATA = [
             this.achievements,
             this.activities,
+            this.avatar,
             this.dailyQuest,
             this.informations,
             this.inventory,

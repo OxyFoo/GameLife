@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import ItemDetailPanel from './ItemDetailPanel';
-import { EQUIPMENT_SLOTS } from 'Data/User/Inventory';
+import { EQUIPMENT_SLOTS } from 'Data/User/Avatar';
 import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
@@ -216,7 +216,7 @@ const InventoryPanel = ({
 
             // Regular avatar item owned by the user
             const ownedItem = /** @type {OwnedSlotItem} */ (item);
-            const equippedStuffID = user.inventory.avatar[ownedItem.slot];
+            const equippedStuffID = user.avatar.avatar[ownedItem.slot];
             const isSelected = ownedItem.stuffID === equippedStuffID;
             const slotPreview = dataManager.items.GetContainerSize(ownedItem.slot);
             const slotPos = slotPreview.pos || { x: 0, y: 0 };
@@ -255,7 +255,7 @@ const InventoryPanel = ({
                                             setLocalAvatarItems(newItems);
                                         }
 
-                                        user.inventory.Equip(ownedItem.slot, ownedItem.stuffID);
+                                        user.avatar.Equip(ownedItem.slot, ownedItem.stuffID);
                                         onItemSelect?.(itemId);
 
                                         // TODO: TEMP ?

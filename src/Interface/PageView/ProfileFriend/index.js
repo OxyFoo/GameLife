@@ -9,7 +9,7 @@ import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstant
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
-import Inventory from 'Data/User/Inventory';
+import Avatar from 'Data/User/Avatar';
 import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
 import { AchievementsGroup, StatsBarTextOnly } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
@@ -29,7 +29,7 @@ class ProfileFriend extends BackProfileFriend {
         const title = friend.title !== 0 ? dataManager.titles.GetByID(friend.title) : null;
         const titleText = title === null ? null : langManager.GetText(title.Name);
 
-        const avatarItems = Inventory.GetFriendAvatarItems(friend);
+        const avatarItems = Avatar.GetFriendAvatarItems(friend);
         const avatarBody = friend.avatar?.Skin || 'human_00';
         const avatarBodyColor = BODY_COLORS[friend.avatar?.SkinColor] || BODY_COLORS[0];
         const containerSize = dataManager.items.GetContainerSize('profile');

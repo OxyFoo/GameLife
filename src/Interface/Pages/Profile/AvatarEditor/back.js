@@ -14,7 +14,7 @@ import user from 'Managers/UserManager';
  * @returns {ItemConfig[]}
  */
 export const getInitialAvatarItems = () => {
-    return user.inventory.GetAvatarItems();
+    return user.avatar.GetAvatarItems();
 };
 
 /**
@@ -22,7 +22,7 @@ export const getInitialAvatarItems = () => {
  * @returns {string}
  */
 export const getBodyColorHexFromUser = () => {
-    return user.inventory.GetBodyColorHex();
+    return user.avatar.GetBodyColorHex();
 };
 
 /**
@@ -30,7 +30,7 @@ export const getBodyColorHexFromUser = () => {
  * @param {string} colorHex
  */
 export const setBodyColorHexOnUser = (colorHex) => {
-    user.inventory.SetBodyColorHex(colorHex);
+    user.avatar.SetBodyColorHex(colorHex);
 };
 
 /**
@@ -38,7 +38,7 @@ export const setBodyColorHexOnUser = (colorHex) => {
  * @returns {AvatarName}
  */
 export const getBodyTypeFromUser = () => {
-    return user.inventory.GetBodyType();
+    return user.avatar.GetBodyType();
 };
 
 /**
@@ -46,5 +46,5 @@ export const getBodyTypeFromUser = () => {
  * @param {AvatarName} bodyType
  */
 export const setBodyTypeOnUser = (bodyType) => {
-    user.inventory.SetBodyType(bodyType);
+    user.avatar.SetBodyType(bodyType);
 };

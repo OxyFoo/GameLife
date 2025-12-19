@@ -7,7 +7,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Inventory from 'Data/User/Inventory';
+import Avatar from 'Data/User/Avatar';
 import { Button, Icon, Text } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
 import ProfileFriend from 'Interface/PageView/ProfileFriend';
@@ -35,7 +35,7 @@ const renderAvatar = (friend, size) => {
         return <Image style={styles.friendTopPlaceholder} resizeMode='stretch' source={AVATAR_MIN_PLACEHOLDER} />;
     }
 
-    const items = Inventory.GetFriendAvatarItems(friend);
+    const items = Avatar.GetFriendAvatarItems(friend);
     const body = friend.avatar.Skin || 'human_00';
     const bodyColor = BODY_COLORS[friend.avatar.SkinColor] || BODY_COLORS[0];
     const containerSize = dataManager.items.GetContainerSize('profile');

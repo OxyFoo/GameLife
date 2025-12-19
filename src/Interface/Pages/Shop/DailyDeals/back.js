@@ -85,7 +85,7 @@ class BackShopItems extends React.Component {
 
         // For 'top' items, also show bottom item (like in avatar editor slots)
         if (item.Slot === 'top') {
-            const bottomStuffID = user.inventory.avatar.bottom;
+            const bottomStuffID = user.avatar.avatar.bottom;
             const bottomStuff = user.inventory.GetStuffByID(bottomStuffID);
             const bottomItemID = bottomStuff ? bottomStuff.ItemID : 'bottom_00';
             baseItems.push({ id: bottomItemID });

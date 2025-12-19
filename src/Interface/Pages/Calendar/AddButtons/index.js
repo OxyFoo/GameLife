@@ -74,7 +74,7 @@ function CardFooter() {
     const prevActivity = activities[activities.length - 1].activity;
     const prevEnd = prevActivity.startTime + prevActivity.duration * 60;
     const startDate = GetDate(prevActivity.startTime);
-    const sameDay = startDate.getUTCDate() === selectedDay.day;
+    const sameDay = startDate.getDate() === selectedDay.day;
     const notAddButtonAdd = !sameDay && (startDate.getUTCHours() > 0 || startDate.getUTCMinutes() > 0);
 
     if (notAddButtonAdd) {

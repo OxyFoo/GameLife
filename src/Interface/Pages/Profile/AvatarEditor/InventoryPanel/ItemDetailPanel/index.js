@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
@@ -49,6 +50,24 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
     const sellPrice = itemData ? Math.ceil(itemData.Value * SELL_PRICE_FACTOR) : 0;
     const sellButtonText = lang['button-sell'].replace('{}', sellPrice.toString());
 
+    /**
+     * Get items to display in avatar preview
+     * For 'top' items, also show the user's bottom item
+     * @returns {Array<{id: ItemName}>}
+     */
+    const getPreviewItems = () => {
+        /** @type {Array<{id: ItemName}>} */
+        const items = [{ id: itemName }];
+
+        // For 'top', also show bottom item (like in SlotButton and ChestReward)
+        if (slot === 'top') {
+            const equippedBottomID = user.inventory.GetEquippedItemID('bottom');
+            items.push({ id: equippedBottomID });
+        }
+
+        return items;
+    };
+
     const handleEquip = () => {
         onEquip(itemName);
         onClose();
@@ -68,7 +87,7 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
                     <AvatarCharacter
                         body={bodyType}
                         bodyColor={bodyColor}
-                        items={[{ id: itemName }]}
+                        items={getPreviewItems()}
                         position={previewPos}
                         scale={previewScale}
                         portraitMode={slot === 'hair'}

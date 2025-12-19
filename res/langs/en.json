@@ -833,6 +833,8 @@
 
         "reward-failed-title": "Failure",
         "reward-failed-message": "An error has occurred, please retry again later.",
+        "reward-no-items-title": "No items available",
+        "reward-no-items-message": "No items are available for this rarity. Please try again later.",
         "reward-wrong-title": "Incorrect code",
         "reward-wrong-text": "The code you entered is incorrect.",
         "reward-success-title": "Code used",

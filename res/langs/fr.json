@@ -833,6 +833,8 @@
 
         "reward-failed-title": "Échec",
         "reward-failed-message": "Une erreur est survenue, réessaye plus tard.",
+        "reward-no-items-title": "Aucun objet disponible",
+        "reward-no-items-message": "Aucun objet n'est disponible pour cette rareté. Réessaye plus tard.",
         "reward-wrong-title": "Code incorrect",
         "reward-wrong-text": "Le code que tu as entré est incorrect.",
         "reward-success-title": "Code utilisé",

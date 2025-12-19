@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@notifee/react-native": "^9.1.8",
-    "@oxyfoo/avatar-factory": "^1.1.9",
+    "@oxyfoo/avatar-factory": "^1.2.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/datetimepicker": "^8.3.0",
     "@react-native-google-signin/google-signin": "^14.0.1",
@@ -64,7 +64,7 @@
     "@babel/plugin-transform-runtime": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
     "@babel/runtime": "^7.27.6",
-    "@oxyfoo/gamelife-types": "^2.2.1",
+    "@oxyfoo/gamelife-types": "^2.2.4",
     "@react-native-community/cli": "20.0.0",
     "@react-native-community/cli-platform-android": "20.0.0",
     "@react-native-community/cli-platform-ios": "20.0.0",

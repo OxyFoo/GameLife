@@ -551,6 +551,17 @@ class Shop extends IUserClass {
             return;
         }
 
+        if (response.result === 'no-items-available') {
+            this.#user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['reward-no-items-title'],
+                    message: lang['reward-no-items-message']
+                }
+            });
+            return;
+        }
+
         if (response.result !== 'ok' || !response.newItem) {
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
@@ -655,8 +666,8 @@ class Shop extends IUserClass {
             this.#user.interface.popup?.OpenT({
                 type: 'ok',
                 data: {
-                    title: lang['reward-failed-title'],
-                    message: lang['reward-failed-message']
+                    title: lang['reward-no-items-title'],
+                    message: lang['reward-no-items-message']
                 }
             });
             return;

@@ -103,13 +103,13 @@ class Avatar extends IUserData {
     };
 
     LoadOnline = async () => {
-        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-inventories', token: this.#token });
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'get-avatar', token: this.#token });
 
         if (
             response === 'interrupted' ||
             response === 'not-sent' ||
             response === 'timeout' ||
-            response.status !== 'get-inventories' ||
+            response.status !== 'get-avatar' ||
             response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', `[Avatar] Failed to load avatar (${response})`);
@@ -134,7 +134,7 @@ class Avatar extends IUserData {
         }
 
         const response = await this.user.server2.tcp.SendAndWait({
-            action: 'save-inventories',
+            action: 'save-avatar',
             avatar: this.avatar,
             token: this.#token
         });
@@ -143,7 +143,7 @@ class Avatar extends IUserData {
             response === 'interrupted' ||
             response === 'not-sent' ||
             response === 'timeout' ||
-            response.status !== 'save-inventories' ||
+            response.status !== 'save-avatar' ||
             response.result === 'error'
         ) {
             this.user.interface.console?.AddLog('error', `[Avatar] Failed to save avatar (${response})`);

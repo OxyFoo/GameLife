@@ -41,14 +41,11 @@ const styles = StyleSheet.create({
         marginBottom: 6
     },
 
-    addFriendButtonContainer: {
-        position: 'absolute',
-        left: 36,
-        bottom: 36,
-        borderRadius: 8
-    },
     addFriendButton: {
+        position: 'absolute',
         width: 'auto',
+        right: 36,
+        bottom: 36,
         paddingVertical: 16,
         paddingHorizontal: 16
     }

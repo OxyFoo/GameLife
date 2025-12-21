@@ -20,13 +20,20 @@ const styles = StyleSheet.create({
         marginBottom: 24
     },
 
-    flatList: {
-        marginTop: 12,
-        marginHorizontal: -24
+    friendsButtonContainer: {
+        position: 'absolute',
+        left: 36,
+        bottom: 0,
+        borderRadius: 8
+    },
+    friendsButton: {
+        width: 'auto',
+        paddingVertical: 16,
+        paddingHorizontal: 16
     },
     leaderboardButtonContainer: {
         position: 'absolute',
-        left: 36,
+        right: 36,
         bottom: 0,
         borderRadius: 8
     },
@@ -34,21 +41,6 @@ const styles = StyleSheet.create({
         width: 'auto',
         paddingVertical: 16,
         paddingHorizontal: 16
-    },
-    addFriendButtonContainer: {
-        position: 'absolute',
-        right: 36,
-        bottom: 0,
-        borderRadius: 8
-    },
-    addFriendButton: {
-        width: 'auto',
-        paddingVertical: 16,
-        paddingHorizontal: 16
-    },
-
-    topMargin: {
-        marginTop: 24
     }
 });
 

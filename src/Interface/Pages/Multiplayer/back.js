@@ -1,5 +1,3 @@
-import React from 'react';
-
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -30,9 +28,6 @@ class BackMultiplayer extends PageBase {
         /** @type {UserOnline[]} */
         friendsPending: []
     };
-
-    /** @type {React.RefObject<View | null>} */
-    refAddButton = React.createRef();
 
     /** @type {Symbol | null} */
     listenerTcpStateChange = null;
@@ -95,6 +90,10 @@ class BackMultiplayer extends PageBase {
 
     goToFriends = () => {
         user.interface.ChangePage('friends');
+    };
+
+    goToLeaderboard = () => {
+        user.interface.ChangePage('leaderboard');
     };
 
     addFriendHandle = () => {

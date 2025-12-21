@@ -468,9 +468,17 @@
     },
 
     "leaderboard": {
+        "title": "Classement",
+        "title-general": "CLASSEMENT HEBDOMADAIRE",
+        "input-label-search": "Rechercher un joueur",
+        "error-connection": "Connexion au serveur impossible",
+        "error-loading": "Erreur lors du chargement du classement",
+        "empty-list": "Aucun joueur trouvé",
         "label-activities": "Activitiés",
         "label-activities-small": "Actis",
-        "input-label-search": "Rechercher un joueur"
+        "container-weekly-title": "Statistiques hebdomadaires",
+        "kpi-rank": "Rang",
+        "kpi-weekly-xp": "XP Hebdo"
     },
 
     "login": {
@@ -582,7 +590,6 @@
         "btn-skills": "Mes compétences",
         "btn-statistics": "Mes statistiques",
         "btn-achievements": "Mes succès",
-        "btn-friends": "Mes amis",
 
         "title-profile": "Mon profil",
         "title-edit-avatar": "Modifier mon apparence",

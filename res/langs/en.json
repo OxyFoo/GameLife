@@ -468,9 +468,17 @@
     },
 
     "leaderboard": {
+        "title": "Leaderboard",
+        "title-general": "WEEKLY RANKINGS",
+        "input-label-search": "Search for a player",
+        "error-connection": "Unable to connect to server",
+        "error-loading": "Error loading leaderboard",
+        "empty-list": "No players found",
         "label-activities": "Activities",
         "label-activities-small": "Actis",
-        "input-label-search": "Search for a player"
+        "container-weekly-title": "Weekly Statistics",
+        "kpi-rank": "Rank",
+        "kpi-weekly-xp": "Weekly XP"
     },
 
     "login": {
@@ -582,7 +590,6 @@
         "btn-skills": "My skills",
         "btn-statistics": "My statistics",
         "btn-achievements": "My achievements",
-        "btn-friends": "My friends",
 
         "title-profile": "My profile",
         "title-edit-avatar": "Change my appearance",

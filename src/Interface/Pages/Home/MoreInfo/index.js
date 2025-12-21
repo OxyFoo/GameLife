@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import themeManager from 'Managers/ThemeManager';
 
 import { Text, Button } from 'Interface/Components';
 import { Round } from 'Utils/Functions';
@@ -29,7 +30,15 @@ function MoreInfo({ style }) {
     const { playedDays, totalActivities, totalHours } = state;
 
     return (
-        <Button style={[styles.button, style]} onPress={openStatistics} appearance='uniform' color='transparent'>
+        <Button
+            style={[styles.button, style]}
+            onPress={openStatistics}
+            gradientColors={[
+                themeManager.GetColor('main1', { opacity: 0.25 }),
+                themeManager.GetColor('main1', { opacity: 0.08 })
+            ]}
+            gradientColorsAngle={90}
+        >
             <View style={styles.kpiRow}>
                 <View style={styles.kpiItem}>
                     <Text style={styles.kpiValue} fontSize={18} bold color='primary'>
@@ -40,6 +49,8 @@ function MoreInfo({ style }) {
                     </Text>
                 </View>
 
+                <View style={styles.verticalDivider} />
+
                 <View style={styles.kpiItem}>
                     <Text style={styles.kpiValue} fontSize={18} bold color='primary'>
                         {totalActivities}
@@ -48,6 +59,8 @@ function MoreInfo({ style }) {
                         {lang['kpi-activities']}
                     </Text>
                 </View>
+
+                <View style={styles.verticalDivider} />
 
                 <View style={styles.kpiItem}>
                     <Text style={styles.kpiValue} fontSize={18} bold color='primary'>
@@ -83,8 +96,8 @@ function computeData() {
 
 const styles = StyleSheet.create({
     button: {
-        paddingVertical: 0,
-        paddingHorizontal: 0,
+        paddingVertical: 12,
+        paddingHorizontal: 4,
         backgroundColor: 'transparent'
     },
     kpiRow: {
@@ -96,15 +109,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         paddingVertical: 8,
-        paddingHorizontal: 4,
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        borderRadius: 8
+        paddingHorizontal: 4
     },
     kpiValue: {
         marginBottom: 4
     },
     kpiLabel: {
         textAlign: 'center'
+    },
+    verticalDivider: {
+        width: 1,
+        marginVertical: 12,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)'
     }
 });
 

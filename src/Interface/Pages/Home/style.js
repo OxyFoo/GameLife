@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     },
     rightColumn: {
         position: 'absolute',
-        top: -20,
+        top: -40,
         left: 0,
         right: '-60%',
         alignItems: 'center',

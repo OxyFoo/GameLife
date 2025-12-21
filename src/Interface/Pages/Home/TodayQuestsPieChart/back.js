@@ -124,7 +124,13 @@ class TodayQuestsPieChartBack extends React.Component {
         user.interface.ChangePage('quest', { storeInHistory: false });
     };
 
-    openQuests = () => user.interface.ChangePage('quests');
+    openQuests = () => {
+        if (this.state.totalQuests === 0) {
+            this.addQuest();
+            return;
+        }
+        user.interface.ChangePage('quests');
+    };
 }
 
 TodayQuestsPieChartBack.prototype.props = InputProps;

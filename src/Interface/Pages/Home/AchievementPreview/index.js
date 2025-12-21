@@ -1,3 +1,5 @@
+// TODO: Delete ?
+
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 
@@ -49,12 +51,12 @@ function AchievementPreview({ style }) {
             style={[styles.button, style]}
             onPress={openAchievements}
             gradientColors={[
-                themeManager.GetColor('main1', { opacity: 0.25 }),
-                themeManager.GetColor('main1', { opacity: 0.15 })
+                themeManager.GetColor('main1', { opacity: 0.75 }),
+                themeManager.GetColor('background', { opacity: 0.9 })
             ]}
             gradientColorsAngle={90}
         >
-            {unlockedCount === 0 ? (
+            {unlockedCount === 0 || lastAchievement === null ? (
                 <>
                     <Icon icon='success' size={24} color='main1' />
                     <Text style={styles.emptyText} fontSize={14} color='light'>
@@ -64,16 +66,17 @@ function AchievementPreview({ style }) {
             ) : (
                 <View style={styles.row}>
                     <View style={styles.countBadge}>
-                        <Icon icon='success' size={14} color='main1' />
-                        <Text style={styles.countText} fontSize={12} bold>
+                        <Icon style={styles.countIcon} icon='success' size={24} color='main1' />
+                        <Text style={styles.countText} fontSize={18} bold>
                             {`${unlockedCount}/${totalCount}`}
                         </Text>
                     </View>
-                    {lastAchievement && (
-                        <Text style={styles.achievementName} fontSize={11} color='light' numberOfLines={1}>
-                            {langManager.GetText(lastAchievement.Name)}
-                        </Text>
-                    )}
+
+                    <View style={styles.verticalBar} />
+
+                    <Text style={styles.achievementName} fontSize={14} color='white'>
+                        {langManager.GetText(lastAchievement.Name)}
+                    </Text>
                 </View>
             )}
         </Button>
@@ -86,29 +89,32 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     row: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         gap: 8
     },
     countBadge: {
         flexDirection: 'row',
-        alignItems: 'center',
-        gap: 4,
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        borderRadius: 12,
-        backgroundColor: 'rgba(255, 255, 255, 0.1)'
+        alignItems: 'center'
+    },
+    countIcon: {
+        marginRight: 4
     },
     countText: {
         marginTop: 1
     },
     achievementName: {
-        flex: 1,
-        textAlign: 'right'
+        flexShrink: 1
     },
     emptyText: {
         marginLeft: 6
+    },
+    verticalBar: {
+        width: 1,
+        height: 36,
+        backgroundColor: 'rgba(255, 255, 255, 0.3)'
     }
 });
 

@@ -1,3 +1,5 @@
+// TODO: Delete ?
+
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';

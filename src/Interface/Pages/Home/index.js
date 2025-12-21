@@ -4,13 +4,14 @@ import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
 import BackHome from './back';
-import { Title } from './title';
-import Experience from './Experience';
-import TodayActivitiesPieChart from './TodayActivitiesPieChart';
-import TodayQuestsPieChart from './TodayQuestsPieChart';
+import { Title } from './Title';
+import { Experience } from './Experience';
+import { TodayActivitiesPieChart } from './TodayActivitiesPieChart';
+import { TodayQuestsPieChart } from './TodayQuestsPieChart';
 import { StatsRadar } from './StatsRadar';
-import { SkillsTags } from './SkillsTags';
-import { AchievementPreview } from './AchievementPreview';
+// TODO: Delete ?
+// import { SkillsTags } from './SkillsTags';
+// import { AchievementPreview } from './AchievementPreview';
 import { MoreInfo } from './MoreInfo';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -61,8 +62,12 @@ class Home extends BackHome {
                         <StatsRadar />
 
                         {/* Skills title + widget */}
-                        <Title title={lang['container-skills-title']} />
-                        <SkillsTags />
+                        {/* <Title title={lang['container-skills-title']} /> */}
+                        {/* <SkillsTags /> */}
+
+                        {/* More infos KPIs */}
+                        <Title title={lang['btn-more-info']} />
+                        <MoreInfo />
                     </View>
 
                     {/* Right column: Avatar with parallax */}
@@ -82,12 +87,8 @@ class Home extends BackHome {
                 </View>
 
                 {/* Achievements title + widget */}
-                <Title title={lang['btn-achievements']} />
-                <AchievementPreview />
-
-                {/* More infos KPIs */}
-                <Title title={lang['btn-more-info']} />
-                <MoreInfo />
+                {/* <Title title={lang['btn-achievements']} />
+                <AchievementPreview /> */}
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>

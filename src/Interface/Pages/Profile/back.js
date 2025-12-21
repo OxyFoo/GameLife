@@ -86,10 +86,6 @@ class BackProfile extends PageBase {
         user.interface.ChangePage('achievements');
     };
 
-    openFriends = () => {
-        user.interface.ChangePage('friends');
-    };
-
     onBack = () => {
         user.interface.BackHandle();
     };

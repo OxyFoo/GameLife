@@ -73,4 +73,4 @@ class TodayActivitiesPieChart extends TodayActivitiesPieChartBack {
     }
 }
 
-export default TodayActivitiesPieChart;
+export { TodayActivitiesPieChart };

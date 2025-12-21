@@ -27,10 +27,14 @@ function StatsRadar({ style }) {
         return () => {
             clearInterval(interval);
         };
-    }, []);
+    }, [showLabels]);
 
     const openProfile = () => {
         user.interface.ChangePage('profile');
+    };
+
+    const switchManually = () => {
+        setShowLabels((prev) => !prev);
     };
 
     const chartSize = Dimensions.get('window').width * 0.3;
@@ -39,6 +43,7 @@ function StatsRadar({ style }) {
         <Button
             style={[styles.container, style]}
             onPress={openProfile}
+            onLongPress={switchManually}
             gradientColors={[
                 themeManager.GetColor('main1', { opacity: 0.25 }),
                 themeManager.GetColor('main1', { opacity: 0.08 })

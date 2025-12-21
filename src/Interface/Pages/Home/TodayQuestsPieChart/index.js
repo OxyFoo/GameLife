@@ -82,4 +82,4 @@ class TodayQuestsPieChart extends TodayQuestsPieChartBack {
     }
 }
 
-export default TodayQuestsPieChart;
+export { TodayQuestsPieChart };

@@ -146,8 +146,14 @@ class TodayActivitiesPieChartBack extends React.Component {
     };
 
     switchDonutLegends = () => {
-        const prevState = this.state.showDonut;
-        this.setState({ showDonut: !prevState });
+        const { showDonut, focusedActivity } = this.state;
+
+        if (focusedActivity === null) {
+            this.onAddActivityPress();
+            return;
+        }
+
+        this.setState({ showDonut: !showDonut });
     };
 }
 

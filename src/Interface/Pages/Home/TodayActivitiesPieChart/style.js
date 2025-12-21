@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+
     absoluteAddButton: {
         position: 'absolute',
         top: 0,
@@ -43,8 +47,8 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
 
-    centerContent: {
-        alignItems: 'center'
+    donut: {
+        marginBottom: 0
     },
 
     notEnoughData: {
@@ -52,9 +56,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 8,
         paddingHorizontal: 8
-    },
-    notEnoughDataText: {
-        fontSize: 16
     }
 });
 

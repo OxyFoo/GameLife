@@ -26,7 +26,7 @@ const Title = React.forwardRef(
 const styles = StyleSheet.create({
     sectionContainer: {
         marginTop: 12,
-        marginBottom: 12,
+        marginBottom: 6,
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'space-between'

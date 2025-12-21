@@ -3,23 +3,23 @@ import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
-import QuestsProgressChartBack from './back';
+import TodayQuestsPieChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, ProgressDonut } from 'Interface/Components';
+import { Text, Button, ProgressDonut, Icon } from 'Interface/Components';
 
-class QuestsProgressChart extends QuestsProgressChartBack {
+class TodayQuestsPieChart extends TodayQuestsPieChartBack {
     render() {
         const lang = langManager.curr['home'];
 
         const { size, progressColor, completedColor } = this.props;
-        const { completedQuests, totalQuests, allCompleted } = this.state;
+        const { completedQuests, totalQuests, allCompleted, maxStreak } = this.state;
 
         const chartProgressColor = allCompleted ? completedColor : progressColor;
 
         return (
-            <>
+            <View style={styles.container}>
                 {/* Absolute add button */}
                 <Button
                     style={styles.absoluteAddButton}
@@ -31,12 +31,7 @@ class QuestsProgressChart extends QuestsProgressChartBack {
                 />
 
                 {/* Button with Gradient background for the chart container */}
-                <Button
-                    style={styles.parentButton}
-                    appearance='uniform'
-                    color='transparent'
-                    // onPress={this.switchDonutLegends}
-                >
+                <Button style={styles.parentButton} appearance='uniform' color='transparent' onPress={this.openQuests}>
                     <LinearGradient
                         style={[styles.gradientContainer, this.props.style]}
                         colors={[
@@ -71,14 +66,20 @@ class QuestsProgressChart extends QuestsProgressChartBack {
                                             {`${completedQuests}/${totalQuests}`}
                                         </Text>
                                     </View>
+                                    <View style={styles.textStreak}>
+                                        <Text fontSize={16} bold>
+                                            {maxStreak}
+                                        </Text>
+                                        <Icon icon='flame' color='main2' />
+                                    </View>
                                 </ProgressDonut>
                             )}
                         </View>
                     </LinearGradient>
                 </Button>
-            </>
+            </View>
         );
     }
 }
 
-export default QuestsProgressChart;
+export default TodayQuestsPieChart;

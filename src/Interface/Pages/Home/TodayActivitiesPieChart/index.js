@@ -3,19 +3,20 @@ import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
-import ActivitiesProgressChartBack from './back';
+import TodayActivitiesPieChartBack from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, Text } from 'Interface/Components';
 import { PieChart } from 'Interface/Widgets';
 
-class ActivitiesProgressChart extends ActivitiesProgressChartBack {
+class TodayActivitiesPieChart extends TodayActivitiesPieChartBack {
     render() {
+        const { style } = this.props;
         const lang = langManager.curr['home'];
 
         return (
-            <>
+            <View style={[styles.container, style]}>
                 {/* Absolute add button */}
                 <Button
                     style={styles.absoluteAddButton}
@@ -67,9 +68,9 @@ class ActivitiesProgressChart extends ActivitiesProgressChartBack {
                         </View>
                     </LinearGradient>
                 </Button>
-            </>
+            </View>
         );
     }
 }
 
-export default ActivitiesProgressChart;
+export default TodayActivitiesPieChart;

@@ -436,11 +436,11 @@
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
         "today-quest": "Quêtes",
-        "section-today-quests": "Quêtes du jour",
         "section-my-todos": "Mes listes",
 
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
+        "btn-more-info": "Plus d'infos",
 
         "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
         "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
@@ -451,6 +451,7 @@
         "container-stats-title": "Stats",
         "container-skills-title": "Compétences",
         "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
+        "container-achievements-empty": "Aucun succès débloqué, lance-toi !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",

@@ -436,11 +436,11 @@
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
         "today-quest": "Quests",
-        "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
 
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
+        "btn-more-info": "More info",
 
         "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
         "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
@@ -451,6 +451,7 @@
         "container-stats-title": "Stats",
         "container-skills-title": "Skills",
         "container-skills-empty": "No skills yet, do one and it will appear here !",
+        "container-achievements-empty": "No achievements yet, go for it!",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",

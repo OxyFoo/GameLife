@@ -16,7 +16,7 @@ import { Sum } from 'Utils/Functions';
  * @typedef {import('Interface/Widgets/PieChart/back').UpdatingData} UpdatingData
  * @typedef {import('Interface/Widgets/PieChart/back').FocusedActivity} FocusedActivity
  *
- * @typedef {object} InputPropsType
+ * @typedef {object} TodayActivitiesPieChartPropsType
  * @property {StyleProp} style
  *
  * @typedef {object} InputStateType
@@ -25,13 +25,13 @@ import { Sum } from 'Utils/Functions';
  * @property {boolean} showDonut - True if the donut chart, false to show legends
  */
 
-/** @type {InputPropsType} */
-const InputProps = {
+/** @type {TodayActivitiesPieChartPropsType} */
+const TodayActivitiesPieChartProps = {
     style: {}
 };
 
-/** @extends {React.Component<InputPropsType, InputStateType>} */
-class ActivitiesProgressChartBack extends React.Component {
+/** @extends {React.Component<TodayActivitiesPieChartPropsType, InputStateType>} */
+class TodayActivitiesPieChartBack extends React.Component {
     state = {
         dataToDisplay: /** @type {UpdatingData[]} */ ([]),
         focusedActivity: /** @type {FocusedActivity | null} */ (null),
@@ -41,7 +41,7 @@ class ActivitiesProgressChartBack extends React.Component {
     /** @type {Symbol | null} */
     activitiesListener = null;
 
-    /** @param {InputPropsType} props */
+    /** @param {TodayActivitiesPieChartPropsType} props */
     constructor(props) {
         super(props);
         this.state = {
@@ -151,7 +151,7 @@ class ActivitiesProgressChartBack extends React.Component {
     };
 }
 
-ActivitiesProgressChartBack.prototype.props = InputProps;
-ActivitiesProgressChartBack.defaultProps = InputProps;
+TodayActivitiesPieChartBack.prototype.props = TodayActivitiesPieChartProps;
+TodayActivitiesPieChartBack.defaultProps = TodayActivitiesPieChartProps;
 
-export default ActivitiesProgressChartBack;
+export default TodayActivitiesPieChartBack;

@@ -32,11 +32,12 @@ const InputProps = {
 };
 
 /** @extends {React.Component<InputPropsType, InputStateType>} */
-class QuestsProgressChartBack extends React.Component {
+class TodayQuestsPieChartBack extends React.Component {
     state = {
         completedQuests: 0,
         totalQuests: 0,
-        allCompleted: false
+        allCompleted: false,
+        maxStreak: 0
     };
 
     /** @type {Symbol | null} */
@@ -50,6 +51,60 @@ class QuestsProgressChartBack extends React.Component {
             ...this.computeProgress()
         };
     }
+
+    componentDidMount() {
+        this.listenerQuests = user.quests.allQuests.AddListener(() => {
+            const newState = this.computeProgress();
+            this.setState(newState);
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.listenerQuests) {
+            user.quests.allQuests.RemoveListener(this.listenerQuests);
+        }
+    }
+
+    /**
+     * @returns {Pick<typeof this.state, 'completedQuests' | 'totalQuests' | 'allCompleted' | 'maxStreak'>}
+     */
+    computeProgress = () => {
+        const allQuests = user.quests.Get();
+
+        let totalQuestsToday = 0;
+        let completedQuestsToday = 0;
+        let maxStreak = 0;
+
+        // For each quest, check if it should be done today
+        for (const quest of allQuests) {
+            const days = user.quests.GetDays(quest);
+
+            // Find today's day in data
+            const todayDay = days.find((day) => day.isToday);
+
+            if (todayDay && todayDay.state !== 'disabled') {
+                totalQuestsToday++;
+
+                // Check if the quest is completed (progress >= 1.0)
+                if (todayDay.state === 'past' || todayDay.progress >= 1.0) {
+                    completedQuestsToday++;
+                }
+            }
+
+            // Get streak for this quest and track max
+            const streak = user.quests.GetStreak(quest); // TODO: Optimize to avoid recalculating
+            if (streak > maxStreak) {
+                maxStreak = streak;
+            }
+        }
+
+        return {
+            completedQuests: completedQuestsToday,
+            totalQuests: totalQuestsToday,
+            allCompleted: totalQuestsToday > 0 && completedQuestsToday === totalQuestsToday,
+            maxStreak
+        };
+    };
 
     /**
      * Add a new quest to the list and open the quest page, or show a popup if the limit is reached.
@@ -69,54 +124,10 @@ class QuestsProgressChartBack extends React.Component {
         user.interface.ChangePage('quest', { storeInHistory: false });
     };
 
-    componentDidMount() {
-        this.listenerQuests = user.quests.allQuests.AddListener(() => {
-            const newState = this.computeProgress();
-            this.setState(newState);
-        });
-    }
-
-    componentWillUnmount() {
-        if (this.listenerQuests) {
-            user.quests.allQuests.RemoveListener(this.listenerQuests);
-        }
-    }
-
-    /**
-     * @returns {Pick<typeof this.state, 'completedQuests' | 'totalQuests' | 'allCompleted'>}
-     */
-    computeProgress = () => {
-        const allQuests = user.quests.Get();
-
-        let totalQuestsToday = 0;
-        let completedQuestsToday = 0;
-
-        // For each quest, check if it should be done today
-        for (const quest of allQuests) {
-            const days = user.quests.GetDays(quest);
-
-            // Find today's day in data
-            const todayDay = days.find((day) => day.isToday);
-
-            if (todayDay && todayDay.state !== 'disabled') {
-                totalQuestsToday++;
-
-                // Check if the quest is completed (progress >= 1.0)
-                if (todayDay.state === 'past' || todayDay.progress >= 1.0) {
-                    completedQuestsToday++;
-                }
-            }
-        }
-
-        return {
-            completedQuests: completedQuestsToday,
-            totalQuests: totalQuestsToday,
-            allCompleted: totalQuestsToday > 0 && completedQuestsToday === totalQuestsToday
-        };
-    };
+    openQuests = () => user.interface.ChangePage('quests');
 }
 
-QuestsProgressChartBack.prototype.props = InputProps;
-QuestsProgressChartBack.defaultProps = InputProps;
+TodayQuestsPieChartBack.prototype.props = InputProps;
+TodayQuestsPieChartBack.defaultProps = InputProps;
 
-export default QuestsProgressChartBack;
+export default TodayQuestsPieChartBack;

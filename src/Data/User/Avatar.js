@@ -1,5 +1,6 @@
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
+import dataManager from 'Managers/DataManager';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -308,6 +309,31 @@ class Avatar extends IUserData {
         const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: this.GetBodyColorHex() }];
 
         return [...faceItems, ...equippedItems];
+    };
+
+    /**
+     * Get avatar items for previewing a specific item (rewards, shop, etc.)
+     * Includes face, ears, the item, and optionally bottom if item is a top
+     * @param {ItemName} itemID - The item to preview
+     * @returns {ItemConfig[]}
+     */
+    GetPreviewAvatarItems = (itemID) => {
+        /** @type {ItemConfig[]} */
+        const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: this.GetBodyColorHex() }];
+
+        /** @type {ItemConfig[]} */
+        const previewItems = [{ id: itemID }];
+
+        // For 'top' items, also show bottom item (like in avatar editor)
+        const item = dataManager.items.GetByID(itemID);
+        if (item?.Slot === 'top') {
+            const bottomStuffID = this.avatar.bottom;
+            const bottomStuff = this.user.inventory.GetStuffByID(bottomStuffID);
+            const bottomItemID = bottomStuff ? bottomStuff.ItemID : 'bottom_00';
+            previewItems.push({ id: bottomItemID });
+        }
+
+        return [...faceItems, ...previewItems];
     };
 
     /**

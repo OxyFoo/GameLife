@@ -65,7 +65,7 @@ class ShopDailyDeals extends BackShopItems {
                             bodyColor={BODY_COLORS[user.avatar.avatar.skinColor] || BODY_COLORS[0]}
                             position={item.Size.pos}
                             scale={item.Size.scale}
-                            items={this.getPreviewItems(item)}
+                            items={user.avatar.GetPreviewAvatarItems(item.ID)}
                         />
                     </AvatarFrame>
 

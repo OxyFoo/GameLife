@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 8
     },
+    sectionMoreData: {
+        marginTop: 12
+    },
 
     // Styles for main content
     chartsContainer: {
@@ -30,7 +33,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: -40,
         left: 0,
-        right: '-60%',
+        right: '-65%',
         alignItems: 'center',
         justifyContent: 'flex-start',
         zIndex: -100,

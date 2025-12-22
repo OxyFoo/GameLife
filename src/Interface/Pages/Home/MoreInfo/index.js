@@ -5,7 +5,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button } from 'Interface/Components';
+import { Text, Button, Icon } from 'Interface/Components';
 import { Round } from 'Utils/Functions';
 import { GetDate, GetGlobalTime } from 'Utils/Time';
 
@@ -39,6 +39,11 @@ function MoreInfo({ style }) {
             ]}
             gradientColorsAngle={90}
         >
+            <View style={styles.header}>
+                <Text fontSize={16}>{lang['kpi-title']}</Text>
+                <Icon color='gradient' icon='arrow-square-outline' angle={90} />
+            </View>
+
             <View style={styles.kpiRow}>
                 <View style={styles.kpiItem}>
                     <Text style={styles.kpiValue} fontSize={18} bold color='primary'>
@@ -95,15 +100,24 @@ function computeData() {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingBottom: 4
+    },
     button: {
-        paddingVertical: 12,
+        paddingVertical: 8,
         paddingHorizontal: 4,
         backgroundColor: 'transparent'
     },
     kpiRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        gap: 8
+        gap: 6,
+        paddingVertical: 8
     },
     kpiItem: {
         flex: 1,

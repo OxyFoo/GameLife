@@ -438,6 +438,7 @@
         "today-quest": "Quests",
         "section-my-todos": "My to-do list",
 
+        "btn-stats": "Statistics",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
         "btn-more-info": "More info",
@@ -448,7 +449,7 @@
 
         "news-myquests-title": "Quests to do",
 
-        "container-stats-title": "Stats",
+        "container-stats-title": "My infos",
         "container-skills-title": "Skills",
         "container-skills-empty": "No skills yet, do one and it will appear here !",
         "container-achievements-empty": "No achievements yet, go for it!",
@@ -577,9 +578,10 @@
         "row-text-graph": "Hours completed this week",
         "row-title-informations": "Informations",
 
+        "kpi-title": "Informations",
         "kpi-since": "days of play",
-        "kpi-activities": "activities",
-        "kpi-time": "hours",
+        "kpi-activities": "activities done",
+        "kpi-time": "hours played",
         "kpi-ox": "Ox",
         "kpi-inventory": "items",
         "kpi-friends": "friends",

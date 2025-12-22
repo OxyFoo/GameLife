@@ -26,7 +26,7 @@ class Home extends BackHome {
         // Avatar data
         const { skin, skinColor, items } = user.avatar.GetAvatarRenderData();
         const screenWidth = Dimensions.get('window').width;
-        const avatarSize = screenWidth * 1.3;
+        const avatarSize = screenWidth * 1.5;
 
         // Parallax effect for avatar
         const avatarParallax = {
@@ -66,8 +66,7 @@ class Home extends BackHome {
                         {/* <SkillsTags /> */}
 
                         {/* More infos KPIs */}
-                        <Title title={lang['btn-more-info']} />
-                        <MoreInfo />
+                        <MoreInfo style={styles.sectionMoreData} />
                     </View>
 
                     {/* Right column: Avatar with parallax */}

@@ -4,12 +4,15 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import user from 'Managers/UserManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Button, RadarChart } from 'Interface/Components';
+import { Button, Icon, RadarChart, Text } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
 
 /** @param {{ style?: import('react-native').ViewStyle }} props */
 function StatsRadar({ style }) {
+    const lang = langManager.curr['home'];
+
     const [statsData, setStatsData] = React.useState(() => computeStats());
-    const [showLabels, setShowLabels] = React.useState(false);
+    const [showLabels, setShowLabels] = React.useState(true);
 
     React.useEffect(() => {
         const listener = user.experience.experience.AddListener(() => {
@@ -20,15 +23,6 @@ function StatsRadar({ style }) {
         };
     }, []);
 
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            setShowLabels((prev) => !prev);
-        }, 10 * 1000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, [showLabels]);
-
     const openProfile = () => {
         user.interface.ChangePage('profile');
     };
@@ -37,7 +31,7 @@ function StatsRadar({ style }) {
         setShowLabels((prev) => !prev);
     };
 
-    const chartSize = Dimensions.get('window').width * 0.3;
+    const chartSize = Dimensions.get('window').width * 0.4;
 
     return (
         <Button
@@ -50,6 +44,11 @@ function StatsRadar({ style }) {
             ]}
             gradientColorsAngle={90}
         >
+            <View style={styles.header}>
+                <Text fontSize={16}>{lang['btn-stats']}</Text>
+                <Icon color='gradient' size={24} icon='arrow-square-outline' angle={90} />
+            </View>
+
             <View style={styles.chartContainer}>
                 <RadarChart data={statsData} size={chartSize} showLabels={showLabels} levels={4} />
             </View>
@@ -70,6 +69,14 @@ function computeStats() {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: 8,
+        paddingHorizontal: 12
+    },
     container: {
         paddingVertical: 0,
         paddingHorizontal: 0

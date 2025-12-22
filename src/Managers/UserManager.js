@@ -203,6 +203,9 @@ class UserManager {
         await GoogleSignIn.SignOut();
         await this.server2.tcp.SendAndWait({ action: 'google-signin-token-reset' });
 
+        // Reset Apple Sign-In token if present
+        await this.server2.tcp.SendAndWait({ action: 'apple-signin-token-reset' });
+
         await this.Clear();
 
         // Wait for the server to disconnect

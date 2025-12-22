@@ -52,6 +52,17 @@ const styles = StyleSheet.create({
     buttonGoogleContent: {
         justifyContent: 'space-between'
     },
+    buttonAppleSignin: {
+        width: 'auto',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 136,
+        margin: 24
+    },
+    buttonAppleContent: {
+        justifyContent: 'space-between'
+    },
     buttonBack: {
         position: 'absolute',
         width: 64,

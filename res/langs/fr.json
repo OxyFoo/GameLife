@@ -491,6 +491,7 @@
         "button-login-text": "Suivant",
         "button-signin-text": "S'inscrire",
         "button-google-signin": "Se connecter avec Google",
+        "button-apple-signin": "Se connecter avec Apple",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
         "error-signin-server": "Une erreur est survenue. ({})",
@@ -499,6 +500,7 @@
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
         "error-google-signin-unavailable": "La connexion avec Google n'est pas encore configurée, réessaye plus tard.",
+        "error-apple-signin-unavailable": "La connexion avec Apple n'est pas disponible sur cet appareil (iOS 13+ requis).",
 
         "error-connection": "Échec de la connexion au serveur",
 

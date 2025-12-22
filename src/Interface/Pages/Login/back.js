@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 
 import { Login, Signin } from './login';
 import GoogleSignIn from 'Utils/GoogleSignIn';
+import AppleSignIn from 'Utils/AppleSignIn';
 import { IsEmail } from 'Utils/String';
 import { Sleep } from 'Utils/Functions';
 import { SpringAnimation } from 'Utils/Animations';
@@ -47,6 +48,13 @@ class BackLogin extends PageBase {
      * @type {boolean}
      */
     googleTokenValidated = false;
+
+    /**
+     * Flag to indicate if the Apple token has been validated
+     * This is used to track token validation state when login or signin is cancelled
+     * @type {boolean}
+     */
+    appleTokenValidated = false;
 
     /** @param {PageBase['props']} props */
     constructor(props) {
@@ -189,6 +197,12 @@ class BackLogin extends PageBase {
             GoogleSignIn.SignOut();
         }
 
+        // If Apple token was validated, reset it
+        if (this.appleTokenValidated) {
+            this.appleTokenValidated = false;
+            user.server2.tcp.Send({ action: 'apple-signin-token-reset' });
+        }
+
         return false;
     };
 
@@ -286,6 +300,111 @@ class BackLogin extends PageBase {
 
         if (response.result === 'can-login' || response.result === 'can-signin') {
             this.googleTokenValidated = true;
+        }
+
+        // Continue login in loading page
+        if (response.result === 'can-login') {
+            const mailSaved = await user.server2.userAuth.SetEmail(result.email);
+            if (!mailSaved) {
+                this.setState({
+                    loading: false,
+                    errorEmail: lang['error-signin-server'].replace('{}', 'email-save-failed')
+                });
+                return;
+            }
+            this.fe.ChangePage('loading', { storeInHistory: false });
+        }
+
+        // Reset loading state
+        else if (response.result === 'can-signin') {
+            this.goToSignin().then(() => {
+                this.setState({
+                    loading: false,
+                    email: result.email,
+                    errorEmail: ''
+                });
+            });
+        }
+
+        // Handle server error
+        else {
+            this.setState({
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', `req-${response.result}`)
+            });
+        }
+    };
+
+    // Apple Sign-In method
+    appleSignIn = async () => {
+        const lang = langManager.curr['login'];
+
+        // Check if Apple Sign-In is available
+        const isAvailable = await AppleSignIn.shouldShowButton();
+        if (!isAvailable) {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-error-title'],
+                    message: lang['error-apple-signin-unavailable']
+                }
+            });
+            return;
+        }
+
+        this.setState({ loading: true });
+
+        // Wait for animations to finish
+        await Sleep(200);
+
+        // Perform Apple Sign-In
+        const result = await AppleSignIn.SignIn();
+        if (!result.success) {
+            // Do nothing if the user cancelled the sign-in
+            if (result.errorType === 'cancelled') {
+                this.setState({ loading: false });
+                return;
+            }
+
+            // Handle error
+            this.setState({
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', result.errorMessage)
+            });
+
+            // Log the error
+            user.interface.console?.AddLog(
+                'error',
+                `[Apple Sign-In] Login failed: ${result.errorMessage}`,
+                JSON.stringify(result.error, null, 2)
+            );
+
+            return;
+        }
+
+        // Submit Apple token to server for validation before proceeding with login/signin
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'apple-signin-token-submit',
+            email: result.email,
+            token: result.identityToken
+        });
+        if (
+            response === 'timeout' ||
+            response === 'not-sent' ||
+            response === 'interrupted' ||
+            response.status !== 'apple-signin-token-submit'
+        ) {
+            // Handle server error
+            const error = typeof response === 'string' ? response : 'unknown';
+            this.setState({
+                loading: false,
+                errorEmail: lang['error-signin-server'].replace('{}', error)
+            });
+            return;
+        }
+
+        if (response.result === 'can-login' || response.result === 'can-signin') {
+            this.appleTokenValidated = true;
         }
 
         // Continue login in loading page

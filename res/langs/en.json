@@ -491,6 +491,7 @@
         "button-login-text": "Next",
         "button-signin-text": "Signin",
         "button-google-signin": "Sign in with Google",
+        "button-apple-signin": "Sign in with Apple",
 
         "error-login-nonmail": "Please enter a valid email address.",
         "error-signin-server": "An error has occurred. ({})",
@@ -499,6 +500,7 @@
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
         "error-google-signin-unavailable": "The connection with Google is not yet configured, please try again later.",
+        "error-apple-signin-unavailable": "Sign in with Apple is not available on this device (iOS 13+ required).",
 
         "error-connection": "Connection to the server failed",
 

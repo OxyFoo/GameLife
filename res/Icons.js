@@ -2,6 +2,7 @@
 const Icons = {
     'add-outline':              require('./icons/add-outline').default,
     'add':                      require('./icons/add').default,
+    'apple':                    require('./icons/apple').default,
     'arrow-left':               require('./icons/arrow-left').default,
     'arrow-square-outline':     require('./icons/arrow-square-outline').default,
     'arrow-square':             require('./icons/arrow-square').default,

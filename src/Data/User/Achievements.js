@@ -40,6 +40,11 @@ class Achievements extends IUserData {
      */
     claimAchievementLoading = false;
 
+    /**
+     * @type {boolean} Prevent multiple save operations at the same time
+     */
+    #savingOnline = false;
+
     /** @type {DynamicVar<AchievementItem[]>} Actual solved achievements */
     achievements = new DynamicVar(/** @type {AchievementItem[]} */ ([]));
 
@@ -124,10 +129,17 @@ class Achievements extends IUserData {
 
     /** @returns {Promise<boolean>} */
     SaveOnline = async (attempt = 1) => {
+        // Prevent concurrent saves
+        if (this.#savingOnline) {
+            this.#user.interface.console?.AddLog('info', '[Achievements] SaveOnline already in progress, skipping');
+            return true;
+        }
+
         if (!this.#isUnsaved()) {
             return true;
         }
 
+        this.#savingOnline = true;
         const unsaved = this.#getUnsaved();
         const response = await this.#user.server2.tcp.SendAndWait({
             action: 'save-achievements',
@@ -147,11 +159,13 @@ class Achievements extends IUserData {
                 'error',
                 `[Achievements] Error while add achievements (${typeof response === 'string' ? response : response.status})`
             );
+            this.#savingOnline = false;
             return false;
         }
 
         if (response.result === 'wrong-achievements') {
             this.#user.interface.console?.AddLog('error', '[Achievements] Wrong achievements to save');
+            this.#savingOnline = false;
             return false;
         }
 
@@ -159,10 +173,12 @@ class Achievements extends IUserData {
         if (response.result === 'not-up-to-date') {
             if (attempt <= 0) {
                 this.#user.interface.console?.AddLog('error', '[Achievements] Too many attempts to save achievements');
+                this.#savingOnline = false;
                 return false;
             }
 
             this.#user.interface.console?.AddLog('info', '[Achievements] Retry to save achievements');
+            this.#savingOnline = false;
             await this.LoadOnline();
             return this.SaveOnline(attempt - 1);
         }
@@ -170,6 +186,7 @@ class Achievements extends IUserData {
         this.#token = response.result.token;
         this.#purge(response.result.newAchievements);
 
+        this.#savingOnline = false;
         return true;
     };
 

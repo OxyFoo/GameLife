@@ -123,7 +123,7 @@ class NotificationsInApp extends React.Component {
                     <FlatList
                         style={styles.flatlist}
                         data={notifications}
-                        keyExtractor={(item) => `notif-in-app-${item.timestamp}`}
+                        keyExtractor={(item, index) => `notif-in-app-${item.type}-${item.timestamp}-${index}`}
                         renderItem={({ item, index }) => <NIA_Template item={item} index={index} />}
                         ItemSeparatorComponent={RenderSeparator}
                         ListEmptyComponent={RenderEmpty}

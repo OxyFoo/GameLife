@@ -69,6 +69,11 @@ function SkillsTags({ style, maxSkills = 4 }) {
             ]}
             gradientColorsAngle={90}
         >
+            <View style={styles.header}>
+                <Text fontSize={16}>{lang['container-skills-title']}</Text>
+                <Icon color='gradient' size={24} icon='arrow-square-outline' angle={90} />
+            </View>
+
             {skills.length === 0 ? (
                 <Text style={styles.emptyText} fontSize={12} color='light'>
                     {lang['container-skills-empty']}
@@ -81,6 +86,14 @@ function SkillsTags({ style, maxSkills = 4 }) {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 8,
+        paddingHorizontal: 2
+    },
     button: {
         paddingVertical: 10,
         paddingHorizontal: 10

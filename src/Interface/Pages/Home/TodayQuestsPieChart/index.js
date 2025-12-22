@@ -67,6 +67,7 @@ class TodayQuestsPieChart extends TodayQuestsPieChartBack {
                                         </Text>
                                     </View>
                                     <View style={styles.textStreak}>
+                                        <Text fontSize={12}>{'Max: '}</Text>
                                         <Text fontSize={12}>{maxStreak}</Text>
                                         <Icon icon='flame' size={18} color='main2' />
                                     </View>

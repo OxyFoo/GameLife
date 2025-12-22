@@ -9,8 +9,8 @@ import { Experience } from './Experience';
 import { TodayActivitiesPieChart } from './TodayActivitiesPieChart';
 import { TodayQuestsPieChart } from './TodayQuestsPieChart';
 import { StatsRadar } from './StatsRadar';
+import { SkillsTags } from './SkillsTags';
 // TODO: Delete ?
-// import { SkillsTags } from './SkillsTags';
 // import { AchievementPreview } from './AchievementPreview';
 import { MoreInfo } from './MoreInfo';
 import user from 'Managers/UserManager';
@@ -63,10 +63,7 @@ class Home extends BackHome {
 
                         {/* Skills title + widget */}
                         {/* <Title title={lang['container-skills-title']} /> */}
-                        {/* <SkillsTags /> */}
-
-                        {/* More infos KPIs */}
-                        <MoreInfo style={styles.sectionMoreData} />
+                        <SkillsTags style={styles.sectionMoreData} />
                     </View>
 
                     {/* Right column: Avatar with parallax */}
@@ -88,6 +85,9 @@ class Home extends BackHome {
                 {/* Achievements title + widget */}
                 {/* <Title title={lang['btn-achievements']} />
                 <AchievementPreview /> */}
+
+                <Title title={lang['btn-more-info']} />
+                <MoreInfo />
 
                 {/* My todos */}
                 <Title title={lang['section-my-todos']}>

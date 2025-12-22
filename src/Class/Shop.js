@@ -115,6 +115,9 @@ class Shop extends IUserClass {
     /** @type {Set<string>} Set of pending purchase IDs already notified to the user */
     #notifiedPendingPurchases = new Set();
 
+    /** @type {Set<string>} Set of transaction IDs currently being processed (race condition protection) */
+    #processingTransactions = new Set();
+
     Clear = () => {
         this.buyToday = {
             day: '',
@@ -317,6 +320,12 @@ class Shop extends IUserClass {
     #handlePurchaseUpdate = async (purchase) => {
         const purchaseId = purchase.id || purchase.transactionId || '';
 
+        // Prevent race conditions: if transaction is already being processed, skip
+        if (purchaseId && this.#processingTransactions.has(purchaseId)) {
+            this.#user.interface.console?.AddLog('info', '[IAP] Transaction already being processed:', purchaseId);
+            return;
+        }
+
         // Handle pending state (slow card test, etc.)
         if (purchase.purchaseState === 'pending') {
             // Only notify once per pending purchase
@@ -356,41 +365,53 @@ class Shop extends IUserClass {
             return;
         }
 
-        // Get quantity from purchase (default 1)
-        const quantity = purchase.quantity ?? 1;
-
-        // Validate with server
-        const result = await this.#validatePurchaseWithServer(purchase, quantity);
-
-        // Finish transaction first to prevent re-processing
-        finishTransaction({ purchase, isConsumable: true });
-
-        if (result === false) {
-            this.#showIAPError('purchase-handle-error');
-            return;
+        // Mark transaction as being processed
+        if (purchaseId) {
+            this.#processingTransactions.add(purchaseId);
         }
 
-        // Skip reward page if already processed (result === 0)
-        if (result === 0) {
-            return;
-        }
+        try {
+            // Get quantity from purchase (default 1)
+            const quantity = purchase.quantity ?? 1;
 
-        // Wait if app is not loaded or already on reward page
-        while (this.#user.appIsLoaded === false || this.#user.interface.GetCurrentPageName() === 'chestreward') {
-            await Sleep(200);
-        }
+            // Validate with server
+            const result = await this.#validatePurchaseWithServer(purchase, quantity);
 
-        // Show reward with total ox
-        this.#user.interface.ChangePage('chestreward', {
-            args: {
-                chestRarity: 'ox',
-                oxCount: result,
-                callback: () => {
-                    this.#user.interface.BackHandle();
-                }
-            },
-            storeInHistory: false
-        });
+            // Finish transaction first to prevent re-processing
+            finishTransaction({ purchase, isConsumable: true });
+
+            if (result === false) {
+                this.#showIAPError('purchase-handle-error');
+                return;
+            }
+
+            // Skip reward page if already processed (result === 0)
+            if (result === 0) {
+                return;
+            }
+
+            // Wait if app is not loaded or already on reward page
+            while (this.#user.appIsLoaded === false || this.#user.interface.GetCurrentPageName() === 'chestreward') {
+                await Sleep(200);
+            }
+
+            // Show reward with total ox
+            this.#user.interface.ChangePage('chestreward', {
+                args: {
+                    chestRarity: 'ox',
+                    oxCount: result,
+                    callback: () => {
+                        this.#user.interface.BackHandle();
+                    }
+                },
+                storeInHistory: false
+            });
+        } finally {
+            // Always remove from processing set
+            if (purchaseId) {
+                this.#processingTransactions.delete(purchaseId);
+            }
+        }
     };
 
     /**

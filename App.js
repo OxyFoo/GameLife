@@ -5,6 +5,7 @@ import user from 'Managers/UserManager';
 import FlowEngine from 'Interface/FlowEngine';
 import { env } from 'Utils/Env';
 import GoogleSignIn from 'Utils/GoogleSignIn';
+import AppleSignIn from 'Utils/AppleSignIn';
 
 /**
  * @typedef {import('react-native').AppStateStatus} AppStateStatus
@@ -31,6 +32,9 @@ class App extends React.Component {
         // Configure Google Sign-In
         GoogleSignIn.SetLogger(user.interface.console?.AddLog ?? null);
         GoogleSignIn.Configure();
+
+        // Configure Apple Sign-In
+        AppleSignIn.SetLogger(user.interface.console?.AddLog ?? null);
 
         // Open the test page
         if (this.props.test || env.SHOW_PAGE_TEST) {

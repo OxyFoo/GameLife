@@ -124,7 +124,7 @@ async function performAppleSignIn() {
         }
 
         // Extract user data
-        const { identityToken, email } = appleAuthRequestResponse;
+        const { identityToken, email: directEmail } = appleAuthRequestResponse;
 
         // Verify we have the required data
         if (!identityToken) {
@@ -137,8 +137,33 @@ async function performAppleSignIn() {
             };
         }
 
+        // Extract email from identity token (JWT)
+        // Apple only provides email directly on first sign-in, but it's always in the token
+        let email = directEmail;
         if (!email) {
-            log('error', 'Apple Sign-In: No email received');
+            try {
+                // Decode JWT to extract email (JWT format: header.payload.signature)
+                const tokenParts = identityToken.split('.');
+                if (tokenParts.length === 3) {
+                    // Decode base64url (replace - with + and _ with /, then decode)
+                    const base64 = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(
+                        atob(base64)
+                            .split('')
+                            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                            .join('')
+                    );
+                    const payload = JSON.parse(jsonPayload);
+                    email = payload.email;
+                    log('info', 'Apple Sign-In: Email extracted from token', { email });
+                }
+            } catch (decodeError) {
+                log('error', 'Apple Sign-In: Failed to decode identity token', decodeError);
+            }
+        }
+
+        if (!email) {
+            log('error', 'Apple Sign-In: No email received or decoded');
             return {
                 success: false,
                 error: null,

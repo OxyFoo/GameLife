@@ -45,11 +45,7 @@ class BackChestReward extends PageBase {
         animChest: new Animated.Value(0),
         animItem: new Animated.Value(0),
         animInteractions: new Animated.Value(0),
-
-        layoutFrame: {
-            width: 0,
-            height: 0
-        }
+        frameSize: 0
     };
 
     buttonEnabled = false;
@@ -127,7 +123,8 @@ class BackChestReward extends PageBase {
     /** @param {LayoutChangeEvent} layout */
     onFrameLayout = (layout) => {
         const { width, height } = layout.nativeEvent.layout;
-        this.setState({ layoutFrame: { width, height } });
+        const frameSize = Math.min(width, height);
+        this.setState({ frameSize });
     };
 
     onPress = () => {

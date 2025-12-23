@@ -26,8 +26,8 @@ jobs:
       - name: '🚧 Check environment availability'
         run: |
           ENVIRONMENT="${{ inputs.environment }}"
-          if [ "$ENVIRONMENT" != "prod" ]; then
-            echo "🚧 iOS build is currently only available for 'prod' environment"
+          if [ "$ENVIRONMENT" != "prod" ] && [ "$ENVIRONMENT" != "test" ]; then
+            echo "🚧 iOS build is only available for 'prod' and 'test' environments"
             echo "   Requested environment: '$ENVIRONMENT'"
             echo "   Skipping iOS build..."
             exit 1
@@ -45,10 +45,23 @@ jobs:
       - name: 'Setup Xcode'
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16'
+          xcode-version: '16.2'
 
-      - name: 'Verify Xcode version'
-        run: xcodebuild -version
+      - name: 'Verify Xcode Selection'
+        run: |
+          echo "=== Xcode Installations ==="
+          ls -la /Applications/ | grep -i xcode || echo "No Xcode found in /Applications"
+          echo ""
+          echo "=== Current Xcode Selection ==="
+          xcode-select -p
+          xcodebuild -version
+          echo ""
+          echo "=== Confirming Xcode Selection ==="
+          SELECTED_XCODE=$(xcode-select -p)
+          if [ -n "$SELECTED_XCODE" ]; then
+            sudo xcode-select -s "$SELECTED_XCODE"
+            echo "✅ Xcode confirmed at: $SELECTED_XCODE"
+          fi
 
       - name: 'Install the Apple certificate and provisioning profile'
         env:
@@ -241,8 +254,6 @@ jobs:
           PROVISION_PROFILE_NAME_ACTUAL: ${{ env.PROVISION_PROFILE_NAME_ACTUAL }}
           # Use manual signing for CI
           USE_AUTOMATIC_SIGNING: "false"
-          # Increase memory for xcodebuild
-          DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
         run: |
           cd ios
           ENVIRONMENT="${{ inputs.environment }}"
@@ -297,6 +308,18 @@ jobs:
         with:
           name: gym-full-log
           path: ~/Library/Logs/gym
+
+      - name: 'Dump xcresult (if failure)'
+        if: failure()
+        run: |
+          echo "=== Searching for .xcresult files ==="
+          find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -type d 2>/dev/null | while read xcresult; do
+            echo "📦 Found: $xcresult"
+            xcrun xcresulttool get --format json --path "$xcresult" 2>/dev/null | head -n 50 || echo "Cannot parse xcresult"
+          done
+          echo ""
+          echo "=== Recent DerivedData builds ==="
+          ls -lt ~/Library/Developer/Xcode/DerivedData/ 2>/dev/null | head -n 10 || echo "No DerivedData found"
 
   delivery:
     name: '📦 Delivery'

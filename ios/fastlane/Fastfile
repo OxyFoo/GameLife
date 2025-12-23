@@ -33,8 +33,24 @@ platform :ios do
 
     UI.message "🏗️ Building for environment: #{environment}"
 
-    # Get app identifier based on environment
-    app_identifier = ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife"
+    # ===== DEBUG: Vérifier les variables d'environnement =====
+    UI.message "="*60
+    UI.message "🔍 DEBUG: Environment Variables Check"
+    UI.message "ENV['APP_IDENTIFIER'] = #{ENV['APP_IDENTIFIER'].inspect}"
+    UI.message "ENV['TEAM_ID'] = #{ENV['TEAM_ID'].inspect}"
+    UI.message "ENV['ITC_TEAM_ID'] = #{ENV['ITC_TEAM_ID'].inspect}"
+    UI.message "ENV['APPLE_ID'] = #{ENV['APPLE_ID'].inspect}"
+    
+    begin
+      appfile_app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+      UI.message "Appfile app_identifier = #{appfile_app_id.inspect}"
+    rescue => e
+      UI.error "Cannot fetch Appfile app_identifier: #{e.message}"
+    end
+    UI.message "="*60
+
+    # Get app identifier from environment (no fallback)
+    app_identifier = ENV.fetch("APP_IDENTIFIER")
 
     # Set provisioning profile name based on environment
     case environment
@@ -156,14 +172,17 @@ platform :ios do
         clean: true,
         archive_path: "./build/GameLife.xcarchive",
         export_options: export_options_hash,
-        # Use deployment target matching Podfile
-        xcargs: "IPHONEOS_DEPLOYMENT_TARGET=15.1 CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates",
+        # Use deployment target matching Podfile + verbose logging
+        xcargs: "-verbose IPHONEOS_DEPLOYMENT_TARGET=15.1 CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates",
+        silent: false,
         disable_xcpretty: true,
         buildlog_path: "./build/logs"
       )
     rescue => e
       UI.important "⚠️ Automatic signing failed: #{e.message}"
       UI.important "🔄 Retrying with manual signing..."
+      UI.error "Full error details: #{e.inspect}"
+      UI.error "Backtrace: #{e.backtrace.first(10).join("\n")}" if e.backtrace
 
       # Retry with manual signing
       update_code_signing_settings(

@@ -22,6 +22,7 @@ jobs:
     name: '🏗️ Build'
     runs-on: macos-15
     timeout-minutes: 60
+    environment: ${{ inputs.environment }}
     steps:
       - name: '🚧 Check environment availability'
         run: |
@@ -234,6 +235,26 @@ jobs:
           security find-identity -v -p codesigning
           echo "=== Provisioning Profiles ==="
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No profiles found"
+
+      - name: 'Debug Environment Variables'
+        env:
+          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          TEAM_ID: ${{ vars.TEAM_ID }}
+          ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+        run: |
+          echo "============================================"
+          echo "🔍 Environment Variables Check (before Fastlane)"
+          echo "APP_IDENTIFIER=${APP_IDENTIFIER}"
+          echo "TEAM_ID=${TEAM_ID}"
+          echo "ITC_TEAM_ID=${ITC_TEAM_ID}"
+          echo "APPLE_ID=${APPLE_ID}"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "============================================"
+          if [ -z "$APP_IDENTIFIER" ]; then
+            echo "❌ ERROR: APP_IDENTIFIER is empty!"
+            exit 1
+          fi
 
       - name: 'Build with Fastlane'
         env:

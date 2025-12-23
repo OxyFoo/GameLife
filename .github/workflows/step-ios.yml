@@ -24,6 +24,27 @@ jobs:
     timeout-minutes: 60
     environment: ${{ inputs.environment }}
     steps:
+      - name: '🔍 Debug Workflow Context'
+        run: |
+          echo "============================================"
+          echo "📊 Workflow Execution Context"
+          echo "============================================"
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Ref name: ${{ github.ref_name }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
+          echo "Environment input: ${{ inputs.environment }}"
+          echo "Environment (job-level): ${{ inputs.environment }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "============================================"
+          if [ "${{ github.event_name }}" = "workflow_call" ]; then
+            echo "⚠️  This workflow is called via workflow_call"
+            echo "⚠️  Ensure parent workflow uses 'secrets: inherit'"
+          fi
+          echo ""
       - name: '🚧 Check environment availability'
         run: |
           ENVIRONMENT="${{ inputs.environment }}"
@@ -72,32 +93,150 @@ jobs:
           PROVISION_PROFILE_TEST_BASE64: ${{ secrets.APPLE_PROVISION_PROFILE_TEST_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
         run: |
+          echo "============================================"
+          echo "🔐 Certificate & Profile Installation Debug"
+          echo "============================================"
+          
+          # 1) Verify secrets are present (without exposing values)
+          echo "📊 Checking secret presence and size..."
+          if [ -z "$BUILD_CERTIFICATE_BASE64" ]; then
+            echo "❌ BUILD_CERTIFICATE_BASE64 is EMPTY"
+            exit 1
+          else
+            echo "✅ BUILD_CERTIFICATE_BASE64 present (length: ${#BUILD_CERTIFICATE_BASE64})"
+          fi
+          
+          if [ -z "$P12_PASSWORD" ]; then
+            echo "❌ P12_PASSWORD is EMPTY"
+            exit 1
+          else
+            echo "✅ P12_PASSWORD present (length: ${#P12_PASSWORD})"
+          fi
+          
+          if [ -z "$KEYCHAIN_PASSWORD" ]; then
+            echo "❌ KEYCHAIN_PASSWORD is EMPTY"
+            exit 1
+          else
+            echo "✅ KEYCHAIN_PASSWORD present (length: ${#KEYCHAIN_PASSWORD})"
+          fi
+          
+          ENVIRONMENT="${{ inputs.environment }}"
+          if [ "$ENVIRONMENT" == 'test' ]; then
+            if [ -z "$PROVISION_PROFILE_TEST_BASE64" ]; then
+              echo "❌ PROVISION_PROFILE_TEST_BASE64 is EMPTY"
+              exit 1
+            else
+              echo "✅ PROVISION_PROFILE_TEST_BASE64 present (length: ${#PROVISION_PROFILE_TEST_BASE64})"
+            fi
+          else
+            if [ -z "$PROVISION_PROFILE_BASE64" ]; then
+              echo "❌ PROVISION_PROFILE_BASE64 is EMPTY"
+              exit 1
+            else
+              echo "✅ PROVISION_PROFILE_BASE64 present (length: ${#PROVISION_PROFILE_BASE64})"
+            fi
+          fi
+          echo ""
+
           # Create variables
-          echo "Creating variables in $RUNNER_TEMP"
+          echo "📁 Creating temporary files in $RUNNER_TEMP"
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # Import certificate and provisioning profile from secrets
+          echo "🔓 Decoding certificate..."
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-
-          ENVIRONMENT="${{ inputs.environment }}"
-          if [ $ENVIRONMENT == 'test' ]; then
-            echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
-            echo "Test environment selected"
-          else
-            echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
-            echo "Production environment selected"
+          DECODE_EXIT=$?
+          if [ $DECODE_EXIT -ne 0 ]; then
+            echo "❌ Failed to decode BUILD_CERTIFICATE_BASE64 (exit code: $DECODE_EXIT)"
+            exit 1
           fi
+          echo "✅ Certificate decoded"
+
+          if [ "$ENVIRONMENT" == 'test' ]; then
+            echo "🔓 Decoding test provisioning profile..."
+            echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
+            echo "✅ Test environment selected"
+          else
+            echo "🔓 Decoding production provisioning profile..."
+            echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+            echo "✅ Production environment selected"
+          fi
+          echo ""
+
+          # 2) Verify decoded files
+          echo "📊 Verifying decoded files..."
+          if [ ! -f "$CERTIFICATE_PATH" ]; then
+            echo "❌ Certificate file not created: $CERTIFICATE_PATH"
+            exit 1
+          fi
+          ls -lh "$CERTIFICATE_PATH"
+          echo "File type: $(file "$CERTIFICATE_PATH")"
+          CERT_SIZE=$(stat -f%z "$CERTIFICATE_PATH" 2>/dev/null || stat -c%s "$CERTIFICATE_PATH" 2>/dev/null || echo "0")
+          echo "Certificate size: $CERT_SIZE bytes"
+          if [ "$CERT_SIZE" -lt 100 ]; then
+            echo "⚠️  Certificate file is suspiciously small (< 100 bytes)"
+          fi
+          echo ""
+          
+          if [ ! -f "$PP_PATH" ]; then
+            echo "❌ Provisioning profile file not created: $PP_PATH"
+            exit 1
+          fi
+          ls -lh "$PP_PATH"
+          echo "File type: $(file "$PP_PATH")"
+          PP_SIZE=$(stat -f%z "$PP_PATH" 2>/dev/null || stat -c%s "$PP_PATH" 2>/dev/null || echo "0")
+          echo "Provisioning profile size: $PP_SIZE bytes"
+          echo ""
+
+          # 3) Test P12 validity with OpenSSL
+          echo "🧪 Testing P12 certificate validity with OpenSSL..."
+          if openssl pkcs12 -in "$CERTIFICATE_PATH" -nokeys -passin pass:"$P12_PASSWORD" >/dev/null 2>&1; then
+            echo "✅ P12 certificate is valid and password is correct"
+            echo "Certificate info:"
+            openssl pkcs12 -in "$CERTIFICATE_PATH" -nokeys -passin pass:"$P12_PASSWORD" 2>/dev/null | openssl x509 -noout -subject -dates 2>/dev/null || echo "Cannot extract certificate details"
+          else
+            OPENSSL_EXIT=$?
+            echo "❌ CRITICAL: P12 certificate validation FAILED (exit code: $OPENSSL_EXIT)"
+            echo "   Possible causes:"
+            echo "   - Invalid P12 file (corrupted or not a valid PKCS#12)"
+            echo "   - Wrong P12_PASSWORD"
+            echo "   - Expired certificate"
+            exit 1
+          fi
+          echo ""
 
           # Create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          echo "🔑 Creating temporary keychain..."
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          echo "✅ Keychain created and unlocked"
+          echo ""
 
           # Import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
+          echo "📥 Importing certificate into keychain..."
+          if security import "$CERTIFICATE_PATH" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"; then
+            echo "✅ Certificate imported successfully"
+          else
+            IMPORT_EXIT=$?
+            echo "❌ CRITICAL: Certificate import FAILED (exit code: $IMPORT_EXIT)"
+            exit 1
+          fi
+          
+          # Set key partition list (critical for codesigning)
+          echo "🔓 Setting key partition list for codesigning access..."
+          if security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" >/dev/null 2>&1; then
+            echo "✅ Key partition list configured"
+          else
+            echo "⚠️  Warning: set-key-partition-list failed (may cause signing issues)"
+          fi
+          echo ""
+          
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          echo "✅ Keychain added to search list"
+          echo ""
 
           # Apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
@@ -157,9 +296,45 @@ jobs:
           echo "BUILD_CERTIFICATE_PATH=$CERTIFICATE_PATH" >> $GITHUB_ENV
           echo "PROVISIONING_PROFILE_PATH=$PP_PATH" >> $GITHUB_ENV
 
-          # Debug (simplified)
-          echo "🔑 Available signing identities:"
+          # 4) Verify signing identities are accessible
+          echo "============================================"
+          echo "🔍 Verifying Signing Identities"
+          echo "============================================"
+          
+          echo "📋 Identities in temporary keychain ($KEYCHAIN_PATH):"
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+          KEYCHAIN_IDENTITIES=$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -c "valid identities found")
+          
+          echo ""
+          echo "📋 Identities in default keychain search list:"
           security find-identity -v -p codesigning
+          DEFAULT_IDENTITIES=$(security find-identity -v -p codesigning | grep -o "[0-9]* valid identities found" || echo "0 valid identities found")
+          
+          echo ""
+          echo "Summary:"
+          echo "  Keychain-specific: $(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep "valid identities found" || echo "0 valid identities found")"
+          echo "  Default search: $DEFAULT_IDENTITIES"
+          
+          if echo "$DEFAULT_IDENTITIES" | grep -q "0 valid identities"; then
+            echo ""
+            echo "❌ CRITICAL: No valid signing identities found!"
+            echo "   This will cause the build to fail."
+            echo ""
+            echo "🔍 Debugging keychain state:"
+            security list-keychains -d user
+            echo ""
+            security default-keychain
+            echo ""
+            echo "Attempting to re-add keychain to search list..."
+            security list-keychain -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | grep -v "$KEYCHAIN_PATH" | xargs)
+            echo ""
+            echo "Retry identity check:"
+            security find-identity -v -p codesigning
+          else
+            echo "✅ Signing identities are accessible"
+          fi
+          echo "============================================"
+          echo ""
 
           echo "📋 Provisioning profile summary:"
           echo "  Profile Name: ${PP_NAME:-'not found'}"

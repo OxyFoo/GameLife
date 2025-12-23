@@ -138,7 +138,10 @@ platform :ios do
         method: "app-store",
         teamID: ENV["TEAM_ID"] || "54ZUH596XX",
         uploadSymbols: true,
-        signingStyle: "automatic"
+        signingStyle: "automatic",
+        provisioningProfiles: {
+          app_identifier => profile_name
+        }
       }
 
       UI.message "🔧 Export options: #{export_options_hash}"
@@ -178,7 +181,7 @@ platform :ios do
         uploadSymbols: true,
         signingStyle: "manual",
         provisioningProfiles: {
-          (ENV["APP_IDENTIFIER"] || "org.reactjs.native.example.GameLife") => (actual_profile_uuid && !actual_profile_uuid.empty?) ? actual_profile_uuid : profile_name
+          app_identifier => (actual_profile_uuid && !actual_profile_uuid.empty?) ? actual_profile_uuid : profile_name
         }
       }
 

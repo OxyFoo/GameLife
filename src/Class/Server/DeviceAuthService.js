@@ -102,6 +102,16 @@ class DeviceAuthService {
             return 'update';
         }
 
+        // Maintenance mode, stop authentication process
+        else if (this.#user.server2.serverState.status === 'maintenance') {
+            this.state.Set('not-authenticated');
+            this.#user.interface.console?.AddLog(
+                'warn',
+                '[DeviceAuthService] Server in maintenance, skipping device authentication'
+            );
+            return 'authenticated';
+        }
+
         // Step 2: Get the integrity token if needed
         const integrityToken = await this.#checkIntegrityAndGenerateIfNeeded();
 

@@ -64,6 +64,15 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
+    // Maintenance mode => Go to wait internet page if not logged, otherwise continue offline
+    else if (authenticated === 'maintenance') {
+        if (!user.server2.userAuth.IsLogged()) {
+            fe.ChangePage('waitinternet', { storeInHistory: false, transition: 'fromBottom' });
+            return;
+        }
+        // If already logged, continue in offline mode (handled at the end)
+    }
+
     // Not connected to the server and user not logged, go to the wait internet page
     const isServerEnabled = env.VPS_PROTOCOL !== 'none';
     if (isServerEnabled && !user.server2.deviceAuth.IsAuthenticated() && !user.server2.userAuth.IsLogged()) {

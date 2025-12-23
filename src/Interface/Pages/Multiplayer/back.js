@@ -14,6 +14,7 @@ import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
 class BackMultiplayer extends PageBase {
     static feShowUserHeader = true;
     static feShowNavBar = true;
+    static feKeepMounted = true;
 
     state = {
         /** @type {'authenticated' | 'loading' | 'offline'} */

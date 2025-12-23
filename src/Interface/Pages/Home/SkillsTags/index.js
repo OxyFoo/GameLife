@@ -50,10 +50,12 @@ function SkillsTags({ style, maxSkills = 4 }) {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                 >
-                    <Icon xml={categoryLogoXML} size={14} color='main1' />
-                    <Text style={styles.tagText} fontSize={10}>
-                        {skill.FullName}
-                    </Text>
+                    <View style={styles.container}>
+                        <Icon xml={categoryLogoXML} size={14} color='main1' />
+                        <Text style={styles.tagText} fontSize={10}>
+                            {skill.FullName}
+                        </Text>
+                    </View>
                 </LinearGradient>
             </View>
         );
@@ -108,13 +110,16 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     tagGradient: {
+        gap: 6
+    },
+    container: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
-        paddingVertical: 6,
-        gap: 6
+        paddingVertical: 6
     },
     tagText: {
+        marginLeft: 4,
         marginTop: 1
     },
     emptyText: {

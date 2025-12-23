@@ -124,14 +124,18 @@ platform :ios do
       UI.error("Could not list certificates: #{e.message}")
     end
 
-    # Update app identifier in project if needed
-    update_app_identifier(
-      xcodeproj: "GameLife.xcodeproj",
-      plist_path: "GameLife/Info.plist",
-      app_identifier: app_identifier
-    )
+    # Update app identifier in project if needed (skip in CI to avoid rewriting with wrong value)
+    unless ENV["CI"] == "true"
+      update_app_identifier(
+        xcodeproj: "GameLife.xcodeproj",
+        plist_path: "GameLife/Info.plist",
+        app_identifier: app_identifier
+      )
+      UI.success "Updated app identifier to: #{app_identifier}"
+    else
+      UI.message "🏄 CI detected: Skipping update_app_identifier (using existing bundle ID from Xcode project)"
+    end
 
-    UI.success "Updated app identifier to: #{app_identifier}"
     UI.success "Using provisioning profile: #{profile_name}"
 
     # Update code signing settings
@@ -218,6 +222,7 @@ platform :ios do
           archive_path: "./build/GameLife.xcarchive",
           export_options: export_options_hash,
           xcargs: "IPHONEOS_DEPLOYMENT_TARGET=15.1 CODE_SIGN_STYLE=Manual",
+          silent: false,
           disable_xcpretty: true,
           buildlog_path: "./build/logs"
         )

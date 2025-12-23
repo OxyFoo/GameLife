@@ -411,25 +411,28 @@ jobs:
           echo "=== Provisioning Profiles ==="
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No profiles found"
 
-      - name: 'Debug Environment Variables'
-        env:
-          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
-          TEAM_ID: ${{ vars.TEAM_ID }}
-          ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
+      - name: 'Derive APP_IDENTIFIER from Xcode project'
         run: |
+          cd ios
           echo "============================================"
-          echo "🔍 Environment Variables Check (before Fastlane)"
-          echo "APP_IDENTIFIER=${APP_IDENTIFIER}"
-          echo "TEAM_ID=${TEAM_ID}"
-          echo "ITC_TEAM_ID=${ITC_TEAM_ID}"
-          echo "APPLE_ID=${APPLE_ID}"
-          echo "Environment: ${{ inputs.environment }}"
+          echo "🔍 Detecting Bundle Identifier from Xcode project"
           echo "============================================"
-          if [ -z "$APP_IDENTIFIER" ]; then
-            echo "❌ ERROR: APP_IDENTIFIER is empty!"
+          
+          BID=$(xcodebuild -showBuildSettings -project GameLife.xcodeproj -target GameLife -configuration Release \
+            | awk -F " = " '/PRODUCT_BUNDLE_IDENTIFIER/ {print $2; exit}')
+          
+          echo "Detected PRODUCT_BUNDLE_IDENTIFIER: $BID"
+          
+          if [ -z "$BID" ]; then
+            echo "❌ Could not detect PRODUCT_BUNDLE_IDENTIFIER from Xcode project"
+            echo "   This is critical - Fastlane needs the correct bundle ID"
             exit 1
           fi
+          
+          echo "✅ Bundle ID detected successfully: $BID"
+          echo "APP_IDENTIFIER=$BID" >> $GITHUB_ENV
+          echo ""
+          echo "This value will be used by Fastlane (via ENV.fetch)"
 
       - name: 'Build with Fastlane'
         env:
@@ -439,8 +442,7 @@ jobs:
           APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
-          # Public configuration variables
-          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          # Public configuration variables (APP_IDENTIFIER already set via $GITHUB_ENV from Xcode detection)
           TEAM_ID: ${{ vars.TEAM_ID }}
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           # Sensitive information only
@@ -450,6 +452,8 @@ jobs:
           PROVISION_PROFILE_NAME_ACTUAL: ${{ env.PROVISION_PROFILE_NAME_ACTUAL }}
           # Use manual signing for CI
           USE_AUTOMATIC_SIGNING: "false"
+          # Mark as CI environment
+          CI: "true"
         run: |
           cd ios
           ENVIRONMENT="${{ inputs.environment }}"

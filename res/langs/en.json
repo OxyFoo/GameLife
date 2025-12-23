@@ -436,11 +436,12 @@
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
         "today-quest": "Quests",
-        "section-today-quests": "Quests of the day",
         "section-my-todos": "My to-do list",
 
+        "btn-stats": "Statistics",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
+        "btn-more-info": "More info",
 
         "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
         "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
@@ -448,9 +449,10 @@
 
         "news-myquests-title": "Quests to do",
 
-        "container-stats-title": "Stats",
+        "container-stats-title": "My infos",
         "container-skills-title": "Skills",
         "container-skills-empty": "No skills yet, do one and it will appear here !",
+        "container-achievements-empty": "No achievements yet, go for it!",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
@@ -467,9 +469,17 @@
     },
 
     "leaderboard": {
+        "title": "Leaderboard",
+        "title-general": "WEEKLY RANKINGS",
+        "input-label-search": "Search for a player",
+        "error-connection": "Unable to connect to server",
+        "error-loading": "Error loading leaderboard",
+        "empty-list": "No players found",
         "label-activities": "Activities",
         "label-activities-small": "Actis",
-        "input-label-search": "Search for a player"
+        "container-weekly-title": "Weekly Statistics",
+        "kpi-rank": "Rank",
+        "kpi-weekly-xp": "Weekly XP"
     },
 
     "login": {
@@ -482,6 +492,7 @@
         "button-login-text": "Next",
         "button-signin-text": "Signin",
         "button-google-signin": "Sign in with Google",
+        "button-apple-signin": "Sign in with Apple",
 
         "error-login-nonmail": "Please enter a valid email address.",
         "error-signin-server": "An error has occurred. ({})",
@@ -490,6 +501,7 @@
         "error-signin-pseudoIncorrect": "This username is incorrect (4-24 characters, no insults...).",
         "error-signin-disagree": "Please accept the terms and conditions.",
         "error-google-signin-unavailable": "The connection with Google is not yet configured, please try again later.",
+        "error-apple-signin-unavailable": "Sign in with Apple is not available on this device (iOS 13+ required).",
 
         "error-connection": "Connection to the server failed",
 
@@ -566,9 +578,10 @@
         "row-text-graph": "Hours completed this week",
         "row-title-informations": "Informations",
 
+        "kpi-title": "Informations",
         "kpi-since": "days of play",
-        "kpi-activities": "activities",
-        "kpi-time": "hours",
+        "kpi-activities": "activities done",
+        "kpi-time": "hours played",
         "kpi-ox": "Ox",
         "kpi-inventory": "items",
         "kpi-friends": "friends",
@@ -581,7 +594,6 @@
         "btn-skills": "My skills",
         "btn-statistics": "My statistics",
         "btn-achievements": "My achievements",
-        "btn-friends": "My friends",
 
         "title-profile": "My profile",
         "title-edit-avatar": "Change my appearance",

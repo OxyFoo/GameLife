@@ -1,167 +1,91 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
 
 /**
- * @typedef {import('Data/User/Multiplayer').Friend} Friend
- * @typedef {Friend & { label: string, rank: number }} RankedFriend
+ * @typedef {import('@oxyfoo/gamelife-types').LeaderboardPlayer} LeaderboardPlayer
  */
 
 class BackLeaderboard extends PageBase {
-    sortList = {
-        XP: langManager.curr['level']['level-small'],
-        skills: langManager.curr['leaderboard']['label-activities-small'],
-        ...user.experience.statsKey.reduce((acc, key) => {
-            acc[key] = langManager.curr['statistics']['names-min'][key];
-            return acc;
-        }, {})
-    };
-
-    /** @type {Array<RankedFriend>} */
-    globalPlayersData = [];
+    static feShowUserHeader = false;
+    static feShowNavBar = false;
 
     state = {
-        /** @type {RankedFriend | null} */
-        selfData: null,
+        /** @type {'loading' | 'loaded' | 'error-connection' | 'error-server'} */
+        loadingState: 'loading',
 
-        /** @type {Array<RankedFriend>} */
-        playersData: [],
+        /** @type {string} */
         search: '',
-        sortIndex: 0
+
+        /** @type {LeaderboardPlayer[]} */
+        players: [],
+
+        /** @type {LeaderboardPlayer | null} */
+        selfPlayer: null,
+
+        /** @type {number} */
+        weekStart: 0
     };
 
-    constructor(props) {
-        super(props);
-
-        const activities = user.activities.Get();
-        const experience = user.experience.experience.Get();
-
-        /** @type {RankedFriend} */
-        const playerData = {
-            rank: 0,
-            label: '',
-
-            accountID: 0,
-            username: user.informations.username.Get(),
-            title: user.informations.title.Get(),
-            xp: experience.xpInfo.totalXP,
-
-            avatar: {
-                Skin: user.inventory.avatar.skin,
-                SkinColor: user.inventory.avatar.skinColor,
-                Hair: user.inventory.GetStuffByID(user.inventory.avatar.hair)?.ItemID ?? 'hair_00',
-                Top: user.inventory.GetStuffByID(user.inventory.avatar.top)?.ItemID ?? 'top_00',
-                Bottom: user.inventory.GetStuffByID(user.inventory.avatar.bottom)?.ItemID ?? 'bottom_00',
-                Shoes: user.inventory.GetStuffByID(user.inventory.avatar.shoes)?.ItemID ?? 'shoes_00'
-            },
-
-            activities: {
-                firstTime: activities.length ? activities[0].startTime : 0,
-                length: activities.length,
-                totalDuration: activities.reduce((acc, activity) => acc + activity.duration, 0)
-            },
-
-            stats: Object.assign({}, ...user.experience.statsKey.map((i) => ({ [i]: experience.stats[i].totalXP }))),
-
-            // Unused
-            currentActivity: null,
-            friendshipState: null,
-            status: null
-        };
-
-        const friendsData = user.multiplayer.friends
-            .Get()
-            .filter((friend) => friend.friendshipState === 'accepted')
-            .map((friend, index) => {
-                return {
-                    ...friend,
-                    label: '',
-                    rank: 0
-                };
-            });
-
-        this.globalPlayersData.push(playerData);
-        this.globalPlayersData.push(...friendsData);
-
-        this.state.selfData = playerData;
-        this.state.playersData = this.refreshRanking(false).playersData;
-    }
+    /** @type {Symbol | null} */
+    listenerTcpState = null;
 
     componentDidMount() {
-        this.listenerTCP = user.server2.tcp.state.AddListener(this.Back);
+        this.listenerTcpState = user.server2.tcp.state.AddListener(this.onTcpStateChange);
+        this.fetchLeaderboard();
     }
 
     componentWillUnmount() {
-        user.server2.tcp.state.RemoveListener(this.listenerTCP);
+        user.server2.tcp.state.RemoveListener(this.listenerTcpState);
     }
 
+    onTcpStateChange = () => {
+        const tcpState = user.server2.tcp.state.Get();
+        if (tcpState !== 'connected') {
+            this.Back();
+        }
+    };
+
+    fetchLeaderboard = async () => {
+        this.setState({ loadingState: 'loading' });
+
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'get-leaderboard'
+        });
+
+        // Erreur de connexion
+        if (response === 'interrupted' || response === 'not-sent' || response === 'timeout') {
+            this.setState({ loadingState: 'error-connection' });
+            return;
+        }
+
+        // Erreur serveur
+        if (response.status !== 'get-leaderboard' || response.result === 'error') {
+            this.setState({ loadingState: 'error-server' });
+            return;
+        }
+
+        this.setState({
+            loadingState: 'loaded',
+            players: response.result.players,
+            selfPlayer: response.result.self,
+            weekStart: response.result.weekStart
+        });
+    };
+
+    /** @param {string} search */
     onChangeSearch = (search) => {
-        this.setState({ search: search }, this.refreshRanking);
-    };
-    onSwitchSort = () => {
-        const sortLength = Object.keys(this.sortList).length;
-        const newIndex = (this.state.sortIndex + 1) % sortLength;
-        this.setState({ sortIndex: newIndex }, this.refreshRanking);
+        this.setState({ search });
     };
 
-    refreshRanking = (applyState = true) => {
-        const lang = langManager.curr['leaderboard'];
-        const langLvl = langManager.curr['level'];
-        const langStats = langManager.curr['statistics'];
-        const { search, sortIndex } = this.state;
-        let newRanking = [...this.globalPlayersData];
+    getFilteredPlayers = () => {
+        const { search, players } = this.state;
 
-        // Sort by XP
-        if (sortIndex === 0) {
-            newRanking.sort((a, b) => b.xp - a.xp);
-
-            // Define label & ranks
-            newRanking.forEach((player, index) => {
-                const statExp = user.experience.getXPDict(player.xp);
-                player.label = `${langLvl['level']} ${statExp.lvl}`;
-                player.rank = index + 1;
-            });
+        if (search === '') {
+            return players;
         }
 
-        // Sort by skills
-        else if (sortIndex === 1) {
-            newRanking.sort((a, b) => b.activities.length - a.activities.length);
-
-            // Define label & ranks
-            newRanking.forEach((player, index) => {
-                player.label = `${player.activities.length} ${lang['label-activities']}`;
-                player.rank = index + 1;
-            });
-        } else if (sortIndex >= 2 && sortIndex <= 1 + user.experience.statsKey.length) {
-            const statKey = user.experience.statsKey[sortIndex - 2];
-            newRanking.sort((a, b) => b.stats[statKey] - a.stats[statKey]);
-
-            // Define label & ranks
-            newRanking.forEach((player, index) => {
-                const statPoints = player.stats[statKey];
-                player.label = `${statPoints} ${langStats['names'][statKey]}`;
-                player.rank = index + 1;
-            });
-        }
-
-        // Error ?
-        else {
-            user.interface.console?.AddLog('error', 'Leaderboard sort index unknown:', sortIndex);
-        }
-
-        // Search filter
-        if (search !== '') {
-            const searchLower = search.toLowerCase();
-            newRanking = newRanking.filter((profile) => {
-                return profile.username.toLowerCase().includes(searchLower);
-            });
-        }
-
-        if (applyState) {
-            this.setState({ playersData: newRanking });
-        }
-
-        return { playersData: newRanking };
+        const searchLower = search.toLowerCase();
+        return players.filter((player) => player.username.toLowerCase().includes(searchLower));
     };
 
     Back = () => {

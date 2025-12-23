@@ -30,9 +30,15 @@ function BuyPopup({ item, closePopup, onPurchased }) {
         setLoading(true);
         user.interface.popup?.SetCancelable(false);
 
-        const success = await user.shop.BuyDailyDeal(item.ID, price);
+        const purchaseStatus = await user.shop.BuyDailyDeal(item.ID, price);
 
-        if (!success) {
+        if (purchaseStatus === 'already-purchased') {
+            onPurchased?.();
+            closePopup('already-purchased');
+            return;
+        }
+
+        if (purchaseStatus === 'error') {
             closePopup('cancelled');
             return;
         }

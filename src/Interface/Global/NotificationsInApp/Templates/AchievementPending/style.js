@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12
     },
     achievementPendingText: {
-        width: '65%'
+        width: '65%',
+        justifyContent: 'center'
     },
     achievementPendingButtons: {
         width: '35%',

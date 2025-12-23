@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     zap: {
         width: 96,
         height: 96,
+        transform: [{ scale: 1.1 }, { translateY: -4 }],
         resizeMode: 'contain'
     },
     zapAbsolute: {

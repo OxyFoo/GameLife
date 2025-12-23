@@ -15,7 +15,7 @@ import { WithInterpolation } from 'Utils/Animations';
 class ChestReward extends BackChestReward {
     render() {
         const langM = langManager.curr['modal'];
-        const { layoutFrame, animChest, animItem, animInteractions, animGlobal } = this.state;
+        const { frameSize, animChest, animItem, animInteractions, animGlobal } = this.state;
 
         // Default chest image
         let chestImage = IMG_CHESTS.common;
@@ -71,12 +71,18 @@ class ChestReward extends BackChestReward {
             else if (this.oxCount > 1000) count = 100;
 
             for (let i = 0; i < count; i++) {
-                oxObjects.push(<OxObject key={`ox-obj-${i}`} index={i} total={count} parentLayout={layoutFrame} />);
+                oxObjects.push(
+                    <OxObject
+                        key={`ox-obj-${i}`}
+                        index={i}
+                        total={count}
+                        parentLayout={{ width: frameSize, height: frameSize }}
+                    />
+                );
             }
         }
 
-        const frameWidth = layoutFrame.width / 2;
-        const frameHeight = (layoutFrame.height - styles.frame.borderWidth * 2) / 2;
+        const avatarFrameSize = frameSize - styles.frame.borderWidth * 2;
         const avatarRenderScale = this.avatarPosition?.scale && this.avatarPosition.scale >= 3 ? 2 : 1;
 
         return (
@@ -92,28 +98,24 @@ class ChestReward extends BackChestReward {
                         style={[styles.frameContainer, { transform: [{ scale: animItem }] }]}
                         onLayout={this.onFrameLayout}
                     >
-                        {(this.chestRarity !== 'ox' &&
-                            this.avatarPosition !== null &&
-                            layoutFrame.width &&
-                            layoutFrame.height && (
-                                <View style={[styles.frame, itemBackgroundStyle]}>
-                                    <AvatarFrame
-                                        style={styles.avatarFrame}
-                                        width={frameWidth}
-                                        height={frameHeight}
-                                        renderScale={avatarRenderScale}
-                                        backgroundColor={themeManager.GetColor('backgroundCard')}
-                                    >
-                                        <AvatarCharacter
-                                            body={this.avatarBody}
-                                            bodyColor={this.avatarBodyColor}
-                                            position={this.avatarPosition.pos}
-                                            scale={this.avatarPosition.scale}
-                                            items={this.avatarItems}
-                                        />
-                                    </AvatarFrame>
-                                </View>
-                            )) || (
+                        {(this.chestRarity !== 'ox' && this.avatarPosition !== null && avatarFrameSize > 0 && (
+                            <View style={[styles.frame, itemBackgroundStyle]}>
+                                <AvatarFrame
+                                    width={avatarFrameSize}
+                                    height={avatarFrameSize}
+                                    renderScale={avatarRenderScale}
+                                    backgroundColor={themeManager.GetColor('backgroundCard')}
+                                >
+                                    <AvatarCharacter
+                                        body={this.avatarBody}
+                                        bodyColor={this.avatarBodyColor}
+                                        position={this.avatarPosition.pos}
+                                        scale={this.avatarPosition.scale}
+                                        items={this.avatarItems}
+                                    />
+                                </AvatarFrame>
+                            </View>
+                        )) || (
                             <View style={[styles.frameOX, itemBackgroundStyle]} onLayout={this.onFrameLayout}>
                                 {oxObjects}
                             </View>

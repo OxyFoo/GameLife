@@ -1,37 +1,62 @@
-import { StyleSheet, Dimensions } from 'react-native';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    // Index styles
+    // Page styles
+    page: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        paddingHorizontal: 24
+    },
+
     header: {
         marginBottom: 12
     },
-    row: {
-        marginBottom: 24,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+
+    sectionTitle: {
+        marginTop: 12,
+        marginBottom: 16,
+        textAlign: 'left',
+        fontSize: 18,
+        textTransform: 'uppercase'
     },
 
-    myRankContainer: {
-        marginTop: 24
+    searchContainer: {
+        marginBottom: 16
     },
-    filter: {
-        marginTop: 24,
-        marginBottom: 0
-    },
+
     inputSearch: {
-        flex: 2,
-        marginRight: 12
+        // flex: 1
     },
-    buttonSortType: {
+
+    loadingContainer: {
         flex: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 48
     },
 
     flatlist: {
-        height: SCREEN_HEIGHT - 350
+        flex: 1,
+        marginHorizontal: -24
+    },
+
+    flatlistContent: {
+        paddingHorizontal: 24,
+        paddingBottom: 100
+    },
+
+    emptyContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 48
+    },
+
+    selfContainer: {
+        marginTop: 16,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: '#38406550'
     },
 
     // Element styles
@@ -41,57 +66,64 @@ const styles = StyleSheet.create({
         height: 'auto',
         padding: 10,
         paddingHorizontal: 10,
-        marginBottom: 2,
+        marginBottom: 4,
         borderRadius: 10
     },
-    avatar: {
-        width: 50,
-        height: 50,
-        borderRadius: 25
-    },
-    frame: {
-        paddingVertical: 0,
-        paddingHorizontal: 0
-    },
+
     frameBorder: {
         width: 48,
         height: 48,
         aspectRatio: 1,
         borderRadius: 4,
         borderWidth: 2,
-        borderColor: '#00000050'
+        borderColor: '#00000050',
+        overflow: 'hidden'
     },
+
     textContainer: {
         flex: 1,
-        marginLeft: 10
+        marginLeft: 12
     },
+
     username: {
         fontWeight: 'bold',
         textAlign: 'left'
     },
+
     details: {
-        textAlign: 'left'
+        textAlign: 'left',
+        fontSize: 12
+    },
+
+    xpContainer: {
+        alignItems: 'flex-end',
+        marginRight: 8
+    },
+
+    xpText: {
+        fontSize: 14,
+        fontWeight: 'bold'
     },
 
     rankContainer: {
-        width: 56,
-        height: 56,
+        width: 48,
+        height: 48,
         alignItems: 'center',
         justifyContent: 'center'
     },
+
     rankImage: {
         position: 'absolute',
-        margin: 1,
         top: 0,
         left: 0,
-        width: 54,
-        height: 54
+        width: 46,
+        height: 46
     },
+
     rankText: {
-        marginBottom: 14,
+        marginBottom: 12,
         fontWeight: 'bold',
         textAlign: 'center',
-
         textShadowColor: '#FFFFFF',
         textShadowOffset: {
             width: 0,

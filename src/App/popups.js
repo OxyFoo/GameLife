@@ -88,24 +88,3 @@ export function showDeletedAccountPopup() {
         cancelable: false
     });
 }
-
-/**
- * @description Show an error popup and redirect to the login page
- * @param {string} loggedState Error state
- */
-export function showErrorPopup(loggedState = 'unknown') {
-    const lang = langManager.curr['login'];
-
-    user.interface.popup?.OpenT({
-        type: 'ok',
-        data: {
-            title: lang['alert-error-title'],
-            message: lang['alert-error-message'].replace('{}', loggedState)
-        },
-        callback: async () => {
-            await user.Clear();
-            user.interface.ChangePage('login', { storeInHistory: false });
-        },
-        cancelable: false
-    });
-}

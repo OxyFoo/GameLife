@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         overflow: 'hidden'
     },
-    avatarFrame: {
-        transform: [{ scale: 2 }]
-    },
     frameOX: {
         width: '100%',
         height: '100%',

@@ -95,10 +95,6 @@ class Profile extends BackProfile {
                     >
                         {lang['btn-achievements']}
                     </Button>
-
-                    <Button style={styles.button} appearance='outline-blur' icon='social' onPress={this.openFriends}>
-                        {lang['btn-friends']}
-                    </Button>
                 </Animated.View>
             </ScrollView>
         );

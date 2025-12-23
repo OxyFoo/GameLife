@@ -61,7 +61,7 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
 
         // For 'top', also show bottom item (like in SlotButton and ChestReward)
         if (slot === 'top') {
-            const equippedBottomID = user.inventory.GetEquippedItemID('bottom');
+            const equippedBottomID = user.avatar.GetEquippedItemID('bottom');
             items.push({ id: equippedBottomID });
         }
 

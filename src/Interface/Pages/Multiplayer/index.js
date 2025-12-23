@@ -30,7 +30,25 @@ class Multiplayer extends BackMultiplayer {
 
                 <OnlineFriends friends={friends} />
 
-                {/** Bottom buttons: Add friend / Leaderboard */}
+                {/** Bottom buttons: All friends (left) / Leaderboard (right) */}
+                <Gradient
+                    containerStyle={styles.friendsButtonContainer}
+                    angle={140}
+                    colors={[
+                        themeManager.GetColor('main1', { opacity: 0.45 }),
+                        themeManager.GetColor('main1', { opacity: 0.12 })
+                    ]}
+                >
+                    <Button
+                        style={styles.friendsButton}
+                        appearance='uniform'
+                        color='transparent'
+                        fontColor='gradient'
+                        icon='users'
+                        onPress={this.goToFriends}
+                    />
+                </Gradient>
+
                 <Gradient
                     containerStyle={styles.leaderboardButtonContainer}
                     angle={140}
@@ -40,31 +58,12 @@ class Multiplayer extends BackMultiplayer {
                     ]}
                 >
                     <Button
-                        nativeRef={this.refAddButton}
                         style={styles.leaderboardButton}
-                        icon='add'
                         appearance='uniform'
                         color='transparent'
                         fontColor='gradient'
-                        onPress={this.addFriendHandle}
-                    />
-                </Gradient>
-
-                <Gradient
-                    containerStyle={styles.addFriendButtonContainer}
-                    angle={140}
-                    colors={[
-                        themeManager.GetColor('main1', { opacity: 0.45 }),
-                        themeManager.GetColor('main1', { opacity: 0.12 })
-                    ]}
-                >
-                    <Button
-                        style={styles.addFriendButton}
-                        appearance='uniform'
-                        color='transparent'
-                        fontColor='gradient'
-                        icon='users'
-                        onPress={this.goToFriends}
+                        icon='crown'
+                        onPress={this.goToLeaderboard}
                     />
                 </Gradient>
             </View>

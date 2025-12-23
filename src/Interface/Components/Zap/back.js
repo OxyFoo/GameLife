@@ -10,7 +10,8 @@ import ZAP_IMAGES from 'Ressources/zap/zap';
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
  *
- * @typedef {'day' | 'night'} ZapColor
+ * @typedef {keyof ZAP_IMAGES[keyof ZAP_IMAGES]} ZapMode
+ * @typedef {keyof ZAP_IMAGES} ZapColor
  * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
  * @typedef {'face' | 'show'} ZapFace
  * @typedef {'left' | 'right'} ZapOrientation
@@ -22,6 +23,9 @@ const ZapProps = {
 
     /** @type {AnimatedValueXY | null} */
     position: null,
+
+    /** @type {'auto' | ZapMode} */
+    mode: 'auto',
 
     /** @type {'auto' | ZapColor} */
     color: 'auto',
@@ -45,26 +49,47 @@ class ZapBack extends React.Component {
         this.props.onLayout(event);
     };
 
+    static isNightTime = () => {
+        const hour = GetDate().getHours();
+        return hour >= 20 || hour <= 8;
+    };
+
+    static isChristmasSeason = () => {
+        const month = GetDate().getMonth();
+        return month === 11;
+    };
+
     getZapImage = () => {
-        const { color, inclinaison, face } = this.props;
+        const { mode, color, inclinaison, face } = this.props;
 
         /** @type {ZapColor} */
         let _color = 'day';
 
         if (color === 'auto') {
-            const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
-            if (isNight) {
+            if (ZapBack.isNightTime()) {
                 _color = 'night';
             }
+        } else {
+            _color = color;
         }
 
-        return ZAP_IMAGES[_color][inclinaison][face];
+        /** @type {ZapMode} */
+        let _mode = 'normal';
+        if (mode === 'auto') {
+            if (ZapBack.isChristmasSeason()) {
+                _mode = 'christmas';
+            }
+        } else {
+            _mode = mode;
+        }
+
+        return ZAP_IMAGES[_color][_mode][inclinaison][face];
     };
 
     static getHighZapImage = () => {
-        const isNight = GetDate().getHours() >= 20 || GetDate().getHours() <= 8;
-        const color = isNight ? 'night' : 'day';
-        return ZAP_IMAGES[color]['high'];
+        const mode = ZapBack.isChristmasSeason() ? 'christmas' : 'normal';
+        const color = ZapBack.isNightTime() ? 'night' : 'day';
+        return ZAP_IMAGES[color][mode]['high'];
     };
 }
 

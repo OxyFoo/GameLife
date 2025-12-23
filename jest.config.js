@@ -2,7 +2,7 @@ module.exports = {
     preset: 'react-native',
     setupFiles: ['./jest.setup.js'],
     transformIgnorePatterns: [
-        'node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native|react-navigation|@react-native/polyfills/error-guard.js|@oxyfoo/gamelife-types)'
+        'node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native|react-navigation|@react-native/polyfills/error-guard.js|@oxyfoo/gamelife-types|@invertase/react-native-apple-authentication)'
     ],
     transform: {
         '^.+\\.(js|jsx|ts|tsx)$': require.resolve('babel-jest'),

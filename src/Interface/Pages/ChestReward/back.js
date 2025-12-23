@@ -45,11 +45,7 @@ class BackChestReward extends PageBase {
         animChest: new Animated.Value(0),
         animItem: new Animated.Value(0),
         animInteractions: new Animated.Value(0),
-
-        layoutFrame: {
-            width: 0,
-            height: 0
-        }
+        frameSize: 0
     };
 
     buttonEnabled = false;
@@ -101,9 +97,9 @@ class BackChestReward extends PageBase {
         this.rarityColor = themeManager.GetRariryColors(item.Rarity)[0];
 
         // Configuration du nouvel avatar
-        this.avatarBody = user.inventory.avatar.skin || 'human_00';
-        this.avatarBodyColor = BODY_COLORS[user.inventory.avatar.skinColor] || BODY_COLORS[0];
-        this.avatarItems = this.getPreviewItems(item);
+        this.avatarBody = user.avatar.avatar.skin || 'human_00';
+        this.avatarBodyColor = BODY_COLORS[user.avatar.avatar.skinColor] || BODY_COLORS[0];
+        this.avatarItems = user.avatar.GetPreviewAvatarItems(itemID);
         this.avatarPosition = dataManager.items.GetContainerSize(item.Slot);
         this.callback = props.args.callback;
     }
@@ -127,33 +123,13 @@ class BackChestReward extends PageBase {
     /** @param {LayoutChangeEvent} layout */
     onFrameLayout = (layout) => {
         const { width, height } = layout.nativeEvent.layout;
-        this.setState({ layoutFrame: { width, height } });
+        const frameSize = Math.min(width, height);
+        this.setState({ frameSize });
     };
 
     onPress = () => {
         if (this.buttonEnabled === false) return;
         this.callback?.();
-    };
-
-    /**
-     * Get items to display in avatar preview
-     * For 'top' items, also show the user's bottom item
-     * @param {import('@oxyfoo/gamelife-types/Data/App/Items').Item} item
-     * @returns {ItemConfig[]}
-     */
-    getPreviewItems = (item) => {
-        /** @type {ItemConfig[]} */
-        const baseItems = [{ id: item.ID }];
-
-        // For 'top' items, also show bottom item (like in avatar editor slots)
-        if (item.Slot === 'top') {
-            const bottomStuffID = user.inventory.avatar.bottom;
-            const bottomStuff = user.inventory.GetStuffByID(bottomStuffID);
-            const bottomItemID = bottomStuff ? bottomStuff.ItemID : 'bottom_00';
-            baseItems.push({ id: bottomItemID });
-        }
-
-        return baseItems;
     };
 }
 

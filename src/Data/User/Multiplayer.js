@@ -124,7 +124,7 @@ class Multiplayer extends IUserData {
     GetSelf = () => {
         const achievements = this.#user.achievements.Get();
         const activities = this.#user.activities.Get();
-        const userAvatar = this.#user.inventory.avatar;
+        const userAvatar = this.#user.avatar.avatar;
 
         /**
          * Get equipped item IDs (convert stuff IDs to item IDs)

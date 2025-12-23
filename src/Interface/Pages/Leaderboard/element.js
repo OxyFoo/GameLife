@@ -1,73 +1,121 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { Dimensions, View, Image } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import Inventory from 'Data/User/Inventory';
+import ProfileLeaderboardPlayer from 'Interface/PageView/ProfileLeaderboardPlayer';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import { Button, Text } from 'Interface/Components';
 
 import { rank_purple } from 'Ressources/items/rank/rank';
 
 /**
- * @typedef {import('./back').RankedFriend} RankedFriend
+ * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardPlayer} LeaderboardPlayer
+ * @typedef {import('react-native').ListRenderItem<LeaderboardPlayer>} ListRenderItemLeaderboardPlayer
  */
 
 /**
+ * Get avatar items from a leaderboard player avatar object
+ * @param {LeaderboardPlayer['avatar']} avatar
+ * @returns {ItemConfig[]}
+ */
+const getLeaderboardAvatarItems = (avatar) => {
+    if (!avatar) return [];
+    const skinColor = BODY_COLORS[avatar.SkinColor] || BODY_COLORS[0];
+
+    /** @type {ItemConfig[]} */
+    const faceItems = [{ id: 'face_00' }, { id: 'ears_00', color: skinColor }];
+
+    /** @type {ItemConfig[]} */
+    const equipmentItems = [];
+    if (avatar.Hair) equipmentItems.push({ id: avatar.Hair });
+    if (avatar.Top) equipmentItems.push({ id: avatar.Top });
+    if (avatar.Bottom) equipmentItems.push({ id: avatar.Bottom });
+    if (avatar.Shoes) equipmentItems.push({ id: avatar.Shoes });
+
+    return [...faceItems, ...equipmentItems];
+};
+
+/**
  * @param {Object} param0
- * @param {RankedFriend} param0.item
+ * @param {LeaderboardPlayer} param0.item
  */
 function RankElement({ item }) {
     if (!item) return null;
 
-    const isThisPlayer = item.accountID === 0;
+    const langLevel = langManager.curr['level'];
     const containerSize = dataManager.items.GetContainerSize('profile');
+    const isSelf = user.informations.username.Get().toLocaleLowerCase() === item.username.toLocaleLowerCase();
 
     const componentColor = {
-        backgroundColor: themeManager.GetColor(isThisPlayer ? 'black' : 'darkBlue')
+        backgroundColor: themeManager.GetColor(isSelf ? 'main1' : 'darkBlue'),
+        opacity: isSelf ? 0.9 : 1
     };
 
-    const statusStyle = {};
-    if (item.status === 'online' || isThisPlayer) {
-        statusStyle.borderColor = themeManager.GetColor('success');
-    } else if (item.status === 'offline') {
-        statusStyle.borderColor = themeManager.GetColor('disabled');
+    const statusStyle = {
+        borderColor: themeManager.GetColor(isSelf ? 'main1' : 'border')
+    };
+
+    // Get title text if available
+    let titleText = null;
+    if (item.title !== 0) {
+        const titleData = dataManager.titles.GetByID(item.title);
+        if (titleData !== null) {
+            titleText = langManager.GetText(titleData.Name);
+        }
     }
 
     const onPress = () => {
-        if (item.accountID === 0) return;
-        // TODO: Replace with user interface change
-        // user.interface.ChangePage('profilefriend', { friendID: item.accountID });
+        const screen = Dimensions.get('window');
+        user.interface.bottomPanel?.Open({
+            content: <ProfileLeaderboardPlayer player={item} />,
+            maxPosY: screen.height * 0.8
+        });
     };
 
+    const avatarItems = getLeaderboardAvatarItems(item.avatar);
+
     return (
-        <Button style={[styles.itemContainer, componentColor]} onPress={onPress}>
+        <Button
+            style={[styles.itemContainer, componentColor]}
+            onPress={onPress}
+            appearance='uniform'
+            color='transparent'
+        >
             <View style={[styles.frameBorder, statusStyle]}>
-                {item.avatar && (
-                    <AvatarFrame width={44} height={44} backgroundColor='#00000000'>
-                        <AvatarCharacter
-                            body={item.avatar.Skin || 'human_00'}
-                            bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}
-                            position={containerSize.pos}
-                            scale={containerSize.scale}
-                            items={Inventory.GetFriendAvatarItems(item)}
-                            portraitMode
-                        />
-                    </AvatarFrame>
-                )}
+                <AvatarFrame width={44} height={44} renderScale={2} backgroundColor='#00000000'>
+                    <AvatarCharacter
+                        body={item.avatar.Skin || 'human_00'}
+                        bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}
+                        position={containerSize.pos}
+                        scale={containerSize.scale}
+                        items={avatarItems}
+                        portraitMode
+                    />
+                </AvatarFrame>
             </View>
 
             <View style={styles.textContainer}>
-                <Text style={styles.username} color={'primary'}>
+                <Text style={styles.username} color={isSelf ? 'white' : 'primary'}>
                     {item.username}
                 </Text>
-                <Text style={styles.details} color={'secondary'}>
-                    {item.label}
+                <Text style={styles.details} color={isSelf ? 'white' : 'secondary'}>
+                    {titleText || `${langLevel['level-small']} ${user.experience.getXPDict(item.weeklyXP).lvl}`}
                 </Text>
             </View>
+
+            <View style={styles.xpContainer}>
+                <Text style={styles.xpText} color={isSelf ? 'white' : 'main1'}>
+                    {`${langLevel['level-small']}${item.weeklyXP}`}
+                </Text>
+            </View>
+
             <View style={styles.rankContainer}>
                 <Image style={styles.rankImage} source={rank_purple} />
                 <Text style={styles.rankText} color={'main1'} fontSize={30 - item.rank.toString().length * 2}>

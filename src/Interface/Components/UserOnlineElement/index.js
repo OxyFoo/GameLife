@@ -9,7 +9,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import ProfileFriend from 'Interface/PageView/ProfileFriend';
-import Inventory from 'Data/User/Inventory';
+import Avatar from 'Data/User/Avatar';
 import { Text, Button, Icon } from 'Interface/Components';
 import { Gradient } from 'Interface/Primitives';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
@@ -92,7 +92,7 @@ function UserOnlineElement({ style, friend }) {
                                     bodyColor={BODY_COLORS[friend.avatar.SkinColor] || BODY_COLORS[0]}
                                     position={containerSize.pos}
                                     scale={containerSize.scale}
-                                    items={Inventory.GetFriendAvatarItems(friend)}
+                                    items={Avatar.GetFriendAvatarItems(friend)}
                                     portraitMode
                                 />
                             </AvatarFrame>

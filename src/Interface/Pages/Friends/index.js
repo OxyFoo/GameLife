@@ -6,7 +6,6 @@ import BackFriends from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Gradient } from 'Interface/Primitives';
 import { Button, InputText, Text, UserOnlineElement } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
@@ -95,23 +94,17 @@ class Friends extends BackFriends {
                     />
                 </ScrollView>
 
-                <Gradient
-                    style={styles.addFriendButtonContainer}
-                    angle={140}
-                    colors={[
+                <Button
+                    style={styles.addFriendButton}
+                    gradientColors={[
                         themeManager.GetColor('main1', { opacity: 0.45 }),
                         themeManager.GetColor('main1', { opacity: 0.12 })
                     ]}
-                >
-                    <Button
-                        style={styles.addFriendButton}
-                        icon='add'
-                        appearance='uniform'
-                        color='transparent'
-                        fontColor='gradient'
-                        onPress={this.onAddFriendPress}
-                    />
-                </Gradient>
+                    gradientColorsAngle={140}
+                    icon='add'
+                    fontColor='gradient'
+                    onPress={this.onAddFriendPress}
+                />
             </View>
         );
     }

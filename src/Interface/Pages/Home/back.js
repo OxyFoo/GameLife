@@ -1,18 +1,16 @@
 import React from 'react';
+import { Animated } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { CollapsiblePopup } from './popup';
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
-
-import { Round } from 'Utils/Functions';
 
 /**
  * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ScrollView} ScrollView
+ * @typedef {import('react-native').NativeScrollEvent} NativeScrollEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<NativeScrollEvent>} NativeSyntheticScrollEvent
  *
  * @typedef {import('Managers/UserManager').UserManager} UserManager
- * @typedef {import('Data/User/Quests').Quest} Quest
  */
 
 const BackHomeProps = {
@@ -27,93 +25,27 @@ class BackHome extends PageBase {
     static feShowUserHeader = true;
     static feShowNavBar = true;
 
-    state = {
-        experience: user.experience.experience.Get(),
-        values: {
-            currentLevel: '0',
-            currentXP: '0',
-            nextLevelXP: '0'
-        },
-        scrollable: true,
-        hasQuests: false
-    };
-
     /** @type {React.RefObject<ScrollView | null>} */
     refScrollView = React.createRef();
 
     /** @type {React.RefObject<View | null>} */
     refQuestsTitle = React.createRef();
 
-    /** @type {Symbol | null} */
-    listenerExperience = null;
+    /** Scroll Y for parallax effect */
+    scrollY = new Animated.Value(0);
 
-    /** @type {Symbol | null} */
-    listenerQuests = null;
-
-    componentDidMount() {
-        this.handleLevelsUpdate(user.experience.experience.Get());
-        this.listenerExperience = user.experience.experience.AddListener(this.handleLevelsUpdate);
-
-        this.handleQuestsUpdate(user.quests.Get());
-        this.listenerQuests = user.quests.allQuests.AddListener(this.handleQuestsUpdate);
-    }
-
-    componentWillUnmount() {
-        user.experience.experience.RemoveListener(this.listenerExperience);
-        user.quests.allQuests.RemoveListener(this.listenerQuests);
-    }
-
-    /** @param {UserManager['experience']['experience']['var']} experience */
-    handleLevelsUpdate = (experience) => {
-        const {
-            xpInfo: { lvl, xp, next }
-        } = experience;
-
-        this.setState({
-            experience,
-            values: {
-                currentLevel: lvl.toString(),
-                currentXP: Round(xp, 0).toString(),
-                nextLevelXP: next.toString()
-            }
-        });
+    /** @param {NativeSyntheticScrollEvent} event */
+    handleScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+        this.scrollY.setValue(y);
     };
 
-    /** @param {Quest[]} newQuests */
-    handleQuestsUpdate = (newQuests) => {
-        this.setState({ hasQuests: newQuests.length > 0 });
+    openProfile = () => {
+        user.interface.ChangePage('profile');
     };
 
-    /** @param {boolean} scrollable */
-    onChangeScrollable = (scrollable) => {
-        this.setState({ scrollable });
-    };
-
-    /**
-     * Affiche des informations sur les quêtes
-     */
-    infoQuests = () => {
-        const lang = langManager.curr['app-explain'];
-
-        user.interface.popup?.Open({
-            content: <CollapsiblePopup title={lang['quest']['popup-title']} sections={lang['quest']['content']} />
-        });
-    };
-
-    addTodo = () => {
-        const lang = langManager.curr['todos'];
-        if (user.todos.IsMax()) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-todoslimit-title'],
-                    message: lang['alert-todoslimit-message']
-                }
-            });
-            return;
-        }
-
-        user.interface.ChangePage('todo', { storeInHistory: false });
+    openStatistics = () => {
+        user.interface.ChangePage('statistics');
     };
 }
 

@@ -436,11 +436,12 @@
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
         "today-quest": "Quêtes",
-        "section-today-quests": "Quêtes du jour",
         "section-my-todos": "Mes listes",
 
+        "btn-stats": "Statistiques",
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
+        "btn-more-info": "Plus d'infos",
 
         "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
         "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
@@ -448,9 +449,10 @@
 
         "news-myquests-title": "Quêtes à faire",
 
-        "container-stats-title": "Stats",
+        "container-stats-title": "Mes infos",
         "container-skills-title": "Compétences",
         "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
+        "container-achievements-empty": "Aucun succès débloqué, lance-toi !",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
@@ -467,9 +469,17 @@
     },
 
     "leaderboard": {
+        "title": "Classement",
+        "title-general": "CLASSEMENT HEBDOMADAIRE",
+        "input-label-search": "Rechercher un joueur",
+        "error-connection": "Connexion au serveur impossible",
+        "error-loading": "Erreur lors du chargement du classement",
+        "empty-list": "Aucun joueur trouvé",
         "label-activities": "Activitiés",
         "label-activities-small": "Actis",
-        "input-label-search": "Rechercher un joueur"
+        "container-weekly-title": "Statistiques hebdomadaires",
+        "kpi-rank": "Rang",
+        "kpi-weekly-xp": "XP Hebdo"
     },
 
     "login": {
@@ -482,6 +492,7 @@
         "button-login-text": "Suivant",
         "button-signin-text": "S'inscrire",
         "button-google-signin": "Se connecter avec Google",
+        "button-apple-signin": "Se connecter avec Apple",
 
         "error-login-nonmail": "Tu dois entrer une adresse email correcte.",
         "error-signin-server": "Une erreur est survenue. ({})",
@@ -490,6 +501,7 @@
         "error-signin-pseudoIncorrect": "Ce pseudo est incorrect (4-24 caractères, pas d'insultes...).",
         "error-signin-disagree": "Tu dois accepter les conditions générales.",
         "error-google-signin-unavailable": "La connexion avec Google n'est pas encore configurée, réessaye plus tard.",
+        "error-apple-signin-unavailable": "La connexion avec Apple n'est pas disponible sur cet appareil (iOS 13+ requis).",
 
         "error-connection": "Échec de la connexion au serveur",
 
@@ -566,9 +578,10 @@
         "row-text-graph": "Heures complétées cette semaine",
         "row-title-informations": "Informations",
 
+        "kpi-title": "Informations",
         "kpi-since": "jours de jeu",
-        "kpi-activities": "activités",
-        "kpi-time": "heures",
+        "kpi-activities": "activités accomplies",
+        "kpi-time": "heures jouées",
         "kpi-ox": "Ox",
         "kpi-inventory": "items",
         "kpi-friends": "amis",
@@ -581,7 +594,6 @@
         "btn-skills": "Mes compétences",
         "btn-statistics": "Mes statistiques",
         "btn-achievements": "Mes succès",
-        "btn-friends": "Mes amis",
 
         "title-profile": "Mon profil",
         "title-edit-avatar": "Modifier mon apparence",

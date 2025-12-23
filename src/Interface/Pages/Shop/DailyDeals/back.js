@@ -74,27 +74,6 @@ class BackShopItems extends React.Component {
     };
 
     /**
-     * Get items to display in item preview
-     * For 'top' items, also show the user's bottom item
-     * @param {BuyableItem} item
-     * @returns {ItemConfig[]}
-     */
-    getPreviewItems = (item) => {
-        /** @type {ItemConfig[]} */
-        const baseItems = [{ id: item.ID }];
-
-        // For 'top' items, also show bottom item (like in avatar editor slots)
-        if (item.Slot === 'top') {
-            const bottomStuffID = user.inventory.avatar.bottom;
-            const bottomStuff = user.inventory.GetStuffByID(bottomStuffID);
-            const bottomItemID = bottomStuff ? bottomStuff.ItemID : 'bottom_00';
-            baseItems.push({ id: bottomItemID });
-        }
-
-        return baseItems;
-    };
-
-    /**
      * @param {ItemID[]} dailyItemsID
      * @returns {BuyableItem[] | null}
      */

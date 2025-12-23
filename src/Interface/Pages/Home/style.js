@@ -6,30 +6,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
 
-    // Styles for progress bar and XP header
-    progressbar: {
-        marginBottom: 6
-    },
-    XPHeader: {
-        marginTop: 0,
-        marginBottom: 0,
-        paddingHorizontal: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    level: {
-        fontSize: 12,
-        fontWeight: 600
-    },
-    experience: {
-        fontSize: 12
-    },
-
     // Special styles for section title and add button
     sectionTitleAddButton: {
         width: 'auto',
         paddingVertical: 8,
         paddingHorizontal: 8
+    },
+    sectionMoreData: {
+        marginTop: 12
     },
 
     // Styles for main content
@@ -39,14 +23,25 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         gap: 12
     },
-    chartItem: {
-        flex: 1
+
+    // Two columns layout
+    leftColumn: {
+        maxWidth: '50%',
+        paddingRight: 8
     },
-    todoList: {
+    rightColumn: {
+        position: 'absolute',
+        top: -40,
+        left: 0,
+        right: '-65%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        zIndex: -100,
+        elevation: -100
+    },
+
+    lastWidget: {
         marginBottom: 24
-    },
-    dailyQuest: {
-        marginBottom: 48
     }
 });
 

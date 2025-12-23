@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, View, Platform } from 'react-native';
 
 import BackLogin from './back';
 import styles from './style';
@@ -131,6 +131,24 @@ class Login extends BackLogin {
                             {lang['button-google-signin']}
                         </Text>
                         <Icon icon='google' color='main1' size={20} show={false} />
+                    </Button>
+                )}
+
+                {/* Apple Sign-In Button - Only show on iOS when not in signin mode */}
+                {!signinMode && Platform.OS === 'ios' && (
+                    <Button
+                        style={styles.buttonAppleSignin}
+                        styleContent={!loading && styles.buttonAppleContent}
+                        appearance='outline'
+                        fontColor='white'
+                        onPress={this.appleSignIn}
+                        loading={loading}
+                    >
+                        <Icon icon='apple' color='white' size={20} />
+                        <Text color='white' fontSize={16}>
+                            {lang['button-apple-signin']}
+                        </Text>
+                        <Icon icon='apple' color='white' size={20} show={false} />
                     </Button>
                 )}
 

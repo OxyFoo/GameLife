@@ -20,11 +20,10 @@ import { Button, Icon, Text } from 'Interface/Components';
  */
 
 const NavButton = React.forwardRef(
-    /**
-     * @param {NavButtonProps} props
-     * @returns {React.ReactNode}
-     */
-    ({ index, icon, iconSelect, text, anim, onPress }, ref) => {
+    (
+        /** @type {NavButtonProps} */ { index, icon, iconSelect, text, anim, onPress },
+        /** @type {React.ForwardedRef<View | null>} */ ref
+    ) => {
         const inputRange = [index - 1, index - 0.5, index, index + 0.5, index + 1];
 
         return (

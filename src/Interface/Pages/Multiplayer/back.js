@@ -1,8 +1,7 @@
+import React from 'react';
+
 import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
-
-import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
 
 /**
  * @typedef {import('react-native').View} View
@@ -41,6 +40,9 @@ class BackMultiplayer extends PageBase {
 
     /** @type {Symbol | null} */
     listenerFriends = null;
+
+    /** @type {React.RefObject<View | null>} */
+    refFriendsButton = React.createRef();
 
     componentDidMount() {
         this.updateOnlineState();
@@ -89,76 +91,16 @@ class BackMultiplayer extends PageBase {
         });
     };
 
-    goToFriends = () => {
-        user.interface.ChangePage('friends');
+    goToFriends = async () => {
+        await new Promise((resolve) => {
+            user.interface.ChangePage('friends', {
+                callback: () => resolve(null)
+            });
+        });
     };
 
     goToLeaderboard = () => {
         user.interface.ChangePage('leaderboard');
-    };
-
-    addFriendHandle = () => {
-        const lang = langManager.curr['multiplayer'];
-
-        // Check friends limits
-        const totalFriends = user.multiplayer.Get().length;
-        if (totalFriends >= FRIENDS_LIMIT) {
-            const langPopup = lang['alert-too-friends'];
-
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langPopup['title'],
-                    message: langPopup['message']
-                }
-            });
-
-            return;
-        }
-
-        // Ask friend name
-        user.interface.screenInput?.Open({
-            label: lang['input-search-friend'],
-            initialText: '',
-            callback: async (username) => {
-                const result = await user.multiplayer.AddFriend(username);
-                if (result === 'canceled') {
-                    return;
-                }
-
-                /**
-                 * @param {{ title: string, message: string }} texts
-                 * @param {string | null} [additionnal]
-                 */
-                const ShowPopup = (texts, additionnal = null) => {
-                    const title = texts.title;
-                    let message = texts.message;
-                    if (additionnal !== null) {
-                        message = message.replace('{}', additionnal);
-                    }
-                    user.interface.popup?.OpenT({
-                        type: 'ok',
-                        data: { title, message }
-                    });
-                };
-
-                if (result === 'not-found') {
-                    ShowPopup(lang['alert-friend-notfound'], username);
-                } else if (result === 'self') {
-                    // Update achievement
-                    user.informations.achievementSelfFriend = true;
-                    ShowPopup(lang['alert-friend-self']);
-                } else if (result === 'already-friend' || result === 'already-pending') {
-                    ShowPopup(lang['alert-already-friend'], username);
-                } else if (result === 'blocked') {
-                    ShowPopup(lang['alert-friend-blocked'], username);
-                } else if (result === 'ok') {
-                    ShowPopup(lang['alert-friend-added'], username);
-                } else {
-                    ShowPopup(lang['alert-error'], result);
-                }
-            }
-        });
     };
 
     Back = () => {

@@ -40,6 +40,7 @@ class Multiplayer extends BackMultiplayer {
                     ]}
                 >
                     <Button
+                        nativeRef={this.refFriendsButton}
                         style={styles.friendsButton}
                         appearance='uniform'
                         color='transparent'

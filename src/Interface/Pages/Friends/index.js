@@ -95,6 +95,7 @@ class Friends extends BackFriends {
                 </ScrollView>
 
                 <Button
+                    nativeRef={this.refAddFriendButton}
                     style={styles.addFriendButton}
                     gradientColors={[
                         themeManager.GetColor('main1', { opacity: 0.45 }),

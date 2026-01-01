@@ -21,14 +21,14 @@ const ScreenTutoProps = {
 
 class ScreenTuto extends ScreenTutoBack {
     render() {
-        const { visible } = this.state;
-        if (!visible) return null;
-
         return (
             <SafeAreaInsetsContext.Consumer>
                 {(insets) => {
-                    // Stocker les insets dans l'instance pour updatePos.js
+                    // Always store insets, even when invisible
                     this.insets = insets || { top: 0, right: 0, bottom: 0, left: 0 };
+
+                    const { visible } = this.state;
+                    if (!visible) return null;
 
                     return (
                         <View style={styles.parent}>

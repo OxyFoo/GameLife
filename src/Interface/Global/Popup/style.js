@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 999,
-        elevation: 999
+        zIndex: 1,
+        elevation: 1
     },
     background: {
         position: 'absolute',

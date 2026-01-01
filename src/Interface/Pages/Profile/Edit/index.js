@@ -26,6 +26,7 @@ class ProfileEditor extends BackProfileEditor {
             <View style={styles.popup}>
                 <Text style={styles.title}>{lang['edit-title']}</Text>
 
+                {/** Email adress */}
                 <View style={styles.rowMail}>
                     <Text style={styles.textMail} color='secondary'>
                         {lang['title-mail']}
@@ -33,6 +34,7 @@ class ProfileEditor extends BackProfileEditor {
                     <Text style={styles.textMail}>{email}</Text>
                 </View>
 
+                {/** Username */}
                 <View style={styles.row}>
                     <Text style={styles.text}>{username}</Text>
                     <Button style={styles.buttonEdit} onPress={this.handleChangeUsername} fontSize={12} color='main1'>
@@ -40,6 +42,7 @@ class ProfileEditor extends BackProfileEditor {
                     </Button>
                 </View>
 
+                {/** Title */}
                 <View style={styles.row}>
                     <Text style={styles.text}>{title}</Text>
                     <Button style={styles.buttonEdit} onPress={this.handleChangeTitle} fontSize={12} color='main1'>
@@ -47,6 +50,7 @@ class ProfileEditor extends BackProfileEditor {
                     </Button>
                 </View>
 
+                {/** User age */}
                 <View style={styles.row}>
                     <Text style={styles.text}>{age}</Text>
                     <Button style={styles.buttonEdit} onPress={this.handleChangeBirthtime} fontSize={12} color='main1'>

@@ -22,7 +22,7 @@ async function StartMission3() {
         user.interface.screenTuto.ShowTutorial([
             {
                 component: null,
-                text: missionLang['texts']['not-connected']
+                text: missionTexts['not-connected']
             }
         ]);
         return;
@@ -51,7 +51,7 @@ async function StartMission3() {
         },
         {
             component: () => user.interface.GetPage('friends')?.refAddFriendButton ?? null,
-            text: missionTexts['2'],
+            text: missionTexts['3'],
             execAfter: () => {
                 user.interface.GetPage('friends')?.onAddFriendPress();
                 return true;

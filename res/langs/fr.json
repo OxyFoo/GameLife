@@ -116,8 +116,9 @@
             "mission3": {
                 "title": "Demander en ami",
                 "texts": {
-                    "1": "Clique sur ce bouton pour aller dans la page des amis",
-                    "2": "En bas à gauche de cette page tu as un bouton pour ajouter un ami",
+                    "1": "Clique sur ce bouton pour aller dans la page multijoueur",
+                    "2": "En bas à gauche de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
             }

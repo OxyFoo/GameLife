@@ -55,7 +55,7 @@ async function UpdatePositions() {
     }
 
     const componentMidX = targetPosition.x + targetPosition.width / 2;
-    const componentMidY = targetPosition.y + targetPosition.height / 2;
+    const componentMidY = Math.max(0, Math.min(screenSize.height, targetPosition.y + targetPosition.height / 2));
     const isOnTop = componentMidY < screenSize.height / 2;
 
     const theta = Math.PI / 2 + Math.atan2(componentMidX - screenSize.width / 2, componentMidY - screenSize.height / 2);

@@ -21,7 +21,7 @@ import { Text, IconCheckable, InputText, Button, Icon } from 'Interface/Componen
 class AddActivityPage1 extends BackActivityPage1 {
     render() {
         const lang = langManager.curr['activity'];
-        const { show, listSkillsIDs } = this.props;
+        const { nativeRef, show, listSkillsIDs } = this.props;
         const { searchEnabled, skillSearch, animSearch, skills, selectedCategory, inputText } = this.state;
 
         if (!show) {
@@ -50,7 +50,7 @@ class AddActivityPage1 extends BackActivityPage1 {
         };
 
         return (
-            <View ref={this.props.nativeRef} style={styles.parent} collapsable={false}>
+            <View ref={nativeRef} style={styles.parent} collapsable={false}>
                 {/* Title & Search button */}
                 <View style={styles.titleParent}>
                     <Animated.View style={[styles.title, animSearchTitle]}>

@@ -164,10 +164,10 @@ class Server extends IUserClass {
     Reconnect = async () => {
         const serverState = this.tcp.state.Get();
         if (serverState !== 'error' && serverState !== 'disconnected') {
-            this.#user.interface.console?.AddLog('info', '[Server] Already connected to the server');
+            this.#user.interface?.console?.AddLog('info', '[Server] Already connected to the server');
             return Promise.resolve('already-authenticated');
         } else {
-            this.#user.interface.console?.AddLog('info', '[Server] Reconnecting to the server...');
+            this.#user.interface?.console?.AddLog('info', '[Server] Reconnecting to the server...');
         }
 
         // Reconnect TCP connection & authenticate device

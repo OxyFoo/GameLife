@@ -19,15 +19,13 @@ class App extends React.Component {
     /** @type {React.RefObject<FlowEngine | null>} */
     ref = React.createRef();
 
-    componentDidMount() {
-        // Get the app state (active or background) to check the date
-        this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
-    }
-
     /** @param {import('Interface/FlowEngine/back').default} flowEngine */
     onFlowEngineReady = (flowEngine) => {
         // Expose FlowEngine's public interface to UserManager for UI interactions
         user.interface = flowEngine._public;
+
+        // Listen to app state changes only after interface is ready
+        this.appStateSubscription = AppState.addEventListener('change', this.componentChangeState);
 
         // Configure Google Sign-In
         GoogleSignIn.SetLogger(user.interface.console?.AddLog ?? null);

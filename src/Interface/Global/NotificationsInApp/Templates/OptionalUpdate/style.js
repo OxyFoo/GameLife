@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
         paddingLeft: 12
     },
     button: {
-        height: '100%',
         justifyContent: 'center',
         paddingVertical: 6,
         paddingHorizontal: 0

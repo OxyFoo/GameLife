@@ -29,7 +29,7 @@ jobs:
             echo "🚧 iOS build is currently only available for 'prod' environment"
             echo "   Requested environment: '$ENVIRONMENT'"
             echo "   Skipping iOS build..."
-            exit 1
+            exit 0
           fi
           echo "✅ Environment '$ENVIRONMENT' is supported for iOS build"
 
@@ -67,7 +67,7 @@ jobs:
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
           ENVIRONMENT="${{ inputs.environment }}"
-          if [ $ENVIRONMENT == 'test' ]; then
+          if [ "$ENVIRONMENT" == "test" ]; then
             echo -n "$PROVISION_PROFILE_TEST_BASE64" | base64 --decode -o $PP_PATH
             echo "Test environment selected"
           else
@@ -134,6 +134,9 @@ jobs:
           if [ -n "$PP_NAME" ]; then
             echo "PROVISION_PROFILE_NAME_ACTUAL=$PP_NAME" >> $GITHUB_ENV
           fi
+          if [ -n "$PP_APP_ID" ]; then
+            echo "PROVISION_PROFILE_APP_ID=$PP_APP_ID" >> $GITHUB_ENV
+          fi
 
           # Set as default keychain for this session
           security default-keychain -s $KEYCHAIN_PATH
@@ -197,6 +200,52 @@ jobs:
             grep -n "IPHONEOS_DEPLOYMENT_TARGET" Pods/Pods.xcodeproj/project.pbxproj | head -10
           fi
 
+      - name: '🧪 Sanity check: provisioning profile matches APP_IDENTIFIER'
+        env:
+          APP_IDENTIFIER: ${{ inputs.environment == 'test' && vars.APP_IDENTIFIER_TEST || vars.APP_IDENTIFIER }}
+          PROVISION_PROFILE_APP_ID: ${{ env.PROVISION_PROFILE_APP_ID }}
+        run: |
+          set -euo pipefail
+          
+          echo "🔍 Checking provisioning profile vs APP_IDENTIFIER..."
+          echo "  APP_IDENTIFIER: $APP_IDENTIFIER"
+          echo "  PROVISION_PROFILE_APP_ID: $PROVISION_PROFILE_APP_ID"
+          
+          if [ -z "$PROVISION_PROFILE_APP_ID" ]; then
+            echo "❌ PROVISION_PROFILE_APP_ID is empty. Cannot verify bundle ID match."
+            echo "   Make sure the provisioning profile was correctly extracted."
+            exit 1
+          fi
+          
+          if [ -z "$APP_IDENTIFIER" ]; then
+            echo "❌ APP_IDENTIFIER is empty."
+            exit 1
+          fi
+          
+          # Extract bundle ID from profile (remove Team ID prefix)
+          PROFILE_BUNDLE_ID="${PROVISION_PROFILE_APP_ID#*.}"
+          echo "  Extracted Bundle ID from profile: $PROFILE_BUNDLE_ID"
+          
+          # Check if profile uses wildcard
+          if [ "$PROFILE_BUNDLE_ID" = "*" ]; then
+            echo "✅ Provisioning profile uses wildcard (*), matches any bundle ID"
+            exit 0
+          fi
+          
+          # Check exact match
+          if [ "$PROFILE_BUNDLE_ID" != "$APP_IDENTIFIER" ]; then
+            echo "❌ Bundle ID MISMATCH!"
+            echo "   Expected in profile: $PROFILE_BUNDLE_ID"
+            echo "   Configured in APP_IDENTIFIER: $APP_IDENTIFIER"
+            echo ""
+            echo "   To fix this issue:"
+            echo "   1. Update APP_IDENTIFIER (or APP_IDENTIFIER_TEST) GitHub variable to '$PROFILE_BUNDLE_ID'"
+            echo "   2. OR generate a new provisioning profile for '$APP_IDENTIFIER'"
+            exit 1
+          fi
+          
+          echo "✅ Bundle ID matches provisioning profile"
+
       - name: 'Build with Fastlane'
         env:
           ENVFILE: .env
@@ -234,27 +283,27 @@ jobs:
           path: ios/build/${{ env.FILE_IPA }}
           if-no-files-found: error
 
-      - name: Collect logs on failure
-        if: failure()
+      - name: '📎 Dump xcodebuild log tail (always)'
+        if: always()
         run: |
-          mkdir -p artifacts/gym artifacts/fastlane
-          # gym logs (if any)
-          if [ -d "$HOME/Library/Logs/gym" ]; then
-            cp -R "$HOME/Library/Logs/gym/." artifacts/gym/ || true
-          fi
-          # fastlane logs (often here too)
-          if [ -d "$HOME/Library/Logs/fastlane" ]; then
-            cp -R "$HOME/Library/Logs/fastlane/." artifacts/fastlane/ || true
-          fi
-          echo "---- listing artifacts ----"
-          find artifacts -maxdepth 3 -type f | sed 's|^| - |'
+          echo "::group::📂 Listing ios/build/logs directory"
+          ls -la ios/build/logs 2>/dev/null || echo "⚠️  ios/build/logs directory not found"
+          echo "::endgroup::"
+          
+          echo "::group::📄 Last 200 lines of build logs"
+          tail -n 200 ios/build/logs/*.log 2>/dev/null || echo "⚠️  No .log files found in ios/build/logs"
+          echo "::endgroup::"
 
-      - name: Upload collected logs
-        if: failure()
+      - name: '⬆️ Upload build logs (always)'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-build-logs
-          path: artifacts
+          name: ios-build-debug
+          path: |
+            ios/build/logs/**
+            ios/build/*.log
+            $HOME/Library/Logs/gym/**
+            $HOME/Library/Logs/fastlane/**
           if-no-files-found: warn
 
   delivery:

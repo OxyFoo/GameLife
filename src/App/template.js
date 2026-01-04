@@ -77,13 +77,93 @@ export function LoadTemplate_AppData(user) {
     dataManager.dailyQuestsRewards.Load([{ index: 0, rewards: [{ Type: 'OX', Amount: 10000 }] }]);
     dataManager.items.Load([
         {
+            ID: 'hair_00',
+            Slot: 'hair',
+            Name: { fr: 'CHEVEUX', en: 'HAIR' },
+            Description: {
+                fr: 'cheveux',
+                en: 'hair'
+            },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+        {
+            ID: 'top_00',
+            Slot: 'top',
+            Name: { fr: 'TSHIRT', en: 'SHIRT' },
+            Description: {
+                fr: 'tshirt',
+                en: 'shirt'
+            },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+        {
+            ID: 'bottom_00',
+            Slot: 'bottom',
+            Name: { fr: 'PANTALON', en: 'PANTS' },
+            Description: {
+                fr: 'pantalon',
+                en: 'pants'
+            },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+        {
+            ID: 'shoes_00',
+            Slot: 'shoes',
+            Name: { fr: 'CHAUSSURES', en: 'SHOES' },
+            Description: {
+                fr: 'chaussures',
+                en: 'shoes'
+            },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+
+        {
+            ID: 'hair_01',
+            Slot: 'hair',
+            Name: { fr: 'CHEVEUX', en: 'HAIR' },
+            Description: { fr: 'cheveux', en: 'hair' },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+        {
+            ID: 'top_01',
+            Slot: 'top',
+            Name: { fr: 'TSHIRT', en: 'SHIRT' },
+            Description: { fr: 'tshirt', en: 'shirt' },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+        {
             ID: 'bottom_01',
             Slot: 'bottom',
-            Name: { fr: 'Pantalon de survêtement', en: 'Sweatpants' },
-            Description: {
-                fr: 'Un jean.',
-                en: 'Jeans.'
-            },
+            Name: { fr: 'PANTALON', en: 'PANTS' },
+            Description: { fr: 'pantalon', en: 'pants' },
+            Rarity: 'common',
+            Buyable: true,
+            Buffs: [],
+            Value: 35
+        },
+        {
+            ID: 'shoes_01',
+            Slot: 'shoes',
+            Name: { fr: 'CHAUSSURES', en: 'SHOES' },
+            Description: { fr: 'chaussures', en: 'shoes' },
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
@@ -293,4 +373,27 @@ export function LoadTemplate_AppData(user) {
 export function LoadTemplate_UserData(user) {
     user.informations.username.Set('TemplateUser');
     user.server2.userAuth.SetEmail('templateuser@localhost');
+    user.inventory.Load({
+        stuffs: [
+            { ID: 1, ItemID: 'hair_00', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 2, ItemID: 'top_00', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 3, ItemID: 'bottom_00', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 4, ItemID: 'shoes_00', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 5, ItemID: 'hair_01', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 6, ItemID: 'top_01', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 7, ItemID: 'bottom_01', CreatedBy: 1, CreatedAt: 0 },
+            { ID: 8, ItemID: 'shoes_01', CreatedBy: 1, CreatedAt: 0 }
+        ],
+        titleIDs: [1, 2, 3]
+    });
+    user.avatar.Load({
+        avatar: {
+            skin: 'human_01',
+            skinColor: 4,
+            hair: 1,
+            top: 2,
+            bottom: 3,
+            shoes: 4
+        }
+    });
 }

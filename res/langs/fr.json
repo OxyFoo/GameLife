@@ -116,8 +116,9 @@
             "mission3": {
                 "title": "Demander en ami",
                 "texts": {
-                    "1": "Clique sur ce bouton pour aller dans la page des amis",
-                    "2": "En bas à gauche de cette page tu as un bouton pour ajouter un ami",
+                    "1": "Clique sur ce bouton pour aller dans la page multijoueur",
+                    "2": "En bas à gauche de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
             }
@@ -455,7 +456,7 @@
         "container-achievements-empty": "Aucun succès débloqué, lance-toi !",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques minutes !",
+        "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques heures !",
         "alert-error-title": "Erreur",
         "alert-error-message": "Une erreur est survenue, réessaye plus tard.",
         "alert-update-title": "Mise à jour disponible !",

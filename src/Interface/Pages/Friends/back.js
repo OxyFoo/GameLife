@@ -1,5 +1,6 @@
-import PageBase from 'Interface/FlowEngine/PageBase';
+import React from 'react';
 
+import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -7,6 +8,7 @@ import { FRIENDS_LIMIT } from 'Data/User/Multiplayer';
 import { FormatForSearch } from 'Utils/String';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
  */
@@ -33,6 +35,9 @@ class BackFriends extends PageBase {
 
     /** @type {Symbol | null} */
     listenerFriends = null;
+
+    /** @type {React.RefObject<View | null>} */
+    refAddFriendButton = React.createRef();
 
     componentDidMount() {
         this.updateFriends();

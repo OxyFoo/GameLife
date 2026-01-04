@@ -1,5 +1,5 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef, useCallback, useEffect, useMemo } from 'react';
-import { Animated, Dimensions, View } from 'react-native';
+import { Animated, Dimensions, View, TouchableOpacity } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
@@ -359,10 +359,14 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                 pointerEvents={editMode ? 'auto' : 'none'}
             >
                 {/** Ox display - top left corner */}
-                <View style={styles.oxContainer}>
+                <TouchableOpacity
+                    style={styles.oxContainer}
+                    onPress={() => user.interface.ChangePage('shop')}
+                    activeOpacity={0.7}
+                >
                     <Text style={styles.oxText}>{oxAmount.toString()}</Text>
                     <Icon icon='ox' size={24} />
-                </View>
+                </TouchableOpacity>
 
                 {/** Left slots: Avatar, Body color */}
                 <View>

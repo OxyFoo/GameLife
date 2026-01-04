@@ -82,4 +82,12 @@ function GetStringLength(str) {
     return width;
 }
 
-export { IsEmail, StrIsJSON, ParsePlural, FormatForSearch, GetStringLength };
+/**
+ * @param {string} link
+ * @returns {string} Cleaned link
+ */
+function CleanLink(link) {
+    return link.replace(/(^\w+:|^)\/\//, '').replace(/\/+$/, '');
+}
+
+export { IsEmail, StrIsJSON, ParsePlural, FormatForSearch, GetStringLength, CleanLink };

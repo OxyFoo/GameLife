@@ -5,6 +5,8 @@ import BackWaitinternet from './back';
 import langManager from 'Managers/LangManager';
 
 import { Text, ProgressBar } from 'Interface/Components';
+import { env } from 'Utils/Env';
+import { CleanLink } from 'Utils/String';
 
 class Waitinternet extends BackWaitinternet {
     render() {
@@ -24,7 +26,7 @@ class Waitinternet extends BackWaitinternet {
                     </Text>
 
                     <Text style={styles.link} onPress={this.goToWebsite} color='main1'>
-                        oxyfoo.fr
+                        {CleanLink(env.LINK_WEBSITE)}
                     </Text>
 
                     <Text style={styles.link} onPress={this.goToDiscord} color='main1'>

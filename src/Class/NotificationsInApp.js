@@ -57,9 +57,12 @@ class NotificationsInApp extends IUserClass {
 
         const notifsAchievements = this.#user.achievements.GetNotifications();
         const notifsFromServer = this.#tmpNotifications;
-        const notifForOptionalUpdate = optionalUpdatesNotifications
-            ? this.#user.informations.GetOptionalUpdateNotifications()
-            : null;
+
+        // Only display the optional update notification if you do not have an advance version (downdate)
+        const notifForOptionalUpdate =
+            optionalUpdatesNotifications && this.#user.server2.serverState.status !== 'downdate'
+                ? this.#user.informations.GetOptionalUpdateNotifications()
+                : null;
 
         const allNotifs = [notifForOptionalUpdate, ...notifsAchievements, ...notifsFromServer]
             .filter((n) => n !== null)

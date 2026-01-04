@@ -116,8 +116,9 @@
             "mission3": {
                 "title": "Ask for a friend",
                 "texts": {
-                    "1": "Click on this button to go to the friends page",
-                    "2": "At the bottom left of this page you have a button to add a friend",
+                    "1": "Click on this button to go to the multiplayer page",
+                    "2": "At the bottom left of the multiplayer page you have a button to see the list of your friends",
+                    "3": "At the bottom right, press the button to add a friend",
                     "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
                 }
             }
@@ -455,7 +456,7 @@
         "container-achievements-empty": "No achievements yet, go for it!",
 
         "alert-maintenance-title": "Maintenance",
-        "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few minutes!",
+        "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few hours!",
         "alert-error-title": "Error",
         "alert-error-message": "An error has occurred, please try again later.",
         "alert-update-title": "Update available!",
@@ -487,7 +488,7 @@
         "page-text": "Every day is an adventure: play, progress and take control of your life with GameLife!",
 
         "input-email-title": "Email address",
-        "input-username-title": "Pseudo",
+        "input-username-title": "Username",
         "input-cgu-text": "I have read and agree to the %terms and conditions%.",
         "button-login-text": "Next",
         "button-signin-text": "Signin",

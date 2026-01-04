@@ -1,4 +1,4 @@
-import { Animated, Dimensions } from 'react-native';
+import { Animated, Dimensions, Platform } from 'react-native';
 
 import { SpringAnimation } from 'Utils/Animations';
 
@@ -42,7 +42,9 @@ async function UpdatePositions() {
     if (ref !== null && ref.current !== null) {
         targetPosition = await new Promise((resolve) => {
             ref.current.measureInWindow((x, y, width, height) => {
-                resolve({ x, y, width, height });
+                // Adjust Y position for iOS safe area (notch) only
+                const adjustedY = y - (Platform.OS === 'ios' ? this.insets.top : 0);
+                resolve({ x, y: adjustedY, width, height });
             });
         });
     }
@@ -53,7 +55,7 @@ async function UpdatePositions() {
     }
 
     const componentMidX = targetPosition.x + targetPosition.width / 2;
-    const componentMidY = targetPosition.y + targetPosition.height / 2;
+    const componentMidY = Math.max(0, Math.min(screenSize.height, targetPosition.y + targetPosition.height / 2));
     const isOnTop = componentMidY < screenSize.height / 2;
 
     const theta = Math.PI / 2 + Math.atan2(componentMidX - screenSize.width / 2, componentMidY - screenSize.height / 2);

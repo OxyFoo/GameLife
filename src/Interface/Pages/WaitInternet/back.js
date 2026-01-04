@@ -9,10 +9,24 @@ import { env } from 'Utils/Env';
 
 const REFRESH_DELAY_SECONDS = 30;
 
+/**
+ * @typedef {'not-connected' | 'maintenance' | 'authenticated-failed' | 'error'} WaitInternetStatus
+ *
+ * @typedef {object} WaitInternetArgs
+ * @property {WaitInternetStatus} [status]
+ */
+
+/** @type {{ args?: WaitInternetArgs }} */
+const BackWaitinternetProps = {
+    args: {
+        status: 'not-connected'
+    }
+};
+
 class BackWaitinternet extends PageBase {
     state = {
-        /** @type {'not-connected' | 'maintenance' | 'authenticated-failed' | 'error'} */
-        currentStatus: 'not-connected',
+        /** @type {WaitInternetStatus} */
+        currentStatus: this.props.args?.status ?? 'not-connected',
 
         /** @type {string | null} */
         lastError: user.server2.tcp.GetLastError()
@@ -32,11 +46,13 @@ class BackWaitinternet extends PageBase {
             user.interface.ChangePage('login', { storeInHistory: false });
         } else if (status === 'update') {
             user.interface.ChangePage('loading', { storeInHistory: false });
-        } else if (status === 'maintenance' || status === 'not-connected' || status === 'authenticated-failed') {
+        } else if (status === 'maintenance') {
+            this.setState({ currentStatus: 'maintenance', lastError: null });
+        } else if (status === 'not-connected' || status === 'authenticated-failed') {
             const lastError = user.server2.tcp.GetLastError();
             this.setState({
                 currentStatus: status,
-                lastError: lastError === null ? 'Unknown error' : lastError
+                lastError: lastError ?? 'Unknown error'
             });
         } else {
             this.setState({
@@ -88,5 +104,8 @@ class BackWaitinternet extends PageBase {
             });
     };
 }
+
+BackWaitinternet.defaultProps = BackWaitinternetProps;
+BackWaitinternet.prototype.props = BackWaitinternetProps;
 
 export default BackWaitinternet;

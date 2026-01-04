@@ -125,7 +125,7 @@ class BackProfileEditor extends React.PureComponent {
         user.interface.bottomPanel?.Open({
             content: <TitlesView items={userTitlesItems} onTitleSelected={this.setTitle} />,
             maxPosY: Dimensions.get('window').height * 0.6,
-            zIndex: 100
+            zIndex: 50
         });
     };
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Dimensions } from 'react-native';
+import { Animated, Dimensions, Platform } from 'react-native';
 
 import { UpdatePositions } from './updatePos';
 import user from 'Managers/UserManager';
@@ -146,14 +146,19 @@ class ScreenTutoBack extends React.Component {
 
             // Show the tutorial element
             let skip = false;
+            /** @type {(() => boolean) | null} */
+            let onBackHandler = null;
+
             await new Promise(async (resolve) => {
                 let showed = false;
-                const onBackHandler = () => {
+                onBackHandler = () => {
                     this.onSkipPress();
                     return true;
                 };
                 this.onComponentPress = () => {
-                    user.interface.RemoveCustomBackHandler(onBackHandler);
+                    if (onBackHandler) {
+                        user.interface.RemoveCustomBackHandler(onBackHandler);
+                    }
                     showed && resolve(null);
                 };
                 this.onSkipPress = () => {
@@ -178,6 +183,12 @@ class ScreenTutoBack extends React.Component {
             // Skip the tutorial, close the tutorial
             if (skip) {
                 clearTimeout(this.hinterval);
+
+                // Remove back handler when skipping
+                if (onBackHandler) {
+                    user.interface.RemoveCustomBackHandler(onBackHandler);
+                }
+
                 await this.setStateSync({
                     component: {
                         ...this.state.component,
@@ -233,6 +244,18 @@ class ScreenTutoBack extends React.Component {
         const { component, text, showNextButton, showSkipButton, fontSize, positionY, zapInline } = element;
         const screenSize = Dimensions.get('window');
 
+        // Hint opacity - Reset
+        clearTimeout(this.hinterval);
+        TimingAnimation(this.state.component.hintOpacity, 0, 0).start();
+
+        // Hint opacity - Start
+        let hintOpacity = 0;
+        this.hinterval = setInterval(() => {
+            hintOpacity = hintOpacity === 0 ? 1 : 0;
+            TimingAnimation(this.state.component.hintOpacity, hintOpacity, 1000).start();
+        }, 5000);
+
+        // Measure component position
         const position = {
             x: screenSize.width / 2,
             y: (screenSize.height * 2) / 3,
@@ -244,29 +267,28 @@ class ScreenTutoBack extends React.Component {
 
         // Get component position
         const _component = typeof component === 'function' ? component() : component;
-        _component?.current?.measureInWindow((x, y, width, height) => {
-            position.x = x;
-            position.y = y;
-            position.width = width;
-            position.height = height;
-            showNext = false;
-        });
+        if (_component?.current) {
+            const measured = await new Promise((resolve) => {
+                const componentCurrent = _component.current;
+                if (componentCurrent) {
+                    componentCurrent.measureInWindow((x, y, width, height) => {
+                        resolve({ x, y, width, height });
+                    });
+                }
+            });
+            if (measured) {
+                position.x = measured.x;
+                position.y = measured.y;
+                position.width = measured.width;
+                position.height = measured.height;
+                showNext = false;
+            }
+        }
 
         // Show next button manually
         if (showNextButton !== null) {
             showNext = showNextButton === true;
         }
-
-        // Hint opacity - Reset
-        clearTimeout(this.hinterval);
-        TimingAnimation(this.state.component.hintOpacity, 0, 0).start();
-
-        // Hint opacity - Start
-        let hintOpacity = 0;
-        this.hinterval = setInterval(() => {
-            hintOpacity = hintOpacity === 0 ? 1 : 0;
-            TimingAnimation(this.state.component.hintOpacity, hintOpacity, 1000).start();
-        }, 5000);
 
         return new Promise((resolve) => {
             this.setState(
@@ -283,7 +305,8 @@ class ScreenTutoBack extends React.Component {
                         ref: _component,
                         position: {
                             x: position.x,
-                            y: position.y
+                            // Adjust Y position for iOS safe area (notch) only
+                            y: position.y - (Platform.OS === 'ios' ? this.insets.top : 0)
                         },
                         size: {
                             x: position.width,

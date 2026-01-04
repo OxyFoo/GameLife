@@ -180,7 +180,12 @@ class DeviceAuthService {
 
         // Update the server state
         if (response.result === 'ok') {
-            this.#user.server2.serverState.status = 'up-to-date';
+            // Maintenance mode: server OK but under maintenance
+            if (response.maintenance === true) {
+                this.#user.server2.serverState.status = 'maintenance';
+            } else {
+                this.#user.server2.serverState.status = 'up-to-date';
+            }
         }
 
         // Update required, blocking step
@@ -192,12 +197,8 @@ class DeviceAuthService {
             return 'update';
         }
 
-        // Maintenance mode, optional update or downgrade, non-blocking step
-        else if (
-            response.result === 'update-optional' ||
-            response.result === 'maintenance' ||
-            response.result === 'downdate'
-        ) {
+        // Optional update or downgrade, non-blocking step
+        else if (response.result === 'update-optional' || response.result === 'downdate') {
             this.#user.server2.serverState.status = response.result;
             if (typeof response.serverVersion === 'string') {
                 this.#user.server2.serverState.version = response.serverVersion;

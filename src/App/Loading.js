@@ -64,13 +64,20 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         return;
     }
 
-    // Maintenance mode => Go to wait internet page if not logged, otherwise continue offline
+    // Maintenance mode => Go to wait internet page if not logged, otherwise show popup and continue offline
     else if (authenticated === 'maintenance') {
         if (!user.server2.userAuth.IsLogged()) {
-            fe.ChangePage('waitinternet', { storeInHistory: false, transition: 'fromBottom' });
+            fe.ChangePage('waitinternet', {
+                storeInHistory: false,
+                transition: 'fromBottom',
+                args: {
+                    status: 'maintenance'
+                }
+            });
             return;
         }
-        // If already logged, continue in offline mode (handled at the end)
+        // Already logged: show maintenance popup immediately, then continue in offline mode
+        await showMaintenancePopup();
     }
 
     // Not connected to the server and user not logged, go to the wait internet page
@@ -220,10 +227,8 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
         user.interface.console?.AddLog('info', 'Statistics Summary:', statsSummary);
     }
 
-    // Maintenance message
-    if (user.server2.serverState.status === 'maintenance') {
-        await showMaintenancePopup();
-    } else if (user.server2.serverState.status === 'downdate') {
+    // Downdate message (advance version)
+    if (user.server2.serverState.status === 'downdate') {
         await showDowndatePopup();
     }
 

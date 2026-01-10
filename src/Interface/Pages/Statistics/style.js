@@ -6,11 +6,14 @@ const styles = StyleSheet.create({
     },
 
     sectionTitle: {
-        marginTop: 24,
         marginBottom: 16,
         fontSize: 21,
         textAlign: 'left',
         textTransform: 'uppercase'
+    },
+
+    activitiesChart: {
+        marginBottom: 24
     },
 
     kpiContainer: {

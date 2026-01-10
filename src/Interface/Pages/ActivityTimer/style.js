@@ -8,23 +8,46 @@ const IMAGE_SIZE = (SCREEN_WIDTH * 0.6) / (Object.keys(user.settings.musicLinks)
 const styles = StyleSheet.create({
     content: {
         height: '100%',
-        paddingVertical: 32,
+        paddingVertical: 24,
         paddingHorizontal: 24,
         justifyContent: 'space-between'
+    },
+    topSection: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    centerSection: {
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    bottomSection: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-end'
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: 12
     },
     button: {
+        flex: 1,
         marginVertical: 6
     },
+    finishButton: {
+        flex: 2
+    },
     musicTitle: {
-        fontSize: 16
+        fontSize: 16,
+        textAlign: 'center'
+    },
+    musicSection: {
+        width: '100%',
+        alignItems: 'center'
     },
     imageMap: {
-        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'

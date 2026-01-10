@@ -8,15 +8,22 @@ const styles = StyleSheet.create({
     gradientInner: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingVertical: 12
     },
     activityIcon: {
         marginRight: 16
     },
+    textContainer: {
+        flex: 1,
+        alignItems: 'flex-start'
+    },
     activityText: {
         fontSize: 24,
         fontWeight: 'bold'
+    },
+    categoryText: {
+        fontSize: 14
     },
     startText: {
         fontSize: 16

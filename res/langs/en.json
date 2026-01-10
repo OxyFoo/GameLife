@@ -384,11 +384,11 @@
         "alert-skill-already-exist-message": "This skill already exists, please choose another one.",
 
         "timer-launch": "Launch time:",
-        "timer-gain": "Current gains: {}",
+        "timer-category": "Category:",
         "timer-friends": "Friends doing the same activity at the same time!",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
-        "timer-music": "Zap music will help you focus",
+        "timer-music": "music to help focus ?",
         "timeralert-cancel-title": "Cancel activity",
         "timeralert-cancel-message": "Are you sure you want to cancel this activity?",
         "timeralert-tooshort-title": "Too early",

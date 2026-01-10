@@ -136,8 +136,8 @@
         "xp": "EXP",
         "level": "Niveau",
         "level-small": "Niv",
-        "total": "Activités",
-        "total-hour": "Heures totales",
+        "total": "Occurences",
+        "total-hour": "temps total",
         "average": "En moyenne {} exp/jour",
         "me": "Moi"
     },
@@ -879,15 +879,15 @@
 
     "skill": {
         "title": "Compétence",
-        "text-author": "Une idée de {}",
+        "text-author": "Cette compétence est une idée de {}",
         "text-unallocated": "Compétence désafectée",
         "text-no-xp": "Cette activité ne rapporte pas d'expérience",
         "stats-title": "Statistiques",
         "informations-title": "Informations",
         "history-title": "Historique",
-        "history-show": "Afficher l'historique",
-        "history-activity": "Historique d'activité",
-        "text-add": "Ajouter l'activité"
+        "history-show": "Voir l'historique complet",
+        "history-activity": "Historique (14 jours)",
+        "category-title": "Catégorie :"
     },
 
     "skills": {

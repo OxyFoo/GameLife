@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import SkillChartBack from './back';
@@ -12,24 +13,30 @@ class SkillChart extends SkillChartBack {
     render() {
         const lang = langManager.curr['skill'];
 
-        const styleContainer = {
-            backgroundColor: themeManager.GetColor('dataBigKpi')
-        };
-
         return (
             <View>
-                <View style={[styleContainer, styles.container, this.props.style]}>
-                    <View style={styles.titleView}>
-                        <Text color='primary' fontSize={16} bold>
-                            {lang['history-activity']}
-                        </Text>
+                <LinearGradient
+                    style={[styles.container, this.props.style]}
+                    colors={[
+                        themeManager.GetColor('border', { opacity: 0.2 }),
+                        themeManager.GetColor('border', { opacity: 0.06 })
+                    ]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                >
+                    <View style={styles.gradientInner}>
+                        <View style={styles.titleView}>
+                            <Text color='primary' fontSize={16} bold>
+                                {lang['history-activity']}
+                            </Text>
+                        </View>
+                        <LineChartSvg
+                            data={this.state.cleanedData}
+                            style={this.props.style}
+                            lineColor={this.state.lineColor}
+                        />
                     </View>
-                    <LineChartSvg
-                        data={this.state.cleanedData}
-                        style={this.props.style}
-                        lineColor={this.state.lineColor}
-                    />
-                </View>
+                </LinearGradient>
             </View>
         );
     }

@@ -24,7 +24,10 @@ const SkillChartProps = {
     chartWidth: 300,
 
     /** @type {number} */
-    skillID: 0
+    skillID: 0,
+
+    /** @type {Date | null} */
+    startDate: null
 };
 
 class SkillChartBack extends React.Component {
@@ -38,7 +41,8 @@ class SkillChartBack extends React.Component {
 
     componentDidMount() {
         const lineColor = this.getLineColor(this.props.skillID);
-        const linesData = this.getDataFromSkillID(this.props.skillID);
+        const startDate = this.props.startDate || new Date(Date.now() - 14 * 24 * 60 * 60 * 1000); // default last two weeks
+        const linesData = this.getDataFromSkillID(this.props.skillID, startDate);
         const cleaningData = this.fillMissingDates(linesData);
 
         this.setState({
@@ -50,14 +54,23 @@ class SkillChartBack extends React.Component {
     /**
      * Get all the data from the skillID
      * @param {number} skillID
+     * @param {Date | null} startDate - Optional start date to filter activities from
      * @returns {LineData[]}
      */
-    getDataFromSkillID(skillID) {
+    getDataFromSkillID(skillID, startDate = null) {
         const dataFromBack = [];
 
         // get the datas here
         const userActivities = user.activities.Get();
-        const history = userActivities.filter((a) => a.skillID === skillID);
+        let history = userActivities.filter((a) => a.skillID === skillID);
+
+        // Filter by start date if provided
+        if (startDate !== null) {
+            history = history.filter((a) => {
+                const activityDate = GetDate(a.startTime);
+                return activityDate >= startDate;
+            });
+        }
 
         // go through the history and create one {activity: string, date: string, value: number}
         for (const element of history) {

@@ -1027,7 +1027,10 @@
     "quest-stats": {
         "title": "Ma quête",
         "title-current-week": "Semaine en cours",
-        "title-heatmap": "Résultats",
+        "title-skills": "Compétences liées",
+        "title-data": "Données",
+        "kpi-efficient": "Efficacité",
+        "kpi-streak": "Série actuelle",
         "button-add-activity": "Ajouter une activité",
         "warn-message": "Attention : Le calcul de la série n'est pas sûr à 100%. Il est possible d'y voir des erreurs"
     },

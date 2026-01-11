@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
     pageHeader: {
-        marginBottom: 48
+        marginBottom: 0
     },
     title: {
         marginTop: 24,
@@ -15,70 +15,68 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     warnText: {
-        marginTop: 16,
+        marginBottom: 12,
         fontSize: 12
     },
 
-    // Quest info
-    questHeader: {
-        borderRadius: 10
-    },
+    // Quest Header
     questHeaderView: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingLeft: 16
-    },
-    questTextView: {
-        flex: 1
-    },
-    questTitle: {
-        paddingTop: 12,
-        fontSize: 24,
-        textAlign: 'left'
+        justifyContent: 'flex-start'
     },
     questSkills: {
         textAlign: 'left',
         flexWrap: 'wrap',
-        paddingBottom: 12,
         fontSize: 14
     },
-    editActivityView: {
-        height: '100%',
-        padding: 6,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    editActivityTime: {
-        marginRight: 6,
-        fontSize: 14
-    },
-    editActivityButton: {
-        width: 'auto',
-        height: '100%',
+
+    // KPI Row (Efficiency & Streak)
+    kpiRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 0,
-        paddingHorizontal: 16,
-        borderRadius: 10
+        justifyContent: 'space-between',
+        gap: 12
     },
 
-    // Widgets
-    streakChartContainer: {
-        marginTop: 12,
+    // KPI Container
+    kpiContainer: {
+        flex: 1,
+        borderRadius: 8
+    },
+
+    // Shared KPI Styles
+    kpiContent: {
+        padding: 12
+    },
+    kpiTitle: {
+        marginBottom: 12,
+        textAlign: 'left'
+    },
+    donutContainer: {
         alignItems: 'center',
-        borderRadius: 12
+        justifyContent: 'center'
     },
-    streakChartView: {
-        paddingVertical: 16
+    donutCenter: {
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    yearHeatMap: {
-        // Margin bottom + add activity button height
-        marginBottom: 24 + 96
+    streakRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4
     },
 
-    // Overlay
+    // Heatmap
+    heatmapContainer: {
+        marginTop: 16,
+        borderRadius: 8
+    },
+    heatmapContent: {
+        padding: 12
+    },
+
+    // Add Activity Button
     addActivity: {
         position: 'absolute',
         width: 'auto',

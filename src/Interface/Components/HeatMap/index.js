@@ -39,7 +39,7 @@ class HeatMap extends HeatMapBack {
                     {
                         height: gridSize,
                         width: gridSize,
-                        margin: gridSize / 5,
+                        margin: gridSize / 8,
                         borderColor,
                         borderWidth,
                         backgroundColor

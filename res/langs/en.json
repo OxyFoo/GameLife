@@ -1027,7 +1027,10 @@
     "quest-stats": {
         "title": "My quest",
         "title-current-week": "Current week",
-        "title-heatmap": "Results",
+        "title-skills": "Skills linked",
+        "title-data": "Quest data",
+        "kpi-efficient": "Efficiency",
+        "kpi-streak": "Current streak",
         "button-add-activity": "Add an activity",
         "warn-message": "Warning: the calculation of the strak is uncertain. You may find errors"
     },

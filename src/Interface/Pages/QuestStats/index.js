@@ -11,7 +11,7 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Button, StreakChart, Text } from 'Interface/Components';
+import { Button, Icon, ProgressDonut, Text } from 'Interface/Components';
 import { PageHeader } from 'Interface/Widgets';
 
 class QuestStats extends BackQuest {
@@ -21,10 +21,9 @@ class QuestStats extends BackQuest {
         }
 
         const lang = langManager.curr['quest-stats'];
-        const { maximumStreak, schedule } = this.selectedQuest;
+        const { schedule } = this.selectedQuest;
 
         const currentStreak = user.quests.GetStreak(this.selectedQuest);
-        const maxStreak = Math.max(10, maximumStreak);
 
         const skillsName = this.selectedQuest.skills
             .map((skillID) => dataManager.skills.GetByID(skillID))
@@ -35,61 +34,114 @@ class QuestStats extends BackQuest {
         return (
             <>
                 <ScrollView style={styles.page}>
-                    <PageHeader style={styles.pageHeader} title={lang['title']} onBackPress={this.onBackPress} />
+                    <PageHeader
+                        style={styles.pageHeader}
+                        title={this.selectedQuest.title}
+                        onBackPress={this.onBackPress}
+                        secondaryIcon='edit'
+                        secondaryIconColor='gradient'
+                        onSecondaryIconPress={this.onEditPress}
+                    />
 
                     {/* Quest info: Title + skills + duration + edit button */}
-                    <LinearGradient
-                        style={styles.questHeader}
-                        colors={[
-                            themeManager.GetColor('backgroundCard', { opacity: 0.65 }),
-                            themeManager.GetColor('backgroundCard', { opacity: 0.25 })
-                        ]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                    >
-                        <View style={styles.questHeaderView}>
-                            <View style={styles.questTextView}>
-                                <Text style={styles.questTitle} color='primary'>
-                                    {this.selectedQuest.title}
-                                </Text>
-                                <Text style={styles.questSkills} color='primary'>
-                                    {skillsName}
-                                </Text>
-                            </View>
+                    <Text style={styles.title} color='border'>
+                        {lang['title-skills']}
+                    </Text>
+                    <View style={styles.questHeaderView}>
+                        <Text style={styles.questSkills} color='primary'>
+                            {skillsName}
+                        </Text>
+                    </View>
 
-                            <View style={styles.editActivityView}>
-                                <Text style={styles.editActivityTime} color='main1'>
-                                    {this.activitiesTimeText}
-                                </Text>
-                                <Button
-                                    style={styles.editActivityButton}
-                                    appearance='uniform'
-                                    color='transparent'
-                                    icon='edit'
-                                    iconSize={24}
-                                    fontColor='gradient'
-                                    onPress={this.onEditPress}
-                                />
-                            </View>
-                        </View>
-                    </LinearGradient>
-
+                    {/* KPI Containers */}
+                    <Text style={styles.title} color='border'>
+                        {lang['title-data']}
+                    </Text>
                     <Text style={styles.warnText} color='secondary'>
                         {lang['warn-message']}
                     </Text>
+                    <View style={styles.kpiRow}>
+                        <LinearGradient
+                            style={styles.kpiContainer}
+                            colors={[
+                                themeManager.GetColor('border', { opacity: 0.2 }),
+                                themeManager.GetColor('border', { opacity: 0.06 })
+                            ]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                        >
+                            <View style={styles.kpiContent}>
+                                <Text fontSize={16} color='white' style={styles.kpiTitle}>
+                                    {lang['kpi-efficient']}
+                                </Text>
+                                <View style={styles.donutContainer}>
+                                    <ProgressDonut
+                                        value={this.efficiencyScore / 100}
+                                        size={100}
+                                        progressColor='main1'
+                                        strokeWidth={8}
+                                        delay={0}
+                                    >
+                                        <View style={styles.donutCenter}>
+                                            <Text fontSize={16} bold color='primary'>
+                                                {this.efficiencyScore}%
+                                            </Text>
+                                        </View>
+                                    </ProgressDonut>
+                                </View>
+                            </View>
+                        </LinearGradient>
 
-                    {/* Streak chart */}
+                        <LinearGradient
+                            style={styles.kpiContainer}
+                            colors={[
+                                themeManager.GetColor('border', { opacity: 0.2 }),
+                                themeManager.GetColor('border', { opacity: 0.06 })
+                            ]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                        >
+                            <View style={styles.kpiContent}>
+                                <Text fontSize={16} color='white' style={styles.kpiTitle}>
+                                    {lang['kpi-streak']}
+                                </Text>
+                                <View style={styles.donutContainer}>
+                                    <ProgressDonut
+                                        value={this.dailyProgress}
+                                        size={100}
+                                        progressColor='main2'
+                                        strokeWidth={8}
+                                        delay={0}
+                                    >
+                                        <View style={styles.donutCenter}>
+                                            <View style={styles.streakRow}>
+                                                <Text fontSize={16} bold color='primary'>
+                                                    {currentStreak}
+                                                </Text>
+                                                <Icon icon='flame' color='main2' size={16} />
+                                            </View>
+                                            <Text fontSize={10} color='secondary'>
+                                                {this.activitiesTimeText}
+                                            </Text>
+                                        </View>
+                                    </ProgressDonut>
+                                </View>
+                            </View>
+                        </LinearGradient>
+                    </View>
+
+                    {/* Heatmap */}
                     <LinearGradient
-                        style={styles.streakChartContainer}
+                        style={styles.heatmapContainer}
                         colors={[
-                            themeManager.GetColor('main1', { opacity: 0.45 }),
-                            themeManager.GetColor('main1', { opacity: 0.15 })
+                            themeManager.GetColor('border', { opacity: 0.2 }),
+                            themeManager.GetColor('border', { opacity: 0.06 })
                         ]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
-                        <View style={styles.streakChartView}>
-                            <StreakChart size={200} height={150} currentStreak={currentStreak} bestStreak={maxStreak} />
+                        <View style={styles.heatmapContent}>
+                            <YearHeatMap quest={this.selectedQuest} />
                         </View>
                     </LinearGradient>
 
@@ -102,12 +154,6 @@ class QuestStats extends BackQuest {
                             <WeekMap quest={this.selectedQuest} showAnimations={this.showAnimations} />
                         </>
                     )}
-
-                    {/* Year heatmap */}
-                    <Text style={styles.title} color='border'>
-                        {lang['title-heatmap']}
-                    </Text>
-                    <YearHeatMap style={styles.yearHeatMap} quest={this.selectedQuest} />
                 </ScrollView>
 
                 <Button style={styles.addActivity} onPress={this.onAddPress}>

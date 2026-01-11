@@ -342,16 +342,16 @@ class Quests extends IUserData {
         // Current time
         let text = '';
         if (timeHour > 0) {
-            text += `${timeHour}${langTimes['hours-min']}`;
+            text += `${timeHour}${langTimes['hours-min']} `;
         }
         if (timeMinute > 0 || timeHour === 0) {
-            text += ` ${timeMinute}${langTimes['minutes-min']}`;
+            text += `${timeMinute}${langTimes['minutes-min']} `;
         }
 
         // Goal time
-        text += ' / ';
+        text += '/';
         if (goalHour > 0) {
-            text += `${goalHour}${langTimes['hours-min']}`;
+            text += ` ${goalHour}${langTimes['hours-min']}`;
         }
         if (goalMinute > 0 || goalHour === 0) {
             text += ` ${goalMinute}${langTimes['minutes-min']}`;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { processChartData } from './downsample';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -22,7 +23,13 @@ const LineChartSvgProps = {
     graphHeight: 200,
 
     /** @type {boolean} */
-    isAreaChart: false
+    isAreaChart: false,
+
+    /** @type {boolean} */
+    enableDownsampling: false,
+
+    /** @type {number} */
+    maxPoints: 40
 };
 
 class LineChartSvgBack extends React.Component {
@@ -88,16 +95,23 @@ class LineChartSvgBack extends React.Component {
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
+        // Apply downsampling if enabled
+        const processedData = this.props.enableDownsampling
+            ? processChartData(this.props.data, {
+                maxPoints: this.props.maxPoints
+            })
+            : this.props.data;
+
         let maxValue = 100;
-        if (this.props.data.length > 0) {
-            maxValue = Math.max(...this.props.data.map((d) => d.value)) * 1.05;
+        if (processedData.length > 0) {
+            maxValue = Math.max(...processedData.map((d) => d.value)) * 1.05;
         }
 
         const yAxisValues = this.getYAxisValues(maxValue);
 
-        const points = this.props.data
+        const points = processedData
             .map((item, index) => {
-                const x = this.getXCoordinate(index, this.props.data.length, layoutWidth);
+                const x = this.getXCoordinate(index, processedData.length, layoutWidth);
                 const y = this.props.graphHeight - this.scaleY(item.value, maxValue); // Calculate the y-coordinate
                 return `${x},${y}`; // Return the coordinate pair for SVG polyline
             })

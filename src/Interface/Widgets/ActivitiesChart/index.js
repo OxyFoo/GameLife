@@ -31,17 +31,8 @@ function ActivitiesChart({ style, activities }) {
         /** @type {LineData[]} */
         const newData = [];
 
-        // Filter activities from the last 14 days
-        const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-
         for (const activity of activities) {
             const activityDate = GetDate(activity.startTime);
-
-            // Skip activities older than 14 days
-            if (activityDate < twoWeeksAgo) {
-                continue;
-            }
-
             const hourDuration = activity.duration / 60;
             const date = DateFormat(activityDate);
             const index = newData.findIndex((item) => item.date === date);
@@ -54,6 +45,9 @@ function ActivitiesChart({ style, activities }) {
                 value: hourDuration
             });
         }
+
+        // Sort by date
+        newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
         setData(newData);
     }, [activities]);
@@ -69,7 +63,7 @@ function ActivitiesChart({ style, activities }) {
             end={{ x: 1, y: 0 }}
         >
             <View style={styles.innerGradient}>
-                <LineChartSvg lineColor={'main2'} data={data} />
+                <LineChartSvg lineColor={'main2'} data={data} enableDownsampling={true} maxPoints={40} />
             </View>
         </LinearGradient>
     );

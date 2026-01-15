@@ -36,16 +36,14 @@ class ActivityTimerTitle extends React.Component {
             return;
         }
 
-        const categoryName = langManager.GetText(category.Name);
-        const activityName = langManager.GetText(skill.Name);
-        this.activityName = activityName;
-        this.categoryName = categoryName;
+        this.activityName = langManager.GetText(skill.Name);
+        this.categoryName = langManager.GetText(category.Name);
         this.xmlIcon = dataManager.skills.GetXmlByLogoID(category.LogoID);
     }
 
     render() {
         const lang = langManager.curr['activity'];
-        
+
         return (
             <View style={styles.gradientInner}>
                 <Icon style={styles.activityIcon} xml={this.xmlIcon} size={40} />

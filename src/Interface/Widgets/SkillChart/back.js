@@ -41,8 +41,7 @@ class SkillChartBack extends React.Component {
 
     componentDidMount() {
         const lineColor = this.getLineColor(this.props.skillID);
-        const startDate = this.props.startDate || new Date(Date.now() - 14 * 24 * 60 * 60 * 1000); // default last two weeks
-        const linesData = this.getDataFromSkillID(this.props.skillID, startDate);
+        const linesData = this.getDataFromSkillID(this.props.skillID, this.props.startDate);
         const cleaningData = this.fillMissingDates(linesData);
 
         this.setState({

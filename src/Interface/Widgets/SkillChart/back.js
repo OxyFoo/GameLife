@@ -114,8 +114,8 @@ class SkillChartBack extends React.Component {
         }
 
         const allDates = new Set();
-        let earliestDate = null;
-        let latestDate = null;
+        let earliestDate = /** @type {Date | null} */ (null);
+        let latestDate = /** @type {Date | null} */ (null);
 
         // Gather all unique dates and find earliest/latest dates
         data.forEach((dataPoint) => {
@@ -134,12 +134,19 @@ class SkillChartBack extends React.Component {
             return data;
         }
 
+        const _earliestDate = earliestDate;
+        const _latestDate = latestDate;
+        const _dateIncrement = 1000 * 60 * 60 * 24; // One day in milliseconds
+
         // Calculate the range of dates
-        const dateRange = Array.from({ length: (latestDate - earliestDate) / (1000 * 60 * 60 * 24) + 1 }, (_, i) => {
-            const date = new Date(earliestDate);
-            date.setDate(date.getDate() + i);
-            return formatDate(date);
-        });
+        const dateRange = Array.from(
+            { length: (_latestDate.getTime() - _earliestDate.getTime()) / _dateIncrement + 1 },
+            (_, i) => {
+                const date = new Date(_earliestDate.getTime());
+                date.setDate(date.getDate() + i);
+                return formatDate(date);
+            }
+        );
 
         // Fill in missing dates
         const result = dateRange.map((date) => {
@@ -161,11 +168,16 @@ class SkillChartBack extends React.Component {
      */
     getLineColor = (skillID) => {
         const skill = dataManager.skills.GetByID(skillID);
+        if (skill === null) {
+            return 'black';
+        }
+
         const categoryID = skill.CategoryID;
         const category = dataManager.skills.GetCategoryByID(categoryID);
         if (category === null) {
             return 'black';
         }
+
         return category.Color;
     };
 }

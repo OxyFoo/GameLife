@@ -30,10 +30,8 @@ class Skill extends BackSkill {
                     <View style={styles.titleContainer}>
                         <Icon style={styles.activityIcon} xml={selectedSkill.xml} size={40} />
                         <View style={styles.activityTextView}>
-                            <Text style={styles.activityText} numberOfLines={1} ellipsizeMode='tail'>
-                                {selectedSkill.name}
-                            </Text>
-                            <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode='tail'>
+                            <Text style={styles.activityText}>{selectedSkill.name}</Text>
+                            <Text style={styles.categoryText}>
                                 {lang['category-title']} {selectedSkill.category}
                             </Text>
                             {!selectedSkill.enabled && (
@@ -76,7 +74,6 @@ class Skill extends BackSkill {
                         {/* Skill use chart */}
                         {selectedSkill.ID !== 0 && (
                             <SkillChart
-                                // TODO : Update the graph more properly
                                 key={`activities-length-${history.length}`}
                                 style={styles.skillChart}
                                 skillID={selectedSkill.ID}

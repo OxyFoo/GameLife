@@ -61,19 +61,18 @@ class SkillChartBack extends React.Component {
 
         // get the datas here
         const userActivities = user.activities.Get();
-        let history = userActivities.filter((a) => a.skillID === skillID);
-
-        // Filter by start date if provided
-        if (startDate !== null) {
-            history = history.filter((a) => {
-                const activityDate = GetDate(a.startTime);
-                return activityDate >= startDate;
-            });
-        }
+        const history = userActivities.filter((a) => a.skillID === skillID);
 
         // go through the history and create one {activity: string, date: string, value: number}
         for (const element of history) {
-            const date = DateToFormatString(GetDate(element.startTime));
+            const activityDate = GetDate(element.startTime);
+
+            // Filter by start date if provided
+            if (startDate !== null && activityDate < startDate) {
+                continue;
+            }
+
+            const date = DateToFormatString(activityDate);
             const index = dataFromBack.findIndex((item) => item.date === date);
             if (index !== -1) {
                 dataFromBack[index].value += element.duration;

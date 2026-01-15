@@ -79,7 +79,7 @@ class ActivityTimer extends BackActivityTimer {
                 inputRange: [0, 1],
                 outputRange: [1, 0]
             }),
-            transform: [{ translateY: Animated.multiply(128, this.animations[musicKey]) }]
+            transform: [{ translateY: Animated.multiply(64, this.animations[musicKey]) }]
         };
 
         return (

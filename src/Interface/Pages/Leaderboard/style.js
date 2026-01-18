@@ -21,6 +21,21 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase'
     },
 
+    periodSelectorContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 16,
+        gap: 8
+    },
+
+    periodButton: {
+        flex: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        alignItems: 'center'
+    },
+
     searchContainer: {
         marginBottom: 16
     },

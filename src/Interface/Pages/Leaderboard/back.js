@@ -3,6 +3,7 @@ import user from 'Managers/UserManager';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types').LeaderboardPlayer} LeaderboardPlayer
+ * @typedef {import('@oxyfoo/gamelife-types').LeaderboardPeriodType} LeaderboardPeriodType
  */
 
 class BackLeaderboard extends PageBase {
@@ -22,8 +23,11 @@ class BackLeaderboard extends PageBase {
         /** @type {LeaderboardPlayer | null} */
         selfPlayer: null,
 
+        /** @type {LeaderboardPeriodType} */
+        periodType: 'weekly',
+
         /** @type {number} */
-        weekStart: 0
+        periodStart: 0
     };
 
     /** @type {Symbol | null} */
@@ -45,12 +49,18 @@ class BackLeaderboard extends PageBase {
         }
     };
 
-    fetchLeaderboard = async () => {
+    /** @param {LeaderboardPeriodType} [periodType] */
+    fetchLeaderboard = async (periodType) => {
         this.setState({ loadingState: 'loading' });
 
+        const requestPeriodType = periodType ?? this.state.periodType;
+
         const response = await user.server2.tcp.SendAndWait({
-            action: 'get-leaderboard'
+            action: 'get-leaderboard',
+            periodType: requestPeriodType
         });
+
+        console.log('Leaderboard data received:', response);
 
         // Erreur de connexion
         if (response === 'interrupted' || response === 'not-sent' || response === 'timeout') {
@@ -68,8 +78,17 @@ class BackLeaderboard extends PageBase {
             loadingState: 'loaded',
             players: response.result.players,
             selfPlayer: response.result.self,
-            weekStart: response.result.weekStart
+            periodType: response.result.periodType,
+            periodStart: response.result.periodStart
         });
+    };
+
+    /** @param {LeaderboardPeriodType} periodType */
+    onChangePeriodType = (periodType) => {
+        if (periodType !== this.state.periodType) {
+            this.setState({ periodType });
+            this.fetchLeaderboard(periodType);
+        }
     };
 
     /** @param {string} search */

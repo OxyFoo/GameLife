@@ -106,13 +106,13 @@ function RankElement({ item }) {
                     {item.username}
                 </Text>
                 <Text style={styles.details} color={isSelf ? 'white' : 'secondary'}>
-                    {titleText || `${langLevel['level-small']} ${user.experience.getXPDict(item.weeklyXP).lvl}`}
+                    {titleText || `${langLevel['level-small']} ${user.experience.getXPDict(item.totalXP).lvl}`}
                 </Text>
             </View>
 
             <View style={styles.xpContainer}>
                 <Text style={styles.xpText} color={isSelf ? 'white' : 'main1'}>
-                    {`${langLevel['level-small']}${item.weeklyXP}`}
+                    {`${item.totalXP.toFixed(0)} XP`}
                 </Text>
             </View>
 

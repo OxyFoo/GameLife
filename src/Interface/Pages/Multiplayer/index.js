@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import styles from './style';
 import BackMultiplayer from './back';
 import TopFriends from './TopFriends';
-import OnlineFriends from './OnlineFriends';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
@@ -14,7 +13,7 @@ import { Button, Text } from 'Interface/Components';
 class Multiplayer extends BackMultiplayer {
     render() {
         const lang = langManager.curr['multiplayer'];
-        const { friends, bestFriends } = this.state;
+        const { bestFriends } = this.state;
 
         return (
             <View style={styles.page}>
@@ -23,12 +22,6 @@ class Multiplayer extends BackMultiplayer {
                 </Text>
 
                 <TopFriends style={styles.topfriendsContainer} friends={bestFriends} />
-
-                <Text style={styles.title} color='border'>
-                    {lang['title-online-friends']}
-                </Text>
-
-                <OnlineFriends friends={friends} />
 
                 {/** Bottom buttons: All friends (left) / Leaderboard (right) */}
                 <Gradient

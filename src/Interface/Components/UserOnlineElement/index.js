@@ -102,7 +102,7 @@ function UserOnlineElement({ style, friend }) {
                     <View style={styles.friendInfoTitle}>
                         <Text fontSize={20}>{friend.username}</Text>
                         {friendTitle !== null && (
-                            <Text style={styles.title} fontSize={16} color='main1'>
+                            <Text style={styles.title} fontSize={14} color='main1'>
                                 {friendTitle}
                             </Text>
                         )}

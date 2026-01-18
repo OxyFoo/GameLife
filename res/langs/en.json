@@ -671,10 +671,6 @@
     },
 
     "profile-friend": {
-        "row-since": "Since",
-        "row-activities": "Number of activities",
-        "row-time": "Time spent",
-
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
 

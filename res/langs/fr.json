@@ -671,10 +671,6 @@
     },
 
     "profile-friend": {
-        "row-since": "Depuis",
-        "row-activities": "Nombre d'activités",
-        "row-time": "Nombre d'heures",
-
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
 

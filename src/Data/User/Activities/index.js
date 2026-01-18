@@ -682,6 +682,9 @@ class Activities extends IUserData {
     #calculateLeaderboardUpdates = (activities) => {
         const now = GetGlobalTime();
 
+        // Get user's total XP (all time)
+        const totalUserXP = Round(this.#user.experience.experience.Get().xpInfo.totalXP, 2);
+
         // Calculate period boundaries (timestamps)
         const weekStart = GetMondayTimestamp(now);
         const weekEnd = weekStart + 7 * DAY_TIME;
@@ -704,7 +707,8 @@ class Activities extends IUserData {
                 periodStart: weekStart,
                 xp: Round(this.#user.experience.CalculateTotalXP(weeklyActivities).totalXP, 2),
                 activities: weeklyActivities.length,
-                time: weeklyActivities.reduce((sum, a) => sum + a.duration, 0)
+                time: weeklyActivities.reduce((sum, a) => sum + a.duration, 0),
+                totalUserXP
             });
         }
 
@@ -714,7 +718,8 @@ class Activities extends IUserData {
                 periodStart: monthStart,
                 xp: Round(this.#user.experience.CalculateTotalXP(monthlyActivities).totalXP, 2),
                 activities: monthlyActivities.length,
-                time: monthlyActivities.reduce((sum, a) => sum + a.duration, 0)
+                time: monthlyActivities.reduce((sum, a) => sum + a.duration, 0),
+                totalUserXP
             });
         }
 
@@ -724,7 +729,8 @@ class Activities extends IUserData {
                 periodStart: yearStart,
                 xp: Round(this.#user.experience.CalculateTotalXP(yearlyActivities).totalXP, 2),
                 activities: yearlyActivities.length,
-                time: yearlyActivities.reduce((sum, a) => sum + a.duration, 0)
+                time: yearlyActivities.reduce((sum, a) => sum + a.duration, 0),
+                totalUserXP
             });
         }
 

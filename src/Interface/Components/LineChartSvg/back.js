@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { processChartData } from './downsample';
+import { lttbDownsample } from './downsample';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -25,11 +25,11 @@ const LineChartSvgProps = {
     /** @type {boolean} */
     isAreaChart: false,
 
-    /** @type {boolean} */
+    /** @type {boolean} - If true, applies LTTB downsampling algorithm to reduce points */
     enableDownsampling: false,
 
-    /** @type {number} */
-    maxPoints: 40
+    /** @type {number} - Maximum number of points after downsampling (only used if enableDownsampling is true) */
+    downsamplingMaxPoints: 40
 };
 
 class LineChartSvgBack extends React.Component {
@@ -95,11 +95,9 @@ class LineChartSvgBack extends React.Component {
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
-        // Apply downsampling if enabled
+        // Apply LTTB downsampling (no-op if data.length <= downsamplingMaxPoints)
         const processedData = this.props.enableDownsampling
-            ? processChartData(this.props.data, {
-                maxPoints: this.props.maxPoints
-            })
+            ? lttbDownsample(this.props.data, this.props.downsamplingMaxPoints)
             : this.props.data;
 
         let maxValue = 100;

@@ -71,28 +71,4 @@ function lttbDownsample(data, threshold) {
     return sampled;
 }
 
-/**
- * Process chart data with downsampling
- * @param {ChartDataPoint[]} data - Original data
- * @param {Object} options - Processing options
- * @param {number} [options.maxPoints=40] - Maximum number of points after downsampling
- * @returns {ChartDataPoint[]} - Processed data
- */
-function processChartData(data, options = {}) {
-    const { maxPoints = 40 } = options;
-
-    if (!data || data.length === 0) {
-        return data;
-    }
-
-    let processed = [...data];
-
-    // Apply LTTB downsampling if data exceeds threshold
-    if (processed.length > maxPoints) {
-        processed = lttbDownsample(processed, maxPoints);
-    }
-
-    return processed;
-}
-
-export { lttbDownsample, processChartData };
+export { lttbDownsample };

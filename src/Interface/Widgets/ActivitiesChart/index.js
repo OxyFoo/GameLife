@@ -46,9 +46,6 @@ function ActivitiesChart({ style, activities }) {
             });
         }
 
-        // Sort by date
-        newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
         setData(newData);
     }, [activities]);
 
@@ -63,7 +60,7 @@ function ActivitiesChart({ style, activities }) {
             end={{ x: 1, y: 0 }}
         >
             <View style={styles.innerGradient}>
-                <LineChartSvg lineColor={'main2'} data={data} enableDownsampling={true} maxPoints={40} />
+                <LineChartSvg lineColor={'main2'} data={data} enableDownsampling={true} />
             </View>
         </LinearGradient>
     );

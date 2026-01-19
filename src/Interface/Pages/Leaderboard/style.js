@@ -76,13 +76,31 @@ const styles = StyleSheet.create({
 
     // Element styles
     itemContainer: {
+        marginVertical: 1,
+        width: '100%',
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: 'transparent',
+        paddingVertical: 0,
+        paddingHorizontal: 0
+    },
+
+    itemGradient: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        height: 'auto',
-        padding: 10,
-        paddingHorizontal: 10,
-        marginBottom: 4,
-        borderRadius: 10
+        justifyContent: 'center',
+        marginHorizontal: 0,
+        marginVertical: 0
+    },
+
+    innerGradient: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 4,
+        paddingHorizontal: 8
     },
 
     frameBorder: {
@@ -108,16 +126,6 @@ const styles = StyleSheet.create({
     details: {
         textAlign: 'left',
         fontSize: 12
-    },
-
-    xpContainer: {
-        alignItems: 'flex-end',
-        marginRight: 8
-    },
-
-    xpText: {
-        fontSize: 14,
-        fontWeight: 'bold'
     },
 
     rankContainer: {

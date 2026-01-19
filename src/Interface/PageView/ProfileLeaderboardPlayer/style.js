@@ -38,18 +38,16 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     title: {
-        fontSize: 24,
+        fontSize: 20,
         textAlign: 'left'
     },
 
     // Profile
-    topSpace: {
-        marginTop: 24
-    },
-    botSpace: {
-        marginBottom: 24
+    xpbarContainer: {
+        marginVertical: 12
     },
     xpRow: {
+        marginTop: 6,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -59,7 +57,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: 24
+        marginTop: 12
     },
     kpiProfile: {
         paddingHorizontal: 2

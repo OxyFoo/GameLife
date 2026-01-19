@@ -60,8 +60,6 @@ class BackLeaderboard extends PageBase {
             periodType: requestPeriodType
         });
 
-        console.log('Leaderboard data received:', response);
-
         // Erreur de connexion
         if (response === 'interrupted' || response === 'not-sent' || response === 'timeout') {
             this.setState({ loadingState: 'error-connection' });

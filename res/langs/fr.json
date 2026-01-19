@@ -480,7 +480,8 @@
         "label-activities-small": "Actis",
         "container-weekly-title": "Statistiques",
         "kpi-rank": "Rang",
-        "kpi-xp": "XP",
+        "kpi-time": "Temps",
+        "kpi-activities": "Activités",
         "period-weekly": "Semaine",
         "period-monthly": "Mois",
         "period-yearly": "Année"

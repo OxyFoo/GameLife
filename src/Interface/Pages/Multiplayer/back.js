@@ -8,6 +8,7 @@ import user from 'Managers/UserManager';
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types').LeaderboardPlayer} LeaderboardPlayer
  */
 
 class BackMultiplayer extends PageBase {
@@ -26,7 +27,10 @@ class BackMultiplayer extends PageBase {
         bestFriends: [],
 
         /** @type {UserOnline[]} */
-        friendsPending: []
+        friendsPending: [],
+
+        /** @type {LeaderboardPlayer[]} */
+        topWorldPlayers: []
     };
 
     /** @type {Symbol | null} */
@@ -47,6 +51,7 @@ class BackMultiplayer extends PageBase {
     componentDidMount() {
         this.updateOnlineState();
         this.updateFriends(user.multiplayer.friends.Get());
+        this.fetchTopWorld();
         this.listenerTcpStateChange = user.server2.tcp.state.AddListener(this.updateOnlineState);
         this.listenerDeviceAuthStateChange = user.server2.deviceAuth.state.AddListener(this.updateOnlineState);
         this.listenerUserAuthEmail = user.server2.userAuth.email.AddListener(this.updateOnlineState);
@@ -67,7 +72,36 @@ class BackMultiplayer extends PageBase {
 
         if (newOnlineState !== onlineState) {
             this.setState({ onlineState: newOnlineState });
+
+            if (newOnlineState === 'authenticated') {
+                this.fetchTopWorld();
+            }
         }
+    };
+
+    fetchTopWorld = async () => {
+        if (!user.server2.IsAuthenticated()) {
+            this.setState({ topWorldPlayers: [] });
+            return;
+        }
+
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'get-leaderboard',
+            periodType: 'weekly',
+            limit: 3
+        });
+
+        if (response === 'interrupted' || response === 'not-sent' || response === 'timeout') {
+            this.setState({ topWorldPlayers: [] });
+            return;
+        }
+
+        if (response.status !== 'get-leaderboard' || response.result === 'error') {
+            this.setState({ topWorldPlayers: [] });
+            return;
+        }
+
+        this.setState({ topWorldPlayers: response.result.players });
     };
 
     /** @param {(Friend | UserOnline)[]} friends */

@@ -8,39 +8,29 @@ const styles = StyleSheet.create({
         paddingBottom: 0
     },
 
+    titleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12
+    },
+
     title: {
-        marginBottom: 12,
+        flex: 1,
         textAlign: 'left',
         fontSize: 21,
         textTransform: 'uppercase'
     },
 
-    topfriendsContainer: {
-        marginTop: 12,
-        marginBottom: 24
+    titleButton: {
+        width: 'auto',
+        paddingVertical: 4,
+        paddingHorizontal: 4
     },
 
-    friendsButtonContainer: {
-        position: 'absolute',
-        left: 36,
-        bottom: 0,
-        borderRadius: 8
-    },
-    friendsButton: {
-        width: 'auto',
-        paddingVertical: 16,
-        paddingHorizontal: 16
-    },
-    leaderboardButtonContainer: {
-        position: 'absolute',
-        right: 36,
-        bottom: 0,
-        borderRadius: 8
-    },
-    leaderboardButton: {
-        width: 'auto',
-        paddingVertical: 16,
-        paddingHorizontal: 16
+    topContainer: {
+        marginTop: 12,
+        marginBottom: 12
     }
 });
 

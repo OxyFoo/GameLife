@@ -1,66 +1,52 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 
 import styles from './style';
 import BackMultiplayer from './back';
 import TopFriends from './TopFriends';
+import TopWorld from './TopWorld';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
-
-import { Gradient } from 'Interface/Primitives';
-import { Button, Text } from 'Interface/Components';
+import { Button, Text, Icon } from 'Interface/Components';
 
 class Multiplayer extends BackMultiplayer {
     render() {
         const lang = langManager.curr['multiplayer'];
-        const { bestFriends } = this.state;
+        const { bestFriends, topWorldPlayers } = this.state;
 
         return (
-            <View style={styles.page}>
-                <Text style={styles.title} color='border'>
-                    {lang['title-top-friends']}
-                </Text>
-
-                <TopFriends style={styles.topfriendsContainer} friends={bestFriends} />
-
-                {/** Bottom buttons: All friends (left) / Leaderboard (right) */}
-                <Gradient
-                    containerStyle={styles.friendsButtonContainer}
-                    angle={140}
-                    colors={[
-                        themeManager.GetColor('main1', { opacity: 0.45 }),
-                        themeManager.GetColor('main1', { opacity: 0.12 })
-                    ]}
-                >
+            <ScrollView style={styles.page}>
+                <View style={styles.titleRow}>
+                    <Text style={styles.title} color='border'>
+                        {lang['title-top-world']}
+                    </Text>
                     <Button
-                        nativeRef={this.refFriendsButton}
-                        style={styles.friendsButton}
+                        style={styles.titleButton}
                         appearance='uniform'
                         color='transparent'
-                        fontColor='gradient'
-                        icon='users'
-                        onPress={this.goToFriends}
-                    />
-                </Gradient>
-
-                <Gradient
-                    containerStyle={styles.leaderboardButtonContainer}
-                    angle={140}
-                    colors={[
-                        themeManager.GetColor('main1', { opacity: 0.45 }),
-                        themeManager.GetColor('main1', { opacity: 0.12 })
-                    ]}
-                >
-                    <Button
-                        style={styles.leaderboardButton}
-                        appearance='uniform'
-                        color='transparent'
-                        fontColor='gradient'
-                        icon='crown'
                         onPress={this.goToLeaderboard}
-                    />
-                </Gradient>
-            </View>
+                    >
+                        <Icon color='gradient' size={24} icon='arrow-square-outline' angle={90} />
+                    </Button>
+                </View>
+
+                <TopWorld style={styles.topContainer} players={topWorldPlayers} />
+
+                <View style={styles.titleRow}>
+                    <Text style={styles.title} color='border'>
+                        {lang['title-top-friends']}
+                    </Text>
+                    <Button
+                        style={styles.titleButton}
+                        appearance='uniform'
+                        color='transparent'
+                        onPress={this.goToFriends}
+                    >
+                        <Icon color='gradient' size={24} icon='arrow-square-outline' angle={90} />
+                    </Button>
+                </View>
+
+                <TopFriends style={styles.topContainer} friends={bestFriends} />
+            </ScrollView>
         );
     }
 

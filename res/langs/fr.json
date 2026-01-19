@@ -471,7 +471,6 @@
 
     "leaderboard": {
         "title": "Classement",
-        "title-general": "CLASSEMENT",
         "input-label-search": "Rechercher un joueur",
         "error-connection": "Connexion au serveur impossible",
         "error-loading": "Erreur lors du chargement du classement",

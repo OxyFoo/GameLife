@@ -471,7 +471,6 @@
 
     "leaderboard": {
         "title": "Leaderboard",
-        "title-general": "RANKINGS",
         "input-label-search": "Search for a player",
         "error-connection": "Unable to connect to server",
         "error-loading": "Error loading leaderboard",

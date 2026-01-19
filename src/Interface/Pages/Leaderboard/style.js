@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     periodSelectorContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
+        marginTop: 12,
         marginBottom: 16,
         gap: 8
     },

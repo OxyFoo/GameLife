@@ -28,10 +28,6 @@ class Leaderboard extends BackLeaderboard {
             <View style={styles.page}>
                 <PageHeader style={styles.header} title={lang['title']} onBackPress={this.Back} />
 
-                <Text style={styles.sectionTitle} color='border'>
-                    {lang['title-general']}
-                </Text>
-
                 <View style={styles.periodSelectorContainer}>
                     {PERIOD_TYPES.map((type) => (
                         <TouchableOpacity
@@ -51,6 +47,9 @@ class Leaderboard extends BackLeaderboard {
                     ))}
                 </View>
 
+                {/*
+                LATER : This will be usefull but later, for now it's not clean-ish, don't like it. 
+                But i'm keeping the logic in the code - no need to remove. 
                 <View style={styles.searchContainer}>
                     <InputText.Thin
                         style={styles.inputSearch}
@@ -59,6 +58,7 @@ class Leaderboard extends BackLeaderboard {
                         onChangeText={this.onChangeSearch}
                     />
                 </View>
+                */}
 
                 {loadingState === 'loading' && (
                     <View style={styles.loadingContainer}>

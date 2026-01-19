@@ -22,14 +22,19 @@ const LineChartSvgProps = {
     graphHeight: 200,
 
     /** @type {boolean} */
-    isAreaChart: false
+    isAreaChart: false,
+
+    /** @type {number} Smoothness factor for curve (0 = straight lines, 0.5 = default/recommended, 1 = very smooth) */
+    smoothness: 0.5
 };
 
 class LineChartSvgBack extends React.Component {
     state = {
         layoutWidth: 0,
         maxValue: 0,
-        points: '',
+
+        /** @type {{ x: number, y: number }[]} */
+        points: [],
 
         /** @type {number[]} */
         yAxisValues: []
@@ -88,24 +93,24 @@ class LineChartSvgBack extends React.Component {
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
+        const { data, graphHeight } = this.props;
+
         let maxValue = 100;
-        if (this.props.data.length > 0) {
-            maxValue = Math.max(...this.props.data.map((d) => d.value)) * 1.05;
+        if (data.length > 0) {
+            maxValue = Math.max(...data.map((d) => d.value)) * 1.05;
         }
 
         const yAxisValues = this.getYAxisValues(maxValue);
 
-        const points = this.props.data
-            .map((item, index) => {
-                const x = this.getXCoordinate(index, this.props.data.length, layoutWidth);
-                const y = this.props.graphHeight - this.scaleY(item.value, maxValue); // Calculate the y-coordinate
-                return `${x},${y}`; // Return the coordinate pair for SVG polyline
-            })
-            .join(' ');
+        const points = data.map((item, index) => {
+            const x = this.getXCoordinate(index, data.length, layoutWidth);
+            const y = graphHeight - this.scaleY(item.value, maxValue);
+            return { x, y };
+        });
 
-        if (Array.isArray(this.props.data) && this.props.data.length > 1) {
-            this.firstDate = this.props.data[0].date;
-            this.lastDate = this.props.data[this.props.data.length - 1].date;
+        if (Array.isArray(data) && data.length > 1) {
+            this.firstDate = data[0].date;
+            this.lastDate = data[data.length - 1].date;
         }
 
         this.setState({ maxValue, points, yAxisValues, layoutWidth });

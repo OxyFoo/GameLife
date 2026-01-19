@@ -480,6 +480,7 @@
         "container-weekly-title": "Statistics",
         "kpi-rank": "Rank",
         "kpi-time": "Time",
+        "kpi-time-hour": "{}h",
         "kpi-activities": "Activities",
         "period-weekly": "Week",
         "period-monthly": "Month",

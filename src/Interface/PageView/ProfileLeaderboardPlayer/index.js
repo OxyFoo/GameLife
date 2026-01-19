@@ -122,7 +122,7 @@ const ProfileLeaderboardPlayer = ({ player }) => {
                     style={styles.kpiProfile}
                     containerStyle={styles.kpiProfileMiddle}
                     title={lang['kpi-time']}
-                    value={`${totalHours}h`}
+                    value={`${lang['kpi-time-hour'].replace('{}', totalHours.toString())}`}
                 />
                 <KPI style={styles.kpiProfile} title={lang['kpi-activities']} value={player.totalActivities} />
             </View>

@@ -11,7 +11,7 @@ import langManager from 'Managers/LangManager';
 
 import Avatar from 'Data/User/Avatar';
 import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
-import { AchievementsGroup, StatsBarTextOnly } from 'Interface/Widgets';
+import { StatsBarTextOnly } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 
 class ProfileFriend extends BackProfileFriend {

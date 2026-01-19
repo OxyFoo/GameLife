@@ -36,19 +36,19 @@ class Multiplayer extends BackMultiplayer {
                 </Text>
 
                 <View style={styles.periodSelectorContainer}>
-                    {PERIOD_TYPES.map((type) => (
+                    {PERIOD_TYPES.map((period) => (
                         <TouchableOpacity
-                            key={type}
+                            key={period}
                             style={[
                                 styles.periodButton,
                                 {
-                                    backgroundColor: themeManager.GetColor(type === periodType ? 'main1' : 'darkBlue')
+                                    backgroundColor: themeManager.GetColor(period === periodType ? 'main1' : 'darkBlue')
                                 }
                             ]}
-                            onPress={() => this.onChangePeriodType(type)}
+                            onPress={() => this.onChangePeriodType(period)}
                         >
-                            <Text color={type === periodType ? 'white' : 'secondary'}>
-                                {lang[`period-${type}`] || type}
+                            <Text color={period === periodType ? 'white' : 'secondary'}>
+                                {lang[`period-${period}`] || period}
                             </Text>
                         </TouchableOpacity>
                     ))}

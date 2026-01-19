@@ -842,6 +842,7 @@
 
         "internet-offline-title": "Pas de connexion",
         "internet-offline-text": "Tu dois être connecté à internet !",
+        "internet-offline-ios-subtext": "Les appareils iOS ont parfois des soucis de reconnexion, essaie de redémarrer l'application si le problème persiste.",
 
         "reward-failed-title": "Échec",
         "reward-failed-message": "Une erreur est survenue, réessaye plus tard.",

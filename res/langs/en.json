@@ -842,6 +842,7 @@
 
         "internet-offline-title": "No connection",
         "internet-offline-text": "You must be connected to the internet!",
+        "internet-offline-ios-subtext": "iOS devices seems to have issues reconnecting, please restart the application if the problem persists.",
 
         "reward-failed-title": "Failure",
         "reward-failed-message": "An error has occurred, please retry again later.",

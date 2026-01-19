@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 
 import BackShop from './back';
 import ShopHeader from './UI/header';
@@ -81,6 +81,11 @@ class Shop extends BackShop {
                 <Icon icon='no-wifi' size={100} />
                 <Text fontSize={22}>{title}</Text>
                 <Text fontSize={16}>{text}</Text>
+                {Platform.OS === 'ios' && (
+                    <Text fontSize={14} color='secondary' style={{ marginTop: 8 }}>
+                        {lang['internet-offline-ios-subtext']}
+                    </Text>
+                )}
             </View>
         );
     };
@@ -117,6 +122,7 @@ const styles = StyleSheet.create({
     },
     noInternetContainer: {
         flex: 1,
+        paddingHorizontal: 24,
         justifyContent: 'center',
         alignItems: 'center'
     }

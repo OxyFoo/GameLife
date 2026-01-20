@@ -4,6 +4,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -11,6 +12,7 @@ import langManager from 'Managers/LangManager';
  *
  * @typedef {object} InputPropsType
  * @property {StyleProp} style
+ * @property {React.RefObject<View | null>} refParent - Ref to the parent View
  * @property {number} size - Size of the donut chart
  * @property {ThemeColor} progressColor - Color of progress
  * @property {ThemeColor} completedColor - Color of completed quests
@@ -24,6 +26,7 @@ import langManager from 'Managers/LangManager';
 
 /** @type {InputPropsType} */
 const InputProps = {
+    refParent: React.createRef(),
     style: {},
     size: 110,
     progressColor: 'success',

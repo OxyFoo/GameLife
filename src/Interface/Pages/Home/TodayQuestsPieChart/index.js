@@ -19,7 +19,7 @@ class TodayQuestsPieChart extends TodayQuestsPieChartBack {
         const chartProgressColor = allCompleted ? completedColor : progressColor;
 
         return (
-            <View style={styles.container}>
+            <View ref={this.props.refParent} style={styles.container}>
                 {/* Absolute add button */}
                 <Button
                     style={styles.absoluteAddButton}

@@ -97,6 +97,7 @@ class Home extends BackHome {
                         color='transparent'
                         icon='add-outline'
                         fontColor='gradient'
+                        onPress={this.newTodo}
                     />
                 </Title>
                 <TodoList style={styles.lastWidget} />

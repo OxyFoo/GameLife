@@ -15,6 +15,7 @@ import { SpringAnimation, TimingAnimation } from 'Utils/Animations';
  * @property {string} [initialText] Initial text of the input
  * @property {number} [maxLength] Maximum length of the input
  * @property {boolean} [multiline] If true, the input is multiline // TODO: ⚠️ Fix this
+ * @property {number} [zIndex] zIndex of the screen input overlay
  * @property {(text: string | null) => void} [callback] Callback called when the input is validated or closed, with the text or null
  * @property {(text: string) => void} [callbackStream] Callback called when the input is changed, with the text
  */
@@ -94,6 +95,7 @@ class ScreenInputBack extends React.Component {
             initialText: '',
             multiline: false,
             maxLength: (params.multiline ?? false) ? 1024 : 64,
+            zIndex: undefined,
             callback: () => {},
             callbackStream: () => {}
         };

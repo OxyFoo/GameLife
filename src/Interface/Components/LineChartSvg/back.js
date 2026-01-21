@@ -102,7 +102,8 @@ class LineChartSvgBack extends React.Component {
 
         let maxValue = 100;
         if (processedData.length > 0) {
-            maxValue = Math.max(...processedData.map((d) => d.value)) * 1.05;
+            const dataMax = processedData.reduce((max, d) => Math.max(max, d.value), 0);
+            maxValue = Math.max(dataMax * 1.05, 1); // Minimum of 1 to avoid division by 0
         }
 
         const yAxisValues = this.getYAxisValues(maxValue);

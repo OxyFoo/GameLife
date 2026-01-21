@@ -853,6 +853,13 @@
         "reward-success-title": "Code used",
         "reward-success-text": "You have obtained the following rewards:",
 
+        "tuto": {
+            "unavailable": "Probabilities are not available at the moment.",
+            "chest-common": "**Simple Chest**\nCommon: {}%\nRare: {}%\nEpic: {}%",
+            "chest-rare": "**Mysterious Chest**\nCommon: {}%\nRare: {}%\nEpic: {}%",
+            "chest-epic": "**Epic Chest**\nCommon: {}%\nRare: {}%\nEpic: {}%"
+        },
+
         "popup-purchase": {
             "purchase-pending": {
                 "title": "Purchase in progress",

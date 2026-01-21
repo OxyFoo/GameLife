@@ -346,7 +346,7 @@ class Shop extends IUserClass {
         }
 
         // Handle failed purchases (slow card declined, etc.)
-        if (purchase.purchaseState === 'failed') {
+        if (purchase.purchaseState === 'unknown') {
             this.#user.interface.console?.AddLog('warn', '[IAP] Purchase failed:', purchase.purchaseState);
             this.#showIAPError('purchase-error');
             // Finalize the failed transaction to clear it from the queue

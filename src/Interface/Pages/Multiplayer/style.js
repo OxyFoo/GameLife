@@ -9,10 +9,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
 
-    header: {
-        marginBottom: 12
-    },
-
     sectionTitle: {
         textAlign: 'left',
         fontSize: 18,
@@ -33,14 +29,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderRadius: 8,
         alignItems: 'center'
-    },
-
-    searchContainer: {
-        marginBottom: 16
-    },
-
-    inputSearch: {
-        flex: 1
     },
 
     loadingContainer: {

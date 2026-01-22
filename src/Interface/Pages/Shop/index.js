@@ -73,15 +73,13 @@ class Shop extends BackShop {
 
     renderNoInternet = () => {
         const lang = langManager.curr['shop'];
-        const title = lang['internet-offline-title'];
-        const text = lang['internet-offline-text'];
 
         return (
             <View style={styles.noInternetContainer}>
                 <Icon icon='no-wifi' size={100} />
-                <Text fontSize={22}>{title}</Text>
+                <Text fontSize={22}>{lang['internet-offline-title']}</Text>
                 <Text fontSize={14} color='secondary' style={styles.noInternetSubtext}>
-                    {text}
+                    {lang['internet-offline-text']}
                 </Text>
             </View>
         );

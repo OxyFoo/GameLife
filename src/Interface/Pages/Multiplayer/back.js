@@ -47,10 +47,7 @@ class BackMultiplayer extends PageBase {
         selfPlayer: null,
 
         /** @type {LeaderboardPeriodType} */
-        periodType: 'weekly',
-
-        /** @type {number} */
-        periodStart: 0
+        periodType: 'weekly'
     };
 
     /** @type {Symbol | null} */
@@ -68,9 +65,6 @@ class BackMultiplayer extends PageBase {
     /** @type {React.RefObject<View | null>} */
     refFriendsButton = React.createRef();
 
-    /** @type {Symbol | null} */
-    listenerTcpState = null;
-
     componentDidMount() {
         this.updateOnlineState();
         this.updateFriends(user.multiplayer.friends.Get());
@@ -78,7 +72,6 @@ class BackMultiplayer extends PageBase {
         this.listenerDeviceAuthStateChange = user.server2.deviceAuth.state.AddListener(this.updateOnlineState);
         this.listenerUserAuthEmail = user.server2.userAuth.email.AddListener(this.updateOnlineState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
-        this.listenerTcpState = user.server2.tcp.state.AddListener(this.onTcpStateChange);
         this.fetchLeaderboard();
     }
 
@@ -87,7 +80,6 @@ class BackMultiplayer extends PageBase {
         user.server2.deviceAuth.state.RemoveListener(this.listenerDeviceAuthStateChange);
         user.server2.userAuth.email.RemoveListener(this.listenerUserAuthEmail);
         user.multiplayer.friends.RemoveListener(this.listenerFriends);
-        user.server2.tcp.state.RemoveListener(this.listenerTcpState);
     }
 
     updateOnlineState = () => {
@@ -121,13 +113,6 @@ class BackMultiplayer extends PageBase {
         });
     };
 
-    onTcpStateChange = () => {
-        const tcpState = user.server2.tcp.state.Get();
-        if (tcpState !== 'connected') {
-            this.Back();
-        }
-    };
-
     /** @param {LeaderboardPeriodType} [periodType] */
     fetchLeaderboard = async (periodType) => {
         this.setState({ loadingState: 'loading' });
@@ -136,7 +121,8 @@ class BackMultiplayer extends PageBase {
 
         const response = await user.server2.tcp.SendAndWait({
             action: 'get-leaderboard',
-            periodType: requestPeriodType
+            periodType: requestPeriodType,
+            limit: 100
         });
 
         // Erreur de connexion
@@ -159,16 +145,16 @@ class BackMultiplayer extends PageBase {
             players,
             filteredPlayers,
             selfPlayer: response.result.self,
-            periodType: response.result.periodType,
-            periodStart: response.result.periodStart
+            periodType: response.result.periodType
         });
     };
 
     /** @param {LeaderboardPeriodType} periodType */
     onChangePeriodType = (periodType) => {
         if (periodType !== this.state.periodType) {
-            this.setState({ periodType });
-            this.fetchLeaderboard(periodType);
+            this.setState({ periodType }, () => {
+                this.fetchLeaderboard(periodType);
+            });
         }
     };
 

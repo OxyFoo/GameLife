@@ -117,7 +117,7 @@
                 "title": "Demander en ami",
                 "texts": {
                     "1": "Clique sur ce bouton pour aller dans la page multijoueur",
-                    "2": "En bas à gauche de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "2": "En bas à droite de la page multijoueur tu as un bouton pour voir la liste de tes amis",
                     "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
@@ -475,9 +475,6 @@
         "error-connection": "Connexion au serveur impossible",
         "error-loading": "Erreur lors du chargement du classement",
         "empty-list": "Aucun joueur trouvé",
-        "label-activities": "Activités",
-        "label-activities-small": "Actis",
-        "container-weekly-title": "Statistiques",
         "kpi-rank": "Rang",
         "kpi-time": "Temps",
         "kpi-time-hour": "{}h",
@@ -532,7 +529,6 @@
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",
 
         "title-top-friends": "Top amis",
-        "title-top-world": "Top mondial (hebdo)",
 
         "category-friend": "Amis",
         "category-friend-pending": "Demandes en attente",

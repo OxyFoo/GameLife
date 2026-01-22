@@ -62,7 +62,7 @@ const ProfileLeaderboardPlayer = ({ player }) => {
     const avatarBodyColor = BODY_COLORS[player.avatar?.SkinColor] || BODY_COLORS[0];
     const containerSize = dataManager.items.GetContainerSize('profile');
 
-    const xpInfo = user.experience.getXPDict(player.totalUserXP);
+    const xpInfo = user.experience.getXPDict(player.totalUserXP, 'user');
     const totalHours = Round(player.totalTime / 60, 1);
 
     return (
@@ -122,7 +122,7 @@ const ProfileLeaderboardPlayer = ({ player }) => {
                     style={styles.kpiProfile}
                     containerStyle={styles.kpiProfileMiddle}
                     title={lang['kpi-time']}
-                    value={`${lang['kpi-time-hour'].replace('{}', totalHours.toString())}`}
+                    value={lang['kpi-time-hour'].replace('{}', totalHours.toString())}
                 />
                 <KPI style={styles.kpiProfile} title={lang['kpi-activities']} value={player.totalActivities} />
             </View>

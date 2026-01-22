@@ -117,7 +117,7 @@
                 "title": "Ask for a friend",
                 "texts": {
                     "1": "Click on this button to go to the multiplayer page",
-                    "2": "At the bottom left of the multiplayer page you have a button to see the list of your friends",
+                    "2": "At the bottom right of the multiplayer page you have a button to see the list of your friends",
                     "3": "At the bottom right, press the button to add a friend",
                     "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
                 }
@@ -475,9 +475,6 @@
         "error-connection": "Unable to connect to server",
         "error-loading": "Error loading leaderboard",
         "empty-list": "No players found",
-        "label-activities": "Activities",
-        "label-activities-small": "Actis",
-        "container-weekly-title": "Statistics",
         "kpi-rank": "Rank",
         "kpi-time": "Time",
         "kpi-time-hour": "{}h",
@@ -532,7 +529,6 @@
         "container-content-error": "An error has occurred, please try again later.",
 
         "title-top-friends": "Top friends",
-        "title-top-world": "Top world (weekly)",
 
         "category-friend": "Friends",
         "category-friend-pending": "Pending",

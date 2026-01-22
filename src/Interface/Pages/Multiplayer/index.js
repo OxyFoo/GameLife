@@ -53,7 +53,7 @@ class Multiplayer extends BackMultiplayer {
                 </View>
 
                 {/*
-                LATER : This will be usefull but later, for now it's not clean-ish, don't like it. 
+                TODO | LATER : This will be usefull but later, for now it's not clean-ish, don't like it. 
                 But i'm keeping the logic in the code - no need to remove. 
                 <View style={styles.searchContainer}>
                     <InputText.Thin
@@ -115,6 +115,7 @@ class Multiplayer extends BackMultiplayer {
                     ]}
                 >
                     <Button
+                        nativeRef={this.refFriendsButton}
                         style={styles.navButton}
                         appearance='uniform'
                         color='transparent'
@@ -129,15 +130,13 @@ class Multiplayer extends BackMultiplayer {
 
     renderNoInternet = () => {
         const lang = langManager.curr['shop'];
-        const title = lang['internet-offline-title'];
-        const text = lang['internet-offline-text'];
 
         return (
             <View style={styles.noInternetContainer}>
                 <Icon icon='no-wifi' size={100} />
-                <Text fontSize={22}>{title}</Text>
+                <Text fontSize={22}>{lang['internet-offline-title']}</Text>
                 <Text fontSize={14} color='secondary' style={styles.noInternetSubtext}>
-                    {text}
+                    {lang['internet-offline-text']}
                 </Text>
             </View>
         );

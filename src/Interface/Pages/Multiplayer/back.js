@@ -40,6 +40,9 @@ class BackMultiplayer extends PageBase {
         /** @type {LeaderboardPlayer[]} */
         players: [],
 
+        /** @type {LeaderboardPlayer[]} */
+        filteredPlayers: [],
+
         /** @type {LeaderboardPlayer | null} */
         selfPlayer: null,
 
@@ -148,9 +151,13 @@ class BackMultiplayer extends PageBase {
             return;
         }
 
+        const players = response.result.players;
+        const filteredPlayers = this.getFilteredPlayers(this.state.search, players);
+
         this.setState({
             loadingState: 'loaded',
-            players: response.result.players,
+            players,
+            filteredPlayers,
             selfPlayer: response.result.self,
             periodType: response.result.periodType,
             periodStart: response.result.periodStart
@@ -167,11 +174,17 @@ class BackMultiplayer extends PageBase {
 
     /** @param {string} search */
     onChangeSearch = (search) => {
-        this.setState({ search });
+        const filteredPlayers = this.getFilteredPlayers(search, this.state.players);
+        this.setState({ search, filteredPlayers });
     };
 
-    getFilteredPlayers = () => {
-        const { search, players } = this.state;
+    /**
+     * Retourne la liste filtrée des joueurs en fonction de la recherche
+     * @param {string} search - Terme de recherche
+     * @param {LeaderboardPlayer[]} players - Liste complète des joueurs
+     * @returns {LeaderboardPlayer[]} - Liste filtrée
+     */
+    getFilteredPlayers = (search, players) => {
         const searchLower = search.trim().toLowerCase();
 
         if (searchLower === '') {

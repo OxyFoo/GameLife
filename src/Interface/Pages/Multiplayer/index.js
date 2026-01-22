@@ -21,13 +21,11 @@ const PERIOD_TYPES = ['weekly', 'monthly', 'yearly'];
 class Multiplayer extends BackMultiplayer {
     render() {
         const lang = langManager.curr['leaderboard'];
-        const { loadingState, selfPlayer, periodType } = this.state;
+        const { loadingState, selfPlayer, periodType, filteredPlayers } = this.state;
 
         if (!user.server2.IsAuthenticated()) {
             return this.renderNoInternet();
         }
-
-        const filteredPlayers = this.getFilteredPlayers();
 
         return (
             <View style={styles.page}>
@@ -61,7 +59,7 @@ class Multiplayer extends BackMultiplayer {
                     <InputText.Thin
                         style={styles.inputSearch}
                         placeholder={lang['input-label-search']}
-                        value={search}
+                        value={this.state.search}
                         onChangeText={this.onChangeSearch}
                     />
                 </View>

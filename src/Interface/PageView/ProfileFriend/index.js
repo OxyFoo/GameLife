@@ -11,7 +11,7 @@ import langManager from 'Managers/LangManager';
 
 import Avatar from 'Data/User/Avatar';
 import { Container, Text, Button, KPI, ProgressBar } from 'Interface/Components';
-import { StatsBarTextOnly } from 'Interface/Widgets';
+import { AchievementsGroup, StatsBarTextOnly } from 'Interface/Widgets';
 import { Round } from 'Utils/Functions';
 
 class ProfileFriend extends BackProfileFriend {
@@ -123,20 +123,17 @@ class ProfileFriend extends BackProfileFriend {
                 )}
 
                 {/** Achievements */}
-                {/*
-                    TODO : show achievements when we will have more of them / when they will be more interesting
-                    {friend.friendshipState === 'accepted' && friend.accountID !== 0 && (
-                        <Container
-                            style={styles.topSpace}
-                            text={lang['container-achievements-title']}
-                            type='rollable'
-                            opened={true}
-                            backgroundColor='dataBigKpi'
-                        >
-                            <AchievementsGroup friend={friend} />
-                        </Container>
-                    )}
-                */}
+                {friend.friendshipState === 'accepted' && friend.accountID !== 0 && (
+                    <Container
+                        style={styles.topSpace}
+                        text={lang['container-achievements-title']}
+                        type='rollable'
+                        opened={true}
+                        backgroundColor='dataBigKpi'
+                    >
+                        <AchievementsGroup friend={friend} />
+                    </Container>
+                )}
 
                 {/** Actions */}
                 {friend.accountID !== 0 && <View style={styles.botSpace}>{this.renderAction()}</View>}

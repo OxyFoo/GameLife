@@ -838,7 +838,7 @@
         "popup-notenoughox-message": "You don't have enough Ox to buy this item.",
 
         "internet-offline-title": "No connection",
-        "internet-offline-text": "Some devices seems to have issues reconnecting, please restart the application if the problem persists.",
+        "internet-offline-text": "The application is not connected to the internet, try restarting the application if the problem persists.",
 
         "reward-failed-title": "Failure",
         "reward-failed-message": "An error has occurred, please retry again later.",

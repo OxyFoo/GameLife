@@ -47,10 +47,10 @@ class Home extends BackHome {
                 <Missions />
 
                 {/* Today recap: Activities & Quests */}
-                <Title ref={this.refQuestsTitle} title={lang['section-today-performance']} />
+                <Title title={lang['section-today-performance']} />
                 <View style={styles.chartsContainer}>
                     <TodayActivitiesPieChart />
-                    <TodayQuestsPieChart />
+                    <TodayQuestsPieChart refParent={this.refQuestsTitle} />
                 </View>
 
                 {/* Main stats & avatar */}
@@ -97,6 +97,7 @@ class Home extends BackHome {
                         color='transparent'
                         icon='add-outline'
                         fontColor='gradient'
+                        onPress={this.newTodo}
                     />
                 </Title>
                 <TodoList style={styles.lastWidget} />

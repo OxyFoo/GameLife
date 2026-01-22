@@ -6,6 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
+import { AddActivity } from 'Interface/Widgets';
 import { GetDate } from 'Utils/Time';
 import { Round } from 'Utils/Functions';
 import { DateFormat } from 'Utils/Date';

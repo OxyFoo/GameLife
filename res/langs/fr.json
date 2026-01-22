@@ -853,6 +853,13 @@
         "reward-success-title": "Code utilisé",
         "reward-success-text": "Tu as obtenu les récompenses suivantes :",
 
+        "tuto": {
+            "unavailable": "Les probabilités ne sont pas disponibles pour le moment.",
+            "chest-common": "**Coffre Simple**\nCommun: {}%\nRare: {}%\nÉpique: {}%",
+            "chest-rare": "**Coffre Mystérieux**\nCommun: {}%\nRare: {}%\nÉpique: {}%",
+            "chest-epic": "**Coffre Mythique**\nCommun: {}%\nRare: {}%\nÉpique: {}%"
+        },
+
         "popup-purchase": {
             "purchase-pending": {
                 "title": "Achat en cours",

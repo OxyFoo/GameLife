@@ -24,30 +24,105 @@ const FadeInTextProps = {
     styleText: {}
 };
 
+/**
+ * Parse markdown-like syntax and return array of segments with formatting
+ * Supports: **bold**, *italic*, __underline__
+ * @param {string} text
+ * @returns {Array<{text: string, bold: boolean, italic: boolean, underline: boolean}>}
+ */
+const parseMarkdown = (text) => {
+    /** @type {Array<{text: string, bold: boolean, italic: boolean, underline: boolean}>} */
+    const segments = [];
+
+    // Regex to match markdown patterns: **bold**, *italic*, __underline__
+    const regex = /(\*\*(.+?)\*\*|\*(.+?)\*|__(.+?)__)/g;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        // Add text before match
+        if (match.index > lastIndex) {
+            segments.push({
+                text: text.slice(lastIndex, match.index),
+                bold: false,
+                italic: false,
+                underline: false
+            });
+        }
+
+        // Determine formatting type
+        const fullMatch = match[0];
+        if (fullMatch.startsWith('**')) {
+            segments.push({ text: match[2], bold: true, italic: false, underline: false });
+        } else if (fullMatch.startsWith('__')) {
+            segments.push({ text: match[4], bold: false, italic: false, underline: true });
+        } else if (fullMatch.startsWith('*')) {
+            segments.push({ text: match[3], bold: false, italic: true, underline: false });
+        }
+
+        lastIndex = regex.lastIndex;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+        segments.push({
+            text: text.slice(lastIndex),
+            bold: false,
+            italic: false,
+            underline: false
+        });
+    }
+
+    // If no markdown found, return original text
+    if (segments.length === 0) {
+        segments.push({ text, bold: false, italic: false, underline: false });
+    }
+
+    return segments;
+};
+
 class FadeInText extends React.Component {
     render() {
         const { style, styleText, children } = this.props;
 
         if (typeof children !== 'string') {
-            user.interface.console?.AddLog('warn', 'FadeInText', 'children is not a string');
+            user.interface?.console?.AddLog('warn', 'FadeInText', 'children is not a string');
             return null;
         }
 
         let index = 0;
+        const lines = children.split('\n');
+
         return (
             <View key={`content-${index}-${children}`} style={[styles.content, style]}>
-                {children.split(' ').map((word) => (
-                    <View key={`word-${index}`} style={styles.word}>
-                        {word.split('').map((char) => (
-                            <AnimatedChar
-                                key={'char-' + (++index).toString()}
-                                index={index}
-                                char={char}
-                                style={styleText}
-                            />
-                        ))}
-                        <AnimatedChar key={++index} char={' '} style={styleText} />
-                    </View>
+                {lines.map((line, lineIndex) => (
+                    <React.Fragment key={`line-${lineIndex}`}>
+                        {parseMarkdown(line).map((segment, segmentIndex) => {
+                            /** @type {TextStyle} */
+                            const segmentStyle = {
+                                ...(segment.bold && { fontWeight: 'bold' }),
+                                ...(segment.italic && { fontStyle: 'italic' }),
+                                ...(segment.underline && {
+                                    textDecorationLine: 'underline'
+                                })
+                            };
+
+                            return segment.text.split(' ').map((word) => (
+                                <View key={`word-${index}-${segmentIndex}`} style={styles.word}>
+                                    {word.split('').map((char) => (
+                                        <AnimatedChar
+                                            key={'char-' + (++index).toString()}
+                                            index={index}
+                                            char={char}
+                                            style={[styleText, segmentStyle]}
+                                        />
+                                    ))}
+                                    <AnimatedChar key={++index} char={' '} style={[styleText, segmentStyle]} />
+                                </View>
+                            ));
+                        })}
+                        {lineIndex < lines.length - 1 && <View style={styles.lineBreak} />}
+                    </React.Fragment>
                 ))}
             </View>
         );
@@ -108,6 +183,10 @@ const styles = StyleSheet.create({
     },
     word: {
         flexDirection: 'row'
+    },
+    lineBreak: {
+        width: '100%',
+        height: 8
     },
     character: {
         fontSize: 36,

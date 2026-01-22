@@ -47,6 +47,10 @@ class BackHome extends PageBase {
     openStatistics = () => {
         user.interface.ChangePage('statistics');
     };
+
+    newTodo = () => {
+        user.interface.ChangePage('todo');
+    };
 }
 
 BackHome.defaultProps = BackHomeProps;

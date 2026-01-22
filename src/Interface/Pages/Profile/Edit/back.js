@@ -201,7 +201,8 @@ class BackProfileEditor extends React.PureComponent {
         user.interface.screenInput?.Open({
             label: lang['input-username'],
             initialText: user.informations.username.Get(),
-            callback: this.onChangeUsername
+            callback: this.onChangeUsername,
+            zIndex: 60
         });
     };
 

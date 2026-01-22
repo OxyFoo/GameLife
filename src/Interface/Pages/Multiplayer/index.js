@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
+import { View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 import styles from './style';
 import BackMultiplayer from './back';
@@ -138,12 +138,9 @@ class Multiplayer extends BackMultiplayer {
             <View style={styles.noInternetContainer}>
                 <Icon icon='no-wifi' size={100} />
                 <Text fontSize={22}>{title}</Text>
-                <Text fontSize={16}>{text}</Text>
-                {Platform.OS === 'ios' && (
-                    <Text fontSize={14} color='secondary' style={{ marginTop: 8 }}>
-                        {lang['internet-offline-ios-subtext']}
-                    </Text>
-                )}
+                <Text fontSize={14} color='secondary' style={styles.noInternetSubtext}>
+                    {text}
+                </Text>
             </View>
         );
     };

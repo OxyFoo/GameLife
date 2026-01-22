@@ -174,6 +174,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 24
+    },
+    noInternetSubtext: {
+        marginTop: 8
     }
 });
 

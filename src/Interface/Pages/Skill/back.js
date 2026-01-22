@@ -6,7 +6,6 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { AddActivity } from 'Interface/Widgets';
 import { GetDate } from 'Utils/Time';
 import { Round } from 'Utils/Functions';
 import { DateFormat } from 'Utils/Date';
@@ -211,15 +210,6 @@ class BackSkill extends PageBase {
             totalDuration += element.duration;
         }
         return Round(totalDuration / 60, 1);
-    };
-
-    addActivity = () => {
-        const { selectedSkill } = this.state;
-        const skillID = selectedSkill.ID;
-
-        this.fe.bottomPanel?.Open({
-            content: <AddActivity openSkillID={skillID} />
-        });
     };
 
     showHistory = () => {

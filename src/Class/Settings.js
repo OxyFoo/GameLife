@@ -14,7 +14,7 @@ import Storage from 'Utils/Storage';
 /** @type {SaveObject_Settings['musicLinks']} */
 const DEFAULT_MUSIC_LINKS = {
     spotify: 'https://open.spotify.com/playlist/2qMPv8Re0IW2FzBGjS7HCG',
-    applemusic: 'https://music.apple.com/fr/playlist/zapnmusic-for-work/pl.u-JPAZEomsDXLGvEb',
+    applemusic: 'https://music.apple.com/fr/artist/zapnmusic/1641077919',
     youtubemusic: 'https://music.youtube.com/playlist?list=PLBo5aRk85uWnkkflI9Of9ecRn8e3SsclZ&si=6szeIToboXpBVot7',
     deezer: 'https://deezer.page.link/huyVFejy9ce3m7YY8'
 };

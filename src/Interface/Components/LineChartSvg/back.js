@@ -29,14 +29,19 @@ const LineChartSvgProps = {
     enableDownsampling: false,
 
     /** @type {number} - Maximum number of points after downsampling (only used if enableDownsampling is true) */
-    downsamplingMaxPoints: 40
+    downsamplingMaxPoints: 40,
+
+    /** @type {number} Smoothness factor for curve (0 = straight lines, 0.5 = default/recommended, 1 = very smooth) */
+    smoothness: 0.5
 };
 
 class LineChartSvgBack extends React.Component {
     state = {
         layoutWidth: 0,
         maxValue: 0,
-        points: '',
+
+        /** @type {{ x: number, y: number }[]} */
+        points: [],
 
         /** @type {number[]} */
         yAxisValues: []
@@ -95,10 +100,10 @@ class LineChartSvgBack extends React.Component {
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
+        const { enableDownsampling, data, downsamplingMaxPoints, graphHeight } = this.props;
+
         // Apply LTTB downsampling (no-op if data.length <= downsamplingMaxPoints)
-        const processedData = this.props.enableDownsampling
-            ? lttbDownsample(this.props.data, this.props.downsamplingMaxPoints)
-            : this.props.data;
+        const processedData = enableDownsampling ? lttbDownsample(data, downsamplingMaxPoints) : data;
 
         let maxValue = 100;
         if (processedData.length > 0) {
@@ -108,17 +113,15 @@ class LineChartSvgBack extends React.Component {
 
         const yAxisValues = this.getYAxisValues(maxValue);
 
-        const points = processedData
-            .map((item, index) => {
-                const x = this.getXCoordinate(index, processedData.length, layoutWidth);
-                const y = this.props.graphHeight - this.scaleY(item.value, maxValue); // Calculate the y-coordinate
-                return `${x},${y}`; // Return the coordinate pair for SVG polyline
-            })
-            .join(' ');
+        const points = processedData.map((item, index) => {
+            const x = this.getXCoordinate(index, processedData.length, layoutWidth);
+            const y = graphHeight - this.scaleY(item.value, maxValue);
+            return { x, y };
+        });
 
-        if (Array.isArray(this.props.data) && this.props.data.length > 1) {
-            this.firstDate = this.props.data[0].date;
-            this.lastDate = this.props.data[this.props.data.length - 1].date;
+        if (Array.isArray(processedData) && processedData.length > 1) {
+            this.firstDate = processedData[0].date;
+            this.lastDate = processedData[processedData.length - 1].date;
         }
 
         this.setState({ maxValue, points, yAxisValues, layoutWidth });

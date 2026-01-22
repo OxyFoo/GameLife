@@ -4,7 +4,7 @@ import { View, Animated, TouchableOpacity, Image } from 'react-native';
 import styles from './style';
 import BackActivityTimer from './back';
 import ActivityTimerTitle from './Sections/title';
-import ActivityTimerScore from './Sections/score';
+import ActivityTimerTimer from './Sections/timer';
 import ActivityTimerFriends from './Sections/friends';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -32,30 +32,36 @@ class ActivityTimer extends BackActivityTimer {
 
         return (
             <View style={styles.content}>
-                {/* Title */}
-                <ActivityTimerTitle currentActivity={currentActivity} />
-
-                {/* Informations */}
-                <ActivityTimerScore currentActivity={currentActivity} />
-
-                {/* Friends ! */}
-                <ActivityTimerFriends currentActivity={currentActivity} />
-
-                {/* Buttons - Cancel / Done */}
-                <View>
-                    <Button style={styles.button} appearance='outline' onPress={this.onPressCancel}>
-                        {bt_cancel}
-                    </Button>
-
-                    <Button style={styles.button} onPress={this.onPressComplete} loading={loading}>
-                        {bt_complete}
-                    </Button>
+                {/* Top Section - Title + Friends */}
+                <View style={styles.topSection}>
+                    <ActivityTimerTitle currentActivity={currentActivity} />
+                    <ActivityTimerFriends currentActivity={currentActivity} />
                 </View>
 
-                {/* Zap'N'Music */}
-                <View>
-                    <Text style={styles.musicTitle}>{lang['timer-music']}</Text>
-                    <View style={styles.imageMap}>{musicKeys.map(this.renderMusic)}</View>
+                {/* Center Section - Timer + Music */}
+                <View style={styles.centerSection}>
+                    <ActivityTimerTimer currentActivity={currentActivity} />
+                    <View style={styles.musicSection}>
+                        <Text style={styles.musicTitle}>{lang['timer-music']}</Text>
+                        <View style={styles.imageMap}>{musicKeys.map(this.renderMusic)}</View>
+                    </View>
+                </View>
+
+                {/* Bottom Section - Buttons */}
+                <View style={styles.bottomSection}>
+                    <View style={styles.row}>
+                        <Button style={styles.button} appearance='outline' onPress={this.onPressCancel}>
+                            {bt_cancel}
+                        </Button>
+
+                        <Button
+                            style={[styles.button, styles.finishButton]}
+                            onPress={this.onPressComplete}
+                            loading={loading}
+                        >
+                            {bt_complete}
+                        </Button>
+                    </View>
                 </View>
             </View>
         );
@@ -73,7 +79,7 @@ class ActivityTimer extends BackActivityTimer {
                 inputRange: [0, 1],
                 outputRange: [1, 0]
             }),
-            transform: [{ translateY: Animated.multiply(128, this.animations[musicKey]) }]
+            transform: [{ translateY: Animated.multiply(64, this.animations[musicKey]) }]
         };
 
         return (

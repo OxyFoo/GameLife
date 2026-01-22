@@ -46,6 +46,9 @@ class TodayQuestsPieChartBack extends React.Component {
     /** @type {Symbol | null} */
     listenerQuests = null;
 
+    /** @type {Symbol | null} */
+    listenerActivities = null;
+
     /** @param {InputPropsType} props */
     constructor(props) {
         super(props);
@@ -60,11 +63,18 @@ class TodayQuestsPieChartBack extends React.Component {
             const newState = this.computeProgress();
             this.setState(newState);
         });
+        this.listenerActivities = user.activities.allActivities.AddListener(() => {
+            const newState = this.computeProgress();
+            this.setState(newState);
+        });
     }
 
     componentWillUnmount() {
         if (this.listenerQuests) {
             user.quests.allQuests.RemoveListener(this.listenerQuests);
+        }
+        if (this.listenerActivities) {
+            user.activities.allActivities.RemoveListener(this.listenerActivities);
         }
     }
 

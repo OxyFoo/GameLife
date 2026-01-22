@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { lttbDownsample } from './downsample';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -23,6 +24,12 @@ const LineChartSvgProps = {
 
     /** @type {boolean} */
     isAreaChart: false,
+
+    /** @type {boolean} - If true, applies LTTB downsampling algorithm to reduce points */
+    enableDownsampling: false,
+
+    /** @type {number} - Maximum number of points after downsampling (only used if enableDownsampling is true) */
+    downsamplingMaxPoints: 40,
 
     /** @type {number} Smoothness factor for curve (0 = straight lines, 0.5 = default/recommended, 1 = very smooth) */
     smoothness: 0.5
@@ -93,24 +100,28 @@ class LineChartSvgBack extends React.Component {
 
     /** @param {number} layoutWidth */
     compute(layoutWidth) {
-        const { data, graphHeight } = this.props;
+        const { enableDownsampling, data, downsamplingMaxPoints, graphHeight } = this.props;
+
+        // Apply LTTB downsampling (no-op if data.length <= downsamplingMaxPoints)
+        const processedData = enableDownsampling ? lttbDownsample(data, downsamplingMaxPoints) : data;
 
         let maxValue = 100;
-        if (data.length > 0) {
-            maxValue = Math.max(...data.map((d) => d.value)) * 1.05;
+        if (processedData.length > 0) {
+            const dataMax = processedData.reduce((max, d) => Math.max(max, d.value), 0);
+            maxValue = Math.max(dataMax * 1.05, 1); // Minimum of 1 to avoid division by 0
         }
 
         const yAxisValues = this.getYAxisValues(maxValue);
 
-        const points = data.map((item, index) => {
-            const x = this.getXCoordinate(index, data.length, layoutWidth);
+        const points = processedData.map((item, index) => {
+            const x = this.getXCoordinate(index, processedData.length, layoutWidth);
             const y = graphHeight - this.scaleY(item.value, maxValue);
             return { x, y };
         });
 
-        if (Array.isArray(data) && data.length > 1) {
-            this.firstDate = data[0].date;
-            this.lastDate = data[data.length - 1].date;
+        if (Array.isArray(processedData) && processedData.length > 1) {
+            this.firstDate = processedData[0].date;
+            this.lastDate = processedData[processedData.length - 1].date;
         }
 
         this.setState({ maxValue, points, yAxisValues, layoutWidth });

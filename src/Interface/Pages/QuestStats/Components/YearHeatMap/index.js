@@ -10,16 +10,6 @@ const GRID_MARGIN = GRID_SIZE / 8;
 const CELLS_PER_ROW = 38; // 152 days / 4 rows = 38 cells per row
 
 class YearHeatMap extends YearHeatMapBack {
-    scrollViewRef = React.createRef();
-
-    componentDidMount() {
-        super.componentDidMount();
-        // Scroll to the end to be on the most recent days
-        setTimeout(() => {
-            this.scrollViewRef.current?.scrollToEnd({ animated: false });
-        }, 100);
-    }
-
     render() {
         const { dataToDisplay } = this.state;
 

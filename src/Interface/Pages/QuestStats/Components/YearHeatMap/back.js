@@ -34,6 +34,8 @@ class YearHeatMapBack extends React.Component {
     /** @type {Symbol | null} */
     activitiesListener = null;
 
+    scrollViewRef = React.createRef();
+
     /** @param {YearHeatMapPropsType} props */
     constructor(props) {
         super(props);
@@ -47,6 +49,11 @@ class YearHeatMapBack extends React.Component {
     componentDidMount() {
         this.GetHeatMapData();
         this.activitiesListener = user.activities.allActivities.AddListener(this.GetHeatMapData);
+        
+        // Scroll to the end to be on the most recent days
+        setTimeout(() => {
+            this.scrollViewRef.current?.scrollToEnd({ animated: false });
+        }, 100);
     }
 
     componentWillUnmount() {

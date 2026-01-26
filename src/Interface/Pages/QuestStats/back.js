@@ -77,7 +77,8 @@ class BackQuest extends PageBase {
         // Calculate days completed by checking activities
         const questActivities = user.activities
             .Get()
-            .filter((activity) => this.selectedQuest.skills.includes(activity.skillID));
+            .filter((activity) => this.selectedQuest.skills.includes(activity.skillID))
+            .filter((activity) => activity.startTime >= this.selectedQuest.created);
 
         // Group activities by day
         const daysDone = new Set();

@@ -11,6 +11,7 @@ import themeManager from 'Managers/ThemeManager';
 import ProfileLeaderboardPlayer from 'Interface/PageView/ProfileLeaderboardPlayer';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import { Button, Text } from 'Interface/Components';
+import { Gradient } from 'Interface/Primitives';
 
 import { rank_purple } from 'Ressources/items/rank/rank';
 
@@ -49,12 +50,10 @@ const getLeaderboardAvatarItems = (avatar) => {
 function RankElement({ item }) {
     if (!item) return null;
 
-    const langLevel = langManager.curr['level'];
     const containerSize = dataManager.items.GetContainerSize('profile');
     const isSelf = user.informations.username.Get().toLocaleLowerCase() === item.username.toLocaleLowerCase();
 
     const componentColor = {
-        backgroundColor: themeManager.GetColor(isSelf ? 'main1' : 'darkBlue'),
         opacity: isSelf ? 0.9 : 1
     };
 
@@ -88,40 +87,43 @@ function RankElement({ item }) {
             appearance='uniform'
             color='transparent'
         >
-            <View style={[styles.frameBorder, statusStyle]}>
-                <AvatarFrame width={44} height={44} renderScale={2} backgroundColor='#00000000'>
-                    <AvatarCharacter
-                        body={item.avatar.Skin || 'human_00'}
-                        bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}
-                        position={containerSize.pos}
-                        scale={containerSize.scale}
-                        items={avatarItems}
-                        portraitMode
-                    />
-                </AvatarFrame>
-            </View>
+            <Gradient
+                containerStyle={styles.itemGradient}
+                style={styles.innerGradient}
+                colors={['#38406573', '#38406526']}
+                angle={100}
+            >
+                <View style={[styles.frameBorder, statusStyle]}>
+                    <AvatarFrame width={44} height={44} renderScale={2} backgroundColor='#00000000'>
+                        <AvatarCharacter
+                            body={item.avatar.Skin || 'human_00'}
+                            bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}
+                            position={containerSize.pos}
+                            scale={containerSize.scale}
+                            items={avatarItems}
+                            portraitMode
+                        />
+                    </AvatarFrame>
+                </View>
 
-            <View style={styles.textContainer}>
-                <Text style={styles.username} color={isSelf ? 'white' : 'primary'}>
-                    {item.username}
-                </Text>
-                <Text style={styles.details} color={isSelf ? 'white' : 'secondary'}>
-                    {titleText || `${langLevel['level-small']} ${user.experience.getXPDict(item.weeklyXP).lvl}`}
-                </Text>
-            </View>
+                <View style={styles.textContainer}>
+                    <Text style={styles.username} color={isSelf ? 'white' : 'primary'}>
+                        {item.username}
+                    </Text>
+                    {titleText !== null && (
+                        <Text style={styles.details} color={isSelf ? 'white' : 'secondary'}>
+                            {titleText}
+                        </Text>
+                    )}
+                </View>
 
-            <View style={styles.xpContainer}>
-                <Text style={styles.xpText} color={isSelf ? 'white' : 'main1'}>
-                    {`${langLevel['level-small']}${item.weeklyXP}`}
-                </Text>
-            </View>
-
-            <View style={styles.rankContainer}>
-                <Image style={styles.rankImage} source={rank_purple} />
-                <Text style={styles.rankText} color={'main1'} fontSize={30 - item.rank.toString().length * 2}>
-                    {item.rank.toString()}
-                </Text>
-            </View>
+                <View style={styles.rankContainer}>
+                    <Image style={styles.rankImage} source={rank_purple} />
+                    <Text style={styles.rankText} color={'main1'} fontSize={30 - item.rank.toString().length * 2}>
+                        {item.rank.toString()}
+                    </Text>
+                </View>
+            </Gradient>
         </Button>
     );
 }

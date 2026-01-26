@@ -117,7 +117,7 @@
                 "title": "Demander en ami",
                 "texts": {
                     "1": "Clique sur ce bouton pour aller dans la page multijoueur",
-                    "2": "En bas à gauche de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "2": "En bas à droite de la page multijoueur tu as un bouton pour voir la liste de tes amis",
                     "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
@@ -471,16 +471,17 @@
 
     "leaderboard": {
         "title": "Classement",
-        "title-general": "CLASSEMENT HEBDOMADAIRE",
         "input-label-search": "Rechercher un joueur",
         "error-connection": "Connexion au serveur impossible",
         "error-loading": "Erreur lors du chargement du classement",
         "empty-list": "Aucun joueur trouvé",
-        "label-activities": "Activitiés",
-        "label-activities-small": "Actis",
-        "container-weekly-title": "Statistiques hebdomadaires",
         "kpi-rank": "Rang",
-        "kpi-weekly-xp": "XP Hebdo"
+        "kpi-time": "Temps",
+        "kpi-time-hour": "{}h",
+        "kpi-activities": "Activités",
+        "period-weekly": "Semaine",
+        "period-monthly": "Mois",
+        "period-yearly": "Année"
     },
 
     "login": {
@@ -528,7 +529,6 @@
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",
 
         "title-top-friends": "Top amis",
-        "title-online-friends": "Amis en ligne",
 
         "category-friend": "Amis",
         "category-friend-pending": "Demandes en attente",
@@ -669,10 +669,6 @@
     },
 
     "profile-friend": {
-        "row-since": "Depuis",
-        "row-activities": "Nombre d'activités",
-        "row-time": "Nombre d'heures",
-
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
 
@@ -842,7 +838,7 @@
         "popup-notenoughox-message": "Tu n'as pas assez d'Ox pour acheter cet item.",
 
         "internet-offline-title": "Pas de connexion",
-        "internet-offline-text": "Tu dois être connecté à internet !",
+        "internet-offline-text": "L'application n'est pas connecté à internet, essaie de redémarrer l'application si le problème persiste.",
 
         "reward-failed-title": "Échec",
         "reward-failed-message": "Une erreur est survenue, réessaye plus tard.",

@@ -64,4 +64,48 @@ function GetActivityIndex(arr, activity) {
     return null;
 }
 
-export { ActivitiesAreEquals, TimeIsFree, GetActivityIndex };
+/**
+ * Get the timestamp of the Monday at 00:00:00 UTC for a given timestamp
+ * @param {number} timestamp - Unix timestamp in seconds
+ * @returns {number} - Timestamp of Monday 00:00:00 UTC
+ */
+function GetMondayTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const dayOfWeek = date.getUTCDay(); // 0 = Sunday, 1 = Monday, ...
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    const monday = new Date(date);
+    monday.setUTCDate(date.getUTCDate() - daysSinceMonday);
+    monday.setUTCHours(0, 0, 0, 0);
+    return Math.floor(monday.getTime() / 1000);
+}
+
+/**
+ * Get the timestamp of the first day of the month at 00:00:00 UTC for a given timestamp
+ * @param {number} timestamp - Unix timestamp in seconds
+ * @returns {number} - Timestamp of 1st of month 00:00:00 UTC
+ */
+function GetMonthStartTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const firstOfMonth = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1, 0, 0, 0, 0));
+    return Math.floor(firstOfMonth.getTime() / 1000);
+}
+
+/**
+ * Get the timestamp of the first day of the year at 00:00:00 UTC for a given timestamp
+ * @param {number} timestamp - Unix timestamp in seconds
+ * @returns {number} - Timestamp of 1st of year 00:00:00 UTC
+ */
+function GetYearStartTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const firstOfYear = new Date(Date.UTC(date.getUTCFullYear(), 0, 1, 0, 0, 0, 0));
+    return Math.floor(firstOfYear.getTime() / 1000);
+}
+
+export {
+    ActivitiesAreEquals,
+    TimeIsFree,
+    GetActivityIndex,
+    GetMondayTimestamp,
+    GetMonthStartTimestamp,
+    GetYearStartTimestamp
+};

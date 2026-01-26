@@ -141,6 +141,9 @@ class QuestStats extends BackQuest {
                         end={{ x: 1, y: 0 }}
                     >
                         <View style={styles.heatmapContent}>
+                            <Text fontSize={16} color='white' style={styles.kpiTitle}>
+                                {lang['kpi-history']}
+                            </Text>
                             <YearHeatMap quest={this.selectedQuest} />
                         </View>
                     </LinearGradient>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import { MinMax } from 'Utils/Functions';
 import { DAY_TIME, GetGlobalTime } from 'Utils/Time';
@@ -23,12 +24,21 @@ const YearHeatMapProps = {
     quest: null
 };
 
-const DAYS_TO_DISPLAY = 152;
+const DAYS_TO_DISPLAY = 364;
+const CELLS_PER_ROW = 91;
+
+/**
+ * @typedef {Object} MonthLabel
+ * @property {string} name
+ * @property {number} position Column position (0-based)
+ */
 
 class YearHeatMapBack extends React.Component {
     state = {
         /** @type {Array<HeatMapDataType>} */
-        dataToDisplay: []
+        dataToDisplay: [],
+        /** @type {Array<MonthLabel>} */
+        monthLabels: []
     };
 
     /** @type {Symbol | null} */
@@ -49,7 +59,7 @@ class YearHeatMapBack extends React.Component {
     componentDidMount() {
         this.GetHeatMapData();
         this.activitiesListener = user.activities.allActivities.AddListener(this.GetHeatMapData);
-        
+
         // Scroll to the end to be on the most recent days
         setTimeout(() => {
             this.scrollViewRef.current?.scrollToEnd({ animated: false });
@@ -84,7 +94,7 @@ class YearHeatMapBack extends React.Component {
                 duration: activity.duration
             }));
 
-        // Last 152 days: Fixed amount displayed on 4 rows with horizontal scroll (38 cells per row)
+        // Last 364 days: Fixed amount displayed on 4 rows with horizontal scroll (91 cells per row)
         for (let i = 0; i < DAYS_TO_DISPLAY; i++) {
             const timeDay = timeGlobalStart + i * DAY_TIME;
             const timeDayEnd = timeDay + DAY_TIME;
@@ -100,7 +110,43 @@ class YearHeatMapBack extends React.Component {
             });
         }
 
-        return { dataToDisplay };
+        // Calculate month labels positions
+        /** @type {Array<MonthLabel>} */
+        const monthLabels = [];
+        const monthNames = langManager.curr['dates']['months-min'];
+
+        let lastMonth = -1;
+
+        for (let i = 0; i < DAYS_TO_DISPLAY; i++) {
+            const timeDay = timeGlobalStart + i * DAY_TIME;
+            const date = new Date(timeDay * 1000);
+            const month = date.getMonth();
+
+            if (month !== lastMonth) {
+                // With 4 rows, each column contains 4 days
+                // So column position = day index / 4
+                const columnPosition = Math.floor(i / 4);
+
+                // Skip the very first partial month (only if at position 0)
+                if (columnPosition >= 1) {
+                    monthLabels.push({
+                        name: monthNames[month],
+                        position: columnPosition
+                    });
+                }
+
+                lastMonth = month;
+            }
+        }
+
+        // Add year to the last month label
+        if (monthLabels.length > 0) {
+            const lastLabel = monthLabels[monthLabels.length - 1];
+            const lastDayDate = new Date(timeGlobalEnd * 1000);
+            lastLabel.name = `${lastLabel.name} ${lastDayDate.getFullYear()}`;
+        }
+
+        return { dataToDisplay, monthLabels };
     };
 }
 

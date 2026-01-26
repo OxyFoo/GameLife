@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         padding: 12
     },
     kpiTitle: {
-        marginBottom: 12,
+        marginBottom: 4,
         textAlign: 'left'
     },
     donutContainer: {

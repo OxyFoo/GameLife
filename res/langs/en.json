@@ -189,6 +189,20 @@
             "Fri.",
             "Sat.",
             "Sun."
+        ],
+        "months-min": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
         ]
     },
 
@@ -1031,6 +1045,7 @@
         "title-data": "Quest data",
         "kpi-efficient": "Attendance",
         "kpi-streak": "Current streak",
+        "kpi-history": "History",
         "button-add-activity": "Add an activity",
         "warn-message": "Warning: the calculation of the strak is uncertain. You may find errors"
     },

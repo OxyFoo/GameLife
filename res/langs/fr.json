@@ -189,6 +189,20 @@
             "Ven.",
             "Sam.",
             "Dim."
+        ],
+        "months-min": [
+            "Jan",
+            "Fév",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Juin",
+            "Juil",
+            "Aoû",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Déc"
         ]
     },
 
@@ -1031,6 +1045,7 @@
         "title-data": "Données",
         "kpi-efficient": "Assiduité",
         "kpi-streak": "Série actuelle",
+        "kpi-history": "Historique",
         "button-add-activity": "Ajouter une activité",
         "warn-message": "Attention : Le calcul de la série n'est pas sûr à 100%. Il est possible d'y voir des erreurs"
     },

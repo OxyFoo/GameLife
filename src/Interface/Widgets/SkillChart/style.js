@@ -2,18 +2,16 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 10,
-        paddingHorizontal: 20,
-        paddingBottom: 0,
-        borderRadius: 20
+        borderRadius: 8
+    },
+    gradientInner: {
+        paddingTop: 18,
+        paddingHorizontal: 18
     },
     titleView: {
         alignItems: 'flex-start',
-        justifyContent: 'flex-start'
-    },
-    headerText: {
-        fontWeight: 'bold',
-        marginVertical: 10
+        justifyContent: 'flex-start',
+        marginBottom: 4
     }
 });
 

@@ -17,7 +17,7 @@ import { Round } from 'Utils/Functions';
 class ProfileFriend extends BackProfileFriend {
     render() {
         const lang = langManager.curr['profile-friend'];
-        const langDates = langManager.curr['dates']['names'];
+        const langKpi = langManager.curr['profile'];
 
         const { friend, xpInfo, statsInfo, activities } = this.state;
 
@@ -86,21 +86,17 @@ class ProfileFriend extends BackProfileFriend {
                 {/** KPI */}
                 {friend.friendshipState === 'accepted' && (
                     <View style={styles.kpiContainer}>
-                        <KPI
-                            style={styles.kpiProfile}
-                            title={lang['row-since']}
-                            value={`${activities.totalDays} ${langDates['day-min']}`}
-                        />
+                        <KPI style={styles.kpiProfile} title={langKpi['kpi-since']} value={`${activities.totalDays}`} />
                         <KPI
                             style={styles.kpiProfile}
                             containerStyle={styles.kpiProfileMiddle}
-                            title={lang['row-activities']}
+                            title={langKpi['kpi-activities']}
                             value={activities.activitiesLength}
                         />
                         <KPI
                             style={styles.kpiProfile}
-                            title={lang['row-time']}
-                            value={`${activities.durationHours} ${langDates['hours-min']}`}
+                            title={langKpi['kpi-time']}
+                            value={`${activities.durationHours}`}
                         />
                     </View>
                 )}

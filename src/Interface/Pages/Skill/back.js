@@ -213,15 +213,6 @@ class BackSkill extends PageBase {
         return Round(totalDuration / 60, 1);
     };
 
-    addActivity = () => {
-        const { selectedSkill } = this.state;
-        const skillID = selectedSkill.ID;
-
-        this.fe.bottomPanel?.Open({
-            content: <AddActivity openSkillID={skillID} />
-        });
-    };
-
     showHistory = () => {
         const { history } = this.state;
 

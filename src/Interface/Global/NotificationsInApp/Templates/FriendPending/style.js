@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
         width: '40%',
         height: 'auto',
         aspectRatio: 1,
+        justifyContent: 'center',
         paddingVertical: 12,
         paddingHorizontal: 0
     },
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     },
     friendPendingBlockButtonContent: {
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'center'
     }
 });
 

@@ -33,11 +33,8 @@ class BackActivityTimer extends PageBase {
             return;
         }
 
-        const transformedLinksArray = Object.keys(user.settings.musicLinks).map((key, index) => {
+        const transformedLinksArray = Object.keys(user.settings.musicLinks).map((key) => {
             const animation = new Animated.Value(1);
-            setTimeout(() => {
-                SpringAnimation(animation, 0).start();
-            }, 200 * index);
             return { [key]: animation };
         });
 
@@ -51,6 +48,10 @@ class BackActivityTimer extends PageBase {
         this.currentActivityEvent = user.activities.currentActivity.AddListener((currentActivity) => {
             this.setState({ currentActivity });
         });
+
+        // Start staggered animations
+        const animations = Object.values(this.animations).map((anim) => SpringAnimation(anim, 0));
+        Animated.stagger(200, animations).start();
     }
 
     componentWillUnmount() {

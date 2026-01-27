@@ -21,7 +21,7 @@ class Statistics extends BackStatistics {
                     {lang['row-text-graph']}
                 </Text>
 
-                <ActivitiesChart activities={activities} />
+                <ActivitiesChart activities={activities} style={styles.activitiesChart} />
 
                 <Text style={styles.sectionTitle} color='secondary'>
                     {lang['row-title-informations']}

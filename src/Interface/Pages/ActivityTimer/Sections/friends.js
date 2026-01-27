@@ -54,10 +54,12 @@ class ActivityTimerFriends extends React.Component {
 
         return (
             <View style={styles.friendsParent}>
-                <Text style={styles.friendsTitle}>{lang['timer-friends']}</Text>
+                <Text style={styles.friendsTitle} fontSize={14} bold>
+                    {lang['timer-friends']}
+                </Text>
 
                 <View style={styles.friendsContainer}>
-                    <Text color={'primary'} fontSize={16}>
+                    <Text color={'primary'} fontSize={14}>
                         {friendsText}
                     </Text>
                 </View>

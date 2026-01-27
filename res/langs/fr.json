@@ -117,7 +117,7 @@
                 "title": "Demander en ami",
                 "texts": {
                     "1": "Clique sur ce bouton pour aller dans la page multijoueur",
-                    "2": "En bas à gauche de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "2": "En bas à droite de la page multijoueur tu as un bouton pour voir la liste de tes amis",
                     "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
@@ -136,8 +136,8 @@
         "xp": "EXP",
         "level": "Niveau",
         "level-small": "Niv",
-        "total": "Activités",
-        "total-hour": "Heures totales",
+        "total": "Occurences",
+        "total-hour": "Temps total",
         "average": "En moyenne {} exp/jour",
         "me": "Moi"
     },
@@ -384,11 +384,11 @@
         "alert-skill-already-exist-message": "Il semble que cette compétence existe déjà, réessaye avec une autre.",
 
         "timer-launch": "Heure de lancement :",
-        "timer-gain": "Gains actuel: {}",
+        "timer-category": "Catégorie :",
         "timer-friends": "Des amis font la même activité en même temps !",
         "timer-complete": "Terminer",
         "timer-cancel": "Annuler",
-        "timer-music": "La musique de Zap t'aidera à te concentrer !",
+        "timer-music": "Un peu de musique pour te concentrer ?",
         "timeralert-cancel-title": "Annuler l'activité ?",
         "timeralert-cancel-message": "Veux-tu annuler cette activité ?",
         "timeralert-tooshort-title": "Trop tôt",
@@ -471,16 +471,17 @@
 
     "leaderboard": {
         "title": "Classement",
-        "title-general": "CLASSEMENT HEBDOMADAIRE",
         "input-label-search": "Rechercher un joueur",
         "error-connection": "Connexion au serveur impossible",
         "error-loading": "Erreur lors du chargement du classement",
         "empty-list": "Aucun joueur trouvé",
-        "label-activities": "Activitiés",
-        "label-activities-small": "Actis",
-        "container-weekly-title": "Statistiques hebdomadaires",
         "kpi-rank": "Rang",
-        "kpi-weekly-xp": "XP Hebdo"
+        "kpi-time": "Temps",
+        "kpi-time-hour": "{}h",
+        "kpi-activities": "Activités",
+        "period-weekly": "Semaine",
+        "period-monthly": "Mois",
+        "period-yearly": "Année"
     },
 
     "login": {
@@ -528,7 +529,6 @@
         "container-content-error": "Une erreur est survenue, réessaye plus tard.",
 
         "title-top-friends": "Top amis",
-        "title-online-friends": "Amis en ligne",
 
         "category-friend": "Amis",
         "category-friend-pending": "Demandes en attente",
@@ -576,7 +576,7 @@
         "value-age-empty": "Date de naissance inconnue",
         "value-title-empty": "Aucun titre sélectionné",
 
-        "row-text-graph": "Heures complétées cette semaine",
+        "row-text-graph": "Heures jouées",
         "row-title-informations": "Informations",
 
         "kpi-title": "Informations",
@@ -669,10 +669,6 @@
     },
 
     "profile-friend": {
-        "row-since": "Depuis",
-        "row-activities": "Nombre d'activités",
-        "row-time": "Nombre d'heures",
-
         "activity-now-title": "Activité en cours: {}",
         "activity-now-start": "Commencer la même activité",
 
@@ -842,7 +838,7 @@
         "popup-notenoughox-message": "Tu n'as pas assez d'Ox pour acheter cet item.",
 
         "internet-offline-title": "Pas de connexion",
-        "internet-offline-text": "Tu dois être connecté à internet !",
+        "internet-offline-text": "L'application n'est pas connecté à internet, essaie de redémarrer l'application si le problème persiste.",
 
         "reward-failed-title": "Échec",
         "reward-failed-message": "Une erreur est survenue, réessaye plus tard.",
@@ -852,6 +848,13 @@
         "reward-wrong-text": "Le code que tu as entré est incorrect.",
         "reward-success-title": "Code utilisé",
         "reward-success-text": "Tu as obtenu les récompenses suivantes :",
+
+        "tuto": {
+            "unavailable": "Les probabilités ne sont pas disponibles pour le moment.",
+            "chest-common": "**Coffre Simple**\nCommun: {}%\nRare: {}%\nÉpique: {}%",
+            "chest-rare": "**Coffre Mystérieux**\nCommun: {}%\nRare: {}%\nÉpique: {}%",
+            "chest-epic": "**Coffre Mythique**\nCommun: {}%\nRare: {}%\nÉpique: {}%"
+        },
 
         "popup-purchase": {
             "purchase-pending": {
@@ -879,15 +882,15 @@
 
     "skill": {
         "title": "Compétence",
-        "text-author": "Une idée de {}",
+        "text-author": "Cette compétence est une idée de {}",
         "text-unallocated": "Compétence désafectée",
         "text-no-xp": "Cette activité ne rapporte pas d'expérience",
         "stats-title": "Statistiques",
         "informations-title": "Informations",
         "history-title": "Historique",
-        "history-show": "Afficher l'historique",
-        "history-activity": "Historique d'activité",
-        "text-add": "Ajouter l'activité"
+        "history-show": "Voir l'historique complet",
+        "history-activity": "Historique",
+        "category-title": "Catégorie :"
     },
 
     "skills": {

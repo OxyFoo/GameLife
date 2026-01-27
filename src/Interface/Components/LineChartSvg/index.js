@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Svg, Polyline, Line, Text, Circle, Path } from 'react-native-svg';
+import { Svg, Line, Text, Circle, Path } from 'react-native-svg';
 
 import LineChartSvgBack from './back';
 import themeManager from 'Managers/ThemeManager';
+import { generateSmoothPath } from 'Utils/Svg';
 
 class LineChartSvg extends LineChartSvgBack {
     render() {
@@ -67,33 +68,37 @@ class LineChartSvg extends LineChartSvgBack {
     }
 
     renderChartContent() {
-        const { data, lineColor, graphHeight, isAreaChart } = this.props;
+        const { lineColor, graphHeight, isAreaChart, smoothness } = this.props;
         const { points, layoutWidth } = this.state;
 
-        if (points.length <= 1 || layoutWidth === 0) {
+        if (points.length === 0 || layoutWidth === 0) {
             return null;
         }
 
         // Colors
         const topLineColor = themeManager.GetColor(lineColor);
-        const fillColor = topLineColor + '30'; // Change this to the desired color for the line on top
+        const fillColor = topLineColor + '30';
 
         // Single point
-        if (data.length === 1) {
-            const [x, y] = points.split(',').map(Number);
-            return <Circle key={`point_single`} cx={x} cy={y} r='3' fill={topLineColor} />;
+        if (points.length === 1) {
+            return <Circle key={`point_single`} cx={points[0].x} cy={points[0].y} r='3' fill={topLineColor} />;
         }
 
-        // Area chart path for the filled area
-        const areaPath = `M${this.leftMargin},${graphHeight} L${points} L${layoutWidth},${graphHeight} Z`;
+        // Generate smooth curve path
+        const linePath = generateSmoothPath(points, smoothness);
+
+        // Area chart path - close the path to fill
+        const firstPoint = points[0];
+        const lastPoint = points[points.length - 1];
+        const areaPath = `${linePath} L${lastPoint.x},${graphHeight} L${firstPoint.x},${graphHeight} Z`;
 
         return (
             <>
                 {/* Area fill */}
                 {isAreaChart && <Path d={areaPath} fill={fillColor} />}
 
-                {/* Line on top */}
-                <Polyline points={points} fill='none' stroke={topLineColor} strokeWidth='3' />
+                {/* Smooth curve line */}
+                <Path d={linePath} fill='none' stroke={topLineColor} strokeWidth='3' />
             </>
         );
     }

@@ -13,37 +13,37 @@ const styles = StyleSheet.create({
 
     // Skill card
     titleContainer: {
-        marginBottom: 24
-    },
-    gradient: {
-        borderRadius: 8
-    },
-    activityView: {
+        marginBottom: 12,
         flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 24
+        alignItems: 'center'
     },
     activityIcon: {
         marginRight: 16
     },
     activityTextView: {
-        flex: 1
+        flex: 1,
+        alignItems: 'flex-start'
     },
     activityText: {
-        fontSize: 16,
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'left'
+    },
+    categoryText: {
+        fontSize: 14,
         textAlign: 'left'
     },
     skillUnallocated: {
-        fontSize: 16,
+        fontSize: 14,
         textAlign: 'left',
-        opacity: 0.7
+        opacity: 0.7,
+        marginTop: 2
     },
     creator: {
         marginTop: 6,
         marginRight: 6,
-        fontSize: 18,
-        textAlign: 'right'
+        fontSize: 16,
+        textAlign: 'center'
     },
 
     // XP bar & level
@@ -59,12 +59,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6
     },
 
+    // Info
+    infoContainer: {
+        marginBottom: 12
+    },
+
     // KPIs
     kpiContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 24
+        marginBottom: 12
     },
     kpiLeft: {
         marginRight: 6
@@ -75,12 +80,12 @@ const styles = StyleSheet.create({
 
     // Skill chart
     skillChart: {
-        marginBottom: 24
+        marginBottom: 12
     },
 
     // History
     historyButton: {
-        marginBottom: 24
+        marginBottom: 12
     },
     historyTitle: {
         marginTop: 24,
@@ -102,16 +107,6 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 6,
         marginVertical: 2
-    },
-
-    // Add activity button
-    addActivity: {
-        position: 'absolute',
-        width: 'auto',
-        right: 24,
-        bottom: 24,
-        paddingVertical: 12,
-        paddingHorizontal: 12
     }
 });
 

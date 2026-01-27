@@ -45,7 +45,7 @@ async function StartMission3() {
             text: missionTexts['2'],
             execAfter: async () => {
                 await user.interface.GetPage('multiplayer')?.goToFriends();
-                await Sleep(500);
+                await Sleep(700);
                 return true;
             }
         },

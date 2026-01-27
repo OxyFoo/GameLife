@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     title: {
-        fontSize: 24,
+        fontSize: 20,
         textAlign: 'left'
     },
 

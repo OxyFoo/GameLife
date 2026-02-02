@@ -34,6 +34,7 @@ class SkillChart extends SkillChartBack {
                             data={this.state.cleanedData}
                             style={this.props.style}
                             lineColor={this.state.lineColor}
+                            enableDownsampling={true}
                         />
                     </View>
                 </LinearGradient>

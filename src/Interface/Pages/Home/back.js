@@ -25,6 +25,10 @@ class BackHome extends PageBase {
     static feShowUserHeader = true;
     static feShowNavBar = true;
 
+    state = {
+        showDayRecap: false
+    };
+
     /** @type {React.RefObject<ScrollView | null>} */
     refScrollView = React.createRef();
 
@@ -50,6 +54,14 @@ class BackHome extends PageBase {
 
     newTodo = () => {
         user.interface.ChangePage('todo');
+    };
+
+    openDayRecap = () => {
+        this.setState({ showDayRecap: true });
+    };
+
+    closeDayRecap = () => {
+        this.setState({ showDayRecap: false });
     };
 }
 

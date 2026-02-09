@@ -8,6 +8,7 @@ import { CardHeader, CardSeparator, CardFooter } from './AddButtons';
 import langManager from 'Managers/LangManager';
 
 import { ActivityTimeline, Button, Icon, Text } from 'Interface/Components';
+import { DayRecap } from 'Interface/Widgets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(null, 0).length + 1) / 2;
@@ -23,20 +24,36 @@ class Calendar extends BackCalendar {
             days,
             animSummaryY,
             animTodayButton,
-            selectedIsToday
+            selectedIsToday,
+            showDayRecap
         } = this.state;
 
         const summaryStyle = {
             marginTop: animSummaryY
         };
 
+        // Get selected date for DayRecap
+        const selectedDate = selectedDay ? new Date(selectedDay.year, selectedDay.month, selectedDay.day) : new Date();
+
         return (
             <View style={styles.page}>
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
-                    <Text style={styles.summaryTitle} color='secondary'>
-                        {lang['activities-title'].replace('{}', todayStrDate)}
-                    </Text>
+                    <View style={styles.summaryHeader}>
+                        <Text style={styles.summaryTitle} color='secondary'>
+                            {todayStrDate}
+                        </Text>
+                        {activities.length > 0 && (
+                            <Button
+                                style={styles.shareButton}
+                                appearance='uniform'
+                                color='transparent'
+                                onPress={this.openDayRecap}
+                            >
+                                <Icon icon='share-2' color='main1' size={20} />
+                            </Button>
+                        )}
+                    </View>
 
                     <View style={styles.summaryHoursContent}>
                         <Text fontSize={12} color='secondary'>
@@ -118,6 +135,9 @@ class Calendar extends BackCalendar {
                         showsHorizontalScrollIndicator={false}
                     />
                 </View>
+
+                {/** Day Recap Modal */}
+                {showDayRecap && <DayRecap date={selectedDate} onClose={this.closeDayRecap} />}
             </View>
         );
     }

@@ -420,7 +420,6 @@
     },
 
     "calendar": {
-        "activities-title": "Activities of {}",
         "add-activity": "Add an activity",
         "hour-min": "h",
         "start": "Start of the day",
@@ -428,7 +427,24 @@
         "utc": "UTC",
         "between-activity": "{}h and {}min available",
         "between-activity-min": "{}min available",
-        "between-activity-hour": "{}h available"
+        "between-activity-hour": "{}h available",
+
+        "recap": {
+            "title": "Today I did - {}",
+            "footer": "GameLife",
+            "save": "Save",
+            "saving": "Saving...",
+            "share": "Share",
+            "sharing": "Sharing...",
+            "empty-title": "No activities",
+            "empty-message": "Add activities to create your daily recap!",
+            "permission-denied-title": "Permission denied",
+            "permission-denied-message": "Cannot save without permission",
+            "saved-title": "Saved!",
+            "saved-message": "Image has been saved to your gallery",
+            "error-title": "Error",
+            "error-message": "Failed to save image"
+        }
     },
 
     "home": {

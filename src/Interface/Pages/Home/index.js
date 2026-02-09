@@ -17,7 +17,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
-import { Missions, TodoList } from 'Interface/Widgets';
+import { DayRecap, Missions, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -47,7 +47,16 @@ class Home extends BackHome {
                 <Missions />
 
                 {/* Today recap: Activities & Quests */}
-                <Title title={lang['section-today-performance']} />
+                <Title title={lang['section-today-performance']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='share-2'
+                        fontColor='gradient'
+                        onPress={this.openDayRecap}
+                    />
+                </Title>
                 <View style={styles.chartsContainer}>
                     <TodayActivitiesPieChart />
                     <TodayQuestsPieChart refParent={this.refQuestsTitle} />
@@ -101,6 +110,9 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodoList style={styles.lastWidget} />
+
+                {/* Day Recap Modal */}
+                {this.state.showDayRecap && <DayRecap date={new Date()} onClose={this.closeDayRecap} />}
             </ScrollView>
         );
     }

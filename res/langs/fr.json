@@ -420,7 +420,6 @@
     },
 
     "calendar": {
-        "activities-title": "Activités du {}",
         "add-activity": "Ajouter une activité",
         "hour-min": "h",
         "start": "Début de journée",
@@ -428,7 +427,24 @@
         "utc": "UTC",
         "between-activity": "{}h et {}min disponibles",
         "between-activity-min": "{}min disponible[s]",
-        "between-activity-hour": "{}h disponible[s]"
+        "between-activity-hour": "{}h disponible[s]",
+
+        "recap": {
+            "title": "Récap du jour - {}",
+            "footer": "GameLife",
+            "save": "Télécharger",
+            "saving": "Téléchargement...",
+            "share": "Partager",
+            "sharing": "Partage...",
+            "empty-title": "Aucune activité",
+            "empty-message": "Ajoute des activités pour créer ton récap du jour !",
+            "permission-denied-title": "Permission refusée",
+            "permission-denied-message": "Impossible de sauvegarder sans permission",
+            "saved-title": "Sauvegardé !",
+            "saved-message": "L'image a été sauvegardée dans ta galerie",
+            "error-title": "Erreur",
+            "error-message": "Impossible de sauvegarder l'image"
+        }
     },
 
     "home": {

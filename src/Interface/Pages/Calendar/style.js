@@ -24,10 +24,22 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
         paddingHorizontal: 24
     },
+    summaryHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8
+    },
     summaryTitle: {
-        marginBottom: 8,
+        flex: 1,
         fontSize: 18,
         textAlign: 'left'
+    },
+    shareButton: {
+        width: 'auto',
+        flexShrink: 0,
+        paddingVertical: 6,
+        paddingHorizontal: 6
     },
     summaryHoursContent: {
         marginBottom: 2,

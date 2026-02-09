@@ -82,7 +82,10 @@ class BackCalendar extends PageBase {
             }),
 
         animSummaryY: new Animated.Value(0),
-        animTodayButton: new Animated.Value(0)
+        animTodayButton: new Animated.Value(0),
+
+        /** @type {boolean} */
+        showDayRecap: false
     };
 
     /** @type {Symbol | null} */
@@ -141,6 +144,18 @@ class BackCalendar extends PageBase {
                 message: "Cette feature n'est pas encore implémentée, un peu de patience 👀"
             }
         });
+    };
+
+    openDayRecap = () => {
+        const { activities } = this.state;
+        if (activities.length === 0) {
+            return;
+        }
+        this.setState({ showDayRecap: true });
+    };
+
+    closeDayRecap = () => {
+        this.setState({ showDayRecap: false });
     };
 
     openToday = () => {

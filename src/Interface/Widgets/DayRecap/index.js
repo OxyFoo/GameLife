@@ -86,10 +86,7 @@ class DayRecap extends BackDayRecap {
                         {/* Close button bottom */}
                         <View style={styles.buttonsContainer}>
                             <TouchableOpacity
-                                style={[
-                                    styles.closeButtonInline,
-                                    { backgroundColor: themeManager.GetColor('border') }
-                                ]}
+                                style={[styles.closeButtonInline, { backgroundColor: themeManager.GetColor('border') }]}
                                 onPress={onClose}
                             >
                                 <Icon icon='close' color='primary' size={20} />
@@ -133,7 +130,10 @@ class DayRecap extends BackDayRecap {
                     </View>
 
                     {/* Capturable card */}
-                    <ViewShot ref={this.viewShotRef} options={{ format: 'png', quality: 1, result: 'tmpfile' }}>
+                    <ViewShot
+                        ref={this.viewShotRef}
+                        options={{ format: 'png', quality: 1, result: 'tmpfile', width: 1080 }}
+                    >
                         <View style={[styles.card, { backgroundColor: cardBgColor }]}>
                             <DynamicBackground opacity={0.2} />
 

@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 14,
-        fontWeight: '600'
+        fontWeight: 'bold'
     },
     closeButtonInline: {
         alignItems: 'center',

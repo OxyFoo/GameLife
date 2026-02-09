@@ -271,8 +271,8 @@ class DayRecap extends BackDayRecap {
                             onPress={this.saveToGallery}
                             disabled={isSaving}
                         >
-                            <Icon icon='save' color='backgroundCard' size={18} />
-                            <Text style={styles.buttonText} color='backgroundCard'>
+                            <Icon icon='save' color='primary' size={18} />
+                            <Text style={styles.buttonText} color='primary'>
                                 {isSaving ? langRecap['saving'] || 'Saving...' : langRecap['save'] || 'Save'}
                             </Text>
                         </TouchableOpacity>
@@ -282,8 +282,8 @@ class DayRecap extends BackDayRecap {
                             onPress={() => this.shareImage('general')}
                             disabled={isSharing}
                         >
-                            <Icon icon='share-2' color='backgroundCard' size={18} />
-                            <Text style={styles.buttonText} color='backgroundCard'>
+                            <Icon icon='share-2' color='primary' size={18} />
+                            <Text style={styles.buttonText} color='primary'>
                                 {isSharing ? langRecap['sharing'] || 'Sharing...' : langRecap['share'] || 'Share'}
                             </Text>
                         </TouchableOpacity>

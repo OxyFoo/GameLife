@@ -20,7 +20,7 @@ import CardContent from './elements/CardContent';
 class DayRecap extends BackDayRecap {
     render() {
         const { onClose } = this.props;
-        const { isSaving, isSharing, recapData } = this.state;
+        const { isSharing, saveStatus, recapData } = this.state;
 
         // Show loading if data not ready
         if (!recapData) {
@@ -139,11 +139,17 @@ class DayRecap extends BackDayRecap {
                         <TouchableOpacity
                             style={[styles.saveButton, { backgroundColor: themeManager.GetColor('main2') }]}
                             onPress={this.saveToGallery}
-                            disabled={isSaving}
+                            disabled={saveStatus === 'saving'}
                         >
                             <Icon icon='save' color='primary' size={18} />
                             <Text style={styles.buttonText} color='primary'>
-                                {isSaving ? langRecap['saving'] || 'Saving...' : langRecap['save'] || 'Save'}
+                                {saveStatus === 'saving'
+                                    ? langRecap['saving'] || 'Saving...'
+                                    : saveStatus === 'success'
+                                      ? langRecap['saved-success'] || 'Confirmé ✓'
+                                      : saveStatus === 'error'
+                                        ? langRecap['saved-error'] || 'Échec ✗'
+                                        : langRecap['save'] || 'Save'}
                             </Text>
                         </TouchableOpacity>
 

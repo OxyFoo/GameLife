@@ -2,9 +2,6 @@ import { Platform, PermissionsAndroid } from 'react-native';
 import Share from 'react-native-share';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
-import user from 'Managers/UserManager';
-import langManager from 'Managers/LangManager';
-
 /**
  * @typedef {import('react-native-view-shot').default} ViewShot
  */
@@ -57,8 +54,7 @@ export const requestSavePermission = async () => {
             buttonPositive: 'OK'
         });
         return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-        console.error('[DayRecap] Permission error:', err);
+    } catch (_err) {
         return false;
     }
 };
@@ -67,51 +63,30 @@ export const requestSavePermission = async () => {
  * Save the recap image to the device gallery
  * @param {React.RefObject<ViewShot | null>} viewShotRef
  * @param {(capturing: boolean) => void} setCapturing
- * @param {(saving: boolean) => void} setSaving
+ * @returns {Promise<boolean>} True if saved successfully, false otherwise
  */
-export const saveToGallery = async (viewShotRef, setCapturing, setSaving) => {
-    const langRecap = langManager.curr['calendar']?.['recap'] || {};
-
+export const saveToGallery = async (viewShotRef, setCapturing) => {
     const hasPermission = await requestSavePermission();
     if (!hasPermission) {
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: langRecap['permission-denied-title'] || 'Permission denied',
-                message: langRecap['permission-denied-message'] || 'Cannot save without permission'
-            }
-        });
-        return;
+        return false;
     }
-
-    setSaving(true);
 
     try {
         const uri = await captureImage(viewShotRef, setCapturing);
         if (!uri) {
-            throw new Error('Failed to capture image');
+            return false;
         }
 
-        await CameraRoll.save(uri, { type: 'photo', album: 'GameLife' });
-
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: langRecap['saved-title'] || 'Saved!',
-                message: langRecap['saved-message'] || 'Image has been saved to your gallery'
-            }
-        });
-    } catch (error) {
-        console.error('[DayRecap] Save error:', error);
-        user.interface.popup?.OpenT({
-            type: 'ok',
-            data: {
-                title: langRecap['error-title'] || 'Error',
-                message: langRecap['error-message'] || 'Failed to save image'
-            }
-        });
-    } finally {
-        setSaving(false);
+        // Ensure proper file:// prefix for iOS
+        const fileUri = uri.startsWith('file://') ? uri : `file://${uri}`;
+        
+        // Add small delay to ensure the file is fully written
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        
+        await CameraRoll.save(fileUri, { type: 'photo' });
+        return true;
+    } catch (_error) {
+        return false;
     }
 };
 
@@ -162,7 +137,6 @@ export const shareImage = async (viewShotRef, setCapturing, setSharing, target =
         if (err?.message?.includes('cancel')) {
             return;
         }
-        console.error('[DayRecap] Share error:', error);
     } finally {
         setSharing(false);
     }

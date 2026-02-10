@@ -434,16 +434,12 @@
             "footer": "GameLife",
             "save": "Save",
             "saving": "Saving...",
+            "saved-success": "Saved ✓",
+            "saved-error": "Failed ✗",
             "share": "Share",
             "sharing": "Sharing...",
             "empty-title": "No activities",
-            "empty-message": "Add activities to create your daily recap!",
-            "permission-denied-title": "Permission denied",
-            "permission-denied-message": "Cannot save without permission",
-            "saved-title": "Saved!",
-            "saved-message": "Image has been saved to your gallery",
-            "error-title": "Error",
-            "error-message": "Failed to save image"
+            "empty-message": "Add activities to create your daily recap!"
         }
     },
 

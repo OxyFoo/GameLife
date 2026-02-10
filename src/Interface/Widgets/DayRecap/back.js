@@ -49,6 +49,7 @@ const DayRecapProps = {
  * @property {boolean} isCapturing
  * @property {boolean} isSaving
  * @property {boolean} isSharing
+ * @property {'idle' | 'saving' | 'success' | 'error'} saveStatus
  * @property {DayRecapData | null} recapData
  */
 
@@ -61,6 +62,7 @@ class BackDayRecap extends React.Component {
         isCapturing: false,
         isSaving: false,
         isSharing: false,
+        saveStatus: 'idle',
         recapData: null
     };
 
@@ -231,11 +233,18 @@ class BackDayRecap extends React.Component {
     /** @param {boolean} value */
     setCapturing = (value) => this.setState({ isCapturing: value });
     /** @param {boolean} value */
-    setSaving = (value) => this.setState({ isSaving: value });
-    /** @param {boolean} value */
     setSharing = (value) => this.setState({ isSharing: value });
 
-    saveToGallery = () => saveToGallery(this.viewShotRef, this.setCapturing, this.setSaving);
+    saveToGallery = async () => {
+        this.setState({ saveStatus: 'saving' });
+        const success = await saveToGallery(this.viewShotRef, this.setCapturing);
+        this.setState({ saveStatus: success ? 'success' : 'error' });
+        
+        // Reset status after 2 seconds
+        setTimeout(() => {
+            this.setState({ saveStatus: 'idle' });
+        }, 2000);
+    };
 
     /**
      * @param {'instagram' | 'instagram-stories' | 'general'} [target='general']

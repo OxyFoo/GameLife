@@ -1,13 +1,12 @@
 import React from 'react';
-import { Platform, PermissionsAndroid } from 'react-native';
-import Share from 'react-native-share';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { GetLocalTime } from 'Utils/Time';
+
+import { saveToGallery, shareImage } from './share';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -196,157 +195,6 @@ class BackDayRecap extends React.Component {
     };
 
     /**
-     * Capture the view as an image
-     * @returns {Promise<string | null>} URI of the captured image
-     */
-    captureImage = async () => {
-        const viewShot = this.viewShotRef.current;
-        if (!viewShot || typeof viewShot.capture !== 'function') {
-            return null;
-        }
-
-        try {
-            this.setState({ isCapturing: true });
-
-            const uri = await viewShot.capture();
-            return uri;
-        } catch (error) {
-            console.error('[DayRecap] Capture error:', error);
-            return null;
-        } finally {
-            this.setState({ isCapturing: false });
-        }
-    };
-
-    /**
-     * Request permission to save to gallery (Android only)
-     * @returns {Promise<boolean>}
-     */
-    requestSavePermission = async () => {
-        if (Platform.OS !== 'android') {
-            return true;
-        }
-
-        // Android 13+ doesn't need WRITE_EXTERNAL_STORAGE for media
-        if (Platform.Version >= 33) {
-            return true;
-        }
-
-        try {
-            const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-                title: 'Permission requise',
-                message: "GameLife a besoin d'accéder à votre galerie pour sauvegarder l'image",
-                buttonNeutral: 'Plus tard',
-                buttonNegative: 'Annuler',
-                buttonPositive: 'OK'
-            });
-            return granted === PermissionsAndroid.RESULTS.GRANTED;
-        } catch (err) {
-            console.error('[DayRecap] Permission error:', err);
-            return false;
-        }
-    };
-
-    /**
-     * Save the recap image to the device gallery
-     */
-    saveToGallery = async () => {
-        const langRecap = langManager.curr['calendar']?.['recap'] || {};
-
-        const hasPermission = await this.requestSavePermission();
-        if (!hasPermission) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langRecap['permission-denied-title'] || 'Permission denied',
-                    message: langRecap['permission-denied-message'] || 'Cannot save without permission'
-                }
-            });
-            return;
-        }
-
-        this.setState({ isSaving: true });
-
-        try {
-            const uri = await this.captureImage();
-            if (!uri) {
-                throw new Error('Failed to capture image');
-            }
-
-            await CameraRoll.save(uri, { type: 'photo', album: 'GameLife' });
-
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langRecap['saved-title'] || 'Saved!',
-                    message: langRecap['saved-message'] || 'Image has been saved to your gallery'
-                }
-            });
-        } catch (error) {
-            console.error('[DayRecap] Save error:', error);
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: langRecap['error-title'] || 'Error',
-                    message: langRecap['error-message'] || 'Failed to save image'
-                }
-            });
-        } finally {
-            this.setState({ isSaving: false });
-        }
-    };
-
-    /**
-     * Share the recap image to social media or other apps
-     * @param {'instagram' | 'instagram-stories' | 'general'} [target='general']
-     */
-    shareImage = async (target = 'general') => {
-        this.setState({ isSharing: true });
-
-        try {
-            const uri = await this.captureImage();
-            if (!uri) {
-                throw new Error('Failed to capture image');
-            }
-
-            /** @type {import('react-native-share').ShareOptions} */
-            const shareOptions = {
-                url: uri,
-                type: 'image/png',
-                failOnCancel: false
-            };
-
-            if (target === 'instagram-stories') {
-                // Share to Instagram Stories
-                await Share.shareSingle({
-                    ...shareOptions,
-                    social: /** @type {any} */ (Share.Social.INSTAGRAM_STORIES),
-                    backgroundBottomColor: '#1a1a2e',
-                    backgroundTopColor: '#16213e'
-                });
-            } else if (target === 'instagram') {
-                // Share to Instagram Feed
-                await Share.shareSingle({
-                    ...shareOptions,
-                    social: /** @type {any} */ (Share.Social.INSTAGRAM)
-                });
-            } else {
-                // General share sheet
-                await Share.open(shareOptions);
-            }
-        } catch (error) {
-            // User cancelled - not an error
-            const err = /** @type {Error | null} */ (error);
-            if (err?.message?.includes('cancel')) {
-                return;
-            }
-            console.error('[DayRecap] Share error:', error);
-        } finally {
-            this.setState({ isSharing: false });
-        }
-    };
-
-    /**
      * Compute radar chart data from stats
      * @param {StatsXP} stats
      * @returns {Array<{label: string, value: number}>}
@@ -377,6 +225,23 @@ class BackDayRecap extends React.Component {
             return `${hours}h`;
         }
         return `${hours}h${mins.toString().padStart(2, '0')}`;
+    };
+
+    // Share functions - delegate to share.js
+    /** @param {boolean} value */
+    setCapturing = (value) => this.setState({ isCapturing: value });
+    /** @param {boolean} value */
+    setSaving = (value) => this.setState({ isSaving: value });
+    /** @param {boolean} value */
+    setSharing = (value) => this.setState({ isSharing: value });
+
+    saveToGallery = () => saveToGallery(this.viewShotRef, this.setCapturing, this.setSaving);
+
+    /**
+     * @param {'instagram' | 'instagram-stories' | 'general'} [target='general']
+     */
+    shareImage = (target = 'general') => {
+        shareImage(this.viewShotRef, this.setCapturing, this.setSharing, target);
     };
 }
 

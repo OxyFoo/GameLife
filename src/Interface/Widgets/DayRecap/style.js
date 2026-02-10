@@ -1,45 +1,60 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-const CARD_WIDTH = Math.min(SCREEN_WIDTH * 0.9, 380);
-const CARD_MAX_HEIGHT = SCREEN_HEIGHT * 0.8;
-const CARD_PADDING = 20;
+const CARD_WIDTH = SCREEN_WIDTH * 0.85;
+const CARD_MAX_HEIGHT = SCREEN_HEIGHT * 0.75;
 
 const styles = StyleSheet.create({
+    // Absolute fill for background touch
+    absoluteFill: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
+
     // Modal overlay
     overlay: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
         justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 40
+        alignItems: 'center'
     },
 
     // Top row for close button
     topRow: {
         width: CARD_WIDTH,
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginBottom: 12
+        justifyContent: 'flex-end'
     },
     closeButtonTop: {
         padding: 8
     },
 
-    // Main card container (this is what gets captured)
-    card: {
+    // Visible frame - ScrollView container with max height
+    visibleFrame: {
         width: CARD_WIDTH,
         maxHeight: CARD_MAX_HEIGHT,
-        borderRadius: 20,
-        padding: CARD_PADDING,
+        flexGrow: 0,
+        marginVertical: 12
+    },
+
+    // Visible card - same 9:16 ratio as hidden card
+    visibleCard: {
+        width: CARD_WIDTH,
+        aspectRatio: 9 / 16,
         overflow: 'hidden'
     },
 
     // Empty state card
     emptyCard: {
+        width: '80%',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 60
+        paddingVertical: 60,
+        overflow: 'hidden',
+        borderRadius: 16
     },
     emptyTitle: {
         fontSize: 20,
@@ -53,158 +68,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
 
-    // Header section
-    header: {
-        alignItems: 'center',
-        marginBottom: 16
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 4
-    },
-    dateText: {
-        fontSize: 14
-    },
-
-    // Level bar section
-    levelContainer: {
-        width: '100%',
-        marginBottom: 8
-    },
-    levelRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 6
-    },
-    levelText: {
-        fontSize: 14
-    },
-    xpText: {
-        fontSize: 14,
-        fontWeight: '600'
-    },
-    progressBar: {
-        borderRadius: 4
-    },
-
-    // Donut + Activities section
-    mainContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 16
-    },
-    donutContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    donutCenter: {
-        position: 'absolute',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    donutCenterText: {
-        fontSize: 24,
-        fontWeight: 'bold'
-    },
-    activitiesList: {
-        flex: 1,
-        paddingLeft: 8,
-        overflow: 'hidden'
-    },
-    activityItem: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        marginBottom: 6
-    },
-    activityName: {
-        flex: 1,
-        fontSize: 16,
-        textAlign: 'left'
-    },
-    activityDuration: {
-        flexShrink: 0,
-        fontSize: 16,
-        textAlign: 'left'
-    },
-
-    // Separator
-    separator: {
-        height: 1,
-        marginVertical: 16
-    },
-
-    // Stats section
-    statsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    statsBars: {
-        flex: 1
-    },
-    statBarRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 6
-    },
-    statBadge: {
-        paddingHorizontal: 8,
-        paddingVertical: 3,
-        borderRadius: 6,
-        marginRight: 8,
-        minWidth: 42,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    statBadgeText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    statLabel: {
-        fontSize: 14
-    },
-    radarContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-
-    // Footer with logo
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 24
-    },
-    footerLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6
-    },
-    footerLogo: {
-        width: 20,
-        height: 20,
-        resizeMode: 'contain'
-    },
-    footerRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8
-    },
-    logoText: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        letterSpacing: 1
-    },
-
     // Share buttons (outside captured area)
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 20,
         gap: 12
     },
     shareButton: {
@@ -226,15 +93,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 14,
         fontWeight: 'bold'
-    },
-    closeButtonInline: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 44,
-        height: 44,
-        borderRadius: 12
     }
 });
 
-export { CARD_WIDTH, CARD_PADDING };
 export default styles;

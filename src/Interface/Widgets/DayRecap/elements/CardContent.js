@@ -7,11 +7,12 @@ import Footer from './Footer';
 import Header from './Header';
 import LevelProgress from './LevelProgress';
 import DonutSection from './DonutSection';
-import BottomRow from './BottomRow';
+import StatsSection from './StatsSection';
+import QuestSection from './QuestSection';
 
 /**
  * @typedef {import('../back').DayRecapData} DayRecapData
- * @typedef {import('../back').QuestProgress} QuestProgress
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
  */
 
 /**
@@ -21,9 +22,11 @@ import BottomRow from './BottomRow';
  * @param {Array<{label: string, value: number, stroke: string}>} props.donutData - Donut chart data
  * @param {Array<{label: string, value: number}>} props.radarData - Radar chart data
  * @param {string} props.totalTimeFormatted - Formatted total time
+ * @param {Array<keyof StatsXP>} props.statsKeys - Stats keys to display
  * @param {Date} props.date - Date to display
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter
  * @param {Record<string, string>} [props.langRecap] - Language strings for recap
+ * @param {Record<string, string>} [props.langStats] - Language strings for stats
  * @param {Record<string, string>} [props.langLevel] - Language strings for level
  */
 const CardContent = ({
@@ -31,13 +34,15 @@ const CardContent = ({
     donutData,
     radarData,
     totalTimeFormatted,
+    statsKeys,
     date,
     formatDuration,
     langRecap = {},
+    langStats = {},
     langLevel = {}
 }) => {
-    const { username, level, xpGained, xpCurrent, xpNext, skills, questProgress } = recapData;
-    const borderColor = themeManager.GetColor('border');
+    const { username, level, xpGained, xpCurrent, xpNext, skills, statsGained, questProgress } = recapData;
+    const separatorColor = themeManager.GetColor('border', { opacity: 0.3 });
 
     return (
         <View style={styles.mainContent}>
@@ -52,9 +57,13 @@ const CardContent = ({
                 formatDuration={formatDuration}
             />
 
-            <View style={[styles.separator, { backgroundColor: borderColor }]} />
+            <View style={[styles.separator, { backgroundColor: separatorColor }]} />
 
-            <BottomRow radarData={radarData} questProgress={questProgress} langRecap={langRecap} />
+            <StatsSection statsKeys={statsKeys} statsGained={statsGained} radarData={radarData} lang={langStats} />
+
+            <View style={[styles.separator, { backgroundColor: separatorColor }]} />
+
+            <QuestSection questProgress={questProgress} lang={langRecap} />
 
             <Footer text={langRecap['footer']} />
         </View>
@@ -71,7 +80,7 @@ const styles = StyleSheet.create({
     },
     separator: {
         height: 1,
-        marginBottom: 12
+        marginVertical: 0
     }
 });
 

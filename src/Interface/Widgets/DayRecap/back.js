@@ -19,10 +19,18 @@ import { saveToGallery, shareImage } from './share';
  * @property {number} durationMinutes
  * @property {string} color
  *
+ * @typedef {object} QuestDetail
+ * @property {string} title
+ * @property {boolean} completed
+ * @property {number} progress - 0 to 1
+ * @property {number} streak - Current streak
+ * @property {string} timeText - Time done / goal
+ *
  * @typedef {object} QuestProgress
  * @property {number} completedQuests
  * @property {number} totalQuests
  * @property {boolean} allCompleted
+ * @property {QuestDetail[]} quests
  *
  * @typedef {object} DayRecapData
  * @property {string} username
@@ -217,6 +225,8 @@ class BackDayRecap extends React.Component {
 
         let totalQuests = 0;
         let completedQuests = 0;
+        /** @type {QuestDetail[]} */
+        const quests = [];
 
         for (const quest of allQuests) {
             const days = user.quests.GetDays(quest, time);
@@ -224,16 +234,27 @@ class BackDayRecap extends React.Component {
 
             if (todayDay && todayDay.state !== 'disabled') {
                 totalQuests++;
-                if (todayDay.state === 'past' || todayDay.progress >= 1.0) {
+                const completed = todayDay.state === 'past' || todayDay.progress >= 1.0;
+                if (completed) {
                     completedQuests++;
                 }
+                const streak = user.quests.GetStreak(quest);
+                const timeText = user.quests.GetQuestTimeText(quest);
+                quests.push({
+                    title: quest.title,
+                    completed,
+                    progress: Math.min(todayDay.progress, 1),
+                    streak,
+                    timeText
+                });
             }
         }
 
         return {
             completedQuests,
             totalQuests,
-            allCompleted: totalQuests > 0 && completedQuests === totalQuests
+            allCompleted: totalQuests > 0 && completedQuests === totalQuests,
+            quests
         };
     };
 

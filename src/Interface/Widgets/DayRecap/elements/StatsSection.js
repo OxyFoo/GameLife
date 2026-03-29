@@ -20,7 +20,7 @@ const StatsSection = ({ statsKeys, statsGained, radarData, lang = {} }) => {
     return (
         <View style={styles.statsContainer}>
             <View style={styles.statsBars}>
-                {statsKeys.map((key) => {
+                {statsKeys.slice(0, 6).map((key) => {
                     const value = statsGained[key];
 
                     return (
@@ -39,7 +39,7 @@ const StatsSection = ({ statsKeys, statsGained, radarData, lang = {} }) => {
             </View>
 
             <View style={styles.radarContainer}>
-                <RadarChart data={radarData} size={160} showLabels={true} levels={4} />
+                <RadarChart data={radarData} size={130} showLabels={true} levels={4} />
             </View>
         </View>
     );
@@ -48,38 +48,37 @@ const StatsSection = ({ statsKeys, statsGained, radarData, lang = {} }) => {
 const styles = StyleSheet.create({
     statsContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 12
+        alignItems: 'center'
     },
     statsBars: {
-        flex: 1
+        flex: 1,
+        marginRight: 12
+    },
+    radarContainer: {
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     statBarRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 4
+        marginBottom: 2
     },
     statBadge: {
-        paddingHorizontal: 8,
-        paddingVertical: 3,
-        borderRadius: 6,
-        marginRight: 8,
-        minWidth: 42,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 5,
+        marginRight: 6,
+        minWidth: 36,
         alignItems: 'center',
         justifyContent: 'center'
     },
     statBadgeText: {
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: 'bold',
         textAlign: 'center'
     },
     statLabel: {
-        fontSize: 14
-    },
-    radarContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+        fontSize: 12
     }
 });
 

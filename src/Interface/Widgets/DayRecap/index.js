@@ -6,6 +6,7 @@ import styles from './style';
 import BackDayRecap from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
+import user from 'Managers/UserManager';
 import { Icon, Text } from 'Interface/Components';
 import { DynamicBackground } from 'Interface/Primitives';
 
@@ -31,9 +32,10 @@ class DayRecap extends BackDayRecap {
             );
         }
 
-        const { totalMinutes, categories, totalStats } = recapData;
+        const { totalMinutes, categories, statsGained, totalStats } = recapData;
 
         const langRecap = langManager.curr['calendar']?.['recap'] || {};
+        const langStats = langManager.curr['statistics']?.['names'] || {};
         const langLevel = langManager.curr['level'] || {};
 
         // Check if there are no activities
@@ -86,6 +88,9 @@ class DayRecap extends BackDayRecap {
         // Format total time
         const totalTimeFormatted = this.formatDuration(totalMinutes);
 
+        // Get stats keys for display (only show non-zero stats)
+        const statsKeys = user.experience.statsKey.filter((key) => statsGained[key] > 0);
+
         // Card background color from theme
         const cardBgColor = themeManager.GetColor('background');
 
@@ -117,9 +122,11 @@ class DayRecap extends BackDayRecap {
                                     donutData={donutData}
                                     radarData={radarData}
                                     totalTimeFormatted={totalTimeFormatted}
+                                    statsKeys={statsKeys}
                                     date={this.props.date}
                                     formatDuration={this.formatDuration}
                                     langRecap={langRecap}
+                                    langStats={langStats}
                                     langLevel={langLevel}
                                 />
                             </View>

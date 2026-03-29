@@ -21,7 +21,7 @@ const DonutSection = ({ donutData, totalTime, skills, formatDuration }) => {
     return (
         <View style={styles.mainContent}>
             <View style={styles.donutContainer}>
-                <DonutChart data={donutData} size={120} strokeWidth={8} strokeLinecap='round' delay={0} segmentGap={10}>
+                <DonutChart data={donutData} size={80} strokeWidth={7} strokeLinecap='round' delay={0} segmentGap={10}>
                     <View style={styles.donutCenter}>
                         <Text style={styles.donutCenterText} color='primary'>
                             {totalTime}
@@ -31,7 +31,7 @@ const DonutSection = ({ donutData, totalTime, skills, formatDuration }) => {
             </View>
 
             <View style={styles.activitiesList}>
-                {skills.slice(0, 4).map((skill, index) => (
+                {skills.slice(0, 5).map((skill, index) => (
                     <View key={index} style={styles.activityItem}>
                         <Text style={styles.activityName} color='primary'>
                             {skill.name}{' '}
@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
     donutContainer: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginRight: 12
     },
     donutCenter: {
         position: 'absolute',
@@ -63,27 +63,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     donutCenterText: {
-        fontSize: 24,
+        fontSize: 18,
         fontWeight: 'bold'
     },
     activitiesList: {
         flex: 1,
-        paddingLeft: 8,
         overflow: 'hidden'
     },
     activityItem: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        marginBottom: 4
+        marginBottom: 2
     },
     activityName: {
         flex: 1,
-        fontSize: 16,
+        fontSize: 13,
         textAlign: 'left'
     },
     activityDuration: {
         flexShrink: 0,
-        fontSize: 16,
+        fontSize: 13,
         textAlign: 'left'
     }
 });

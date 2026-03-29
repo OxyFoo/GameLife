@@ -19,6 +19,11 @@ import { saveToGallery, shareImage } from './share';
  * @property {number} durationMinutes
  * @property {string} color
  *
+ * @typedef {object} QuestProgress
+ * @property {number} completedQuests
+ * @property {number} totalQuests
+ * @property {boolean} allCompleted
+ *
  * @typedef {object} DayRecapData
  * @property {string} username
  * @property {number} level
@@ -30,6 +35,7 @@ import { saveToGallery, shareImage } from './share';
  * @property {ActivityData[]} skills - For activity list (individual skills)
  * @property {StatsXP} statsGained
  * @property {StatsXP} totalStats
+ * @property {QuestProgress} questProgress
  *
  * @typedef {object} DayRecapProps
  * @property {StyleProp} [style]
@@ -179,6 +185,9 @@ class BackDayRecap extends React.Component {
         const xpNext = experience.xpInfo.next;
         const totalStats = experience.stats;
 
+        // Compute quest progress for this date
+        const questProgress = this.computeQuestProgress(date);
+
         /** @type {DayRecapData} */
         const recapData = {
             username,
@@ -190,10 +199,42 @@ class BackDayRecap extends React.Component {
             categories,
             skills,
             statsGained,
-            totalStats
+            totalStats,
+            questProgress
         };
 
         this.setState({ recapData });
+    };
+
+    /**
+     * Compute quest progress for a given date
+     * @param {Date} date
+     * @returns {QuestProgress}
+     */
+    computeQuestProgress = (date) => {
+        const time = GetLocalTime(date);
+        const allQuests = user.quests.Get();
+
+        let totalQuests = 0;
+        let completedQuests = 0;
+
+        for (const quest of allQuests) {
+            const days = user.quests.GetDays(quest, time);
+            const todayDay = days.find((day) => day.isToday);
+
+            if (todayDay && todayDay.state !== 'disabled') {
+                totalQuests++;
+                if (todayDay.state === 'past' || todayDay.progress >= 1.0) {
+                    completedQuests++;
+                }
+            }
+        }
+
+        return {
+            completedQuests,
+            totalQuests,
+            allCompleted: totalQuests > 0 && completedQuests === totalQuests
+        };
     };
 
     /**

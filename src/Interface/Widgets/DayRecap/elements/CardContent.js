@@ -7,11 +7,11 @@ import Footer from './Footer';
 import Header from './Header';
 import LevelProgress from './LevelProgress';
 import DonutSection from './DonutSection';
-import StatsSection from './StatsSection';
+import BottomRow from './BottomRow';
 
 /**
  * @typedef {import('../back').DayRecapData} DayRecapData
- * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
+ * @typedef {import('../back').QuestProgress} QuestProgress
  */
 
 /**
@@ -21,11 +21,9 @@ import StatsSection from './StatsSection';
  * @param {Array<{label: string, value: number, stroke: string}>} props.donutData - Donut chart data
  * @param {Array<{label: string, value: number}>} props.radarData - Radar chart data
  * @param {string} props.totalTimeFormatted - Formatted total time
- * @param {Array<keyof StatsXP>} props.statsKeys - Stats keys to display
  * @param {Date} props.date - Date to display
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter
  * @param {Record<string, string>} [props.langRecap] - Language strings for recap
- * @param {Record<string, string>} [props.langStats] - Language strings for stats
  * @param {Record<string, string>} [props.langLevel] - Language strings for level
  */
 const CardContent = ({
@@ -33,14 +31,12 @@ const CardContent = ({
     donutData,
     radarData,
     totalTimeFormatted,
-    statsKeys,
     date,
     formatDuration,
     langRecap = {},
-    langStats = {},
     langLevel = {}
 }) => {
-    const { username, level, xpGained, xpCurrent, xpNext, statsGained, skills } = recapData;
+    const { username, level, xpGained, xpCurrent, xpNext, skills, questProgress } = recapData;
     const borderColor = themeManager.GetColor('border');
 
     return (
@@ -58,7 +54,7 @@ const CardContent = ({
 
             <View style={[styles.separator, { backgroundColor: borderColor }]} />
 
-            <StatsSection statsKeys={statsKeys} statsGained={statsGained} radarData={radarData} lang={langStats} />
+            <BottomRow radarData={radarData} questProgress={questProgress} langRecap={langRecap} />
 
             <Footer text={langRecap['footer']} />
         </View>

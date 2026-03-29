@@ -31,7 +31,7 @@ const LevelProgress = ({ level, xpGained, xpCurrent, xpNext, lang = {} }) => {
 const styles = StyleSheet.create({
     levelContainer: {
         width: '100%',
-        marginBottom: 12
+        marginBottom: 16
     },
     levelRow: {
         flexDirection: 'row',

@@ -33,7 +33,9 @@ class Calendar extends BackCalendar {
         };
 
         // Get selected date for DayRecap
-        const selectedDate = selectedDay ? new Date(selectedDay.year, selectedDay.month, selectedDay.day) : new Date();
+        const selectedDate = selectedIsToday
+            ? new Date()
+            : selectedDay ? new Date(selectedDay.year, selectedDay.month, selectedDay.day) : new Date();
 
         return (
             <View style={styles.page}>

@@ -9,15 +9,16 @@ import { getStartOfMonth, getStartOfWeek } from './utils';
 /**
  * @param {Activity[]} activities
  * @param {Quest} quest
+ * @param {number} [time]
  * @returns {number} Streak
  */
-function getStreakFromMonthOrWeek(activities, quest) {
+function getStreakFromMonthOrWeek(activities, quest, time = GetLocalTime()) {
     if (activities.length === 0) {
         return 0;
     }
 
     let streak = 0;
-    const timeNow = GetLocalTime();
+    const timeNow = time;
     const todayMidnight = timeNow - (timeNow % DAY_TIME) - GetTimeZone() * 60 * 60;
 
     const allActivitiesTime = activities.map((activity) => ({

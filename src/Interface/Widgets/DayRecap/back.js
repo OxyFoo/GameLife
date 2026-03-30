@@ -230,20 +230,20 @@ class BackDayRecap extends React.Component {
 
         for (const quest of allQuests) {
             const days = user.quests.GetDays(quest, time);
-            const todayDay = days.find((day) => day.isToday);
+            const selectedDay = days.find((day) => day.isToday);
 
-            if (todayDay && todayDay.state !== 'disabled') {
+            if (selectedDay && selectedDay.state !== 'disabled') {
                 totalQuests++;
-                const completed = todayDay.state === 'past' || todayDay.progress >= 1.0;
+                const completed = selectedDay.state === 'past' || selectedDay.progress >= 1.0;
                 if (completed) {
                     completedQuests++;
                 }
-                const streak = user.quests.GetStreak(quest);
-                const timeText = user.quests.GetQuestTimeText(quest);
+                const streak = user.quests.GetStreak(quest, time);
+                const timeText = user.quests.GetQuestTimeText(quest, time);
                 quests.push({
                     title: quest.title,
                     completed,
-                    progress: Math.min(todayDay.progress, 1),
+                    progress: Math.min(selectedDay.progress, 1),
                     streak,
                     timeText
                 });

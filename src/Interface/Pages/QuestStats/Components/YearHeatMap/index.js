@@ -23,6 +23,7 @@ class YearHeatMap extends YearHeatMapBack {
                 style={this.props.style}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
+                onContentSizeChange={this.handleContentSizeChange}
             >
                 <View style={{ width: heatMapWidth }}>
                     <View style={styles.monthLabelContainer}>

@@ -25,7 +25,6 @@ const YearHeatMapProps = {
 };
 
 const DAYS_TO_DISPLAY = 364;
-const CELLS_PER_ROW = 91;
 
 /**
  * @typedef {Object} MonthLabel
@@ -59,12 +58,12 @@ class YearHeatMapBack extends React.Component {
     componentDidMount() {
         this.GetHeatMapData();
         this.activitiesListener = user.activities.allActivities.AddListener(this.GetHeatMapData);
-
-        // Scroll to the end to be on the most recent days
-        setTimeout(() => {
-            this.scrollViewRef.current?.scrollToEnd({ animated: false });
-        }, 100);
     }
+
+    /** Scroll to the end when the content is rendered */
+    handleContentSizeChange = () => {
+        this.scrollViewRef.current?.scrollToEnd({ animated: false });
+    };
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);

@@ -1,14 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import themeManager from 'Managers/ThemeManager';
-
 import Footer from './Footer';
 import Header from './Header';
 import LevelProgress from './LevelProgress';
-import DonutSection from './DonutSection';
-import StatsSection from './StatsSection';
-import QuestSection from './QuestSection';
+import TemplateRouter from '../templates';
 
 /**
  * @typedef {import('../back').DayRecapData} DayRecapData
@@ -16,7 +12,7 @@ import QuestSection from './QuestSection';
  */
 
 /**
- * Card content component - composes all recap elements
+ * Card content component - composes header, level, template content, and footer
  * @param {object} props
  * @param {DayRecapData} props.recapData - Recap data
  * @param {Array<{label: string, value: number, stroke: string}>} props.donutData - Donut chart data
@@ -24,6 +20,7 @@ import QuestSection from './QuestSection';
  * @param {string} props.totalTimeFormatted - Formatted total time
  * @param {Array<keyof StatsXP>} props.statsKeys - Stats keys to display
  * @param {Date} props.date - Date to display
+ * @param {string} [props.template] - Template name (tripleStack, dualStack, chartRow)
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter
  * @param {Record<string, string>} [props.langRecap] - Language strings for recap
  * @param {Record<string, string>} [props.langStats] - Language strings for stats
@@ -36,13 +33,13 @@ const CardContent = ({
     totalTimeFormatted,
     statsKeys,
     date,
+    template = 'tripleStack',
     formatDuration,
     langRecap = {},
     langStats = {},
     langLevel = {}
 }) => {
     const { username, level, xpGained, xpCurrent, xpNext, skills, statsGained, questProgress } = recapData;
-    const separatorColor = themeManager.GetColor('border', { opacity: 0.3 });
 
     return (
         <View style={styles.mainContent}>
@@ -50,20 +47,19 @@ const CardContent = ({
 
             <LevelProgress level={level} xpGained={xpGained} xpCurrent={xpCurrent} xpNext={xpNext} lang={langLevel} />
 
-            <DonutSection
+            <TemplateRouter
+                template={template}
                 donutData={donutData}
-                totalTime={totalTimeFormatted}
+                totalTimeFormatted={totalTimeFormatted}
                 skills={skills}
                 formatDuration={formatDuration}
+                statsKeys={statsKeys}
+                statsGained={statsGained}
+                radarData={radarData}
+                questProgress={questProgress}
+                langStats={langStats}
+                langRecap={langRecap}
             />
-
-            <View style={[styles.separator, { backgroundColor: separatorColor }]} />
-
-            <StatsSection statsKeys={statsKeys} statsGained={statsGained} radarData={radarData} lang={langStats} />
-
-            <View style={[styles.separator, { backgroundColor: separatorColor }]} />
-
-            <QuestSection questProgress={questProgress} lang={langRecap} />
 
             <Footer text={langRecap['footer']} />
         </View>
@@ -77,10 +73,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
         paddingVertical: 40
-    },
-    separator: {
-        height: 1,
-        marginVertical: 0
     }
 });
 

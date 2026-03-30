@@ -64,6 +64,7 @@ const DayRecapProps = {
  * @property {boolean} isSaving
  * @property {boolean} isSharing
  * @property {'idle' | 'saving' | 'success' | 'error'} saveStatus
+ * @property {string} template
  * @property {DayRecapData | null} recapData
  */
 
@@ -77,7 +78,13 @@ class BackDayRecap extends React.Component {
         isSaving: false,
         isSharing: false,
         saveStatus: 'idle',
+        template: 'tripleStack',
         recapData: null
+    };
+
+    /** @param {string} template */
+    setTemplate = (template) => {
+        this.setState({ template });
     };
 
     componentDidMount() {

@@ -11,6 +11,7 @@ import { Icon, Text } from 'Interface/Components';
 import { DynamicBackground } from 'Interface/Primitives';
 
 import CardContent from './elements/CardContent';
+import { TEMPLATE_NAMES } from './templates';
 
 /**
  * @typedef {import('./back').ActivityData} ActivityData
@@ -19,7 +20,7 @@ import CardContent from './elements/CardContent';
 class DayRecap extends BackDayRecap {
     render() {
         const { onClose } = this.props;
-        const { isSharing, saveStatus, recapData } = this.state;
+        const { isSharing, saveStatus, template, recapData } = this.state;
 
         // Show loading if data not ready
         if (!recapData) {
@@ -102,8 +103,27 @@ class DayRecap extends BackDayRecap {
                         <View style={styles.absoluteFill} />
                     </TouchableWithoutFeedback>
 
-                    {/* Close button top right */}
+                    {/* Top row: template buttons (left) + close (right) */}
                     <View style={styles.topRow}>
+                        <View style={styles.templateButtons}>
+                            {TEMPLATE_NAMES.map((name, index) => (
+                                <TouchableOpacity
+                                    key={name}
+                                    style={[
+                                        styles.templateButton,
+                                        template === name && { backgroundColor: themeManager.GetColor('main1') }
+                                    ]}
+                                    onPress={() => this.setTemplate(name)}
+                                >
+                                    <Text
+                                        style={styles.templateButtonText}
+                                        color={template === name ? 'backgroundCard' : 'secondary'}
+                                    >
+                                        {index + 1}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                         <TouchableOpacity style={styles.closeButtonTop} onPress={onClose}>
                             <Icon icon='close' color='primary' size={24} />
                         </TouchableOpacity>
@@ -124,6 +144,7 @@ class DayRecap extends BackDayRecap {
                                     totalTimeFormatted={totalTimeFormatted}
                                     statsKeys={statsKeys}
                                     date={this.props.date}
+                                    template={template}
                                     formatDuration={this.formatDuration}
                                     langRecap={langRecap}
                                     langStats={langStats}

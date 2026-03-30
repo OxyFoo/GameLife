@@ -26,10 +26,28 @@ const styles = StyleSheet.create({
     topRow: {
         width: CARD_WIDTH,
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     closeButtonTop: {
         padding: 8
+    },
+    templateButtons: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8
+    },
+    templateButton: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.15)'
+    },
+    templateButtonText: {
+        fontSize: 13,
+        fontWeight: 'bold'
     },
 
     // Visible frame - ScrollView container with max height

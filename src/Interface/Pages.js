@@ -11,7 +11,6 @@ const PAGES = {
     itemreward:             require('./Pages/ItemReward').default,
     friends:                require('./Pages/Friends').default,
     home:                   require('./Pages/Home').default,
-    leaderboard:            require('./Pages/Leaderboard').default,
     loading:                require('./Pages/Loading').default,
     login:                  require('./Pages/Login').default,
     multiplayer:            require('./Pages/Multiplayer').default,

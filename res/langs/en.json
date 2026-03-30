@@ -117,7 +117,7 @@
                 "title": "Ask for a friend",
                 "texts": {
                     "1": "Click on this button to go to the multiplayer page",
-                    "2": "At the bottom left of the multiplayer page you have a button to see the list of your friends",
+                    "2": "At the bottom right of the multiplayer page you have a button to see the list of your friends",
                     "3": "At the bottom right, press the button to add a friend",
                     "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
                 }
@@ -136,8 +136,8 @@
         "xp": "XP",
         "level": "Level",
         "level-small": "Lvl",
-        "total": "Activities",
-        "total-hour": "Total hours",
+        "total": "Occurrences",
+        "total-hour": "Total time",
         "average": "AVERAGE {} XP/DAY",
         "me": "Me"
     },
@@ -398,11 +398,11 @@
         "alert-skill-already-exist-message": "This skill already exists, please choose another one.",
 
         "timer-launch": "Launch time:",
-        "timer-gain": "Current gains: {}",
+        "timer-category": "Category:",
         "timer-friends": "Friends doing the same activity at the same time!",
         "timer-complete": "Complete",
         "timer-cancel": "Cancel",
-        "timer-music": "Zap music will help you focus",
+        "timer-music": "music to help focus ?",
         "timeralert-cancel-title": "Cancel activity",
         "timeralert-cancel-message": "Are you sure you want to cancel this activity?",
         "timeralert-tooshort-title": "Too early",
@@ -485,16 +485,17 @@
 
     "leaderboard": {
         "title": "Leaderboard",
-        "title-general": "WEEKLY RANKINGS",
         "input-label-search": "Search for a player",
         "error-connection": "Unable to connect to server",
         "error-loading": "Error loading leaderboard",
         "empty-list": "No players found",
-        "label-activities": "Activities",
-        "label-activities-small": "Actis",
-        "container-weekly-title": "Weekly Statistics",
         "kpi-rank": "Rank",
-        "kpi-weekly-xp": "Weekly XP"
+        "kpi-time": "Time",
+        "kpi-time-hour": "{}h",
+        "kpi-activities": "Activities",
+        "period-weekly": "Week",
+        "period-monthly": "Month",
+        "period-yearly": "Year"
     },
 
     "login": {
@@ -542,7 +543,6 @@
         "container-content-error": "An error has occurred, please try again later.",
 
         "title-top-friends": "Top friends",
-        "title-online-friends": "Online friends",
 
         "category-friend": "Friends",
         "category-friend-pending": "Pending",
@@ -590,7 +590,7 @@
         "value-age-empty": "Date of birth unknown",
         "value-title-empty": "No title selected",
 
-        "row-text-graph": "Hours completed this week",
+        "row-text-graph": "Hours played",
         "row-title-informations": "Informations",
 
         "kpi-title": "Informations",
@@ -683,10 +683,6 @@
     },
 
     "profile-friend": {
-        "row-since": "Since",
-        "row-activities": "Number of activities",
-        "row-time": "Time spent",
-
         "activity-now-title": "Activity now: {}",
         "activity-now-start": "Start the same activity",
 
@@ -856,7 +852,7 @@
         "popup-notenoughox-message": "You don't have enough Ox to buy this item.",
 
         "internet-offline-title": "No connection",
-        "internet-offline-text": "You must be connected to the internet!",
+        "internet-offline-text": "The application is not connected to the internet, try restarting the application if the problem persists.",
 
         "reward-failed-title": "Failure",
         "reward-failed-message": "An error has occurred, please retry again later.",
@@ -866,6 +862,13 @@
         "reward-wrong-text": "The code you entered is incorrect.",
         "reward-success-title": "Code used",
         "reward-success-text": "You have obtained the following rewards:",
+
+        "tuto": {
+            "unavailable": "Probabilities are not available at the moment.",
+            "chest-common": "**Simple Chest**\nCommon: {}%\nRare: {}%\nEpic: {}%",
+            "chest-rare": "**Mysterious Chest**\nCommon: {}%\nRare: {}%\nEpic: {}%",
+            "chest-epic": "**Epic Chest**\nCommon: {}%\nRare: {}%\nEpic: {}%"
+        },
 
         "popup-purchase": {
             "purchase-pending": {
@@ -893,15 +896,15 @@
 
     "skill": {
         "title": "Skill",
-        "text-author": "An idea from {}",
+        "text-author": "This skill was an idea from {}",
         "text-unallocated": "Competence unallocated",
         "text-no-xp": "This activity does not earn experience",
         "stats-title": "Statistiques",
         "informations-title": "Informations",
         "history-title": "History",
-        "history-show": "Show history",
+        "history-show": "See entire history",
         "history-activity": "Activity history",
-        "text-add": "Add activity"
+        "category-title": "Category:"
     },
 
     "skills": {

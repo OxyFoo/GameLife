@@ -62,7 +62,8 @@ const ProfileLeaderboardPlayer = ({ player }) => {
     const avatarBodyColor = BODY_COLORS[player.avatar?.SkinColor] || BODY_COLORS[0];
     const containerSize = dataManager.items.GetContainerSize('profile');
 
-    const xpInfo = user.experience.getXPDict(player.weeklyXP, 'user');
+    const xpInfo = user.experience.getXPDict(player.totalUserXP, 'user');
+    const totalHours = Round(player.totalTime / 60, 1);
 
     return (
         <ScrollView
@@ -102,12 +103,16 @@ const ProfileLeaderboardPlayer = ({ player }) => {
             </View>
 
             {/** XP Bar */}
-            <View style={styles.botSpace}>
-                <View style={styles.xpRow}>
-                    <Text>{langLevel['level'] + ' ' + xpInfo.lvl}</Text>
-                    <Text>{Round(xpInfo.xp) + '/' + xpInfo.next}</Text>
-                </View>
+            <View style={styles.xpbarContainer}>
                 <ProgressBar value={xpInfo.xp} maxValue={xpInfo.next} />
+                <View style={styles.xpRow}>
+                    <Text fontSize={14} color={'secondary'}>
+                        {langLevel['level'] + ' ' + xpInfo.lvl}
+                    </Text>
+                    <Text fontSize={14} color={'secondary'}>
+                        {Round(xpInfo.xp) + '/' + xpInfo.next + ' ' + langLevel['xp']}
+                    </Text>
+                </View>
             </View>
 
             {/** Weekly Stats */}
@@ -116,10 +121,10 @@ const ProfileLeaderboardPlayer = ({ player }) => {
                 <KPI
                     style={styles.kpiProfile}
                     containerStyle={styles.kpiProfileMiddle}
-                    title={lang['kpi-weekly-xp'] || 'XP Hebdo'}
-                    value={player.weeklyXP}
+                    title={lang['kpi-time']}
+                    value={lang['kpi-time-hour'].replace('{}', totalHours.toString())}
                 />
-                <KPI style={styles.kpiProfile} title={langLevel['level']} value={xpInfo.lvl} />
+                <KPI style={styles.kpiProfile} title={lang['kpi-activities']} value={player.totalActivities} />
             </View>
         </ScrollView>
     );

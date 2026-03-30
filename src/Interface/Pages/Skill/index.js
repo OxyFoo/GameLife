@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { View, ScrollView } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import BackSkill from './back';
 import styles from './style';
 import langManager from 'Managers/LangManager';
-import themeManager from 'Managers/ThemeManager';
 
 import { Round } from 'Utils/Functions';
 import { Text, Icon, ProgressBar, Button, KPI } from 'Interface/Components';
@@ -30,36 +28,18 @@ class Skill extends BackSkill {
 
                     {/* Skill name and icon */}
                     <View style={styles.titleContainer}>
-                        <LinearGradient
-                            style={styles.gradient}
-                            colors={[
-                                themeManager.GetColor('main1', { opacity: 0.65 }),
-                                themeManager.GetColor('main1', { opacity: 0.25 })
-                            ]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={styles.activityView}>
-                                <Icon style={styles.activityIcon} xml={selectedSkill.xml} />
-                                <View style={styles.activityTextView}>
-                                    <Text
-                                        style={styles.activityText}
-                                    >{`${selectedSkill.name} - ${selectedSkill.category}`}</Text>
-                                    {!selectedSkill.enabled && (
-                                        <Text style={styles.skillUnallocated} color='warning'>
-                                            {lang['text-unallocated']}
-                                        </Text>
-                                    )}
-                                </View>
-                            </View>
-                        </LinearGradient>
-
-                        {/* Creator */}
-                        {selectedSkill.creator !== '' && (
-                            <Text style={styles.creator} color='secondary'>
-                                {selectedSkill.creator}
+                        <Icon style={styles.activityIcon} xml={selectedSkill.xml} size={40} />
+                        <View style={styles.activityTextView}>
+                            <Text style={styles.activityText}>{selectedSkill.name}</Text>
+                            <Text style={styles.categoryText}>
+                                {lang['category-title']} {selectedSkill.category}
                             </Text>
-                        )}
+                            {!selectedSkill.enabled && (
+                                <Text style={styles.skillUnallocated} color='warning'>
+                                    {lang['text-unallocated']}
+                                </Text>
+                            )}
+                        </View>
                     </View>
 
                     {/* Level and XP bar */}
@@ -68,8 +48,8 @@ class Skill extends BackSkill {
                             <>
                                 <ProgressBar color='main1' value={selectedSkill.xp} maxValue={selectedSkill.next} />
                                 <View style={styles.levelsView}>
-                                    <Text>{selectedSkill.level}</Text>
-                                    <Text>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
+                                    <Text fontSize={14}>{selectedSkill.level}</Text>
+                                    <Text fontSize={14} color='secondary'>{`${txtCurrXp}/${txtNextXP} ${txtXP}`}</Text>
                                 </View>
                             </>
                         ) : (
@@ -81,53 +61,46 @@ class Skill extends BackSkill {
                     <Text style={styles.title} color='border'>
                         {lang['informations-title']}
                     </Text>
-                    <View style={styles.kpiContainer}>
-                        <KPI containerStyle={styles.kpiLeft} title={langLevel['total']} value={history.length} />
-                        <KPI
-                            containerStyle={styles.kpiRight}
-                            title={langLevel['total-hour']}
-                            value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
-                        />
+                    <View style={styles.infoContainer}>
+                        <View style={styles.kpiContainer}>
+                            <KPI containerStyle={styles.kpiLeft} title={langLevel['total']} value={history.length} />
+                            <KPI
+                                containerStyle={styles.kpiRight}
+                                title={langLevel['total-hour']}
+                                value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
+                            />
+                        </View>
+
+                        {/* Skill use chart */}
+                        {selectedSkill.ID !== 0 && (
+                            <SkillChart
+                                key={`activities-length-${history.length}`}
+                                style={styles.skillChart}
+                                skillID={selectedSkill.ID}
+                                chartWidth={300}
+                            />
+                        )}
+
+                        {/* History */}
+                        {history.length > 0 && (
+                            <Button
+                                style={styles.historyButton}
+                                appearance='outline'
+                                color='main1'
+                                onPress={this.showHistory}
+                            >
+                                {lang['history-show']}
+                            </Button>
+                        )}
                     </View>
 
-                    {/* Skill use chart */}
-                    <Text style={styles.title} color='border'>
-                        {lang['history-activity']}
-                    </Text>
-                    {selectedSkill.ID !== 0 && (
-                        <SkillChart
-                            // TODO : Update the graph more properly
-                            key={`activities-length-${history.length}`}
-                            style={styles.skillChart}
-                            skillID={selectedSkill.ID}
-                            chartWidth={300}
-                        />
-                    )}
-
-                    {/* History */}
-                    {history.length > 0 && (
-                        <Button
-                            style={styles.historyButton}
-                            appearance='uniform'
-                            color='main1'
-                            onPress={this.showHistory}
-                        >
-                            {lang['history-show']}
-                        </Button>
+                    {/* Creator */}
+                    {selectedSkill.creator !== '' && (
+                        <Text style={styles.creator} color='secondary'>
+                            {selectedSkill.creator}
+                        </Text>
                     )}
                 </ScrollView>
-
-                {/* Absolute add button */}
-                {selectedSkill.enabled && (
-                    <Button
-                        style={styles.addActivity}
-                        appearance='uniform'
-                        color='main2'
-                        onPress={this.addActivity}
-                        icon='add-outline'
-                        iconSize={30}
-                    />
-                )}
             </>
         );
     }

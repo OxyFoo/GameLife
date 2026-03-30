@@ -8,6 +8,9 @@ import user from 'Managers/UserManager';
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
+ *
+ * @typedef {import('@oxyfoo/gamelife-types').LeaderboardPlayer} LeaderboardPlayer
+ * @typedef {import('@oxyfoo/gamelife-types').LeaderboardPeriodType} LeaderboardPeriodType
  */
 
 class BackMultiplayer extends PageBase {
@@ -26,7 +29,25 @@ class BackMultiplayer extends PageBase {
         bestFriends: [],
 
         /** @type {UserOnline[]} */
-        friendsPending: []
+        friendsPending: [],
+
+        /** @type {'loading' | 'loaded' | 'error-connection' | 'error-server'} */
+        loadingState: 'loading',
+
+        /** @type {string} */
+        search: '',
+
+        /** @type {LeaderboardPlayer[]} */
+        players: [],
+
+        /** @type {LeaderboardPlayer[]} */
+        filteredPlayers: [],
+
+        /** @type {LeaderboardPlayer | null} */
+        selfPlayer: null,
+
+        /** @type {LeaderboardPeriodType} */
+        periodType: 'weekly'
     };
 
     /** @type {Symbol | null} */
@@ -51,6 +72,7 @@ class BackMultiplayer extends PageBase {
         this.listenerDeviceAuthStateChange = user.server2.deviceAuth.state.AddListener(this.updateOnlineState);
         this.listenerUserAuthEmail = user.server2.userAuth.email.AddListener(this.updateOnlineState);
         this.listenerFriends = user.multiplayer.friends.AddListener(this.updateFriends);
+        this.fetchLeaderboard();
     }
 
     componentWillUnmount() {
@@ -91,20 +113,79 @@ class BackMultiplayer extends PageBase {
         });
     };
 
-    goToFriends = async () => {
-        await new Promise((resolve) => {
-            user.interface.ChangePage('friends', {
-                callback: () => resolve(null)
-            });
+    /** @param {LeaderboardPeriodType} [periodType] */
+    fetchLeaderboard = async (periodType) => {
+        this.setState({ loadingState: 'loading' });
+
+        const requestPeriodType = periodType ?? this.state.periodType;
+
+        const response = await user.server2.tcp.SendAndWait({
+            action: 'get-leaderboard',
+            periodType: requestPeriodType,
+            limit: 100
+        });
+
+        // Erreur de connexion
+        if (response === 'interrupted' || response === 'not-sent' || response === 'timeout') {
+            this.setState({ loadingState: 'error-connection' });
+            return;
+        }
+
+        // Erreur serveur
+        if (response.status !== 'get-leaderboard' || response.result === 'error') {
+            this.setState({ loadingState: 'error-server' });
+            return;
+        }
+
+        const players = response.result.players;
+        const filteredPlayers = this.getFilteredPlayers(this.state.search, players);
+
+        this.setState({
+            loadingState: 'loaded',
+            players,
+            filteredPlayers,
+            selfPlayer: response.result.self,
+            periodType: response.result.periodType
         });
     };
 
-    goToLeaderboard = () => {
-        user.interface.ChangePage('leaderboard');
+    /** @param {LeaderboardPeriodType} periodType */
+    onChangePeriodType = (periodType) => {
+        if (periodType !== this.state.periodType) {
+            this.setState({ periodType }, () => {
+                this.fetchLeaderboard(periodType);
+            });
+        }
+    };
+
+    /** @param {string} search */
+    onChangeSearch = (search) => {
+        const filteredPlayers = this.getFilteredPlayers(search, this.state.players);
+        this.setState({ search, filteredPlayers });
+    };
+
+    /**
+     * Retourne la liste filtrée des joueurs en fonction de la recherche
+     * @param {string} search - Terme de recherche
+     * @param {LeaderboardPlayer[]} players - Liste complète des joueurs
+     * @returns {LeaderboardPlayer[]} - Liste filtrée
+     */
+    getFilteredPlayers = (search, players) => {
+        const searchLower = search.trim().toLowerCase();
+
+        if (searchLower === '') {
+            return players;
+        }
+
+        return players.filter((player) => player.username.toLowerCase().includes(searchLower));
     };
 
     Back = () => {
         user.interface.BackHandle();
+    };
+
+    goToFriends = () => {
+        user.interface.ChangePage('friends');
     };
 }
 

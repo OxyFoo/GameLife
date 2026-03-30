@@ -29,31 +29,29 @@ class Shop extends BackShop {
             return this.renderLoading();
         }
 
-        const Help = undefined; //() => {};
-
         return (
             <View style={styles.container}>
                 <ShopHeader ref={this.refHeader} style={styles.shopHeader} onScrollToIAP={this.scrollToIAP} />
 
                 <ScrollView style={styles.page} ref={this.refPage} showsVerticalScrollIndicator={false}>
-                    <Banner id='dailyDeals' onPress={Help} title={lang['banner-daily']} showTimer />
+                    <Banner id='dailyDeals' title={lang['banner-daily']} showTimer />
                     <ShopDailyDeals ref={this.refDailyDeals} dailyItemsID={dailyItemsID} />
 
                     <View onLayout={(e) => (this.iapSectionY = e.nativeEvent.layout.y)}>
-                        <Banner id='iap' onPress={Help} title={lang['banner-iap']} />
+                        <Banner id='iap' title={lang['banner-iap']} />
                     </View>
                     <ShopIAP ref={this.refIAP} />
 
                     {targetChestsStats !== null && (
                         <>
-                            <Banner id='targetChests' onPress={Help} title={lang['banner-targeted-chest']} />
+                            <Banner id='targetChests' onPress={this.handleHelp} title={lang['banner-targeted-chest']} />
                             <ShopTargetedChests ref={this.refTargetedChests} targetChestsStats={targetChestsStats} />
                         </>
                     )}
 
                     {randomChestsStats !== null && (
                         <>
-                            <Banner id='randomChests' onPress={Help} title={lang['banner-random-chest']} />
+                            <Banner id='randomChests' onPress={this.handleHelp} title={lang['banner-random-chest']} />
                             <ShopRandomChests ref={this.refRandomChests} randomChestsStats={randomChestsStats} />
                         </>
                     )}
@@ -73,14 +71,14 @@ class Shop extends BackShop {
 
     renderNoInternet = () => {
         const lang = langManager.curr['shop'];
-        const title = lang['internet-offline-title'];
-        const text = lang['internet-offline-text'];
 
         return (
             <View style={styles.noInternetContainer}>
                 <Icon icon='no-wifi' size={100} />
-                <Text fontSize={22}>{title}</Text>
-                <Text fontSize={16}>{text}</Text>
+                <Text fontSize={22}>{lang['internet-offline-title']}</Text>
+                <Text fontSize={14} color='secondary' style={styles.noInternetSubtext}>
+                    {lang['internet-offline-text']}
+                </Text>
             </View>
         );
     };
@@ -117,8 +115,12 @@ const styles = StyleSheet.create({
     },
     noInternetContainer: {
         flex: 1,
+        paddingHorizontal: 24,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    noInternetSubtext: {
+        marginTop: 8
     }
 });
 

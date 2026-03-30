@@ -16,7 +16,7 @@ class TodayActivitiesPieChart extends TodayActivitiesPieChartBack {
         const lang = langManager.curr['home'];
 
         return (
-            <View style={[styles.container, style]}>
+            <View ref={this.props.refParent} style={[styles.container, style]}>
                 {/* Absolute add button */}
                 <Button
                     style={styles.absoluteAddButton}

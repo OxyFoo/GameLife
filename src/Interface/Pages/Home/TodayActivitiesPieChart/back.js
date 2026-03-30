@@ -10,6 +10,7 @@ import { GetLocalTime } from 'Utils/Time';
 import { Sum } from 'Utils/Functions';
 
 /**
+ * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  *
@@ -18,6 +19,7 @@ import { Sum } from 'Utils/Functions';
  *
  * @typedef {object} TodayActivitiesPieChartPropsType
  * @property {StyleProp} style
+ * @property {React.RefObject<View | null>} refParent - Ref to the parent View
  *
  * @typedef {object} InputStateType
  * @property {UpdatingData[]} dataToDisplay
@@ -27,6 +29,7 @@ import { Sum } from 'Utils/Functions';
 
 /** @type {TodayActivitiesPieChartPropsType} */
 const TodayActivitiesPieChartProps = {
+    refParent: React.createRef(),
     style: {}
 };
 

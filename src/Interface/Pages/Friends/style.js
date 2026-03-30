@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     buttonRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         marginTop: 12
     },
     buttonAscending: {

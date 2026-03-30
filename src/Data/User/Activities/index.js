@@ -2,7 +2,13 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
-import { GetActivityIndex, TimeIsFree } from './utils';
+import {
+    GetActivityIndex,
+    GetMondayTimestamp,
+    GetMonthStartTimestamp,
+    GetYearStartTimestamp,
+    TimeIsFree
+} from './utils';
 import DynamicVar from 'Utils/DynamicVar';
 import { Round, SortByKey } from 'Utils/Functions';
 import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
@@ -15,6 +21,8 @@ import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } f
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').CurrentActivity} CurrentActivity
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').ActivitySaved} ActivitySaved
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardPeriodType} LeaderboardPeriodType
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardUpdateData} LeaderboardUpdateData
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly'} AddStatus
@@ -232,6 +240,11 @@ class Activities extends IUserData {
 
         const unsaved = this.#getUnsaved();
         const experience = this.#user.experience.experience.Get();
+
+        // Get all activities (including unsaved) for leaderboard calculation
+        const allActivities = this.Get(true);
+        const leaderboardUpdates = this.#calculateLeaderboardUpdates(allActivities);
+
         const response = await this.#user.server2.tcp.SendAndWait({
             action: 'save-activities',
             activitiesToAdd: unsaved.add,
@@ -239,7 +252,8 @@ class Activities extends IUserData {
             activitiesToDelete: unsaved.delete,
             xp: Round(experience.xpInfo.totalXP, 2),
             stats: this.#user.experience.GetStatsNumber(),
-            token: this.#token
+            token: this.#token,
+            leaderboardUpdates
         });
 
         // Check if failed
@@ -658,6 +672,70 @@ class Activities extends IUserData {
         }
         return 'grant';
     }
+
+    /**
+     * Calculate leaderboard updates for current periods only (current week, month, year)
+     * Uses the same XP calculation logic as Experience class (12h/day limit, friend bonus)
+     * @param {Activity[]} activities - All activities (including unsaved)
+     * @returns {LeaderboardUpdateData[]}
+     */
+    #calculateLeaderboardUpdates = (activities) => {
+        const now = GetGlobalTime();
+
+        // Get user's total XP (all time)
+        const totalUserXP = Round(this.#user.experience.experience.Get().xpInfo.totalXP, 2);
+
+        // Calculate period boundaries (timestamps)
+        const weekStart = GetMondayTimestamp(now);
+        const weekEnd = weekStart + 7 * DAY_TIME;
+        const monthStart = GetMonthStartTimestamp(now);
+        const monthEnd = GetMonthStartTimestamp(monthStart + 32 * DAY_TIME);
+        const yearStart = GetYearStartTimestamp(now);
+        const yearEnd = GetYearStartTimestamp(yearStart + 366 * DAY_TIME);
+
+        // Filter activities by period using simple timestamp comparison
+        const weeklyActivities = activities.filter((a) => a.startTime >= weekStart && a.startTime < weekEnd);
+        const monthlyActivities = activities.filter((a) => a.startTime >= monthStart && a.startTime < monthEnd);
+        const yearlyActivities = activities.filter((a) => a.startTime >= yearStart && a.startTime < yearEnd);
+
+        /** @type {LeaderboardUpdateData[]} */
+        const updates = [];
+
+        if (weeklyActivities.length > 0) {
+            updates.push({
+                periodType: 'weekly',
+                periodStart: weekStart,
+                xp: Round(this.#user.experience.CalculateTotalXP(weeklyActivities).totalXP, 2),
+                activities: weeklyActivities.length,
+                time: weeklyActivities.reduce((sum, a) => sum + a.duration, 0),
+                totalUserXP
+            });
+        }
+
+        if (monthlyActivities.length > 0) {
+            updates.push({
+                periodType: 'monthly',
+                periodStart: monthStart,
+                xp: Round(this.#user.experience.CalculateTotalXP(monthlyActivities).totalXP, 2),
+                activities: monthlyActivities.length,
+                time: monthlyActivities.reduce((sum, a) => sum + a.duration, 0),
+                totalUserXP
+            });
+        }
+
+        if (yearlyActivities.length > 0) {
+            updates.push({
+                periodType: 'yearly',
+                periodStart: yearStart,
+                xp: Round(this.#user.experience.CalculateTotalXP(yearlyActivities).totalXP, 2),
+                activities: yearlyActivities.length,
+                time: yearlyActivities.reduce((sum, a) => sum + a.duration, 0),
+                totalUserXP
+            });
+        }
+
+        return updates;
+    };
 }
 
 export { DEFAULT_ACTIVITY };

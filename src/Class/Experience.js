@@ -88,40 +88,41 @@ class Experience extends IUserClass {
 
     UpdateExperience = () => {
         const activities = this.#user.activities.GetUseful(true);
+        const { totalXP, stats } = this.CalculateTotalXP(activities);
+        this.experience.Set({ stats, xpInfo: this.getXPDict(totalXP, 'user') });
+    };
 
-        let XP = 0;
+    /**
+     * Calculate total XP and stats for a list of activities
+     * Applies friend bonus but NOT 12h/day limit (caller should filter with GetUseful if needed)
+     * @param {Activity[]} activities - Activities to calculate XP for
+     * @returns {{ totalXP: number, stats: StatsXP }}
+     */
+    CalculateTotalXP = (activities) => {
+        let totalXP = 0;
 
         /** @type {StatsXP} */
-        const stats = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: null })));
-
-        /** @type {{ [key: string]: number }} */
         const statValues = Object.assign({}, ...this.statsKey.map((i) => ({ [i]: 0 })));
 
-        for (let a in activities) {
-            const activity = activities[a];
+        for (const activity of activities) {
             const skill = dataManager.skills.GetByID(activity.skillID);
             if (skill === null) continue;
 
             // XP
             const durationHour = activity.duration / 60;
-            XP += skill.XP * durationHour;
+            let xp = skill.XP * durationHour;
 
             // Friends bonus
-            XP += XP * this.GetExperienceFriendBonus(activity);
+            xp += xp * this.GetExperienceFriendBonus(activity);
+            totalXP += xp;
 
             // Stats
-            for (let s in this.statsKey) {
-                const stat = this.statsKey[s];
+            for (const stat of this.statsKey) {
                 statValues[stat] += skill.Stats[stat];
             }
         }
 
-        for (let k in this.statsKey) {
-            const key = this.statsKey[k];
-            stats[key] = statValues[key];
-        }
-
-        this.experience.Set({ stats, xpInfo: this.getXPDict(XP, 'user') });
+        return { totalXP, stats: statValues };
     };
 
     GetStatsNumber = () => {

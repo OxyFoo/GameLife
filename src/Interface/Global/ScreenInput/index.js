@@ -16,8 +16,11 @@ class ScreenInput extends ScreenInputBack {
             transform: [{ translateY: this.state.keyboardHeight }]
         };
 
+        /** @type {import('react-native').ViewStyle} */
+        const zIndexStyle = input?.zIndex !== undefined ? { zIndex: input.zIndex, elevation: input.zIndex } : {};
+
         return (
-            <Animated.View style={[styles.parent, opacity]} pointerEvents={event}>
+            <Animated.View style={[styles.parent, opacity, zIndexStyle]} pointerEvents={event}>
                 <View style={styles.background} onTouchStart={this.onPressIn} onTouchEnd={this.onPressOut} />
                 <Animated.View style={[styles.panel, animInput]} onLayout={this.onLayout}>
                     <InputText

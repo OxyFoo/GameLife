@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import themeManager from 'Managers/ThemeManager';
 
@@ -31,8 +32,9 @@ function ActivitiesChart({ style, activities }) {
         const newData = [];
 
         for (const activity of activities) {
+            const activityDate = GetDate(activity.startTime);
             const hourDuration = activity.duration / 60;
-            const date = DateFormat(GetDate(activity.startTime));
+            const date = DateFormat(activityDate);
             const index = newData.findIndex((item) => item.date === date);
             if (index !== -1) {
                 newData[index].value += hourDuration;
@@ -47,23 +49,31 @@ function ActivitiesChart({ style, activities }) {
         setData(newData);
     }, [activities]);
 
-    const styleContainer = {
-        backgroundColor: themeManager.GetColor('dataBigKpi')
-    };
-
     return (
-        <View style={[styleContainer, styles.container, style]}>
-            <LineChartSvg lineColor={'main2'} data={data} />
-        </View>
+        <LinearGradient
+            style={[styles.container, style]}
+            colors={[
+                themeManager.GetColor('border', { opacity: 0.2 }),
+                themeManager.GetColor('border', { opacity: 0.06 })
+            ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+        >
+            <View style={styles.innerGradient}>
+                <LineChartSvg lineColor={'main2'} data={data} enableDownsampling={true} />
+            </View>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 10,
-        paddingHorizontal: 20,
-        paddingBottom: 0,
-        borderRadius: 20
+        borderRadius: 8
+    },
+    innerGradient: {
+        paddingTop: 12,
+        paddingHorizontal: 18,
+        paddingBottom: 0
     },
     headerText: {
         fontWeight: 'bold',

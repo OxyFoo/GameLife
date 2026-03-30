@@ -56,8 +56,9 @@ class YearHeatMapBack extends React.Component {
     }
 
     componentDidMount() {
-        this.GetHeatMapData();
-        this.activitiesListener = user.activities.allActivities.AddListener(this.GetHeatMapData);
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            this.setState(this.GetHeatMapData());
+        });
     }
 
     /** Scroll to the end when the content is rendered */

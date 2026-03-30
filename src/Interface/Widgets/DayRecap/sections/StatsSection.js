@@ -21,7 +21,6 @@ import themeManager from 'Managers/ThemeManager';
  * @param {number} [props.chartSize] - Radar chart size override
  * @param {number} [props.maxItems] - Max stats to display
  * @param {boolean} [props.compactFont] - Use compact font sizes
- * @param {string} [props.title] - Optional title above the data list
  */
 const StatsSection = ({
     statsKeys,
@@ -32,12 +31,11 @@ const StatsSection = ({
     chartLeft = false,
     chartSize = 130,
     maxItems = 6,
-    compactFont = true,
-    title = ''
+    compactFont = true
 }) => {
     const badgeFontSize = compactFont ? 11 : 12;
     const labelFontSize = compactFont ? 12 : 14;
-    const radarPadding = mode === 'full' && !compactFont ? 10 : 5;
+    const radarPadding = mode === 'full' && !compactFont ? 15 : 10;
 
     const chart = (
         <View
@@ -52,11 +50,6 @@ const StatsSection = ({
 
     const data = (
         <View style={styles.dataBars}>
-            {title !== '' && (
-                <Text style={styles.sectionTitle} color='secondary'>
-                    {title}
-                </Text>
-            )}
             {statsKeys.slice(0, maxItems).map((key) => {
                 const value = statsGained[key];
                 return (
@@ -125,14 +118,6 @@ const styles = StyleSheet.create({
     },
     dataLabel: {
         fontSize: 12
-    },
-    sectionTitle: {
-        fontSize: 11,
-        fontWeight: '600',
-        marginBottom: 4,
-        textAlign: 'left',
-        textTransform: 'uppercase',
-        letterSpacing: 1
     }
 });
 

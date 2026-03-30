@@ -42,7 +42,7 @@ const ChartRow = ({
 
             <View style={styles.chartRow}>
                 <View style={styles.chartSide}>
-                    <View style={[styles.questDataContainer, { marginTop: 4 }]}>
+                    <View style={[styles.questDataContainer, { marginTop: 8 }]}>
                         <QuestSection
                             questProgress={questProgress}
                             lang={langRecap}

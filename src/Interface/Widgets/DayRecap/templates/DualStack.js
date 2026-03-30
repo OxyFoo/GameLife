@@ -46,7 +46,6 @@ const DualStack = ({
                 chartSize={160}
                 maxItems={99}
                 compactFont={false}
-                title={langRecap['stats'] || 'Stats'}
             />
         </View>
     );

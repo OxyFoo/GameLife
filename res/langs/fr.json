@@ -443,7 +443,7 @@
 
             "permission-stockage": {
                 "title": "Permission requise",
-                "message": "GameLife a besoin d'accéder a la galerie pour pouvoir enregistrer le récap du jour.",
+                "message": "GameLife a besoin d'accéder à la galerie pour pouvoir enregistrer le récap du jour.",
                 "button-neutral": "Plus tard",
                 "button-positive": "OK",
                 "button-negative": "Annuler"

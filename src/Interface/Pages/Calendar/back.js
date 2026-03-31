@@ -85,7 +85,9 @@ class BackCalendar extends PageBase {
         animTodayButton: new Animated.Value(0),
 
         /** @type {boolean} */
-        showDayRecap: false
+        showDayRecap: false,
+        /** @type {Date | null} */
+        dayRecapDate: null
     };
 
     /** @type {Symbol | null} */
@@ -147,15 +149,18 @@ class BackCalendar extends PageBase {
     };
 
     openDayRecap = () => {
-        const { activities } = this.state;
+        const { activities, selectedDay, selectedIsToday } = this.state;
         if (activities.length === 0) {
             return;
         }
-        this.setState({ showDayRecap: true });
+        const dayRecapDate = selectedIsToday
+            ? new Date()
+            : selectedDay ? new Date(selectedDay.year, selectedDay.month, selectedDay.day) : new Date();
+        this.setState({ showDayRecap: true, dayRecapDate });
     };
 
     closeDayRecap = () => {
-        this.setState({ showDayRecap: false });
+        this.setState({ showDayRecap: false, dayRecapDate: null });
     };
 
     openToday = () => {

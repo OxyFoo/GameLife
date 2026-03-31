@@ -32,11 +32,6 @@ class Calendar extends BackCalendar {
             marginTop: animSummaryY
         };
 
-        // Get selected date for DayRecap
-        const selectedDate = selectedIsToday
-            ? new Date()
-            : selectedDay ? new Date(selectedDay.year, selectedDay.month, selectedDay.day) : new Date();
-
         return (
             <View style={styles.page}>
                 {/** Summary (hidden on scroll) */}
@@ -139,7 +134,7 @@ class Calendar extends BackCalendar {
                 </View>
 
                 {/** Day Recap Modal */}
-                {showDayRecap && <DayRecap date={selectedDate} onClose={this.closeDayRecap} />}
+                {showDayRecap && <DayRecap date={this.state.dayRecapDate} onClose={this.closeDayRecap} />}
             </View>
         );
     }

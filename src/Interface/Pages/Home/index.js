@@ -112,7 +112,7 @@ class Home extends BackHome {
                 <TodoList style={styles.lastWidget} />
 
                 {/* Day Recap Modal */}
-                {this.state.showDayRecap && <DayRecap date={new Date()} onClose={this.closeDayRecap} />}
+                {this.state.showDayRecap && <DayRecap date={this.state.dayRecapDate} onClose={this.closeDayRecap} />}
             </ScrollView>
         );
     }

@@ -26,7 +26,9 @@ class BackHome extends PageBase {
     static feShowNavBar = true;
 
     state = {
-        showDayRecap: false
+        showDayRecap: false,
+        /** @type {Date | null} */
+        dayRecapDate: null
     };
 
     /** @type {React.RefObject<ScrollView | null>} */
@@ -57,11 +59,11 @@ class BackHome extends PageBase {
     };
 
     openDayRecap = () => {
-        this.setState({ showDayRecap: true });
+        this.setState({ showDayRecap: true, dayRecapDate: new Date() });
     };
 
     closeDayRecap = () => {
-        this.setState({ showDayRecap: false });
+        this.setState({ showDayRecap: false, dayRecapDate: null });
     };
 }
 

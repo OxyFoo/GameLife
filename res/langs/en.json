@@ -439,7 +439,15 @@
             "share": "Share",
             "sharing": "Sharing...",
             "empty-title": "No activities",
-            "empty-message": "Add activities to create your daily recap!"
+            "empty-message": "Add activities to create your daily recap!",
+
+            "permission-stockage": {
+                "title": "Permission required",
+                "message": "GameLife needs access to the gallery to save the daily recap.",
+                "button-neutral": "Later",
+                "button-positive": "OK",
+                "button-negative": "Cancel"
+            }
         }
     },
 

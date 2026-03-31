@@ -6,16 +6,11 @@ import styles from './style';
 import BackDayRecap from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
-import user from 'Managers/UserManager';
 import { Icon, Text } from 'Interface/Components';
 import { DynamicBackground } from 'Interface/Primitives';
 
 import CardContent from './elements/CardContent';
 import { TEMPLATE_NAMES } from './templates';
-
-/**
- * @typedef {import('./back').ActivityData} ActivityData
- */
 
 class DayRecap extends BackDayRecap {
     render() {
@@ -33,14 +28,17 @@ class DayRecap extends BackDayRecap {
             );
         }
 
-        const { totalMinutes, categories, statsGained, totalStats } = recapData;
-
-        const langRecap = langManager.curr['calendar']?.['recap'] || {};
+        const langHome = langManager.curr['home'] || {};
+        const langRecap = {
+            ...(langManager.curr['calendar']?.['recap'] || {}),
+            activities: langHome['today-activity'] || 'Activities',
+            quests: langHome['today-quest'] || 'Quests'
+        };
         const langStats = langManager.curr['statistics']?.['names'] || {};
         const langLevel = langManager.curr['level'] || {};
 
         // Check if there are no activities
-        const hasNoActivities = categories.length === 0 || totalMinutes === 0;
+        const hasNoActivities = recapData.categories.length === 0 || recapData.totalMinutes === 0;
 
         // Show empty state if no activities
         if (hasNoActivities) {
@@ -73,24 +71,6 @@ class DayRecap extends BackDayRecap {
                 </Modal>
             );
         }
-
-        // Prepare donut chart data (from categories)
-        const donutData = categories
-            .filter((a) => a.durationMinutes > 0)
-            .map((category) => ({
-                label: category.name,
-                value: category.durationMinutes,
-                stroke: category.color
-            }));
-
-        // Prepare radar chart data
-        const radarData = this.computeRadarData(totalStats);
-
-        // Format total time
-        const totalTimeFormatted = this.formatDuration(totalMinutes);
-
-        // Get stats keys for display (only show non-zero stats)
-        const statsKeys = user.experience.statsKey.filter((key) => statsGained[key] > 0);
 
         // Card background color from theme
         const cardBgColor = themeManager.GetColor('background');
@@ -139,13 +119,10 @@ class DayRecap extends BackDayRecap {
                                 <DynamicBackground opacity={0.2} />
                                 <CardContent
                                     recapData={recapData}
-                                    donutData={donutData}
-                                    radarData={radarData}
-                                    totalTimeFormatted={totalTimeFormatted}
-                                    statsKeys={statsKeys}
                                     date={this.props.date}
                                     template={template}
                                     formatDuration={this.formatDuration}
+                                    computeRadarData={this.computeRadarData}
                                     langRecap={langRecap}
                                     langStats={langStats}
                                     langLevel={langLevel}
@@ -157,7 +134,7 @@ class DayRecap extends BackDayRecap {
                     {/* Action buttons (outside captured area) */}
                     <View style={styles.buttonsContainer}>
                         <TouchableOpacity
-                            style={[styles.saveButton, { backgroundColor: themeManager.GetColor('main2') }]}
+                            style={[styles.actionButton, { backgroundColor: themeManager.GetColor('main2') }]}
                             onPress={this.saveToGallery}
                             disabled={saveStatus === 'saving'}
                         >
@@ -166,15 +143,15 @@ class DayRecap extends BackDayRecap {
                                 {saveStatus === 'saving'
                                     ? langRecap['saving'] || 'Saving...'
                                     : saveStatus === 'success'
-                                      ? langRecap['saved-success'] || 'Confirmé ✓'
+                                      ? langRecap['saved-success'] || '✓'
                                       : saveStatus === 'error'
-                                        ? langRecap['saved-error'] || 'Échec ✗'
+                                        ? langRecap['saved-error'] || '✗'
                                         : langRecap['save'] || 'Save'}
                             </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[styles.shareButton, { backgroundColor: themeManager.GetColor('main1') }]}
+                            style={[styles.actionButton, { backgroundColor: themeManager.GetColor('main1') }]}
                             onPress={() => this.shareImage('general')}
                             disabled={isSharing}
                         >

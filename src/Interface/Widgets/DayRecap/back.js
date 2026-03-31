@@ -24,6 +24,7 @@ import { saveToGallery, shareImage } from './share';
  * @property {boolean} completed
  * @property {number} progress - 0 to 1
  * @property {number} streak - Current streak
+ * @property {number} timeDone - Minutes done (for sorting)
  * @property {string} timeText - Time done / goal
  *
  * @typedef {object} QuestProgress
@@ -42,7 +43,7 @@ import { saveToGallery, shareImage } from './share';
  * @property {ActivityData[]} categories - For donut chart (grouped by category)
  * @property {ActivityData[]} skills - For activity list (individual skills)
  * @property {StatsXP} statsGained
- * @property {StatsXP} totalStats
+ * @property {Array<keyof StatsXP>} statsKeys - Non-zero stat keys for display
  * @property {QuestProgress} questProgress
  *
  * @typedef {object} DayRecapProps
@@ -61,7 +62,6 @@ const DayRecapProps = {
 /**
  * @typedef {object} DayRecapState
  * @property {boolean} isCapturing
- * @property {boolean} isSaving
  * @property {boolean} isSharing
  * @property {'idle' | 'saving' | 'success' | 'error'} saveStatus
  * @property {string} template
@@ -75,7 +75,6 @@ class BackDayRecap extends React.Component {
     /** @type {DayRecapState} */
     state = {
         isCapturing: false,
-        isSaving: false,
         isSharing: false,
         saveStatus: 'idle',
         template: 'tripleStack',
@@ -106,102 +105,26 @@ class BackDayRecap extends React.Component {
     computeRecapData = () => {
         const { date } = this.props;
 
-        // Get activities for this day
-        const dayStart = new Date(date);
-        dayStart.setHours(0, 0, 0, 0);
-        const startTime = GetLocalTime(dayStart);
+        const { categories, skills, statsGained, totalXP, totalMinutes } = this.computeActivityStats(date);
 
-        const allActivities = user.activities.allActivities.Get();
-        const dayActivities = allActivities.filter((activity) => {
-            const activityTime = activity.startTime + activity.timezone * 3600;
-            return activityTime >= startTime && activityTime < startTime + 24 * 60 * 60;
-        });
+        // Compute level/XP as of end of selected day (not current)
+        const dayEnd = new Date(date);
+        dayEnd.setHours(23, 59, 59, 999);
+        const endTime = GetLocalTime(dayEnd);
+        const activitiesUpToDate = user.activities
+            .GetUseful(true)
+            .filter((a) => a.startTime + a.timezone * 3600 <= endTime);
+        const { totalXP: cumulativeXP } = user.experience.CalculateTotalXP(activitiesUpToDate);
+        const xpInfo = user.experience.getXPDict(cumulativeXP, 'user');
 
-        // Group by CATEGORY for donut chart, and by SKILL for activity list
-        /** @type {Map<number, { name: string, durationMinutes: number, color: string, xp: number }>} */
-        const categoryMap = new Map();
-        /** @type {Map<number, { name: string, durationMinutes: number, color: string, xp: number }>} */
-        const skillMap = new Map();
-
-        /** @type {StatsXP} */
-        const statsGained = { int: 0, soc: 0, for: 0, sta: 0, agi: 0, dex: 0 };
-        let totalXP = 0;
-        let totalMinutes = 0;
-
-        for (const activity of dayActivities) {
-            const skill = dataManager.skills.GetByID(activity.skillID);
-            if (!skill) continue;
-
-            // Get category for grouping and color
-            const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
-            if (!category) continue;
-
-            const color = category.Color || '#7c3aed';
-            const categoryName = langManager.GetText(category.Name);
-
-            const duration = activity.duration;
-            totalMinutes += duration;
-
-            // XP calculation
-            const durationHour = duration / 60;
-            const xp = skill.XP * durationHour;
-            totalXP += xp;
-
-            // Stats
-            for (const stat of user.experience.statsKey) {
-                statsGained[stat] += Math.round(skill.Stats[stat] * durationHour);
-            }
-
-            // Group by category (for donut chart)
-            const existingCategory = categoryMap.get(category.ID);
-            if (existingCategory) {
-                existingCategory.durationMinutes += duration;
-                existingCategory.xp += xp;
-            } else {
-                categoryMap.set(category.ID, {
-                    name: categoryName,
-                    durationMinutes: duration,
-                    color: color,
-                    xp
-                });
-            }
-
-            // Group by skill (for activity list)
-            const skillName = langManager.GetText(skill.Name);
-            const existingSkill = skillMap.get(skill.ID);
-            if (existingSkill) {
-                existingSkill.durationMinutes += duration;
-                existingSkill.xp += xp;
-            } else {
-                skillMap.set(skill.ID, {
-                    name: skillName,
-                    durationMinutes: duration,
-                    color: color,
-                    xp
-                });
-            }
-        }
-
-        // Sort categories by duration (for donut chart)
-        const categories = Array.from(categoryMap.values())
-            .sort((a, b) => b.durationMinutes - a.durationMinutes)
-            .map(({ name, durationMinutes, color }) => ({ name, durationMinutes, color }));
-
-        // Sort skills by duration (for activity list)
-        const skills = Array.from(skillMap.values())
-            .sort((a, b) => b.durationMinutes - a.durationMinutes)
-            .map(({ name, durationMinutes, color }) => ({ name, durationMinutes, color }));
-
-        // Get user info
-        const experience = user.experience.experience.Get();
         const username = user.informations.username.Get() || 'Player';
-        const level = experience.xpInfo.lvl;
-        const xpCurrent = experience.xpInfo.xp;
-        const xpNext = experience.xpInfo.next;
-        const totalStats = experience.stats;
-
-        // Compute quest progress for this date
+        const level = xpInfo.lvl;
+        const xpCurrent = xpInfo.xp;
+        const xpNext = xpInfo.next;
         const questProgress = this.computeQuestProgress(date);
+        const statsKeys = user.experience.statsKey
+            .filter((key) => statsGained[key] > 0)
+            .sort((a, b) => statsGained[b] - statsGained[a]);
 
         /** @type {DayRecapData} */
         const recapData = {
@@ -214,11 +137,76 @@ class BackDayRecap extends React.Component {
             categories,
             skills,
             statsGained,
-            totalStats,
+            statsKeys,
             questProgress
         };
 
         this.setState({ recapData });
+    };
+
+    /**
+     * Compute activity stats, categories, and skills for a given date
+     * @param {Date} date
+     * @returns {{ categories: ActivityData[], skills: ActivityData[], statsGained: StatsXP, totalXP: number, totalMinutes: number }}
+     */
+    computeActivityStats = (date) => {
+        const dayStart = new Date(date);
+        dayStart.setHours(0, 0, 0, 0);
+        const startTime = GetLocalTime(dayStart);
+
+        const allActivities = user.activities.allActivities.Get();
+        const dayActivities = allActivities.filter((activity) => {
+            const activityTime = activity.startTime + activity.timezone * 3600;
+            return activityTime >= startTime && activityTime < startTime + 24 * 60 * 60;
+        });
+
+        // Use the app's real XP/stats calculation (includes friend bonus, proper stats formula)
+        const grantedActivities = dayActivities.filter((a) => user.activities.GetExperienceStatus(a) === 'grant');
+        const { totalXP, stats: statsGained } = user.experience.CalculateTotalXP(grantedActivities);
+
+        // Group by category and skill for display (uses all day activities, not just granted)
+        /** @type {Map<number, { name: string, durationMinutes: number, color: string }>} */
+        const categoryMap = new Map();
+        /** @type {Map<number, { name: string, durationMinutes: number, color: string }>} */
+        const skillMap = new Map();
+        let totalMinutes = 0;
+
+        for (const activity of dayActivities) {
+            const skill = dataManager.skills.GetByID(activity.skillID);
+            if (!skill) continue;
+
+            const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
+            if (!category) continue;
+
+            const color = category.Color || '#7c3aed';
+            const duration = activity.duration;
+            totalMinutes += duration;
+
+            // Group by category (for donut chart)
+            const existingCategory = categoryMap.get(category.ID);
+            if (existingCategory) {
+                existingCategory.durationMinutes += duration;
+            } else {
+                categoryMap.set(category.ID, {
+                    name: langManager.GetText(category.Name),
+                    durationMinutes: duration,
+                    color
+                });
+            }
+
+            // Group by skill (for activity list)
+            const existingSkill = skillMap.get(skill.ID);
+            if (existingSkill) {
+                existingSkill.durationMinutes += duration;
+            } else {
+                skillMap.set(skill.ID, { name: langManager.GetText(skill.Name), durationMinutes: duration, color });
+            }
+        }
+
+        const categories = Array.from(categoryMap.values()).sort((a, b) => b.durationMinutes - a.durationMinutes);
+        const skills = Array.from(skillMap.values()).sort((a, b) => b.durationMinutes - a.durationMinutes);
+
+        return { categories, skills, statsGained, totalXP, totalMinutes };
     };
 
     /**
@@ -247,15 +235,23 @@ class BackDayRecap extends React.Component {
                 }
                 const streak = user.quests.GetStreak(quest, time);
                 const timeText = user.quests.GetQuestTimeText(quest, time);
+                const timeDone = user.activities
+                    .GetByTime(time)
+                    .filter((a) => quest.skills.includes(a.skillID))
+                    .filter((a) => user.activities.GetExperienceStatus(a) === 'grant')
+                    .reduce((sum, a) => sum + a.duration, 0);
                 quests.push({
                     title: quest.title,
                     completed,
                     progress: Math.min(selectedDay.progress, 1),
                     streak,
+                    timeDone,
                     timeText
                 });
             }
         }
+
+        quests.sort((a, b) => b.timeDone - a.timeDone);
 
         return {
             completedQuests,
@@ -276,7 +272,7 @@ class BackDayRecap extends React.Component {
 
         return user.experience.statsKey.map((key) => ({
             label: key.toUpperCase().slice(0, 3),
-            value: maxValue > 0 ? stats[key] / maxValue : 0
+            value: stats[key] / maxValue
         }));
     };
 
@@ -308,7 +304,7 @@ class BackDayRecap extends React.Component {
         this.setState({ saveStatus: 'saving' });
         const success = await saveToGallery(this.viewShotRef, this.setCapturing);
         this.setState({ saveStatus: success ? 'success' : 'error' });
-        
+
         // Reset status after 2 seconds
         setTimeout(() => {
             this.setState({ saveStatus: 'idle' });

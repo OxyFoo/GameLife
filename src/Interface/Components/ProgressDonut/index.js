@@ -17,7 +17,7 @@ import themeManager from 'Managers/ThemeManager';
  * @property {number} [strokeWidth] - Width of the donut stroke
  * @property {'round' | 'square' | 'butt'} [strokeLinecap] - Line cap style
  * @property {Object} [style] - Container styles
- * @property {(value: number) => number} [easing] - Easing function for animation
+ * @property {((value: number) => number) | null} [easing] - Easing function for animation
  * @property {Function} [onMeasure] - Callback with graph dimensions
  * @property {React.ReactNode} [children] - Content to display in center
  * @property {number} [size] - Size of the donut chart in pixels
@@ -39,7 +39,7 @@ function ProgressDonut({
     strokeWidth = 8,
     strokeLinecap = 'round',
     style,
-    easing = Easing.out(Easing.exp),
+    easing = null,
     children,
     size = 110,
     progressColor = 'success',
@@ -61,10 +61,10 @@ function ProgressDonut({
             toValue: value,
             duration,
             delay,
-            easing,
+            easing: easing ?? Easing.out(Easing.exp),
             useNativeDriver: false
         }).start();
-    }, [animationValue, value, delay, duration, easing]);
+    }, [animationValue, value, delay, duration]);
 
     return (
         <View style={[{ width: size, height: size }, styles.parent, style]}>

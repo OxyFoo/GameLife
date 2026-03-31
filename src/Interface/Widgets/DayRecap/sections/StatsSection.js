@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import { RadarChart, Text } from 'Interface/Components';
 import themeManager from 'Managers/ThemeManager';
+import shared from './shared';
 
 /**
  * @typedef {'full' | 'chartOnly' | 'dataOnly'} SectionMode
@@ -40,8 +41,8 @@ const StatsSection = ({
     const chart = (
         <View
             style={[
-                styles.chartContainer,
-                mode === 'full' && (chartLeft ? styles.chartMarginRight : styles.chartMarginLeft)
+                shared.chartContainer,
+                mode === 'full' && (chartLeft ? shared.chartMarginRight : shared.chartMarginLeft)
             ]}
         >
             <RadarChart data={radarData} size={chartSize} showLabels={true} levels={4} basePadding={radarPadding} />
@@ -49,7 +50,7 @@ const StatsSection = ({
     );
 
     const data = (
-        <View style={styles.dataBars}>
+        <View style={shared.dataList}>
             {statsKeys.slice(0, maxItems).map((key) => {
                 const value = statsGained[key];
                 return (
@@ -68,11 +69,11 @@ const StatsSection = ({
         </View>
     );
 
-    if (mode === 'chartOnly') return <View style={styles.container}>{chart}</View>;
-    if (mode === 'dataOnly') return <View style={styles.container}>{data}</View>;
+    if (mode === 'chartOnly') return <View style={shared.container}>{chart}</View>;
+    if (mode === 'dataOnly') return <View style={shared.container}>{data}</View>;
 
     return (
-        <View style={styles.container}>
+        <View style={shared.container}>
             {chartLeft ? chart : data}
             {chartLeft ? data : chart}
         </View>
@@ -80,23 +81,6 @@ const StatsSection = ({
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    dataBars: {
-        flex: 1
-    },
-    chartContainer: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    chartMarginRight: {
-        marginRight: 12
-    },
-    chartMarginLeft: {
-        marginLeft: 12
-    },
     dataRow: {
         flexDirection: 'row',
         alignItems: 'center',

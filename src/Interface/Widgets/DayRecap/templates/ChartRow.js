@@ -42,7 +42,7 @@ const ChartRow = ({
 
             <View style={styles.chartRow}>
                 <View style={styles.chartSide}>
-                    <View style={[styles.questDataContainer, { marginTop: 8 }]}>
+                    <View style={[styles.questDataContainer]}>
                         <QuestSection
                             questProgress={questProgress}
                             lang={langRecap}
@@ -72,7 +72,8 @@ const ChartRow = ({
 const styles = StyleSheet.create({
     separator: {
         height: 1,
-        marginVertical: 8
+        marginTop: 12,
+        marginBottom: 2
     },
     chartRow: {
         flexDirection: 'row',

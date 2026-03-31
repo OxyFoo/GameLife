@@ -2,6 +2,8 @@ import { Platform, PermissionsAndroid } from 'react-native';
 import Share from 'react-native-share';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
+import langManager from 'Managers/LangManager';
+
 /**
  * @typedef {import('react-native-view-shot').default} ViewShot
  */
@@ -46,12 +48,13 @@ export const requestSavePermission = async () => {
     }
 
     try {
+        const langPerm = langManager.curr['calendar']?.['recap']?.['permission-stockage'] || {};
         const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-            title: 'Permission requise',
-            message: "GameLife a besoin d'accéder à votre galerie pour sauvegarder l'image",
-            buttonNeutral: 'Plus tard',
-            buttonNegative: 'Annuler',
-            buttonPositive: 'OK'
+            title: langPerm['title'] || 'Permission required',
+            message: langPerm['message'] || 'GameLife needs access to the gallery to save the daily recap.',
+            buttonNeutral: langPerm['button-neutral'] || 'Later',
+            buttonNegative: langPerm['button-negative'] || 'Cancel',
+            buttonPositive: langPerm['button-positive'] || 'OK'
         });
         return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (_err) {
@@ -79,10 +82,10 @@ export const saveToGallery = async (viewShotRef, setCapturing) => {
 
         // Ensure proper file:// prefix for iOS
         const fileUri = uri.startsWith('file://') ? uri : `file://${uri}`;
-        
+
         // Add small delay to ensure the file is fully written
         await new Promise((resolve) => setTimeout(resolve, 100));
-        
+
         await CameraRoll.save(fileUri, { type: 'photo' });
         return true;
     } catch (_error) {

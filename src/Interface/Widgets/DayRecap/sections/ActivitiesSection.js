@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { DonutChart, Text } from 'Interface/Components';
+import shared from './shared';
 
 /**
  * @typedef {'full' | 'chartOnly' | 'dataOnly'} SectionMode
@@ -42,7 +43,12 @@ const ActivitiesSection = ({
     const fontSize = compactFont ? 13 : 16;
 
     const chart = (
-        <View style={[styles.chartContainer, mode === 'full' && (chartLeft ? styles.chartMarginRight : styles.chartMarginLeft)]}>
+        <View
+            style={[
+                shared.chartContainer,
+                mode === 'full' && (chartLeft ? shared.chartMarginRight : shared.chartMarginLeft)
+            ]}
+        >
             <DonutChart
                 data={donutData}
                 size={chartSize}
@@ -51,8 +57,8 @@ const ActivitiesSection = ({
                 delay={0}
                 segmentGap={10}
             >
-                <View style={styles.chartCenter}>
-                    <Text style={[styles.chartCenterText, { fontSize: centerFontSize }]} color='primary'>
+                <View style={[shared.chartCenter, styles.chartCenterAbsolute]}>
+                    <Text style={[shared.chartCenterText, { fontSize: centerFontSize }]} color='primary'>
                         {totalTime}
                     </Text>
                 </View>
@@ -61,14 +67,14 @@ const ActivitiesSection = ({
     );
 
     const data = (
-        <View style={styles.dataList}>
+        <View style={shared.dataList}>
             {title !== '' && (
-                <Text style={styles.sectionTitle} color='secondary'>
+                <Text style={shared.sectionTitle} color='secondary'>
                     {title}
                 </Text>
             )}
             {skills.slice(0, maxItems).map((skill, index) => (
-                <View key={index} style={styles.dataItem}>
+                <View key={`${index}-${skill.name}`} style={styles.dataItem}>
                     <Text style={[styles.dataName, { fontSize }]} color='primary'>
                         {skill.name}{' '}
                         <Text style={[styles.dataDuration, { fontSize }]} color='secondary'>
@@ -80,11 +86,11 @@ const ActivitiesSection = ({
         </View>
     );
 
-    if (mode === 'chartOnly') return <View style={styles.container}>{chart}</View>;
-    if (mode === 'dataOnly') return <View style={styles.container}>{data}</View>;
+    if (mode === 'chartOnly') return <View style={shared.container}>{chart}</View>;
+    if (mode === 'dataOnly') return <View style={shared.container}>{data}</View>;
 
     return (
-        <View style={styles.container}>
+        <View style={shared.container}>
             {chartLeft ? chart : data}
             {chartLeft ? data : chart}
         </View>
@@ -92,40 +98,8 @@ const ActivitiesSection = ({
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12
-    },
-    chartContainer: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    chartMarginRight: {
-        marginRight: 12
-    },
-    chartMarginLeft: {
-        marginLeft: 12
-    },
-    chartCenter: {
-        position: 'absolute',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    chartCenterText: {
-        fontWeight: 'bold'
-    },
-    dataList: {
-        flex: 1,
-        overflow: 'hidden'
-    },
-    sectionTitle: {
-        fontSize: 11,
-        fontWeight: '600',
-        marginBottom: 4,
-        textAlign: 'left',
-        textTransform: 'uppercase',
-        letterSpacing: 1
+    chartCenterAbsolute: {
+        position: 'absolute'
     },
     dataItem: {
         flexDirection: 'row',

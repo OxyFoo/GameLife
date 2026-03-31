@@ -92,15 +92,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 12
     },
-    shareButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 12,
-        borderRadius: 12,
-        gap: 8
-    },
-    saveButton: {
+    actionButton: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,

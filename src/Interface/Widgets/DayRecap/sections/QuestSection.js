@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Easing } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import { ProgressDonut, Icon, Text } from 'Interface/Components';
 import themeManager from 'Managers/ThemeManager';
-
-const DONUT_EASING = Easing.out(Easing.exp); // This is here so animation doesn't trigger AGAIN when trying to save the image
+import shared from './shared';
 
 /**
  * @typedef {'full' | 'chartOnly' | 'dataOnly'} SectionMode
@@ -46,8 +45,8 @@ const QuestSection = ({
     const chart = (
         <View
             style={[
-                styles.chartContainer,
-                mode === 'full' && (chartLeft ? styles.chartMarginRight : styles.chartMarginLeft)
+                shared.chartContainer,
+                mode === 'full' && (chartLeft ? shared.chartMarginRight : shared.chartMarginLeft)
             ]}
         >
             {hasQuests ? (
@@ -57,10 +56,9 @@ const QuestSection = ({
                     progressColor={progressColor}
                     strokeWidth={strokeWidth}
                     delay={0}
-                    easing={DONUT_EASING}
                 >
-                    <View style={styles.chartCenter}>
-                        <Text style={[styles.chartCenterText, { fontSize: centerFontSize }]} color='primary'>
+                    <View style={shared.chartCenter}>
+                        <Text style={[shared.chartCenterText, { fontSize: centerFontSize }]} color='primary'>
                             {`${completedQuests}/${totalQuests}`}
                         </Text>
                     </View>
@@ -86,26 +84,23 @@ const QuestSection = ({
     );
 
     const data = (
-        <View style={styles.dataList}>
+        <View style={shared.dataList}>
             {title !== '' && (
-                <Text style={styles.sectionTitle} color='secondary'>
+                <Text style={shared.sectionTitle} color='secondary'>
                     {title}
                 </Text>
             )}
             {quests.slice(0, maxItems).map((quest, index) => (
-                <View key={index} style={styles.dataRow}>
+                <View key={`${index}-${quest.title}`} style={styles.dataRow}>
                     <Text
-                        style={[
-                            styles.dataTitle,
-                            { fontSize: titleFontSize },
-                            quest.completed && styles.dataCompleted
-                        ]}
+                        style={[styles.dataTitle, { fontSize: titleFontSize }, quest.completed && styles.dataCompleted]}
                         color={quest.completed ? 'primary' : 'secondary'}
                         numberOfLines={1}
                     >
                         {quest.title}
                         <Text style={[styles.dataDetailText, { fontSize: detailFontSize }]} color='secondary'>
-                            {' '}{quest.timeText}
+                            {' '}
+                            {quest.timeText}
                         </Text>
                     </Text>
                     <View style={styles.streakBadge}>
@@ -128,11 +123,11 @@ const QuestSection = ({
         </View>
     );
 
-    if (mode === 'chartOnly') return <View style={styles.container}>{chart}</View>;
-    if (mode === 'dataOnly') return data;
+    if (mode === 'chartOnly') return <View style={shared.container}>{chart}</View>;
+    if (mode === 'dataOnly') return <View style={shared.container}>{data}</View>;
 
     return (
-        <View style={styles.container}>
+        <View style={shared.container}>
             {chartLeft ? chart : data}
             {chartLeft ? data : chart}
         </View>
@@ -140,27 +135,6 @@ const QuestSection = ({
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    chartContainer: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    chartMarginRight: {
-        marginRight: 12
-    },
-    chartMarginLeft: {
-        marginLeft: 12
-    },
-    chartCenter: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    chartCenterText: {
-        fontWeight: 'bold'
-    },
     noQuests: {
         borderWidth: 2,
         borderStyle: 'dashed',
@@ -170,28 +144,11 @@ const styles = StyleSheet.create({
     noQuestsText: {
         fontSize: 11
     },
-    dataList: {
-        flex: 1,
-        overflow: 'hidden',
-        paddingTop: 0
-    },
-    sectionTitle: {
-        fontSize: 11,
-        fontWeight: '600',
-        marginBottom: 4,
-        textAlign: 'left',
-        textTransform: 'uppercase',
-        letterSpacing: 1
-    },
     dataRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 4
-    },
-    dataInfo: {
-        flexShrink: 1,
-        alignItems: 'flex-start'
     },
     dataTitle: {
         fontSize: 13

@@ -33,7 +33,7 @@ const TripleStack = ({
                 skills={skills}
                 formatDuration={formatDuration}
                 chartSize={80}
-                maxItems={5}
+                maxItems={4}
                 title={langRecap['activities'] || 'Activities'}
             />
 
@@ -44,13 +44,20 @@ const TripleStack = ({
                 statsGained={statsGained}
                 radarData={radarData}
                 lang={langStats}
+                chartLeft={false}
                 chartSize={130}
                 maxItems={6}
             />
 
             <View style={[styles.separator, { backgroundColor: separatorColor }]} />
 
-            <QuestSection questProgress={questProgress} lang={langRecap} chartSize={80} maxItems={5} title={langRecap['quests'] || 'Quests'} />
+            <QuestSection
+                questProgress={questProgress}
+                lang={langRecap}
+                chartSize={80}
+                maxItems={4}
+                title={langRecap['quests'] || 'Quests'}
+            />
         </View>
     );
 };

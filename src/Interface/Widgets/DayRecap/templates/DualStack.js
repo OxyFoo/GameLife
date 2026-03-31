@@ -31,7 +31,7 @@ const DualStack = ({
                 skills={skills}
                 formatDuration={formatDuration}
                 chartSize={120}
-                maxItems={4}
+                maxItems={5}
                 compactFont={false}
                 title={langRecap['activities'] || 'Activities'}
             />
@@ -43,8 +43,9 @@ const DualStack = ({
                 statsGained={statsGained}
                 radarData={radarData}
                 lang={langStats}
+                chartLeft={false}
                 chartSize={160}
-                maxItems={99}
+                maxItems={6}
                 compactFont={false}
             />
         </View>
@@ -54,7 +55,8 @@ const DualStack = ({
 const styles = StyleSheet.create({
     separator: {
         height: 1,
-        marginVertical: 8
+        marginTop: 12,
+        marginBottom: 2 // 2 because statsSection already has space around it of 10
     }
 });
 

@@ -7,19 +7,19 @@ import ChartRow from './ChartRow';
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
  * @typedef {import('../back').QuestProgress} QuestProgress
- * @typedef {import('../sections/ActivitiesSection').SkillData} SkillData
+ * @typedef {import('../back').ActivityData} ActivityData
  *
  * @typedef {object} TemplateProps
- * @property {Array<{label: string, value: number, stroke: string}>} donutData
- * @property {string} totalTimeFormatted
- * @property {SkillData[]} skills
- * @property {(minutes: number) => string} formatDuration
- * @property {Array<keyof StatsXP>} statsKeys
- * @property {Record<keyof StatsXP, number>} statsGained
- * @property {Array<{label: string, value: number}>} radarData
- * @property {QuestProgress} questProgress
- * @property {Record<string, string>} langStats
- * @property {Record<string, string>} langRecap
+ * @property {Array<{label: string, value: number, stroke: string}>} donutData - Donut chart segments
+ * @property {string} totalTimeFormatted - Formatted total time string
+ * @property {ActivityData[]} skills - Skills sorted by duration
+ * @property {(minutes: number) => string} formatDuration - Duration formatter
+ * @property {Array<keyof StatsXP>} statsKeys - Non-zero stat keys
+ * @property {Record<keyof StatsXP, number>} statsGained - Stats gained values
+ * @property {Array<{label: string, value: number}>} radarData - Radar chart data (normalized 0-1)
+ * @property {QuestProgress} questProgress - Quest completion data
+ * @property {Record<string, string>} langStats - Language strings for stat names
+ * @property {Record<string, any>} langRecap - Language strings for recap labels
  */
 
 /** @type {Record<string, React.ComponentType<TemplateProps>>} */

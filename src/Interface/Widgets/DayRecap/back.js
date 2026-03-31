@@ -315,7 +315,11 @@ class BackDayRecap extends React.Component {
         this.setState({ saveStatus: success ? 'success' : 'error' });
 
         // Reset status after 2 seconds
+        if (this._saveStatusTimer !== null) {
+            clearTimeout(this._saveStatusTimer);
+        }
         this._saveStatusTimer = setTimeout(() => {
+            this._saveStatusTimer = null;
             this.setState({ saveStatus: 'idle' });
         }, 2000);
     };

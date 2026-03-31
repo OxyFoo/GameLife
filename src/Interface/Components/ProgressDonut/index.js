@@ -64,7 +64,7 @@ function ProgressDonut({
             easing: easing ?? Easing.out(Easing.exp),
             useNativeDriver: false
         }).start();
-    }, [animationValue, value, delay, duration]);
+    }, [animationValue, value, delay, duration, easing]);
 
     return (
         <View style={[{ width: size, height: size }, styles.parent, style]}>

@@ -72,6 +72,9 @@ class BackDayRecap extends React.Component {
     /** @type {React.RefObject<import('react-native-view-shot').default | null>} */
     viewShotRef = React.createRef();
 
+    /** @type {ReturnType<typeof setTimeout> | null} */
+    _saveStatusTimer = null;
+
     /** @type {DayRecapState} */
     state = {
         isCapturing: false,
@@ -88,6 +91,12 @@ class BackDayRecap extends React.Component {
 
     componentDidMount() {
         this.computeRecapData();
+    }
+
+    componentWillUnmount() {
+        if (this._saveStatusTimer !== null) {
+            clearTimeout(this._saveStatusTimer);
+        }
     }
 
     /**
@@ -306,7 +315,7 @@ class BackDayRecap extends React.Component {
         this.setState({ saveStatus: success ? 'success' : 'error' });
 
         // Reset status after 2 seconds
-        setTimeout(() => {
+        this._saveStatusTimer = setTimeout(() => {
             this.setState({ saveStatus: 'idle' });
         }, 2000);
     };

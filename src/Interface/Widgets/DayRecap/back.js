@@ -103,7 +103,7 @@ class BackDayRecap extends React.Component {
      * @param {DayRecapProps} prevProps
      */
     componentDidUpdate(prevProps) {
-        if (prevProps.date !== this.props.date) {
+        if (prevProps.date.getTime() !== this.props.date.getTime()) {
             this.computeRecapData();
         }
     }

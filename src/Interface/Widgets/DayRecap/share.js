@@ -6,6 +6,8 @@ import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('react-native-view-shot').default} ViewShot
+ * @typedef {import('react-native-share').ShareOptions} ShareOptions
+ * @typedef {import('react-native-share').ShareSingleOptions} ShareSingleOptions
  */
 
 /**
@@ -109,7 +111,7 @@ export const shareImage = async (viewShotRef, setCapturing, setSharing, target =
             throw new Error('Failed to capture image');
         }
 
-        /** @type {import('react-native-share').ShareOptions} */
+        /** @type {ShareOptions} */
         const shareOptions = {
             url: uri,
             type: 'image/png',
@@ -118,18 +120,22 @@ export const shareImage = async (viewShotRef, setCapturing, setSharing, target =
 
         if (target === 'instagram-stories') {
             // Share to Instagram Stories
-            await Share.shareSingle({
-                ...shareOptions,
-                social: /** @type {any} */ (Share.Social.INSTAGRAM_STORIES),
-                backgroundBottomColor: '#1a1a2e',
-                backgroundTopColor: '#16213e'
-            });
+            await Share.shareSingle(
+                /** @type {ShareSingleOptions} */ ({
+                    ...shareOptions,
+                    social: Share.Social.INSTAGRAM_STORIES,
+                    backgroundBottomColor: '#1a1a2e',
+                    backgroundTopColor: '#16213e'
+                })
+            );
         } else if (target === 'instagram') {
             // Share to Instagram Feed
-            await Share.shareSingle({
-                ...shareOptions,
-                social: /** @type {any} */ (Share.Social.INSTAGRAM)
-            });
+            await Share.shareSingle(
+                /** @type {ShareSingleOptions} */ ({
+                    ...shareOptions,
+                    social: Share.Social.INSTAGRAM
+                })
+            );
         } else {
             // General share sheet
             await Share.open(shareOptions);

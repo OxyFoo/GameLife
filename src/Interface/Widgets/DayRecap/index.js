@@ -167,4 +167,4 @@ class DayRecap extends BackDayRecap {
     }
 }
 
-export default DayRecap;
+export { DayRecap };

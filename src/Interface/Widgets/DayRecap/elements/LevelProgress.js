@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { ProgressBar, Text } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
 
 /**
  * Level progress section with XP bar
@@ -10,17 +11,17 @@ import { ProgressBar, Text } from 'Interface/Components';
  * @param {number} props.xpGained - XP gained today
  * @param {number} props.xpCurrent - Current XP in level
  * @param {number} props.xpNext - XP needed for next level
- * @param {Record<string, string>} [props.lang] - Language strings
  */
-const LevelProgress = ({ level, xpGained, xpCurrent, xpNext, lang = {} }) => {
+const LevelProgress = ({ level, xpGained, xpCurrent, xpNext }) => {
+    const lang = langManager.curr['level'];
     return (
         <View style={styles.levelContainer}>
             <View style={styles.levelRow}>
                 <Text style={styles.levelText} color='secondary'>
-                    {lang['level-small'] || 'Niv.'} {level}
+                    {lang['level-small']} {level}
                 </Text>
                 <Text style={styles.xpText} color='main1'>
-                    + {xpGained} {lang['xp'] || 'EXP'}
+                    + {xpGained} {lang['xp']}
                 </Text>
             </View>
             <ProgressBar style={styles.progressBar} value={xpCurrent} maxValue={xpNext} color='gradient' height={8} />

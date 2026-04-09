@@ -134,7 +134,9 @@ class Calendar extends BackCalendar {
                 </View>
 
                 {/** Day Recap Modal */}
-                {showDayRecap && <DayRecap date={this.state.dayRecapDate} onClose={this.closeDayRecap} />}
+                {showDayRecap && this.state.dayRecapDate && (
+                    <DayRecap date={this.state.dayRecapDate} onClose={this.closeDayRecap} />
+                )}
             </View>
         );
     }

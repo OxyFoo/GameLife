@@ -2,20 +2,16 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
 import { Icon, Text } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
 
 // @ts-ignore
 import GameLifeLogo from 'Ressources/logo/GameLife.png';
 
 /**
- * @typedef {object} FooterProps
- * @property {string} [text]
- */
-
-/**
  * Footer component for DayRecap
- * @param {FooterProps} props
  */
-const Footer = ({ text = 'GameLife' }) => {
+const Footer = () => {
+    const text = langManager.curr['calendar']['recap']['footer'];
     return (
         <View style={styles.footer}>
             <View style={styles.footerLeft}>

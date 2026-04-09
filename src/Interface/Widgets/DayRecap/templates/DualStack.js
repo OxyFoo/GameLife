@@ -18,8 +18,7 @@ const DualStack = ({
     statsKeys,
     statsGained,
     radarData,
-    langStats,
-    langRecap
+    activitiesTitle
 }) => {
     const separatorColor = themeManager.GetColor('border', { opacity: 0.3 });
 
@@ -33,7 +32,7 @@ const DualStack = ({
                 chartSize={120}
                 maxItems={5}
                 compactFont={false}
-                title={langRecap['activities'] || 'Activities'}
+                title={activitiesTitle}
             />
 
             <View style={[styles.separator, { backgroundColor: separatorColor }]} />
@@ -42,7 +41,6 @@ const DualStack = ({
                 statsKeys={statsKeys}
                 statsGained={statsGained}
                 radarData={radarData}
-                lang={langStats}
                 chartLeft={false}
                 chartSize={160}
                 maxItems={6}

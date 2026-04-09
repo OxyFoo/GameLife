@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { ProgressDonut, Icon, Text } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 import shared from './shared';
 
@@ -14,7 +15,6 @@ import shared from './shared';
  * Quest section with progress donut and quest list
  * @param {object} props
  * @param {QuestProgress} props.questProgress - Quest completion data
- * @param {Record<string, string>} [props.lang] - Language strings
  * @param {SectionMode} [props.mode] - Display mode
  * @param {boolean} [props.chartLeft] - Chart on left side
  * @param {number} [props.chartSize] - Donut size override
@@ -24,7 +24,6 @@ import shared from './shared';
  */
 const QuestSection = ({
     questProgress,
-    lang = {},
     mode = 'full',
     chartLeft = true,
     chartSize = 80,
@@ -32,6 +31,7 @@ const QuestSection = ({
     compactFont = true,
     title = ''
 }) => {
+    const lang = langManager.curr['calendar']['recap'];
     const { completedQuests, totalQuests, allCompleted, quests } = questProgress;
     const hasQuests = totalQuests > 0;
     const rawProgress = hasQuests ? completedQuests / totalQuests : 0;
@@ -76,7 +76,7 @@ const QuestSection = ({
                     ]}
                 >
                     <Text style={styles.noQuestsText} color='secondary'>
-                        {lang['no-quests'] || 'No quests'}
+                        {lang['no-quests']}
                     </Text>
                 </View>
             )}
@@ -117,7 +117,7 @@ const QuestSection = ({
             ))}
             {!hasQuests && (
                 <Text style={styles.emptyText} color='secondary'>
-                    {lang['no-quests-message'] || 'No quests today'}
+                    {'No quests today'}
                 </Text>
             )}
         </View>

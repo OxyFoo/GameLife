@@ -85,10 +85,7 @@ export const saveToGallery = async (viewShotRef, setCapturing) => {
         // Ensure proper file:// prefix for iOS
         const fileUri = uri.startsWith('file://') ? uri : `file://${uri}`;
 
-        // Add small delay to ensure the file is fully written
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        await CameraRoll.save(fileUri, { type: 'photo' });
+        await CameraRoll.saveAsset(fileUri, { type: 'photo' });
         return true;
     } catch (_error) {
         return false;

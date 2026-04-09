@@ -6,6 +6,8 @@ import Header from './Header';
 import LevelProgress from './LevelProgress';
 import TemplateRouter from '../templates';
 
+import langManager from 'Managers/LangManager';
+
 /**
  * @typedef {import('../back').DayRecapData} DayRecapData
  */
@@ -18,20 +20,8 @@ import TemplateRouter from '../templates';
  * @param {string} [props.template] - Template name (tripleStack, dualStack, chartRow)
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter
  * @param {(stats: import('@oxyfoo/gamelife-types/Class/Experience').StatsXP) => Array<{label: string, value: number}>} props.computeRadarData - Radar data computer
- * @param {Record<string, any>} [props.langRecap] - Language strings for recap
- * @param {Record<string, string>} [props.langStats] - Language strings for stats
- * @param {Record<string, string>} [props.langLevel] - Language strings for level
  */
-const CardContent = ({
-    recapData,
-    date,
-    template = 'tripleStack',
-    formatDuration,
-    computeRadarData,
-    langRecap = {},
-    langStats = {},
-    langLevel = {}
-}) => {
+const CardContent = ({ recapData, date, template = 'tripleStack', formatDuration, computeRadarData }) => {
     const {
         username,
         level,
@@ -55,11 +45,15 @@ const CardContent = ({
     const radarData = computeRadarData(statsGained);
     const totalTimeFormatted = formatDuration(totalMinutes);
 
+    const langHome = langManager.curr['home'];
+    const activitiesTitle = langHome['today-activity'];
+    const questsTitle = langHome['today-quest'];
+
     return (
         <View style={styles.mainContent}>
-            <Header username={username} date={date} titleTemplate={langRecap['title']} />
+            <Header username={username} date={date} />
 
-            <LevelProgress level={level} xpGained={xpGained} xpCurrent={xpCurrent} xpNext={xpNext} lang={langLevel} />
+            <LevelProgress level={level} xpGained={xpGained} xpCurrent={xpCurrent} xpNext={xpNext} />
 
             <TemplateRouter
                 template={template}
@@ -71,11 +65,11 @@ const CardContent = ({
                 statsGained={statsGained}
                 radarData={radarData}
                 questProgress={questProgress}
-                langStats={langStats}
-                langRecap={langRecap}
+                activitiesTitle={activitiesTitle}
+                questsTitle={questsTitle}
             />
 
-            <Footer text={langRecap['footer']} />
+            <Footer />
         </View>
     );
 };

@@ -9,13 +9,13 @@ import langManager from 'Managers/LangManager';
  * @param {object} props
  * @param {string} props.username - User's name
  * @param {Date} props.date - Date to display
- * @param {string} [props.titleTemplate] - Title template with {} placeholder
  */
-const Header = ({ username, date, titleTemplate = 'Today I did - {}' }) => {
+const Header = ({ username, date }) => {
+    const titleTemplate = langManager.curr['calendar']['recap']['title'];
     const title = titleTemplate.replace('{}', username);
-    const langDates = langManager.curr['dates'] || {};
-    const dayName = (langDates['days'] || [])[date.getDay()] || '';
-    const monthName = (langDates['month'] || [])[date.getMonth()] || '';
+    const langDates = langManager.curr['dates'];
+    const dayName = langDates['days'][date.getDay()];
+    const monthName = langDates['month'][date.getMonth()];
     const day = date.getDate();
     const year = date.getFullYear();
     const formattedDate = `${dayName} ${day} ${monthName} ${year}`;

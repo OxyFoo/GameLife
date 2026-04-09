@@ -20,8 +20,8 @@ const TripleStack = ({
     statsGained,
     radarData,
     questProgress,
-    langStats,
-    langRecap
+    activitiesTitle,
+    questsTitle
 }) => {
     const separatorColor = themeManager.GetColor('border', { opacity: 0.3 });
 
@@ -34,7 +34,7 @@ const TripleStack = ({
                 formatDuration={formatDuration}
                 chartSize={80}
                 maxItems={4}
-                title={langRecap['activities'] || 'Activities'}
+                title={activitiesTitle}
             />
 
             <View style={[styles.separator, { backgroundColor: separatorColor }]} />
@@ -43,7 +43,6 @@ const TripleStack = ({
                 statsKeys={statsKeys}
                 statsGained={statsGained}
                 radarData={radarData}
-                lang={langStats}
                 chartLeft={false}
                 chartSize={130}
                 maxItems={6}
@@ -51,13 +50,7 @@ const TripleStack = ({
 
             <View style={[styles.separator, { backgroundColor: separatorColor }]} />
 
-            <QuestSection
-                questProgress={questProgress}
-                lang={langRecap}
-                chartSize={80}
-                maxItems={4}
-                title={langRecap['quests'] || 'Quests'}
-            />
+            <QuestSection questProgress={questProgress} chartSize={80} maxItems={4} title={questsTitle} />
         </View>
     );
 };

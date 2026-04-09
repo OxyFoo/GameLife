@@ -153,9 +153,14 @@ class BackCalendar extends PageBase {
         if (activities.length === 0) {
             return;
         }
-        const dayRecapDate = selectedIsToday
-            ? new Date()
-            : selectedDay ? new Date(selectedDay.year, selectedDay.month, selectedDay.day) : new Date();
+        if (selectedIsToday) {
+            this.setState({ showDayRecap: true, dayRecapDate: new Date() });
+            return;
+        }
+        if (!selectedDay) {
+            return;
+        }
+        const dayRecapDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
         this.setState({ showDayRecap: true, dayRecapDate });
     };
 

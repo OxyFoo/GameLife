@@ -20,8 +20,8 @@ const ChartRow = ({
     statsGained,
     radarData,
     questProgress,
-    langStats,
-    langRecap
+    activitiesTitle,
+    questsTitle
 }) => {
     const separatorColor = themeManager.GetColor('border', { opacity: 0.3 });
 
@@ -35,7 +35,7 @@ const ChartRow = ({
                 chartSize={120}
                 maxItems={4}
                 compactFont={false}
-                title={langRecap['activities'] || 'Activities'}
+                title={activitiesTitle}
             />
 
             <View style={[styles.separator, { backgroundColor: separatorColor }]} />
@@ -45,11 +45,10 @@ const ChartRow = ({
                     <View style={[styles.questDataContainer]}>
                         <QuestSection
                             questProgress={questProgress}
-                            lang={langRecap}
                             mode='dataOnly'
                             maxItems={4}
                             compactFont
-                            title={langRecap['quests'] || 'Quests'}
+                            title={questsTitle}
                         />
                     </View>
                 </View>
@@ -59,7 +58,6 @@ const ChartRow = ({
                         statsKeys={statsKeys}
                         statsGained={statsGained}
                         radarData={radarData}
-                        lang={langStats}
                         mode='chartOnly'
                         chartSize={140}
                     />

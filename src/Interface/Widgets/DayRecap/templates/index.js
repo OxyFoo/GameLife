@@ -18,8 +18,8 @@ import ChartRow from './ChartRow';
  * @property {Record<keyof StatsXP, number>} statsGained - Stats gained values
  * @property {Array<{label: string, value: number}>} radarData - Radar chart data (normalized 0-1)
  * @property {QuestProgress} questProgress - Quest completion data
- * @property {Record<string, string>} langStats - Language strings for stat names
- * @property {Record<string, any>} langRecap - Language strings for recap labels
+ * @property {string} activitiesTitle - Translated title for activities section
+ * @property {string} questsTitle - Translated title for quests section
  */
 
 /** @type {Record<string, React.ComponentType<TemplateProps>>} */

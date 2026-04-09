@@ -28,14 +28,7 @@ class DayRecap extends BackDayRecap {
             );
         }
 
-        const langHome = langManager.curr['home'] || {};
-        const langRecap = {
-            ...(langManager.curr['calendar']?.['recap'] || {}),
-            activities: langHome['today-activity'] || 'Activities',
-            quests: langHome['today-quest'] || 'Quests'
-        };
-        const langStats = langManager.curr['statistics']?.['names'] || {};
-        const langLevel = langManager.curr['level'] || {};
+        const langRecap = langManager.curr['calendar']['recap'];
 
         // Check if there are no activities
         const hasNoActivities = recapData.categories.length === 0 || recapData.totalMinutes === 0;
@@ -123,9 +116,6 @@ class DayRecap extends BackDayRecap {
                                     template={template}
                                     formatDuration={this.formatDuration}
                                     computeRadarData={this.computeRadarData}
-                                    langRecap={langRecap}
-                                    langStats={langStats}
-                                    langLevel={langLevel}
                                 />
                             </View>
                         </ViewShot>

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { RadarChart, Text } from 'Interface/Components';
+import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 import shared from './shared';
 
@@ -16,7 +17,6 @@ import shared from './shared';
  * @param {Array<keyof StatsXP>} props.statsKeys - Keys of stats to display
  * @param {Record<keyof StatsXP, number>} props.statsGained - Stats values gained
  * @param {Array<{label: string, value: number}>} props.radarData - Data for radar chart
- * @param {Record<string, string>} [props.lang] - Language strings for stat names
  * @param {SectionMode} [props.mode] - Display mode
  * @param {boolean} [props.chartLeft] - Chart on left side
  * @param {number} [props.chartSize] - Radar chart size override
@@ -27,13 +27,13 @@ const StatsSection = ({
     statsKeys,
     statsGained,
     radarData,
-    lang = {},
     mode = 'full',
     chartLeft = false,
     chartSize = 130,
     maxItems = 6,
     compactFont = true
 }) => {
+    const lang = langManager.curr['statistics']['names'];
     const badgeFontSize = compactFont ? 11 : 12;
     const labelFontSize = compactFont ? 12 : 14;
     const radarPadding = mode === 'full' && !compactFont ? 15 : 10;
@@ -61,7 +61,7 @@ const StatsSection = ({
                             </Text>
                         </View>
                         <Text style={[styles.dataLabel, { fontSize: labelFontSize }]} color='primary'>
-                            {lang[key] || key}
+                            {lang[key]}
                         </Text>
                     </View>
                 );

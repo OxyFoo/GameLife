@@ -52,13 +52,6 @@ import { saveToGallery, shareImage } from './share';
  * @property {() => void} [onClose]
  */
 
-/** @type {DayRecapProps} */
-const DayRecapProps = {
-    style: /** @type {StyleProp} */ ({}),
-    date: new Date(),
-    onClose: () => {}
-};
-
 /**
  * @typedef {object} DayRecapState
  * @property {boolean} isCapturing
@@ -68,6 +61,7 @@ const DayRecapProps = {
  * @property {DayRecapData | null} recapData
  */
 
+/** @extends {React.Component<DayRecapProps, DayRecapState>} */
 class BackDayRecap extends React.Component {
     /** @type {React.RefObject<import('react-native-view-shot').default | null>} */
     viewShotRef = React.createRef();
@@ -331,8 +325,5 @@ class BackDayRecap extends React.Component {
         shareImage(this.viewShotRef, this.setCapturing, this.setSharing, target);
     };
 }
-
-BackDayRecap.prototype.props = DayRecapProps;
-BackDayRecap.defaultProps = DayRecapProps;
 
 export default BackDayRecap;

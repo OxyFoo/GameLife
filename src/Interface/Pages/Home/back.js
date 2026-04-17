@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
+import { DayRecap } from 'Interface/Widgets';
 import user from 'Managers/UserManager';
 
 /**
@@ -24,12 +25,6 @@ class BackHome extends PageBase {
     static feKeepMounted = true;
     static feShowUserHeader = true;
     static feShowNavBar = true;
-
-    state = {
-        showDayRecap: false,
-        /** @type {Date | null} */
-        dayRecapDate: null
-    };
 
     /** @type {React.RefObject<ScrollView | null>} */
     refScrollView = React.createRef();
@@ -59,11 +54,10 @@ class BackHome extends PageBase {
     };
 
     openDayRecap = () => {
-        this.setState({ showDayRecap: true, dayRecapDate: new Date() });
-    };
-
-    closeDayRecap = () => {
-        this.setState({ showDayRecap: false, dayRecapDate: null });
+        user.interface.popup?.Open({
+            content: <DayRecap date={new Date()} />,
+            cancelable: true
+        });
     };
 }
 

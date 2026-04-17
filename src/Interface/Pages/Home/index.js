@@ -17,7 +17,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
-import { DayRecap, Missions, TodoList } from 'Interface/Widgets';
+import { Missions, TodoList } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -110,9 +110,6 @@ class Home extends BackHome {
                     />
                 </Title>
                 <TodoList style={styles.lastWidget} />
-
-                {/* Day Recap Modal */}
-                {this.state.showDayRecap && <DayRecap date={this.state.dayRecapDate} onClose={this.closeDayRecap} />}
             </ScrollView>
         );
     }

@@ -1,41 +1,28 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH * 0.85;
-const CARD_MAX_HEIGHT = SCREEN_HEIGHT * 0.75;
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const CARD_MAX_HEIGHT = SCREEN_HEIGHT * 0.55;
 
 const styles = StyleSheet.create({
-    // Absolute fill for background touch
-    absoluteFill: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
+    // Main container inside popup
+    container: {
+        alignItems: 'center',
+        paddingVertical: 16
     },
 
-    // Modal overlay
-    overlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    // Loading state
+    loadingContainer: {
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'center'
+        paddingVertical: 60
     },
 
-    // Top row for close button
-    topRow: {
-        width: CARD_WIDTH,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    closeButtonTop: {
-        padding: 8
-    },
+    // Template buttons row
     templateButtons: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8
+        gap: 8,
+        marginBottom: 8
     },
     templateButton: {
         width: 28,
@@ -52,7 +39,7 @@ const styles = StyleSheet.create({
 
     // Visible frame - ScrollView container with max height
     visibleFrame: {
-        width: CARD_WIDTH,
+        width: '100%',
         maxHeight: CARD_MAX_HEIGHT,
         flexGrow: 0,
         marginVertical: 12
@@ -60,19 +47,16 @@ const styles = StyleSheet.create({
 
     // Visible card - same 9:16 ratio as hidden card
     visibleCard: {
-        width: CARD_WIDTH,
+        width: '100%',
         aspectRatio: 9 / 16,
         overflow: 'hidden'
     },
 
     // Empty state card
     emptyCard: {
-        width: '80%',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 60,
-        overflow: 'hidden',
-        borderRadius: 16
+        paddingVertical: 60
     },
     emptyTitle: {
         fontSize: 20,

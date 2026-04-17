@@ -49,7 +49,6 @@ import { saveToGallery, shareImage } from './share';
  * @typedef {object} DayRecapProps
  * @property {StyleProp} [style]
  * @property {Date} date - The date to display recap for
- * @property {() => void} [onClose]
  */
 
 /**

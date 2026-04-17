@@ -8,7 +8,6 @@ import { CardHeader, CardSeparator, CardFooter } from './AddButtons';
 import langManager from 'Managers/LangManager';
 
 import { ActivityTimeline, Button, Icon, Text } from 'Interface/Components';
-import { DayRecap } from 'Interface/Widgets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(null, 0).length + 1) / 2;
@@ -24,8 +23,7 @@ class Calendar extends BackCalendar {
             days,
             animSummaryY,
             animTodayButton,
-            selectedIsToday,
-            showDayRecap
+            selectedIsToday
         } = this.state;
 
         const summaryStyle = {
@@ -132,11 +130,6 @@ class Calendar extends BackCalendar {
                         showsHorizontalScrollIndicator={false}
                     />
                 </View>
-
-                {/** Day Recap Modal */}
-                {showDayRecap && this.state.dayRecapDate && (
-                    <DayRecap date={this.state.dayRecapDate} onClose={this.closeDayRecap} />
-                )}
             </View>
         );
     }

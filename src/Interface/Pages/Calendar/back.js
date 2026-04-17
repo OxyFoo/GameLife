@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { AddActivity } from 'Interface/Widgets';
+import { AddActivity, DayRecap } from 'Interface/Widgets';
 import { SpringAnimation, EasingAnimation } from 'Utils/Animations';
 import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
@@ -82,12 +82,7 @@ class BackCalendar extends PageBase {
             }),
 
         animSummaryY: new Animated.Value(0),
-        animTodayButton: new Animated.Value(0),
-
-        /** @type {boolean} */
-        showDayRecap: false,
-        /** @type {Date | null} */
-        dayRecapDate: null
+        animTodayButton: new Animated.Value(0)
     };
 
     /** @type {Symbol | null} */
@@ -153,19 +148,19 @@ class BackCalendar extends PageBase {
         if (activities.length === 0) {
             return;
         }
+        /** @type {Date} */
+        let date;
         if (selectedIsToday) {
-            this.setState({ showDayRecap: true, dayRecapDate: new Date() });
+            date = new Date();
+        } else if (selectedDay) {
+            date = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
+        } else {
             return;
         }
-        if (!selectedDay) {
-            return;
-        }
-        const dayRecapDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
-        this.setState({ showDayRecap: true, dayRecapDate });
-    };
-
-    closeDayRecap = () => {
-        this.setState({ showDayRecap: false, dayRecapDate: null });
+        user.interface.popup?.Open({
+            content: <DayRecap date={date} />,
+            cancelable: true
+        });
     };
 
     openToday = () => {

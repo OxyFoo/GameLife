@@ -45,7 +45,7 @@ class Calendar extends BackCalendar {
                                 color='transparent'
                                 onPress={this.openDayRecap}
                             >
-                                <Icon icon='share-2' color='main1' size={20} />
+                                <Icon icon='share-2-outline' color='gradient' size={20} />
                             </Button>
                         )}
                     </View>

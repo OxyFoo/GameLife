@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     // Main container inside popup
     container: {
         alignItems: 'center',
-        paddingVertical: 16
+        marginHorizontal: -16
     },
 
     // Loading state
@@ -17,12 +17,16 @@ const styles = StyleSheet.create({
         paddingVertical: 60
     },
 
-    // Template buttons row
+    // Template buttons row (above popup card)
     templateButtons: {
+        position: 'absolute',
+        top: -40,
+        left: 0,
+        right: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
-        marginBottom: 8
+        justifyContent: 'flex-start',
+        gap: 8
     },
     templateButton: {
         width: 28,
@@ -42,7 +46,7 @@ const styles = StyleSheet.create({
         width: '100%',
         maxHeight: CARD_MAX_HEIGHT,
         flexGrow: 0,
-        marginVertical: 12
+        borderRadius: 16
     },
 
     // Visible card - same 9:16 ratio as hidden card
@@ -70,8 +74,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
 
-    // Share buttons (outside captured area)
+    // Share buttons (below popup card)
     buttonsContainer: {
+        position: 'absolute',
+        bottom: -56,
+        left: 0,
+        right: 0,
         flexDirection: 'row',
         justifyContent: 'center',
         gap: 12

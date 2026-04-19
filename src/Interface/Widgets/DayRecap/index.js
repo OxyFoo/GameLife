@@ -50,7 +50,7 @@ class DayRecap extends BackDayRecap {
 
         return (
             <View style={styles.container}>
-                {/* Template buttons */}
+                {/* Template buttons (positioned above popup card) */}
                 <View style={styles.templateButtons}>
                     {TEMPLATE_NAMES.map((name, index) => (
                         <TouchableOpacity
@@ -90,7 +90,7 @@ class DayRecap extends BackDayRecap {
                     </ViewShot>
                 </ScrollView>
 
-                {/* Action buttons (outside captured area) */}
+                {/* Action buttons (positioned below popup card) */}
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity
                         style={[styles.actionButton, { backgroundColor: themeManager.GetColor('main2') }]}

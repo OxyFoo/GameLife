@@ -52,7 +52,7 @@ class Home extends BackHome {
                         style={styles.sectionTitleAddButton}
                         appearance='uniform'
                         color='transparent'
-                        icon='share-2'
+                        icon='share-2-outline'
                         fontColor='gradient'
                         onPress={this.openDayRecap}
                     />

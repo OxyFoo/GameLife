@@ -89,6 +89,7 @@ const Icons = {
     'settings':                 require('./icons/settings').default,
     'share-outline':            require('./icons/share-outline').default,
     'share':                    require('./icons/share').default,
+    'share-2-outline':          require('./icons/share-2-outline').default,
     'share-2':                  require('./icons/share-2').default,
     'slot-bottom':              require('./icons/slot-bottom').default,
     'slot-hair':                require('./icons/slot-hair').default,

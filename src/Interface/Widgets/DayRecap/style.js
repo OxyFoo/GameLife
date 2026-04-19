@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const CARD_MAX_HEIGHT = SCREEN_HEIGHT * 0.55;
+const CARD_MAX_HEIGHT = SCREEN_HEIGHT * 0.7;
 
 const styles = StyleSheet.create({
     // Main container inside popup

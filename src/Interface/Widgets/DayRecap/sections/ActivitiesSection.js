@@ -2,9 +2,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { DonutChart, Text } from 'Interface/Components';
-import shared from './shared';
+import shared from './sharedStyle';
 
 /**
+ * @typedef {import('../back').DonutSegment} DonutSegment
  * @typedef {'full' | 'chartOnly' | 'dataOnly'} SectionMode
  *
  * @typedef {object} SkillData
@@ -15,7 +16,7 @@ import shared from './shared';
 /**
  * Activities section with donut chart and skills list
  * @param {object} props
- * @param {Array<{label: string, value: number, stroke: string}>} props.donutData - Data for donut chart
+ * @param {DonutSegment[]} props.donutData - Data for donut chart
  * @param {string} props.totalTime - Formatted total time
  * @param {SkillData[]} props.skills - List of skills
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter function

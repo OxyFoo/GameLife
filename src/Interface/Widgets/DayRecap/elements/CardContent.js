@@ -10,6 +10,7 @@ import langManager from 'Managers/LangManager';
 
 /**
  * @typedef {import('../back').DayRecapData} DayRecapData
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
  */
 
 /**
@@ -19,7 +20,7 @@ import langManager from 'Managers/LangManager';
  * @param {Date} props.date - Date to display
  * @param {string} [props.template] - Template name (tripleStack, dualStack, chartRow)
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter
- * @param {(stats: import('@oxyfoo/gamelife-types/Class/Experience').StatsXP) => Array<{label: string, value: number}>} props.computeRadarData - Radar data computer
+ * @param {(stats: StatsXP) => Array<{label: string, value: number}>} props.computeRadarData - Radar data computer
  */
 const CardContent = ({ recapData, date, template = 'tripleStack', formatDuration, computeRadarData }) => {
     const {

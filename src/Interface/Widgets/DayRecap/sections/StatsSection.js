@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import { RadarChart, Text } from 'Interface/Components';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
-import shared from './shared';
+import shared from './sharedStyle';
 
 /**
  * @typedef {'full' | 'chartOnly' | 'dataOnly'} SectionMode

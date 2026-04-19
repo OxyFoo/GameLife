@@ -49,6 +49,11 @@ import { saveToGallery, shareImage } from './share';
  * @typedef {object} DayRecapProps
  * @property {StyleProp} [style]
  * @property {Date} date - The date to display recap for
+ *
+ * @typedef {object} DonutSegment
+ * @property {string} label - Segment label
+ * @property {number} value - Segment value (duration in minutes)
+ * @property {string} stroke - Segment color
  */
 
 /**

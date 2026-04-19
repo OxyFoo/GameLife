@@ -8,9 +8,10 @@ import ChartRow from './ChartRow';
  * @typedef {import('@oxyfoo/gamelife-types/Class/Experience').StatsXP} StatsXP
  * @typedef {import('../back').QuestProgress} QuestProgress
  * @typedef {import('../back').ActivityData} ActivityData
+ * @typedef {import('../back').DonutSegment} DonutSegment
  *
  * @typedef {object} TemplateProps
- * @property {Array<{label: string, value: number, stroke: string}>} donutData - Donut chart segments
+ * @property {DonutSegment[]} donutData - Donut chart segments
  * @property {string} totalTimeFormatted - Formatted total time string
  * @property {ActivityData[]} skills - Skills sorted by duration
  * @property {(minutes: number) => string} formatDuration - Duration formatter

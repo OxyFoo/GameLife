@@ -47,7 +47,16 @@ class Home extends BackHome {
                 <Missions />
 
                 {/* Today recap: Activities & Quests */}
-                <Title title={lang['section-today-performance']} />
+                <Title title={lang['section-today-performance']}>
+                    <Button
+                        style={styles.sectionTitleAddButton}
+                        appearance='uniform'
+                        color='transparent'
+                        icon='share-2-outline'
+                        fontColor='gradient'
+                        onPress={this.openDayRecap}
+                    />
+                </Title>
                 <View style={styles.chartsContainer}>
                     <TodayActivitiesPieChart />
                     <TodayQuestsPieChart refParent={this.refQuestsTitle} />

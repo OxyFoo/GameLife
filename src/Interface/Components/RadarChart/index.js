@@ -23,6 +23,7 @@ const AnimatedSvgText = Animated.createAnimatedComponent(SvgText);
  * @property {StyleViewProp} [style] - Container styles
  * @property {boolean} [showLabels] - Show labels on axes
  * @property {number} [levels] - Number of concentric hexagons
+ * @property {number} [basePadding] - Base padding around the chart
  */
 
 /**
@@ -58,9 +59,9 @@ function getHexagonPoints(cx, cy, radius) {
  * Radar Chart component (hexagon shape) for stats visualization
  * @param {RadarChartProps} props
  */
-function RadarChart({ data, size = 140, style, showLabels = false, levels = 4 } = RadarChartProps) {
+function RadarChart({ data, size = 140, style, showLabels = false, levels = 4, basePadding = 10 } = RadarChartProps) {
     const animValue = React.useRef(new Animated.Value(showLabels ? 1 : 0)).current;
-    const [padding, setPadding] = React.useState(showLabels ? 30 : 10);
+    const [padding, setPadding] = React.useState(showLabels ? basePadding + 20 : basePadding);
 
     const labelOpacity = animValue.interpolate({
         inputRange: [0, 1],
@@ -70,7 +71,7 @@ function RadarChart({ data, size = 140, style, showLabels = false, levels = 4 } 
 
     React.useEffect(() => {
         const listenerId = animValue.addListener(({ value }) => {
-            setPadding(10 + value * 20);
+            setPadding(basePadding + value * 20);
         });
 
         SpringAnimation(animValue, showLabels ? 1 : 0, true).start();
@@ -78,7 +79,7 @@ function RadarChart({ data, size = 140, style, showLabels = false, levels = 4 } 
         return () => {
             animValue.removeListener(listenerId);
         };
-    }, [showLabels, animValue]);
+    }, [showLabels, animValue, basePadding]);
 
     const center = size / 2;
     const maxRadius = center - padding;

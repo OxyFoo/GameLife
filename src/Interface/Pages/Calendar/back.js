@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { AddActivity } from 'Interface/Widgets';
+import { AddActivity, DayRecap } from 'Interface/Widgets';
 import { SpringAnimation, EasingAnimation } from 'Utils/Animations';
 import { GetGlobalTime, GetLocalTime } from 'Utils/Time';
 
@@ -140,6 +140,26 @@ class BackCalendar extends PageBase {
                 title: 'Pas terminé',
                 message: "Cette feature n'est pas encore implémentée, un peu de patience 👀"
             }
+        });
+    };
+
+    openDayRecap = () => {
+        const { activities, selectedDay, selectedIsToday } = this.state;
+        if (activities.length === 0) {
+            return;
+        }
+        /** @type {Date} */
+        let date;
+        if (selectedIsToday) {
+            date = new Date();
+        } else if (selectedDay) {
+            date = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
+        } else {
+            return;
+        }
+        user.interface.popup?.Open({
+            content: <DayRecap date={date} />,
+            cancelable: true
         });
     };
 

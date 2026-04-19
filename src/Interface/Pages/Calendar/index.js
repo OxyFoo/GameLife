@@ -34,9 +34,21 @@ class Calendar extends BackCalendar {
             <View style={styles.page}>
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
-                    <Text style={styles.summaryTitle} color='secondary'>
-                        {lang['activities-title'].replace('{}', todayStrDate)}
-                    </Text>
+                    <View style={styles.summaryHeader}>
+                        <Text style={styles.summaryTitle} color='secondary'>
+                            {todayStrDate}
+                        </Text>
+                        {activities.length > 0 && (
+                            <Button
+                                style={styles.shareButton}
+                                appearance='uniform'
+                                color='transparent'
+                                onPress={this.openDayRecap}
+                            >
+                                <Icon icon='share-2-outline' color='gradient' size={20} />
+                            </Button>
+                        )}
+                    </View>
 
                     <View style={styles.summaryHoursContent}>
                         <Text fontSize={12} color='secondary'>

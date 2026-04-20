@@ -153,6 +153,46 @@ class TCP {
         );
     };
 
+    /**
+     * Synchronize the connection state with the native side.
+     * Critical for iOS where the connection may be closed while the app is in background,
+     * but JS timers are suspended so we miss the close event.
+     * @returns {Promise<ConnectionState>} The synchronized state
+     */
+    SyncState = async () => {
+        if (!this.socket) {
+            return this.state.Get();
+        }
+
+        try {
+            const nativeState = await this.socket.syncReadyState();
+
+            // If native says closed, clean up the socket to allow a new connection
+            if (nativeState === WebSocketReadyState.CLOSED) {
+                // Remove event listeners to prevent memory leaks
+                this.socket.removeEventListener('open', this.#onOpen);
+                this.socket.removeEventListener('message', this.#onMessage);
+                this.socket.removeEventListener('error', this.#onError);
+                this.socket.removeEventListener('close', this.#onClose);
+                this.socket.cleanup();
+                this.socket = null;
+                this.#connecting = false;
+
+                // Update state if it was connected
+                if (this.state.Get() === 'connected' || this.state.Get() === 'connecting') {
+                    this.state.Set('disconnected');
+                }
+            }
+        } catch {
+            // If sync fails, assume disconnected
+            if (this.state.Get() === 'connected') {
+                this.state.Set('disconnected');
+            }
+        }
+
+        return this.state.Get();
+    };
+
     Disconnect = () => {
         // Reset connecting flag
         this.#connecting = false;

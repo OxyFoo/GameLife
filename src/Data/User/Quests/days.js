@@ -84,7 +84,7 @@ function getDayFromMonthOrWeek(activities, quest, time = GetLocalTime()) {
  */
 function getDayFromFrequencyByMonth(activities, quest, time = GetLocalTime()) {
     const dateNow = GetDate(time);
-    const currentDate = new Date().getDate();
+    const currentDate = dateNow.getDate();
     const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
     const maxDate = currentDate + 7 - currentDayIndex;
     const firstDateWeek = currentDate - currentDayIndex;
@@ -98,7 +98,7 @@ function getDayFromFrequencyByMonth(activities, quest, time = GetLocalTime()) {
         return days;
     }
 
-    const firstDayMonth = new Date();
+    const firstDayMonth = new Date(dateNow);
     firstDayMonth.setDate(1);
     const firstTime = firstDayMonth.setHours(0, 0, 0, 0) / 1000;
 
@@ -162,7 +162,7 @@ function getDayFromFrequencyByMonth(activities, quest, time = GetLocalTime()) {
  */
 function getDayFromFrequencyByWeek(activities, quest, time = GetLocalTime()) {
     const dateNow = GetDate(time);
-    const currentDate = new Date().getDate();
+    const currentDate = dateNow.getDate();
     const currentDayIndex = (dateNow.getDay() - 1 + 7) % 7;
     const { skills, schedule } = quest;
 
@@ -174,7 +174,7 @@ function getDayFromFrequencyByWeek(activities, quest, time = GetLocalTime()) {
         return days;
     }
 
-    const firstDayWeek = new Date();
+    const firstDayWeek = new Date(dateNow);
     firstDayWeek.setDate(currentDate - currentDayIndex);
     const firstTime = firstDayWeek.setHours(0, 0, 0, 0) / 1000;
 

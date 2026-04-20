@@ -640,17 +640,13 @@ class BackFlowEngine extends React.Component {
      * @private
      */
     removeFromMountedPages = async (pageName) => {
-        const { mountedPages } = this.state;
-        const index = mountedPages.findIndex((p) => p.pageName === pageName);
-        if (index === -1) {
-            return;
-        }
-
         return new Promise((resolve) => {
             this.setState(
                 (/** @type {this['state']} */ prevState) => {
-                    const newPages = [...prevState.mountedPages];
-                    newPages.splice(index, 1);
+                    const newPages = prevState.mountedPages.filter((p) => p.pageName !== pageName);
+                    if (newPages.length === prevState.mountedPages.length) {
+                        return null;
+                    }
                     return { mountedPages: newPages };
                 },
                 () => {

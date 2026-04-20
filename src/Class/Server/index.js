@@ -162,6 +162,10 @@ class Server extends IUserClass {
      * @returns {Promise<InitResultCodes | 'user-authentication-failed'>} If returns 'user-authentication-failed', the user is not logged and should be disconnected
      */
     Reconnect = async () => {
+        // Sync state with native side first - critical for iOS where the connection
+        // may have been closed while the app was in background
+        await this.tcp.SyncState();
+
         const serverState = this.tcp.state.Get();
         if (serverState !== 'error' && serverState !== 'disconnected') {
             this.#user.interface?.console?.AddLog('info', '[Server] Already connected to the server');

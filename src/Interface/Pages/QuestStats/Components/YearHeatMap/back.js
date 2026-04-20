@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import user from 'Managers/UserManager';
+import langManager from 'Managers/LangManager';
 
 import { MinMax } from 'Utils/Functions';
-import { DAY_TIME, GetGlobalTime, GetYearTime } from 'Utils/Time';
+import { DAY_TIME, GetGlobalTime } from 'Utils/Time';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -23,22 +24,26 @@ const YearHeatMapProps = {
     quest: null
 };
 
-const WEEKS = 52;
-const DAYS_PER_WEEK = 7;
+const DAYS_TO_DISPLAY = 364;
+
+/**
+ * @typedef {Object} MonthLabel
+ * @property {string} name
+ * @property {number} position Column position (0-based)
+ */
 
 class YearHeatMapBack extends React.Component {
     state = {
-        switchMode: 0,
-
         /** @type {Array<HeatMapDataType>} */
-        dataToDisplay: []
+        dataToDisplay: [],
+        /** @type {Array<MonthLabel>} */
+        monthLabels: []
     };
-
-    /** @type {NodeJS.Timeout | null} */
-    saveTimeout = null;
 
     /** @type {Symbol | null} */
     activitiesListener = null;
+
+    scrollViewRef = React.createRef();
 
     /** @param {YearHeatMapPropsType} props */
     constructor(props) {
@@ -51,14 +56,17 @@ class YearHeatMapBack extends React.Component {
     }
 
     componentDidMount() {
-        this.GetHeatMapData();
-        this.activitiesListener = user.activities.allActivities.AddListener(this.GetHeatMapData);
+        this.activitiesListener = user.activities.allActivities.AddListener(() => {
+            this.setState(this.GetHeatMapData());
+        });
     }
 
+    /** Scroll to the end when the content is rendered */
+    handleContentSizeChange = () => {
+        this.scrollViewRef.current?.scrollToEnd({ animated: false });
+    };
+
     componentWillUnmount() {
-        if (this.saveTimeout) {
-            clearTimeout(this.saveTimeout);
-        }
         user.activities.allActivities.RemoveListener(this.activitiesListener);
     }
 
@@ -66,12 +74,11 @@ class YearHeatMapBack extends React.Component {
         const { quest } = this.props;
         if (!quest) return {};
 
-        const switchMode = user.settings.questHeatMapIndex;
         /** @type {Array<HeatMapDataType>} */
         const dataToDisplay = [];
 
-        const timeGlobalStart = GetYearTime();
         const timeGlobalEnd = GetGlobalTime();
+        const timeGlobalStart = timeGlobalEnd - DAYS_TO_DISPLAY * DAY_TIME;
 
         const allActivitiesTime = user.activities
             .Get()
@@ -87,75 +94,59 @@ class YearHeatMapBack extends React.Component {
                 duration: activity.duration
             }));
 
-        // Year by days: Data with 52 * 7 cells, one for each day of the year
-        if (switchMode === 0) {
-            for (let i = 0; i < WEEKS * DAYS_PER_WEEK; i++) {
-                const timeDay = timeGlobalStart + i * DAY_TIME;
-                const timeDayEnd = timeDay + DAY_TIME;
+        // Last 364 days: Fixed amount displayed on 4 rows with horizontal scroll (91 cells per row)
+        for (let i = 0; i < DAYS_TO_DISPLAY; i++) {
+            const timeDay = timeGlobalStart + i * DAY_TIME;
+            const timeDayEnd = timeDay + DAY_TIME;
 
-                // If after today, push -1
-                if (timeDay > timeGlobalEnd) {
-                    dataToDisplay.push({
-                        level: -1,
-                        backgroundColor: 'transparent'
+            const totalDuration = allActivitiesTime
+                .filter((activity) => activity.start >= timeDay && activity.start < timeDayEnd)
+                .reduce((acc, activity) => acc + activity.duration, 0);
+
+            const levelPourcentage = MinMax(0, totalDuration / quest.schedule.duration, 1);
+            dataToDisplay.push({
+                level: levelPourcentage,
+                backgroundColor: 'main3'
+            });
+        }
+
+        // Calculate month labels positions
+        /** @type {Array<MonthLabel>} */
+        const monthLabels = [];
+        const monthNames = langManager.curr['dates']['months-min'];
+
+        let lastMonth = -1;
+
+        for (let i = 0; i < DAYS_TO_DISPLAY; i++) {
+            const timeDay = timeGlobalStart + i * DAY_TIME;
+            const date = new Date(timeDay * 1000);
+            const month = date.getMonth();
+
+            if (month !== lastMonth) {
+                // With 4 rows, each column contains 4 days
+                // So column position = day index / 4
+                const columnPosition = Math.floor(i / 4);
+
+                // Skip the very first partial month (only if at position 0)
+                if (columnPosition >= 1) {
+                    monthLabels.push({
+                        name: monthNames[month],
+                        position: columnPosition
                     });
-                    continue;
                 }
 
-                const totalDuration = allActivitiesTime
-                    .filter((activity) => activity.start >= timeDay && activity.start < timeDayEnd)
-                    .reduce((acc, activity) => acc + activity.duration, 0);
-
-                const levelPourcentage = MinMax(0, totalDuration / quest.schedule.duration, 1);
-                dataToDisplay.push({
-                    level: levelPourcentage,
-                    backgroundColor: 'main2'
-                });
+                lastMonth = month;
             }
         }
 
-        // Year by weeks: Data with 52 cells, one for each week
-        else if (switchMode === 1) {
-            for (let i = 0; i < WEEKS; i++) {
-                const timeWeek = timeGlobalStart + i * DAY_TIME * DAYS_PER_WEEK;
-                const timeWeekEnd = timeWeek + DAY_TIME * DAYS_PER_WEEK;
-
-                // If after today, push -1
-                if (timeWeek > timeGlobalEnd) {
-                    dataToDisplay.push({
-                        level: -1,
-                        backgroundColor: 'transparent'
-                    });
-                    continue;
-                }
-
-                const totalDuration = allActivitiesTime
-                    .filter((activity) => activity.start >= timeWeek && activity.start < timeWeekEnd)
-                    .reduce((acc, activity) => acc + activity.duration, 0);
-
-                const level = MinMax(0, totalDuration / (quest.schedule.duration * DAYS_PER_WEEK), 1);
-                dataToDisplay.push({
-                    level,
-                    backgroundColor: 'main2'
-                });
-            }
+        // Add year to the last month label
+        if (monthLabels.length > 0) {
+            const lastLabel = monthLabels[monthLabels.length - 1];
+            const lastDayDate = new Date(timeGlobalEnd * 1000);
+            lastLabel.name = `${lastLabel.name} ${lastDayDate.getFullYear()}`;
         }
 
-        return { switchMode, dataToDisplay };
-    };
-
-    /** @param {number} index */
-    changeSwitchValue = (index) => {
-        // Save the settings (avoid spamming the save)
-        if (this.saveTimeout) {
-            clearTimeout(this.saveTimeout);
-        }
-        this.saveTimeout = setTimeout(() => {
-            user.settings.IndependentSave();
-        }, 3 * 1000);
-
-        user.settings.questHeatMapIndex = index;
-        this.setState(this.GetHeatMapData());
+        return { dataToDisplay, monthLabels };
     };
 }
 

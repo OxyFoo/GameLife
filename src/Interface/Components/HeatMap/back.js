@@ -23,7 +23,7 @@ import * as React from 'react';
 const HeatMapProps = {
     style: {},
     data: [],
-    gridSize: 5,
+    gridSize: 10,
     borderSize: 1.2
 };
 

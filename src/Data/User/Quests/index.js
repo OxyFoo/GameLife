@@ -317,12 +317,12 @@ class Quests extends IUserData {
      * @param {Quest} quest
      * @returns {string} Time text
      */
-    GetQuestTimeText = (quest) => {
+    GetQuestTimeText = (quest, time = GetLocalTime()) => {
         if (quest === null) return '';
 
         const totalDuration = Sum(
             this.#user.activities
-                .GetByTime(GetLocalTime())
+                .GetByTime(time)
                 .filter((activity) => quest.skills.includes(activity.skillID))
                 .filter((activity) => this.#user.activities.GetExperienceStatus(activity) === 'grant')
                 .map((activity) => activity.duration)
@@ -342,16 +342,16 @@ class Quests extends IUserData {
         // Current time
         let text = '';
         if (timeHour > 0) {
-            text += `${timeHour}${langTimes['hours-min']}`;
+            text += `${timeHour}${langTimes['hours-min']} `;
         }
         if (timeMinute > 0 || timeHour === 0) {
-            text += ` ${timeMinute}${langTimes['minutes-min']}`;
+            text += `${timeMinute}${langTimes['minutes-min']} `;
         }
 
         // Goal time
-        text += ' / ';
+        text += '/';
         if (goalHour > 0) {
-            text += `${goalHour}${langTimes['hours-min']}`;
+            text += ` ${goalHour}${langTimes['hours-min']}`;
         }
         if (goalMinute > 0 || goalHour === 0) {
             text += ` ${goalMinute}${langTimes['minutes-min']}`;
@@ -564,18 +564,18 @@ class Quests extends IUserData {
      * @param {Quest} quest
      * @returns {number} Streak
      */
-    GetStreak(quest) {
+    GetStreak(quest, time = GetLocalTime()) {
         let streak = 0;
 
         const questActivities = this.GetQuestActivities(quest);
 
         if (quest.schedule.type === 'week' || quest.schedule.type === 'month') {
-            streak = getStreakFromMonthOrWeek(questActivities, quest);
+            streak = getStreakFromMonthOrWeek(questActivities, quest, time);
         } else if (quest.schedule.type === 'frequency') {
             if (quest.schedule.frequencyMode === 'month') {
-                streak = getStreakFromFrequencyByMonth(questActivities, quest);
+                streak = getStreakFromFrequencyByMonth(questActivities, quest, time);
             } else if (quest.schedule.frequencyMode === 'week') {
-                streak = getStreakFromFrequencyByWeek(questActivities, quest);
+                streak = getStreakFromFrequencyByWeek(questActivities, quest, time);
             }
         }
 

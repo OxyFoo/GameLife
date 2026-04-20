@@ -9,15 +9,16 @@ import { getStartOfMonth, getStartOfWeek } from './utils';
 /**
  * @param {Activity[]} activities
  * @param {Quest} quest
+ * @param {number} [time]
  * @returns {number} Streak
  */
-function getStreakFromMonthOrWeek(activities, quest) {
+function getStreakFromMonthOrWeek(activities, quest, time = GetLocalTime()) {
     if (activities.length === 0) {
         return 0;
     }
 
     let streak = 0;
-    const timeNow = GetLocalTime();
+    const timeNow = time;
     const todayMidnight = timeNow - (timeNow % DAY_TIME) - GetTimeZone() * 60 * 60;
 
     const allActivitiesTime = activities.map((activity) => ({
@@ -91,9 +92,10 @@ function getStreakFromMonthOrWeek(activities, quest) {
 /**
  * @param {Activity[]} activities
  * @param {Quest} quest
+ * @param {number} [time]
  * @returns {number} Streak
  */
-function getStreakFromFrequencyByMonth(activities, quest) {
+function getStreakFromFrequencyByMonth(activities, quest, time = GetLocalTime()) {
     if (quest.schedule.type !== 'frequency') {
         return -1;
     }
@@ -112,7 +114,12 @@ function getStreakFromFrequencyByMonth(activities, quest) {
     for (let i = activities.length - 1; i >= 0; i--) {
         const activity = activities[i];
 
-        // Activity is in future
+        // Activity is after the reference time
+        if (activity.startTime > time) {
+            continue;
+        }
+
+        // Activity is in future relative to current period
         if (activity.startTime > currentMonth + 30 * DAY_TIME) {
             continue;
         }
@@ -152,9 +159,10 @@ function getStreakFromFrequencyByMonth(activities, quest) {
 /**
  * @param {Activity[]} activities
  * @param {Quest} quest
+ * @param {number} [time]
  * @returns {number} Streak
  */
-function getStreakFromFrequencyByWeek(activities, quest) {
+function getStreakFromFrequencyByWeek(activities, quest, time = GetLocalTime()) {
     if (quest.schedule.type !== 'frequency') {
         return -1;
     }
@@ -173,7 +181,12 @@ function getStreakFromFrequencyByWeek(activities, quest) {
     for (let i = activities.length - 1; i >= 0; i--) {
         const activity = activities[i];
 
-        // Activity is in future
+        // Activity is after the reference time
+        if (activity.startTime > time) {
+            continue;
+        }
+
+        // Activity is in future relative to current period
         if (activity.startTime > currentWeek + 7 * DAY_TIME) {
             continue;
         }

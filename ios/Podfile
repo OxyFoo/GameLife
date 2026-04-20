@@ -44,6 +44,22 @@ target 'GameLife' do
       end
     end
 
+    # Fix fmt 11.x consteval issue with Xcode 16+ by patching the header file
+    fmt_base_h = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base_h)
+      content = File.read(fmt_base_h)
+      unless content.include?('FMT_XCODE16_PATCH')
+        # Replace the entire consteval detection block with a forced 0
+        patched = content.sub(
+          /\/\/ Detect consteval.*?#  define FMT_USE_CONSTEVAL 0\n#endif/m,
+          "// FMT_XCODE16_PATCH: Force disable consteval for Xcode 16+ compatibility\n#define FMT_USE_CONSTEVAL 0"
+        )
+        File.chmod(0644, fmt_base_h)
+        File.write(fmt_base_h, patched)
+        puts "[fmt] Patched base.h to force FMT_USE_CONSTEVAL=0"
+      end
+    end
+
     react_native_post_install(
       installer,
       config[:reactNativePath],

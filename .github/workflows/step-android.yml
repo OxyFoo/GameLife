@@ -82,6 +82,13 @@ jobs:
           # This fixes react-native-reanimated bundleReleaseLocalLintAar crash on CI
           npm run build -- -PreactNativeArchitectures=arm64-v8a,armeabi-v7a -PGAMELIFE_KEYSTORE_PASSWORD="${{ secrets.GAMELIFE_KEYSTORE_PASSWORD }}" -PGAMELIFE_KEY_PASSWORD="${{ secrets.GAMELIFE_KEY_PASSWORD }}"
 
+          MERGED_MANIFEST="android/app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
+          if grep -qE "READ_MEDIA_IMAGES|READ_MEDIA_VIDEO" "$MERGED_MANIFEST"; then
+            echo "❌ Google Play rejects READ_MEDIA_IMAGES/READ_MEDIA_VIDEO for this app. Remove these permissions before delivery."
+            grep -nE "READ_MEDIA_IMAGES|READ_MEDIA_VIDEO" "$MERGED_MANIFEST"
+            exit 1
+          fi
+
           # Move aab & mapping files to root
           mv android/app/build/outputs/bundle/release/app-release.aab ./${FILE_AAB}
           mv android/app/build/outputs/mapping/release/mapping.txt ./${FILE_MAPPING}

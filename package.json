@@ -1,7 +1,7 @@
 {
   "name": "gamelife",
-  "version": "2.2.4",
-  "versionName": "2.2.4",
+  "version": "2.2.5",
+  "versionName": "2.2.5",
   "private": true,
   "scripts": {
     "start": "react-native start --reset-cache",

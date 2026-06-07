@@ -16,6 +16,7 @@ on:
 env:
   FILE_IPA: GameLife-${{ inputs.environment }}.ipa
   PROVISION_PROFILE_NAME: ${{ inputs.environment == 'prod' && 'Game Life Distributed' || 'GameLife Test Profile' }}
+  XCODE_VERSION: '26'
 
 jobs:
   build:
@@ -44,10 +45,29 @@ jobs:
       - name: 'Setup Xcode'
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16'
+          xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: 'Verify Xcode version'
-        run: xcodebuild -version
+        run: |
+          set -euo pipefail
+
+          xcodebuild -version
+          xcodebuild -showsdks | grep iphoneos
+
+          REQUIRED_XCODE_MAJOR="${{ env.XCODE_VERSION }}"
+          XCODE_MAJOR_VERSION=$(xcodebuild -version | awk '/Xcode/ { split($2, parts, "."); print parts[1] }')
+          if ! [[ "$XCODE_MAJOR_VERSION" =~ ^[0-9]+$ ]] || [ "$XCODE_MAJOR_VERSION" -lt "$REQUIRED_XCODE_MAJOR" ]; then
+            echo "❌ App Store Connect requires an IPA built with Xcode ${{ env.XCODE_VERSION }} / iOS ${{ env.XCODE_VERSION }} SDK or later."
+            echo "   Current Xcode major version: ${XCODE_MAJOR_VERSION:-unknown}"
+            exit 1
+          fi
+
+          IOS_SDK_MAJOR_VERSION=$(xcodebuild -showsdks | awk -F'iphoneos' '/-sdk iphoneos[0-9]+/ { split($2, parts, "."); print parts[1] }' | sort -nr | head -1)
+          if ! [[ "$IOS_SDK_MAJOR_VERSION" =~ ^[0-9]+$ ]] || [ "$IOS_SDK_MAJOR_VERSION" -lt "$REQUIRED_XCODE_MAJOR" ]; then
+            echo "❌ iOS ${{ env.XCODE_VERSION }} SDK or later is not installed on this runner."
+            echo "   Current iOS SDK major version: ${IOS_SDK_MAJOR_VERSION:-unknown}"
+            exit 1
+          fi
 
       - name: 'Install the Apple certificate and provisioning profile'
         env:
@@ -317,6 +337,33 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
+
+      - name: 'Setup Xcode'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: 'Verify Xcode version'
+        run: |
+          set -euo pipefail
+
+          xcodebuild -version
+          xcodebuild -showsdks | grep iphoneos
+
+          REQUIRED_XCODE_MAJOR="${{ env.XCODE_VERSION }}"
+          XCODE_MAJOR_VERSION=$(xcodebuild -version | awk '/Xcode/ { split($2, parts, "."); print parts[1] }')
+          if ! [[ "$XCODE_MAJOR_VERSION" =~ ^[0-9]+$ ]] || [ "$XCODE_MAJOR_VERSION" -lt "$REQUIRED_XCODE_MAJOR" ]; then
+            echo "❌ App Store Connect requires Xcode ${{ env.XCODE_VERSION }} / iOS ${{ env.XCODE_VERSION }} SDK or later for App Store delivery."
+            echo "   Current Xcode major version: ${XCODE_MAJOR_VERSION:-unknown}"
+            exit 1
+          fi
+
+          IOS_SDK_MAJOR_VERSION=$(xcodebuild -showsdks | awk -F'iphoneos' '/-sdk iphoneos[0-9]+/ { split($2, parts, "."); print parts[1] }' | sort -nr | head -1)
+          if ! [[ "$IOS_SDK_MAJOR_VERSION" =~ ^[0-9]+$ ]] || [ "$IOS_SDK_MAJOR_VERSION" -lt "$REQUIRED_XCODE_MAJOR" ]; then
+            echo "❌ iOS ${{ env.XCODE_VERSION }} SDK or later is not installed on this runner."
+            echo "   Current iOS SDK major version: ${IOS_SDK_MAJOR_VERSION:-unknown}"
+            exit 1
+          fi
 
       - name: 'Get ipa artifact'
         uses: actions/download-artifact@v4

@@ -35,12 +35,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'left'
     },
-    shareButton: {
-        width: 'auto',
-        flexShrink: 0,
-        paddingVertical: 6,
-        paddingHorizontal: 6
-    },
     summaryHoursContent: {
         marginBottom: 2,
         flexDirection: 'row',

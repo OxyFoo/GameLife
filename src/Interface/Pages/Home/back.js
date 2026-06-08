@@ -2,7 +2,6 @@ import React from 'react';
 import { Animated } from 'react-native';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
-import { DayRecap } from 'Interface/Widgets';
 import user from 'Managers/UserManager';
 
 /**
@@ -51,13 +50,6 @@ class BackHome extends PageBase {
 
     newTodo = () => {
         user.interface.ChangePage('todo');
-    };
-
-    openDayRecap = () => {
-        user.interface.popup?.Open({
-            content: <DayRecap date={new Date()} />,
-            cancelable: true
-        });
     };
 }
 

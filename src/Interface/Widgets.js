@@ -2,7 +2,6 @@ export { AchievementsGroup } from './Widgets/AchievementsGroup';
 export { ActivitiesChart } from './Widgets/ActivitiesChart';
 export { AddActivity } from './PageView/AddActivity';
 export { DailyQuest } from './Widgets/DailyQuest';
-export { DayRecap } from './Widgets/DayRecap';
 export { Missions } from './Widgets/Missions';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';

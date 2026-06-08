@@ -240,36 +240,6 @@ jest.mock('react-native-app-control', () => ({
     }
 }));
 
-jest.mock('react-native-view-shot', () => {
-    const React = require('react');
-    const { View } = require('react-native');
-    const ViewShot = React.forwardRef((props, ref) => React.createElement(View, { ...props, ref }));
-    ViewShot.captureRef = jest.fn(() => Promise.resolve('file:///mock.png'));
-    ViewShot.captureScreen = jest.fn(() => Promise.resolve('file:///mock.png'));
-    return {
-        __esModule: true,
-        default: ViewShot,
-        captureRef: ViewShot.captureRef,
-        captureScreen: ViewShot.captureScreen
-    };
-});
-
-jest.mock('react-native-share', () => ({
-    default: {
-        open: jest.fn(() => Promise.resolve()),
-        shareSingle: jest.fn(() => Promise.resolve())
-    },
-    Social: {}
-}));
-
-jest.mock('@react-native-camera-roll/camera-roll', () => ({
-    CameraRoll: {
-        saveAsset: jest.fn(() => Promise.resolve()),
-        save: jest.fn(() => Promise.resolve()),
-        getPhotos: jest.fn(() => Promise.resolve({ edges: [] }))
-    }
-}));
-
 jest.mock('@react-native-google-signin/google-signin', () => ({
     GoogleSignin: {
         configure: jest.fn(),

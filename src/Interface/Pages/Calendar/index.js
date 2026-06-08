@@ -38,16 +38,6 @@ class Calendar extends BackCalendar {
                         <Text style={styles.summaryTitle} color='secondary'>
                             {todayStrDate}
                         </Text>
-                        {activities.length > 0 && (
-                            <Button
-                                style={styles.shareButton}
-                                appearance='uniform'
-                                color='transparent'
-                                onPress={this.openDayRecap}
-                            >
-                                <Icon icon='share-2-outline' color='gradient' size={20} />
-                            </Button>
-                        )}
                     </View>
 
                     <View style={styles.summaryHoursContent}>

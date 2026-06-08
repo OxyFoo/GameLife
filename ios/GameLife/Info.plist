@@ -54,10 +54,6 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>GameLife needs access to your photo library to save your daily recap images</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>GameLife needs access to save your daily recap images to your photo library</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>We need to track user activity to provide personalized ads</string>
 	<key>RCTNewArchEnabled</key>

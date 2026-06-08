@@ -441,35 +441,13 @@
         "utc": "UTC",
         "between-activity": "{}h and {}min available",
         "between-activity-min": "{}min available",
-        "between-activity-hour": "{}h available",
-
-        "recap": {
-            "title": "Today I did - {}",
-            "footer": "GameLife",
-            "save": "Save",
-            "saving": "Saving...",
-            "saved-success": "Saved ✓",
-            "saved-error": "Failed ✗",
-            "share": "Share",
-            "sharing": "Sharing...",
-            "empty-title": "No activities",
-            "empty-message": "Add activities to create your daily recap!",
-            "no-quests": "No quests..",
-
-            "permission-stockage": {
-                "title": "Permission required",
-                "message": "GameLife needs access to the gallery to save the daily recap.",
-                "button-neutral": "Later",
-                "button-positive": "OK",
-                "button-negative": "Cancel"
-            }
-        }
+        "between-activity-hour": "{}h available"
     },
 
     "home": {
         "title-hello": "Hello {}",
 
-        "section-today-performance": "Recap of the day",
+        "section-today-performance": "Today",
         "today-activity": "Activities",
         "today-quest": "Quests",
         "section-my-todos": "My to-do list",

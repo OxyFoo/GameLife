@@ -441,35 +441,13 @@
         "utc": "UTC",
         "between-activity": "{}h et {}min disponibles",
         "between-activity-min": "{}min disponible[s]",
-        "between-activity-hour": "{}h disponible[s]",
-
-        "recap": {
-            "title": "Récap du jour - {}",
-            "footer": "GameLife",
-            "save": "Télécharger",
-            "saving": "Téléchargement...",
-            "saved-success": "Confirmé ✓",
-            "saved-error": "Échec ✗",
-            "share": "Partager",
-            "sharing": "Partage...",
-            "empty-title": "Aucune activité",
-            "empty-message": "Ajoute des activités pour créer ton récap du jour !",
-            "no-quests": "Aucune quête..",
-
-            "permission-stockage": {
-                "title": "Permission requise",
-                "message": "GameLife a besoin d'accéder à la galerie pour pouvoir enregistrer le récap du jour.",
-                "button-neutral": "Plus tard",
-                "button-positive": "OK",
-                "button-negative": "Annuler"
-            }
-        }
+        "between-activity-hour": "{}h disponible[s]"
     },
 
     "home": {
         "title-hello": "Bonjour {}",
 
-        "section-today-performance": "Récap du jour",
+        "section-today-performance": "Aujourd'hui",
         "today-activity": "Activités",
         "today-quest": "Quêtes",
         "section-my-todos": "Mes listes",
@@ -479,7 +457,7 @@
         "btn-achievements": "Succès",
         "btn-more-info": "Plus d'infos",
 
-        "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
+        "chart-today-notmuch": "Ajoute une activité pour voir ta progression du jour !",
         "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
         "chart-click-me": "clique ici !",
 

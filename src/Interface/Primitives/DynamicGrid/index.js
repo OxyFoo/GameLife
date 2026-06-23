@@ -27,7 +27,7 @@ import { Defs, G, Line, Mask, RadialGradient, Rect, Stop, Svg } from 'react-nati
 function DynamicGrid({
     style,
     spacing = 30,
-    opacity = 0.09,
+    opacity = 0.07,
     color1 = 'main1',
     color2 = 'main2',
     backgroundColor = 'transparent'

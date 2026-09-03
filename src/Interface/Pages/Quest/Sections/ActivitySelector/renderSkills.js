@@ -31,7 +31,7 @@ function renderEmptyList() {
 
 /**
  * @param {{ item: ItemSkill }} param0
- * @returns {React.ReactNode}
+ * @returns {React.JSX.Element}
  */
 function RenderSkill({ item }) {
     const { value, onPress } = item;

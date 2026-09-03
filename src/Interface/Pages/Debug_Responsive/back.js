@@ -1,7 +1,10 @@
 import PageBase from 'Interface/FlowEngine/PageBase';
 
 /**
- * @typedef {import('Interface/Components').ComboBox} ComboBox
+ * ComboBox is a function component, so its props type is imported directly
+ * instead of going through `ComboBox['props']`.
+ * @typedef {import('Interface/Components/ComboBox/back').ComboBoxPropsType} ComboBoxPropsType
+ * @typedef {NonNullable<ComboBoxPropsType['onSelect']>} ComboBoxOnSelect
  */
 
 class BackResponsive extends PageBase {
@@ -17,7 +20,7 @@ class BackResponsive extends PageBase {
         };
     }
 
-    /** @type {ComboBox['props']['onSelect']} */
+    /** @type {ComboBoxOnSelect} */
     handleChangeAspectRatio = (item) => {
         if (item === null) {
             return;
@@ -28,7 +31,7 @@ class BackResponsive extends PageBase {
         });
     };
 
-    /** @type {ComboBox['props']['onSelect']} */
+    /** @type {ComboBoxOnSelect} */
     handleChangePaddingVertical = (item) => {
         if (item === null) {
             return;
@@ -39,7 +42,7 @@ class BackResponsive extends PageBase {
         });
     };
 
-    /** @type {ComboBox['props']['onSelect']} */
+    /** @type {ComboBoxOnSelect} */
     handleChangePaddingHorizontal = (item) => {
         if (item === null) {
             return;

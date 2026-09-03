@@ -46,7 +46,9 @@ class Icon extends IconBack {
                         height={size}
                         color={color}
                         fill={color}
-                        transform={[{ rotate: (angle * Math.PI) / 180 }]}
+                        // react-native-svg reads a numeric `rotate` as radians; React Native's
+                        // TransformsStyle only types the CSS string form ('90deg'), hence the cast.
+                        transform={/** @type {any} */ ([{ rotate: (angle * Math.PI) / 180 }])}
                     />
                 </View>
             );

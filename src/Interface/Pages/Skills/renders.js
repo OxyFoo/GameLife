@@ -48,7 +48,7 @@ function renderCategory(value, _index, _array) {
 /**
  * @this {SkillsPage}
  * @param {{item: EnrichedSkill}} item
- * @returns {React.ReactNode}
+ * @returns {React.JSX.Element}
  */
 function renderSkill({ item }) {
     const { ID, LogoXML, FullName, Experience } = item;

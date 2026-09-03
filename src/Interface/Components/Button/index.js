@@ -47,9 +47,11 @@ class Button extends ButtonBack {
             ...rest
         } = this.props;
 
-        const ButtonView = styleAnimation === null ? View : Animated.View;
+        // A plain View is used when there is no animation, to skip the Animated wrapper.
+        // Both branches are typed as Animated.View because its style prop is the only one
+        // that accepts plain *and* animated values; the runtime component is unchanged.
+        const ButtonView = /** @type {typeof Animated.View} */ (styleAnimation === null ? View : Animated.View);
         return (
-            // @ts-ignore
             <ButtonView
                 {...rest}
                 ref={nativeRef}

@@ -31,7 +31,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {boolean} [hideChevron]
  */
 
-/** @type {ComboBoxPropsType} */
+/** @type {Required<ComboBoxPropsType>} */
 const ComboBoxDefaultProps = {
     style: {},
     inputStyle: {},
@@ -50,6 +50,8 @@ const ComboBoxDefaultProps = {
  * @param {ComboBoxPropsType} props
  */
 const ComboBoxBack = (props) => {
+    // Every key is provided by ComboBoxDefaultProps, so the merged object is fully
+    // defined even though each prop is optional on the public props type.
     const {
         style,
         inputStyle,
@@ -62,7 +64,7 @@ const ComboBoxBack = (props) => {
         onSelect,
         enabled,
         hideChevron
-    } = { ...ComboBoxDefaultProps, ...props };
+    } = /** @type {Required<ComboBoxPropsType>} */ ({ ...ComboBoxDefaultProps, ...props });
 
     /** @type {[LayoutRectangle, React.Dispatch<React.SetStateAction<LayoutRectangle>>]} */
     const [parent, setParent] = useState({

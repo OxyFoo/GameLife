@@ -22,12 +22,14 @@ jobs:
 
       - name: 'Update version'
         env:
-          ACTION_UPDATE: ${{ github.event.inputs.action-update }}
+          # `inputs`, not `github.event.inputs`: this is a reusable workflow, so the
+          # caller's dispatch payload is not necessarily what was passed in `with:`.
+          ACTION_UPDATE: ${{ inputs.action-update }}
         run: |
           # Update version for current branch
-          NEWVERSION=$(./Tools/Version/version.sh $ACTION_UPDATE --version)
+          NEWVERSION=$(./Tools/Version/version.sh "$ACTION_UPDATE" --version)
           echo "VERSION=$NEWVERSION" >> $GITHUB_ENV
-          ./Tools/Version/version.sh $ACTION_UPDATE --force
+          ./Tools/Version/version.sh "$ACTION_UPDATE" --force
 
           # Commit changes
           git config --local user.email "github-actions[bot]@users.noreply.github.com"

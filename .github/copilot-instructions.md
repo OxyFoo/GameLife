@@ -23,7 +23,7 @@ Commence **TOUTES** tes réponses par `[GameLife Assistant]` pour indiquer que t
 
 ## Vue d'ensemble du projet
 
-GameLife est une application mobile React Native (v0.79.2) de gamification de la vie quotidienne. L'app utilise TypeScript/JavaScript avec une architecture modulaire stricte et des patterns de conception spécifiques.
+GameLife est une application mobile React Native (v0.82.1, React 19) de gamification de la vie quotidienne. L'app utilise TypeScript/JavaScript avec une architecture modulaire stricte et des patterns de conception spécifiques.
 
 ## Architecture générale
 
@@ -52,6 +52,9 @@ src/
 ### Style et formatage
 
 - **ESLint/Prettier** : Configuration stricte avec Prettier
+- **Config Prettier** : `.prettierrc` à la racine, doublée par la règle `prettier/prettier` de
+  `.eslintrc.json` (les deux doivent rester identiques). `.prettierignore` reflète les
+  `ignorePatterns` d'ESLint pour que `npm run lint` et `npm run format` couvrent le même périmètre.
 - **Indentation** : 4 espaces (tabWidth: 4)
 - **Quotes** : Simple quotes (`'`) pour JS, JSX single quotes
 - **Semicolons** : Obligatoires
@@ -308,7 +311,10 @@ user.interface.popup?.OpenT({
 - **SSL Pinning** : WebSocket sécurisé
 - **Device Authentication** : Attestation iOS/Android
 - **Integrity Checks** : Google Play Integrity
-- **Obfuscation** : Code obfusqué en production
+- **Obfuscation** : ⚠️ Actuellement **désactivée**. `obfuscator-io-metro-plugin` est incompatible
+  avec Metro >= 0.83 (il génère des fichiers nommés `undefined`) ; le code est commenté dans
+  `metro.config.js`. Les builds de production ne sont donc pas obfusqués tant que le plugin
+  n'est pas corrigé ou remplacé.
 
 ## Tests et qualité
 

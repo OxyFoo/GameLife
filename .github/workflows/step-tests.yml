@@ -67,9 +67,11 @@ jobs:
       - name: 'Run linter'
         run: npm run lint
 
-      # TODO: Enable type checking after Avatar/Shop refactor
-      # - name: 'Run typecheck'
-      #   run: npm run typecheck
+      - name: 'Check formatting'
+        run: npm run format
+
+      - name: 'Run typecheck'
+        run: npm run typecheck
 
   test-ressource:
     name: '📦 Resources'

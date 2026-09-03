@@ -286,14 +286,6 @@ class BackFlowEngine extends React.Component {
     // @ts-ignore
     GetPageName = (pageName) => (this.availablePages.includes(pageName) ? pageName : null);
 
-    // TODO: Remove
-    /**
-     * @description Custom back button handler
-     * @type {(() => boolean) | null} Return true if back is handled
-     * @private
-     */
-    customBackHandle = null;
-
     /**
      * @description Custom back button handler
      * @type {((args: any) => (boolean | (() => void)))[]} Return true if back is handled
@@ -318,30 +310,6 @@ class BackFlowEngine extends React.Component {
         }
         this.customBackHandlers.push(handle);
         return true;
-    };
-
-    // TODO: Remove
-    /**
-     * @param {() => boolean} handle
-     * @returns {boolean} True if handle is set
-     * @public
-     * @deprecated
-     */
-    SetCustomBackHandler = (handle) => {
-        if (typeof handle !== 'function') {
-            return false;
-        }
-        this.customBackHandle = handle;
-        return true;
-    };
-
-    // TODO: Remove
-    /**
-     * @public
-     * @deprecated
-     */
-    ResetCustomBackHandler = () => {
-        this.customBackHandle = null;
     };
 
     /**
@@ -712,12 +680,7 @@ class BackFlowEngine extends React.Component {
         GetCurrentPage: this.GetCurrentPage,
         GetCurrentPageName: this.GetCurrentPageName,
         AddCustomBackHandler: this.AddCustomBackHandler,
-        RemoveCustomBackHandler: this.RemoveCustomBackHandler,
-
-        /** @deprecated */
-        SetCustomBackHandler: this.SetCustomBackHandler,
-        /** @deprecated */
-        ResetCustomBackHandler: this.ResetCustomBackHandler
+        RemoveCustomBackHandler: this.RemoveCustomBackHandler
     };
 }
 

@@ -126,6 +126,13 @@ class BackFlowEngine extends React.Component {
     nativeEventSubscription = null;
 
     /**
+     * @description Pending requestAnimationFrame of the ref-polling loop, cancelled on unmount
+     * @type {number | null}
+     * @private
+     */
+    assignRefsFrame = null;
+
+    /**
      * @type {Array<PageNames>}
      * @protected
      */
@@ -183,9 +190,11 @@ class BackFlowEngine extends React.Component {
                 !this.navBar.current ||
                 !this.notificationsInApp.current
             ) {
-                requestAnimationFrame(assignRefs);
+                this.assignRefsFrame = requestAnimationFrame(assignRefs);
                 return;
             }
+
+            this.assignRefsFrame = null;
 
             // Set public properties
             this._public.popup = this.popup.current;
@@ -208,6 +217,12 @@ class BackFlowEngine extends React.Component {
 
     componentWillUnmount() {
         this.nativeEventSubscription?.remove();
+
+        // Stop the ref-polling loop, it would otherwise keep running after unmount
+        if (this.assignRefsFrame !== null) {
+            cancelAnimationFrame(this.assignRefsFrame);
+            this.assignRefsFrame = null;
+        }
     }
 
     /**
@@ -287,7 +302,9 @@ class BackFlowEngine extends React.Component {
     customBackHandlers = [];
 
     ClearHistory = () => {
-        this.history = [];
+        // Emptied in place: `_public.history` holds this exact array, so reassigning
+        // `this.history` would leave every consumer pointing at the old one.
+        this.history.length = 0;
     };
 
     /**

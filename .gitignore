@@ -85,7 +85,6 @@ __pycache__/
 .gitattributes
 .editorconfig
 .flowconfig
-.prettierrc.js
 
 # Other
 Backups

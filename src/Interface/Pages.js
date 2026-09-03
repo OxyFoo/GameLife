@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+// The columns below are aligned by hand; this file is listed in .prettierignore.
 const PAGES = {
     about:                  require('./Pages/About').default,
     achievements:           require('./Pages/Achievements').default,
@@ -33,7 +33,6 @@ const PAGES = {
     test:                   require('./Pages/Test').default,
     todo:                   require('./Pages/Todo').default
 };
-/* eslint-enable prettier/prettier */
 
 /**
  * @typedef {keyof typeof PAGES} PageNames

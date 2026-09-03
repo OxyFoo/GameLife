@@ -125,8 +125,10 @@ class Button extends ButtonBack {
         // Manage children
         else if (hasChildren) {
             if (typeof children === 'string') {
+                // `Text` has no gradient renderer, so 'gradient' degrades to white,
+                // exactly like `Icon` does for the same font color.
                 content = (
-                    <Text color={_fontColor} fontSize={fontSize}>
+                    <Text color={_fontColor === 'gradient' ? 'white' : _fontColor} fontSize={fontSize}>
                         {children}
                     </Text>
                 );

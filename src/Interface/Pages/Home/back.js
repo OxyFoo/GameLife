@@ -30,9 +30,6 @@ class BackHome extends PageBase {
     refScrollView = React.createRef();
 
     /** @type {React.RefObject<View | null>} */
-    refQuestsTitle = React.createRef();
-
-    /** @type {React.RefObject<View | null>} */
     refSkillsTags = React.createRef();
 
     /** Current scroll offset of the page, used by the tutorial to bring a widget into view */

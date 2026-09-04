@@ -7,7 +7,6 @@ import BackHome from './back';
 import { Title } from './Title';
 import { Experience } from './Experience';
 import { TodayActivitiesPieChart } from './TodayActivitiesPieChart';
-import { TodayQuestsPieChart } from './TodayQuestsPieChart';
 import { StatsRadar } from './StatsRadar';
 import { SkillsTags } from './SkillsTags';
 // TODO: Delete ?
@@ -46,7 +45,7 @@ class Home extends BackHome {
                 {/* Missions - Optional */}
                 <Missions />
 
-                {/* Today recap: Activities & Quests */}
+                {/* Today recap: Activities */}
                 <Title title={lang['section-today-performance']}>
                     <Button
                         style={styles.sectionTitleAddButton}
@@ -59,7 +58,6 @@ class Home extends BackHome {
                 </Title>
                 <View style={styles.chartsContainer}>
                     <TodayActivitiesPieChart />
-                    <TodayQuestsPieChart refParent={this.refQuestsTitle} />
                 </View>
 
                 {/* Main stats & avatar */}

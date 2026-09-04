@@ -20,10 +20,10 @@
                 "Your life's game is ongoing. Ensure every move is tracked. Log now!",
                 "Remember, every small activity can earn you points. Did you add yours?",
                 "Chase those leaderboards! Make sure to input today's experiences.",
-                "Every quest and challenge today brings growth. Have you updated the app?",
+                "Every activity and challenge today brings growth. Have you updated the app?",
                 "Jot down your journey! What were today's highs and lows?",
                 "Life's a game, and every day is a new turn. Ensure you've played yours by logging in.",
-                "Another day, another quest! Make sure to capture all your adventures.",
+                "Another day, another adventure! Make sure to log all your activities.",
                 "Gathered any power-ups or achievements today? Don't let them slip away, note them!",
                 "Your legacy is built one day at a time. Have you logged today's story?",
                 "Epic moments await! What epic tales from today will you share in the app?",
@@ -46,15 +46,6 @@
                 "Your {skillName} session is starting now! Let’s go!",
                 "It’s time for {skillName}! Let’s get started!"
             ]
-        },
-        "quests": {
-            "name": "Quest notifications",
-            "title": "GameLife - Quests",
-            "message": {
-                "half-time": "You have half the time left to complete the quest[s]: {}",
-                "last-time": "The following quest[s] are due tomorrow: {}, so hurry up and finish them!",
-                "today-time": "The following quest[s] are finished today: {}, hurry up and finish them!"
-            }
         },
         "in-app": {
             "name": "In-app notifications",
@@ -109,8 +100,8 @@
             "mission2": {
                 "title": "Check a skill",
                 "texts": {
-                    "1": "Press here on the + right to add a new quest",
-                    "2": "Here is the quest page, they are used to give you goals to achieve regularly"
+                    "1": "Here are your skills, tap here to see them all",
+                    "2": "Every skill has its page: let's open your most practiced one to discover your day streak and consistency"
                 }
             },
             "mission3": {
@@ -272,8 +263,8 @@
         },
         "page2": {
             "first": "Turn every challenge into an adventure: earn experience points and improve your skills with every activity.",
-            "second": "Alone or with your friends, complete quests, unlock achievements and become the hero of your own story!",
-            "second-bis": "Alone or with your friends, complete quests, unlock achievements and become the best version of yourself!"
+            "second": "Alone or with your friends, level up your skills, unlock achievements and become the hero of your own story!",
+            "second-bis": "Alone or with your friends, level up your skills, unlock achievements and become the best version of yourself!"
         },
         "test-caution-message": "Test version:\n\nRisk of bugs and instability.\nAccounts are independent of the main version.\nData may be deleted.\n\nHelp us improve the app and earn rewards for every bug found!",
         "test-caution-redirect": "Come to the Discord to find out more!",
@@ -367,7 +358,7 @@
         "title-friends": "Activity partner",
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
-        "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
+        "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience.",
         "title-ox": "+ {} Ox",
         "title-limit-reached": "You already logged 12 hours of activities today: this one grants neither XP nor Ox.",
         "title-commentary": "Commentary",
@@ -456,7 +447,6 @@
             "sharing": "Sharing...",
             "empty-title": "No activities",
             "empty-message": "Add activities to create your daily recap!",
-            "no-quests": "No quests..",
 
             "permission-stockage": {
                 "title": "Permission required",
@@ -473,7 +463,6 @@
 
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
-        "today-quest": "Quests",
         "section-my-todos": "My to-do list",
 
         "btn-stats": "Statistics",
@@ -482,10 +471,7 @@
         "btn-more-info": "More info",
 
         "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
-        "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
         "chart-click-me": "click-me!",
-
-        "news-myquests-title": "Quests to do",
 
         "container-stats-title": "My infos",
         "container-skills-title": "Skills",
@@ -1026,76 +1012,6 @@
         "alert-todoslimit-message": "You have reached the limit of todos, please delete some of them to add more."
     },
 
-    "quest": {
-        "title": "My quest",
-        "title-new": "Create my quest",
-
-        "titles": {
-            "title": "Title quest",
-            "skills": "Select your activities",
-            "schedule": "Schedule quest",
-            "duration": "Minimum duration for each day",
-            "comment": "Commentary"
-        },
-
-        "input-activity-title": "No activity selected",
-        "input-activity-add": "Add",
-        "input-comment-placeholder": "Comments about the quest...",
-        "input-switch-frequency": "Frequency",
-
-        "popup-all-categories": "All categories",
-
-        "text-hint-select": "Press and hold to select the column",
-        "text-hint-frequency": "How often do you want to do your activities?",
-
-        "input-errors": {
-            "title-empty": "Please enter a title",
-            "title-exists": "A quest with this title already exists",
-            "skills-empty": "You must add at least one activity",
-            "schedule-empty": "You must select the days on which you want to do this quest"
-        },
-
-        "button-text": {
-            "add": "Add",
-            "save": "Save",
-            "remove": "Delete"
-        },
-
-        "alert-remquest-title": "Delete quest?",
-        "alert-remquest-message": "Are you sure you want to delete this quest?",
-        "alert-back-title": "Back",
-        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
-        "alert-error-title": "Error",
-        "alert-error-message": "An error occurred, again tried again ({}).",
-        "alert-save-error-title": "Error",
-        "alert-save-error-message": "An error occurred, again tried again."
-    },
-
-    "quest-stats": {
-        "title": "My quest",
-        "title-current-week": "Current week",
-        "title-skills": "Skills linked",
-        "title-data": "Quest data",
-        "kpi-efficient": "Attendance",
-        "kpi-streak": "Current streak",
-        "kpi-history": "History",
-        "button-add-activity": "Add an activity",
-        "warn-message": "Warning: the calculation of the streak is uncertain. You may find errors"
-    },
-
-    "quests": {
-        "container-title": "My quests",
-        "button-add-quest": "Add a quest",
-        "button-all-quests": "All quests",
-
-        "alert-questslimit-title": "Limit reached",
-        "alert-questslimit-message": "You have reached the limit of quests, please delete some of them to add more.",
-
-        "current-streak": "Current streak",
-        "heatmap-title-day": "Day",
-        "heatmap-title-week": "Week"
-    },
-
     "daily-quest": {
         "container-title": "Quest of the day",
         "container-date": "Rewards from {}",
@@ -1208,36 +1124,6 @@
             "request-timeout": "Request time limit exceeded",
             "no-activities": "No activities generated",
             "limit-reached": "You have reached the use limit for today"
-        }
-    },
-
-    "app-explain" : {
-        "quest": {
-            "popup-title": "Quests",
-
-            "content": [
-                {
-                    "title": "What are quests ?",
-                    "text": [
-                        "In GameLife, quests are a way to motivate you to do activities regularly. You can create your own quests, which will be validated when you complete them.",
-                        "Imagine, for example, that you want to do 15 minutes of sport every day. You can create a quest called \"Daily Sport\" and add activities like running, cycling, or going to the gym.",
-                        "When you complete these activities (and input it in the app), your quest will be validated!"
-                    ]
-                }, 
-                {
-                    "title": "What's the point of quests ?",
-                    "text": [
-                        "Quests are a great way to stay motivated and keep track of your progress. They help you set goals and achieve them, while also making it fun to do activities."
-                    ]
-                },
-                {
-                    "title": "No imposed quests like in Solo Leveling?",
-                    "text": [
-                        "In GameLife, we believe in freedom and flexibility. We don't impose quests on you like in Solo Leveling, where you have to complete specific tasks to progress. Especially because the one in Solo Leveling are often too difficult or unrealistic for most people.",
-                        "Instead, you can create your own quests based on your interests and goals. This way, you can enjoy the game while also improving your real-life skills and habits."
-                    ]
-                }
-            ]
         }
     }
 }

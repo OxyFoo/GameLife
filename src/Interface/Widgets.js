@@ -7,7 +7,6 @@ export { Missions } from './Widgets/Missions';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';
 export { PieChart } from './Widgets/PieChart';
-export { QuestsList } from './Widgets/QuestsList';
 export { SkillHistogram } from './Widgets/SkillHistogram';
 export { StatsBar, StatsBarTextOnly } from './Widgets/StatsBars';
 export { TodoList } from './Widgets/TodoList';

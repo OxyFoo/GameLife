@@ -20,10 +20,10 @@
                 "Le jeu de ta vie est en cours. Veille à ce que chacun de tes mouvements soit suivi. Connecte-toi maintenant !",
                 "N'oublie pas que chaque petite activité peut te faire gagner des points. As-tu ajouté les tiennes ?",
                 "Chasse les classements ! Assure-toi de saisir tes expériences du jour",
-                "Chaque quête et chaque défi d'aujourd'hui est source de croissance. As-tu mis à jour l'application ?",
+                "Chaque activité et chaque défi d'aujourd'hui est source de croissance. As-tu mis à jour l'application ?",
                 "Note ton parcours ! Quels ont été les hauts et les bas d'aujourd'hui ?",
                 "La vie est un jeu, et chaque jour est un nouveau tournant. Assure-toi d'avoir joué le tien en te connectant",
-                "Un autre jour, une autre quête ! Assure-toi d'immortaliser toutes tes aventures",
+                "Un autre jour, une autre aventure ! Assure-toi d'immortaliser toutes tes activités",
                 "Tu as obtenu des bonus ou des succès aujourd'hui ? Ne les laisse pas s'échapper, note-les !",
                 "Ton héritage se construit un jour à la fois. As-tu enregistré l'histoire d'aujourd'hui ?",
                 "Des moments épiques t'attendent ! Quels récits épiques de la journée vas-tu partager dans l'application ?",
@@ -46,15 +46,6 @@
                 "Ton futur toi te remerciera — {skillName} commence maintenant !",
                 "Hey ! {skillName} commence maintenant — tu peux le faire !"
             ]
-        },
-        "quests": {
-            "name": "Notifications des quêtes",
-            "title": "GameLife - Quêtes",
-            "message": {
-                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] quête[s] : {}",
-                "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
-                "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
-            }
         },
         "in-app": {
             "name": "Notifications dans l'app",
@@ -109,8 +100,8 @@
             "mission2": {
                 "title": "Consulter une compétence",
                 "texts": {
-                    "1": "Appui ici sur le + à droite pour ajouter une nouvelle quête",
-                    "2": "Voici la page des quêtes, elles servent à te donner des objectifs à réaliser régulièrement"
+                    "1": "Voici tes compétences, appuie ici pour les voir toutes",
+                    "2": "Chaque compétence a sa page : on t'ouvre celle que tu pratiques le plus pour découvrir ta série de jours et ta régularité"
                 }
             },
             "mission3": {
@@ -272,8 +263,8 @@
         },
         "page2": {
             "first": "Transforme chaque défi en aventure: Gagne des points d’expérience et améliore tes compétences à chaque activité.",
-            "second": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens le héros de ta propre histoire !",
-            "second-bis": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens la meilleure version de toi-même !"
+            "second": "Seul ou avec tes amis, progresse dans tes compétences, débloque des succès et deviens le héros de ta propre histoire !",
+            "second-bis": "Seul ou avec tes amis, progresse dans tes compétences, débloque des succès et deviens la meilleure version de toi-même !"
         },
         "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
         "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
@@ -367,7 +358,7 @@
         "title-friends": "Partenaires d'activité",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
         "title-not-past": "Cette activité n'a pas encore été réalisée",
-        "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience et n'est pas prise en compte pour les quêtes.",
+        "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience.",
         "title-ox": "+ {} Ox",
         "title-limit-reached": "Tu as déjà comptabilisé 12 h d'activités aujourd'hui : celle-ci ne rapporte ni points d'expérience ni Ox.",
         "title-commentary": "Commentaire",
@@ -456,7 +447,6 @@
             "sharing": "Partage...",
             "empty-title": "Aucune activité",
             "empty-message": "Ajoute des activités pour créer ton récap du jour !",
-            "no-quests": "Aucune quête..",
 
             "permission-stockage": {
                 "title": "Permission requise",
@@ -473,7 +463,6 @@
 
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
-        "today-quest": "Quêtes",
         "section-my-todos": "Mes listes",
 
         "btn-stats": "Statistiques",
@@ -482,10 +471,7 @@
         "btn-more-info": "Plus d'infos",
 
         "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
-        "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
         "chart-click-me": "clique ici !",
-
-        "news-myquests-title": "Quêtes à faire",
 
         "container-stats-title": "Mes infos",
         "container-skills-title": "Compétences",
@@ -1026,76 +1012,6 @@
         "alert-todoslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
-    "quest": {
-        "title": "Ma quête",
-        "title-new": "Créer une quête",
-
-        "titles": {
-            "title": "Titre de la quête",
-            "skills": "Sélectionne tes activités",
-            "schedule": "Planification",
-            "duration": "Durée minimum pour chaque jour",
-            "comment": "Commentaire"
-        },
-
-        "input-activity-title": "Aucune activité sélectionnée",
-        "input-activity-add": "Ajouter",
-        "input-comment-placeholder": "Commentaire à propos de la quête...",
-        "input-switch-frequency": "Fréquence",
-
-        "popup-all-categories": "Toutes les catégories",
-
-        "text-hint-select": "Reste appuyé pour sélectionner un colonne",
-        "text-hint-frequency": "À quelle fréquence tu veux faire tes activités",
-
-        "input-errors": {
-            "title-empty": "Le titre ne peut pas être vide",
-            "title-exists": "Une quête avec ce titre existe déjà",
-            "skills-empty": "Tu dois ajouter au moins une activité",
-            "schedule-empty": "Tu dois sélectionner les jours durant lesquels tu veux faire cette quête"
-        },
-
-        "button-text": {
-            "add": "Ajouter",
-            "save": "Sauvegarder",
-            "remove": "Supprimer"
-        },
-
-        "alert-remquest-title": "Suppression ?",
-        "alert-remquest-message": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
-        "alert-back-title": "Retour",
-        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
-        "alert-error-title": "Erreur",
-        "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
-        "alert-save-error-title": "Erreur",
-        "alert-save-error-message": "Une erreur est survenue, réessaye plus tard."
-    },
-
-    "quest-stats": {
-        "title": "Ma quête",
-        "title-current-week": "Semaine en cours",
-        "title-skills": "Compétences liées",
-        "title-data": "Données",
-        "kpi-efficient": "Assiduité",
-        "kpi-streak": "Série actuelle",
-        "kpi-history": "Historique",
-        "button-add-activity": "Ajouter une activité",
-        "warn-message": "Attention : Le calcul de la série n'est pas sûr à 100%. Il est possible d'y voir des erreurs"
-    },
-
-    "quests": {
-        "container-title": "Mes quêtes",
-        "button-add-quest": "Ajouter une quête",
-        "button-all-quests": "Toutes mes quêtes",
-
-        "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-message": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
-
-        "current-streak": "Série actuelle",
-        "heatmap-title-day": "Jour",
-        "heatmap-title-week": "Semaine"
-    },
-
     "daily-quest": {
         "container-title": "Quête du jour",
         "container-date": "Récompenses du {}",
@@ -1208,36 +1124,6 @@
             "request-timeout": "Le délai de la requête a dépassé la limite",
             "no-activities": "Aucune activité n'a été générée",
             "limit-reached": "Tu as atteint la limite d'utilisation pour aujourd'hui"
-        }
-    },
-
-    "app-explain" : {
-        "quest": {
-            "popup-title": "Les quêtes",
-
-            "content": [
-                {
-                    "title": "Qu'est-ce qu'une quête ?",
-                    "text": [
-                        "Dans GameLife, les quêtes sont des objectifs que tu te fixes pour t'améliorer dans un ou plusieurs domaines.",
-                        "Imagine, tu veux te remettre au sport, tu peux créer une quête 'Faire du sport'. 15 min tous les jours, qui accepte les activités 'football', 'course', et 'musculation'.",
-                        "Pour valider ta quête tous les jours tu dois donc réaliser 15 min d'une de ces activités et l'inscrire dans GameLife. Ta quête sera alors automatiquement validée !"
-                    ]
-                },
-                {
-                    "title": "A quoi servent les quêtes ?",
-                    "text": [
-                        "Le but des quêtes est de te motiver à faire une activité de manière régulière. Une fois une quête commencée, tu peux voir tout un tas de statistiques sur celle-ci, suivre tes progrès, et être fier de toi-même lorsque tu la valides !"
-                    ]
-                },
-                {
-                    "title": "Vous n'imposez pas de quêtes comme dans Solo Leveling ?",
-                    "text": [
-                        "Les quêtes imposées sont assez contre productives car elles ne sont pas adaptées à tout le monde. Dans le cas de Solo Leveling, l'entrainement journalier réalisé dans le manga est trop lourd pour la plupart des gens, il est presque dangereux car peu de repos.",
-                        "Nous avons donc décidé de ne pas imposer de quêtes et de laisser les utilisateurs créer leurs propres quêtes adaptées à leurs besoins et capacités."
-                    ]
-                }
-            ]
         }
     }
 }

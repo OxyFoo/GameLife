@@ -107,7 +107,7 @@
                 }
             },
             "mission2": {
-                "title": "Create a quest",
+                "title": "Check a skill",
                 "texts": {
                     "1": "Press here on the + right to add a new quest",
                     "2": "Here is the quest page, they are used to give you goals to achieve regularly"

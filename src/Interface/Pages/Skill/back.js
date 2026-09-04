@@ -133,6 +133,9 @@ class BackSkill extends PageBase {
             return;
         }
 
+        // Tutorial mission: consult a skill
+        user.missions.SetMissionState('mission2', 'completed');
+
         this.listenerActivity = user.activities.allActivities.AddListener(this.updateActivity);
     }
 
@@ -232,9 +235,6 @@ class BackSkill extends PageBase {
         return Round(totalDuration / 60, 1);
     };
 
-    showHistory = () => {
-        const { history } = this.state;
-
     /** Switch the rate window between the last 30 days and the whole history */
     toggleRateWindow = () => {
         const { selectedSkill, rateWindow: currentWindow } = this.state;
@@ -244,6 +244,9 @@ class BackSkill extends PageBase {
             frequency: user.activities.GetSkillFrequency(selectedSkill.ID, rateWindow)
         });
     };
+
+    showHistory = () => {
+        const { history } = this.state;
 
         user.interface.bottomPanel?.Open({
             content: <HistoryView items={history} />

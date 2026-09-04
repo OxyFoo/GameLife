@@ -15,8 +15,13 @@ import { Text, Icon, Button } from 'Interface/Components';
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').EnrichedSkill} EnrichedSkill
  */
 
-/** @param {{ style?: import('react-native').ViewStyle, maxSkills?: number }} props */
-function SkillsTags({ style, maxSkills = 4 }) {
+/**
+ * @param {object} props
+ * @param {import('react-native').ViewStyle} [props.style]
+ * @param {number} [props.maxSkills]
+ * @param {React.RefObject<import('react-native').View | null>} [props.refParent] Ref of the root button (tutorial target)
+ */
+function SkillsTags({ style, maxSkills = 4, refParent }) {
     const [skills, setSkills] = React.useState(() => user.activities.GetLastSkills(maxSkills));
 
     React.useEffect(() => {
@@ -64,6 +69,7 @@ function SkillsTags({ style, maxSkills = 4 }) {
     return (
         <Button
             style={[styles.button, style]}
+            nativeRef={refParent}
             onPress={openSkills}
             gradientColors={[
                 themeManager.GetColor('main1', { opacity: 0.25 }),

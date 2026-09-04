@@ -2,6 +2,28 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import Home from 'Interface/Pages/Home';
+import { Sleep } from 'Utils/Functions';
+
+/**
+ * Bring the skills widget of the home page into view before highlighting it
+ * @param {Home} homePage
+ * @returns {Promise<void>}
+ */
+function scrollToSkillsTags(homePage) {
+    return new Promise((resolve) => {
+        const node = homePage.refSkillsTags.current;
+        if (node === null) {
+            resolve();
+            return;
+        }
+
+        node.measureInWindow((_x, y) => {
+            const offset = Math.max(0, homePage.scrollOffsetY + y - 140);
+            homePage.refScrollView.current?.scrollTo({ y: offset, animated: true });
+            setTimeout(resolve, 500);
+        });
+    });
+}
 
 async function StartMission2() {
     const mission = user.missions.GetCurrentMission().mission;
@@ -20,7 +42,7 @@ async function StartMission2() {
 
     user.interface.screenTuto.ShowTutorial([
         {
-            component: user.interface.GetPage('home')?.refQuestsTitle ?? null,
+            component: () => user.interface.GetPage('home')?.refSkillsTags ?? null,
             text: missionTexts['1'],
             execBefore: async () => {
                 // Go to home page
@@ -31,31 +53,35 @@ async function StartMission2() {
                     });
                 }
 
-                // Scroll to the quests widget
+                // Scroll to the skills widget
                 const currentPage = user.interface.GetCurrentPage();
                 if (currentPage !== null && currentPage.pageName === 'home') {
                     const homePage = currentPage.ref.current;
                     if (homePage instanceof Home) {
-                        await new Promise((resolve) => {
-                            homePage.refScrollView.current?.scrollTo({ y: 100, animated: true });
-                            setTimeout(resolve, 500);
-                        });
+                        await scrollToSkillsTags(homePage);
                     }
                 }
             },
             execAfter: async () => {
                 await new Promise((resolve) => {
-                    user.interface.ChangePage('quest', {
-                        storeInHistory: false,
-                        callback: () => resolve(null)
-                    });
+                    user.interface.ChangePage('skills', { callback: () => resolve(null) });
                 });
+                await Sleep(500);
                 return false;
             }
         },
         {
             component: null,
-            text: missionTexts['2']
+            text: missionTexts['2'],
+            showNextButton: true,
+            execAfter: async () => {
+                // Open the most practiced skill: its page completes the mission
+                const lastSkill = user.activities.GetLastSkills(1)[0];
+                if (typeof lastSkill !== 'undefined') {
+                    user.interface.ChangePage('skill', { args: { skillID: lastSkill.ID } });
+                }
+                return true;
+            }
         }
     ]);
 }

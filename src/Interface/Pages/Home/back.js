@@ -32,6 +32,12 @@ class BackHome extends PageBase {
     /** @type {React.RefObject<View | null>} */
     refQuestsTitle = React.createRef();
 
+    /** @type {React.RefObject<View | null>} */
+    refSkillsTags = React.createRef();
+
+    /** Current scroll offset of the page, used by the tutorial to bring a widget into view */
+    scrollOffsetY = 0;
+
     /** Scroll Y for parallax effect */
     scrollY = new Animated.Value(0);
 
@@ -39,6 +45,7 @@ class BackHome extends PageBase {
     handleScroll = (event) => {
         const { y } = event.nativeEvent.contentOffset;
         this.scrollY.setValue(y);
+        this.scrollOffsetY = y;
     };
 
     openProfile = () => {

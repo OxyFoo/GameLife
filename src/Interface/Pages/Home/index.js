@@ -72,7 +72,7 @@ class Home extends BackHome {
 
                         {/* Skills title + widget */}
                         {/* <Title title={lang['container-skills-title']} /> */}
-                        <SkillsTags style={styles.sectionMoreData} />
+                        <SkillsTags style={styles.sectionMoreData} refParent={this.refSkillsTags} />
                     </View>
 
                     {/* Right column: Avatar with parallax */}

@@ -3,7 +3,9 @@ import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import {
+    ActivitiesAreEquals,
     GetActivityIndex,
+    GetLocalDayIndex,
     GetMondayTimestamp,
     GetMonthStartTimestamp,
     GetYearStartTimestamp,
@@ -30,8 +32,12 @@ import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } f
  * @typedef {'removed' | 'notExist'} RemoveStatus
  */
 
+/** Max hours of activities (with XP) per local day: beyond, activities grant neither XP nor ox */
 const MAX_HOUR_PER_DAY = 12;
+const MAX_MINUTES_PER_DAY = MAX_HOUR_PER_DAY * 60;
 const HOURS_BEFORE_LIMIT = 48;
+/** Ox granted per minute of activity (same eligibility as XP, see GetOxReward) */
+const OX_PER_MINUTE = 1;
 
 /** @type {Activity} */
 const DEFAULT_ACTIVITY = {
@@ -302,6 +308,15 @@ class Activities extends IUserData {
         this.#purge(response.result.newActivities);
         this.allActivities.Set(this.Get());
         this.#user.interface.console?.AddLog('info', `[Activities] ${this.#SAVED_activities.length} activities saved`);
+
+        // Update ox (activities rewards, computed by the server)
+        if (typeof response.result.ox === 'number') {
+            this.#user.informations.ox.Set(response.result.ox);
+            if (response.result.oxGained > 0) {
+                this.#user.interface.console?.AddLog('info', `[Activities] ${response.result.oxGained} ox earned`);
+            }
+        }
+
         this.#user.SaveLocal();
 
         return true;
@@ -367,7 +382,7 @@ class Activities extends IUserData {
     }
 
     /**
-     * @description Get activities that have brought xp
+     * @description Get activities that have brought xp (12h/day limit applied, see #applyDailyLimit)
      * @param {boolean} [forceRefresh=false]
      * @returns {Activity[]}
      */
@@ -378,39 +393,87 @@ class Activities extends IUserData {
         }
 
         const activities = this.#user.activities.Get().filter(this.DoesGrantXP);
+        const usefulActivities = this.#applyDailyLimit(activities);
 
-        let lastMidnight = 0;
-        let hoursRemain = MAX_HOUR_PER_DAY;
-        let usefulActivities = [];
-        for (let i in activities) {
-            const activity = activities[i];
+        this.#cache_get_useful.id = id;
+        this.#cache_get_useful.activities = usefulActivities;
 
+        return usefulActivities;
+    };
+
+    /**
+     * Apply the 12h/day limit: activities are walked chronologically and each local day
+     * (in the activity's own timezone) has a budget of 12h, consumed by activities whose
+     * skill gives XP. Once the budget is exceeded, the activity is dropped as well as every
+     * following one of the same day (all-or-nothing).
+     * @param {Activity[]} activities Sorted by start time, already filtered by DoesGrantXP
+     * @returns {Activity[]} Activities that grant XP
+     */
+    #applyDailyLimit = (activities) => {
+        /** @type {Map<number, number>} Minutes remaining per local day */
+        const minutesRemain = new Map();
+
+        /** @type {Activity[]} */
+        const usefulActivities = [];
+
+        for (const activity of activities) {
             const skill = dataManager.skills.GetByID(activity.skillID);
             if (skill === null) {
                 continue;
             }
 
-            const midnight = GetMidnightTime(activity.startTime);
-            const durationHour = activity.duration / 60;
-
-            if (lastMidnight !== midnight) {
-                lastMidnight = midnight;
-                hoursRemain = MAX_HOUR_PER_DAY;
-            }
+            const day = GetLocalDayIndex(activity);
+            let remain = minutesRemain.get(day) ?? MAX_MINUTES_PER_DAY;
 
             // Limit
-            if (skill.XP > 0) hoursRemain -= durationHour;
-            if (hoursRemain < 0) {
+            if (skill.XP > 0) remain -= activity.duration;
+            minutesRemain.set(day, remain);
+            if (remain < 0) {
                 continue;
             }
 
             usefulActivities.push(activity);
         }
 
-        this.#cache_get_useful.id = id;
-        this.#cache_get_useful.activities = usefulActivities;
-
         return usefulActivities;
+    };
+
+    /**
+     * Ox granted by an activity (1 ox per minute), with the same rules as XP: the skill must
+     * give XP, the activity must be added less than 48h after its start, and the 12h/day
+     * limit of its local day must not be exceeded (all-or-nothing, see #applyDailyLimit).
+     * The candidate activity is always included in the day walk, even if it's not in the past
+     * yet, to match the XP preview of the add activity screen.
+     * The actual reward is computed by the server with the same rules (save-activities).
+     * @param {Activity} activity
+     * @param {Activity | null} [replacedActivity] Activity being edited, excluded from the day budget
+     * @returns {number}
+     */
+    GetOxReward = (activity, replacedActivity = null) => {
+        const skill = dataManager.skills.GetByID(activity.skillID);
+        if (skill === null || skill.XP <= 0) {
+            return 0;
+        }
+
+        if (this.GetExperienceStatus(activity) === 'beforeLimit') {
+            return 0;
+        }
+
+        // Other activities of the same local day (without the candidate and the activity it replaces)
+        const day = GetLocalDayIndex(activity);
+        const dayActivities = this.Get().filter(
+            (other) =>
+                GetLocalDayIndex(other) === day &&
+                !ActivitiesAreEquals(other, activity) &&
+                (replacedActivity === null || !ActivitiesAreEquals(other, replacedActivity)) &&
+                this.DoesGrantXP(other)
+        );
+
+        const candidates = SortByKey([...dayActivities, activity], 'startTime');
+        const usefulActivities = this.#applyDailyLimit(candidates);
+        const granted = usefulActivities.some((other) => ActivitiesAreEquals(other, activity));
+
+        return granted ? activity.duration * OX_PER_MINUTE : 0;
     };
 
     /**
@@ -738,5 +801,5 @@ class Activities extends IUserData {
     };
 }
 
-export { DEFAULT_ACTIVITY };
+export { DEFAULT_ACTIVITY, MAX_HOUR_PER_DAY, MAX_MINUTES_PER_DAY, OX_PER_MINUTE };
 export default Activities;

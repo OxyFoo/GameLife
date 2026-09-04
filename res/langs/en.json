@@ -368,6 +368,8 @@
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
         "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
+        "title-ox": "+ {} Ox",
+        "title-limit-reached": "You already logged 12 hours of activities today: this one grants neither XP nor Ox.",
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",

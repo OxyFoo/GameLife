@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -6,6 +7,7 @@ import dataManager from 'Managers/DataManager';
 
 // import Notifications from 'Utils/Notifications';
 import { AddActivity as AddActivityView } from 'Interface/Widgets';
+import { Icon, Text } from 'Interface/Components';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
@@ -93,6 +95,24 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
     };
 
     return AddActivity(newActivity);
+}
+
+/**
+ * "+ x Ox" mention shown under the success message of the display page
+ * @param {number} ox
+ * @returns {React.JSX.Element}
+ */
+function renderOxMention(ox) {
+    const lang = langManager.curr['activity'];
+
+    return (
+        <View style={styles.oxMention}>
+            <Icon icon='ox' size={24} />
+            <Text fontSize={18} style={styles.oxMentionText}>
+                {lang['title-ox'].replace('{}', ox.toString())}
+            </Text>
+        </View>
+    );
 }
 
 /**
@@ -187,11 +207,15 @@ async function AddActivity(activity) {
         );
     }
 
+    // Ox brought by the activity (preview, the server grants the real amount at save)
+    const ox = addedActivity ? user.activities.GetOxReward(addedActivity) : 0;
+
     // Display the activity
     user.interface.ChangePage('display', {
         args: {
             icon: 'check-filled',
             text: lang['display-activity-text'],
+            additionalContent: ox > 0 ? renderOxMention(ox) : undefined,
             quote: dataManager.quotes.GetRandomQuote(),
             button: lang['display-activity-button'],
             button2: lang['display-activity-button2'],
@@ -393,6 +417,17 @@ function Back() {
         }
     });
 }
+
+const styles = StyleSheet.create({
+    oxMention: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    oxMentionText: {
+        marginLeft: 8
+    }
+});
 
 export {
     TIME_STEP_MINUTES,

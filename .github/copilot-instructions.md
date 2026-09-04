@@ -257,6 +257,25 @@ class UserData {
 }
 ```
 
+### Règles métier partagées client / serveur
+
+Certaines règles sont calculées **des deux côtés** : l'app pour l'aperçu et l'XP, le serveur
+pour ce qui touche à la monnaie (les Ox sont toujours serveur-autoritaires). Elles doivent
+rester strictement identiques :
+
+- **Jour local** d'une activité : `GetLocalDayIndex(activity)` = `floor((startTime + timezone * 3600) / 86400)`,
+  dérivé du fuseau **stocké dans l'activité** — `src/Data/User/Activities/utils.js` côté app,
+  `Services/GameLife/Activities.ts` côté serveur.
+- **Limite 12 h / jour local** (tout-ou-rien, chronologique, seules les compétences avec XP
+  consomment le budget) : `Activities.#applyDailyLimit` (app) et `GameLifeActivites.#computeDueOx` (serveur).
+- **Ox par activité** : 1 Ox / minute, même éligibilité que l'XP (règle des 48 h + limite 12 h,
+  0 Ox pour les compétences à 0 XP). L'app n'affiche qu'un aperçu (`user.activities.GetOxReward`) ;
+  le crédit réel est fait par `save-activities` (`SettleOx`, registre dans `Logs` type `activityOx`)
+  et renvoyé dans `result.ox` / `result.oxGained`.
+
+Toute modification de l'une de ces règles doit être reportée aux deux endroits, et couverte par
+`src/Data/User/Activities/__tests__/Activities-test.js`.
+
 ## Communication serveur
 
 ### TCP WebSocket sécurisé

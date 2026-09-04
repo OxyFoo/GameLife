@@ -117,11 +117,23 @@ class AddActivityPage2 extends BackActivityPage2 {
             );
         }
 
+        // Ox (1/min): 0 means the 12h/day limit is reached, XP is not granted either
+        const ox = user.activities.GetOxReward(activity, this.props.editActivity);
+        if (ox === 0) {
+            return (
+                <Text fontSize={14} color='main1'>
+                    {lang['title-limit-reached']}
+                </Text>
+            );
+        }
+
         const usefulStats = user.experience.statsKey.filter((key) => skill.Stats[key] > 0);
 
         return (
             <>
-                <Text fontSize={14} color='main1'>{`+ ${XP} ${langXP['xp']} /`}</Text>
+                <Text fontSize={14} color='main1'>{`+ ${XP} ${langXP['xp']} / `}</Text>
+                <Icon icon='ox' size={16} />
+                <Text fontSize={14} color='main1'>{` ${lang['title-ox'].replace('{}', ox.toString())} /`}</Text>
                 {usefulStats.map((stat) => {
                     const statXP = Round((skill.Stats[stat] * activity.duration) / 60, 2);
                     return (

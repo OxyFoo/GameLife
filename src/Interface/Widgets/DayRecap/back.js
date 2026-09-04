@@ -19,20 +19,6 @@ import { saveToGallery, shareImage } from './share';
  * @property {number} durationMinutes
  * @property {string} color
  *
- * @typedef {object} QuestDetail
- * @property {string} title
- * @property {boolean} completed
- * @property {number} progress - 0 to 1
- * @property {number} streak - Current streak
- * @property {number} timeDone - Minutes done (for sorting)
- * @property {string} timeText - Time done / goal
- *
- * @typedef {object} QuestProgress
- * @property {number} completedQuests
- * @property {number} totalQuests
- * @property {boolean} allCompleted
- * @property {QuestDetail[]} quests
- *
  * @typedef {object} DayRecapData
  * @property {string} username
  * @property {number} level
@@ -44,7 +30,6 @@ import { saveToGallery, shareImage } from './share';
  * @property {ActivityData[]} skills - For activity list (individual skills)
  * @property {StatsXP} statsGained
  * @property {Array<keyof StatsXP>} statsKeys - Non-zero stat keys for display
- * @property {QuestProgress} questProgress
  *
  * @typedef {object} DayRecapProps
  * @property {StyleProp} [style]
@@ -61,7 +46,6 @@ import { saveToGallery, shareImage } from './share';
  * @property {boolean} isCapturing
  * @property {boolean} isSharing
  * @property {'idle' | 'saving' | 'success' | 'error'} saveStatus
- * @property {string} template
  * @property {DayRecapData | null} recapData
  */
 
@@ -78,13 +62,7 @@ class BackDayRecap extends React.Component {
         isCapturing: false,
         isSharing: false,
         saveStatus: 'idle',
-        template: 'tripleStack',
         recapData: null
-    };
-
-    /** @param {string} template */
-    setTemplate = (template) => {
-        this.setState({ template });
     };
 
     componentDidMount() {
@@ -128,7 +106,6 @@ class BackDayRecap extends React.Component {
         const level = xpInfo.lvl;
         const xpCurrent = xpInfo.xp;
         const xpNext = xpInfo.next;
-        const questProgress = this.computeQuestProgress(date);
         const statsKeys = user.experience.statsKey
             .filter((key) => statsGained[key] > 0)
             .sort((a, b) => statsGained[b] - statsGained[a]);
@@ -144,8 +121,7 @@ class BackDayRecap extends React.Component {
             categories,
             skills,
             statsGained,
-            statsKeys,
-            questProgress
+            statsKeys
         };
 
         this.setState({ recapData });
@@ -214,58 +190,6 @@ class BackDayRecap extends React.Component {
         const skills = Array.from(skillMap.values()).sort((a, b) => b.durationMinutes - a.durationMinutes);
 
         return { categories, skills, statsGained, totalXP, totalMinutes };
-    };
-
-    /**
-     * Compute quest progress for a given date
-     * @param {Date} date
-     * @returns {QuestProgress}
-     */
-    computeQuestProgress = (date) => {
-        const time = GetLocalTime(date);
-        const allQuests = user.quests.Get();
-
-        let totalQuests = 0;
-        let completedQuests = 0;
-        /** @type {QuestDetail[]} */
-        const quests = [];
-
-        for (const quest of allQuests) {
-            const days = user.quests.GetDays(quest, time);
-            const selectedDay = days.find((day) => day.isToday);
-
-            if (selectedDay && selectedDay.state !== 'disabled') {
-                totalQuests++;
-                const completed = selectedDay.state === 'past' || selectedDay.progress >= 1.0;
-                if (completed) {
-                    completedQuests++;
-                }
-                const streak = user.quests.GetStreak(quest, time);
-                const timeText = user.quests.GetQuestTimeText(quest, time);
-                const timeDone = user.activities
-                    .GetByTime(time)
-                    .filter((a) => quest.skills.includes(a.skillID))
-                    .filter((a) => user.activities.GetExperienceStatus(a) === 'grant')
-                    .reduce((sum, a) => sum + a.duration, 0);
-                quests.push({
-                    title: quest.title,
-                    completed,
-                    progress: Math.min(selectedDay.progress, 1),
-                    streak,
-                    timeDone,
-                    timeText
-                });
-            }
-        }
-
-        quests.sort((a, b) => b.timeDone - a.timeDone);
-
-        return {
-            completedQuests,
-            totalQuests,
-            allCompleted: totalQuests > 0 && completedQuests === totalQuests,
-            quests
-        };
     };
 
     /**

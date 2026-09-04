@@ -10,11 +10,10 @@ import { Icon, Text } from 'Interface/Components';
 import { DynamicBackground } from 'Interface/Primitives';
 
 import CardContent from './elements/CardContent';
-import { TEMPLATE_NAMES } from './templates';
 
 class DayRecap extends BackDayRecap {
     render() {
-        const { isSharing, saveStatus, template, recapData } = this.state;
+        const { isSharing, saveStatus, recapData } = this.state;
 
         // Show loading if data not ready
         if (!recapData) {
@@ -50,27 +49,6 @@ class DayRecap extends BackDayRecap {
 
         return (
             <View style={styles.container}>
-                {/* Template buttons (positioned above popup card) */}
-                <View style={styles.templateButtons}>
-                    {TEMPLATE_NAMES.map((name, index) => (
-                        <TouchableOpacity
-                            key={name}
-                            style={[
-                                styles.templateButton,
-                                template === name && { backgroundColor: themeManager.GetColor('main1') }
-                            ]}
-                            onPress={() => this.setTemplate(name)}
-                        >
-                            <Text
-                                style={styles.templateButtonText}
-                                color={template === name ? 'backgroundCard' : 'secondary'}
-                            >
-                                {index + 1}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-
                 {/* Visible card (9:16 inside ScrollView) */}
                 <ScrollView style={styles.visibleFrame} showsVerticalScrollIndicator={false}>
                     <ViewShot
@@ -82,7 +60,6 @@ class DayRecap extends BackDayRecap {
                             <CardContent
                                 recapData={recapData}
                                 date={this.props.date}
-                                template={template}
                                 formatDuration={this.formatDuration}
                                 computeRadarData={this.computeRadarData}
                             />

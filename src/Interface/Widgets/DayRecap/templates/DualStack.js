@@ -7,7 +7,7 @@ import ActivitiesSection from '../sections/ActivitiesSection';
 import StatsSection from '../sections/StatsSection';
 
 /**
- * Dual stack template: Activities + Stats (2 rows, bigger sizes, no quests)
+ * Dual stack template: Activities + Stats (2 rows, bigger sizes)
  * @param {import('./index').TemplateProps} props
  */
 const DualStack = ({

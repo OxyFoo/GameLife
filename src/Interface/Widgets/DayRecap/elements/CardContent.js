@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import Footer from './Footer';
 import Header from './Header';
 import LevelProgress from './LevelProgress';
-import TemplateRouter from '../templates';
+import Template from '../templates';
 
 import langManager from 'Managers/LangManager';
 
@@ -18,24 +18,12 @@ import langManager from 'Managers/LangManager';
  * @param {object} props
  * @param {DayRecapData} props.recapData - Recap data
  * @param {Date} props.date - Date to display
- * @param {string} [props.template] - Template name (tripleStack, dualStack, chartRow)
  * @param {(minutes: number) => string} props.formatDuration - Duration formatter
  * @param {(stats: StatsXP) => Array<{label: string, value: number}>} props.computeRadarData - Radar data computer
  */
-const CardContent = ({ recapData, date, template = 'tripleStack', formatDuration, computeRadarData }) => {
-    const {
-        username,
-        level,
-        xpGained,
-        xpCurrent,
-        xpNext,
-        totalMinutes,
-        categories,
-        skills,
-        statsGained,
-        statsKeys,
-        questProgress
-    } = recapData;
+const CardContent = ({ recapData, date, formatDuration, computeRadarData }) => {
+    const { username, level, xpGained, xpCurrent, xpNext, totalMinutes, categories, skills, statsGained, statsKeys } =
+        recapData;
 
     // Derive display data from recapData
     const donutData = categories.map((category) => ({
@@ -48,7 +36,6 @@ const CardContent = ({ recapData, date, template = 'tripleStack', formatDuration
 
     const langHome = langManager.curr['home'];
     const activitiesTitle = langHome['today-activity'];
-    const questsTitle = langHome['today-quest'];
 
     return (
         <View style={styles.mainContent}>
@@ -56,8 +43,7 @@ const CardContent = ({ recapData, date, template = 'tripleStack', formatDuration
 
             <LevelProgress level={level} xpGained={xpGained} xpCurrent={xpCurrent} xpNext={xpNext} />
 
-            <TemplateRouter
-                template={template}
+            <Template
                 donutData={donutData}
                 totalTimeFormatted={totalTimeFormatted}
                 skills={skills}
@@ -65,9 +51,7 @@ const CardContent = ({ recapData, date, template = 'tripleStack', formatDuration
                 statsKeys={statsKeys}
                 statsGained={statsGained}
                 radarData={radarData}
-                questProgress={questProgress}
                 activitiesTitle={activitiesTitle}
-                questsTitle={questsTitle}
             />
 
             <Footer />

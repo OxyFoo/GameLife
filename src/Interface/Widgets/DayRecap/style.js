@@ -17,30 +17,6 @@ const styles = StyleSheet.create({
         paddingVertical: 60
     },
 
-    // Template buttons row (above popup card)
-    templateButtons: {
-        position: 'absolute',
-        top: -40,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: 8
-    },
-    templateButton: {
-        width: 28,
-        height: 28,
-        borderRadius: 14,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.15)'
-    },
-    templateButtonText: {
-        fontSize: 13,
-        fontWeight: 'bold'
-    },
-
     // Visible frame - ScrollView container with max height
     visibleFrame: {
         width: '100%',

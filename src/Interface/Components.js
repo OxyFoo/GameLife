@@ -17,7 +17,7 @@ export { ProgressDonut } from './Components/ProgressDonut';
 export { RadarChart } from './Components/RadarChart';
 export { Reward } from './Components/Reward';
 export { Separator } from './Components/Separator';
-export { StreakChart } from './Components/StreakChart';
+export { StreakCard } from './Components/StreakCard';
 export { Swiper } from './Components/Swiper';
 export { Switch } from './Components/Switch';
 export { SwitchText } from './Components/SwitchText';

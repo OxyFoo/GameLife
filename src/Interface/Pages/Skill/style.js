@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
     title: {
-        marginBottom: 12,
         textAlign: 'left',
         fontSize: 21
     },
@@ -59,23 +58,41 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6
     },
 
-    // Info
-    infoContainer: {
-        marginBottom: 12
-    },
-
-    // KPIs
-    kpiContainer: {
+    // Informations
+    infoTitleRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 12
     },
-    kpiLeft: {
-        marginRight: 6
+    rateWindowButton: {
+        width: 'auto',
+        paddingVertical: 4,
+        paddingHorizontal: 10
     },
-    kpiRight: {
-        marginLeft: 6
+    rateWindowButtonBackground: {
+        borderRadius: 14
+    },
+    infoContainer: {
+        marginBottom: 12
+    },
+
+    // KPIs and streak
+    kpiRow: {
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        gap: 12,
+        marginBottom: 12
+    },
+    kpiColumn: {
+        flex: 1,
+        gap: 12
+    },
+    kpiCell: {
+        flexBasis: 'auto'
+    },
+    streakCard: {
+        flex: 1
     },
 
     // Skill chart

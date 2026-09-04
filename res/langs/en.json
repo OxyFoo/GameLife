@@ -927,7 +927,14 @@
         "history-title": "History",
         "history-show": "See entire history",
         "history-activity": "Activity history",
-        "category-title": "Category:"
+        "category-title": "Category:",
+        "streak-title": "Current streak",
+        "streak-max": "Max: {}",
+        "rate-title": "Consistency",
+        "rate-value": "{}%",
+        "rate-window-30": "30 d",
+        "rate-window-all": "All time",
+        "histogram-empty": "No past activity yet"
     },
 
     "skills": {

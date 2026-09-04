@@ -927,7 +927,14 @@
         "history-title": "Historique",
         "history-show": "Voir l'historique complet",
         "history-activity": "Historique",
-        "category-title": "Catégorie :"
+        "category-title": "Catégorie :",
+        "streak-title": "Série actuelle",
+        "streak-max": "Max : {}",
+        "rate-title": "Régularité",
+        "rate-value": "{} %",
+        "rate-window-30": "30 j",
+        "rate-window-all": "Total",
+        "histogram-empty": "Aucune activité passée pour le moment"
     },
 
     "skills": {

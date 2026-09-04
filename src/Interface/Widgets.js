@@ -8,11 +8,11 @@ export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';
 export { PieChart } from './Widgets/PieChart';
 export { QuestsList } from './Widgets/QuestsList';
+export { SkillHistogram } from './Widgets/SkillHistogram';
 export { StatsBar, StatsBarTextOnly } from './Widgets/StatsBars';
 export { TodoList } from './Widgets/TodoList';
 
 import BlockMonth from './Widgets/BlockMonth';
-import SkillChart from './Widgets/SkillChart';
 import SkillsGroup from './Widgets/SkillsGroup';
 
-export { BlockMonth, SkillChart, SkillsGroup };
+export { BlockMonth, SkillsGroup };

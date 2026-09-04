@@ -11,6 +11,7 @@ import {
     GetYearStartTimestamp,
     TimeIsFree
 } from './utils';
+import { ComputeSkillFrequency, GetTodayLocalDayIndex, RATE_WINDOW_DAYS } from './skillFrequency';
 import DynamicVar from 'Utils/DynamicVar';
 import { Round, SortByKey } from 'Utils/Functions';
 import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
@@ -25,6 +26,7 @@ import { DAY_TIME, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } f
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').SaveObject_Activities} SaveObject_Activities
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardPeriodType} LeaderboardPeriodType
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardUpdateData} LeaderboardUpdateData
+ * @typedef {import('./skillFrequency').SkillFrequency} SkillFrequency
  *
  * @typedef {'grant' | 'isNotPast' | 'beforeLimit'} ActivityStatus
  * @typedef {'added' | 'notFree' | 'tooEarly'} AddStatus
@@ -164,6 +166,17 @@ class Activities extends IUserData {
      */
     GetBySkillID(skillID) {
         return this.Get().filter((activity) => activity.skillID === skillID);
+    }
+
+    /**
+     * Frequency of a skill (streaks, rate, minutes per local day), computed from its activities.
+     * Future activities are ignored, nothing is persisted.
+     * @param {number} skillID
+     * @param {number | null} [windowDays] Rate window in days (today included), null = since the first activity
+     * @returns {SkillFrequency}
+     */
+    GetSkillFrequency(skillID, windowDays = RATE_WINDOW_DAYS) {
+        return ComputeSkillFrequency(this.GetBySkillID(skillID), GetTodayLocalDayIndex(), windowDays);
     }
 
     /** @param {Partial<SaveObject_Activities>} data */

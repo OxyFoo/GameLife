@@ -463,7 +463,6 @@
 
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
-        "section-my-todos": "My to-do list",
 
         "btn-stats": "Statistics",
         "btn-other-skills": "All skills",
@@ -963,52 +962,6 @@
             "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
             "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
         }
-    },
-
-    "todo": {
-        "title": "My list",
-        "title-new": "Create my list",
-
-        "input-title": "Title",
-        "input-title-placeholder": "Title of the todo",
-        "input-deadline-title": "Due date",
-        "input-deadline-empty": "No deadline defined",
-        "input-commentary-title": "Commentary",
-        "input-commentary-placeholder": "Write a commentary here...",
-        "input-task-title": "Tasks",
-        "input-task-placeholder": "Task",
-
-        "button-commentary": "Add a commentary",
-        "button-add": "Add",
-        "button-save": "Save",
-        "button-remove": "Delete",
-
-        "error-title-empty": "Please enter a title",
-        "error-title-exists": "A todo with this title already exists",
-
-        "alert-remcomment-title": "Delete comment?",
-        "alert-remcomment-text": "Are you sure you want to delete this comment?",
-        "alert-remtodo-title": "Delete todo?",
-        "alert-remtodo-message": "Are you sure you want to delete this todo?",
-        "alert-todo-notexist-title": "Error",
-        "alert-todo-notexist-message": "The list todo could not be deleted ({})",
-        "alert-todo-savefail-title": "Error",
-        "alert-todo-savefail-message": "The todo could not be saved, please try again later.",
-        "alert-remtask-title": "Delete todo?",
-        "alert-remtask-message": "Are you sure you want to delete this task?",
-        "alert-taskslimit-title": "Limit reached",
-        "alert-taskslimit-text": "You can't add more than {} tasks to this todo",
-        "alert-back-title": "Back",
-        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost."
-    },
-
-    "todos": {
-        "container-title": "Todo list",
-
-        "todos-empty-text": "No todo list",
-
-        "alert-todoslimit-title": "Limit reached",
-        "alert-todoslimit-message": "You have reached the limit of todos, please delete some of them to add more."
     },
 
     "daily-quest": {

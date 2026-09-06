@@ -16,7 +16,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
-import { Missions, TodoList } from 'Interface/Widgets';
+import { Missions } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -94,20 +94,7 @@ class Home extends BackHome {
                 <AchievementPreview /> */}
 
                 <Title title={lang['btn-more-info']} />
-                <MoreInfo />
-
-                {/* My todos */}
-                <Title title={lang['section-my-todos']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='add-outline'
-                        fontColor='gradient'
-                        onPress={this.newTodo}
-                    />
-                </Title>
-                <TodoList style={styles.lastWidget} />
+                <MoreInfo style={styles.lastWidget} />
             </ScrollView>
         );
     }

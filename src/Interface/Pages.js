@@ -27,8 +27,7 @@ const PAGES = {
     statistics:             require('./Pages/Statistics').default,
     waitinternet:           require('./Pages/WaitInternet').default,
     waitmail:               require('./Pages/WaitMail').default,
-    test:                   require('./Pages/Test').default,
-    todo:                   require('./Pages/Todo').default
+    test:                   require('./Pages/Test').default
 };
 
 /**

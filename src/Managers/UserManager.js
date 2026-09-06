@@ -16,7 +16,6 @@ import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
 import Multiplayer from 'Data/User/Multiplayer';
-import Todos from 'Data/User/Todos';
 
 import Storage from 'Utils/Storage';
 import GoogleSignIn from 'Utils/GoogleSignIn';
@@ -59,7 +58,6 @@ class UserManager {
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
         this.multiplayer = new Multiplayer(this);
-        this.todos = new Todos(this);
 
         /**
          * `informations` is an IUserData and belongs to DATA only: listing it here too
@@ -87,8 +85,7 @@ class UserManager {
             this.informations,
             this.inventory,
             this.missions,
-            this.multiplayer,
-            this.todos
+            this.multiplayer
         ];
 
         // Mount classes

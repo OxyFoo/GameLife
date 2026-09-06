@@ -53,10 +53,6 @@ class BackHome extends PageBase {
         user.interface.ChangePage('statistics');
     };
 
-    newTodo = () => {
-        user.interface.ChangePage('todo');
-    };
-
     openDayRecap = () => {
         user.interface.popup?.Open({
             content: <DayRecap date={new Date()} />,

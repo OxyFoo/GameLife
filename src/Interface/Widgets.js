@@ -9,7 +9,6 @@ export { PageHeader } from './Widgets/PageHeader';
 export { PieChart } from './Widgets/PieChart';
 export { SkillHistogram } from './Widgets/SkillHistogram';
 export { StatsBar, StatsBarTextOnly } from './Widgets/StatsBars';
-export { TodoList } from './Widgets/TodoList';
 
 import BlockMonth from './Widgets/BlockMonth';
 import SkillsGroup from './Widgets/SkillsGroup';

@@ -463,7 +463,6 @@
 
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
-        "section-my-todos": "Mes listes",
 
         "btn-stats": "Statistiques",
         "btn-other-skills": "Toutes les compétences",
@@ -963,52 +962,6 @@
             "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter ton agilité sont des activités comme des étirements ou encore du yoga.",
             "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
         }
-    },
-
-    "todo": {
-        "title": "Ma liste",
-        "title-new": "Créer ma liste",
-
-        "input-title": "Titre",
-        "input-title-placeholder": "Titre de la liste",
-        "input-deadline-title": "Date limite",
-        "input-deadline-empty": "Aucune date définie",
-        "input-commentary-title": "Commentaire",
-        "input-commentary-placeholder": "Écris un commentaire ici...",
-        "input-task-title": "Tâches",
-        "input-task-placeholder": "Tâche",
-
-        "button-commentary": "Ajouter un commentaire",
-        "button-add": "Ajouter",
-        "button-save": "Sauvegarder",
-        "button-remove": "Supprimer",
-
-        "error-title-empty": "Le titre ne peut pas être vide",
-        "error-title-exists": "Une tâche avec ce titre existe déjà",
-
-        "alert-remcomment-title": "Suppression ?",
-        "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
-        "alert-remtodo-title": "Suppression ?",
-        "alert-remtodo-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
-        "alert-todo-notexist-title": "Erreur",
-        "alert-todo-notexist-message": "La todo liste n'a pas pu être supprimée ({})",
-        "alert-todo-savefail-title": "Erreur",
-        "alert-todo-savefail-message": "La todo liste n'a pas pu être sauvegardée, réessaye plus tard.",
-        "alert-remtask-title": "Suppression ?",
-        "alert-remtask-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
-        "alert-taskslimit-title": "Limite atteinte",
-        "alert-taskslimit-text": "Tu ne peux pas avoir plus de {} tâches.",
-        "alert-back-title": "Retour",
-        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
-    },
-
-    "todos": {
-        "container-title": "Todo liste",
-
-        "todos-empty-text": "Pas de todo liste",
-
-        "alert-todoslimit-title": "Limite atteinte",
-        "alert-todoslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
     },
 
     "daily-quest": {

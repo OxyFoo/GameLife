@@ -916,8 +916,7 @@
         "category-title": "Catégorie :",
         "streak-title": "Série actuelle",
         "streak-max": "Max : {}",
-        "rate-title": "Régularité",
-        "rate-value": "{} %",
+        "rate-text": "Régularité : {} %",
         "rate-window-30": "30 j",
         "rate-window-all": "Total",
         "histogram-empty": "Aucune activité passée pour le moment"

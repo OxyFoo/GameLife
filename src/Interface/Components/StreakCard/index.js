@@ -18,7 +18,8 @@ import { ProgressDonut } from '../ProgressDonut';
  * @property {string} title
  * @property {number} current Current streak, in days
  * @property {number} best Best streak, in days
- * @property {string} bestText Formatted best streak (e.g. "Max : 12")
+ * @property {string} bestText Formatted best streak, shown under the counter (e.g. "Max : 12")
+ * @property {string} rateText Formatted consistency rate, shown under the donut (e.g. "Régularité : 72 %")
  * @property {number} size Donut size, in pixels
  */
 
@@ -29,20 +30,21 @@ const StreakCardProps = {
     current: 0,
     best: 0,
     bestText: '',
+    rateText: '',
     size: 110
 };
 
 class StreakCard extends React.Component {
     render() {
-        const { style, title, current, best, bestText, size } = this.props;
+        const { style, title, current, best, bestText, rateText, size } = this.props;
         const progress = best > 0 ? Math.min(1, current / best) : 0;
 
         return (
             <LinearGradient
                 style={[styles.gradient, style]}
                 colors={[
-                    themeManager.GetColor('main1', { opacity: 0.12 }),
-                    themeManager.GetColor('main1', { opacity: 0.45 })
+                    themeManager.GetColor('main1', { opacity: 0.2 }),
+                    themeManager.GetColor('main1', { opacity: 0.1 })
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
@@ -55,14 +57,19 @@ class StreakCard extends React.Component {
                 <View style={styles.body}>
                     <ProgressDonut value={progress} size={size} strokeWidth={8} delay={0} progressColor='main2'>
                         <View style={styles.center}>
-                            <Text fontSize={22} bold>
-                                {`${current}`}
+                            <View style={styles.counter}>
+                                <Text fontSize={22} bold>
+                                    {`${current}`}
+                                </Text>
+                                <Icon icon='flame' size={20} color='main2' />
+                            </View>
+                            <Text fontSize={10} color='secondary'>
+                                {bestText}
                             </Text>
-                            <Icon icon='flame' size={20} color='main2' />
                         </View>
                     </ProgressDonut>
-                    <Text fontSize={12} color='secondary'>
-                        {bestText}
+                    <Text fontSize={11} color='secondary'>
+                        {rateText}
                     </Text>
                 </View>
             </LinearGradient>

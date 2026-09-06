@@ -4,11 +4,11 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import HistogramBar from './bar';
-import BackSkillHistogram, { VISIBLE_BARS } from './back';
+import BackSkillHistogram from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from 'Interface/Components';
+import { Button, Text } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').HistogramDay} HistogramDay
@@ -20,9 +20,10 @@ const KeyExtractor = (item) => `day-${item.dayIndex}`;
 class SkillHistogram extends BackSkillHistogram {
     render() {
         const lang = langManager.curr['skill'];
-        const { style, firstDayIndex } = this.props;
+        const { style, firstDayIndex, windowDays, windowLabel, onWindowPress } = this.props;
         const { listWidth, selectedDayIndex } = this.state;
         const { days, niceMax } = this.getData();
+        const visibleBars = this.getVisibleBars();
 
         const gridColor = themeManager.GetColor('border', { opacity: 0.15 });
         const baseColor = themeManager.GetColor('border', { opacity: 0.35 });
@@ -38,14 +39,27 @@ class SkillHistogram extends BackSkillHistogram {
                 end={{ x: 1, y: 0 }}
             >
                 <View style={styles.header}>
-                    <Text style={styles.headerTitle} fontSize={16} color='primary' bold>
-                        {lang['history-activity']}
-                    </Text>
-                    {selectedDayIndex !== null && (
-                        <Text fontSize={12} color='main3'>
-                            {this.getSelectedText(selectedDayIndex)}
+                    <View style={styles.headerTexts}>
+                        <Text style={styles.headerTitle} fontSize={16} color='primary' bold>
+                            {lang['history-activity']}
                         </Text>
-                    )}
+                        {selectedDayIndex !== null && (
+                            <Text style={styles.headerSelected} fontSize={11} color='main3'>
+                                {this.getSelectedText(selectedDayIndex)}
+                            </Text>
+                        )}
+                    </View>
+                    <Button
+                        style={styles.windowButton}
+                        styleBackground={styles.windowButtonBackground}
+                        appearance='outline'
+                        borderColor='main1'
+                        fontColor='main1'
+                        fontSize={12}
+                        onPress={onWindowPress}
+                    >
+                        {windowLabel}
+                    </Button>
                 </View>
 
                 {firstDayIndex === null ? (
@@ -77,7 +91,7 @@ class SkillHistogram extends BackSkillHistogram {
                         <View style={styles.list} onLayout={this.onLayoutList}>
                             {listWidth > 0 && (
                                 <FlatList
-                                    key={`histogram-${listWidth}`}
+                                    key={`histogram-${listWidth}-${windowDays}`}
                                     ref={this.refList}
                                     contentContainerStyle={styles.listContent}
                                     data={days}
@@ -85,9 +99,9 @@ class SkillHistogram extends BackSkillHistogram {
                                     keyExtractor={KeyExtractor}
                                     renderItem={this.renderItem}
                                     getItemLayout={this.getItemLayout}
-                                    initialScrollIndex={Math.max(0, days.length - VISIBLE_BARS)}
-                                    initialNumToRender={VISIBLE_BARS + 6}
-                                    maxToRenderPerBatch={VISIBLE_BARS}
+                                    initialScrollIndex={Math.max(0, days.length - visibleBars)}
+                                    initialNumToRender={visibleBars + 6}
+                                    maxToRenderPerBatch={visibleBars}
                                     windowSize={3}
                                     removeClippedSubviews={true}
                                     maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
@@ -110,6 +124,7 @@ class SkillHistogram extends BackSkillHistogram {
             day={item}
             slotWidth={this.getSlotWidth()}
             niceMax={this.getData().niceMax}
+            labelStep={this.getDayLabelStep()}
             selected={item.dayIndex === this.state.selectedDayIndex}
             onPress={this.onBarPress}
         />

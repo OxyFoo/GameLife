@@ -20,7 +20,8 @@ class Skill extends BackSkill {
         const txtCurrXp = Round(selectedSkill.xp, 1);
         const txtNextXP = Round(selectedSkill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
-        const txtRate = lang['rate-value'].replace('{}', `${Math.round(frequency.rate * 100)}`);
+        const txtRate = lang['rate-text'].replace('{}', `${Math.round(frequency.rate * 100)}`);
+        const txtWindow = rateWindow === null ? lang['rate-window-all'] : lang['rate-window-30'];
 
         return (
             <>
@@ -59,24 +60,9 @@ class Skill extends BackSkill {
                     </View>
 
                     {/* Informations */}
-                    <View style={styles.infoTitleRow}>
-                        <Text style={styles.title} color='border'>
-                            {lang['informations-title']}
-                        </Text>
-                        <Button
-                            style={styles.rateWindowButton}
-                            styleBackground={styles.rateWindowButtonBackground}
-                            appearance='outline'
-                            borderColor='main1'
-                            fontColor='main1'
-                            fontSize={12}
-                            icon='retry'
-                            iconSize={14}
-                            onPress={this.toggleRateWindow}
-                        >
-                            {rateWindow === null ? lang['rate-window-all'] : lang['rate-window-30']}
-                        </Button>
-                    </View>
+                    <Text style={styles.title} color='border'>
+                        {lang['informations-title']}
+                    </Text>
                     <View style={styles.infoContainer}>
                         <View style={styles.kpiRow}>
                             <View style={styles.kpiColumn}>
@@ -90,7 +76,6 @@ class Skill extends BackSkill {
                                     title={langLevel['total-hour']}
                                     value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
                                 />
-                                <KPI containerStyle={styles.kpiCell} title={lang['rate-title']} value={txtRate} />
                             </View>
                             <StreakCard
                                 style={styles.streakCard}
@@ -98,21 +83,26 @@ class Skill extends BackSkill {
                                 current={frequency.currentStreak}
                                 best={frequency.bestStreak}
                                 bestText={lang['streak-max'].replace('{}', `${frequency.bestStreak}`)}
+                                rateText={`${txtRate} · ${txtWindow}`}
                             />
                         </View>
 
-                        {/* Daily histogram */}
+                        {/* Daily histogram, its window button also drives the rate window */}
                         <SkillHistogram
                             style={styles.skillChart}
                             dailyMinutes={frequency.dailyMinutes}
                             firstDayIndex={frequency.firstDayIndex}
                             todayIndex={frequency.todayIndex}
+                            windowDays={rateWindow}
+                            windowLabel={txtWindow}
+                            onWindowPress={this.toggleRateWindow}
                         />
 
                         {/* History */}
                         {history.length > 0 && (
                             <Button
                                 style={styles.historyButton}
+                                styleBackground={styles.historyButtonBackground}
                                 appearance='outline'
                                 color='main1'
                                 onPress={this.showHistory}

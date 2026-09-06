@@ -916,8 +916,7 @@
         "category-title": "Category:",
         "streak-title": "Current streak",
         "streak-max": "Max: {}",
-        "rate-title": "Consistency",
-        "rate-value": "{}%",
+        "rate-text": "Consistency: {}%",
         "rate-window-30": "30 d",
         "rate-window-all": "All time",
         "histogram-empty": "No past activity yet"

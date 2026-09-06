@@ -20,8 +20,14 @@ import { DayIndexToDate, GetHistogramDays, GetNiceMaxMinutes } from 'Data/User/A
 /** Days loaded per batch when scrolling to the past */
 const BATCH_DAYS = 60;
 
-/** Bars displayed at once */
+/** Bars displayed at once with a fixed window */
 const VISIBLE_BARS = 14;
+
+/** Bars displayed at once on the whole history (narrower bars, more data) */
+const VISIBLE_BARS_ALL = 30;
+
+/** Day labels shown every N days on the whole history (the 1st of each month is always shown) */
+const DAY_LABEL_STEP_ALL = 5;
 
 const SkillHistogramProps = {
     /** @type {StyleViewProp} */
@@ -34,7 +40,16 @@ const SkillHistogramProps = {
     firstDayIndex: null,
 
     /** @type {number} Local day index of today */
-    todayIndex: 0
+    todayIndex: 0,
+
+    /** @type {number | null} Displayed window in days (today included), null = whole history with lazy loading */
+    windowDays: null,
+
+    /** @type {string} Label of the window button */
+    windowLabel: '',
+
+    /** Called when the window button is pressed */
+    onWindowPress: () => {}
 };
 
 class BackSkillHistogram extends React.Component {
@@ -66,16 +81,18 @@ class BackSkillHistogram extends React.Component {
 
     /** @returns {number} Oldest displayed day, clamped to [firstDayIndex, todayIndex] */
     getOldestDayIndex = () => {
-        const { firstDayIndex, todayIndex } = this.props;
+        const { firstDayIndex, todayIndex, windowDays } = this.props;
         if (firstDayIndex === null) {
             return todayIndex + 1;
         }
-        return Math.max(firstDayIndex, Math.min(this.state.oldestDayIndex, todayIndex));
+        const oldest = windowDays !== null ? todayIndex - windowDays + 1 : this.state.oldestDayIndex;
+        return Math.max(firstDayIndex, Math.min(oldest, todayIndex));
     };
 
+    /** More days can be loaded only without fixed window */
     hasMoreDays = () => {
-        const { firstDayIndex } = this.props;
-        return firstDayIndex !== null && this.getOldestDayIndex() > firstDayIndex;
+        const { firstDayIndex, windowDays } = this.props;
+        return windowDays === null && firstDayIndex !== null && this.getOldestDayIndex() > firstDayIndex;
     };
 
     /** @returns {HistogramData} Loaded days and scale, memoized */
@@ -98,7 +115,13 @@ class BackSkillHistogram extends React.Component {
         return this.cache.data;
     };
 
-    getSlotWidth = () => this.state.listWidth / VISIBLE_BARS;
+    /** @returns {number} Bars displayed at once, more of them on the whole history */
+    getVisibleBars = () => (this.props.windowDays === null ? VISIBLE_BARS_ALL : VISIBLE_BARS);
+
+    /** @returns {number} Days between two day labels */
+    getDayLabelStep = () => (this.props.windowDays === null ? DAY_LABEL_STEP_ALL : 1);
+
+    getSlotWidth = () => this.state.listWidth / this.getVisibleBars();
 
     /** @param {LayoutChangeEvent} event */
     onLayoutList = (event) => {
@@ -168,4 +191,4 @@ BackSkillHistogram.prototype.props = SkillHistogramProps;
 BackSkillHistogram.defaultProps = SkillHistogramProps;
 
 export default BackSkillHistogram;
-export { BATCH_DAYS, VISIBLE_BARS };
+export { BATCH_DAYS, VISIBLE_BARS, VISIBLE_BARS_ALL };

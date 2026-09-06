@@ -13,7 +13,10 @@ const AXIS_WIDTH = 34;
 const MIN_BAR_HEIGHT = 3;
 
 /** Horizontal gap on each side of a bar, in pixels */
-const BAR_GAP = 3;
+const BAR_GAP = 4;
+
+/** Width of the day and month labels, in pixels */
+const LABEL_WIDTH = 30;
 
 const styles = StyleSheet.create({
     card: {
@@ -26,9 +29,25 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 12
     },
-    headerTitle: {
+    headerTexts: {
         flexShrink: 1,
+        alignItems: 'flex-start'
+    },
+    headerTitle: {
         textAlign: 'left'
+    },
+    headerSelected: {
+        textAlign: 'left',
+        marginTop: 2
+    },
+    windowButton: {
+        width: 'auto',
+        paddingVertical: 4,
+        paddingHorizontal: 12,
+        borderRadius: 20 // Radius of the ripple effect
+    },
+    windowButtonBackground: {
+        borderRadius: 20
     },
     plot: {
         flexDirection: 'row',
@@ -93,19 +112,22 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center'
     },
-    glow: {
-        position: 'absolute',
-        bottom: -2
+    bar: {
+        borderTopLeftRadius: 2,
+        borderTopRightRadius: 2
     },
     emptyDot: {
         width: 3,
         height: 3,
         borderRadius: 2
     },
+    // Labels are wider than a narrow slot and overflow it evenly, so a date never wraps
     dayLabel: {
+        width: LABEL_WIDTH,
         marginTop: 4
     },
     monthLabel: {
+        width: LABEL_WIDTH,
         marginTop: -2
     }
 });

@@ -20,6 +20,9 @@ const styles = StyleSheet.create({
         gap: 6
     },
     center: {
+        alignItems: 'center'
+    },
+    counter: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 2

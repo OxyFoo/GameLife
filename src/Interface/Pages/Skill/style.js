@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24
     },
     title: {
+        marginBottom: 12,
         textAlign: 'left',
         fontSize: 21
     },
@@ -59,20 +60,6 @@ const styles = StyleSheet.create({
     },
 
     // Informations
-    infoTitleRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 12
-    },
-    rateWindowButton: {
-        width: 'auto',
-        paddingVertical: 4,
-        paddingHorizontal: 10
-    },
-    rateWindowButtonBackground: {
-        borderRadius: 14
-    },
     infoContainer: {
         marginBottom: 12
     },
@@ -97,12 +84,19 @@ const styles = StyleSheet.create({
 
     // Skill chart
     skillChart: {
-        marginBottom: 12
+        marginBottom: 24
     },
 
     // History
     historyButton: {
-        marginBottom: 12
+        width: 'auto',
+        marginHorizontal: 24,
+        marginBottom: 12,
+        paddingVertical: 12,
+        borderRadius: 12
+    },
+    historyButtonBackground: {
+        borderRadius: 12
     },
     historyTitle: {
         marginTop: 24,

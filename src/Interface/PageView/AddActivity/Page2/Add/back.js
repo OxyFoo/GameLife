@@ -5,7 +5,8 @@ import langManager from 'Managers/LangManager';
 
 import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { MinMax } from 'Utils/Functions';
-import { GetDate, GetLocalTime } from 'Utils/Time';
+import { FormatDurationShort } from 'Utils/Date';
+import { GetDate, GetLocalTime, GetWeekEndTime, GetWeekIndex } from 'Utils/Time';
 import {
     AddActivity,
     EditActivity,
@@ -18,6 +19,7 @@ import {
 /**
  * @typedef {import('react-native').View} View
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
+ * @typedef {import('Data/User/Activities/index').OxQuote} OxQuote
  * @typedef {import('Interface/Components').Digit} Digit
  * @typedef {import('Interface/Components').InputText} InputText
  *
@@ -54,8 +56,14 @@ class BackActivityPage2Add extends React.Component {
 
         DTPDate: new Date(),
 
-        loading: false
+        loading: false,
+
+        /** Bumped when the ox balance changes, to re-render the prices and the greyed buttons */
+        oxTick: 0
     };
+
+    /** @type {Symbol | null} */
+    #oxListener = null;
 
     /** @param {BackActivityPage2AddPropsType} props */
     constructor(props) {
@@ -65,6 +73,67 @@ class BackActivityPage2Add extends React.Component {
         this.state.selectedHours = Math.floor(activity.duration / 60);
         this.state.selectedMinutes = activity.duration % 60;
     }
+
+    componentDidMount() {
+        this.#oxListener = user.informations.ox.AddListener(() => {
+            this.setState({ oxTick: this.state.oxTick + 1 });
+        });
+    }
+
+    componentWillUnmount() {
+        user.informations.ox.RemoveListener(this.#oxListener);
+    }
+
+    /**
+     * Price of deleting the activity being edited
+     * @returns {OxQuote | null}
+     */
+    getRemoveQuote = () => {
+        const { baseActivity } = this.props;
+        return baseActivity === null ? null : user.activities.GetDeleteOxQuote(baseActivity);
+    };
+
+    /**
+     * Price of the current edition of the activity
+     * @returns {OxQuote | null}
+     */
+    getEditQuote = () => {
+        const { activity, baseActivity } = this.props;
+        if (baseActivity === null || !this.isEdited()) {
+            return null;
+        }
+        return user.activities.GetEditOxQuote(baseActivity, activity);
+    };
+
+    /**
+     * No costly deletion or edition while the balance is negative (same rule as the server)
+     * @param {OxQuote | null} quote
+     * @returns {boolean}
+     */
+    isOxBlocked = (quote) => quote !== null && user.activities.IsOxOperationBlocked(quote);
+
+    /**
+     * Signed ox change of adding the current activity
+     * @returns {number}
+     */
+    getAddDelta = () => {
+        const { activity, baseActivity } = this.props;
+        return baseActivity === null ? user.activities.GetOxReward(activity) : 0;
+    };
+
+    /**
+     * Time before the weekly base price is back, for the hint (the slot may be taken by a
+     * pending operation of this device: next Monday 00:00 UTC then)
+     * @returns {string}
+     */
+    getSlotCountdown = () => {
+        const now = GetLocalTime();
+        const stored = user.informations.oxFreeSlotUntil;
+        // A stale expiry (the slot is taken by a pending operation of this device) counts to the
+        // next Monday 00:00 UTC, like the server will
+        const until = stored !== null && stored > now ? stored : GetWeekEndTime(GetWeekIndex(now, 0), 0);
+        return FormatDurationShort(until - now);
+    };
 
     onAddActivity = async () => {
         const { activity, baseActivity } = this.props;
@@ -120,7 +189,12 @@ class BackActivityPage2Add extends React.Component {
 
         if (user.server2.IsAuthenticated() && removedStatus === 'removed') {
             const saved = await user.activities.SaveOnline();
-            if (!saved) {
+            if (!saved && user.activities.WasOxOperationDiscarded(baseActivity)) {
+                // Refused and explained by the data layer, the activity is back: stay on it
+                this.setState({ loading: false });
+                return;
+            }
+            if (!saved && user.activities.lastSaveOnlineError === null) {
                 await new Promise((resolve) => {
                     user.interface.popup?.OpenT({
                         type: 'ok',

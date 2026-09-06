@@ -49,6 +49,13 @@ class Informations extends IUserData {
 
     xp = 0;
     ox = new DynamicVar(0);
+
+    /**
+     * Expiry (unix seconds) of the weekly base-price slot for activity deletions/editions once it
+     * has been used, null while the base price is available. Set by the server.
+     * @type {number | null}
+     */
+    oxFreeSlotUntil = null;
     adRemaining = 0;
     adTotalWatched = 0;
 
@@ -67,6 +74,7 @@ class Informations extends IUserData {
         this.UNSAVED_birthTime = null;
         this.xp = 0;
         this.ox.Set(0);
+        this.oxFreeSlotUntil = null;
         this.adRemaining = 0;
         this.adTotalWatched = 0;
         this.zapGPT = { remaining: 0, total: 0 };
@@ -86,6 +94,7 @@ class Informations extends IUserData {
         if (typeof data.UNSAVED_birthTime !== 'undefined') this.UNSAVED_birthTime = data.UNSAVED_birthTime;
         if (typeof data.xp !== 'undefined') this.xp = data.xp;
         if (typeof data.ox !== 'undefined') this.ox.Set(data.ox);
+        if (typeof data.oxFreeSlotUntil !== 'undefined') this.oxFreeSlotUntil = data.oxFreeSlotUntil;
         if (typeof data.adRemaining !== 'undefined') this.adRemaining = data.adRemaining;
         if (typeof data.adTotalWatched !== 'undefined') this.adTotalWatched = data.adTotalWatched;
         if (typeof data.achievementSelfFriend !== 'undefined') this.achievementSelfFriend = data.achievementSelfFriend;
@@ -104,6 +113,7 @@ class Informations extends IUserData {
             UNSAVED_birthTime: this.UNSAVED_birthTime,
             xp: this.xp,
             ox: this.ox.Get(),
+            oxFreeSlotUntil: this.oxFreeSlotUntil,
             adRemaining: this.adRemaining,
             adTotalWatched: this.adTotalWatched,
             achievementSelfFriend: this.achievementSelfFriend,
@@ -127,14 +137,25 @@ class Informations extends IUserData {
         }
 
         // Load data
-        const { Username, Lang, LastChangeUsername, Title, Ox, Birthtime, LastChangeBirth, AccountAge, AdRemaining } =
-            response.data;
+        const {
+            Username,
+            Lang,
+            LastChangeUsername,
+            Title,
+            Ox,
+            Birthtime,
+            LastChangeBirth,
+            AccountAge,
+            AdRemaining,
+            OxFreeSlotUntil
+        } = response.data;
 
         this.username.Set(Username);
         this.usernameTime = LastChangeUsername;
         await this.user.settings.SetLang(Lang);
         this.title.Set(Title);
         this.ox.Set(Ox);
+        this.oxFreeSlotUntil = OxFreeSlotUntil ?? null;
         this.birthTime = Birthtime;
         this.lastBirthTime = LastChangeBirth;
         this.accountAge = AccountAge;

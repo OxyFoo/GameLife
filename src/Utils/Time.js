@@ -119,6 +119,29 @@ function GetTimeZone() {
 }
 
 /**
+ * Index of the local week (Monday 00:00 to Sunday 23:59) containing a time, in a timezone.
+ * Week 0 starts on Monday 1969-12-29 (day 0 of the epoch, 1970-01-01, is a Thursday).
+ * Same helper on the server side (weekly limit of costly activity operations).
+ * @param {number} time Unix timestamp in seconds (UTC)
+ * @param {number} timezone Offset in hours
+ * @returns {number}
+ */
+function GetWeekIndex(time, timezone) {
+    const localDay = Math.floor((time + timezone * 3600) / DAY_TIME);
+    return Math.floor((localDay + 3) / 7);
+}
+
+/**
+ * First instant after a local week: the next Monday 00:00 in the timezone
+ * @param {number} weekIndex See GetWeekIndex
+ * @param {number} timezone Offset in hours
+ * @returns {number} Unix timestamp in seconds (UTC)
+ */
+function GetWeekEndTime(weekIndex, timezone) {
+    return ((weekIndex + 1) * 7 - 3) * DAY_TIME - timezone * 3600;
+}
+
+/**
  * @param {number} year
  * @returns {number} Days count in year
  */
@@ -143,5 +166,7 @@ export {
     GetTimeToTomorrow,
     GetDaysUntil,
     GetTimeZone,
+    GetWeekIndex,
+    GetWeekEndTime,
     GetDaysCountInYear
 };

@@ -9,8 +9,9 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
-import { Text, Button, Icon, KeyboardSpacerView } from 'Interface/Components';
+import { Text, Button, Icon, KeyboardSpacerView, OxAmount } from 'Interface/Components';
 import { Round } from 'Utils/Functions';
+import { GetLocalTime } from 'Utils/Time';
 
 class AddActivityPage2 extends BackActivityPage2 {
     render() {
@@ -85,14 +86,21 @@ class AddActivityPage2 extends BackActivityPage2 {
         const lang = langManager.curr['activity'];
         const langXP = langManager.curr['level'];
         const langStats = langManager.curr['statistics']['names'];
-        const { activity } = this.props;
+        const { activity, editActivity } = this.props;
 
         const skill = dataManager.skills.GetByID(activity.skillID);
         if (skill === null) {
             return null;
         }
 
-        const XP = Round((skill.XP * activity.duration) / 60, 2);
+        // The version that will be stored: an edit of the skill, start or duration is re-stamped
+        // (the 48h rule applies to it), an addition is stamped with now
+        const stamped =
+            editActivity === null
+                ? { ...activity, addedTime: activity.addedTime || GetLocalTime() }
+                : user.activities.StampEdition(editActivity, activity);
+
+        const XP = Round((skill.XP * stamped.duration) / 60, 2);
         if (XP === 0) {
             return (
                 <Text fontSize={14} color='main1'>
@@ -102,14 +110,14 @@ class AddActivityPage2 extends BackActivityPage2 {
         }
 
         // XP not granted
-        const activityStatus = user.activities.GetExperienceStatus(activity);
+        const activityStatus = user.activities.GetExperienceStatus(stamped);
         if (activityStatus === 'beforeLimit') {
             return (
                 <Text fontSize={14} color='main1'>
                     {lang['title-before-limit']}
                 </Text>
             );
-        } else if (activityStatus === 'isNotPast' && this.props.editActivity !== null) {
+        } else if (activityStatus === 'isNotPast' && editActivity !== null) {
             return (
                 <Text fontSize={14} color='main1'>
                     {lang['title-not-past']}
@@ -117,9 +125,11 @@ class AddActivityPage2 extends BackActivityPage2 {
             );
         }
 
-        // Ox (1/min): 0 means the 12h/day limit is reached, XP is not granted either
-        const ox = user.activities.GetOxReward(activity, this.props.editActivity);
-        if (ox === 0) {
+        // Ox brought by the activity, previewed as if it were done. In edit mode the header keeps
+        // showing what the new version is worth; the signed price of the change (penalty included)
+        // is on the Edit button, so the two numbers never contradict each other.
+        const ox = editActivity === null ? user.activities.GetOxReward(activity) : null;
+        if (ox === 0 && activityStatus === 'grant') {
             return (
                 <Text fontSize={14} color='main1'>
                     {lang['title-limit-reached']}
@@ -132,10 +142,14 @@ class AddActivityPage2 extends BackActivityPage2 {
         return (
             <>
                 <Text fontSize={14} color='main1'>{`+ ${XP} ${langXP['xp']} / `}</Text>
-                <Icon icon='ox' size={16} />
-                <Text fontSize={14} color='main1'>{` ${lang['title-ox'].replace('{}', ox.toString())} /`}</Text>
+                {ox !== null && <OxAmount value={ox} signed fontSize={14} color='main1' />}
+                {ox !== null && (
+                    <Text fontSize={14} color='main1'>
+                        {' /'}
+                    </Text>
+                )}
                 {usefulStats.map((stat) => {
-                    const statXP = Round((skill.Stats[stat] * activity.duration) / 60, 2);
+                    const statXP = Round((skill.Stats[stat] * stamped.duration) / 60, 2);
                     return (
                         <Text
                             key={`stat-text-${stat}`}

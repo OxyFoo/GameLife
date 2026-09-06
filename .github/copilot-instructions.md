@@ -268,13 +268,22 @@ rester strictement identiques :
   `Services/GameLife/Activities.ts` côté serveur.
 - **Limite 12 h / jour local** (tout-ou-rien, chronologique, seules les compétences avec XP
   consomment le budget) : `Activities.#applyDailyLimit` (app) et `GameLifeActivites.#computeDueOx` (serveur).
-- **Ox par activité** : 1 Ox / minute, même éligibilité que l'XP (règle des 48 h + limite 12 h,
-  0 Ox pour les compétences à 0 XP). L'app n'affiche qu'un aperçu (`user.activities.GetOxReward`) ;
-  le crédit réel est fait par `save-activities` (`SettleOx`, registre dans `Logs` type `activityOx`)
-  et renvoyé dans `result.ox` / `result.oxGained`.
+- **Économie des Ox des activités** : une seule simulation pure, **miroir exact** entre
+  `src/Data/User/Activities/oxEconomy.js` et `GameLife-Server/src/Services/GameLife/OxEconomy.ts`
+  (mêmes scénarios S1…S16 dans les deux suites de tests). 1 Ox / minute avec l'éligibilité de l'XP ;
+  supprimer ou éditer règle la différence signée ; première opération coûteuse de la semaine
+  (lundi 00:00 UTC) au prix de base, les suivantes +50 % ; solde possiblement négatif, puis plus
+  d'opération coûteuse. L'app ne fait que **prévisualiser** (`user.activities.SimulateOx`,
+  `GetDeleteOxQuote`, `GetEditOxQuote`, `GetOxReward`) en rejouant ses seaux en attente sur son
+  instantané serveur ; le serveur règle dans une transaction verrouillée par compte
+  (`GameLifeActivites.Save`) et renvoie `ox`, `oxDelta`, `oxPenalty`, `oxFreeSlotUntil`.
+  Le devis confirmé est figé (`oxQuotedDelta` → `oxExpectedDelta`) et l'opération gratuite désignée
+  (`oxFreeKey`) ; le serveur répond `ox-quote-changed` / `ox-negative` plutôt que d'appliquer un
+  montant non vu.
 
 Toute modification de l'une de ces règles doit être reportée aux deux endroits, et couverte par
-`src/Data/User/Activities/__tests__/Activities-test.js`.
+`src/Data/User/Activities/__tests__/{Activities,oxEconomy}-test.js` et
+`GameLife-Server/src/Services/GameLife/__tests__/OxEconomy.test.ts`.
 
 ## Communication serveur
 

@@ -6,7 +6,7 @@ import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import { DEFAULT_ACTIVITY } from 'Data/User/Activities';
 
-import { Text, Icon } from 'Interface/Components';
+import { Text, OxAmount } from 'Interface/Components';
 import { DateFormat } from 'Utils/Date';
 import { TIME_STEP_MINUTES } from 'Utils/Activities';
 import { GetDate, GetLocalTime, RoundTimeTo } from 'Utils/Time';
@@ -112,8 +112,7 @@ class ActivityTimerTimer extends React.Component {
                 <Text style={styles.startText}>{lang['timer-launch'] + ' ' + displayInitialTime}</Text>
                 <Text style={styles.durationText}>{displayCurrentTime}</Text>
                 <View style={styles.oxContainer}>
-                    <Icon icon='ox' size={20} />
-                    <Text style={styles.oxText}>{lang['title-ox'].replace('{}', displayOx.toString())}</Text>
+                    <OxAmount value={displayOx} signed fontSize={16} iconSize={20} />
                 </View>
             </View>
         );

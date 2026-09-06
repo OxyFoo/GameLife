@@ -7,7 +7,7 @@ import styles from './style';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text, Button, Icon, InputText, Digit } from 'Interface/Components';
+import { Text, Button, Icon, InputText, Digit, OxAmount } from 'Interface/Components';
 import { GetDate } from 'Utils/Time';
 import { DateFormat } from 'Utils/Date';
 import { MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
@@ -31,6 +31,25 @@ class AddActivityPage2Add extends BackActivityPage2Add {
         const styleBorderColor = {
             borderColor: themeManager.GetColor('border')
         };
+
+        // Ox prices of the three actions and the greyed state (no costly operation while negative)
+        const removeQuote = this.getRemoveQuote();
+        const editQuote = this.getEditQuote();
+        const addDelta = this.getAddDelta();
+        const removeBlocked = this.isOxBlocked(removeQuote);
+        const editBlocked = this.isOxBlocked(editQuote);
+        const penalised = (removeQuote?.penalty ?? 0) > 0 || (editQuote?.penalty ?? 0) > 0;
+        const disabledColor = themeManager.GetColor('disabled');
+
+        /** @type {string | null} */
+        let oxHint = null;
+        if (removeBlocked || editBlocked) {
+            oxHint = lang['hint-ox-negative'];
+        } else if (penalised) {
+            oxHint = lang['hint-ox-penalty'].replace('{}', this.getSlotCountdown());
+        } else if (addDelta < 0) {
+            oxHint = lang['hint-ox-addition-loss'];
+        }
 
         return (
             <View ref={nativeRef} collapsable={false}>
@@ -183,30 +202,80 @@ class AddActivityPage2Add extends BackActivityPage2Add {
                     multiline
                 />
 
-                {/* Button: Add to planner */}
+                {/* Button: Add to planner (signed ox change of the day when it is not a plain gain) */}
                 {baseActivity === null && (
                     <Button style={styles.addActivityButton} onPress={this.onAddActivity} loading={loading}>
-                        {lang['button-add']}
+                        <View style={styles.buttonContent}>
+                            <Text fontSize={16} color='darkBlue'>
+                                {lang['button-add']}
+                            </Text>
+                        </View>
                     </Button>
                 )}
 
-                {/* Button: Edit activity */}
-                {baseActivity !== null && this.isEdited() && (
-                    <Button style={styles.addActivityButton} onPress={this.onAddActivity} loading={loading}>
-                        {lang['button-edit']}
+                {/* Button: Edit activity (signed ox change, penalty included; greyed while negative) */}
+                {baseActivity !== null && this.isEdited() && editQuote !== null && (
+                    <Button
+                        style={styles.addActivityButton}
+                        gradientColors={editBlocked ? [disabledColor, disabledColor] : undefined}
+                        onPress={this.onAddActivity}
+                        loading={loading}
+                        enabled={!editBlocked}
+                    >
+                        <View style={styles.buttonContent}>
+                            <Text fontSize={16} color='darkBlue'>
+                                {lang['button-edit']}
+                            </Text>
+                            {editQuote.total > 0 && (
+                                <OxAmount
+                                    style={styles.buttonOx}
+                                    value={-editQuote.total}
+                                    signed
+                                    color={editBlocked ? 'error' : 'darkBlue'}
+                                />
+                            )}
+                            {editQuote.total === 0 && editQuote.delta > 0 && (
+                                <OxAmount style={styles.buttonOx} value={editQuote.delta} signed color='darkBlue' />
+                            )}
+                        </View>
                     </Button>
                 )}
 
-                {/* Button: Remove activity */}
-                {baseActivity !== null && (
+                {/* Button: Remove activity (price of the deletion; greyed while negative) */}
+                {baseActivity !== null && removeQuote !== null && (
                     <Button
                         style={styles.addActivityButton}
                         appearance='outline'
+                        fontColor='primary'
+                        borderColor={removeBlocked ? 'disabled' : 'border'}
                         onPress={this.onRemoveActivity}
                         loading={loading}
+                        enabled={!removeBlocked}
                     >
-                        {lang['button-remove']}
+                        <View style={styles.buttonContent}>
+                            <Text fontSize={16} color='primary'>
+                                {lang['button-remove']}
+                            </Text>
+                            {removeQuote.total > 0 && (
+                                <OxAmount
+                                    style={styles.buttonOx}
+                                    value={-removeQuote.total}
+                                    signed
+                                    color={removeBlocked ? 'error' : 'primary'}
+                                />
+                            )}
+                            {removeQuote.total === 0 && removeQuote.delta > 0 && (
+                                <OxAmount style={styles.buttonOx} value={removeQuote.delta} signed color='primary' />
+                            )}
+                        </View>
                     </Button>
+                )}
+
+                {/* Why the price is what it is */}
+                {oxHint !== null && (
+                    <Text style={styles.oxHint} fontSize={12} color='secondary'>
+                        {oxHint}
+                    </Text>
                 )}
 
                 {/** Date/Time selection */}

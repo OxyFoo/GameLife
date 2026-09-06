@@ -17,6 +17,29 @@ const DAYS = {
 };
 
 /**
+ * Short human-readable duration, rounded down to the minute and without empty parts:
+ * "3 j 4 h", "3 j", "5 h 12 m", "45 m", "0 m"
+ * @param {number} seconds
+ * @returns {string}
+ */
+function FormatDurationShort(seconds) {
+    const names = langManager.curr['dates']['names'];
+
+    const totalMinutes = Math.max(0, Math.floor(seconds / 60));
+    const days = Math.floor(totalMinutes / (24 * 60));
+    const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+    const minutes = totalMinutes % 60;
+
+    if (days > 0) {
+        return `${days} ${names['day-min']}` + (hours > 0 ? ` ${hours} ${names['hours-min']}` : '');
+    }
+    if (hours > 0) {
+        return `${hours} ${names['hours-min']}` + (minutes > 0 ? ` ${minutes} ${names['minutes-min']}` : '');
+    }
+    return `${minutes} ${names['minutes-min']}`;
+}
+
+/**
  * Return day number (0-6)
  * @param {Date} date Date object
  * @param {number} [firstDay] First day of week, default: 1 (monday)
@@ -114,4 +137,13 @@ function DateToFormatTimeString(date) {
     return [HH, MM].join(':');
 }
 
-export { DAYS, GetDay, GetMonthAndYear, GetFullDate, DateToFormatString, DateToFormatTimeString, DateFormat };
+export {
+    DAYS,
+    GetDay,
+    GetMonthAndYear,
+    GetFullDate,
+    DateToFormatString,
+    DateToFormatTimeString,
+    DateFormat,
+    FormatDurationShort
+};

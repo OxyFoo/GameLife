@@ -141,7 +141,8 @@ class ShopHeader extends React.Component {
         const { adState, oxAmount, oxGain } = this.state;
 
         const oxAmountStr = oxAmount.toString();
-        const oxTextSize = oxAmountStr.length < 3 ? 16 : 20 - oxAmountStr.length;
+        const oxDigits = Math.abs(oxAmount).toString().length;
+        const oxTextSize = oxDigits < 3 ? 16 : 20 - oxDigits;
 
         const isAdError = adState === 'error' || adState === 'notAvailable';
         const isAdLoading = adState === 'wait';

@@ -7,7 +7,7 @@ import dataManager from 'Managers/DataManager';
 
 // import Notifications from 'Utils/Notifications';
 import { AddActivity as AddActivityView } from 'Interface/Widgets';
-import { Icon, Text } from 'Interface/Components';
+import { OxAmount } from 'Interface/Components';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
@@ -98,19 +98,14 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
 }
 
 /**
- * "+ x Ox" mention shown under the success message of the display page
+ * Ox brought by the activity, shown under the success message of the display page
  * @param {number} ox
  * @returns {React.JSX.Element}
  */
 function renderOxMention(ox) {
-    const lang = langManager.curr['activity'];
-
     return (
         <View style={styles.oxMention}>
-            <Icon icon='ox' size={24} />
-            <Text fontSize={18} style={styles.oxMentionText}>
-                {lang['title-ox'].replace('{}', ox.toString())}
-            </Text>
+            <OxAmount value={ox} signed fontSize={18} iconSize={24} />
         </View>
     );
 }
@@ -121,6 +116,9 @@ function renderOxMention(ox) {
  */
 async function AddActivity(activity) {
     const lang = langManager.curr['activity'];
+
+    // Ox brought by the activity (preview of the server settlement, computed before it is queued)
+    const oxPreview = user.activities.GetOxReward(activity);
 
     const { status, activity: addedActivity } = user.activities.Add({
         skillID: activity.skillID,
@@ -181,14 +179,18 @@ async function AddActivity(activity) {
     if (user.server2.IsAuthenticated()) {
         const saved = await user.activities.SaveOnline();
         if (!saved) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-error-title'],
-                    message: lang['alert-error-message'].replace('{}', 'save online')
-                }
-            });
-            return false;
+            // Refused by the server (negative balance, price changed): already explained there.
+            // Additions are never refused for their price, so this one is simply not saved yet.
+            if (user.activities.lastSaveOnlineError === null) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-error-title'],
+                        message: lang['alert-error-message'].replace('{}', 'save online')
+                    }
+                });
+                return false;
+            }
         }
     }
 
@@ -207,15 +209,12 @@ async function AddActivity(activity) {
         );
     }
 
-    // Ox brought by the activity (preview, the server grants the real amount at save)
-    const ox = addedActivity ? user.activities.GetOxReward(addedActivity) : 0;
-
     // Display the activity
     user.interface.ChangePage('display', {
         args: {
             icon: 'check-filled',
             text: lang['display-activity-text'],
-            additionalContent: ox > 0 ? renderOxMention(ox) : undefined,
+            additionalContent: oxPreview !== 0 ? renderOxMention(oxPreview) : undefined,
             quote: dataManager.quotes.GetRandomQuote(),
             button: lang['display-activity-button'],
             button2: lang['display-activity-button2'],
@@ -269,16 +268,33 @@ async function AddActivity(activity) {
 async function EditActivity(oldActivity, newActivity, confirm = false) {
     const lang = langManager.curr['activity'];
 
+    // Price of the edition; a costly one is refused while the balance is negative
+    const quote = user.activities.GetEditOxQuote(oldActivity, newActivity);
+    if (user.activities.IsOxOperationBlocked(quote)) {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-ox-negative-title'],
+                message: lang['alert-ox-negative-message']
+            }
+        });
+        return false;
+    }
+
     const { status, activity } = user.activities.Edit(oldActivity, newActivity, confirm);
 
     // Manage confirmation
     if (status === 'needConfirmation') {
+        let message = lang['alert-needconfirmation-message'];
+        if (quote.total > 0) {
+            message += ' ' + lang['alert-needconfirmation-cost'].replace('{}', quote.total.toString());
+        }
         return new Promise((resolve) => {
             user.interface.popup?.OpenT({
                 type: 'yesno',
                 data: {
                     title: lang['alert-needconfirmation-title'],
-                    message: lang['alert-needconfirmation-message']
+                    message
                 },
                 callback: async (button) => {
                     if (button === 'yes') {
@@ -324,13 +340,21 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
     if (user.server2.IsAuthenticated()) {
         const saved = await user.activities.SaveOnline();
         if (!saved) {
-            user.interface.popup?.OpenT({
-                type: 'ok',
-                data: {
-                    title: lang['alert-error-title'],
-                    message: lang['alert-error-message'].replace('{}', 'save online')
+            // Refused by the server (negative balance, price changed): when THIS edition is the
+            // one that was cancelled, it is already reverted and explained by the data layer
+            if (user.activities.lastSaveOnlineError !== null) {
+                if (user.activities.WasOxOperationDiscarded(oldActivity)) {
+                    return false;
                 }
-            });
+            } else {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-error-title'],
+                        message: lang['alert-error-message'].replace('{}', 'save online')
+                    }
+                });
+            }
         }
     }
 
@@ -363,12 +387,32 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
 async function RemoveActivity(activity) {
     const lang = langManager.curr['activity'];
 
+    // Price of the deletion; a costly one is refused while the balance is negative
+    const quote = user.activities.GetDeleteOxQuote(activity);
+    if (user.activities.IsOxOperationBlocked(quote)) {
+        user.interface.popup?.OpenT({
+            type: 'ok',
+            data: {
+                title: lang['alert-ox-negative-title'],
+                message: lang['alert-ox-negative-message']
+            }
+        });
+        return 'cancel';
+    }
+
+    let message = lang['alert-remove-message'];
+    if (quote.total > 0) {
+        message += '\n\n' + lang['alert-remove-cost'].replace('{}', quote.total.toString());
+    } else if (quote.delta > 0) {
+        message += '\n\n' + lang['alert-remove-gain'].replace('{}', quote.delta.toString());
+    }
+
     return new Promise((resolve) => {
         user.interface.popup?.OpenT({
             type: 'yesno',
             data: {
                 title: lang['alert-remove-title'],
-                message: lang['alert-remove-message']
+                message
             },
             callback: (button) => {
                 // Popup closed
@@ -420,12 +464,7 @@ function Back() {
 
 const styles = StyleSheet.create({
     oxMention: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    oxMentionText: {
-        marginLeft: 8
+        alignItems: 'center'
     }
 });
 

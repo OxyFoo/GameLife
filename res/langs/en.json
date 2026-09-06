@@ -476,12 +476,10 @@
         "btn-stats": "Statistics",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
-        "btn-more-info": "More info",
 
         "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
         "chart-click-me": "click-me!",
 
-        "container-stats-title": "My infos",
         "container-skills-title": "Skills",
         "container-skills-empty": "No skills yet, do one and it will appear here !",
         "container-achievements-empty": "No achievements yet, go for it!",
@@ -619,7 +617,6 @@
         "kpi-friends": "friends",
 
         "container-achievements-title": "Last achievements",
-        "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
 
         "btn-edit-profile": "Change my appearance",

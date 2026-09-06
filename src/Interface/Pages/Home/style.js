@@ -21,17 +21,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'stretch',
         justifyContent: 'space-between',
-        gap: 12
+        gap: 12,
+        marginBottom: 24
     },
 
     // Two columns layout
+    mainContentContainer: {
+        marginBottom: 24
+    },
     leftColumn: {
         maxWidth: '50%',
         paddingRight: 8
     },
     rightColumn: {
         position: 'absolute',
-        top: -40,
+        top: -60,
         left: 0,
         right: '-65%',
         alignItems: 'center',

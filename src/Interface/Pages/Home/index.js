@@ -61,11 +61,10 @@ class Home extends BackHome {
                 </View>
 
                 {/* Main stats & avatar */}
-                <View>
+                <View style={styles.mainContentContainer}>
                     {/* Left column: Stats, Skills, Achievements */}
                     <View style={styles.leftColumn}>
                         {/* Stats title + widget */}
-                        <Title title={lang['container-stats-title']} />
                         <StatsRadar />
 
                         {/* Skills title + widget */}
@@ -93,7 +92,6 @@ class Home extends BackHome {
                 {/* <Title title={lang['btn-achievements']} />
                 <AchievementPreview /> */}
 
-                <Title title={lang['btn-more-info']} />
                 <MoreInfo style={styles.lastWidget} />
             </ScrollView>
         );

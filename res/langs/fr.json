@@ -476,12 +476,10 @@
         "btn-stats": "Statistiques",
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
-        "btn-more-info": "Plus d'infos",
 
         "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
         "chart-click-me": "clique ici !",
 
-        "container-stats-title": "Mes infos",
         "container-skills-title": "Compétences",
         "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
         "container-achievements-empty": "Aucun succès débloqué, lance-toi !",
@@ -619,7 +617,6 @@
         "kpi-friends": "amis",
 
         "container-achievements-title": "Derniers succès",
-        "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
 
         "btn-edit-profile": "Modifier mon apparence",

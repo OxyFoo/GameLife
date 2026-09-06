@@ -7,7 +7,7 @@ import { RenderActivity, RenderDay } from './elements';
 import { CardHeader, CardSeparator, CardFooter } from './AddButtons';
 import langManager from 'Managers/LangManager';
 
-import { ActivityTimeline, Button, Icon, Text } from 'Interface/Components';
+import { ActivityTimeline, Button, Icon, OxAmount, Text } from 'Interface/Components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const INITIAL_SCROLL_INDEX = (TOTAL_DAYS_COUNT - SCREEN_WIDTH / getItemLayout(null, 0).length + 1) / 2;
@@ -17,6 +17,7 @@ class Calendar extends BackCalendar {
         const lang = langManager.curr['calendar'];
         const {
             activities,
+            oxAmount,
             todayStrDate,
             selectedDay,
             selectedMonth,
@@ -48,6 +49,16 @@ class Calendar extends BackCalendar {
                                 <Icon icon='share-2-outline' color='gradient' size={20} />
                             </Button>
                         )}
+
+                        {/* Ox owned, like the shop badge: tap to open the shop */}
+                        <Button
+                            style={styles.oxButton}
+                            appearance='uniform'
+                            color='transparent'
+                            onPress={this.openShop}
+                        >
+                            <OxAmount value={oxAmount} fontSize={16} iconSize={20} />
+                        </Button>
                     </View>
 
                     <View style={styles.summaryHoursContent}>

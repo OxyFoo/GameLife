@@ -41,6 +41,12 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 6
     },
+    oxButton: {
+        width: 'auto',
+        flexShrink: 0,
+        paddingVertical: 6,
+        paddingHorizontal: 6
+    },
     summaryHoursContent: {
         marginBottom: 2,
         flexDirection: 'row',

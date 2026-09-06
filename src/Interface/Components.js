@@ -15,6 +15,7 @@ export { LineChartSvg } from './Components/LineChartSvg';
 export { ProgressBar } from './Components/ProgressBar';
 export { ProgressDonut } from './Components/ProgressDonut';
 export { RadarChart } from './Components/RadarChart';
+export { OxAmount } from './Components/OxAmount';
 export { Reward } from './Components/Reward';
 export { Separator } from './Components/Separator';
 export { StreakCard } from './Components/StreakCard';

@@ -56,11 +56,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         backgroundColor: '#38406573',
         borderRadius: 8
-    },
-    oxText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginRight: 6
     }
 });
 

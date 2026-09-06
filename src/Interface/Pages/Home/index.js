@@ -9,8 +9,7 @@ import { Experience } from './Experience';
 import { TodayActivitiesPieChart } from './TodayActivitiesPieChart';
 import { StatsRadar } from './StatsRadar';
 import { SkillsTags } from './SkillsTags';
-// TODO: Delete ?
-// import { AchievementPreview } from './AchievementPreview';
+import { AchievementsPreview } from './AchievementsPreview';
 import { MoreInfo } from './MoreInfo';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -70,6 +69,9 @@ class Home extends BackHome {
                         {/* Skills title + widget */}
                         {/* <Title title={lang['container-skills-title']} /> */}
                         <SkillsTags style={styles.sectionMoreData} refParent={this.refSkillsTags} />
+
+                        {/* Achievements title + widget */}
+                        <AchievementsPreview style={styles.sectionMoreData} />
                     </View>
 
                     {/* Right column: Avatar with parallax */}
@@ -87,10 +89,6 @@ class Home extends BackHome {
                         </TouchableOpacity>
                     </Animated.View>
                 </View>
-
-                {/* Achievements title + widget */}
-                {/* <Title title={lang['btn-achievements']} />
-                <AchievementPreview /> */}
 
                 <MoreInfo style={styles.lastWidget} />
             </ScrollView>

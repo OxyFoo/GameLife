@@ -76,6 +76,7 @@ const Icons = {
     'ox':                       require('./icons/ox').default,
     'planner-outline':          require('./icons/planner-outline').default,
     'planner':                  require('./icons/planner').default,
+    'play':                     require('./icons/play').default,
     'recent-outline':           require('./icons/recent-outline').default,
     'recent':                   require('./icons/recent').default,
     'retry':                    require('./icons/retry').default,

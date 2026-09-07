@@ -115,9 +115,12 @@ class ShopHeader extends React.Component {
     onAdStateChange = (ad, state) => {
         const lang = langManager.curr['server'];
 
+        // Flat-rate ad: RewardOx is only null for ads whose amount is computed server-side
+        const reward = ad.RewardOx ?? 0;
+
         if (state === 'ready') {
             if (user.informations.adRemaining > 0) {
-                this.setState({ adState: 'ready', oxGain: ad.RewardOx });
+                this.setState({ adState: 'ready', oxGain: reward });
             } else {
                 this.setState({ adState: 'notAvailable' });
             }
@@ -126,7 +129,7 @@ class ShopHeader extends React.Component {
                 type: 'ok',
                 data: {
                     title: lang['alert-adsuccess-title'],
-                    message: lang['alert-adsuccess-message'].replace('{}', ad.RewardOx.toString())
+                    message: lang['alert-adsuccess-message'].replace('{}', reward.toString())
                 }
             });
             this.setState({ adState: 'wait' });

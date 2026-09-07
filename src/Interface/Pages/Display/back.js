@@ -22,6 +22,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {(() => void) | null} [args.action2]
  * @property {Quote | null} [args.quote]
  * @property {React.ReactNode} [args.additionalContent]
+ * @property {React.ReactNode} [args.additionalButton] Rendered above the two buttons
  */
 
 /** @type {BackDisplayPropsType} */
@@ -37,7 +38,8 @@ const BackDisplayProps = {
         action: null,
         action2: null,
         quote: undefined,
-        additionalContent: undefined
+        additionalContent: undefined,
+        additionalButton: undefined
     }
 };
 

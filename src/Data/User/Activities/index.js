@@ -211,6 +211,19 @@ class Activities extends IUserData {
     };
 
     /**
+     * Server row of an activity, found by its start time (unique per account: the database has a
+     * UNIQUE key on (AccountID, StartTime)). Null while it has not been saved online.
+     *
+     * `Add()` returns the object pushed into the pending list, which `#purge()` later replaces by
+     * the server one: that reference never carries an ID, this is how the caller gets it.
+     *
+     * @param {number} startTime
+     * @returns {ActivitySaved | null}
+     */
+    GetSavedByStartTime = (startTime) =>
+        this.#SAVED_activities.find((activity) => activity.startTime === startTime) ?? null;
+
+    /**
      * Return the list of activities for the skill
      * @param {number} skillID Skill ID
      * @returns {Activity[]} List of activities

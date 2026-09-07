@@ -1,4 +1,12 @@
-import { DAY_TIME, DueOxForDay, GetLocalDayIndex, PenaltyFor, SimulateBatch } from '../oxEconomy';
+import {
+    AdBonusOx,
+    DAY_TIME,
+    DueOxForDay,
+    GetLocalDayIndex,
+    MarginalOxOfActivity,
+    PenaltyFor,
+    SimulateBatch
+} from '../oxEconomy';
 
 /**
  * @typedef {import('../oxEconomy').OxActivity} OxActivity
@@ -62,6 +70,13 @@ const batch = (partial) => ({
     ...partial
 });
 
+/**
+ * ID of an activity built by `at` (always saved, so never null)
+ * @param {OxActivity} activity
+ * @returns {number}
+ */
+const idOf = (activity) => /** @type {number} */ (activity.id);
+
 describe('[Data] oxEconomy', () => {
     describe('GetLocalDayIndex', () => {
         it('should use the rounded timezone (tinyint column)', () => {
@@ -85,6 +100,77 @@ describe('[Data] oxEconomy', () => {
             late.addedTime = late.startTime + 49 * 3600;
             const future = at(START_DAY + 25, 8, 60);
             expect(DueOxForDay([late, future], NOW, xpOfSkill)).toBe(0);
+        });
+    });
+
+    describe('MarginalOxOfActivity', () => {
+        it('is the duration when the day is far from the budget', () => {
+            const a = at(DAY, 8, 60);
+            const b = at(DAY, 12, 90);
+            expect(MarginalOxOfActivity([a, b], idOf(a), NOW, xpOfSkill)).toBe(60);
+        });
+
+        it('is 0 for a skill without XP', () => {
+            const a = at(DAY, 8, 60, SKILL_NO_XP);
+            const b = at(DAY, 12, 90);
+            expect(MarginalOxOfActivity([a, b], idOf(a), NOW, xpOfSkill)).toBe(0);
+        });
+
+        it('is 0 for an activity that has not started yet', () => {
+            const future = at(DAY + 30, 8, 60);
+            expect(MarginalOxOfActivity([future], idOf(future), NOW, xpOfSkill)).toBe(0);
+        });
+
+        it('is 0 for an activity added more than 48h after its start', () => {
+            const late = at(DAY, 8, 60);
+            late.addedTime = late.startTime + 49 * 3600;
+            expect(MarginalOxOfActivity([late], idOf(late), NOW, xpOfSkill)).toBe(0);
+        });
+
+        it('is 0 for the activity that overflows the 12h budget', () => {
+            const full = at(DAY, 6, 720);
+            const overflow = at(DAY, 20, 60);
+            expect(MarginalOxOfActivity([full, overflow], idOf(overflow), NOW, xpOfSkill)).toBe(0);
+        });
+
+        it('is below its duration when removing it lets a later activity fit back in', () => {
+            // 700 + 60 -> the 60 overflows (760 > 720). Without the 700, the 60 fits: due 60.
+            // The morning activity is thus worth 700 - 60 = 640, not its 700 minutes.
+            const morning = at(DAY, 6, 700);
+            const evening = at(DAY, 20, 60);
+            expect(DueOxForDay([morning, evening], NOW, xpOfSkill)).toBe(700);
+            expect(MarginalOxOfActivity([morning, evening], idOf(morning), NOW, xpOfSkill)).toBe(640);
+        });
+
+        it('is 0 when the ID is absent from the day', () => {
+            const a = at(DAY, 8, 60);
+            expect(MarginalOxOfActivity([a], 999999, NOW, xpOfSkill)).toBe(0);
+        });
+
+        it('never lets the marginals of a day exceed its due', () => {
+            const rows = [at(DAY, 6, 300), at(DAY, 12, 300), at(DAY, 18, 300), at(DAY, 22, 60)];
+            const due = DueOxForDay(rows, NOW, xpOfSkill);
+            const sum = rows.reduce((total, r) => total + MarginalOxOfActivity(rows, idOf(r), NOW, xpOfSkill), 0);
+            expect(sum).toBeLessThanOrEqual(due);
+        });
+    });
+
+    describe('AdBonusOx', () => {
+        it('is half of what the activity brought: the activity pays 1.5x', () => {
+            expect(AdBonusOx(30)).toBe(15);
+            expect(AdBonusOx(600)).toBe(300);
+        });
+
+        it('rounds a half ox up, like PenaltyFor does on the other side', () => {
+            expect(AdBonusOx(25)).toBe(13);
+        });
+
+        it('is 0 when the activity brought nothing', () => {
+            expect(AdBonusOx(0)).toBe(0);
+        });
+
+        it('is never negative', () => {
+            expect(AdBonusOx(-10)).toBe(0);
         });
     });
 

@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 // import Notifications from 'Utils/Notifications';
-import { AddActivity as AddActivityView } from 'Interface/Widgets';
-import { OxAmount } from 'Interface/Components';
+import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention } from 'Interface/Widgets';
+import DynamicVar from 'Utils/DynamicVar';
+import { AdBonusOx } from 'Data/User/Activities/oxEconomy';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
@@ -95,19 +95,6 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
     };
 
     return AddActivity(newActivity);
-}
-
-/**
- * Ox brought by the activity, shown under the success message of the display page
- * @param {number} ox
- * @returns {React.JSX.Element}
- */
-function renderOxMention(ox) {
-    return (
-        <View style={styles.oxMention}>
-            <OxAmount value={ox} signed fontSize={18} iconSize={24} />
-        </View>
-    );
 }
 
 /**
@@ -209,12 +196,32 @@ async function AddActivity(activity) {
         );
     }
 
+    // Offer a rewarded ad to make the activity pay 1.5x. Every condition must hold: without a
+    // server ID (offline, save refused) there is nothing to boost, a planned activity is due 0
+    // server-side even though the preview shows it as if done, and a day already at 12h brings
+    // nothing. The amount is only a preview: the server recomputes it.
+    const savedActivity = user.activities.GetSavedByStartTime(activity.startTime);
+    const oxBonusPreview = AdBonusOx(oxPreview);
+
+    // Ox granted by the ad, 0 until it has been watched. Shared by the mention and the button:
+    // the `args` below are captured once, only a watched value can make the total follow.
+    const bonusOx = new DynamicVar(0);
+    const canBoost =
+        savedActivity !== null &&
+        oxBonusPreview > 0 &&
+        activity.startTime <= GetLocalTime() &&
+        user.server2.IsAuthenticated() &&
+        user.informations.activityBonusRemaining > 0;
+
     // Display the activity
     user.interface.ChangePage('display', {
         args: {
             icon: 'check-filled',
             text: lang['display-activity-text'],
-            additionalContent: oxPreview !== 0 ? renderOxMention(oxPreview) : undefined,
+            additionalContent: oxPreview !== 0 ? <BonusOxMention baseOx={oxPreview} bonusOx={bonusOx} /> : undefined,
+            additionalButton: canBoost ? (
+                <BonusOxAdButton activityID={savedActivity.ID} oxBonusPreview={oxBonusPreview} bonusOx={bonusOx} />
+            ) : undefined,
             quote: dataManager.quotes.GetRandomQuote(),
             button: lang['display-activity-button'],
             button2: lang['display-activity-button2'],
@@ -461,12 +468,6 @@ function Back() {
         }
     });
 }
-
-const styles = StyleSheet.create({
-    oxMention: {
-        alignItems: 'center'
-    }
-});
 
 export {
     TIME_STEP_MINUTES,

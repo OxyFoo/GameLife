@@ -121,6 +121,47 @@ function DueOxForDay(rows, now, xpOfSkill) {
 }
 
 /**
+ * Ox the activity is responsible for on its local day: what the day would lose without it.
+ *
+ * This is NOT its duration. The 12h budget is chronological and all-or-nothing, so removing an
+ * early activity can let a later one fit back in: the marginal contribution of a morning activity
+ * may be far below its duration, or zero.
+ *
+ * Mirror of GameLife-Server/src/Services/GameLife/OxEconomy.ts — any change goes to both sides.
+ *
+ * @param {OxActivity[]} dayRows Every activity of that same local day, the target included
+ * @param {number} activityID
+ * @param {number} now
+ * @param {(skillID: number) => number} xpOfSkill
+ * @returns {number}
+ */
+function MarginalOxOfActivity(dayRows, activityID, now, xpOfSkill) {
+    const withIt = DueOxForDay(dayRows, now, xpOfSkill);
+    const withoutIt = DueOxForDay(
+        dayRows.filter((activity) => activity.id !== activityID),
+        now,
+        xpOfSkill
+    );
+    return Math.max(0, withIt - withoutIt);
+}
+
+/**
+ * Ox granted by one rewarded ad on an activity: half of what it brought, rounded up, so the
+ * activity ends up paying 1.5x. No cap: the 12h daily budget already bounds what an activity can
+ * be worth, and one ad may be watched per activity.
+ *
+ * Same +50% shape and rounding as `PenaltyFor`, on the other side of the ledger.
+ *
+ * Mirror of GameLife-Server/src/Services/GameLife/OxEconomy.ts — any change goes to both sides.
+ *
+ * @param {number} marginal
+ * @returns {number}
+ */
+function AdBonusOx(marginal) {
+    return Math.max(0, Math.ceil(marginal / 2));
+}
+
+/**
  * Extra cost of a costly operation beyond the weekly slot: +50%, rounded up
  * @param {number} cost
  * @returns {number}
@@ -306,6 +347,8 @@ export {
     GetLocalDayIndex,
     DoesGrantXP,
     DueOxForDay,
+    MarginalOxOfActivity,
+    AdBonusOx,
     PenaltyFor,
     KeyOf,
     SimulateBatch

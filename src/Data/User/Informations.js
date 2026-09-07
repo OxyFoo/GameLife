@@ -57,6 +57,8 @@ class Informations extends IUserData {
      */
     oxFreeSlotUntil = null;
     adRemaining = 0;
+    /** Activity ox boosts left today: own daily quota, does not consume `adRemaining` */
+    activityBonusRemaining = 0;
     adTotalWatched = 0;
 
     /** @type {ZapGPTState} */
@@ -76,6 +78,7 @@ class Informations extends IUserData {
         this.ox.Set(0);
         this.oxFreeSlotUntil = null;
         this.adRemaining = 0;
+        this.activityBonusRemaining = 0;
         this.adTotalWatched = 0;
         this.zapGPT = { remaining: 0, total: 0 };
         this.achievementSelfFriend = false;
@@ -96,6 +99,9 @@ class Informations extends IUserData {
         if (typeof data.ox !== 'undefined') this.ox.Set(data.ox);
         if (typeof data.oxFreeSlotUntil !== 'undefined') this.oxFreeSlotUntil = data.oxFreeSlotUntil;
         if (typeof data.adRemaining !== 'undefined') this.adRemaining = data.adRemaining;
+        if (typeof data.activityBonusRemaining !== 'undefined') {
+            this.activityBonusRemaining = data.activityBonusRemaining;
+        }
         if (typeof data.adTotalWatched !== 'undefined') this.adTotalWatched = data.adTotalWatched;
         if (typeof data.achievementSelfFriend !== 'undefined') this.achievementSelfFriend = data.achievementSelfFriend;
         if (typeof data.purchasedCount !== 'undefined') this.purchasedCount = data.purchasedCount;
@@ -115,6 +121,7 @@ class Informations extends IUserData {
             ox: this.ox.Get(),
             oxFreeSlotUntil: this.oxFreeSlotUntil,
             adRemaining: this.adRemaining,
+            activityBonusRemaining: this.activityBonusRemaining,
             adTotalWatched: this.adTotalWatched,
             achievementSelfFriend: this.achievementSelfFriend,
             purchasedCount: this.purchasedCount
@@ -147,6 +154,7 @@ class Informations extends IUserData {
             LastChangeBirth,
             AccountAge,
             AdRemaining,
+            ActivityBonusRemaining,
             OxFreeSlotUntil
         } = response.data;
 
@@ -160,6 +168,7 @@ class Informations extends IUserData {
         this.lastBirthTime = LastChangeBirth;
         this.accountAge = AccountAge;
         this.adRemaining = AdRemaining;
+        this.activityBonusRemaining = ActivityBonusRemaining;
 
         this.user.interface.console?.AddLog('info', `[Ads] Ad remaining loaded: ${this.adRemaining}`);
         this.user.interface.console?.AddLog('info', `[DEBUG] Loaded user data online: ${AccountAge} years old`);

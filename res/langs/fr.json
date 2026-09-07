@@ -413,6 +413,8 @@
         "display-activity-text": "Ton activité a bien été créée !",
         "display-activity-button": "Continuer",
         "display-activity-button2": "Ajouter une autre activité",
+        "display-activity-bonus-ad": "Regarder une pub pour gagner {} Ox de plus",
+        "display-activity-bonus-success": "+{} Ox ! Ton activité rapporte 1,5 fois plus.",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 

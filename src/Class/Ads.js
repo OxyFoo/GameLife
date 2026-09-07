@@ -8,12 +8,15 @@ import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Ads').Ad} Ad
  *
- * @typedef {'shop'} RewardedAds
+ * @typedef {'shop' | 'activity-bonus'} RewardedAds
  * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds | InterstitialAds} AdNames
  *
  * @typedef {'watched' | 'ready' | 'notAvailable' | 'wait' | 'closed' | 'error'} AdStates
  * @typedef {(ad: Ad, state: AdStates) => void} AdEventFunction
+ *
+ * @typedef {(ad: Ad) => Promise<boolean>} AdClaimFunction Ask the server for the reward and apply
+ *   it, when the flat `watch-ad` rate does not fit. Returning false emits the 'error' state.
  */
 
 const AD_KEYWORDS = ['video-game', 'sports'];
@@ -33,6 +36,9 @@ class AdEvent {
 
     /** @type {AdEventFunction | null} Current callback from Get() */
     callback = null;
+
+    /** @type {AdClaimFunction | null} Current claim from Get() */
+    claim = null;
 }
 
 class Ads extends IUserClass {
@@ -65,7 +71,7 @@ class Ads extends IUserClass {
         for (const adMeta of ads) {
             // Rewarded ad
             if (adMeta.Type === 'rewarded') {
-                const adUnitId = __DEV__ ? TestIds.REWARDED : adMeta.Codes['android'];
+                const adUnitId = __DEV__ ? TestIds.REWARDED : adMeta.Codes[Platform.OS];
                 const ad = RewardedAd.createForAdRequest(adUnitId, {
                     requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
                     keywords: AD_KEYWORDS
@@ -83,7 +89,7 @@ class Ads extends IUserClass {
 
             // Interstitial ad
             else if (adMeta.Type === 'interstitial') {
-                const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : adMeta.Codes['android'];
+                const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : adMeta.Codes[Platform.OS];
                 const ad = InterstitialAd.createForAdRequest(adUnitId, {
                     requestNonPersonalizedAdsOnly: !this.user.consent.isPersonalized(),
                     keywords: AD_KEYWORDS
@@ -135,9 +141,10 @@ class Ads extends IUserClass {
     /**
      * @param {Ad['Name']} adName
      * @param {AdEventFunction} callback
+     * @param {AdClaimFunction | null} [claim] Reward claim, when the flat `watch-ad` rate does not fit
      * @returns {AdEvent | null}
      */
-    Get = (adName, callback) => {
+    Get = (adName, callback, claim = null) => {
         // Get ad
         const adEvent = this.adEvents.find((a) => a.meta.Name === adName);
         if (adEvent === undefined) {
@@ -147,6 +154,7 @@ class Ads extends IUserClass {
 
         // Store callback for event handling
         adEvent.callback = callback;
+        adEvent.claim = claim;
 
         // Callback with current state
         if (adEvent.ad.loaded) {
@@ -165,12 +173,15 @@ class Ads extends IUserClass {
      * @param {AdEventFunction} callback
      */
     EventOx = async (type, ad, callback = () => {}) => {
-        if (this.user.informations.adRemaining <= 0 || !this.user.server2.IsAuthenticated()) {
+        if (!this.user.server2.IsAuthenticated()) {
             callback(ad.meta, 'notAvailable');
             return;
         }
 
-        let response;
+        // No daily-quota guard here on purpose: the server owns the quota and answers
+        // 'limit-reached'. Checking a possibly stale local counter would drop a reward the server
+        // would have granted (another device watched ads since). Each screen still pre-checks
+        // before showing the ad, which is where refusing early belongs.
 
         switch (type) {
             case AdEventType.LOADED:
@@ -178,31 +189,7 @@ class Ads extends IUserClass {
                 callback(ad.meta, 'ready');
                 break;
             case RewardedAdEventType.EARNED_REWARD:
-                response = await this.user.server2.tcp.SendAndWait({
-                    action: 'watch-ad',
-                    adName: ad.meta.Name
-                });
-
-                if (
-                    response === 'interrupted' ||
-                    response === 'not-sent' ||
-                    response === 'timeout' ||
-                    response.status !== 'watch-ad' ||
-                    response.result !== 'ok' ||
-                    typeof response.ox === 'undefined'
-                ) {
-                    callback(ad.meta, 'error');
-                    break;
-                }
-
-                this.user.informations.ox.Set(response.ox);
-                if (typeof response.adRemaining === 'number') {
-                    this.user.informations.adRemaining = response.adRemaining;
-                } else {
-                    this.user.informations.DecrementAdRemaining();
-                }
-                callback(ad.meta, 'watched');
-
+                callback(ad.meta, (await (ad.claim ?? this.#ClaimWatchAd)(ad.meta)) ? 'watched' : 'error');
                 break;
             case AdEventType.OPENED:
                 callback(ad.meta, 'wait');
@@ -218,9 +205,41 @@ class Ads extends IUserClass {
         }
     };
 
+    /**
+     * Default reward: the flat `RewardOx` of the ad row, credited by the server.
+     * @param {Ad} adMeta
+     * @returns {Promise<boolean>} False when the reward could not be claimed
+     */
+    #ClaimWatchAd = async (adMeta) => {
+        const response = await this.user.server2.tcp.SendAndWait({
+            action: 'watch-ad',
+            adName: adMeta.Name
+        });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'watch-ad' ||
+            response.result !== 'ok' ||
+            typeof response.ox === 'undefined'
+        ) {
+            return false;
+        }
+
+        this.user.informations.ox.Set(response.ox);
+        if (typeof response.adRemaining === 'number') {
+            this.user.informations.adRemaining = response.adRemaining;
+        } else {
+            this.user.informations.DecrementAdRemaining();
+        }
+        return true;
+    };
+
     /** @param {AdEvent} ad */
     ClearEvents(ad) {
         ad.callback = null;
+        ad.claim = null;
     }
 }
 

@@ -1025,8 +1025,11 @@ class Activities extends IUserData {
             return { status: 'tooEarly', activity: null };
         }
 
-        // Activity is not free
-        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, this.#SAVED_activities)) {
+        // Activity is not free: a local addition is checked against the pending additions too
+        // (a retry after a failed save must not create a twin), a server row only against the
+        // rows already loaded (LoadOnline rebuilds the list, the pending filter comes after)
+        const occupied = alreadySaved ? this.#SAVED_activities : this.Get();
+        if (!this.TimeIsFree(newActivity.startTime, newActivity.duration, occupied)) {
             return { status: 'notFree', activity: null };
         }
 
@@ -1104,9 +1107,15 @@ class Activities extends IUserData {
                 this.#UNSAVED_editions[indexUnsavedEdition] = _newActivity;
             }
         } else {
-            // Activity edited is not saved
+            // Activity edited is not saved: it keeps its stamps, they are its identity (pending
+            // filter of LoadOnline, deduplication of the server) and the 48h rule is moot for an
+            // activity that was just added
             const _activity = /** @type {Activity} */ (activity);
-            const _newActivity = /** @type {Activity} */ (editedActivity);
+            const _newActivity = /** @type {Activity} */ ({
+                ...editedActivity,
+                timezone: _activity.timezone,
+                addedTime: _activity.addedTime
+            });
 
             const indexUnsaved = GetActivityIndex(this.#UNSAVED_activities, _activity);
 

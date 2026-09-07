@@ -316,4 +316,62 @@ describe('[Data] Activities', () => {
             expect(activities.oxFreeKey).toBeNull();
         });
     });
+
+    describe('Add / Edit of pending additions (no twin after a failed save)', () => {
+        it('should refuse an addition overlapping a pending one', () => {
+            load([]);
+            const first = activities.Add(candidate(YESTERDAY, 8, 60));
+            expect(first.status).toBe('added');
+
+            // Same slot, retried a few seconds later (another addedTime)
+            jest.setSystemTime(new Date((NOW + 5) * 1000));
+            const second = activities.Add(candidate(YESTERDAY, 8, 60));
+            expect(second.status).toBe('notFree');
+            expect(activities.Get().length).toBe(1);
+
+            const overlapping = activities.Add(candidate(YESTERDAY, 8.5, 60));
+            expect(overlapping.status).toBe('notFree');
+            expect(activities.Get().length).toBe(1);
+        });
+
+        it('should accept an addition in the slot of a saved activity whose deletion is pending', () => {
+            const a = savedAt(YESTERDAY, 8, 60);
+            load([a]);
+            expect(activities.Add(candidate(YESTERDAY, 8, 30)).status).toBe('notFree');
+
+            expect(activities.Remove(a)).toBe('removed');
+            expect(activities.Add(candidate(YESTERDAY, 8, 30)).status).toBe('added');
+            expect(activities.Get().length).toBe(1);
+        });
+
+        it('should keep the stamps of a pending addition when it is edited', () => {
+            load([]);
+            const { activity } = activities.Add(candidate(YESTERDAY, 8, 60));
+            expect(activity).not.toBeNull();
+            if (activity === null) return;
+            const { addedTime, timezone } = activity;
+
+            jest.setSystemTime(new Date((NOW + 5) * 1000));
+            const { status, activity: edited } = activities.Edit(activity, { ...activity, duration: 30 });
+            expect(status).toBe('edited');
+            expect(edited).not.toBeNull();
+            if (edited === null) return;
+
+            const all = activities.Get();
+            expect(all.length).toBe(1);
+            expect(all[0]).toMatchObject({ duration: 30, addedTime, timezone });
+        });
+
+        it('should still re-stamp a big edit of a saved activity (48h rule)', () => {
+            const a = savedAt(YESTERDAY, 8, 60);
+            load([a]);
+
+            const { status, activity: edited } = activities.Edit(a, { ...a, duration: 30 });
+            expect(status).toBe('edited');
+            expect(edited).not.toBeNull();
+            if (edited === null) return;
+            expect(edited.addedTime).toBe(NOW);
+            expect(edited.addedTime).not.toBe(a.addedTime);
+        });
+    });
 });

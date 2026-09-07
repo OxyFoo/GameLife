@@ -65,6 +65,9 @@ class BackActivityPage2Add extends React.Component {
     /** @type {Symbol | null} */
     #oxListener = null;
 
+    /** Synchronous guard: `state.loading` lags one render, a second tap must not add a twin */
+    #loading = false;
+
     /** @param {BackActivityPage2AddPropsType} props */
     constructor(props) {
         super(props);
@@ -138,10 +141,11 @@ class BackActivityPage2Add extends React.Component {
     onAddActivity = async () => {
         const { activity, baseActivity } = this.props;
 
-        if (activity.skillID === 0) {
+        if (activity.skillID === 0 || this.#loading) {
             return;
         }
 
+        this.#loading = true;
         this.setState({ loading: true });
 
         let success = true;
@@ -152,11 +156,14 @@ class BackActivityPage2Add extends React.Component {
         }
 
         if (!success) {
-            this.setState({ loading: false });
+            this.setState({ loading: false }, () => {
+                this.#loading = false;
+            });
             return;
         }
 
         this.setState({ loading: false }, () => {
+            this.#loading = false;
             user.interface.bottomPanel?.Close();
         });
     };
@@ -165,10 +172,11 @@ class BackActivityPage2Add extends React.Component {
         const lang = langManager.curr['activity'];
         const { baseActivity } = this.props;
 
-        if (baseActivity === null) {
+        if (baseActivity === null || this.#loading) {
             return;
         }
 
+        this.#loading = true;
         this.setState({ loading: true });
 
         const removedStatus = await RemoveActivity(baseActivity);
@@ -181,7 +189,9 @@ class BackActivityPage2Add extends React.Component {
                     message: lang['alert-error-message'].replace('{}', "can't remove activity")
                 },
                 callback: () => {
-                    this.setState({ loading: false });
+                    this.setState({ loading: false }, () => {
+                        this.#loading = false;
+                    });
                 }
             });
             return;
@@ -191,7 +201,9 @@ class BackActivityPage2Add extends React.Component {
             const saved = await user.activities.SaveOnline();
             if (!saved && user.activities.WasOxOperationDiscarded(baseActivity)) {
                 // Refused and explained by the data layer, the activity is back: stay on it
-                this.setState({ loading: false });
+                this.setState({ loading: false }, () => {
+                    this.#loading = false;
+                });
                 return;
             }
             if (!saved && user.activities.lastSaveOnlineError === null) {
@@ -209,6 +221,7 @@ class BackActivityPage2Add extends React.Component {
         }
 
         this.setState({ loading: false }, () => {
+            this.#loading = false;
             if (removedStatus !== 'cancel') {
                 user.interface.bottomPanel?.Close();
             }

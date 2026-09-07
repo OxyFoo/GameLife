@@ -1,8 +1,5 @@
-// TODO: Delete ?
-
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
@@ -40,28 +37,30 @@ function SkillsTags({ style, maxSkills = 4, refParent }) {
     const lang = langManager.curr['home'];
 
     /** @param {EnrichedSkill} skill */
-    const renderSkillTag = (skill) => {
+    const renderSkillCard = (skill) => {
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const categoryLogoXML = category ? dataManager.skills.GetXmlByLogoID(category.LogoID) : skill.LogoXML;
 
         return (
-            <View key={`skill-tag-${skill.ID}`} style={styles.tag}>
-                <LinearGradient
-                    style={styles.tagGradient}
-                    colors={[
-                        themeManager.GetColor('grey', { opacity: 0.5 }),
-                        themeManager.GetColor('grey', { opacity: 0.2 })
-                    ]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                >
-                    <View style={styles.container}>
-                        <Icon xml={categoryLogoXML} size={14} color='main1' />
-                        <Text style={styles.tagText} fontSize={10}>
-                            {skill.FullName}
-                        </Text>
-                    </View>
-                </LinearGradient>
+            <View key={`skill-card-${skill.ID}`} style={styles.card}>
+                <View style={styles.cardSquareParent}>
+                    <Button
+                        style={[styles.cardSquare, { borderColor: themeManager.GetColor('main1', { opacity: 0.45 }) }]}
+                        gradientColors={[
+                            themeManager.GetColor('main1', { opacity: 0.35 }),
+                            themeManager.GetColor('main1', { opacity: 0.12 })
+                        ]}
+                        gradientColorsAngle={45}
+                        iconXml={categoryLogoXML}
+                        iconSize={28}
+                        // @ts-ignore
+                        fontColor={category?.Color || 'main1'}
+                    />
+                </View>
+
+                <Text style={styles.cardText} fontSize={10} color='light' numberOfLines={1}>
+                    {skill.FullName}
+                </Text>
             </View>
         );
     };
@@ -87,7 +86,7 @@ function SkillsTags({ style, maxSkills = 4, refParent }) {
                     {lang['container-skills-empty']}
                 </Text>
             ) : (
-                <View style={styles.tagsContainer}>{skills.map(renderSkillTag)}</View>
+                <View style={styles.cardsContainer}>{skills.map(renderSkillCard)}</View>
             )}
         </Button>
     );
@@ -99,34 +98,39 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingBottom: 8,
         paddingHorizontal: 2
     },
     button: {
         paddingVertical: 10,
         paddingHorizontal: 10
     },
-    tagsContainer: {
+    cardsContainer: {
+        width: '100%',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 8
+        justifyContent: 'center'
     },
-    tag: {
-        borderRadius: 16,
-        overflow: 'hidden'
-    },
-    tagGradient: {
-        gap: 6
-    },
-    container: {
-        flexDirection: 'row',
+    card: {
+        width: '50%',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 6
+        padding: 0,
+        marginTop: 8
     },
-    tagText: {
-        marginLeft: 4,
-        marginTop: 1
+    cardSquareParent: {
+        width: '75%'
+    },
+    cardSquare: {
+        aspectRatio: 1,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        borderRadius: 12,
+        borderWidth: 1,
+        justifyContent: 'center'
+    },
+    cardText: {
+        width: '100%',
+        textAlign: 'center',
+        marginTop: 2
     },
     emptyText: {
         textAlign: 'center'

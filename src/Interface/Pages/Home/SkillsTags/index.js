@@ -58,7 +58,7 @@ function SkillsTags({ style, maxSkills = 4, refParent }) {
                     />
                 </View>
 
-                <Text style={styles.cardText} fontSize={10} color='light' numberOfLines={1}>
+                <Text style={styles.cardText} fontSize={10} color='light' numberOfLines={2}>
                     {skill.FullName}
                 </Text>
             </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     cardSquareParent: {
-        width: '75%'
+        width: '65%'
     },
     cardSquare: {
         aspectRatio: 1,

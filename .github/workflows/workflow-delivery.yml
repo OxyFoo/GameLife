@@ -84,7 +84,7 @@ jobs:
     if: success() || (needs.android.result == 'success' || needs.ios.result == 'success')
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref_name }}
           submodules: 'recursive'

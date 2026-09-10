@@ -30,7 +30,7 @@ jobs:
     container: reactnativecommunity/react-native-android
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
@@ -44,7 +44,7 @@ jobs:
           cat package.json
 
       - name: 'Setup Node.js'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22.x'
 
@@ -96,14 +96,14 @@ jobs:
           ls -la
 
       - name: 'Upload aab artifact'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.FILE_AAB }}
           path: ./${{ env.FILE_AAB }}
           if-no-files-found: error  
 
       - name: 'Upload mapping artifact'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.FILE_MAPPING }}
           path: ./${{ env.FILE_MAPPING }}
@@ -130,7 +130,7 @@ jobs:
 
       - name: 'Upload apk artifact'
         if: ${{ inputs.save-apk-artifact }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.FILE_APK }}
           path: ./${{ env.FILE_APK }}
@@ -143,18 +143,18 @@ jobs:
     needs: build-android
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: 'Get aab artifact'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: ${{ env.FILE_AAB }}
 
       - name: 'Get mapping artifact'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: ${{ env.FILE_MAPPING }}
 

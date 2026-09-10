@@ -2,6 +2,8 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import Svg, { Defs, Image as SvgImage, LinearGradient, Mask, Rect, Stop } from 'react-native-svg';
 
+import themeManager from 'Managers/ThemeManager';
+
 /**
  * @typedef {import('react-native').ImageSourcePropType} ImageSourcePropType
  */
@@ -20,6 +22,11 @@ import Svg, { Defs, Image as SvgImage, LinearGradient, Mask, Rect, Stop } from '
  *
  * The gradient is white with a ramp on `stopOpacity`: an SVG mask reads luminance times alpha, and
  * white keeps luminance at 1 whichever of the two a platform favours.
+ *
+ * The image is dimmed so text stays readable, which would leave the app background — including the
+ * `DynamicGrid` lines — showing through the artwork. An opaque ground is therefore painted under it,
+ * carrying the same alpha ramp: the two vanish together, so the background reappears through the
+ * fade instead of at a seam.
  *
  * @param {object} props
  * @param {ImageSourcePropType} props.source
@@ -47,12 +54,19 @@ function ImageBackdrop({ source, opacity = 0.5, fadeStart = 0.3, fadeEnd = 0.85 
                 </Mask>
             </Defs>
 
+            <Rect
+                x='0'
+                y='0'
+                width='100%'
+                height='100%'
+                fill={themeManager.GetColor('ground1')}
+                mask={`url(#${maskID})`}
+            />
             <SvgImage
                 href={source}
                 x='0'
                 y='0'
                 width='100%'
-                height='100%'
                 preserveAspectRatio='xMidYMid slice'
                 opacity={opacity}
                 mask={`url(#${maskID})`}

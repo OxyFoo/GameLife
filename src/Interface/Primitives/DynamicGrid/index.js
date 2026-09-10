@@ -62,7 +62,7 @@ function DynamicGrid({
                             <Stop offset='55%' stopColor='#fff' stopOpacity='1' />
                             <Stop offset='100%' stopColor='#fff' stopOpacity='0' />
                         </RadialGradient>
-                        <Mask id='gridMask'>
+                        <Mask id='gridMask' maskUnits='userSpaceOnUse' x='0' y='0' width={width} height={height}>
                             <Rect x='0' y='0' width={width} height={height} fill='url(#gridMaskGrad)' />
                         </Mask>
                     </Defs>

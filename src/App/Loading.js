@@ -189,12 +189,16 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.notificationsPush.SetupAllNotifications();
     user.notificationsInApp.Update();
 
-    // Load admob
-    //await user.consent.ShowTrackingPopup();
+    // Consent (UMP form, then ATT on iOS) and Mobile Ads SDK init - must precede LoadAds
+    const consentResult = await user.consent.Initialize();
+    user.interface.console?.AddLog('info', 'Consent:', consentResult);
 
-    // Load ads
-    const ads = dataManager.ads.Get();
-    user.ads.LoadAds(ads);
+    // Load ads, only once the UMP SDK allows ad requests (EU User Consent Policy)
+    if (user.consent.canRequestAds) {
+        user.ads.LoadAds(dataManager.ads.Get());
+    } else {
+        user.interface.console?.AddLog('warn', 'Ads not loaded: consent not gathered yet');
+    }
 
     // Check if ads are available
     if (user.informations.adRemaining === 0) {

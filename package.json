@@ -49,7 +49,7 @@
     "react-native-config": "1.5.5",
     "react-native-device-info": "^14.0.4",
     "react-native-gifted-charts": "1.4.61",
-    "react-native-google-mobile-ads": "^16.0.0",
+    "react-native-google-mobile-ads": "^16.5.0",
     "react-native-google-play-integrity": "^1.1.0",
     "react-native-iap": "^14.5.0",
     "react-native-ios-appattest": "^1.0.1",

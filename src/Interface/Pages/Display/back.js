@@ -13,7 +13,7 @@ import { SpringAnimation } from 'Utils/Animations';
  *
  * @typedef {object} BackDisplayPropsType
  * @property {object} args
- * @property {IconsName} args.icon
+ * @property {IconsName | 'zap'} args.icon Icon to display, or `'zap'` to show Zap instead
  * @property {number} [args.iconWidth]
  * @property {string} args.text
  * @property {string} args.button

@@ -221,7 +221,7 @@ async function AddActivity(activity) {
     // Display the activity
     user.interface.ChangePage('display', {
         args: {
-            icon: 'check-filled',
+            icon: 'zap',
             text: lang['display-activity-text'],
             additionalContent:
                 oxPreview !== 0 || raidPreview !== null ? (

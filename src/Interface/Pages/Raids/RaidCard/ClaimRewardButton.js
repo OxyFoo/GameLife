@@ -49,8 +49,8 @@ function ClaimRewardButton({ style, seasonID, claimed }) {
             loading={loading}
             onPress={onPress}
         >
-            <Icon icon='gift' size={18} color='white' />
-            <Text fontSize={14} bold>
+            <Icon color='background' icon='gift' size={18} />
+            <Text color='background' fontSize={14} bold>
                 {lang['reward-claim']}
             </Text>
         </Button>

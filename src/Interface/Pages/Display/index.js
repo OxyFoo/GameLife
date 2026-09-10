@@ -13,7 +13,11 @@ class Display extends BackDisplay {
             <View style={styles.page}>
                 <View style={styles.iconParent}>
                     <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
-                        <Icon icon={icon} size={this.iconWidth} />
+                        {icon === 'zap' ? (
+                            <Zap style={{ width: this.iconWidth, height: this.iconWidth }} />
+                        ) : (
+                            <Icon icon={icon} size={this.iconWidth} />
+                        )}
                     </Animated.View>
                     <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                         <Text style={styles.title}>{text}</Text>
@@ -24,9 +28,6 @@ class Display extends BackDisplay {
 
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
-                        <Animated.View style={[styles.zapContainer, { transform: [{ scale: this.state.anim }] }]}>
-                            <Zap style={styles.zap} />
-                        </Animated.View>
                         <Text fontSize={16} color={'light'} style={styles.quote}>
                             {this.quote.text}
                         </Text>
@@ -104,13 +105,6 @@ const styles = StyleSheet.create({
         paddingVertical: 42,
         alignItems: 'center',
         justifyContent: 'flex-end'
-    },
-    zapContainer: {
-        marginBottom: 16
-    },
-    zap: {
-        width: 80,
-        height: 80
     },
     quote: {
         fontStyle: 'italic'

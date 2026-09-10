@@ -7,14 +7,8 @@ import { DEFAULT_ACTIVITY } from 'Data/User/Activities/index';
 import { MinMax } from 'Utils/Functions';
 import { FormatDurationShort } from 'Utils/Date';
 import { GetDate, GetLocalTime, GetWeekEndTime, GetWeekIndex } from 'Utils/Time';
-import {
-    AddActivity,
-    EditActivity,
-    MAX_TIME_MINUTES,
-    MIN_TIME_MINUTES,
-    RemoveActivity,
-    TIME_STEP_MINUTES
-} from 'Utils/Activities';
+import { AddActivity, EditActivity, RemoveActivity } from 'Utils/Activities';
+import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/ActivityTime';
 
 /**
  * @typedef {import('react-native').View} View

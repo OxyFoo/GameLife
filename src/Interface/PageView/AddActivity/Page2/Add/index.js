@@ -10,7 +10,7 @@ import themeManager from 'Managers/ThemeManager';
 import { Text, Button, Icon, InputText, Digit, OxAmount } from 'Interface/Components';
 import { GetDate } from 'Utils/Time';
 import { DateFormat } from 'Utils/Date';
-import { MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { MAX_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/ActivityTime';
 
 class AddActivityPage2Add extends BackActivityPage2Add {
     render() {

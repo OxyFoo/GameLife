@@ -6,7 +6,7 @@ import dataManager from 'Managers/DataManager';
 import Calendar from 'Interface/Pages/Calendar';
 import { MinMax } from 'Utils/Functions';
 import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
-import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/Activities';
+import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/ActivityTime';
 
 /**
  * @typedef {import('react-native').View} View

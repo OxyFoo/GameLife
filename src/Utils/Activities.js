@@ -9,24 +9,31 @@ import dataManager from 'Managers/DataManager';
 import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention, RaidPointsMention } from 'Interface/Widgets';
 import DynamicVar from 'Utils/DynamicVar';
 import { AdBonusOx } from '@oxyfoo/gamelife-types/Rules/OxEconomy';
-import { MinMax } from 'Utils/Functions';
-import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
+import { GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
+import {
+    TIME_STEP_MINUTES,
+    MIN_TIME_MINUTES,
+    MAX_TIME_MINUTES,
+    RoundActivityTime,
+    GetActivitySlot
+} from 'Utils/ActivityTime';
 
 /**
  * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  */
 
-const TIME_STEP_MINUTES = 5;
-const MIN_TIME_MINUTES = 1 * TIME_STEP_MINUTES; // 5m
-const MAX_TIME_MINUTES = 72 * TIME_STEP_MINUTES; // 6h
-
 /** @param {number} skillID */
 function StartActivityNow(skillID) {
     const startTime = GetLocalTime();
-    const roundedTime = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'prev');
 
-    if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES * 2)) {
+    // Same rounding as the save (see AddActivityNow): the activity that has just been stopped ends at the
+    // nearest step, so a start snapped the same way lands at or after that end, never inside it.
+    // Truncating instead would read the slot as busy for up to half a step.
+    const roundedTime = RoundActivityTime(startTime);
+
+    // Only the shortest recordable activity is reserved: a slot free for 5 minutes is enough
+    if (!user.activities.TimeIsFree(roundedTime, MIN_TIME_MINUTES)) {
         const title = langManager.curr['activity']['alert-wrongtiming-title'];
         const message = langManager.curr['activity']['alert-wrongtiming-message'];
         user.interface.popup?.OpenT({
@@ -57,15 +64,15 @@ function StartActivityNow(skillID) {
 function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
     const lang = langManager.curr['activity'];
 
-    const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
-    const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, endTime, 'near');
-
-    const delta = endTimeRounded - startTimeRounded;
-    let duration = MinMax(MIN_TIME_MINUTES, delta / 60, MAX_TIME_MINUTES);
+    // Only the end is clamped: raising a slot shorter than the minimum would make the activity finish
+    // after the rounded stop instant, and a new activity started right after would find its own slot
+    // busy (see StartActivityNow). Too short is refused by the loop instead.
+    const slot = GetActivitySlot(startTime, endTime);
+    let duration = Math.min(slot.duration, MAX_TIME_MINUTES);
 
     // Get the max duration possible
     const activities = user.activities.Get(true);
-    while (!user.activities.TimeIsFree(startTimeRounded, duration, activities)) {
+    while (duration < MIN_TIME_MINUTES || !user.activities.TimeIsFree(slot.startTime, duration, activities)) {
         duration -= TIME_STEP_MINUTES;
         if (duration <= 0) {
             return new Promise((resolve) => {
@@ -85,7 +92,7 @@ function AddActivityNow(skillID, startTime, endTime, friendsIDs) {
     /** @type {Activity} */
     const newActivity = {
         skillID: skillID,
-        startTime: startTimeRounded,
+        startTime: slot.startTime,
         duration: duration,
         comment: '',
         timezone: 0,

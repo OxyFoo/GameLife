@@ -8,8 +8,8 @@ import { DEFAULT_ACTIVITY } from 'Data/User/Activities';
 
 import { Text, OxAmount } from 'Interface/Components';
 import { DateFormat } from 'Utils/Date';
-import { TIME_STEP_MINUTES } from 'Utils/Activities';
-import { GetDate, GetLocalTime, RoundTimeTo } from 'Utils/Time';
+import { GetActivitySlot } from 'Utils/ActivityTime';
+import { GetDate, GetLocalTime } from 'Utils/Time';
 import { TwoDigit } from 'Utils/Functions';
 
 /**
@@ -73,14 +73,13 @@ class ActivityTimerTimer extends React.Component {
         const { skillID, startTime, timezone } = currentActivity;
         const now = GetLocalTime();
 
-        const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
-        const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
-        const duration = Math.max(0, (endTimeRounded - startTimeRounded) / 60);
+        const slot = GetActivitySlot(startTime, now);
+        const duration = Math.max(0, slot.duration);
 
         return user.activities.GetOxReward({
             ...DEFAULT_ACTIVITY,
             skillID,
-            startTime,
+            startTime: slot.startTime,
             duration,
             timezone,
             addedTime: now

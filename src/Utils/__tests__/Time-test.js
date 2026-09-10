@@ -1,4 +1,4 @@
-import { DAY_TIME, GetWeekIndex, GetWeekEndTime } from '../Time';
+import { DAY_TIME, GetWeekIndex, GetWeekEndTime, RoundTimeTo } from '../Time';
 import { FormatDurationShort } from '../Date';
 
 /**
@@ -45,6 +45,38 @@ describe('[Utils] Time', () => {
         it('should place the epoch Thursday in week 0, starting Monday 1969-12-29', () => {
             expect(GetWeekIndex(0, 0)).toBe(0);
             expect(GetWeekEndTime(0, 0)).toBe(utc(1970, 1, 5));
+        });
+    });
+
+    describe('RoundTimeTo', () => {
+        const base = utc(2026, 9, 7, 17, 35);
+
+        it('should round to the nearest step by default, ties going down', () => {
+            expect(RoundTimeTo(5, base + 149)).toBe(base);
+            expect(RoundTimeTo(5, base + 150)).toBe(base);
+            expect(RoundTimeTo(5, base + 151)).toBe(base + 300);
+            expect(RoundTimeTo(5, base + 300, 'near')).toBe(base + 300);
+        });
+
+        it('should truncate with prev', () => {
+            expect(RoundTimeTo(5, base + 299, 'prev')).toBe(base);
+            expect(RoundTimeTo(5, base, 'prev')).toBe(base);
+        });
+
+        it('should always go to the next step with next, even from a step', () => {
+            expect(RoundTimeTo(5, base + 1, 'next')).toBe(base + 300);
+            expect(RoundTimeTo(5, base, 'next')).toBe(base + 300);
+        });
+
+        it('should order prev <= near <= next and never decrease over time', () => {
+            let previous = RoundTimeTo(5, base);
+            for (let time = base; time <= base + 2 * 300; time++) {
+                const near = RoundTimeTo(5, time);
+                expect(RoundTimeTo(5, time, 'prev')).toBeLessThanOrEqual(near);
+                expect(near).toBeLessThanOrEqual(RoundTimeTo(5, time, 'next'));
+                expect(near).toBeGreaterThanOrEqual(previous);
+                previous = near;
+            }
         });
     });
 

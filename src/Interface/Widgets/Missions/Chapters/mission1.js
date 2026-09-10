@@ -5,7 +5,7 @@ import langManager from 'Managers/LangManager';
 
 import { AddActivity } from '../../../PageView/AddActivity';
 import { Sleep } from 'Utils/Functions';
-import { TIME_STEP_MINUTES } from 'Utils/Activities';
+import { TIME_STEP_MINUTES } from 'Utils/ActivityTime';
 import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
 
 async function StartMission1() {

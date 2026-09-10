@@ -3,6 +3,7 @@ import Activities from '../index';
 import { GetLocalDayIndex } from '@oxyfoo/gamelife-types/Rules/Time';
 import DynamicVar from 'Utils/DynamicVar';
 import { GetTimeZone } from 'Utils/Time';
+import { MIN_TIME_MINUTES, GetActivitySlot, RoundActivityTime } from 'Utils/ActivityTime';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Activities').Activity} Activity
@@ -375,6 +376,40 @@ describe('[Data] Activities', () => {
             if (edited === null) return;
             expect(edited.addedTime).toBe(NOW);
             expect(edited.addedTime).not.toBe(a.addedTime);
+        });
+    });
+    describe('slots on the 5 minutes grid', () => {
+        const stop = 17 + 38 / 60 + 20 / 3600;
+
+        it('should accept an activity starting exactly when another one ends', () => {
+            load([savedAt(YESTERDAY, 8, 60)]);
+            expect(activities.Add(candidate(YESTERDAY, 9, 30)).status).toBe('added');
+        });
+
+        it('should refuse an activity starting one second before the end of another one', () => {
+            load([savedAt(YESTERDAY, 8, 60)]);
+            const touching = candidate(YESTERDAY, 9, 30);
+            expect(activities.Add({ ...touching, startTime: touching.startTime - 1 }).status).toBe('notFree');
+        });
+
+        it('should refuse an activity ending one second after the start of another one', () => {
+            load([savedAt(YESTERDAY, 9, 60)]);
+            const touching = candidate(YESTERDAY, 8, 60);
+            expect(activities.Add({ ...touching, startTime: touching.startTime + 1 }).status).toBe('notFree');
+        });
+
+        // Regression: the "GO" slot was truncated to the previous step (17:35) while the stop had been
+        // saved at the nearest one (17:40), so nothing could be started for up to 2.5 minutes
+        it('should let a new activity start right after the timer has been stopped', () => {
+            load([]);
+            const started = candidate(YESTERDAY, 17, 0);
+            const stopped = candidate(YESTERDAY, stop, 0);
+            const slot = GetActivitySlot(started.startTime, stopped.startTime);
+            expect(slot.duration).toBe(40);
+            expect(activities.Add({ ...started, ...slot }).status).toBe('added');
+
+            const go = stopped.startTime + 10;
+            expect(activities.TimeIsFree(RoundActivityTime(go), MIN_TIME_MINUTES)).toBe(true);
         });
     });
 });

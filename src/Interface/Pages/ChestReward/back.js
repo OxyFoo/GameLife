@@ -61,6 +61,12 @@ class BackChestReward extends PageBase {
     oxCount = 0;
     callback = () => {};
 
+    /** @type {ChestRewardArgs['chestRarity']} */
+    chestRarity = 'common';
+    text = '';
+    textSecondary = '';
+    rarityColor = '';
+
     /**
      * @param {Object} props
      * @param {ChestRewardProps | OxRewardProps} props.args
@@ -68,23 +74,32 @@ class BackChestReward extends PageBase {
     constructor(props) {
         super(props);
 
-        if (props.args.chestRarity === undefined || props.args.callback === undefined) {
+        this.loadReward(props.args);
+    }
+
+    /**
+     * The reward on display. Read again on every focus: `Rewards` chains several rewards through
+     * this single page, so the fields below outlive the constructor.
+     * @param {ChestRewardArgs} args
+     */
+    loadReward = (args) => {
+        if (args.chestRarity === undefined || args.callback === undefined) {
             throw new Error('[ChestReward] Missing arguments');
         }
 
-        /** @type {ChestRewardArgs['chestRarity']} */
-        this.chestRarity = props.args.chestRarity;
+        this.chestRarity = args.chestRarity;
+        this.callback = args.callback;
+        this.textSecondary = '';
 
-        if (props.args.chestRarity === 'ox') {
-            this.oxCount = props.args.oxCount;
-            this.callback = props.args.callback;
+        if (args.chestRarity === 'ox') {
+            this.oxCount = args.oxCount;
 
             this.text = langManager.curr['shop']['iap']['reward-page-text'].replace('{}', this.oxCount.toString());
             this.rarityColor = themeManager.GetColor('ox');
             return;
         }
 
-        const itemID = props.args['itemID'];
+        const itemID = args['itemID'];
         const item = dataManager.items.GetByID(itemID);
         if (item === null) {
             user.interface.console?.AddLog('error', `ChestReward: item not found (${itemID})`);
@@ -101,10 +116,19 @@ class BackChestReward extends PageBase {
         this.avatarBodyColor = BODY_COLORS[user.avatar.avatar.skinColor] || BODY_COLORS[0];
         this.avatarItems = user.avatar.GetPreviewAvatarItems(itemID);
         this.avatarPosition = dataManager.items.GetContainerSize(item.Slot);
-        this.callback = props.args.callback;
-    }
+    };
 
-    componentDidMount() {
+    /** Chest closed, item hidden, button dead: the reward opens itself again from there */
+    playReward = () => {
+        clearTimeout(this.timeout1);
+        clearTimeout(this.timeout2);
+
+        this.buttonEnabled = false;
+        this.state.animGlobal.setValue(0.7);
+        this.state.animChest.setValue(0);
+        this.state.animItem.setValue(0);
+        this.state.animInteractions.setValue(0);
+
         SpringAnimation(this.state.animGlobal, 1).start();
         TimingAnimation(this.state.animChest, 4, 1000).start();
         this.timeout1 = setTimeout(() => {
@@ -114,10 +138,25 @@ class BackChestReward extends PageBase {
             SpringAnimation(this.state.animInteractions, 1).start();
             this.buttonEnabled = true;
         }, 2000);
+    };
+
+    componentDidMount() {
+        this.playReward();
     }
     componentWillUnmount() {
         clearTimeout(this.timeout1);
         clearTimeout(this.timeout2);
+    }
+
+    /**
+     * Next reward of the chain: the page was never left, so nothing remounts. The reward is read
+     * from the new args and the chest closes again to open on it.
+     * @param {this['props']} props
+     */
+    componentDidFocused(props) {
+        this.loadReward(props.args);
+        this.playReward();
+        this.forceUpdate();
     }
 
     /** @param {LayoutChangeEvent} layout */

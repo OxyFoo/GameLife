@@ -379,7 +379,7 @@ class BackFlowEngine extends React.Component {
         }
 
         if (nextpage === selectedPage) {
-            return false;
+            return this.refreshPage(nextpage, options);
         }
 
         const isGoingBack = nextpage === this.history[this.history.length - 1]?.pageName;
@@ -394,6 +394,32 @@ class BackFlowEngine extends React.Component {
         if (isGoingBack) {
             this.history.pop();
         }
+
+        return true;
+    };
+
+    /**
+     * Re-enter the page already displayed with new arguments. Nothing is mounted, unmounted or
+     * pushed to the history: the page keeps its instance and is asked to restart on the new args,
+     * which is how `chestreward` chains its rewards — one page, one animation per reward.
+     * The args are handed over before the focus call so the page reads them from its own props.
+     * @template {PageNames} T
+     * @param {T} pageName
+     * @param {PageOptions<T>} options
+     * @returns {boolean} True if the page received new arguments
+     * @private
+     */
+    refreshPage = (pageName, options) => {
+        const page = this.getActivePage(pageName);
+        if (page === null || typeof options.args === 'undefined' || page.args === options.args) {
+            return false;
+        }
+
+        page.args = options.args;
+        this.setState({ mountedPages: [...this.state.mountedPages] }, () => {
+            page.ref.current?._componentDidFocused({ args: page.args });
+            options.callback?.();
+        });
 
         return true;
     };
@@ -471,7 +497,9 @@ class BackFlowEngine extends React.Component {
             if (newPage.args !== options.args) {
                 newPage.args = options.args;
             }
-            newPage.ref.current?._componentDidFocused(newPage.args);
+            // Props, not args: a page reads its arguments through `props.args`, exactly like the
+            // `componentDidFocused(this.props)` it calls itself on mount
+            newPage.ref.current?._componentDidFocused({ args: newPage.args });
             pageAlreadyMounted = true;
         }
 

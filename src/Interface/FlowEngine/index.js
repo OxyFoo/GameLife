@@ -9,7 +9,7 @@ import PageWrapper from './wrapper';
 import themeManager from 'Managers/ThemeManager';
 
 import PAGES from 'Interface/Pages';
-import { DynamicBackground } from 'Interface/Primitives';
+import { DynamicBackground, DynamicGrid } from 'Interface/Primitives';
 import {
     BottomPanel,
     Console,
@@ -30,6 +30,7 @@ class FlowEnginePagesRender extends BackFlowEngine {
         return (
             <SafeAreaProvider style={styles.fullscreen} testID={testID}>
                 <DynamicBackground opacity={0.15} backgroundColor={themeManager.GetColor('ground1')} />
+                <DynamicGrid />
                 <DynamicArea customResponsive={customResponsive}>
                     <KeyboardAvoidingView style={styles.fullscreen} behavior='padding'>
                         <SafeAreaInsetsContext.Consumer>

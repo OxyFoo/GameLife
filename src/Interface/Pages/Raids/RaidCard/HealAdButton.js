@@ -3,6 +3,7 @@ import * as React from 'react';
 import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import { STOP_CARD_PRESS } from './cardPress';
 
 import { Button, Icon, Text } from 'Interface/Components';
 
@@ -196,6 +197,7 @@ class HealAdButton extends React.Component {
 
         return (
             <Button
+                {...STOP_CARD_PRESS}
                 style={styles.healButton}
                 styleContent={styles.healButtonContent}
                 appearance='outline'

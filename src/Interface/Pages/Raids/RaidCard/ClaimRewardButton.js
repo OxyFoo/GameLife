@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import { STOP_CARD_PRESS } from './cardPress';
 
 import { Button, Icon, Text } from 'Interface/Components';
 
@@ -42,6 +43,7 @@ function ClaimRewardButton({ style, seasonID, claimed }) {
 
     return (
         <Button
+            {...STOP_CARD_PRESS}
             style={style}
             styleContent={styles.content}
             appearance='normal'

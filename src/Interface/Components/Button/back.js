@@ -39,6 +39,8 @@ import * as React from 'react';
  * @property {(event: GestureResponderEvent) => void} onPress
  * @property {(event: GestureResponderEvent) => void} onLongPress
  * @property {'none' | 'auto' | 'box-none' | 'box-only'} pointerEvents
+ * @property {() => boolean} [onStartShouldSetResponder] Claim the touch so an ancestor `Touchable` does not fire too
+ * @property {(event: GestureResponderEvent) => boolean} [onResponderTerminationRequest]
  * @property {(event: GestureResponderEvent) => void} onTouchStart
  * @property {(event: GestureResponderEvent) => void} onTouchMove
  * @property {(event: GestureResponderEvent) => void} onTouchEnd

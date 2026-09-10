@@ -5,6 +5,7 @@ import styles from './style';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import { HealAdButton } from './HealAdButton';
+import { STOP_CARD_PRESS } from './cardPress';
 
 import { Button, Icon, ProgressBar, Text } from 'Interface/Components';
 import { FormatMinutes } from 'Utils/Raids';
@@ -65,6 +66,7 @@ function StatusRow({ snapshot }) {
                         <View style={styles.healButtons}>
                             <HealAdButton />
                             <Button
+                                {...STOP_CARD_PRESS}
                                 style={styles.healButton}
                                 styleContent={styles.healButtonContent}
                                 appearance='uniform'

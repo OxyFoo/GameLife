@@ -13,16 +13,6 @@ function ActivitiesAreEquals(activityA, activityB) {
 }
 
 /**
- * Local day index of an activity: days since epoch, in the activity's own timezone
- * (rounded like the database column; stable even if the device timezone changes). Same helper on the server side.
- * @param {Pick<Activity, 'startTime' | 'timezone'>} activity
- * @returns {number}
- */
-function GetLocalDayIndex(activity) {
-    return Math.floor((activity.startTime + Math.round(activity.timezone) * 3600) / (24 * 60 * 60));
-}
-
-/**
  * @param {number} time Time in seconds (unix timestamp, UTC)
  * @param {number} duration Duration in minutes
  * @param {Activity[]} activities
@@ -113,7 +103,6 @@ function GetYearStartTimestamp(timestamp) {
 
 export {
     ActivitiesAreEquals,
-    GetLocalDayIndex,
     TimeIsFree,
     GetActivityIndex,
     GetMondayTimestamp,

@@ -4,7 +4,6 @@ import langManager from 'Managers/LangManager';
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import {
     GetActivityIndex,
-    GetLocalDayIndex,
     GetMondayTimestamp,
     GetMonthStartTimestamp,
     GetYearStartTimestamp,
@@ -12,7 +11,14 @@ import {
 } from './utils';
 import { ComputeSkillFrequency, GetTodayLocalDayIndex, RATE_WINDOW_DAYS } from './skillFrequency';
 import DynamicVar from 'Utils/DynamicVar';
-import { KeyOf, MAX_HOUR_PER_DAY, MAX_MINUTES_PER_DAY, OX_PER_MINUTE, SimulateBatch } from './oxEconomy';
+import {
+    KeyOf,
+    MAX_HOUR_PER_DAY,
+    MAX_MINUTES_PER_DAY,
+    OX_PER_MINUTE,
+    SimulateBatch,
+    UsefulActivities
+} from '@oxyfoo/gamelife-types/Rules/OxEconomy';
 import { Round, SortByKey } from 'Utils/Functions';
 import { DAY_TIME, GetDate, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTimeZone } from 'Utils/Time';
 
@@ -27,9 +33,9 @@ import { DAY_TIME, GetDate, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTim
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardPeriodType} LeaderboardPeriodType
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardUpdateData} LeaderboardUpdateData
  * @typedef {import('./skillFrequency').SkillFrequency} SkillFrequency
- * @typedef {import('./oxEconomy').OxActivity} OxActivity
- * @typedef {import('./oxEconomy').OxOpResult} OxOpResult
- * @typedef {import('./oxEconomy').OxBatchResult} OxBatchResult
+ * @typedef {import('@oxyfoo/gamelife-types/Rules/OxEconomy').OxActivity} OxActivity
+ * @typedef {import('@oxyfoo/gamelife-types/Rules/OxEconomy').OxOpResult} OxOpResult
+ * @typedef {import('@oxyfoo/gamelife-types/Rules/OxEconomy').OxBatchResult} OxBatchResult
  *
  * @typedef {{ kind: 'add', next: Activity } | { kind: 'edit', prev: Activity, next: Activity } | { kind: 'delete', prev: Activity }} OxCandidate
  *
@@ -483,6 +489,11 @@ class Activities extends IUserData {
         this.oxQuotedDelta = null;
         this.oxFreeKey = null;
 
+        // Raid: the server total and progress win over the local preview
+        if (typeof response.result.raid !== 'undefined') {
+            this.#user.raids.ApplySaveResult(response.result.raid);
+        }
+
         // Update and print message
         this.#purge(response.result.newActivities);
         this.allActivities.Set(this.Get());
@@ -560,7 +571,9 @@ class Activities extends IUserData {
     }
 
     /**
-     * @description Get activities that have brought xp (12h/day limit applied, see #applyDailyLimit)
+     * @description Activities that granted xp: the shared rule of the ox module, so that the app and
+     * the server agree on what counts (skill with xp, added within 48h, inside the 12h chronological
+     * all-or-nothing budget of its local day)
      * @param {boolean} [forceRefresh=false]
      * @returns {Activity[]}
      */
@@ -570,8 +583,9 @@ class Activities extends IUserData {
             return this.#cache_get_useful.activities;
         }
 
-        const activities = this.#user.activities.Get().filter(this.DoesGrantXP);
-        const usefulActivities = this.#applyDailyLimit(activities);
+        const activities = this.#user.activities.Get();
+        const useful = UsefulActivities(activities.map(this.#toOx), GetLocalTime(), this.#xpOfSkill);
+        const usefulActivities = activities.filter((activity) => useful.has(KeyOf(this.#toOx(activity))));
 
         this.#cache_get_useful.id = id;
         this.#cache_get_useful.activities = usefulActivities;
@@ -579,42 +593,8 @@ class Activities extends IUserData {
         return usefulActivities;
     };
 
-    /**
-     * Apply the 12h/day limit: activities are walked chronologically and each local day
-     * (in the activity's own timezone) has a budget of 12h, consumed by activities whose
-     * skill gives XP. Once the budget is exceeded, the activity is dropped as well as every
-     * following one of the same day (all-or-nothing).
-     * @param {Activity[]} activities Sorted by start time, already filtered by DoesGrantXP
-     * @returns {Activity[]} Activities that grant XP
-     */
-    #applyDailyLimit = (activities) => {
-        /** @type {Map<number, number>} Minutes remaining per local day */
-        const minutesRemain = new Map();
-
-        /** @type {Activity[]} */
-        const usefulActivities = [];
-
-        for (const activity of activities) {
-            const skill = dataManager.skills.GetByID(activity.skillID);
-            if (skill === null) {
-                continue;
-            }
-
-            const day = GetLocalDayIndex(activity);
-            let remain = minutesRemain.get(day) ?? MAX_MINUTES_PER_DAY;
-
-            // Limit
-            if (skill.XP > 0) remain -= activity.duration;
-            minutesRemain.set(day, remain);
-            if (remain < 0) {
-                continue;
-            }
-
-            usefulActivities.push(activity);
-        }
-
-        return usefulActivities;
-    };
+    /** @param {number} skillID */
+    #xpOfSkill = (skillID) => dataManager.skills.GetByID(skillID)?.XP ?? 0;
 
     /**
      * @param {Activity} activity

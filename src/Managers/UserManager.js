@@ -16,6 +16,7 @@ import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
 import Multiplayer from 'Data/User/Multiplayer';
+import Raids from 'Data/User/Raids';
 
 import Storage from 'Utils/Storage';
 import GoogleSignIn from 'Utils/GoogleSignIn';
@@ -58,6 +59,7 @@ class UserManager {
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
         this.multiplayer = new Multiplayer(this);
+        this.raids = new Raids(this);
 
         /**
          * `informations` is an IUserData and belongs to DATA only: listing it here too
@@ -85,7 +87,8 @@ class UserManager {
             this.informations,
             this.inventory,
             this.missions,
-            this.multiplayer
+            this.multiplayer,
+            this.raids
         ];
 
         // Mount classes
@@ -110,6 +113,7 @@ class UserManager {
     onMount() {
         this.experience.onMount();
         this.dailyQuest.onMount();
+        this.raids.onMount();
 
         // Initialize IAP listeners globally (handles pending purchases on app restart)
         this.shop.InitIAP();

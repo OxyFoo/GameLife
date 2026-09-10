@@ -64,13 +64,13 @@ class NavBar extends BottomBarBack {
                 />
 
                 <NavButton
-                    ref={this.refButtons['multiplayer']}
+                    ref={this.refButtons['raids']}
                     index={3}
-                    text={lang['multiplayer']}
-                    icon='multiplayer-outline'
-                    iconSelect='multiplayer-variant'
+                    text={lang['raids']}
+                    icon='raids-outline'
+                    iconSelect='raids'
                     anim={animationSelection}
-                    onPress={this.openMultiplayer}
+                    onPress={this.openRaids}
                 />
 
                 <NavButton

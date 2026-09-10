@@ -11,6 +11,7 @@ import { StatsRadar } from './StatsRadar';
 import { SkillsTags } from './SkillsTags';
 import { AchievementsPreview } from './AchievementsPreview';
 import { MoreInfo } from './MoreInfo';
+import { RaidWidget } from './RaidWidget';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
@@ -57,6 +58,7 @@ class Home extends BackHome {
                 </Title>
                 <View style={styles.chartsContainer}>
                     <TodayActivitiesPieChart />
+                    <RaidWidget />
                 </View>
 
                 {/* Main stats & avatar */}

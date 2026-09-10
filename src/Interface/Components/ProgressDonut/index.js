@@ -50,17 +50,21 @@ function ProgressDonut({
     const center = size / 2;
     const circumference = 2 * Math.PI * radius;
 
-    // Animation value for progress
+    // Animation value for progress: starts empty, so the first run grows the ring from zero
     const animationValue = useRef(new Animated.Value(0)).current;
+    const intro = useRef(true);
 
     useEffect(() => {
-        // Reset and start animation
-        animationValue.setValue(0);
+        // Only the first run starts from an empty ring, and only it takes the entrance delay. Later
+        // value changes animate from where the ring already is: resetting to 0 every time made it
+        // collapse and refill on each data refresh, which reads as a blink.
+        const isIntro = intro.current;
+        intro.current = false;
 
         Animated.timing(animationValue, {
             toValue: value,
             duration,
-            delay,
+            delay: isIntro ? delay : 0,
             easing: easing ?? Easing.out(Easing.exp),
             useNativeDriver: false
         }).start();

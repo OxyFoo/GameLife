@@ -1,6 +1,6 @@
 import { TwoDigit } from './Functions';
 
-const DAY_TIME = 24 * 60 * 60;
+import { DAY_TIME } from '@oxyfoo/gamelife-types/Rules/Time';
 
 /**
  * Get absolute UTC time in seconds

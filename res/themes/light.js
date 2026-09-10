@@ -21,6 +21,7 @@ const Color = {
     darkBlue: '#04052C', // Dark blue
 
     ox: '#962D8B',
+    raid: '#F5A24B', // Orange (raids)
     dataBigKpi: '#232B5D', // Dark blue
 
     ground1: '#FFFFFF',

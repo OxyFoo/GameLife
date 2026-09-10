@@ -566,7 +566,7 @@ class BackFlowEngine extends React.Component {
         // Animation selection
         if (this.navBar.current?.state.animationSelection) {
             /** @type {(PageNames | null)[]} */
-            const pageList = ['home', 'calendar', null, 'multiplayer', 'shop'];
+            const pageList = ['home', 'calendar', null, 'raids', 'shop'];
             const toIndex = pageList.indexOf(pageName);
             const newAnimPos = toIndex === -1 ? 2 : toIndex;
 

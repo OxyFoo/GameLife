@@ -1,4 +1,4 @@
-import { GetLocalDayIndex } from './utils';
+import { GetLocalDayIndex } from '@oxyfoo/gamelife-types/Rules/Time';
 import { DAY_TIME, GetLocalTime, GetTimeZone } from 'Utils/Time';
 
 /**

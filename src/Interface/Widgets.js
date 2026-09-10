@@ -8,6 +8,7 @@ export { Missions } from './Widgets/Missions';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';
 export { PageHeader } from './Widgets/PageHeader';
 export { PieChart } from './Widgets/PieChart';
+export { RaidPointsMention } from './Widgets/RaidPointsMention';
 export { SkillHistogram } from './Widgets/SkillHistogram';
 export { StatsBar, StatsBarTextOnly } from './Widgets/StatsBars';
 

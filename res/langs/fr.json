@@ -107,8 +107,8 @@
             "mission3": {
                 "title": "Demander en ami",
                 "texts": {
-                    "1": "Clique sur ce bouton pour aller dans la page multijoueur",
-                    "2": "En bas à droite de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "1": "Clique sur ce bouton pour aller dans la page Raids",
+                    "2": "Ouvre l'onglet Amis pour voir la liste de tes amis",
                     "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
@@ -214,7 +214,7 @@
     "navbar": {
         "home": "Accueil",
         "calendar": "Calendrier",
-        "multiplayer": "Multijoueur",
+        "raids": "Raids",
         "shop": "Marché"
     },
 
@@ -234,7 +234,8 @@
         "common": "Commun",
         "rare": "Rare",
         "epic": "Épique",
-        "legendary": "Légendaire"
+        "legendary": "Légendaire",
+        "random": "Aléatoire"
     },
 
     "server": {
@@ -309,6 +310,7 @@
             "item": "Nouvel item : {}",
             "ox": "Gain : {} Ox",
             "chest": "Coffre : {}",
+            "achievement": "Succès débloqué : {}",
             "items-in-chest": "Ainsi que les objets suivants..."
         },
 
@@ -485,6 +487,13 @@
         "container-skills-title": "Compétences",
         "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
         "container-achievements-empty": "Aucun succès débloqué, lance-toi !",
+        "container-raid-title": "Raid",
+        "container-raid-fighting": "En combat",
+        "container-raid-healing": "En guérison",
+        "container-raid-rest": "En repos",
+        "container-raid-locked": "Niveau {} requis",
+        "container-raid-none": "Aucun raid en cours",
+        "container-raid-update": "Dispo après la maj",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques heures !",
@@ -500,19 +509,99 @@
         "alert-dateerror-text": "Il semblerait que tu aies modifié la date, peut-être dans le but de tricher ?\n\nJe compte sur toi pour remettre la bonne date, j'espère que cela ne se reproduira plus ^^"
     },
 
-    "leaderboard": {
-        "title": "Classement",
-        "input-label-search": "Rechercher un joueur",
+
+    "raids": {
+        "title": "Raids",
+        "season": "Saison {}",
+        "points": "{} pts",
+        "points-signed": "+{} pts",
+        "rank": "Rang #{}",
+        "tab-rank": "Raid Rank",
+        "tab-friends": "Amis",
+        "tab-feed": "Feed",
+        "tab-this-raid": "Ce Raid",
+        "tab-history": "Anciens Raids",
+        "card-progress": "Progression globale",
+        "card-contribution": "Contribution",
+        "card-participants": "Participants",
+        "card-duration": "Durée",
+        "card-duration-days": "{} / {} jours",
+        "card-locked": "Fonctionnalité débloquée à partir du niveau {} : fais des activités dans la vraie vie, note-les dans ton calendrier et reviens une fois le niveau atteint, tout un monde s'ouvrira à toi !",
+        "card-update-required": "Les raids seront disponibles après la mise à jour",
+        "card-rest-title": "Repos des Héros",
+        "card-rest-next": "Prochain raid",
+        "card-rest-no-next": "Les héros se reposent, le prochain raid sera annoncé bientôt",
+        "card-last-contribution": "Dernière contribution : {} pts · Rang #{}",
+        "status-fighting": "En cours",
+        "status-fighting-detail": "{} activités · {} restantes",
+        "status-healing": "Guérison",
+        "status-defeated": "Boss vaincu !",
+        "status-ended": "Saison terminée",
+        "heal-ad": "Guérison ×2",
+        "heal-ox": "Guérison totale {} Ox",
+        "rewards-locked": "Bats le boss à temps pour débloquer les récompenses",
+        "rewards-unlocked": "Récompenses débloquées, à réclamer",
+        "reward-claim": "Réclamer la récompense",
+        "reward-claimed": "Récompense réclamée",
+        "reward-none": "Pas de récompense pour ce raid",
+        "claim-title": "Récompense du raid",
+        "claim-message": "Merci pour ta participation, voici ce que tu as gagné !",
+        "history-boss-defeated": "Boss vaincu",
+        "history-boss-survived": "Boss non vaincu",
+        "leaderboard-title": "Classement mondial",
+        "leaderboard-info-title": "Classement",
+        "leaderboard-info-message": "Points infligés au boss pendant ce raid. La flèche indique l'évolution de ton rang depuis hier.",
+        "leaderboard-empty": "Aucun joueur pour le moment",
         "error-connection": "Connexion au serveur impossible",
-        "error-loading": "Erreur lors du chargement du classement",
-        "empty-list": "Aucun joueur trouvé",
+        "error-loading": "Erreur lors du chargement",
+        "retry": "Réessayer",
         "kpi-rank": "Rang",
-        "kpi-time": "Temps",
-        "kpi-time-hour": "{}h",
+        "kpi-points": "Points",
         "kpi-activities": "Activités",
-        "period-weekly": "Semaine",
-        "period-monthly": "Mois",
-        "period-yearly": "Année"
+        "friends-search": "Rechercher un ami",
+        "friends-sort": "Trier par :",
+        "friends-sort-list": ["ordre alphabétique", "niveau", "activités", "heures"],
+        "friends-title": "Mes amis",
+        "friends-waiting": "Demandes en attente",
+        "friends-blocked": "Amis bloqués",
+        "feed-title": "Feed de tes amis",
+        "feed-info-title": "Feed",
+        "feed-info-message": "Niveaux, succès, coups critiques et rangs de tes amis.",
+        "feed-level-up": "Niv. {}",
+        "feed-achievement": "Succès : {}",
+        "feed-critical": "Coup critique +{} pts",
+        "feed-rank": "Top {} du raid",
+        "feed-empty": "Rien à afficher, ajoute des amis !",
+        "activities-title": "Activités - ce raid",
+        "activities-count": "{} activités",
+        "activities-empty": "Aucune activité comptabilisée pour ce raid",
+        "history-title": "Raids précédents",
+        "history-not-participated": "Non participé",
+        "history-ended-on": "Terminé le {}",
+        "history-empty": "Aucun raid terminé",
+        "alert-error": {
+            "title": "Erreur",
+            "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        },
+        "alert-claim-error": {
+            "title": "Récompense indisponible",
+            "message": "Cette récompense n'est pas (ou plus) disponible."
+        },
+        "alert-heal-ox-title": "Guérison totale",
+        "alert-heal-ox-message": "Terminer la guérison maintenant pour {} Ox ?",
+        "alert-heal-ox-quote-message": "Le prix a changé : {} Ox. Confirmer ?",
+        "alert-heal-ad-limit": {
+            "title": "Limite atteinte",
+            "message": "Tu as déjà accéléré ta guérison {} fois aujourd'hui."
+        },
+        "alert-heal-ad-used": {
+            "title": "Déjà utilisé",
+            "message": "Une seule pub par guérison."
+        },
+        "alert-heal-ad-success": {
+            "title": "Bravo",
+            "message": "Ta guérison est deux fois plus rapide !"
+        }
     },
 
     "login": {
@@ -682,21 +771,6 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
-    "friends": {
-        "title": "Mes amis",
-        "title-friends": "Mes amis",
-        "title-waiting-friends": "Demandes en attente",
-        "title-blocked-friends": "Amis bloqués",
-
-        "button-search": "Rechercher un ami",
-        "button-sort": "Trier par :",
-        "sort-list": [
-            "ordre alphabétique",
-            "niveau",
-            "activités",
-            "heures"
-        ]
-    },
 
     "profile-friend": {
         "activity-now-title": "Activité en cours: {}",

@@ -142,7 +142,7 @@ class Test extends BackTest {
                 <InputText
                     containerStyle={styles.marginBot}
                     label='Test input'
-                    icon={'users'}
+                    icon={'user'}
                     value={this.state.input}
                     onChangeText={(newText) => this.setState({ input: newText })}
                 />

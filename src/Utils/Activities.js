@@ -1,13 +1,14 @@
 import React from 'react';
+import { View } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 // import Notifications from 'Utils/Notifications';
-import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention } from 'Interface/Widgets';
+import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention, RaidPointsMention } from 'Interface/Widgets';
 import DynamicVar from 'Utils/DynamicVar';
-import { AdBonusOx } from 'Data/User/Activities/oxEconomy';
+import { AdBonusOx } from '@oxyfoo/gamelife-types/Rules/OxEconomy';
 import { MinMax } from 'Utils/Functions';
 import { GetDate, GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 
@@ -203,6 +204,10 @@ async function AddActivity(activity) {
     const savedActivity = user.activities.GetSavedByStartTime(activity.startTime);
     const oxBonusPreview = AdBonusOx(oxPreview);
 
+    // Raid points of the activity: local preview first (no critical), then the server value
+    const raidStatus = user.raids.GetStatus();
+    const raidPreview = raidStatus === 'fighting' || raidStatus === 'healing' ? user.raids.PreviewHit(activity) : null;
+
     // Ox granted by the ad, 0 until it has been watched. Shared by the mention and the button:
     // the `args` below are captured once, only a watched value can make the total follow.
     const bonusOx = new DynamicVar(0);
@@ -218,7 +223,13 @@ async function AddActivity(activity) {
         args: {
             icon: 'check-filled',
             text: lang['display-activity-text'],
-            additionalContent: oxPreview !== 0 ? <BonusOxMention baseOx={oxPreview} bonusOx={bonusOx} /> : undefined,
+            additionalContent:
+                oxPreview !== 0 || raidPreview !== null ? (
+                    <View>
+                        {oxPreview !== 0 && <BonusOxMention baseOx={oxPreview} bonusOx={bonusOx} />}
+                        <RaidPointsMention preview={raidPreview} />
+                    </View>
+                ) : undefined,
             additionalButton: canBoost ? (
                 <BonusOxAdButton activityID={savedActivity.ID} oxBonusPreview={oxBonusPreview} bonusOx={bonusOx} />
             ) : undefined,

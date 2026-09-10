@@ -8,7 +8,7 @@ import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Ads').Ad} Ad
  *
- * @typedef {'shop' | 'activity-bonus'} RewardedAds
+ * @typedef {'shop' | 'activity-bonus' | 'raid-heal'} RewardedAds
  * @typedef {'none'} InterstitialAds
  * @typedef {RewardedAds | InterstitialAds} AdNames
  *

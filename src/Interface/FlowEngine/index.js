@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import styles from './style';
 import BackFlowEngine from './back';
@@ -32,7 +32,9 @@ class FlowEnginePagesRender extends BackFlowEngine {
                 <DynamicBackground opacity={0.15} backgroundColor={themeManager.GetColor('ground1')} />
                 <DynamicArea customResponsive={customResponsive}>
                     <KeyboardAvoidingView style={styles.fullscreen} behavior='padding'>
-                        {this.renderPages()}
+                        <SafeAreaInsetsContext.Consumer>
+                            {(insets) => this.renderPages(insets)}
+                        </SafeAreaInsetsContext.Consumer>
                         <UserHeader ref={this.userHeader} />
                         <BottomPanel ref={this.bottomPanel} />
                         <NavBar ref={this.navBar} />
@@ -47,7 +49,14 @@ class FlowEnginePagesRender extends BackFlowEngine {
         );
     }
 
-    renderPages() {
+    /**
+     * @param {import('./DynamicArea').AreaInsets | null} insets Safe-area insets, already applied as
+     * padding by `DynamicArea`. A page declaring `feHeaderOverlay` gets them back as negative
+     * offsets so its background reaches the physical edges of the screen; `overflow: hidden` then
+     * clips to that enlarged box, not to the padded one. The bottom is left alone: the navbar owns
+     * it, and the pages that overlay their header still sit above it.
+     */
+    renderPages(insets) {
         return this.state.mountedPages.map((page) => {
             const { selectedPage, currentTransition } = this.state;
 
@@ -64,7 +73,13 @@ class FlowEnginePagesRender extends BackFlowEngine {
                     <View
                         style={[
                             styles.parent,
-                            Page.feShowUserHeader && { top: this.userHeader.current?.state.height },
+                            Page.feShowUserHeader &&
+                                !Page.feHeaderOverlay && { top: this.userHeader.current?.state.height },
+                            Page.feHeaderOverlay && {
+                                top: -(insets?.top ?? 0),
+                                left: -(insets?.left ?? 0),
+                                right: -(insets?.right ?? 0)
+                            },
                             Page.feShowNavBar && { bottom: this.navBar.current?.state.height }
                         ]}
                     >

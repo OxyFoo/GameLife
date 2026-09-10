@@ -1,6 +1,6 @@
 import dataManager from 'Managers/DataManager';
 import Activities from '../index';
-import { GetLocalDayIndex } from '../utils';
+import { GetLocalDayIndex } from '@oxyfoo/gamelife-types/Rules/Time';
 import DynamicVar from 'Utils/DynamicVar';
 import { GetTimeZone } from 'Utils/Time';
 
@@ -148,11 +148,14 @@ describe('[Data] Activities', () => {
             expect(activities.GetUseful()).toEqual([evening, afterLocalMidnight]);
         });
 
-        it('should not consume the budget with skills without XP', () => {
-            const saved = [at(DAY, 8, 720), at(DAY, 21, 60, SKILL_NO_XP)];
-            load(saved);
+        it('should neither consume the budget nor grant anything with skills without XP', () => {
+            const morning = at(DAY, 8, 600);
+            const rest = at(DAY, 12, 60, SKILL_NO_XP);
+            const evening = at(DAY, 18.5, 120);
+            load([morning, rest, evening]);
 
-            expect(activities.GetUseful()).toEqual(saved);
+            // The rest activity is not useful, and it left the whole 12h budget to the other two
+            expect(activities.GetUseful()).toEqual([morning, evening]);
         });
 
         it('should ignore activities added more than 48h after their start', () => {

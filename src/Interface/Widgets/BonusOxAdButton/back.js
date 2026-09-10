@@ -57,6 +57,14 @@ class BackBonusOxAdButton extends React.Component {
     /** @type {boolean} The ad has been closed and the screen is ours again */
     closed = false;
 
+    /**
+     * The reward has been earned: this button has done its job for this activity, whatever the SDK
+     * says next. The ad reloads right after CLOSED, and that reload announces 'ready' — which used
+     * to bring the button back and let the user burn a second ad for a boost the server refuses.
+     * @type {boolean}
+     */
+    consumed = false;
+
     /** @type {boolean} The outcome has been announced: only ever once */
     announced = false;
 
@@ -81,6 +89,9 @@ class BackBonusOxAdButton extends React.Component {
      * @type {(ad: Ad) => Promise<boolean>}
      */
     claim = async () => {
+        // Set before the round-trip: the reload may announce 'ready' while the claim is still flying
+        this.consumed = true;
+
         const response = await user.server2.tcp.SendAndWait({
             action: 'bonus-activity-ox',
             activityID: this.props.activityID
@@ -206,6 +217,11 @@ class BackBonusOxAdButton extends React.Component {
      * @type {AdEventFunction}
      */
     onAdStateChange = (_ad, state) => {
+        // The reload that follows a watched ad must not re-offer the boost
+        if (this.consumed && (state === 'ready' || state === 'wait')) {
+            return;
+        }
+
         if (state === 'ready') {
             this.setState({ adState: user.informations.activityBonusRemaining > 0 ? 'ready' : 'notAvailable' });
             return;
@@ -220,8 +236,9 @@ class BackBonusOxAdButton extends React.Component {
         if (state === 'closed') {
             this.closed = true;
 
-            // Closed without ever reaching the claim: the ad reloads, offer it again
-            if (this.claimOutcome === null) {
+            // Closed without ever earning the reward: the ad reloads, offer it again. Closed with
+            // the claim still in flight keeps the spinner until it answers.
+            if (this.claimOutcome === null && !this.consumed) {
                 this.setState({ adState: 'wait' });
                 return;
             }

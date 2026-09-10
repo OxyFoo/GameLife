@@ -147,6 +147,34 @@ describe('[Widget] BonusOxAdButton', () => {
         expect(toJSON()).toBeNull();
     });
 
+    it('stays gone when the reload announces a fresh ad after the reward', async () => {
+        // The SDK reloads the ad right after CLOSED, and that reload fires 'ready'. It used to bring
+        // the button back: the user watched a second ad for a boost the server refuses as
+        // 'not-eligible' — a real impression burned for nothing.
+        const { toJSON } = render(<BonusOxAdButton activityID={ACTIVITY_ID} oxBonusPreview={OX_BONUS_PREVIEW} />);
+        const claim = adsGet.mock.calls[0][2];
+
+        user.server2.tcp.SendAndWait = jest.fn(() =>
+            Promise.resolve({ status: 'bonus-activity-ox', result: 'ok', ox: 115, oxBonus: 15, remaining: 2 })
+        );
+
+        act(() => onAdStateChange(adMeta, 'ready'));
+        expect(toJSON()).not.toBeNull();
+
+        // Reward earned, then the ad closes while the claim is still in flight
+        const pending = claim(adMeta);
+        act(() => onAdStateChange(adMeta, 'closed'));
+        await act(async () => {
+            await pending;
+        });
+        act(() => onAdStateChange(adMeta, 'watched'));
+        expect(toJSON()).toBeNull();
+
+        // The reload of the consumed ad must not offer it again
+        act(() => onAdStateChange(adMeta, 'ready'));
+        expect(toJSON()).toBeNull();
+    });
+
     it('comes back when the ad is closed without a reward', () => {
         const { toJSON } = render(<BonusOxAdButton activityID={ACTIVITY_ID} oxBonusPreview={OX_BONUS_PREVIEW} />);
 

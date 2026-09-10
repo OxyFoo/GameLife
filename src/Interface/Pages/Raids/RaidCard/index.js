@@ -11,7 +11,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { RAID_MIN_LEVEL } from 'Data/User/Raids';
-import { Icon, ProgressBar, Text } from 'Interface/Components';
+import { Icon, ProgressBar, Reward, Text } from 'Interface/Components';
 import { ClaimRewardButton } from './ClaimRewardButton';
 import { FormatCompact, FormatCountdown, FormatThousands } from 'Utils/Raids';
 
@@ -177,7 +177,20 @@ function renderRest(snapshot, lastSeason) {
                 </Text>
             )}
             {season !== null && (rewardState === 'claimable' || rewardState === 'claimed') && (
-                <ClaimRewardButton style={styles.restClaim} seasonID={season.id} claimed={rewardState === 'claimed'} />
+                <View style={styles.restRewards}>
+                    {season.rewards.length > 0 && (
+                        <View style={styles.restRewardsSlots}>
+                            {season.rewards.map((reward, index) => (
+                                <Reward key={`raid-rest-reward-${index}`} item={reward} size={32} />
+                            ))}
+                        </View>
+                    )}
+                    <ClaimRewardButton
+                        seasonID={season.id}
+                        claimed={rewardState === 'claimed'}
+                        rewardsCount={season.rewards.length}
+                    />
+                </View>
             )}
         </View>
     );

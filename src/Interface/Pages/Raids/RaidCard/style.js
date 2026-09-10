@@ -181,8 +181,15 @@ const styles = StyleSheet.create({
     restLast: {
         marginTop: 12
     },
-    restClaim: {
+    // The season rewards stay on the card once the boss is down, claimed or not
+    restRewards: {
+        alignItems: 'center',
+        gap: 8,
         marginTop: 12
+    },
+    restRewardsSlots: {
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 });
 

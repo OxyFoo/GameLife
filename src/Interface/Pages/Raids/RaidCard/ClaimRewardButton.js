@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 import { STOP_CARD_PRESS } from './cardPress';
 
 import { Button, Icon, Text } from 'Interface/Components';
+import { ParsePlural } from 'Utils/String';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -19,9 +20,11 @@ import { Button, Icon, Text } from 'Interface/Components';
  * @param {StyleProp} [props.style]
  * @param {number} props.seasonID
  * @param {boolean} props.claimed
+ * @param {number} [props.rewardsCount] Number of rewards of the season, for the plural
  */
-function ClaimRewardButton({ style, seasonID, claimed }) {
+function ClaimRewardButton({ style, seasonID, claimed, rewardsCount = 1 }) {
     const lang = langManager.curr['raids'];
+    const plural = rewardsCount > 1;
     const [loading, setLoading] = React.useState(false);
 
     const onPress = async () => {
@@ -36,7 +39,7 @@ function ClaimRewardButton({ style, seasonID, claimed }) {
     if (claimed) {
         return (
             <Text style={style} fontSize={12} color='success'>
-                {`✓ ${lang['reward-claimed']}`}
+                {`✓ ${ParsePlural(lang['reward-claimed'], plural)}`}
             </Text>
         );
     }
@@ -53,7 +56,7 @@ function ClaimRewardButton({ style, seasonID, claimed }) {
         >
             <Icon color='background' icon='gift' size={18} />
             <Text color='background' fontSize={14} bold>
-                {lang['reward-claim']}
+                {ParsePlural(lang['reward-claim'], plural)}
             </Text>
         </Button>
     );

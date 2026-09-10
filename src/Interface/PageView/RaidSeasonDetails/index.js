@@ -110,6 +110,7 @@ const RaidSeasonDetails = ({ entry }) => {
                                 style={styles.claim}
                                 seasonID={entry.id}
                                 claimed={entry.rewardState === 'claimed'}
+                                rewardsCount={entry.rewards.length}
                             />
                         )}
                     </>

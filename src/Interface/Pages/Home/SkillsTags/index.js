@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 0,
         borderRadius: 12,
-        borderWidth: 1,
+        borderWidth: 0.6,
         justifyContent: 'center'
     },
     cardText: {

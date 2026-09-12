@@ -17,7 +17,7 @@ import { Defs, G, Line, Mask, RadialGradient, Rect, Stop, Svg } from 'react-nati
  * A radial mask keeps the grid crisp near the top and fades it toward the edges.
  * @param {object} props
  * @param {StyleProp} [props.style]
- * @param {number} [props.spacing] Space between lines in px, default: 30
+ * @param {number} [props.spacing] Space between lines in px, default: 20
  * @param {number} [props.opacity] Line opacity between 0 and 1, default: 0.09
  * @param {ThemeColor} [props.color1] Vertical lines color, default: 'main1'
  * @param {ThemeColor} [props.color2] Horizontal lines color, default: 'main2'
@@ -26,8 +26,8 @@ import { Defs, G, Line, Mask, RadialGradient, Rect, Stop, Svg } from 'react-nati
  */
 function DynamicGrid({
     style,
-    spacing = 30,
-    opacity = 0.07,
+    spacing = 20,
+    opacity = 0.05,
     color1 = 'main1',
     color2 = 'main2',
     backgroundColor = 'transparent'

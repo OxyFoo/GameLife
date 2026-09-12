@@ -28,8 +28,8 @@ class BonusOxAdButton extends BackBonusOxAdButton {
                 loading={adState === 'wait'}
                 onPress={this.openAd}
             >
-                <Icon icon='play' color='white' size={20} />
-                <Text fontSize={14} bold>
+                <Icon style={styles.icon} icon='play' color='white' size={20} />
+                <Text style={styles.text} fontSize={14} bold>
                     {lang['display-activity-bonus-ad'].replace('{}', oxBonusPreview.toString())}
                 </Text>
             </Button>

@@ -47,7 +47,7 @@ class Display extends BackDisplay {
                     <View style={styles.buttonsRow}>
                         {button2 && this.callback2 && (
                             <Button
-                                style={[styles.button, styles.buttonRowItem]}
+                                style={[styles.button, styles.buttonRowItemLarge]}
                                 appearance='outline'
                                 fontSize={13}
                                 onPress={this.callback2}
@@ -55,7 +55,11 @@ class Display extends BackDisplay {
                                 {button2}
                             </Button>
                         )}
-                        <Button style={[styles.button, styles.buttonRowItem]} fontSize={13} onPress={this.callback}>
+                        <Button
+                            style={[styles.button, styles.buttonRowItemSmall]}
+                            fontSize={13}
+                            onPress={this.callback}
+                        >
                             {button}
                         </Button>
                     </View>
@@ -102,8 +106,14 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 4
     },
-    buttonRowItem: {
-        flex: 1,
+    // 60/40 split: the secondary action carries the long label, the primary one is a single word.
+    // Alone, the primary button still fills the row.
+    buttonRowItemLarge: {
+        flex: 3,
+        justifyContent: 'center'
+    },
+    buttonRowItemSmall: {
+        flex: 2,
         justifyContent: 'center'
     },
 

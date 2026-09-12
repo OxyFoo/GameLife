@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         justifyContent: 'space-between',
         gap: 12,
-        marginBottom: 24
+        marginBottom: 12
     },
 
     // Two columns layout
     mainContentContainer: {
-        marginBottom: 24
+        marginBottom: 12
     },
     leftColumn: {
         maxWidth: '50%',

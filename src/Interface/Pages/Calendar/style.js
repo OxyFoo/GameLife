@@ -30,12 +30,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 8
     },
+    // Button defaults (full width, 16/24 padding) overridden: it only wraps the date and the icon
     shareButton: {
+        width: 'auto',
         flexShrink: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-        paddingVertical: 6
+        paddingVertical: 6,
+        paddingHorizontal: 0
+    },
+    shareContent: {
+        flexWrap: 'nowrap',
+        gap: 6
     },
     summaryTitle: {
         flexShrink: 1,

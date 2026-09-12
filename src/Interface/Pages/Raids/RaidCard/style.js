@@ -161,10 +161,10 @@ const styles = StyleSheet.create({
     lockedText: {
         textAlign: 'center'
     },
+    // No padding of its own: the title sits where the boss name sits on the fight face
     rest: {
         alignItems: 'center',
-        gap: 4,
-        paddingVertical: 12
+        gap: 4
     },
     restCountdown: {
         marginTop: 4

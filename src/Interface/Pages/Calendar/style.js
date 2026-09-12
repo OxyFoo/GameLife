@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         width: 'auto',
         flexShrink: 1,
         paddingVertical: 6,
-        paddingHorizontal: 0
+        paddingHorizontal: 6
     },
     shareContent: {
         flexWrap: 'nowrap',

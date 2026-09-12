@@ -34,27 +34,7 @@ exports[`[Component] Button renders correctly 1`] = `
   }
   throttleTime={250}
 >
-  <BVLinearGradient
-    angle={267}
-    colors={
-      [
-        4287428607,
-        4292583935,
-      ]
-    }
-    endPoint={
-      {
-        "x": 0.5,
-        "y": 1,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0.5,
-        "y": 0,
-      }
-    }
+  <View
     style={
       {
         "bottom": 0,
@@ -64,10 +44,45 @@ exports[`[Component] Button renders correctly 1`] = `
         "top": 0,
       }
     }
-    useAngle={true}
   >
+    <BVLinearGradient
+      angle={267}
+      colors={
+        [
+          4287428607,
+          4292583935,
+        ]
+      }
+      endPoint={
+        {
+          "x": 0.5,
+          "y": 1,
+        }
+      }
+      locations={null}
+      pointerEvents="none"
+      startPoint={
+        {
+          "x": 0.5,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {},
+        ]
+      }
+      useAngle={true}
+    />
     <View />
-  </BVLinearGradient>
+  </View>
   <View
     pointerEvents="none"
     style={

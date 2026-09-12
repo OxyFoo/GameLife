@@ -23,8 +23,9 @@ class Raids extends BackRaids {
             return this.renderNoInternet();
         }
 
-        // The page draws under the header and under the status bar (feHeaderOverlay): it owns both
-        // offsets the FlowEngine would normally apply, so the card lands where it belongs.
+        // The page draws under the header and under the status bar (feHeaderOverlay), so the season
+        // landscape reaches the physical edges. The scroll view itself starts below the header: the
+        // content vanishes under it while scrolling, as on every other page, and the landscape stays put.
         const headerHeight = this.fe.userHeader?.state.height ?? 0;
 
         return (
@@ -34,11 +35,10 @@ class Raids extends BackRaids {
                 <SafeAreaInsetsContext.Consumer>
                     {(insets) => (
                         <ScrollView
-                            style={styles.scrollview}
+                            style={[styles.scrollview, { marginTop: (insets?.top ?? 0) + headerHeight }]}
                             contentContainerStyle={[
                                 styles.scrollContent,
                                 {
-                                    paddingTop: (insets?.top ?? 0) + headerHeight,
                                     paddingLeft: CONTENT_PADDING + (insets?.left ?? 0),
                                     paddingRight: CONTENT_PADDING + (insets?.right ?? 0)
                                 }

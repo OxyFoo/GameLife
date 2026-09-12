@@ -47,8 +47,11 @@ function RaidCard({ style, onPress, lastSeason = null, onRewardClaimed }) {
     const snapshot = useRaid();
     const lang = langManager.curr['raids'];
     const { status } = snapshot;
+    // No boss to fight: the raid is over for everyone until the 1st, the card rests with the heroes
+    const rest = status === 'no-season' || status === 'heroes-rest' || status === 'ended' || status === 'defeated';
 
-    const borderColor = themeManager.GetColor(status === 'locked' ? 'border' : 'raid');
+    // The orange belongs to the fight: a locked or resting card is greyed out
+    const borderColor = themeManager.GetColor(status === 'locked' || rest ? 'border' : 'raid');
     // Opaque enough to stay readable over the season landscape, translucent enough to belong to it
     const overlay = [
         themeManager.GetColor('background', { opacity: 0.88 }),
@@ -73,8 +76,7 @@ function RaidCard({ style, onPress, lastSeason = null, onRewardClaimed }) {
                 </View>
             </View>
         );
-    } else if (status === 'no-season' || status === 'heroes-rest' || status === 'ended' || status === 'defeated') {
-        // The boss is down: the raid is over for everyone until the 1st, the card rests with it
+    } else if (rest) {
         content = renderRest(snapshot, lastSeason, onRewardClaimed);
     } else {
         content = renderFull(snapshot, false);
@@ -175,7 +177,7 @@ function renderRest(snapshot, lastSeason, onRewardClaimed) {
 
     return (
         <View style={styles.rest}>
-            <Text fontSize={22} bold>
+            <Text fontSize={22} color='secondary' bold>
                 {lang['card-rest-title']}
             </Text>
             {season !== null && (defeated || status === 'ended') && (
@@ -213,6 +215,7 @@ function renderRest(snapshot, lastSeason, onRewardClaimed) {
                         seasonID={outcome.id}
                         claimed={false}
                         rewardsCount={outcome.rewards.length}
+                        appearance='outline'
                         onClaimed={onRewardClaimed}
                     />
                 </View>

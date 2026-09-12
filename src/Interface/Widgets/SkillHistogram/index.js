@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, FlatList } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import HistogramBar from './bar';
@@ -8,6 +7,7 @@ import BackSkillHistogram from './back';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
+import { GradientView } from 'Interface/Primitives';
 import { Button, Text } from 'Interface/Components';
 
 /**
@@ -29,7 +29,7 @@ class SkillHistogram extends BackSkillHistogram {
         const baseColor = themeManager.GetColor('border', { opacity: 0.35 });
 
         return (
-            <LinearGradient
+            <GradientView
                 style={[styles.card, style]}
                 colors={[
                     themeManager.GetColor('border', { opacity: 0.2 }),
@@ -104,7 +104,13 @@ class SkillHistogram extends BackSkillHistogram {
                                     maxToRenderPerBatch={visibleBars}
                                     windowSize={3}
                                     removeClippedSubviews={true}
-                                    maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+                                    // Only the whole history prepends days; a fixed window never
+                                    // needs the anchor, and it skews the initial offset on iOS
+                                    maintainVisibleContentPosition={
+                                        windowDays === null ? { minIndexForVisible: 0 } : undefined
+                                    }
+                                    onContentSizeChange={this.onListContentSizeChange}
+                                    onScrollBeginDrag={this.onScrollBeginDrag}
                                     onStartReached={this.onStartReached}
                                     onStartReachedThreshold={0.5}
                                     horizontal={true}
@@ -114,7 +120,7 @@ class SkillHistogram extends BackSkillHistogram {
                         </View>
                     </View>
                 )}
-            </LinearGradient>
+            </GradientView>
         );
     }
 

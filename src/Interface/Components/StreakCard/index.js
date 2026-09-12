@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import themeManager from 'Managers/ThemeManager';
 
+import { GradientView } from 'Interface/Primitives';
 import { Text } from '../Text';
 import { Icon } from '../Icon';
 import { ProgressDonut } from '../ProgressDonut';
@@ -40,7 +40,7 @@ class StreakCard extends React.Component {
         const progress = best > 0 ? Math.min(1, current / best) : 0;
 
         return (
-            <LinearGradient
+            <GradientView
                 style={[styles.gradient, style]}
                 colors={[
                     themeManager.GetColor('main1', { opacity: 0.2 }),
@@ -72,7 +72,7 @@ class StreakCard extends React.Component {
                         {rateText}
                     </Text>
                 </View>
-            </LinearGradient>
+            </GradientView>
         );
     }
 }

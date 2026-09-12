@@ -49,7 +49,7 @@ class BackRaids extends PageBase {
         /** @type {RaidFeedEvent[]} */
         feed: [],
 
-        /** @type {RaidHistoryEntry | null} Last closed season (heroes' rest face of the card) */
+        /** @type {RaidHistoryEntry | null} Last settled season (heroes' rest face of the card) */
         lastSeason: null
     };
 
@@ -140,7 +140,10 @@ class BackRaids extends PageBase {
         this.setState({ feedState: 'loaded', feed: result.events });
     };
 
-    /** Last closed season, shown under the heroes' rest face */
+    /**
+     * Last settled season, shown under the heroes' rest face. Loaded again once its reward is taken
+     * from the card: the reward state lives in the history, not in the raid payload.
+     */
     loadLastSeason = async () => {
         const status = user.raids.GetStatus();
         if (status !== 'heroes-rest' && status !== 'no-season' && status !== 'ended') {

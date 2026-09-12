@@ -24,26 +24,32 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
         paddingHorizontal: 24
     },
+    // Date and share icon on the left, ox counter pushed to the right edge
     summaryHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 8
     },
-    summaryTitle: {
-        flex: 1,
-        fontSize: 18,
-        textAlign: 'left'
-    },
+    // Button defaults (full width, 16/24 padding) overridden: it only wraps the date and the icon
     shareButton: {
         width: 'auto',
-        flexShrink: 0,
+        flexShrink: 1,
         paddingVertical: 6,
         paddingHorizontal: 6
+    },
+    shareContent: {
+        flexWrap: 'nowrap',
+        gap: 6
+    },
+    summaryTitle: {
+        flexShrink: 1,
+        fontSize: 18,
+        textAlign: 'left'
     },
     oxButton: {
         width: 'auto',
         flexShrink: 0,
+        marginLeft: 'auto',
         paddingVertical: 6,
         paddingHorizontal: 6
     },

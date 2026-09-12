@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 
 import langManager from 'Managers/LangManager';
 
@@ -70,6 +71,12 @@ class BackSkillHistogram extends React.Component {
     /** Avoid loading two batches at once */
     loading = false;
 
+    /** The user took over the scroll position, stop snapping the list to today */
+    userInteracted = false;
+
+    /** Unfloored list width, to snap the scroll exactly to the end of the content */
+    exactListWidth = 0;
+
     /** @type {{ dailyMinutes: Map<number, number> | null, oldest: number, today: number, data: HistogramData }} */
     cache = { dailyMinutes: null, oldest: 0, today: 0, data: { days: [], niceMax: GetNiceMaxMinutes(0) } };
 
@@ -123,12 +130,41 @@ class BackSkillHistogram extends React.Component {
 
     getSlotWidth = () => this.state.listWidth / this.getVisibleBars();
 
+    /** @param {typeof SkillHistogramProps} prevProps */
+    componentDidUpdate(prevProps) {
+        if (prevProps.windowDays !== this.props.windowDays) {
+            this.userInteracted = false;
+        }
+    }
+
     /** @param {LayoutChangeEvent} event */
     onLayoutList = (event) => {
+        this.exactListWidth = event.nativeEvent.layout.width;
         const listWidth = Math.floor(event.nativeEvent.layout.width);
         if (listWidth !== this.state.listWidth) {
+            this.userInteracted = false;
             this.setState({ listWidth });
         }
+    };
+
+    onScrollBeginDrag = () => {
+        this.userInteracted = true;
+    };
+
+    /**
+     * On iOS, `initialScrollIndex` leaves the list short of its end by a fraction of a slot (the
+     * bars drift to the right and today is clipped). Once the content is sized, snap to the exact
+     * end — today against the right edge — as long as the user did not take over the scroll.
+     * @param {number} contentWidth
+     */
+    onListContentSizeChange = (contentWidth) => {
+        if (Platform.OS !== 'ios' || this.userInteracted || this.refList.current === null) {
+            return;
+        }
+        this.refList.current.scrollToOffset({
+            offset: Math.max(0, contentWidth - this.exactListWidth),
+            animated: false
+        });
     };
 
     /** @type {FlatListDays['props']['getItemLayout']} */

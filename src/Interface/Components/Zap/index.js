@@ -29,7 +29,13 @@ class Zap extends ZapBack {
         const { style, position, orientation } = this.props;
 
         if (position === null) {
-            return <Animated.Image style={[styles.zap, style]} onLayout={this.onLayout} source={this.getZapImage()} />;
+            return (
+                <Animated.Image
+                    style={[styles.zap, orientation === 'left' ? styles.zapLeft : styles.zapRight, style]}
+                    onLayout={this.onLayout}
+                    source={this.getZapImage()}
+                />
+            );
         }
 
         return (
@@ -53,12 +59,20 @@ class Zap extends ZapBack {
     }
 }
 
+/** Slight enlargement of the drawing inside its box, applied before the optional mirror */
+const ZAP_TRANSFORM = [{ scale: 1.1 }, { translateY: -4 }];
+
 const styles = StyleSheet.create({
     zap: {
         width: 96,
         height: 96,
-        transform: [{ scale: 1.1 }, { translateY: -4 }],
         resizeMode: 'contain'
+    },
+    zapRight: {
+        transform: ZAP_TRANSFORM
+    },
+    zapLeft: {
+        transform: [...ZAP_TRANSFORM, { scaleX: -1 }]
     },
     zapAbsolute: {
         position: 'absolute',

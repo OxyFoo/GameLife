@@ -139,6 +139,9 @@ class AddActivityPage2 extends BackActivityPage2 {
 
         const usefulStats = user.experience.statsKey.filter((key) => skill.Stats[key] > 0);
 
+        // Raid points of a stored activity, the critical hit revealed by the server
+        const raidHit = editActivity === null ? null : user.raids.GetHit(editActivity);
+
         return (
             <>
                 <Text fontSize={14} color='main1'>{`+ ${XP} ${langXP['xp']} / `}</Text>
@@ -158,6 +161,14 @@ class AddActivityPage2 extends BackActivityPage2 {
                         >{` + ${statXP} ${langStats[stat]}`}</Text>
                     );
                 })}
+                {raidHit !== null && (
+                    <>
+                        <Text fontSize={14} color='main1'>
+                            {` / + ${langManager.curr['raids']['points'].replace('{}', raidHit.points.toString())}`}
+                        </Text>
+                        {raidHit.critical && <Icon icon='bolt' size={14} color='raid' />}
+                    </>
+                )}
             </>
         );
     };

@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 // import Notifications from 'Utils/Notifications';
+import { Zap } from 'Interface/Components';
 import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention, RaidPointsMention } from 'Interface/Widgets';
 import DynamicVar from 'Utils/DynamicVar';
 import { AdBonusOx } from '@oxyfoo/gamelife-types/Rules/OxEconomy';
@@ -213,7 +214,7 @@ async function AddActivity(activity) {
 
     // Raid points of the activity: local preview first (no critical), then the server value
     const raidStatus = user.raids.GetStatus();
-    const raidPreview = raidStatus === 'fighting' || raidStatus === 'healing' ? user.raids.PreviewHit(activity) : null;
+    const raidPreview = raidStatus === 'fighting' || raidStatus === 'healing' ? user.raids.GetHit(activity) : null;
 
     // Ox granted by the ad, 0 until it has been watched. Shared by the mention and the button:
     // the `args` below are captured once, only a watched value can make the total follow.
@@ -229,6 +230,8 @@ async function AddActivity(activity) {
     user.interface.ChangePage('display', {
         args: {
             icon: 'zap',
+            zapPose: Zap.GetRandomCelebrationPose(),
+            zapOrientation: Zap.GetRandomOrientation(),
             text: lang['display-activity-text'],
             additionalContent:
                 oxPreview !== 0 || raidPreview !== null ? (

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import themeManager from 'Managers/ThemeManager';
 
+import { GradientView } from 'Interface/Primitives';
 import { Text } from 'Interface/Components';
 
 /**
@@ -28,7 +28,7 @@ import { Text } from 'Interface/Components';
  */
 function Stat({ style, label, value, valueColor = 'primary', inline = false, right, children }) {
     return (
-        <LinearGradient
+        <GradientView
             style={[styles.stat, style]}
             colors={[
                 themeManager.GetColor('border', { opacity: 0.2 }),
@@ -60,7 +60,7 @@ function Stat({ style, label, value, valueColor = 'primary', inline = false, rig
                 </>
             )}
             {children}
-        </LinearGradient>
+        </GradientView>
     );
 }
 

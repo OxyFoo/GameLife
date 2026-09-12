@@ -67,8 +67,8 @@ class NavBar extends BottomBarBack {
                     ref={this.refButtons['raids']}
                     index={3}
                     text={lang['raids']}
-                    icon='raids-outline'
-                    iconSelect='raids'
+                    icon='swords'
+                    iconSelect='swords'
                     anim={animationSelection}
                     onPress={this.openRaids}
                 />

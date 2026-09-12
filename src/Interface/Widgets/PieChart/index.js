@@ -2,7 +2,7 @@ import React from 'react';
 import { View, FlatList } from 'react-native';
 
 import BackPieChart from './back';
-import styles from './style';
+import styles, { DONUT_SIZE } from './style';
 import langManager from 'Managers/LangManager';
 
 import { DonutChart, Text } from 'Interface/Components';
@@ -52,7 +52,7 @@ class PieChart extends BackPieChart {
             <View style={styles.pieChart}>
                 <DonutChart
                     data={convertedData}
-                    size={110}
+                    size={DONUT_SIZE}
                     strokeWidth={8}
                     strokeLinecap='round'
                     delay={0}

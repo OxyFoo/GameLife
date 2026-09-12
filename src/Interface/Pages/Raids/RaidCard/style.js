@@ -161,10 +161,10 @@ const styles = StyleSheet.create({
     lockedText: {
         textAlign: 'center'
     },
+    // No padding of its own: the title sits where the boss name sits on the fight face
     rest: {
         alignItems: 'center',
-        gap: 4,
-        paddingVertical: 12
+        gap: 4
     },
     restCountdown: {
         marginTop: 4
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     restLast: {
         marginTop: 12
     },
-    // The season rewards stay on the card once the boss is down, claimed or not
+    // The season rewards wait on the card until they are claimed
     restRewards: {
         alignItems: 'center',
         gap: 8,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { GetDate } from 'Utils/Time';
+import { Random } from 'Utils/Functions';
 import ZAP_IMAGES from 'Ressources/zap/zap';
 
 /**
@@ -15,6 +16,7 @@ import ZAP_IMAGES from 'Ressources/zap/zap';
  * @typedef {'onTwoLegs' | 'onFourLegs'} ZapInclinaison
  * @typedef {'face' | 'show'} ZapFace
  * @typedef {'left' | 'right'} ZapOrientation
+ * @typedef {'up' | 'high' | 'firefly' | 'upThumb'} ZapPose Simple poses, drawn as is
  */
 
 const ZapProps = {
@@ -39,6 +41,12 @@ const ZapProps = {
     /** @type {ZapOrientation} */
     orientation: 'right',
 
+    /**
+     * Simple pose drawn as is, `null` to follow `inclinaison` and `face`
+     * @type {ZapPose | null}
+     */
+    pose: null,
+
     /** @type {(event: LayoutChangeEvent) => void} */
     onLayout: () => {}
 };
@@ -60,7 +68,7 @@ class ZapBack extends React.Component {
     };
 
     getZapImage = () => {
-        const { mode, color, inclinaison, face } = this.props;
+        const { mode, color, inclinaison, face, pose } = this.props;
 
         /** @type {ZapColor} */
         let _color = 'day';
@@ -83,7 +91,23 @@ class ZapBack extends React.Component {
             _mode = mode;
         }
 
+        if (pose !== null) {
+            return ZAP_IMAGES[_color][_mode][pose];
+        }
         return ZAP_IMAGES[_color][_mode][inclinaison][face];
+    };
+
+    /** Poses drawn at random to celebrate (activity created): the usual one and the two cheering ones */
+    static celebrationPoses = /** @type {ZapPose[]} */ (['up', 'firefly', 'upThumb']);
+
+    /** @returns {ZapPose} */
+    static GetRandomCelebrationPose = () => {
+        return ZapBack.celebrationPoses[Random(0, ZapBack.celebrationPoses.length)];
+    };
+
+    /** @returns {ZapOrientation} Left or right, one chance in two */
+    static GetRandomOrientation = () => {
+        return Random(0, 2) === 0 ? 'left' : 'right';
     };
 
     static getHighZapImage = () => {

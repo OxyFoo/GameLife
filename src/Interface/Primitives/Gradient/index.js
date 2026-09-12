@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import themeManager from 'Managers/ThemeManager';
+
+import { GradientView } from '../GradientView';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -21,14 +22,14 @@ import themeManager from 'Managers/ThemeManager';
 
 function Gradient({ style, containerStyle, colors, angle, children }) {
     return (
-        <LinearGradient
+        <GradientView
             style={containerStyle}
             colors={colors ?? [themeManager.GetColor('main3'), themeManager.GetColor('main2')]}
             useAngle={true}
             angle={angle ?? 267}
         >
             <View style={style}>{children}</View>
-        </LinearGradient>
+        </GradientView>
     );
 }
 

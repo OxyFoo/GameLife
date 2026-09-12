@@ -36,19 +36,21 @@ class Calendar extends BackCalendar {
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
                     <View style={styles.summaryHeader}>
-                        <Text style={styles.summaryTitle} color='secondary'>
-                            {todayStrDate}
-                        </Text>
-                        {activities.length > 0 && (
-                            <Button
-                                style={styles.shareButton}
-                                appearance='uniform'
-                                color='transparent'
-                                onPress={this.openDayRecap}
-                            >
-                                <Icon icon='share-2-outline' color='gradient' size={20} />
-                            </Button>
-                        )}
+                        {/* The date and the share icon are one button. Without activities there is nothing
+                            to share: the date stays a plain label, neither dimmed (`enabled`) nor rippling */}
+                        <Button
+                            style={styles.shareButton}
+                            styleContent={styles.shareContent}
+                            appearance='uniform'
+                            color='transparent'
+                            pointerEvents={activities.length > 0 ? 'auto' : 'none'}
+                            onPress={this.openDayRecap}
+                        >
+                            <Text style={styles.summaryTitle} color='secondary'>
+                                {todayStrDate}
+                            </Text>
+                            {activities.length > 0 && <Icon icon='share-2-outline' color='gradient' size={20} />}
+                        </Button>
 
                         {/* Ox owned, like the shop badge: tap to open the shop */}
                         <Button

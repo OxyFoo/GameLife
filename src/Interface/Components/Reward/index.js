@@ -29,7 +29,10 @@ const Reward = ({ item, size }) => {
             return (
                 <View style={styleReward}>
                     <Icon size='100%' icon='ox' />
-                    <Text style={styles.rewardValue}>{'x' + item.Amount.toString()}</Text>
+                    {/* The label may be wider than the slot: shrink it instead of wrapping */}
+                    <Text style={styles.rewardValue} numberOfLines={1} adjustsFontSizeToFit>
+                        {'x' + item.Amount.toString()}
+                    </Text>
                 </View>
             );
 

@@ -6,8 +6,8 @@ const PLOT_HEIGHT = 120;
 /** Height of the labels under the bars, in pixels */
 const LABELS_HEIGHT = 30;
 
-/** Width of the Y axis column, in pixels */
-const AXIS_WIDTH = 34;
+/** Width of the Y axis column, in pixels — the widest label ("30m" at fs9) plus a small gap */
+const AXIS_WIDTH = 20;
 
 /** Minimum height of a non-empty bar, in pixels */
 const MIN_BAR_HEIGHT = 3;
@@ -81,8 +81,7 @@ const styles = StyleSheet.create({
     },
     axisLabel: {
         position: 'absolute',
-        right: 6,
-        textAlign: 'right'
+        left: 0
     },
     axisLabelTop: {
         top: -6

@@ -28,6 +28,10 @@ const RaidSeasonDetails = ({ entry }) => {
     const endText = `${end.getDate()} ${langManager.curr['dates']['months-min'][end.getMonth()]}`;
     const self = entry.self;
 
+    // The entry is a snapshot of the history: once the server confirms the claim, the panel flips
+    // itself rather than waiting for the list to be loaded again
+    const [rewardState, setRewardState] = React.useState(entry.rewardState);
+
     return (
         <ScrollView
             ref={user.interface.bottomPanel?.mover.SetScrollView}
@@ -105,12 +109,13 @@ const RaidSeasonDetails = ({ entry }) => {
                                 <Reward key={`season-reward-${index}`} item={reward} size={40} />
                             ))}
                         </View>
-                        {entry.rewardState !== 'none' && (
+                        {rewardState !== 'none' && (
                             <ClaimRewardButton
                                 style={styles.claim}
                                 seasonID={entry.id}
-                                claimed={entry.rewardState === 'claimed'}
+                                claimed={rewardState === 'claimed'}
                                 rewardsCount={entry.rewards.length}
+                                onClaimed={() => setRewardState('claimed')}
                             />
                         )}
                     </>

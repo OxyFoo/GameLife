@@ -79,7 +79,8 @@ function HistoryRow({ entry }) {
 }
 
 /**
- * Closed seasons, newest first, with the participation of the player
+ * Settled seasons (closed, or still open with the boss down or the scoring over), newest first,
+ * with the participation of the player
  * @param {object} props
  * @param {LoadingState} props.state
  * @param {RaidHistoryEntry[]} props.entries

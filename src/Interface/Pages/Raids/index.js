@@ -48,6 +48,7 @@ class Raids extends BackRaids {
                                 style={styles.card}
                                 onPress={this.openDetails}
                                 lastSeason={this.state.lastSeason}
+                                onRewardClaimed={this.loadLastSeason}
                             />
 
                             <Tabs

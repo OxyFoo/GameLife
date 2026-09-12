@@ -21,8 +21,10 @@ import { ParsePlural } from 'Utils/String';
  * @param {number} props.seasonID
  * @param {boolean} props.claimed
  * @param {number} [props.rewardsCount] Number of rewards of the season, for the plural
+ * @param {'normal' | 'outline'} [props.appearance]
+ * @param {() => void} [props.onClaimed] Called once the server has confirmed the claim
  */
-function ClaimRewardButton({ style, seasonID, claimed, rewardsCount = 1 }) {
+function ClaimRewardButton({ style, seasonID, claimed, rewardsCount = 1, appearance = 'normal', onClaimed }) {
     const lang = langManager.curr['raids'];
     const plural = rewardsCount > 1;
     const [loading, setLoading] = React.useState(false);
@@ -32,8 +34,11 @@ function ClaimRewardButton({ style, seasonID, claimed, rewardsCount = 1 }) {
             return;
         }
         setLoading(true);
-        await user.raids.ClaimReward(seasonID);
+        const result = await user.raids.ClaimReward(seasonID);
         setLoading(false);
+        if (result === 'ok') {
+            onClaimed?.();
+        }
     };
 
     if (claimed) {
@@ -44,18 +49,21 @@ function ClaimRewardButton({ style, seasonID, claimed, rewardsCount = 1 }) {
         );
     }
 
+    // Dark on the bright gradient; the outline masks its content with the gradient, whatever the colour
+    const fontColor = appearance === 'normal' ? 'background' : 'primary';
+
     return (
         <Button
             {...STOP_CARD_PRESS}
             style={style}
             styleContent={styles.content}
-            appearance='normal'
+            appearance={appearance}
             fontSize={14}
             loading={loading}
             onPress={onPress}
         >
-            <Icon color='background' icon='gift' size={18} />
-            <Text color='background' fontSize={14} bold>
+            <Icon color={fontColor} icon='gift' size={18} />
+            <Text color={fontColor} fontSize={14} bold>
                 {ParsePlural(lang['reward-claim'], plural)}
             </Text>
         </Button>

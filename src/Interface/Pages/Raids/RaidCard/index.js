@@ -21,6 +21,15 @@ import { FormatCompact, FormatCountdown, FormatThousands } from 'Utils/Raids';
  * @typedef {import('Data/User/Raids').RaidSnapshot} RaidSnapshot
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidHistoryEntry} RaidHistoryEntry
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidTrend} RaidTrend
+ * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidRewardState} RaidRewardState
+ * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward
+ *
+ * @typedef {object} RestOutcome The season the heroes' rest is about, and what the player got from it
+ * @property {number} id
+ * @property {RawReward[]} rewards
+ * @property {RaidRewardState} rewardState
+ * @property {number | null} damage
+ * @property {number | null} rank
  */
 
 /**
@@ -31,9 +40,10 @@ import { FormatCompact, FormatCountdown, FormatThousands } from 'Utils/Raids';
  * @param {object} props
  * @param {StyleProp} [props.style]
  * @param {() => void} [props.onPress]
- * @param {RaidHistoryEntry | null} [props.lastSeason] Last closed season, for the heroes' rest face
+ * @param {RaidHistoryEntry | null} [props.lastSeason] Last settled season, for the heroes' rest face
+ * @param {() => void} [props.onRewardClaimed] The reward of the rest face has just been taken
  */
-function RaidCard({ style, onPress, lastSeason = null }) {
+function RaidCard({ style, onPress, lastSeason = null, onRewardClaimed }) {
     const snapshot = useRaid();
     const lang = langManager.curr['raids'];
     const { status } = snapshot;
@@ -65,7 +75,7 @@ function RaidCard({ style, onPress, lastSeason = null }) {
         );
     } else if (status === 'no-season' || status === 'heroes-rest' || status === 'ended' || status === 'defeated') {
         // The boss is down: the raid is over for everyone until the 1st, the card rests with it
-        content = renderRest(snapshot, lastSeason);
+        content = renderRest(snapshot, lastSeason, onRewardClaimed);
     } else {
         content = renderFull(snapshot, false);
     }
@@ -108,13 +118,39 @@ function renderMessage(icon, text) {
 }
 
 /**
+ * The season the rest face talks about: the running one while its boss lies dead, the last one of
+ * the history otherwise (the running one again once its scoring is over, but fresh from the server)
  * @param {RaidSnapshot} snapshot
  * @param {RaidHistoryEntry | null} lastSeason
+ * @returns {RestOutcome | null}
  */
-function renderRest(snapshot, lastSeason) {
+function restOutcome(snapshot, lastSeason) {
+    const { status, season, self, rewardState } = snapshot;
+    if (status === 'defeated' && season !== null && self !== null) {
+        return { id: season.id, rewards: season.rewards, rewardState, damage: self.damage, rank: self.rank };
+    }
+    if (lastSeason === null) {
+        return null;
+    }
+    return {
+        id: lastSeason.id,
+        rewards: lastSeason.rewards,
+        rewardState: lastSeason.rewardState,
+        damage: lastSeason.self?.damage ?? null,
+        rank: lastSeason.self?.finalRank ?? null
+    };
+}
+
+/**
+ * @param {RaidSnapshot} snapshot
+ * @param {RaidHistoryEntry | null} lastSeason
+ * @param {(() => void) | undefined} onRewardClaimed
+ */
+function renderRest(snapshot, lastSeason, onRewardClaimed) {
     const lang = langManager.curr['raids'];
-    const { status, now, nextSeasonAt, season, self, rewardState } = snapshot;
+    const { status, now, nextSeasonAt, season } = snapshot;
     const defeated = status === 'defeated';
+    const outcome = restOutcome(snapshot, lastSeason);
 
     /** @type {React.ReactNode} */
     let body;
@@ -137,10 +173,6 @@ function renderRest(snapshot, lastSeason) {
         );
     }
 
-    // Score of the season that just ended: the running one when its boss went down, the last closed one otherwise
-    const score = defeated && self !== null ? { damage: self.damage, rank: self.rank } : null;
-    const last = lastSeason?.self ?? null;
-
     return (
         <View style={styles.rest}>
             <Text fontSize={22} bold>
@@ -162,33 +194,26 @@ function renderRest(snapshot, lastSeason) {
                 </View>
             )}
             {body}
-            {score !== null && score.rank !== null && (
+            {outcome !== null && outcome.damage !== null && outcome.rank !== null && (
                 <Text style={styles.restLast} fontSize={11} color='light'>
                     {lang['card-last-contribution']
-                        .replace('{}', FormatThousands(score.damage))
-                        .replace('{}', score.rank.toString())}
+                        .replace('{}', FormatThousands(outcome.damage))
+                        .replace('{}', outcome.rank.toString())}
                 </Text>
             )}
-            {score === null && last !== null && last.finalRank !== null && (
-                <Text style={styles.restLast} fontSize={11} color='light'>
-                    {lang['card-last-contribution']
-                        .replace('{}', FormatThousands(last.damage))
-                        .replace('{}', last.finalRank.toString())}
-                </Text>
-            )}
-            {season !== null && (rewardState === 'claimable' || rewardState === 'claimed') && (
+            {/* The reward waits here until it is taken; from then on only the history shows it */}
+            {outcome !== null && outcome.rewardState === 'claimable' && (
                 <View style={styles.restRewards}>
-                    {season.rewards.length > 0 && (
-                        <View style={styles.restRewardsSlots}>
-                            {season.rewards.map((reward, index) => (
-                                <Reward key={`raid-rest-reward-${index}`} item={reward} size={32} />
-                            ))}
-                        </View>
-                    )}
+                    <View style={styles.restRewardsSlots}>
+                        {outcome.rewards.map((reward, index) => (
+                            <Reward key={`raid-rest-reward-${index}`} item={reward} size={32} />
+                        ))}
+                    </View>
                     <ClaimRewardButton
-                        seasonID={season.id}
-                        claimed={rewardState === 'claimed'}
-                        rewardsCount={season.rewards.length}
+                        seasonID={outcome.id}
+                        claimed={false}
+                        rewardsCount={outcome.rewards.length}
+                        onClaimed={onRewardClaimed}
                     />
                 </View>
             )}

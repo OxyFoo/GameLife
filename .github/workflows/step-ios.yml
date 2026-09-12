@@ -21,19 +21,10 @@ env:
 jobs:
   build:
     name: '🏗️ Build'
+    # iOS build is currently only available for the 'prod' environment
+    if: inputs.environment == 'prod'
     runs-on: macos-latest
     steps:
-      - name: '🚧 Check environment availability'
-        run: |
-          ENVIRONMENT="${{ inputs.environment }}"
-          if [ "$ENVIRONMENT" != "prod" ]; then
-            echo "🚧 iOS build is currently only available for 'prod' environment"
-            echo "   Requested environment: '$ENVIRONMENT'"
-            echo "   Skipping iOS build..."
-            exit 0
-          fi
-          echo "✅ Environment '$ENVIRONMENT' is supported for iOS build"
-
       - name: 'Checkout repository'
         uses: actions/checkout@v6
         with:

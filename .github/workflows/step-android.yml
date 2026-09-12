@@ -171,14 +171,3 @@ jobs:
           track: production
           whatsNewDirectory: distribution/whatsnew
           mappingFile: ./${{ env.FILE_MAPPING }}
-
-      - name: 'Check if upload was successful'
-        run: |
-          if [ $? -eq 0 ]; then
-            echo "PLAYSTORE_STATUS=success" >> $GITHUB_ENV
-            echo "Upload successful, state saved"
-          else
-            echo "PLAYSTORE_STATUS=failure" >> $GITHUB_ENV
-            echo "Upload failed"
-            exit 1
-          fi

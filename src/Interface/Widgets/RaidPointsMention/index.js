@@ -55,10 +55,10 @@ class RaidPointsMention extends React.Component {
         const lang = langManager.curr['raids'];
         return (
             <View style={styles.mention}>
-                <Icon icon='swords' size={18} color='raid' />
-                <Text fontSize={16} color='success' bold>
+                <Text fontSize={16} color='main2' bold>
                     {lang['points-signed'].replace('{}', hit.points.toString())}
                 </Text>
+                <Icon icon='swords' size={18} color='raid' />
                 {hit.critical && <Icon icon='bolt' size={18} color='raid' />}
             </View>
         );

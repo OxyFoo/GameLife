@@ -47,8 +47,9 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
 
+    // Puts the centre of the donut level with the big ring of the raid widget beside it
     donut: {
-        marginBottom: 0
+        marginTop: 8
     },
 
     notEnoughData: {

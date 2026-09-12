@@ -24,14 +24,14 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
         paddingHorizontal: 24
     },
+    // Date, share button right against it, ox counter pushed to the right edge
     summaryHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 8
     },
     summaryTitle: {
-        flex: 1,
+        flexShrink: 1,
         fontSize: 18,
         textAlign: 'left'
     },
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     oxButton: {
         width: 'auto',
         flexShrink: 0,
+        marginLeft: 'auto',
         paddingVertical: 6,
         paddingHorizontal: 6
     },

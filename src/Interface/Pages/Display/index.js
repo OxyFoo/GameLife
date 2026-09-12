@@ -45,13 +45,13 @@ class Display extends BackDisplay {
                             <Button
                                 style={[styles.button, styles.buttonRowItem]}
                                 appearance='outline'
-                                fontSize={14}
+                                fontSize={13}
                                 onPress={this.callback2}
                             >
                                 {button2}
                             </Button>
                         )}
-                        <Button style={[styles.button, styles.buttonRowItem]} fontSize={14} onPress={this.callback}>
+                        <Button style={[styles.button, styles.buttonRowItem]} fontSize={13} onPress={this.callback}>
                             {button}
                         </Button>
                     </View>
@@ -90,11 +90,13 @@ const styles = StyleSheet.create({
     buttonsRow: {
         flexDirection: 'row',
         alignItems: 'stretch',
-        gap: 12
+        gap: 8
     },
+    // Tight paddings and fontSize 13: the longest label ("Ajouter une autre activité")
+    // must hold on one line on both platforms
     button: {
         marginBottom: 12,
-        paddingHorizontal: 12
+        paddingHorizontal: 4
     },
     buttonRowItem: {
         flex: 1,

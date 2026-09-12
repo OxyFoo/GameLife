@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         width: 'auto',
         flexShrink: 1,
         paddingVertical: 6,
-        paddingHorizontal: 6
+        paddingHorizontal: 0
     },
     shareContent: {
         flexWrap: 'nowrap',
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         marginLeft: 'auto',
         paddingVertical: 6,
-        paddingHorizontal: 6
+        paddingHorizontal: 0
     },
     summaryHoursContent: {
         marginBottom: 2,

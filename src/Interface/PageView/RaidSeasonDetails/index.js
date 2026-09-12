@@ -93,7 +93,7 @@ const RaidSeasonDetails = ({ entry }) => {
 
             {self !== null && (
                 <Text style={styles.duration} fontSize={12} color='light'>
-                    {FormatMinutes(self.minutes)}
+                    {lang['history-time-contributed'].replace('{}', FormatMinutes(self.minutes))}
                 </Text>
             )}
 

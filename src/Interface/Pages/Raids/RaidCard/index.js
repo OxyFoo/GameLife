@@ -20,7 +20,6 @@ import { FormatCompact, FormatCountdown, FormatThousands } from 'Utils/Raids';
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
  * @typedef {import('Data/User/Raids').RaidSnapshot} RaidSnapshot
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidHistoryEntry} RaidHistoryEntry
- * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidTrend} RaidTrend
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidRewardState} RaidRewardState
  * @typedef {import('@oxyfoo/gamelife-types/Class/Rewards').RawReward} RawReward
  *
@@ -238,8 +237,6 @@ function renderFull(snapshot, skeleton) {
     const maxHP = season?.maxHP ?? 1;
     const participants = season?.participantsCount ?? 0;
     const damage = skeleton ? 0 : Math.max(self?.damage ?? 0, simulation?.totals.damage ?? 0);
-    /** @type {RaidTrend} */
-    const trend = self === null ? 'same' : self.trend;
 
     return (
         <View>
@@ -267,13 +264,6 @@ function renderFull(snapshot, skeleton) {
                     label={lang['card-contribution']}
                     value={lang['points'].replace('{}', FormatThousands(damage))}
                     valueColor='main2'
-                    right={
-                        trend === 'up' ? (
-                            <Icon icon='arrow-up' size={12} color='success' />
-                        ) : trend === 'down' ? (
-                            <Icon icon='arrow-up' size={12} angle={180} color='danger' />
-                        ) : null
-                    }
                 />
             </View>
 

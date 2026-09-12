@@ -578,6 +578,7 @@
         "history-title": "Previous raids",
         "history-not-participated": "Did not take part",
         "history-ended-on": "Ended on {}",
+        "history-time-contributed": "Time contributed: {}",
         "history-empty": "No past raid",
         "alert-error": {
             "title": "Error",

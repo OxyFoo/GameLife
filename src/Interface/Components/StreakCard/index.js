@@ -43,8 +43,8 @@ class StreakCard extends React.Component {
             <GradientView
                 style={[styles.gradient, style]}
                 colors={[
-                    themeManager.GetColor('main1', { opacity: 0.2 }),
-                    themeManager.GetColor('main1', { opacity: 0.1 })
+                    themeManager.GetColor('border', { opacity: 0.2 }),
+                    themeManager.GetColor('border', { opacity: 0.06 })
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}

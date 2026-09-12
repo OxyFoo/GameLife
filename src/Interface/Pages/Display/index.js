@@ -14,7 +14,11 @@ class Display extends BackDisplay {
                 <View style={styles.iconParent}>
                     <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                         {icon === 'zap' ? (
-                            <Zap style={{ width: this.iconWidth, height: this.iconWidth }} />
+                            <Zap
+                                pose={this.zapPose}
+                                orientation={this.zapOrientation}
+                                style={{ width: this.iconWidth, height: this.iconWidth }}
+                            />
                         ) : (
                             <Icon icon={icon} size={this.iconWidth} />
                         )}

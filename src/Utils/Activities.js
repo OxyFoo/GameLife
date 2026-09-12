@@ -6,6 +6,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 // import Notifications from 'Utils/Notifications';
+import { Zap } from 'Interface/Components';
 import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention, RaidPointsMention } from 'Interface/Widgets';
 import DynamicVar from 'Utils/DynamicVar';
 import { AdBonusOx } from '@oxyfoo/gamelife-types/Rules/OxEconomy';
@@ -229,6 +230,8 @@ async function AddActivity(activity) {
     user.interface.ChangePage('display', {
         args: {
             icon: 'zap',
+            zapPose: Zap.GetRandomCelebrationPose(),
+            zapOrientation: Zap.GetRandomOrientation(),
             text: lang['display-activity-text'],
             additionalContent:
                 oxPreview !== 0 || raidPreview !== null ? (

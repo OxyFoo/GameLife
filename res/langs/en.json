@@ -1034,12 +1034,12 @@
             "dex": "Dex"
         },
         "descriptions": {
-            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
-            "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
-            "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "sta": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
-            "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
-            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
+            "int": "Intelligence is a very broad statistic: as soon as you use your brain, you train it and gain intelligence points. The main skills to gain some are school work and thinking work. In raids it makes you a fine strategist: the higher it is, the better your chances of walking away with an extra copy of every item or chest you win!",
+            "soc": "Social grows when you do activities with other people, like team sports or going out with friends. In raids it is your support: after a fight your hero has to heal, and the higher your social, the sooner they are back in front of the boss!",
+            "for": "Strength is a fairly simple statistic: it increases with the skills that require it, like bodybuilding, sports or physical jobs! In raids it is what hurts: the higher your strength, the more damage every minute of activity deals to the boss.",
+            "sta": "Stamina is probably the statistic you can improve the fastest! It is essential and grows with most sports. In raids it is your fight gauge: the higher it is, the more hours of activity you can chain against the boss before you need a breather.",
+            "agi": "Agility is probably the slowest statistic to build: it is rarely required and improves slowly. The best ways to raise it are activities like stretching or yoga. In raids it is the critical hit: an activity can deal double damage, and the higher your agility, the more often it happens!",
+            "dex": "Dexterity is the agility of the fingers: it grows on precision tasks, typing on a computer or playing a musical instrument. In raids it has no role yet… but don't worry, it is coming soon! Keep training it, your fingers will be ready when the day comes."
         }
     },
 

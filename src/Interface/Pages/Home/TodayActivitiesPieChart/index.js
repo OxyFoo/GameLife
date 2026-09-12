@@ -59,7 +59,6 @@ class TodayActivitiesPieChart extends TodayActivitiesPieChartBack {
                             ) : (
                                 /* Pie chart view */
                                 <PieChart
-                                    style={styles.donut}
                                     data={this.state.dataToDisplay}
                                     isDonutView={this.state.showDonut}
                                     focusedActivity={this.state.focusedActivity}

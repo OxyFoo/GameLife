@@ -8,6 +8,7 @@ import { useRaid } from 'Interface/Pages/Raids/RaidCard/useRaid';
 
 import { RAID_MIN_LEVEL } from 'Data/User/Raids';
 import { Text, Icon, Button, ProgressDonut } from 'Interface/Components';
+import { DONUT_SIZE } from 'Interface/Widgets/PieChart/style';
 import { FormatCountdown } from 'Utils/Raids';
 
 /**
@@ -99,7 +100,8 @@ function RaidWidget({ style }) {
 
 /**
  * The two rings and what sits at their centre. Extracted so the loading state shows the very same
- * geometry with empty rings, and the widget never changes height.
+ * geometry with empty rings, and the widget never changes height. The outer ring is the donut of
+ * the activities widget beside it, same diameter and same distance from the top.
  * @param {number} outerValue Phase of the player [0-1]
  * @param {'main3' | 'success'} outerColor
  * @param {number} innerValue Progress of the season [0-1]
@@ -108,8 +110,14 @@ function RaidWidget({ style }) {
 function renderDonuts(outerValue, outerColor, innerValue, children) {
     return (
         <View style={styles.body}>
-            <ProgressDonut value={outerValue} size={104 + 16} strokeWidth={8} progressColor={outerColor} delay={0}>
-                <ProgressDonut value={innerValue} size={78 + 16} strokeWidth={8} progressColor='raid' delay={200}>
+            <ProgressDonut value={outerValue} size={DONUT_SIZE} strokeWidth={8} progressColor={outerColor} delay={0}>
+                <ProgressDonut
+                    value={innerValue}
+                    size={DONUT_SIZE - 26}
+                    strokeWidth={8}
+                    progressColor='raid'
+                    delay={200}
+                >
                     <View style={styles.donutContent}>{children}</View>
                 </ProgressDonut>
             </ProgressDonut>

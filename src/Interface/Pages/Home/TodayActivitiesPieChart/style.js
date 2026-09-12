@@ -39,17 +39,18 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
 
+    // Same height as the header of the raid widget beside it (10 + icon 24 + 4), so both rings
+    // start at the same distance from the top and their titles share the same line
     header: {
         width: '100%',
-        padding: 8
+        minHeight: 38,
+        paddingTop: 10,
+        paddingBottom: 4,
+        paddingHorizontal: 8,
+        justifyContent: 'center'
     },
     title: {
         textAlign: 'left'
-    },
-
-    // Puts the centre of the donut level with the big ring of the raid widget beside it
-    donut: {
-        marginTop: 8
     },
 
     notEnoughData: {

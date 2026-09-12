@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, View, FlatList, Dimensions } from 'react-native';
+import { Animated, View, FlatList, Dimensions, TouchableOpacity } from 'react-native';
 
 import styles, { getItemLayout } from './style';
 import BackCalendar, { TOTAL_DAYS_COUNT } from './back';
@@ -36,19 +36,18 @@ class Calendar extends BackCalendar {
                 {/** Summary (hidden on scroll) */}
                 <Animated.View style={[styles.summary, summaryStyle]} onLayout={this.onLayoutSummary}>
                     <View style={styles.summaryHeader}>
-                        <Text style={styles.summaryTitle} color='secondary'>
-                            {todayStrDate}
-                        </Text>
-                        {activities.length > 0 && (
-                            <Button
-                                style={styles.shareButton}
-                                appearance='uniform'
-                                color='transparent'
-                                onPress={this.openDayRecap}
-                            >
-                                <Icon icon='share-2-outline' color='gradient' size={20} />
-                            </Button>
-                        )}
+                        {/* The date and the share icon are one tap target; a plain date without activities */}
+                        <TouchableOpacity
+                            style={styles.shareButton}
+                            activeOpacity={0.6}
+                            disabled={activities.length === 0}
+                            onPress={this.openDayRecap}
+                        >
+                            <Text style={styles.summaryTitle} color='secondary'>
+                                {todayStrDate}
+                            </Text>
+                            {activities.length > 0 && <Icon icon='share-2-outline' color='gradient' size={20} />}
+                        </TouchableOpacity>
 
                         {/* Ox owned, like the shop badge: tap to open the shop */}
                         <Button

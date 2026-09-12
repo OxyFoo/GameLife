@@ -24,22 +24,23 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
         paddingHorizontal: 24
     },
-    // Date, share button right against it, ox counter pushed to the right edge
+    // Date and share icon on the left, ox counter pushed to the right edge
     summaryHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 8
     },
+    shareButton: {
+        flexShrink: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingVertical: 6
+    },
     summaryTitle: {
         flexShrink: 1,
         fontSize: 18,
         textAlign: 'left'
-    },
-    shareButton: {
-        width: 'auto',
-        flexShrink: 0,
-        paddingVertical: 6,
-        paddingHorizontal: 6
     },
     oxButton: {
         width: 'auto',

@@ -301,13 +301,18 @@ class Raids extends IUserData {
     GetRaidImages = (imageID) => RAIDS[imageID ?? ''] ?? RAID_GENERIC;
 
     /**
-     * Preview of the points an activity brings, from the local simulation (no critical)
+     * Points an activity brings to the raid: the hit the server replayed once the activity is saved
+     * (critical known), the local preview otherwise (never any critical: the seed stays on the server)
      * @param {Activity} activity
      * @returns {RaidHit | null}
      */
-    PreviewHit = (activity) => {
-        const simulation = this.simulation.Get();
-        return simulation?.hits.find((hit) => hit.startTime === activity.startTime) ?? null;
+    GetHit = (activity) => {
+        const saved = /** @type {Partial<ActivitySaved>} */ (activity);
+        const serverHit =
+            typeof saved.ID === 'number'
+                ? this.GetSelf()?.simulation.hits.find((hit) => hit.activityID === saved.ID)
+                : undefined;
+        return serverHit ?? this.simulation.Get()?.hits.find((hit) => hit.startTime === activity.startTime) ?? null;
     };
 
     /**

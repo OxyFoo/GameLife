@@ -213,7 +213,7 @@ async function AddActivity(activity) {
 
     // Raid points of the activity: local preview first (no critical), then the server value
     const raidStatus = user.raids.GetStatus();
-    const raidPreview = raidStatus === 'fighting' || raidStatus === 'healing' ? user.raids.PreviewHit(activity) : null;
+    const raidPreview = raidStatus === 'fighting' || raidStatus === 'healing' ? user.raids.GetHit(activity) : null;
 
     // Ox granted by the ad, 0 until it has been watched. Shared by the mention and the button:
     // the `args` below are captured once, only a watched value can make the total follow.

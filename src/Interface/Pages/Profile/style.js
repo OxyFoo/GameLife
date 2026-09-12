@@ -2,7 +2,15 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     page: {
-        minHeight: '100%'
+        flex: 1
+    },
+    scrollView: {
+        flex: 1
+    },
+    // Fills the screen so the avatar has its room, and keeps the last stat clear of the pinned button
+    scrollContent: {
+        flexGrow: 1,
+        paddingBottom: 96
     },
     header: {
         paddingHorizontal: 24
@@ -31,13 +39,11 @@ const styles = StyleSheet.create({
         flexGrow: 0
     },
 
-    buttons: {
-        marginTop: '30%',
-        paddingHorizontal: 24,
-        paddingBottom: 12
-    },
-    button: {
-        marginBottom: 16
+    editButtonView: {
+        position: 'absolute',
+        left: 24,
+        right: 24,
+        bottom: 24
     }
 });
 

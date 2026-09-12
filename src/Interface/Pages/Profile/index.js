@@ -23,80 +23,64 @@ class Profile extends BackProfile {
         const styleParallax2_5 = { transform: [{ translateY: Animated.divide(this.scrollY, 5) }] };
 
         return (
-            <ScrollView
-                ref={this.refScrollView}
-                style={styles.page}
-                onScroll={this.handleScroll}
-                scrollEnabled={!editMode}
-            >
-                <Animated.View style={[styles.header, uiOpacity]}>
-                    <PageHeader
-                        style={styles.pageHeader}
-                        title={lang['title-profile']}
-                        onBackPress={this.onBack}
-                        secondaryIcon='settings-outline'
-                        secondaryIconColor='gradient'
-                        onSecondaryIconPress={this.openSettings}
-                    />
-
-                    <Header />
-
-                    <Animated.View style={styles.xpView}>
-                        <ProgressBar color='main1' value={experienceUser.xp} maxValue={experienceUser.next} />
-                        <View style={styles.xpRow}>
-                            <Text>{langManager.curr['level']['level'] + ' ' + experienceUser.lvl}</Text>
-                            <Text>{Round(experienceUser.xp) + '/' + experienceUser.next}</Text>
-                        </View>
-                    </Animated.View>
-                </Animated.View>
-
-                {/** Statistics */}
-                <Animated.View
-                    style={[styles.statsView, styleParallax2_5, uiOpacity]}
-                    pointerEvents={editMode ? 'none' : 'auto'}
+            <View style={styles.page}>
+                <ScrollView
+                    ref={this.refScrollView}
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContent}
+                    onScroll={this.handleScroll}
+                    scrollEnabled={!editMode}
                 >
-                    <FlatList
-                        style={styles.statsFlatList}
-                        data={experienceStats}
-                        renderItem={StatsBar}
-                        keyExtractor={(item) => `user-stat-${item.statKey}`}
-                        scrollEnabled={false}
-                    />
-                </Animated.View>
+                    <Animated.View style={[styles.header, uiOpacity]}>
+                        <PageHeader
+                            style={styles.pageHeader}
+                            title={lang['title-profile']}
+                            onBackPress={this.onBack}
+                            secondaryIcon='settings-outline'
+                            secondaryIconColor='gradient'
+                            onSecondaryIconPress={this.openSettings}
+                        />
 
-                {/* Avatar Frame */}
-                <AvatarEditor
-                    ref={this.refAvatarEditor}
-                    editMode={editMode}
-                    animEditMode={this.avatarEditMode}
-                    scrollY={this.scrollY}
-                    onExitEditMode={this.closeInventory}
-                />
+                        <Header />
 
-                {/** Buttons */}
-                <Animated.View style={[styles.buttons, uiOpacity]} pointerEvents={editMode ? 'none' : 'auto'}>
-                    <Button style={styles.button} onPress={this.openInventory}>
-                        {lang['btn-edit-profile']}
-                    </Button>
+                        <Animated.View style={styles.xpView}>
+                            <ProgressBar color='main1' value={experienceUser.xp} maxValue={experienceUser.next} />
+                            <View style={styles.xpRow}>
+                                <Text>{langManager.curr['level']['level'] + ' ' + experienceUser.lvl}</Text>
+                                <Text>{Round(experienceUser.xp) + '/' + experienceUser.next}</Text>
+                            </View>
+                        </Animated.View>
+                    </Animated.View>
 
-                    <Button style={styles.button} appearance='outline-blur' icon='default' onPress={this.openSkills}>
-                        {lang['btn-skills']}
-                    </Button>
-
-                    <Button style={styles.button} appearance='outline-blur' icon='graph' onPress={this.openStatistics}>
-                        {lang['btn-statistics']}
-                    </Button>
-
-                    <Button
-                        style={styles.button}
-                        appearance='outline-blur'
-                        icon='success'
-                        onPress={this.openAchievements}
+                    {/** Statistics */}
+                    <Animated.View
+                        style={[styles.statsView, styleParallax2_5, uiOpacity]}
+                        pointerEvents={editMode ? 'none' : 'auto'}
                     >
-                        {lang['btn-achievements']}
-                    </Button>
+                        <FlatList
+                            style={styles.statsFlatList}
+                            data={experienceStats}
+                            renderItem={StatsBar}
+                            keyExtractor={(item) => `user-stat-${item.statKey}`}
+                            scrollEnabled={false}
+                        />
+                    </Animated.View>
+
+                    {/* Avatar Frame */}
+                    <AvatarEditor
+                        ref={this.refAvatarEditor}
+                        editMode={editMode}
+                        animEditMode={this.avatarEditMode}
+                        scrollY={this.scrollY}
+                        onExitEditMode={this.closeInventory}
+                    />
+                </ScrollView>
+
+                {/** Edit button, pinned to the bottom of the screen: the avatar keeps the page to itself */}
+                <Animated.View style={[styles.editButtonView, uiOpacity]} pointerEvents={editMode ? 'none' : 'auto'}>
+                    <Button onPress={this.openInventory}>{lang['btn-edit-profile']}</Button>
                 </Animated.View>
-            </ScrollView>
+            </View>
         );
     }
 }

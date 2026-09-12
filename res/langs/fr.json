@@ -1035,12 +1035,20 @@
             "dex": "Dex"
         },
         "descriptions": {
-            "int": "L'intelligence est une statistique très large : dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et tu gagnes des points d'intelligence. Les compétences principales pour en gagner sont le travail scolaire et les travaux de réflexion. Dans les raids, elle fait de toi un fin stratège : plus elle est haute, plus tu as de chances de repartir avec un exemplaire en plus de chaque objet ou coffre gagné !",
-            "soc": "Le social augmente quand tu fais des activités avec d'autres gens, par exemple des sports collectifs ou des sorties entre amis. Dans les raids, c'est ton soutien : après un combat, ton héros doit se soigner, et plus ton social est élevé, plus vite il est de retour face au boss !",
-            "for": "La force est une statistique assez simple : elle augmente avec les compétences qui en demandent, comme la musculation, les sports ou les métiers physiques ! Dans les raids, c'est elle qui fait mal : plus ta force est haute, plus chaque minute d'activité inflige de dégâts au boss.",
-            "sta": "L'endurance est probablement la statistique que tu peux améliorer le plus vite ! Elle est primordiale et progresse en pratiquant la plupart des sports. Dans les raids, c'est ta jauge de combat : plus elle est haute, plus tu enchaînes d'heures d'activité contre le boss avant de devoir souffler.",
-            "agi": "L'agilité est probablement la statistique la plus longue à monter : elle n'est pas souvent requise et s'améliore lentement. Les meilleurs moyens de la faire progresser sont des activités comme les étirements ou le yoga. Dans les raids, c'est le coup critique : une activité peut infliger le double de dégâts, et plus ton agilité monte, plus ça arrive souvent !",
-            "dex": "La dextérité, c'est l'agilité des doigts : elle progresse sur les tâches de précision, l'écriture sur ordinateur ou encore la pratique d'un instrument de musique. Dans les raids, elle n'a pas encore de rôle… mais t'inquiète, ça arrive bientôt ! Continue de l'entraîner, tes doigts seront prêts le jour venu."
+            "int": "L'intelligence est une statistique très large : dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et tu gagnes des points d'intelligence.",
+            "soc": "Le social augmente quand tu fais des activités avec d'autres gens, par exemple des sports collectifs ou des sorties entre amis.",
+            "for": "La force est une statistique assez simple : elle augmente avec les compétences qui en demandent, comme la musculation, les sports ou les métiers physiques !",
+            "sta": "L'endurance est probablement la statistique que tu peux améliorer le plus vite ! Elle est primordiale et progresse en pratiquant la plupart des sports.",
+            "agi": "L'agilité est probablement la statistique la plus longue à monter : elle n'est pas souvent requise et s'améliore lentement. Les meilleurs moyens de la faire progresser sont des activités comme les étirements ou le yoga.",
+            "dex": "La dextérité, c'est l'agilité des doigts : elle progresse sur les tâches de précision, l'écriture sur ordinateur ou encore la pratique d'un instrument de musique."
+        },
+        "descriptions-raid": {
+            "int": "Dans les raids, elle fait de toi un fin stratège : plus elle est haute, plus tu as de chances de repartir avec de meilleures récompenses !",
+            "soc": "Dans les raids, c'est ton soutien : après un combat, ton héros doit se soigner, et plus ton social est élevé, plus vite il est de retour face au boss !",
+            "for": "Dans les raids, c'est elle qui fait mal : plus ta force est haute, plus chaque minute d'activité inflige de dégâts au boss.",
+            "sta": "Dans les raids, c'est ta jauge de combat : plus elle est haute, plus tu enchaînes d'heures d'activité contre le boss avant de devoir souffler.",
+            "agi": "Dans les raids, c'est le coup critique : une activité peut infliger le double de dégâts, et plus ton agilité monte, plus ça arrive souvent !",
+            "dex": "Dans les raids, elle n'a pas encore de rôle… mais t'inquiète, ça arrive bientôt ! Continue de l'entraîner, tes doigts seront prêts le jour venu."
         }
     },
 

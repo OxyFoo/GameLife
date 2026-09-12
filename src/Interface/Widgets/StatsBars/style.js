@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
     },
     popupContentStat: {
         marginVertical: 14
+    },
+    popupContentStatRaid: {
+        marginTop: 10
     }
 });
 

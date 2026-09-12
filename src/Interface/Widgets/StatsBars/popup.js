@@ -24,6 +24,7 @@ function PopupContent({ initStatKey, stats = user.experience.experience.Get().st
     const statBox = (statKey) => {
         const statName = lang['names'][statKey];
         const statDescription = lang['descriptions'][statKey];
+        const statDescriptionRaid = lang['descriptions-raid'][statKey];
 
         return (
             <View style={styles.popupContentStatPage}>
@@ -34,6 +35,9 @@ function PopupContent({ initStatKey, stats = user.experience.experience.Get().st
                 </Text>
 
                 <Text fontSize={14}>{statDescription}</Text>
+                <Text style={styles.popupContentStatRaid} fontSize={14}>
+                    {statDescriptionRaid}
+                </Text>
             </View>
         );
     };

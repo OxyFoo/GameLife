@@ -79,7 +79,7 @@ class Raids extends IUserData {
     /** @type {DynamicVar<{ points: number, critical: boolean } | null>} Last hit confirmed by save-activities */
     lastHit = new DynamicVar(/** @type {{ points: number, critical: boolean } | null} */ (null));
 
-    /** Unix seconds of the last successful `get-raid` */
+    /** Unix seconds of the last answer of the server to `get-raid` (a raid, or none) */
     fetchedAt = 0;
 
     /** A claim is in flight: the buttons must not fire twice */
@@ -151,8 +151,11 @@ class Raids extends IUserData {
     };
 
     /**
-     * Fetch the state of the current raid. Only a lost connection is a failure: a server that does
-     * not know the raids yet (old server) keeps the cache and does not break the global loading.
+     * Fetch the state of the current raid. The server is authoritative: whatever it answers replaces
+     * the cache, including "no raid" (an error, or a server that does not know the raids yet), so a
+     * season it no longer has is never shown as live. Only a lost connection keeps the cache, for
+     * the Home widget offline, and it is the only failure: a missing raid does not break the
+     * global loading.
      * @returns {Promise<boolean>}
      */
     LoadOnline = async () => {
@@ -165,10 +168,10 @@ class Raids extends IUserData {
 
         if (response.status !== 'get-raid' || response.result === 'error') {
             this.#user.interface.console?.AddLog('warn', '[Raids] Raid not available on the server');
-            return true;
+            this.payload.Set(null);
+        } else {
+            this.payload.Set(response.result);
         }
-
-        this.payload.Set(response.result);
         this.fetchedAt = GetLocalTime();
         this.#recompute();
         this.#user.SaveLocal();

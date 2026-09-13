@@ -215,25 +215,50 @@ describe('Raids', () => {
         expect(raids.GetStatus(NOW)).toBe('update-required');
     });
 
-    test('LoadOnline keeps the cache on an old server and fails only on a lost connection', async () => {
+    test('LoadOnline keeps the cache on a lost connection only, the server answer always wins', async () => {
         const user = makeUser();
         const raids = new Raids(/** @type {UserManager} */ (/** @type {unknown} */ (user)));
         raids.Load({ cache: payload(), fetchedAt: NOW });
 
+        // Offline: the cached season keeps the Home widget alive, and it is the only failure
         jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(/** @type {any} */ ('timeout'));
         expect(await raids.LoadOnline()).toBe(false);
         expect(raids.GetSeason()?.number).toBe(1);
 
-        jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(/** @type {any} */ ({ status: 'unknown' }));
+        // The server answered without a raid (error): a season it no longer has is not shown as live
+        jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(
+            /** @type {any} */ ({ status: 'get-raid', result: 'error' })
+        );
         expect(await raids.LoadOnline()).toBe(true);
-        expect(raids.GetSeason()?.number).toBe(1);
+        expect(raids.GetSeason()).toBeNull();
+        expect(raids.GetSnapshot(NOW).loaded).toBe(true);
+        expect(raids.GetSnapshot(NOW).status).toBe('no-season');
+        expect(user.SaveLocal).toHaveBeenCalled();
 
         jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(
             /** @type {any} */ ({ status: 'get-raid', result: payload({ season: { ...season(), number: 2 } }) })
         );
         expect(await raids.LoadOnline()).toBe(true);
         expect(raids.GetSeason()?.number).toBe(2);
-        expect(user.SaveLocal).toHaveBeenCalled();
+
+        // Same for a server that does not know the raids at all
+        jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(/** @type {any} */ ({ status: 'unknown' }));
+        expect(await raids.LoadOnline()).toBe(true);
+        expect(raids.GetSeason()).toBeNull();
+
+        // Between two raids the server sends the date of the next one: the cached season gives way
+        // to the countdown, on the raid card and on the Home widget alike
+        raids.Load({ cache: payload(), fetchedAt: NOW });
+        jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(
+            /** @type {any} */ ({
+                status: 'get-raid',
+                result: payload({ state: 'no-season', season: null, self: null, nextSeasonAt: E })
+            })
+        );
+        expect(await raids.LoadOnline()).toBe(true);
+        expect(raids.GetSeason()).toBeNull();
+        expect(raids.GetSnapshot(NOW).status).toBe('heroes-rest');
+        expect(raids.GetSnapshot(NOW).nextSeasonAt).toBe(E);
     });
 
     test('the heal ad is offered once per phase and within the daily quota', () => {

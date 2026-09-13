@@ -149,12 +149,12 @@ jobs:
           fetch-depth: 0
 
       - name: 'Get aab artifact'
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: ${{ env.FILE_AAB }}
 
       - name: 'Get mapping artifact'
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: ${{ env.FILE_MAPPING }}
 

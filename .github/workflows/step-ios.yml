@@ -357,7 +357,7 @@ jobs:
           fi
 
       - name: 'Get ipa artifact'
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: ${{ env.FILE_IPA }}
           path: .

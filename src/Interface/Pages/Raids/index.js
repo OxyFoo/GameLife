@@ -36,6 +36,7 @@ class Raids extends BackRaids {
                     {(insets) => (
                         <ScrollView
                             style={[styles.scrollview, { marginTop: (insets?.top ?? 0) + headerHeight }]}
+                            showsVerticalScrollIndicator={false}
                             contentContainerStyle={[
                                 styles.scrollContent,
                                 {

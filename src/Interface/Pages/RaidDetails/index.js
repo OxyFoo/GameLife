@@ -27,6 +27,7 @@ class RaidDetails extends BackRaidDetails {
                             style={styles.scrollview}
                             onScroll={this.handleScroll}
                             scrollEventThrottle={16}
+                            showsVerticalScrollIndicator={false}
                             contentContainerStyle={[
                                 styles.content,
                                 {

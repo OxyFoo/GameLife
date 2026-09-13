@@ -41,7 +41,7 @@ function BossBackground({ scrollY }) {
 
     return (
         <Animated.View style={[StyleSheet.absoluteFill, parallax]} pointerEvents='none'>
-            <ImageBackdrop source={images.boss} fadeStart={0.15} fadeEnd={0.5} />
+            <ImageBackdrop source={images.boss} fadeStart={0.15} fadeEnd={0.55} />
         </Animated.View>
     );
 }

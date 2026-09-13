@@ -909,10 +909,10 @@
 
         "randomChests": {
             "chest-random": {
-                "common": "Simple chest",
-                "rare": "Mysterious chest",
-                "epic": "Epic chest",
-                "legendary": "Legendary chest"
+                "common": "Chest",
+                "rare": "Chest",
+                "epic": "Chest",
+                "legendary": "Chest"
             },
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",

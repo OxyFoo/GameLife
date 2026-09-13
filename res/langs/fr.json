@@ -909,10 +909,10 @@
 
         "randomChests": {
             "chest-random": {
-                "common": "Coffre simple",
-                "rare": "Coffre mystérieux",
-                "epic": "Coffre mythique",
-                "legendary": "Coffre légendaire"
+                "common": "Coffre",
+                "rare": "Coffre",
+                "epic": "Coffre",
+                "legendary": "Coffre"
             },
 
             "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",

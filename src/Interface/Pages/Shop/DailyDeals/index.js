@@ -92,24 +92,24 @@ class ShopDailyDeals extends BackShopItems {
 
     /** @param {BuyableItem} item */
     renderPrice = (item) => {
-        // Default price
-        if (user.shop.priceFactor === 1) {
+        const price = Math.round(item.Price * user.shop.priceFactor);
+
+        // Sold at its value, nothing to strike through
+        if (price === item.PriceOriginal) {
             return (
                 <View style={styles.itemPrice}>
-                    <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
+                    <Text style={styles.itemPriceOx}>{price.toString()}</Text>
                     <Icon size={20} icon='ox' />
                 </View>
             );
         }
 
-        // Price factor is applied
+        // Deal price under the struck-through item value
         return (
             <View style={styles.itemPrice}>
                 <View>
-                    <Text style={styles.itemPriceOxEditedOld}>{item.Price.toString()}</Text>
-                    <Text style={styles.itemPriceOxEditedNew}>
-                        {Math.round(item.Price * user.shop.priceFactor).toString()}
-                    </Text>
+                    <Text style={styles.itemPriceOxEditedOld}>{item.PriceOriginal.toString()}</Text>
+                    <Text style={styles.itemPriceOxEditedNew}>{price.toString()}</Text>
                 </View>
                 <Icon size={20} icon='ox' />
             </View>

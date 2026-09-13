@@ -14,14 +14,14 @@ import { Text, Button } from 'Interface/Components';
 /**
  * @param {object} props
  * @param {Item} props.item
+ * @param {number} props.price Deal price charged, shop price factor applied
  * @param {(reason: string) => void} props.closePopup
  * @param {() => void} [props.onPurchased] Callback when item is successfully purchased
  */
-function BuyPopup({ item, closePopup, onPurchased }) {
+function BuyPopup({ item, price, closePopup, onPurchased }) {
     const lang = langManager.curr['shop']['dailyDeals'];
     const [loading, setLoading] = React.useState(false);
 
-    const price = Math.round(item.Value * user.shop.priceFactor);
     const itemName = langManager.GetText(item.Name);
     const itemDescription = langManager.GetText(item.Description);
     const buttonText = lang['popup-item-button'].replace('{}', price.toString());

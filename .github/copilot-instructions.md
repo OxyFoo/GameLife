@@ -275,6 +275,12 @@ sans dépendance ni état, et les deux projets importent ce module.
   (1/min × force, ×2 sur critique), fenêtre d'une saison (`SeasonWindow`, toujours du 1er du mois au 1er
   suivant moins le repos) et rejeu chronologique (`SimulateParticipant`). Les activités qui marquent des
   points sont celles des Ox, via `UsefulActivities`.
+- `@oxyfoo/gamelife-types/Rules/ItemEconomy` — économie des items : revente à 50 % de la valeur, arrondie
+  au-dessus (`SellPriceOf`) ; offres du jour, 3 emplacements tirant chacun leur rareté (80 % common, 18 % rare,
+  2 % epic, jamais legendary : poids 0) puis un item achetable de cette rareté, sans doublon, depuis la date
+  seule (`PickDailyDeals`, PRNG seedé) ; prix fixe d'une offre par rareté, 180 / 555 / 1 800
+  (`DailyDealPriceOf`, `null` pour une rareté jamais proposée). La valeur des items (`Items.Value`, prix du
+  coffre non ciblé de leur rareté : 222 / 666 / 2 000 / 6 000) reste en base.
 
 L'app ne fait que **prévisualiser** : `user.activities.SimulateOx`, `GetDeleteOxQuote`, `GetEditOxQuote`,
 `GetOxReward` rejouent ses seaux en attente sur l'instantané serveur, et `user.raids` simule sans les
@@ -284,8 +290,8 @@ critiques (le seed reste sur le serveur). Le serveur règle dans une transaction
 (`oxQuotedDelta` → `oxExpectedDelta`) et l'opération gratuite désignée (`oxFreeKey`) ; le serveur répond
 `ox-quote-changed` / `ox-negative` plutôt que d'appliquer un montant non vu.
 
-Ces règles sont couvertes par `GameLife-Server/src/Services/GameLife/__tests__/OxEconomy.test.ts` et
-`RaidEngine.test.ts` (scénarios S1…S16 et R1…R19), qui sont la suite de référence du module partagé :
+Ces règles sont couvertes par `GameLife-Server/src/Services/GameLife/__tests__/OxEconomy.test.ts`,
+`RaidEngine.test.ts` (scénarios S1…S16 et R1…R19) et `ItemEconomy.test.ts`, qui sont la suite de référence du module partagé :
 le paquet de types n'a pas de lanceur de tests à lui. Après toute modification dans `GameLife-Types`,
 reconstruire le paquet et recopier son `dist/` dans les `node_modules/@oxyfoo/gamelife-types` des trois
 consommateurs, sinon les deux côtés n'exécutent plus le même code.

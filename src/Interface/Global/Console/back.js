@@ -274,7 +274,7 @@ class ConsoleBack extends React.Component {
     refreshAppData = async () => {
         this.toggleDeleteButtons();
 
-        dataManager.Clear();
+        await dataManager.Clear();
         await dataManager.SaveLocal(user);
         await dataManager.LoadOnline(user);
         await dataManager.SaveLocal(user);

@@ -15,9 +15,8 @@ import DailyQuest from 'Data/User/DailyQuests';
 import Informations from 'Data/User/Informations';
 import Inventory from 'Data/User/Inventory';
 import Missions from 'Data/User/Missions';
-import Quests from 'Data/User/Quests/index';
 import Multiplayer from 'Data/User/Multiplayer';
-import Todos from 'Data/User/Todos';
+import Raids from 'Data/User/Raids';
 
 import Storage from 'Utils/Storage';
 import GoogleSignIn from 'Utils/GoogleSignIn';
@@ -59,11 +58,14 @@ class UserManager {
         this.dailyQuest = new DailyQuest(this);
         this.inventory = new Inventory(this);
         this.missions = new Missions(this);
-        this.quests = new Quests(this);
         this.multiplayer = new Multiplayer(this);
-        this.todos = new Todos(this);
+        this.raids = new Raids(this);
 
-        /** @type {IUserClass<*>[]} */
+        /**
+         * `informations` is an IUserData and belongs to DATA only: listing it here too
+         * made it serialize into both USER_CLASS and USER_DATA, and Clear/Unmount run twice.
+         * @type {IUserClass<*>[]}
+         */
         this.CLASS = [
             this.ads,
             this.consent,
@@ -73,8 +75,7 @@ class UserManager {
             this.server2,
             this.settings,
             this.shop,
-            this.statistics,
-            this.informations
+            this.statistics
         ];
 
         /** @type {IUserData<*>[]} */
@@ -86,9 +87,8 @@ class UserManager {
             this.informations,
             this.inventory,
             this.missions,
-            this.quests,
             this.multiplayer,
-            this.todos
+            this.raids
         ];
 
         // Mount classes
@@ -113,6 +113,7 @@ class UserManager {
     onMount() {
         this.experience.onMount();
         this.dailyQuest.onMount();
+        this.raids.onMount();
 
         // Initialize IAP listeners globally (handles pending purchases on app restart)
         this.shop.InitIAP();
@@ -229,16 +230,20 @@ class UserManager {
         if (this.globalSaving) return false;
         this.globalSaving = true;
 
-        let success = true;
+        try {
+            let success = true;
 
-        const onlineSaved = await this.SaveOnline();
-        if (!onlineSaved) success = false;
+            const onlineSaved = await this.SaveOnline();
+            if (!onlineSaved) success = false;
 
-        const localSaved = await this.SaveLocal();
-        if (!localSaved) success = false;
+            const localSaved = await this.SaveLocal();
+            if (!localSaved) success = false;
 
-        this.globalSaving = false;
-        return success;
+            return success;
+        } finally {
+            // Released even if a save throws, otherwise no further save can ever run
+            this.globalSaving = false;
+        }
     };
 
     /**
@@ -325,6 +330,13 @@ class UserManager {
             if (success && !savingSuccess) {
                 success = false;
             }
+        }
+
+        if (!success) {
+            if (debugIndex) {
+                this.interface.console?.EditLog(debugIndex, 'error', '[UserData] Online save failed');
+            }
+            return false;
         }
 
         if (debugIndex) {

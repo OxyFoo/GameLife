@@ -66,7 +66,7 @@ npm run android   # Pour Android
 * [React Native Google Play Integrity](https://www.npmjs.com/package/react-native-google-play-integrity)
 * [React Native iOS AppAttest](https://www.npmjs.com/package/react-native-ios-appattest)
 * [React Native Keychain](https://npmjs.com/package/react-native-keychain)
-* [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin)
+* [Obfuscator io metro plugin](https://www.npmjs.com/package/obfuscator-io-metro-plugin) ⚠️ désactivé (incompatible Metro >= 0.83)
 * [React Native Pinned WebSocket](https://github.com/Gerem66/react-native-pinned-ws) 📦
 
 ### 💰 Monétisation & achats in-app

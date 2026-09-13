@@ -1,0 +1,16 @@
+# Mirrors the "ignorePatterns" of .eslintrc.json so that
+# `npm run format` and `npm run lint` agree on what they check.
+node_modules/
+Backups/
+android/
+ios/
+build/
+.jso/
+
+# Code that does not need to be formatted
+res/
+_Template/
+**/Pages/Test/
+
+# Manually aligned page registry (see the eslint-disable at the top of the file)
+src/Interface/Pages.js

@@ -59,33 +59,44 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6
     },
 
-    // Info
+    // Informations
     infoContainer: {
         marginBottom: 12
     },
 
-    // KPIs
-    kpiContainer: {
+    // KPIs and streak
+    kpiRow: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        gap: 12,
         marginBottom: 12
     },
-    kpiLeft: {
-        marginRight: 6
+    kpiColumn: {
+        flex: 1,
+        gap: 12
     },
-    kpiRight: {
-        marginLeft: 6
+    kpiCell: {
+        flexBasis: 'auto'
+    },
+    streakCard: {
+        flex: 1
     },
 
     // Skill chart
     skillChart: {
-        marginBottom: 12
+        marginBottom: 24
     },
 
     // History
     historyButton: {
-        marginBottom: 12
+        width: 'auto',
+        marginHorizontal: 24,
+        marginBottom: 12,
+        paddingVertical: 12,
+        borderRadius: 12
+    },
+    historyButtonBackground: {
+        borderRadius: 12
     },
     historyTitle: {
         marginTop: 24,

@@ -5,6 +5,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
+import { DailyDealPriceOf } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types').Rarities} Rarities
@@ -17,7 +18,7 @@ import themeManager from 'Managers/ThemeManager';
  * @typedef BuyableItem
  * @property {ItemID} ID
  * @property {string} Name
- * @property {number} Price
+ * @property {number} Price Deal price, before the shop price factor
  * @property {Rarities} Rarity
  * @property {string[]} Colors Colors from rarity
  * @property {CharacterContainerSize} Size Item size in pixels for the character
@@ -89,16 +90,20 @@ class BackShopItems extends React.Component {
             const item = allBuyableItems.find((i) => i.ID === itemID) || null;
             if (item === null) return;
 
+            // The server never deals a rarity without price, this only narrows the type
+            const price = DailyDealPriceOf(item.Rarity);
+            if (price === null) return;
+
             /** @type {BuyableItem} */
             const buyableItem = {
                 ID: itemID,
                 Name: langManager.GetText(item.Name),
-                Price: item.Value,
+                Price: price,
                 Rarity: item.Rarity,
                 Colors: themeManager.GetRariryColors(item.Rarity),
                 Size: dataManager.items.GetContainerSize(item.Slot),
                 Slot: item.Slot,
-                OnPress: () => this.openItemPopup(item)
+                OnPress: () => this.openItemPopup(item, price)
             };
             buyableItems.push(buyableItem);
         });
@@ -106,12 +111,16 @@ class BackShopItems extends React.Component {
         return buyableItems;
     };
 
-    /** @param {Item} item */
-    openItemPopup = (item) => {
+    /**
+     * @param {Item} item
+     * @param {number} price Deal price, before the shop price factor
+     */
+    openItemPopup = (item, price) => {
         user.interface.popup?.Open({
             content: (
                 <BuyPopup
                     item={item}
+                    price={Math.round(price * user.shop.priceFactor)}
                     closePopup={user.interface.popup?.Close}
                     onPurchased={() => this.onItemPurchased(item.ID)}
                 />

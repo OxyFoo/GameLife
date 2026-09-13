@@ -55,7 +55,9 @@ class ShopDailyDeals extends BackShopItems {
                     {/** Item name & rarity */}
                     <View style={styles.itemInfo}>
                         <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
-                        <Text style={styles.itemName}>{item.Name}</Text>
+                        <Text style={styles.itemName} numberOfLines={2}>
+                            {item.Name}
+                        </Text>
                     </View>
 
                     {/** Item frame */}
@@ -90,27 +92,13 @@ class ShopDailyDeals extends BackShopItems {
         return <Text style={styles.errorText}>{lang['error-no-items']}</Text>;
     };
 
-    /** @param {BuyableItem} item */
+    /** @param {BuyableItem} item Only the deal price is shown, the item value is not displayed */
     renderPrice = (item) => {
-        // Default price
-        if (user.shop.priceFactor === 1) {
-            return (
-                <View style={styles.itemPrice}>
-                    <Text style={styles.itemPriceOx}>{item.Price.toString()}</Text>
-                    <Icon size={20} icon='ox' />
-                </View>
-            );
-        }
+        const price = Math.round(item.Price * user.shop.priceFactor);
 
-        // Price factor is applied
         return (
             <View style={styles.itemPrice}>
-                <View>
-                    <Text style={styles.itemPriceOxEditedOld}>{item.Price.toString()}</Text>
-                    <Text style={styles.itemPriceOxEditedNew}>
-                        {Math.round(item.Price * user.shop.priceFactor).toString()}
-                    </Text>
-                </View>
+                <Text style={styles.itemPriceOx}>{price.toString()}</Text>
                 <Icon size={20} icon='ox' />
             </View>
         );

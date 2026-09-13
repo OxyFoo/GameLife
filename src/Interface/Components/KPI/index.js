@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import styles from './style';
 import themeManager from 'Managers/ThemeManager';
 
+import { GradientView } from 'Interface/Primitives';
 import { Text } from '../Text';
 
 /**
@@ -31,7 +31,7 @@ class KPI extends React.Component {
         const { title, value } = this.props;
 
         return (
-            <LinearGradient
+            <GradientView
                 style={[styles.gradient, this.props.containerStyle]}
                 colors={[
                     themeManager.GetColor('border', { opacity: 0.2 }),
@@ -48,7 +48,7 @@ class KPI extends React.Component {
                         {title}
                     </Text>
                 </View>
-            </LinearGradient>
+            </GradientView>
         );
     }
 }

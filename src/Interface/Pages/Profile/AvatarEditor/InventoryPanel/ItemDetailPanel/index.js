@@ -7,6 +7,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
+import { SellPriceOf } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
 
 import { Text, Button } from 'Interface/Components';
 
@@ -16,9 +17,6 @@ import { Text, Button } from 'Interface/Components';
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  */
-
-/** Sell price factor - player gets 75% of item value when selling */
-const SELL_PRICE_FACTOR = 0.75;
 
 /**
  * @typedef {object} ItemDetailPanelProps
@@ -47,7 +45,7 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
     const itemData = dataManager.items.GetByID(/** @type {ItemID} */ (itemName));
     const itemTitle = itemData ? langManager.GetText(itemData.Name) : itemName;
     const itemDescription = itemData ? langManager.GetText(itemData.Description) : `Item ${slot}`;
-    const sellPrice = itemData ? Math.ceil(itemData.Value * SELL_PRICE_FACTOR) : 0;
+    const sellPrice = itemData ? SellPriceOf(itemData.Value) : 0;
     const sellButtonText = lang['button-sell'].replace('{}', sellPrice.toString());
 
     /**

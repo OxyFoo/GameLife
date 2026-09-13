@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+// The columns below are aligned by hand; this file is listed in .prettierignore.
 const PAGES = {
     about:                  require('./Pages/About').default,
     achievements:           require('./Pages/Achievements').default,
@@ -9,16 +10,13 @@ const PAGES = {
     chestreward:            require('./Pages/ChestReward').default,
     display:                require('./Pages/Display').default,
     itemreward:             require('./Pages/ItemReward').default,
-    friends:                require('./Pages/Friends').default,
     home:                   require('./Pages/Home').default,
     loading:                require('./Pages/Loading').default,
     login:                  require('./Pages/Login').default,
-    multiplayer:            require('./Pages/Multiplayer').default,
     onboarding:             require('./Pages/Onboarding').default,
     profile:                require('./Pages/Profile').default,
-    quest:                  require('./Pages/Quest').default,
-    quests:                 require('./Pages/Quests').default,
-    queststats:             require('./Pages/QuestStats').default,
+    raids:                  require('./Pages/Raids').default,
+    raid_details:           require('./Pages/RaidDetails').default,
     report:                 require('./Pages/Report').default,
     settings:               require('./Pages/Settings').default,
     settings_beta:          require('./Pages/Settings/Beta').default,
@@ -30,10 +28,8 @@ const PAGES = {
     statistics:             require('./Pages/Statistics').default,
     waitinternet:           require('./Pages/WaitInternet').default,
     waitmail:               require('./Pages/WaitMail').default,
-    test:                   require('./Pages/Test').default,
-    todo:                   require('./Pages/Todo').default
+    test:                   require('./Pages/Test').default
 };
-/* eslint-enable prettier/prettier */
 
 /**
  * @typedef {keyof typeof PAGES} PageNames

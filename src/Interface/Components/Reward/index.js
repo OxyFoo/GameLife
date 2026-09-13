@@ -14,12 +14,13 @@ import { Icon } from '../Icon';
  */
 
 /**
- * @param {{ item: RawReward }} props
- * @returns {React.ReactNode | null}
+ * @param {{ item: RawReward, size?: number }} props
+ * @returns {React.JSX.Element}
  */
-const Reward = ({ item }) => {
+const Reward = ({ item, size }) => {
     const styleReward = {
         ...styles.rewardItem,
+        ...(typeof size === 'number' ? { width: size, height: size } : {}),
         backgroundColor: themeManager.GetColor('background')
     };
 
@@ -28,7 +29,10 @@ const Reward = ({ item }) => {
             return (
                 <View style={styleReward}>
                     <Icon size='100%' icon='ox' />
-                    <Text style={styles.rewardValue}>{'x' + item.Amount.toString()}</Text>
+                    {/* The label may be wider than the slot: shrink it instead of wrapping */}
+                    <Text style={styles.rewardValue} numberOfLines={1} adjustsFontSizeToFit>
+                        {'x' + item.Amount.toString()}
+                    </Text>
                 </View>
             );
 
@@ -36,6 +40,13 @@ const Reward = ({ item }) => {
             return (
                 <View style={styleReward}>
                     <Image style={styles.rewardImage} source={IMG_CHESTS[item.ChestRarity]} />
+                </View>
+            );
+
+        case 'Achievement':
+            return (
+                <View style={styleReward}>
+                    <Icon size='60%' icon='cup' color='main1' />
                 </View>
             );
 

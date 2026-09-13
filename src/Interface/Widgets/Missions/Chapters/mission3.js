@@ -30,30 +30,30 @@ async function StartMission3() {
 
     user.interface.screenTuto.ShowTutorial([
         {
-            component: user.interface.navBar.refButtons['multiplayer'],
+            component: user.interface.navBar.refButtons['raids'],
             text: missionTexts['1'],
             execAfter: async () => {
                 await new Promise((resolve) => {
-                    user.interface.ChangePage('multiplayer', { callback: () => resolve(null) });
+                    user.interface.ChangePage('raids', { callback: () => resolve(null) });
                 });
                 await Sleep(500);
                 return false;
             }
         },
         {
-            component: () => user.interface.GetPage('multiplayer')?.refFriendsButton ?? null,
+            component: () => user.interface.GetPage('raids')?.refTabs[1] ?? null,
             text: missionTexts['2'],
             execAfter: async () => {
-                await user.interface.GetPage('multiplayer')?.goToFriends();
+                user.interface.GetPage('raids')?.setTab(1);
                 await Sleep(700);
-                return true;
+                return false;
             }
         },
         {
-            component: () => user.interface.GetPage('friends')?.refAddFriendButton ?? null,
+            component: () => user.interface.GetPage('raids')?.refAddFriendButton ?? null,
             text: missionTexts['3'],
             execAfter: () => {
-                user.interface.GetPage('friends')?.onAddFriendPress();
+                user.interface.GetPage('raids')?.onAddFriendPress();
                 return true;
             }
         }

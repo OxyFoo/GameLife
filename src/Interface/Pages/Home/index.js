@@ -7,17 +7,16 @@ import BackHome from './back';
 import { Title } from './Title';
 import { Experience } from './Experience';
 import { TodayActivitiesPieChart } from './TodayActivitiesPieChart';
-import { TodayQuestsPieChart } from './TodayQuestsPieChart';
 import { StatsRadar } from './StatsRadar';
 import { SkillsTags } from './SkillsTags';
-// TODO: Delete ?
-// import { AchievementPreview } from './AchievementPreview';
+import { AchievementsPreview } from './AchievementsPreview';
 import { MoreInfo } from './MoreInfo';
+import { RaidWidget } from './RaidWidget';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
 import { Button } from 'Interface/Components';
-import { Missions, TodoList } from 'Interface/Widgets';
+import { Missions } from 'Interface/Widgets';
 
 class Home extends BackHome {
     render() {
@@ -46,7 +45,7 @@ class Home extends BackHome {
                 {/* Missions - Optional */}
                 <Missions />
 
-                {/* Today recap: Activities & Quests */}
+                {/* Today recap: Activities */}
                 <Title title={lang['section-today-performance']}>
                     <Button
                         style={styles.sectionTitleAddButton}
@@ -59,20 +58,22 @@ class Home extends BackHome {
                 </Title>
                 <View style={styles.chartsContainer}>
                     <TodayActivitiesPieChart />
-                    <TodayQuestsPieChart refParent={this.refQuestsTitle} />
+                    <RaidWidget />
                 </View>
 
                 {/* Main stats & avatar */}
-                <View>
+                <View style={styles.mainContentContainer}>
                     {/* Left column: Stats, Skills, Achievements */}
                     <View style={styles.leftColumn}>
                         {/* Stats title + widget */}
-                        <Title title={lang['container-stats-title']} />
                         <StatsRadar />
 
                         {/* Skills title + widget */}
                         {/* <Title title={lang['container-skills-title']} /> */}
-                        <SkillsTags style={styles.sectionMoreData} />
+                        <SkillsTags style={styles.sectionMoreData} refParent={this.refSkillsTags} />
+
+                        {/* Achievements title + widget */}
+                        <AchievementsPreview style={styles.sectionMoreData} />
                     </View>
 
                     {/* Right column: Avatar with parallax */}
@@ -91,25 +92,7 @@ class Home extends BackHome {
                     </Animated.View>
                 </View>
 
-                {/* Achievements title + widget */}
-                {/* <Title title={lang['btn-achievements']} />
-                <AchievementPreview /> */}
-
-                <Title title={lang['btn-more-info']} />
-                <MoreInfo />
-
-                {/* My todos */}
-                <Title title={lang['section-my-todos']}>
-                    <Button
-                        style={styles.sectionTitleAddButton}
-                        appearance='uniform'
-                        color='transparent'
-                        icon='add-outline'
-                        fontColor='gradient'
-                        onPress={this.newTodo}
-                    />
-                </Title>
-                <TodoList style={styles.lastWidget} />
+                <MoreInfo style={styles.lastWidget} />
             </ScrollView>
         );
     }

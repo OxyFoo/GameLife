@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native';
 
+/** Diameter of the donut: the outer ring of the raid widget beside it on the Home takes the same */
+const DONUT_SIZE = 120;
+
 const styles = StyleSheet.create({
     dot: {
         height: 10,
@@ -20,7 +23,7 @@ const styles = StyleSheet.create({
     legendContainerFullScreen: {
         width: '100%',
         marginTop: 6,
-        height: 110 - 6, // Same as the pie chart size (hardcoded in index.js) - margin (title height)
+        height: DONUT_SIZE - 6, // Same height as the donut, margin included
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -38,4 +41,5 @@ const styles = StyleSheet.create({
     }
 });
 
+export { DONUT_SIZE };
 export default styles;

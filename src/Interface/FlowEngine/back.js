@@ -126,6 +126,13 @@ class BackFlowEngine extends React.Component {
     nativeEventSubscription = null;
 
     /**
+     * @description Pending requestAnimationFrame of the ref-polling loop, cancelled on unmount
+     * @type {number | null}
+     * @private
+     */
+    assignRefsFrame = null;
+
+    /**
      * @type {Array<PageNames>}
      * @protected
      */
@@ -183,9 +190,11 @@ class BackFlowEngine extends React.Component {
                 !this.navBar.current ||
                 !this.notificationsInApp.current
             ) {
-                requestAnimationFrame(assignRefs);
+                this.assignRefsFrame = requestAnimationFrame(assignRefs);
                 return;
             }
+
+            this.assignRefsFrame = null;
 
             // Set public properties
             this._public.popup = this.popup.current;
@@ -208,6 +217,12 @@ class BackFlowEngine extends React.Component {
 
     componentWillUnmount() {
         this.nativeEventSubscription?.remove();
+
+        // Stop the ref-polling loop, it would otherwise keep running after unmount
+        if (this.assignRefsFrame !== null) {
+            cancelAnimationFrame(this.assignRefsFrame);
+            this.assignRefsFrame = null;
+        }
     }
 
     /**
@@ -271,14 +286,6 @@ class BackFlowEngine extends React.Component {
     // @ts-ignore
     GetPageName = (pageName) => (this.availablePages.includes(pageName) ? pageName : null);
 
-    // TODO: Remove
-    /**
-     * @description Custom back button handler
-     * @type {(() => boolean) | null} Return true if back is handled
-     * @private
-     */
-    customBackHandle = null;
-
     /**
      * @description Custom back button handler
      * @type {((args: any) => (boolean | (() => void)))[]} Return true if back is handled
@@ -287,7 +294,9 @@ class BackFlowEngine extends React.Component {
     customBackHandlers = [];
 
     ClearHistory = () => {
-        this.history = [];
+        // Emptied in place: `_public.history` holds this exact array, so reassigning
+        // `this.history` would leave every consumer pointing at the old one.
+        this.history.length = 0;
     };
 
     /**
@@ -301,30 +310,6 @@ class BackFlowEngine extends React.Component {
         }
         this.customBackHandlers.push(handle);
         return true;
-    };
-
-    // TODO: Remove
-    /**
-     * @param {() => boolean} handle
-     * @returns {boolean} True if handle is set
-     * @public
-     * @deprecated
-     */
-    SetCustomBackHandler = (handle) => {
-        if (typeof handle !== 'function') {
-            return false;
-        }
-        this.customBackHandle = handle;
-        return true;
-    };
-
-    // TODO: Remove
-    /**
-     * @public
-     * @deprecated
-     */
-    ResetCustomBackHandler = () => {
-        this.customBackHandle = null;
     };
 
     /**
@@ -394,7 +379,7 @@ class BackFlowEngine extends React.Component {
         }
 
         if (nextpage === selectedPage) {
-            return false;
+            return this.refreshPage(nextpage, options);
         }
 
         const isGoingBack = nextpage === this.history[this.history.length - 1]?.pageName;
@@ -409,6 +394,32 @@ class BackFlowEngine extends React.Component {
         if (isGoingBack) {
             this.history.pop();
         }
+
+        return true;
+    };
+
+    /**
+     * Re-enter the page already displayed with new arguments. Nothing is mounted, unmounted or
+     * pushed to the history: the page keeps its instance and is asked to restart on the new args,
+     * which is how `chestreward` chains its rewards — one page, one animation per reward.
+     * The args are handed over before the focus call so the page reads them from its own props.
+     * @template {PageNames} T
+     * @param {T} pageName
+     * @param {PageOptions<T>} options
+     * @returns {boolean} True if the page received new arguments
+     * @private
+     */
+    refreshPage = (pageName, options) => {
+        const page = this.getActivePage(pageName);
+        if (page === null || typeof options.args === 'undefined' || page.args === options.args) {
+            return false;
+        }
+
+        page.args = options.args;
+        this.setState({ mountedPages: [...this.state.mountedPages] }, () => {
+            page.ref.current?._componentDidFocused({ args: page.args });
+            options.callback?.();
+        });
 
         return true;
     };
@@ -486,7 +497,9 @@ class BackFlowEngine extends React.Component {
             if (newPage.args !== options.args) {
                 newPage.args = options.args;
             }
-            newPage.ref.current?._componentDidFocused(newPage.args);
+            // Props, not args: a page reads its arguments through `props.args`, exactly like the
+            // `componentDidFocused(this.props)` it calls itself on mount
+            newPage.ref.current?._componentDidFocused({ args: newPage.args });
             pageAlreadyMounted = true;
         }
 
@@ -581,7 +594,7 @@ class BackFlowEngine extends React.Component {
         // Animation selection
         if (this.navBar.current?.state.animationSelection) {
             /** @type {(PageNames | null)[]} */
-            const pageList = ['home', 'calendar', null, 'multiplayer', 'shop'];
+            const pageList = ['home', 'calendar', null, 'raids', 'shop'];
             const toIndex = pageList.indexOf(pageName);
             const newAnimPos = toIndex === -1 ? 2 : toIndex;
 
@@ -695,12 +708,7 @@ class BackFlowEngine extends React.Component {
         GetCurrentPage: this.GetCurrentPage,
         GetCurrentPageName: this.GetCurrentPageName,
         AddCustomBackHandler: this.AddCustomBackHandler,
-        RemoveCustomBackHandler: this.RemoveCustomBackHandler,
-
-        /** @deprecated */
-        SetCustomBackHandler: this.SetCustomBackHandler,
-        /** @deprecated */
-        ResetCustomBackHandler: this.ResetCustomBackHandler
+        RemoveCustomBackHandler: this.RemoveCustomBackHandler
     };
 }
 

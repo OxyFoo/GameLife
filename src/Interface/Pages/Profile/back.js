@@ -74,18 +74,6 @@ class BackProfile extends PageBase {
         user.interface.ChangePage('settings');
     };
 
-    openSkills = () => {
-        user.interface.ChangePage('skills');
-    };
-
-    openStatistics = () => {
-        user.interface.ChangePage('statistics');
-    };
-
-    openAchievements = () => {
-        user.interface.ChangePage('achievements');
-    };
-
     onBack = () => {
         user.interface.BackHandle();
     };

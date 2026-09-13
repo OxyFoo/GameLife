@@ -58,8 +58,8 @@ class BackSettingsPrivacy extends PageBase {
     openConsentPopup = async () => {
         const lang = langManager.curr['settings'];
 
-        this.setStateSync({ waitingConsentPopup: true });
-        const consentStatus = await user.consent.ShowTrackingPopup(true);
+        await this.setStateSync({ waitingConsentPopup: true });
+        const consentStatus = await user.consent.OpenPrivacyOptions();
         this.setState({ waitingConsentPopup: false });
 
         if (consentStatus === 'error') {

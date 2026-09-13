@@ -2,10 +2,13 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import styles from './style';
+import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import { DEFAULT_ACTIVITY } from 'Data/User/Activities';
 
-import { Text } from 'Interface/Components';
+import { Text, OxAmount } from 'Interface/Components';
 import { DateFormat } from 'Utils/Date';
+import { GetActivitySlot } from 'Utils/ActivityTime';
 import { GetDate, GetLocalTime } from 'Utils/Time';
 import { TwoDigit } from 'Utils/Functions';
 
@@ -21,7 +24,9 @@ const ActivityTimerTimerProps = {
 class ActivityTimerTimer extends React.Component {
     state = {
         displayInitialTime: '00:00',
-        displayCurrentTime: '00:00:00'
+        displayCurrentTime: '00:00:00',
+        /** Ox the activity would grant if completed now */
+        displayOx: 0
     };
 
     /** @param {ActivityTimerTimerProps} props */
@@ -36,6 +41,7 @@ class ActivityTimerTimer extends React.Component {
         const { startTime } = currentActivity;
         this.state.displayInitialTime = DateFormat(GetDate(startTime), 'HH:mm');
         this.state.displayCurrentTime = this.__getCurrentTime();
+        this.state.displayOx = this.__getOx();
     }
 
     componentDidMount() {
@@ -50,7 +56,34 @@ class ActivityTimerTimer extends React.Component {
      * @returns {void}
      */
     tick = () => {
-        this.setState({ displayCurrentTime: this.__getCurrentTime() });
+        this.setState({ displayCurrentTime: this.__getCurrentTime(), displayOx: this.__getOx() });
+    };
+
+    /**
+     * Ox the activity would grant if completed now (1/min, 12h/day limit),
+     * with the same 5 minutes rounding as the completion (see BackActivityTimer.onPressComplete)
+     * @returns {number}
+     */
+    __getOx = () => {
+        const { currentActivity } = this.props;
+        if (currentActivity === null) {
+            return 0;
+        }
+
+        const { skillID, startTime, timezone } = currentActivity;
+        const now = GetLocalTime();
+
+        const slot = GetActivitySlot(startTime, now);
+        const duration = Math.max(0, slot.duration);
+
+        return user.activities.GetOxReward({
+            ...DEFAULT_ACTIVITY,
+            skillID,
+            startTime: slot.startTime,
+            duration,
+            timezone,
+            addedTime: now
+        });
     };
 
     __getCurrentTime = () => {
@@ -71,12 +104,15 @@ class ActivityTimerTimer extends React.Component {
 
     render() {
         const lang = langManager.curr['activity'];
-        const { displayInitialTime, displayCurrentTime } = this.state;
+        const { displayInitialTime, displayCurrentTime, displayOx } = this.state;
 
         return (
             <View>
                 <Text style={styles.startText}>{lang['timer-launch'] + ' ' + displayInitialTime}</Text>
                 <Text style={styles.durationText}>{displayCurrentTime}</Text>
+                <View style={styles.oxContainer}>
+                    <OxAmount value={displayOx} signed fontSize={16} iconSize={20} />
+                </View>
             </View>
         );
     }

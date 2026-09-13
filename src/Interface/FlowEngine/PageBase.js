@@ -24,6 +24,15 @@ class PageBase extends React.Component {
     static feShowNavBar = false;
 
     /**
+     * @description Draw the page under the user header instead of below it (default: false).
+     * The header keeps showing and stays on top; the page owns the whole height and must pad its
+     * own content by `flowEngine.userHeader?.state.height`. For a page whose background must run
+     * behind the header, like the raid landscape.
+     * @type {boolean}
+     */
+    static feHeaderOverlay = false;
+
+    /**
      * @description Refresh page when focused (default: true)
      * @type {boolean}
      * @private

@@ -17,22 +17,25 @@ import Titles from 'Data/App/Titles';
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/index').DataTypes} DataTypes
  */
 
+/** @returns {DataHashes} */
+const EmptyTableHashes = () => ({
+    achievements: 0,
+    ads: 0,
+    contributors: 0,
+    dailyQuestsRewards: 0,
+    iap: 0,
+    items: 0,
+    missions: 0,
+    quotes: 0,
+    skills: 0,
+    skillIcons: 0,
+    skillCategories: 0,
+    titles: 0
+});
+
 class DataManager {
     /** @type {DataHashes} */
-    #tableHashes = {
-        achievements: 0,
-        ads: 0,
-        contributors: 0,
-        dailyQuestsRewards: 0,
-        iap: 0,
-        items: 0,
-        missions: 0,
-        quotes: 0,
-        skills: 0,
-        skillIcons: 0,
-        skillCategories: 0,
-        titles: 0
-    };
+    #tableHashes = EmptyTableHashes();
 
     constructor() {
         this.achievements = new Achievements();
@@ -46,33 +49,26 @@ class DataManager {
         this.titles = new Titles();
     }
 
-    Clear() {
+    /**
+     * Reset every app data table and wipe the local copy
+     * @returns {Promise<void>}
+     */
+    async Clear() {
         this.achievements.Clear();
         this.ads.Clear();
         this.contributors.Clear();
         this.dailyQuestsRewards.Clear();
         this.items.Clear();
+        this.missions.Clear();
         this.quotes.Clear();
         this.skills.Clear();
         this.titles.Clear();
 
-        this.#tableHashes = {
-            achievements: 0,
-            ads: 0,
-            contributors: 0,
-            dailyQuestsRewards: 0,
-            iap: 0,
-            items: 0,
-            missions: 0,
-            quotes: 0,
-            skills: 0,
-            skillIcons: 0,
-            skillCategories: 0,
-            titles: 0
-        };
+        this.#tableHashes = EmptyTableHashes();
 
-        Storage.Save('APP_DATA', null);
-        Storage.Save('APPDATA_HASHES', null);
+        // Awaited, otherwise these resets can land after a save started right afterwards
+        await Storage.Save('APP_DATA', null);
+        await Storage.Save('APPDATA_HASHES', null);
     }
 
     /**

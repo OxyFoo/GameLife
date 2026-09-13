@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
+/** @param {import('react-native-svg').SvgProps} props */
 const SvgComponent = (props) => (
   <Svg viewBox='0 0 24 24' {...props}>
     <Path d='M9.447 15.398a.75.75 0 1 0-.894 1.205A5.767 5.767 0 0 0 12 17.75a5.767 5.767 0 0 0 3.447-1.147.75.75 0 0 0-.894-1.206A4.266 4.266 0 0 1 12 16.25a4.266 4.266 0 0 1-2.553-.852Z' />

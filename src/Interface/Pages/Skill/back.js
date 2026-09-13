@@ -7,6 +7,7 @@ import langManager from 'Managers/LangManager';
 import dataManager from 'Managers/DataManager';
 
 import { AddActivity } from 'Interface/Widgets';
+import { RATE_WINDOW_DAYS } from 'Data/User/Activities/skillFrequency';
 import { GetDate } from 'Utils/Time';
 import { Round } from 'Utils/Functions';
 import { DateFormat } from 'Utils/Date';
@@ -15,6 +16,7 @@ import { DateFormat } from 'Utils/Date';
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
  * @typedef {import('Data/User/Activities/index').Activity} Activity
  * @typedef {import('Data/User/Activities/index').ActivitySaved} ActivitySaved
+ * @typedef {import('Data/User/Activities/skillFrequency').SkillFrequency} SkillFrequency
  *
  * @typedef HistoryActivityItem
  * @property {Activity} activity
@@ -47,7 +49,22 @@ class BackSkill extends PageBase {
         },
 
         /** @type {HistoryActivityItem[]} */
-        history: []
+        history: [],
+
+        /** @type {SkillFrequency} */
+        frequency: {
+            todayIndex: 0,
+            firstDayIndex: null,
+            currentStreak: 0,
+            bestStreak: 0,
+            activeDays: 0,
+            totalDays: 0,
+            rate: 0,
+            dailyMinutes: new Map()
+        },
+
+        /** @type {number | null} Rate window in days, null = since the first activity */
+        rateWindow: RATE_WINDOW_DAYS
     };
 
     /** @type {boolean} Used to avoid multiple comebacks */
@@ -105,6 +122,7 @@ class BackSkill extends PageBase {
         };
 
         this.state.history = this.#getHistory();
+        this.state.frequency = user.activities.GetSkillFrequency(skillID, this.state.rateWindow);
     }
 
     componentDidMount() {
@@ -114,6 +132,9 @@ class BackSkill extends PageBase {
             this.onBackPress();
             return;
         }
+
+        // Tutorial mission: consult a skill
+        user.missions.SetMissionState('mission2', 'completed');
 
         this.listenerActivity = user.activities.allActivities.AddListener(this.updateActivity);
     }
@@ -153,7 +174,8 @@ class BackSkill extends PageBase {
                     stats: Object.values(skill.Stats),
                     totalDuration: this.getTotalDurationFromSkillID(skill.ID)
                 },
-                history: this.#getHistory()
+                history: this.#getHistory(),
+                frequency: user.activities.GetSkillFrequency(skill.ID, this.state.rateWindow)
             },
             async () => {
                 // If history is empty, come back
@@ -211,6 +233,16 @@ class BackSkill extends PageBase {
             totalDuration += element.duration;
         }
         return Round(totalDuration / 60, 1);
+    };
+
+    /** Switch the rate window between the last 30 days and the whole history */
+    toggleRateWindow = () => {
+        const { selectedSkill, rateWindow: currentWindow } = this.state;
+        const rateWindow = currentWindow === null ? RATE_WINDOW_DAYS : null;
+        this.setState({
+            rateWindow,
+            frequency: user.activities.GetSkillFrequency(selectedSkill.ID, rateWindow)
+        });
     };
 
     showHistory = () => {

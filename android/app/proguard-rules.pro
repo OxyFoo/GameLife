@@ -62,3 +62,6 @@
 -keep class com.gamelife.BuildConfig { *; }
 
 -dontwarn com.google.android.gms.ads.**
+
+# Google UMP (consent SDK) - required by react-native-google-mobile-ads
+-keep class com.google.android.gms.internal.consent_sdk.** { *; }

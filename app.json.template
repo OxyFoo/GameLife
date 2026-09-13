@@ -1,6 +1,8 @@
 {
     "react-native-google-mobile-ads": {
         "android_app_id": "ca-app-pub-0123456789012345~0123456789",
-        "ios_app_id": "ca-app-pub-0123456789012345~0123456789"
+        "ios_app_id": "ca-app-pub-0123456789012345~0123456789",
+        "delay_app_measurement_init": true,
+        "user_tracking_usage_description": "We need to track user activity to provide personalized ads"
     }
 }

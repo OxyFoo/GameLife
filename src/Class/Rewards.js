@@ -53,6 +53,11 @@ class Rewards extends IUserData {
         }
         this.#ExecRewardItems(itemsRewards);
 
+        // Achievements: unlocked server-side, the list is refetched (the token moved)
+        if (rewards.some((reward) => reward.Type === 'Achievement' && !reward.AlreadyOwned)) {
+            this.#user.achievements.LoadOnline();
+        }
+
         return true;
     };
 
@@ -294,6 +299,18 @@ class Rewards extends IUserData {
                     const chestRarityName = langManager.curr['rarities'][chestRarity];
                     const chestLine = lang['chest'].replace('{}', chestRarityName);
                     lines.push(chestLine);
+                    break;
+
+                case 'Achievement':
+                    const achievement = dataManager.achievements.GetByID(reward.AchievementID);
+                    if (achievement === null) {
+                        this.#user.interface.console?.AddLog(
+                            'error',
+                            `[Achievements] Error while get achievement (ID: ${reward.AchievementID})`
+                        );
+                        continue;
+                    }
+                    lines.push(lang['achievement'].replace('{}', langManager.GetText(achievement.Name)));
                     break;
             }
         }

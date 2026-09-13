@@ -4,12 +4,10 @@ import dataManager from 'Managers/DataManager';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
- * @typedef {import('Data/User/Inventory').default} Inventory
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
- * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
- * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').UserOnline} UserOnline
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
  *
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').ItemConfig} ItemConfig
@@ -337,8 +335,8 @@ class Avatar extends IUserData {
     };
 
     /**
-     * Get avatar items from a Friend or UserOnline object for AvatarCharacter component
-     * @param {Friend | UserOnline | null | undefined} friend
+     * Get avatar items from a Friend, a UserOnline or any object carrying an avatar (raid players)
+     * @param {{ avatar: { SkinColor: number, Hair: ItemID, Top: ItemID, Bottom: ItemID, Shoes: ItemID } } | null | undefined} friend
      * @returns {ItemConfig[]}
      */
     static GetFriendAvatarItems = (friend) => {

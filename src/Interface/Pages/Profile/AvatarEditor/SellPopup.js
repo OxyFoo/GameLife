@@ -3,15 +3,13 @@ import { View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
+import { SellPriceOf } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
 
 import { Text, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  */
-
-/** Sell price factor - player gets 75% of item value when selling */
-const SELL_PRICE_FACTOR = 0.75;
 
 /**
  * @param {Object} props
@@ -24,7 +22,7 @@ function SellPopup({ stuffID, item, onSold }) {
     const langModal = langManager.curr['modal'];
     const [loading, setLoading] = React.useState(false);
 
-    const sellPrice = Math.ceil(item.Value * SELL_PRICE_FACTOR);
+    const sellPrice = SellPriceOf(item.Value);
     const itemName = langManager.GetText(item.Name);
     const message = lang['alert-sellconfirm-text'].replace('{}', sellPrice.toString());
 

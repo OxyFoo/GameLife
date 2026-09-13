@@ -107,11 +107,10 @@ class SecureStorage {
      * @returns {Promise<void>}
      */
     static async ClearAll() {
-        const keys = Object.values(SECURE_STORAGE_KEYS);
+        // Keys, not values: `Remove` is keyed by the SECURE_STORAGE_KEYS property name.
+        // Iterating the values silently skipped SESSION_TOKEN and the integrity tokens.
+        const keys = /** @type {Array<keyof SECURE_STORAGE_KEYS>} */ (Object.keys(SECURE_STORAGE_KEYS));
         for (const key of keys) {
-            if (!SecureStorage.#checkKey(key)) {
-                continue;
-            }
             await SecureStorage.Remove(key);
         }
     }

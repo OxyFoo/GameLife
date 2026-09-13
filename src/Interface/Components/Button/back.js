@@ -4,7 +4,7 @@ import * as React from 'react';
  * @typedef {import('react-native').View} View
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('react-native').Animated.AnimatedProps<ViewStyle>} AnimatedProps
+ * @typedef {import('react-native').Animated.WithAnimatedObject<ViewStyle>} AnimatedProps
  * @typedef {import('react-native').ButtonProps} ButtonProps
  *
  * @typedef {import('react-native').LayoutChangeEvent} LayoutChangeEvent
@@ -39,6 +39,8 @@ import * as React from 'react';
  * @property {(event: GestureResponderEvent) => void} onPress
  * @property {(event: GestureResponderEvent) => void} onLongPress
  * @property {'none' | 'auto' | 'box-none' | 'box-only'} pointerEvents
+ * @property {() => boolean} [onStartShouldSetResponder] Claim the touch so an ancestor `Touchable` does not fire too
+ * @property {(event: GestureResponderEvent) => boolean} [onResponderTerminationRequest]
  * @property {(event: GestureResponderEvent) => void} onTouchStart
  * @property {(event: GestureResponderEvent) => void} onTouchMove
  * @property {(event: GestureResponderEvent) => void} onTouchEnd

@@ -20,10 +20,10 @@
                 "Le jeu de ta vie est en cours. Veille à ce que chacun de tes mouvements soit suivi. Connecte-toi maintenant !",
                 "N'oublie pas que chaque petite activité peut te faire gagner des points. As-tu ajouté les tiennes ?",
                 "Chasse les classements ! Assure-toi de saisir tes expériences du jour",
-                "Chaque quête et chaque défi d'aujourd'hui est source de croissance. As-tu mis à jour l'application ?",
+                "Chaque activité et chaque défi d'aujourd'hui est source de croissance. As-tu mis à jour l'application ?",
                 "Note ton parcours ! Quels ont été les hauts et les bas d'aujourd'hui ?",
                 "La vie est un jeu, et chaque jour est un nouveau tournant. Assure-toi d'avoir joué le tien en te connectant",
-                "Un autre jour, une autre quête ! Assure-toi d'immortaliser toutes tes aventures",
+                "Un autre jour, une autre aventure ! Assure-toi d'immortaliser toutes tes activités",
                 "Tu as obtenu des bonus ou des succès aujourd'hui ? Ne les laisse pas s'échapper, note-les !",
                 "Ton héritage se construit un jour à la fois. As-tu enregistré l'histoire d'aujourd'hui ?",
                 "Des moments épiques t'attendent ! Quels récits épiques de la journée vas-tu partager dans l'application ?",
@@ -46,15 +46,6 @@
                 "Ton futur toi te remerciera — {skillName} commence maintenant !",
                 "Hey ! {skillName} commence maintenant — tu peux le faire !"
             ]
-        },
-        "quests": {
-            "name": "Notifications des quêtes",
-            "title": "GameLife - Quêtes",
-            "message": {
-                "half-time": "Il te reste la moitié du temps prévu pour terminer la[-es] quête[s] : {}",
-                "last-time": "La[-es] quête[s] suivante[s] se terminent demain : {}, dépêche-toi de les terminer !",
-                "today-time": "La[-es] quête[s] suivante[s] se terminent aujourd'hui : {}, dépêche-toi de les terminer !"
-            }
         },
         "in-app": {
             "name": "Notifications dans l'app",
@@ -107,17 +98,17 @@
                 }
             },
             "mission2": {
-                "title": "Créer une quête",
+                "title": "Consulter une compétence",
                 "texts": {
-                    "1": "Appui ici sur le + à droite pour ajouter une nouvelle quête",
-                    "2": "Voici la page des quêtes, elles servent à te donner des objectifs à réaliser régulièrement"
+                    "1": "Voici tes compétences, appuie ici pour les voir toutes",
+                    "2": "Chaque compétence a sa page : on t'ouvre celle que tu pratiques le plus pour découvrir ta série de jours et ta régularité"
                 }
             },
             "mission3": {
                 "title": "Demander en ami",
                 "texts": {
-                    "1": "Clique sur ce bouton pour aller dans la page multijoueur",
-                    "2": "En bas à droite de la page multijoueur tu as un bouton pour voir la liste de tes amis",
+                    "1": "Clique sur ce bouton pour aller dans la page Raids",
+                    "2": "Ouvre l'onglet Amis pour voir la liste de tes amis",
                     "3": "En bas à droite, appuie sur le bouton pour ajouter un ami",
                     "not-connected": "Tu dois être connecté à internet pour pouvoir ajouter des amis, merci de réessayer plus tard"
                 }
@@ -223,7 +214,7 @@
     "navbar": {
         "home": "Accueil",
         "calendar": "Calendrier",
-        "multiplayer": "Multijoueur",
+        "raids": "Raids",
         "shop": "Marché"
     },
 
@@ -243,7 +234,8 @@
         "common": "Commun",
         "rare": "Rare",
         "epic": "Épique",
-        "legendary": "Légendaire"
+        "legendary": "Légendaire",
+        "random": "Aléatoire"
     },
 
     "server": {
@@ -272,8 +264,8 @@
         },
         "page2": {
             "first": "Transforme chaque défi en aventure: Gagne des points d’expérience et améliore tes compétences à chaque activité.",
-            "second": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens le héros de ta propre histoire !",
-            "second-bis": "Seul ou avec tes amis, accomplis des quêtes, débloque des succès et deviens la meilleure version de toi-même !"
+            "second": "Seul ou avec tes amis, progresse dans tes compétences, débloque des succès et deviens le héros de ta propre histoire !",
+            "second-bis": "Seul ou avec tes amis, progresse dans tes compétences, débloque des succès et deviens la meilleure version de toi-même !"
         },
         "test-caution-message": "Version test :\n\nRisque de bugs et instabilité.\nLes comptes sont indépendants de la version principale.\nDonnées susceptibles d'être supprimées.\n\nAidez-nous à améliorer l'app et gagnez des récompenses pour chaque bug trouvé !",
         "test-caution-redirect": "Viens sur le Discord pour en savoir plus !",
@@ -318,6 +310,7 @@
             "item": "Nouvel item : {}",
             "ox": "Gain : {} Ox",
             "chest": "Coffre : {}",
+            "achievement": "Succès débloqué : {}",
             "items-in-chest": "Ainsi que les objets suivants..."
         },
 
@@ -367,7 +360,11 @@
         "title-friends": "Partenaires d'activité",
         "title-no-experience": "Cette activité n'apporte pas d'expérience",
         "title-not-past": "Cette activité n'a pas encore été réalisée",
-        "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience et n'est pas prise en compte pour les quêtes.",
+        "title-before-limit": "Cette activité a été ajoutée plus de 48 heures après sa réalisation. Elle ne rapporte donc pas d'expérience.",
+        "title-limit-reached": "Tu as déjà comptabilisé 12 h d'activités aujourd'hui : celle-ci ne rapporte ni points d'expérience ni Ox.",
+        "hint-ox-penalty": "Pour éviter les abus, une seule suppression ou modification par semaine est au prix normal : les suivantes coûtent 50 % de plus. Reviens dans {} pour retrouver le prix normal.",
+        "hint-ox-negative": "Ton solde d'Ox est négatif : impossible de faire une opération qui coûte des Ox tant qu'il n'est pas remonté.",
+        "hint-ox-addition-loss": "En s'insérant avant d'autres activités, celle-ci en fait sortir une du budget de 12 h : la journée perd des Ox.",
         "title-commentary": "Commentaire",
         "input-activity": "Toutes les activités",
         "empty-activity": "Aucune activité",
@@ -384,6 +381,13 @@
         "alert-wrongtiming-message": "Une seule activité à la fois peut être réalisée. Cela permet d'être plus présent et plus efficace.",
         "alert-needconfirmation-title": "Confirmation",
         "alert-needconfirmation-message": "Es-tu sûr(e) de vouloir modifier cette activité ? Son expérience va être supprimé.",
+        "alert-remove-cost": "Cette suppression te coûtera {} Ox.",
+        "alert-remove-gain": "Cette suppression te rapportera {} Ox (une activité plus tardive rentre dans le budget de 12 h).",
+        "alert-needconfirmation-cost": "Elle te coûtera aussi {} Ox.",
+        "alert-ox-negative-title": "Solde négatif",
+        "alert-ox-negative-message": "Ton solde d'Ox est négatif : impossible de supprimer ou de raccourcir une activité tant qu'il n'est pas remonté.",
+        "alert-ox-quote-title": "Le prix a changé",
+        "alert-ox-quote-message-cost": "Une suppression ou modification a déjà été faite cette semaine (sur un autre appareil), ou la situation a changé : ces opérations te coûteront {} Ox au total. Continuer ?",
         "alert-alreadyexist-title": "Erreur",
         "alert-alreadyexist-message": "Une erreur est survenue, il semble que cette activité ait déjà été ajoutée.",
         "alert-tooearly-title": "Erreur",
@@ -411,6 +415,8 @@
         "display-activity-text": "Ton activité a bien été créée !",
         "display-activity-button": "Continuer",
         "display-activity-button2": "Ajouter une autre activité",
+        "display-activity-bonus-ad": "Regarder une pub pour gagner {} Ox de plus",
+        "display-activity-bonus-success": "+{} Ox ! Ton activité rapporte 1,5 fois plus.",
         "display-fail-text": "Nous sommes désolé mais l'ajout de l'activité a échoué (status: {})",
         "display-fail-button": "Retour vers l'accueil",
 
@@ -454,7 +460,6 @@
             "sharing": "Partage...",
             "empty-title": "Aucune activité",
             "empty-message": "Ajoute des activités pour créer ton récap du jour !",
-            "no-quests": "Aucune quête..",
 
             "permission-stockage": {
                 "title": "Permission requise",
@@ -471,24 +476,25 @@
 
         "section-today-performance": "Récap du jour",
         "today-activity": "Activités",
-        "today-quest": "Quêtes",
-        "section-my-todos": "Mes listes",
 
         "btn-stats": "Statistiques",
         "btn-other-skills": "Toutes les compétences",
         "btn-achievements": "Succès",
-        "btn-more-info": "Plus d'infos",
 
         "chart-today-notmuch": "Ajoute une activité pour voir le récap du jour !",
-        "chart-quest-notmuch": "La meilleure façon de se motiver ? Lance une quête.",
         "chart-click-me": "clique ici !",
 
-        "news-myquests-title": "Quêtes à faire",
-
-        "container-stats-title": "Mes infos",
         "container-skills-title": "Compétences",
         "container-skills-empty": "Rien à afficher ici, réalise une activité et reviens !",
         "container-achievements-empty": "Aucun succès débloqué, lance-toi !",
+        "container-raid-title": "Raid",
+        "container-raid-fighting": "En combat",
+        "container-raid-healing": "En guérison",
+        "container-raid-rest": "En repos",
+        "container-raid-locked": "Niveau {} requis",
+        "container-raid-none": "Aucun raid en cours",
+        "container-raid-next": "Prochain raid dans {}",
+        "container-raid-update": "Dispo après la maj",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "Les serveurs sont en maintenance, tu peux accéder à l'application mais les fonctionnalités en ligne sont temporairement désactivées.\n\nMerci pour ta patience, tout reviendra à la normale d'ici quelques heures !",
@@ -504,19 +510,100 @@
         "alert-dateerror-text": "Il semblerait que tu aies modifié la date, peut-être dans le but de tricher ?\n\nJe compte sur toi pour remettre la bonne date, j'espère que cela ne se reproduira plus ^^"
     },
 
-    "leaderboard": {
-        "title": "Classement",
-        "input-label-search": "Rechercher un joueur",
+
+    "raids": {
+        "title": "Raids",
+        "season": "Saison {}",
+        "points": "{} pts",
+        "points-signed": "+{} pts",
+        "rank": "Rang #{}",
+        "tab-rank": "Raid Rank",
+        "tab-friends": "Amis",
+        "tab-feed": "Feed",
+        "tab-this-raid": "Ce Raid",
+        "tab-history": "Anciens Raids",
+        "card-progress": "Progression globale",
+        "card-contribution": "Contribution",
+        "card-participants": "Participants",
+        "card-duration": "Durée",
+        "card-duration-days": "{} / {} jours",
+        "card-locked": "Fonctionnalité débloquée à partir du niveau {} : fais des activités dans la vraie vie, note-les dans ton calendrier et reviens une fois le niveau atteint, tout un monde s'ouvrira à toi !",
+        "card-update-required": "Les raids seront disponibles après la mise à jour",
+        "card-rest-title": "Repos des Héros",
+        "card-rest-next": "Prochain raid",
+        "card-rest-no-next": "Les héros se reposent, le prochain raid sera annoncé bientôt",
+        "card-last-contribution": "Dernière contribution : {} pts · Rang #{}",
+        "status-fighting": "En cours",
+        "status-fighting-detail": "{} activités · {} restantes",
+        "status-healing": "Guérison",
+        "status-defeated": "Boss vaincu !",
+        "status-ended": "Saison terminée",
+        "heal-ad": "Guérison ×2",
+        "heal-ox": "Guérison totale {} Ox",
+        "rewards-locked": "Bats le boss à temps pour débloquer les récompenses",
+        "rewards-unlocked": "Récompenses débloquées, à réclamer",
+        "reward-claim": "Réclamer la[--les] récompense[s]",
+        "reward-claimed": "Récompense[s] récupérée[s]",
+        "reward-none": "Pas de récompense pour ce raid",
+        "claim-title": "Récompense du raid",
+        "claim-message": "Merci pour ta participation, voici ce que tu as gagné !",
+        "history-boss-defeated": "Boss vaincu",
+        "history-boss-survived": "Boss non vaincu",
+        "leaderboard-title": "Classement mondial",
+        "leaderboard-info-title": "Classement",
+        "leaderboard-info-message": "Points infligés au boss pendant ce raid. La flèche indique l'évolution de ton rang depuis hier.",
+        "leaderboard-empty": "Aucun joueur pour le moment",
         "error-connection": "Connexion au serveur impossible",
-        "error-loading": "Erreur lors du chargement du classement",
-        "empty-list": "Aucun joueur trouvé",
+        "error-loading": "Erreur lors du chargement",
+        "retry": "Réessayer",
         "kpi-rank": "Rang",
-        "kpi-time": "Temps",
-        "kpi-time-hour": "{}h",
+        "kpi-points": "Points",
         "kpi-activities": "Activités",
-        "period-weekly": "Semaine",
-        "period-monthly": "Mois",
-        "period-yearly": "Année"
+        "friends-search": "Rechercher un ami",
+        "friends-sort": "Trier par :",
+        "friends-sort-list": ["ordre alphabétique", "niveau", "activités", "heures"],
+        "friends-title": "Mes amis",
+        "friends-waiting": "Demandes en attente",
+        "friends-blocked": "Amis bloqués",
+        "feed-title": "Feed de tes amis",
+        "feed-info-title": "Feed",
+        "feed-info-message": "Niveaux, succès, coups critiques et rangs de tes amis.",
+        "feed-level-up": "Niv. {}",
+        "feed-achievement": "Succès : {}",
+        "feed-critical": "Coup critique +{} pts",
+        "feed-rank": "Top {} du raid",
+        "feed-empty": "Rien à afficher, ajoute des amis !",
+        "activities-title": "Activités - ce raid",
+        "activities-count": "{} activités",
+        "activities-empty": "Aucune activité comptabilisée pour ce raid",
+        "history-title": "Raids précédents",
+        "history-not-participated": "Non participé",
+        "history-ended-on": "Terminé le {}",
+        "history-time-contributed": "Temps contribué : {}",
+        "history-empty": "Aucun raid terminé",
+        "alert-error": {
+            "title": "Erreur",
+            "message": "Une erreur est survenue, réessaye plus tard. ({})"
+        },
+        "alert-claim-error": {
+            "title": "Récompense indisponible",
+            "message": "Cette récompense n'est pas (ou plus) disponible."
+        },
+        "alert-heal-ox-title": "Guérison totale",
+        "alert-heal-ox-message": "Terminer la guérison maintenant pour {} Ox ?",
+        "alert-heal-ox-quote-message": "Le prix a changé : {} Ox. Confirmer ?",
+        "alert-heal-ad-limit": {
+            "title": "Limite atteinte",
+            "message": "Tu as déjà accéléré ta guérison {} fois aujourd'hui."
+        },
+        "alert-heal-ad-used": {
+            "title": "Déjà utilisé",
+            "message": "Une seule pub par guérison."
+        },
+        "alert-heal-ad-success": {
+            "title": "Bravo",
+            "message": "Ta guérison est deux fois plus rapide !"
+        }
     },
 
     "login": {
@@ -623,13 +710,9 @@
         "kpi-friends": "amis",
 
         "container-achievements-title": "Derniers succès",
-        "container-stats-title": "Statistiques",
         "container-skills-title": "Compétences",
 
         "btn-edit-profile": "Modifier mon apparence",
-        "btn-skills": "Mes compétences",
-        "btn-statistics": "Mes statistiques",
-        "btn-achievements": "Mes succès",
 
         "title-profile": "Mon profil",
         "title-edit-avatar": "Modifier mon apparence",
@@ -687,21 +770,6 @@
         "alert-sellsuccess-text": "Bravo ! L'item \"{}\" a été vendu pour {} Ox"
     },
 
-    "friends": {
-        "title": "Mes amis",
-        "title-friends": "Mes amis",
-        "title-waiting-friends": "Demandes en attente",
-        "title-blocked-friends": "Amis bloqués",
-
-        "button-search": "Rechercher un ami",
-        "button-sort": "Trier par :",
-        "sort-list": [
-            "ordre alphabétique",
-            "niveau",
-            "activités",
-            "heures"
-        ]
-    },
 
     "profile-friend": {
         "activity-now-title": "Activité en cours: {}",
@@ -842,10 +910,10 @@
 
         "randomChests": {
             "chest-random": {
-                "common": "Coffre simple",
-                "rare": "Coffre mystérieux",
-                "epic": "Coffre mythique",
-                "legendary": "Coffre légendaire"
+                "common": "Coffre",
+                "rare": "Coffre",
+                "epic": "Coffre",
+                "legendary": "Coffre"
             },
 
             "popup-chest-text": "Tu veux ouvrir le \"{}\" pour {} Ox ?",
@@ -925,7 +993,13 @@
         "history-title": "Historique",
         "history-show": "Voir l'historique complet",
         "history-activity": "Historique",
-        "category-title": "Catégorie :"
+        "category-title": "Catégorie :",
+        "streak-title": "Série actuelle",
+        "streak-max": "Max : {}",
+        "rate-text": "Régularité : {} %",
+        "rate-window-30": "30 j",
+        "rate-window-all": "Total",
+        "histogram-empty": "Aucune activité passée pour le moment"
     },
 
     "skills": {
@@ -962,129 +1036,21 @@
             "dex": "Dex"
         },
         "descriptions": {
-            "int": "L’intelligence est une statistique très large, dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et gagnes donc des points d’intelligence. Les compétences principales pour gagner de l’intelligence sont le travail scolaire et les travaux de réflexion.",
-            "soc": "La compétence sociale est une compétence qui augmente quand tu fais des activités avec d'autres gens. Par exemple, des sports collectif ou des sorties avec des amis.",
-            "for": "La force est une statistique assez simple, elle augmente en faisant des compétences qui en requiert, comme la musculation, des sports ou des métiers physiques par exemple !",
-            "sta": "L’endurance est probablement la statistique que tu peux améliorer le plus vite ! Elle est primordiale et est améliorée en pratiquant la plupart des sports !",
-            "agi": "L’agilité est probablement la statistique la plus longue à monter, elle n’est pas souvent requise et s’améliore lentement, les meilleurs moyens d’augmenter ton agilité sont des activités comme des étirements ou encore du yoga.",
-            "dex": "La dextérité est l’agilité des doigts, elle s’améliore donc beaucoup sur les tâches de précision, les taches d’écriture sur un ordinateur ou encore avec des instruments de musique."
+            "int": "L'intelligence est une statistique très large : dès que tu fais fonctionner tes méninges, tu entraînes ton cerveau et tu gagnes des points d'intelligence.",
+            "soc": "Le social augmente quand tu fais des activités avec d'autres gens, par exemple des sports collectifs ou des sorties entre amis.",
+            "for": "La force est une statistique assez simple : elle augmente avec les compétences qui en demandent, comme la musculation, les sports ou les métiers physiques !",
+            "sta": "L'endurance est probablement la statistique que tu peux améliorer le plus vite ! Elle est primordiale et progresse en pratiquant la plupart des sports.",
+            "agi": "L'agilité est probablement la statistique la plus longue à monter : elle n'est pas souvent requise et s'améliore lentement. Les meilleurs moyens de la faire progresser sont des activités comme les étirements ou le yoga.",
+            "dex": "La dextérité, c'est l'agilité des doigts : elle progresse sur les tâches de précision, l'écriture sur ordinateur ou encore la pratique d'un instrument de musique."
+        },
+        "descriptions-raid": {
+            "int": "Dans les raids, elle fait de toi un fin stratège : plus elle est haute, plus tu as de chances de repartir avec de meilleures récompenses !",
+            "soc": "Dans les raids, c'est ton soutien : après un combat, ton héros doit se soigner, et plus ton social est élevé, plus vite il est de retour face au boss !",
+            "for": "Dans les raids, c'est elle qui fait mal : plus ta force est haute, plus chaque minute d'activité inflige de dégâts au boss.",
+            "sta": "Dans les raids, c'est ta jauge de combat : plus elle est haute, plus tu enchaînes d'heures d'activité contre le boss avant de devoir souffler.",
+            "agi": "Dans les raids, c'est le coup critique : une activité peut infliger le double de dégâts, et plus ton agilité monte, plus ça arrive souvent !",
+            "dex": "Dans les raids, elle n'a pas encore de rôle… mais t'inquiète, ça arrive bientôt ! Continue de l'entraîner, tes doigts seront prêts le jour venu."
         }
-    },
-
-    "todo": {
-        "title": "Ma liste",
-        "title-new": "Créer ma liste",
-
-        "input-title": "Titre",
-        "input-title-placeholder": "Titre de la liste",
-        "input-deadline-title": "Date limite",
-        "input-deadline-empty": "Aucune date définie",
-        "input-commentary-title": "Commentaire",
-        "input-commentary-placeholder": "Écris un commentaire ici...",
-        "input-task-title": "Tâches",
-        "input-task-placeholder": "Tâche",
-
-        "button-commentary": "Ajouter un commentaire",
-        "button-add": "Ajouter",
-        "button-save": "Sauvegarder",
-        "button-remove": "Supprimer",
-
-        "error-title-empty": "Le titre ne peut pas être vide",
-        "error-title-exists": "Une tâche avec ce titre existe déjà",
-
-        "alert-remcomment-title": "Suppression ?",
-        "alert-remcomment-text": "Es-tu sûr(e) de vouloir supprimer ce commentaire ?",
-        "alert-remtodo-title": "Suppression ?",
-        "alert-remtodo-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
-        "alert-todo-notexist-title": "Erreur",
-        "alert-todo-notexist-message": "La todo liste n'a pas pu être supprimée ({})",
-        "alert-todo-savefail-title": "Erreur",
-        "alert-todo-savefail-message": "La todo liste n'a pas pu être sauvegardée, réessaye plus tard.",
-        "alert-remtask-title": "Suppression ?",
-        "alert-remtask-message": "Es-tu sûr(e) de vouloir supprimer cette tâche ?",
-        "alert-taskslimit-title": "Limite atteinte",
-        "alert-taskslimit-text": "Tu ne peux pas avoir plus de {} tâches.",
-        "alert-back-title": "Retour",
-        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues."
-    },
-
-    "todos": {
-        "container-title": "Todo liste",
-
-        "todos-empty-text": "Pas de todo liste",
-
-        "alert-todoslimit-title": "Limite atteinte",
-        "alert-todoslimit-message": "Tu as atteint la limite des tâches, supprimes-en certaines pour en ajouter d'autres."
-    },
-
-    "quest": {
-        "title": "Ma quête",
-        "title-new": "Créer une quête",
-
-        "titles": {
-            "title": "Titre de la quête",
-            "skills": "Sélectionne tes activités",
-            "schedule": "Planification",
-            "duration": "Durée minimum pour chaque jour",
-            "comment": "Commentaire"
-        },
-
-        "input-activity-title": "Aucune activité sélectionnée",
-        "input-activity-add": "Ajouter",
-        "input-comment-placeholder": "Commentaire à propos de la quête...",
-        "input-switch-frequency": "Fréquence",
-
-        "popup-all-categories": "Toutes les catégories",
-
-        "text-hint-select": "Reste appuyé pour sélectionner un colonne",
-        "text-hint-frequency": "À quelle fréquence tu veux faire tes activités",
-
-        "input-errors": {
-            "title-empty": "Le titre ne peut pas être vide",
-            "title-exists": "Une quête avec ce titre existe déjà",
-            "skills-empty": "Tu dois ajouter au moins une activité",
-            "schedule-empty": "Tu dois sélectionner les jours durant lesquels tu veux faire cette quête"
-        },
-
-        "button-text": {
-            "add": "Ajouter",
-            "save": "Sauvegarder",
-            "remove": "Supprimer"
-        },
-
-        "alert-remquest-title": "Suppression ?",
-        "alert-remquest-message": "Es-tu sûr(e) de vouloir supprimer cette quête ?",
-        "alert-back-title": "Retour",
-        "alert-back-message": "Veux-tu revenir à l'accueil ? Les modifications non sauvegardées seront perdues.",
-        "alert-error-title": "Erreur",
-        "alert-error-message": "Une erreur est survenue, réessaye plus tard ({}).",
-        "alert-save-error-title": "Erreur",
-        "alert-save-error-message": "Une erreur est survenue, réessaye plus tard."
-    },
-
-    "quest-stats": {
-        "title": "Ma quête",
-        "title-current-week": "Semaine en cours",
-        "title-skills": "Compétences liées",
-        "title-data": "Données",
-        "kpi-efficient": "Assiduité",
-        "kpi-streak": "Série actuelle",
-        "kpi-history": "Historique",
-        "button-add-activity": "Ajouter une activité",
-        "warn-message": "Attention : Le calcul de la série n'est pas sûr à 100%. Il est possible d'y voir des erreurs"
-    },
-
-    "quests": {
-        "container-title": "Mes quêtes",
-        "button-add-quest": "Ajouter une quête",
-        "button-all-quests": "Toutes mes quêtes",
-
-        "alert-questslimit-title": "Limite de quêtes atteinte",
-        "alert-questslimit-message": "Tu as atteint la limite des quêtes, supprimes-en certaines pour en ajouter d'autres.",
-
-        "current-streak": "Série actuelle",
-        "heatmap-title-day": "Jour",
-        "heatmap-title-week": "Semaine"
     },
 
     "daily-quest": {
@@ -1199,36 +1165,6 @@
             "request-timeout": "Le délai de la requête a dépassé la limite",
             "no-activities": "Aucune activité n'a été générée",
             "limit-reached": "Tu as atteint la limite d'utilisation pour aujourd'hui"
-        }
-    },
-
-    "app-explain" : {
-        "quest": {
-            "popup-title": "Les quêtes",
-
-            "content": [
-                {
-                    "title": "Qu'est-ce qu'une quête ?",
-                    "text": [
-                        "Dans GameLife, les quêtes sont des objectifs que tu te fixes pour t'améliorer dans un ou plusieurs domaines.",
-                        "Imagine, tu veux te remettre au sport, tu peux créer une quête 'Faire du sport'. 15 min tous les jours, qui accepte les activités 'football', 'course', et 'musculation'.",
-                        "Pour valider ta quête tous les jours tu dois donc réaliser 15 min d'une de ces activités et l'inscrire dans GameLife. Ta quête sera alors automatiquement validée !"
-                    ]
-                },
-                {
-                    "title": "A quoi servent les quêtes ?",
-                    "text": [
-                        "Le but des quêtes est de te motiver à faire une activité de manière régulière. Une fois une quête commencée, tu peux voir tout un tas de statistiques sur celle-ci, suivre tes progrès, et être fier de toi-même lorsque tu la valides !"
-                    ]
-                },
-                {
-                    "title": "Vous n'imposez pas de quêtes comme dans Solo Leveling ?",
-                    "text": [
-                        "Les quêtes imposées sont assez contre productives car elles ne sont pas adaptées à tout le monde. Dans le cas de Solo Leveling, l'entrainement journalier réalisé dans le manga est trop lourd pour la plupart des gens, il est presque dangereux car peu de repos.",
-                        "Nous avons donc décidé de ne pas imposer de quêtes et de laisser les utilisateurs créer leurs propres quêtes adaptées à leurs besoins et capacités."
-                    ]
-                }
-            ]
         }
     }
 }

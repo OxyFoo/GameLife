@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
+/** @param {import('react-native-svg').SvgProps} props */
 const SvgComponent = (props) => (
   <Svg viewBox='0 0 24 24' {...props}>
     <Circle cx={10} cy={6} r={4} />

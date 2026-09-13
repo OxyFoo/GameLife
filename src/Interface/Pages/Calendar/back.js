@@ -49,9 +49,15 @@ class BackCalendar extends PageBase {
         .Get()
         .filter((activity) => activity.startTime >= this._timeBatchStart && activity.startTime <= this._timeBatchEnd);
 
+    /** @type {Symbol | null} */
+    oxListener = null;
+
     state = {
         /** @type {ActivityDataType[]} */
         activities: [],
+
+        /** @type {number} Ox owned by the user, shown next to the share button */
+        oxAmount: user.informations.ox.Get(),
 
         /** @type {string} */
         selectedMonth: langManager.curr['dates']['month'][new Date().getMonth()],
@@ -99,6 +105,7 @@ class BackCalendar extends PageBase {
 
     componentDidMount() {
         this.activitiesListener = user.activities.allActivities.AddListener(this.updateActivities);
+        this.oxListener = user.informations.ox.AddListener((oxAmount) => this.setState({ oxAmount }));
 
         const { days } = this.state;
         this.onDayPress(days[days.length / 2], false);
@@ -106,6 +113,7 @@ class BackCalendar extends PageBase {
 
     componentWillUnmount() {
         user.activities.allActivities.RemoveListener(this.activitiesListener);
+        user.informations.ox.RemoveListener(this.oxListener);
     }
 
     /** @param {(Activity | ActivitySaved)[]} activities */
@@ -141,6 +149,11 @@ class BackCalendar extends PageBase {
                 message: "Cette feature n'est pas encore implémentée, un peu de patience 👀"
             }
         });
+    };
+
+    /** Ox counter of the header: opens the shop, like the badge of the shop page does */
+    openShop = () => {
+        this.fe.ChangePage('shop');
     };
 
     openDayRecap = () => {

@@ -23,7 +23,7 @@ Commence **TOUTES** tes réponses par `[GameLife Assistant]` pour indiquer que t
 
 ## Vue d'ensemble du projet
 
-GameLife est une application mobile React Native (v0.79.2) de gamification de la vie quotidienne. L'app utilise TypeScript/JavaScript avec une architecture modulaire stricte et des patterns de conception spécifiques.
+GameLife est une application mobile React Native (v0.82.1, React 19) de gamification de la vie quotidienne. L'app utilise TypeScript/JavaScript avec une architecture modulaire stricte et des patterns de conception spécifiques.
 
 ## Architecture générale
 
@@ -52,6 +52,9 @@ src/
 ### Style et formatage
 
 - **ESLint/Prettier** : Configuration stricte avec Prettier
+- **Config Prettier** : `.prettierrc` à la racine, doublée par la règle `prettier/prettier` de
+  `.eslintrc.json` (les deux doivent rester identiques). `.prettierignore` reflète les
+  `ignorePatterns` d'ESLint pour que `npm run lint` et `npm run format` couvrent le même périmètre.
 - **Indentation** : 4 espaces (tabWidth: 4)
 - **Quotes** : Simple quotes (`'`) pour JS, JSX single quotes
 - **Semicolons** : Obligatoires
@@ -254,6 +257,45 @@ class UserData {
 }
 ```
 
+### Règles métier partagées client / serveur
+
+Certaines règles sont exécutées **des deux côtés** : l'app pour l'aperçu et l'XP, le serveur
+pour ce qui touche à la monnaie et au classement (autoritaires). Elles ne sont **pas dupliquées** :
+elles vivent dans le paquet partagé `@oxyfoo/gamelife-types`, sous `Rules/`, en fonctions pures
+sans dépendance ni état, et les deux projets importent ce module.
+
+- `@oxyfoo/gamelife-types/Rules/OxEconomy` — jour local d'une activité (`GetLocalDayIndex`),
+  éligibilité à l'XP (`DoesGrantXP`), limite 12 h / jour local (`UsefulActivities`, tout-ou-rien et
+  chronologique, seules les compétences avec XP consomment le budget) et économie des Ox
+  (1 Ox / minute ; supprimer ou éditer règle la différence signée ; première opération coûteuse de la
+  semaine, lundi 00:00 UTC, au prix de base, les suivantes +50 % ; solde possiblement négatif, puis plus
+  d'opération coûteuse).
+- `@oxyfoo/gamelife-types/Rules/RaidEngine` — multiplicateurs de stats (250 points = ×1, plafond ×25),
+  budget de combat (48 h d'activité utile × endurance), guérison (24 h ÷ social), points
+  (1/min × force, ×2 sur critique), fenêtre d'une saison (`SeasonWindow`, toujours du 1er du mois au 1er
+  suivant moins le repos) et rejeu chronologique (`SimulateParticipant`). Les activités qui marquent des
+  points sont celles des Ox, via `UsefulActivities`.
+- `@oxyfoo/gamelife-types/Rules/ItemEconomy` — économie des items : revente à 50 % de la valeur, arrondie
+  au-dessus (`SellPriceOf`) ; offres du jour, 3 emplacements tirant chacun leur rareté (80 % common, 18 % rare,
+  2 % epic, jamais legendary : poids 0) puis un item achetable de cette rareté, sans doublon, depuis la date
+  seule (`PickDailyDeals`, PRNG seedé) ; prix fixe d'une offre par rareté, 180 / 555 / 1 800
+  (`DailyDealPriceOf`, `null` pour une rareté jamais proposée). La valeur des items (`Items.Value`, prix du
+  coffre non ciblé de leur rareté : 222 / 666 / 2 000 / 6 000) reste en base.
+
+L'app ne fait que **prévisualiser** : `user.activities.SimulateOx`, `GetDeleteOxQuote`, `GetEditOxQuote`,
+`GetOxReward` rejouent ses seaux en attente sur l'instantané serveur, et `user.raids` simule sans les
+critiques (le seed reste sur le serveur). Le serveur règle dans une transaction verrouillée par compte
+(`GameLifeActivites.Save`, puis `GameLifeRaids`) et fait foi : il renvoie `ox`, `oxDelta`, `oxPenalty`,
+`oxFreeSlotUntil`, et arbitre dégâts, vie du boss et classement. Le devis confirmé est figé
+(`oxQuotedDelta` → `oxExpectedDelta`) et l'opération gratuite désignée (`oxFreeKey`) ; le serveur répond
+`ox-quote-changed` / `ox-negative` plutôt que d'appliquer un montant non vu.
+
+Ces règles sont couvertes par `GameLife-Server/src/Services/GameLife/__tests__/OxEconomy.test.ts`,
+`RaidEngine.test.ts` (scénarios S1…S16 et R1…R19) et `ItemEconomy.test.ts`, qui sont la suite de référence du module partagé :
+le paquet de types n'a pas de lanceur de tests à lui. Après toute modification dans `GameLife-Types`,
+reconstruire le paquet et recopier son `dist/` dans les `node_modules/@oxyfoo/gamelife-types` des trois
+consommateurs, sinon les deux côtés n'exécutent plus le même code.
+
 ## Communication serveur
 
 ### TCP WebSocket sécurisé
@@ -308,7 +350,10 @@ user.interface.popup?.OpenT({
 - **SSL Pinning** : WebSocket sécurisé
 - **Device Authentication** : Attestation iOS/Android
 - **Integrity Checks** : Google Play Integrity
-- **Obfuscation** : Code obfusqué en production
+- **Obfuscation** : ⚠️ Actuellement **désactivée**. `obfuscator-io-metro-plugin` est incompatible
+  avec Metro >= 0.83 (il génère des fichiers nommés `undefined`) ; le code est commenté dans
+  `metro.config.js`. Les builds de production ne sont donc pas obfusqués tant que le plugin
+  n'est pas corrigé ou remplacé.
 
 ## Tests et qualité
 

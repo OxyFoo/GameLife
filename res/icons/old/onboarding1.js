@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Svg, { Path, G } from 'react-native-svg';
 
+/** @param {import('react-native-svg').SvgProps} props */
 const SvgComponent = (props) => (
     <Svg viewBox='0 0 361 361' fill='none' {...props}>
         <Path

@@ -29,6 +29,16 @@ const styles = StyleSheet.create({
         fontSize: 64,
         fontWeight: 'bold'
     },
+    oxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 4
+    },
+    oxText: {
+        fontSize: 16,
+        marginLeft: 6
+    },
 
     // Friends
     friendsParent: {

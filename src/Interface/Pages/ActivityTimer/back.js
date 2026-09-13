@@ -4,9 +4,10 @@ import PageBase from 'Interface/FlowEngine/PageBase';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
-import { GetLocalTime, RoundTimeTo } from 'Utils/Time';
+import { GetLocalTime } from 'Utils/Time';
 import { SpringAnimation } from 'Utils/Animations';
-import { AddActivityNow, TIME_STEP_MINUTES, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/Activities';
+import { AddActivityNow } from 'Utils/Activities';
+import { GetActivitySlot, MAX_TIME_MINUTES, MIN_TIME_MINUTES } from 'Utils/ActivityTime';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Global/Links').MusicLinksKeys} MusicLinksKeys
@@ -76,9 +77,13 @@ class BackActivityTimer extends PageBase {
         const { skillID, startTime } = currentActivity;
         const duration = this.__getDuration();
 
-        // Check if time plage is free
-        if (duration > 0 && !user.activities.TimeIsFree(startTime, duration)) {
+        // Check that the slot the activity would occupy once saved is still free. The raw times must not
+        // be used: they are up to half a step away from the saved ones, so the activity that has just been
+        // stopped (its end rounded up) would read as an overlap forever.
+        const slot = GetActivitySlot(startTime, GetLocalTime());
+        if (slot.duration > 0 && !user.activities.TimeIsFree(slot.startTime, slot.duration)) {
             this.onPressComplete();
+            return;
         }
 
         // Check if activity exceeds max time
@@ -132,12 +137,9 @@ class BackActivityTimer extends PageBase {
         const { skillID, startTime, friendsIDs } = currentActivity;
         const now = GetLocalTime();
 
-        const startTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, startTime, 'near');
-        const endTimeRounded = RoundTimeTo(TIME_STEP_MINUTES, now, 'near');
-
-        // Too short
-        const deltaTime = (endTimeRounded - startTimeRounded) / 60;
-        if (deltaTime <= MIN_TIME_MINUTES / 2) {
+        // Too short: the saved slot would be empty
+        const slot = GetActivitySlot(startTime, now);
+        if (slot.duration < MIN_TIME_MINUTES) {
             const lang = langManager.curr['activity'];
             const title = lang['timeralert-tooshort-title'];
             const message = lang['timeralert-tooshort-message'];

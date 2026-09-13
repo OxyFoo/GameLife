@@ -20,7 +20,7 @@ import langManager from 'Managers/LangManager';
 
 import { PageHeader } from 'Interface/Widgets';
 import { SpringAnimation } from 'Utils/Animations';
-import { Icon, Text } from 'Interface/Components';
+import { OxAmount } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').InventorySlotType} InventorySlotType
@@ -364,8 +364,7 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                     onPress={() => user.interface.ChangePage('shop')}
                     activeOpacity={0.7}
                 >
-                    <Text style={styles.oxText}>{oxAmount.toString()}</Text>
-                    <Icon icon='ox' size={24} />
+                    <OxAmount value={oxAmount} fontSize={18} iconSize={24} bold />
                 </TouchableOpacity>
 
                 {/** Left slots: Avatar, Body color */}

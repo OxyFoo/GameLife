@@ -6,8 +6,8 @@ import styles from './style';
 import langManager from 'Managers/LangManager';
 
 import { Round } from 'Utils/Functions';
-import { Text, Icon, ProgressBar, Button, KPI } from 'Interface/Components';
-import { PageHeader, SkillChart } from 'Interface/Widgets';
+import { Text, Icon, ProgressBar, Button, KPI, StreakCard } from 'Interface/Components';
+import { PageHeader, SkillHistogram } from 'Interface/Widgets';
 
 class Skill extends BackSkill {
     render() {
@@ -15,11 +15,13 @@ class Skill extends BackSkill {
         const langTime = langManager.curr['dates']['names'];
         const langLevel = langManager.curr['level'];
 
-        const { selectedSkill, history } = this.state;
+        const { selectedSkill, history, frequency, rateWindow } = this.state;
 
         const txtCurrXp = Round(selectedSkill.xp, 1);
         const txtNextXP = Round(selectedSkill.next, 1);
         const txtXP = langManager.curr['level']['xp'];
+        const txtRate = lang['rate-text'].replace('{}', `${Math.round(frequency.rate * 100)}`);
+        const txtWindow = rateWindow === null ? lang['rate-window-all'] : lang['rate-window-30'];
 
         return (
             <>
@@ -57,34 +59,50 @@ class Skill extends BackSkill {
                         )}
                     </View>
 
-                    {/* KPI place */}
+                    {/* Informations */}
                     <Text style={styles.title} color='border'>
                         {lang['informations-title']}
                     </Text>
                     <View style={styles.infoContainer}>
-                        <View style={styles.kpiContainer}>
-                            <KPI containerStyle={styles.kpiLeft} title={langLevel['total']} value={history.length} />
-                            <KPI
-                                containerStyle={styles.kpiRight}
-                                title={langLevel['total-hour']}
-                                value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
+                        <View style={styles.kpiRow}>
+                            <View style={styles.kpiColumn}>
+                                <KPI
+                                    containerStyle={styles.kpiCell}
+                                    title={langLevel['total']}
+                                    value={history.length}
+                                />
+                                <KPI
+                                    containerStyle={styles.kpiCell}
+                                    title={langLevel['total-hour']}
+                                    value={selectedSkill.totalDuration + ' ' + langTime['hours-min']}
+                                />
+                            </View>
+                            <StreakCard
+                                style={styles.streakCard}
+                                title={lang['streak-title']}
+                                current={frequency.currentStreak}
+                                best={frequency.bestStreak}
+                                bestText={lang['streak-max'].replace('{}', `${frequency.bestStreak}`)}
+                                rateText={`${txtRate} · ${txtWindow}`}
                             />
                         </View>
 
-                        {/* Skill use chart */}
-                        {selectedSkill.ID !== 0 && (
-                            <SkillChart
-                                key={`activities-length-${history.length}`}
-                                style={styles.skillChart}
-                                skillID={selectedSkill.ID}
-                                chartWidth={300}
-                            />
-                        )}
+                        {/* Daily histogram, its window button also drives the rate window */}
+                        <SkillHistogram
+                            style={styles.skillChart}
+                            dailyMinutes={frequency.dailyMinutes}
+                            firstDayIndex={frequency.firstDayIndex}
+                            todayIndex={frequency.todayIndex}
+                            windowDays={rateWindow}
+                            windowLabel={txtWindow}
+                            onWindowPress={this.toggleRateWindow}
+                        />
 
                         {/* History */}
                         {history.length > 0 && (
                             <Button
                                 style={styles.historyButton}
+                                styleBackground={styles.historyButtonBackground}
                                 appearance='outline'
                                 color='main1'
                                 onPress={this.showHistory}

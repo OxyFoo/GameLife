@@ -10,11 +10,15 @@ import { SpringAnimation } from 'Utils/Animations';
 /**
  * @typedef {import('Ressources/Icons').IconsName} IconsName
  * @typedef {import('Data/App/Quotes').Quote} Quote
+ * @typedef {import('Interface/Components/Zap/back').ZapPose} ZapPose
+ * @typedef {import('Interface/Components/Zap/back').ZapOrientation} ZapOrientation
  *
  * @typedef {object} BackDisplayPropsType
  * @property {object} args
- * @property {IconsName} args.icon
+ * @property {IconsName | 'zap'} args.icon Icon to display, or `'zap'` to show Zap instead
  * @property {number} [args.iconWidth]
+ * @property {ZapPose} [args.zapPose] Pose of the zap when `icon` is `'zap'`
+ * @property {ZapOrientation} [args.zapOrientation] Orientation of the zap when `icon` is `'zap'`
  * @property {string} args.text
  * @property {string} args.button
  * @property {string} [args.button2]
@@ -22,6 +26,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {(() => void) | null} [args.action2]
  * @property {Quote | null} [args.quote]
  * @property {React.ReactNode} [args.additionalContent]
+ * @property {React.ReactNode} [args.additionalButton] Rendered above the two buttons
  */
 
 /** @type {BackDisplayPropsType} */
@@ -29,6 +34,8 @@ const BackDisplayProps = {
     args: {
         icon: 'default',
         iconWidth: 150,
+        zapPose: 'up',
+        zapOrientation: 'right',
         text: '',
         button: '',
 
@@ -37,7 +44,8 @@ const BackDisplayProps = {
         action: null,
         action2: null,
         quote: undefined,
-        additionalContent: undefined
+        additionalContent: undefined,
+        additionalButton: undefined
     }
 };
 
@@ -50,9 +58,14 @@ class BackDisplay extends PageBase {
     constructor(props) {
         super(props);
 
-        const { iconWidth, action, action2, quote } = { ...BackDisplayProps.args, ...props.args };
+        const { iconWidth, zapPose, zapOrientation, action, action2, quote } = {
+            ...BackDisplayProps.args,
+            ...props.args
+        };
         this.quote = null;
         this.iconWidth = iconWidth;
+        this.zapPose = zapPose;
+        this.zapOrientation = zapOrientation;
         this.callback = () => {
             if (action) {
                 action();

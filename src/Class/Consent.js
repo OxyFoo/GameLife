@@ -1,6 +1,11 @@
 import { Alert, Platform, Linking } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
+import mobileAds, {
+    AdsConsent,
+    AdsConsentDebugGeography,
+    AdsConsentPrivacyOptionsRequirementStatus,
+    AdsConsentStatus
+} from 'react-native-google-mobile-ads';
 
 import langManager from 'Managers/LangManager';
 
@@ -9,6 +14,8 @@ import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('@oxyfoo/gamelife-types/Class/Consent').SaveObject_Consent} SaveObject_Consent
+ * @typedef {import('react-native-google-mobile-ads').AdsConsentInfo} AdsConsentInfo
+ * @typedef {import('react-native-google-mobile-ads').AdsConsentInfoOptions} AdsConsentInfoOptions
  *
  * @typedef {'ok' | 'not-needed' | 'not-available'} ConsentPopupOSResult
  * @typedef {'loading' | 'error' | ConsentPopupOSResult} ConsentPopupResult
@@ -16,7 +23,20 @@ import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
 const VERSION = require('../../package.json').version;
 
-/** @extends {IUserClass<SaveObject_Consent>} */
+const ATT = PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY;
+
+/**
+ * Ad consent, following Google's recommended flow (react-native-google-mobile-ads docs,
+ * "European User Consent"):
+ *   1. UMP (GDPR consent form) on both OS, at every launch - the UMP SDK decides itself
+ *      whether a form must be shown, so nothing is gated on the app version any more.
+ *   2. App Tracking Transparency prompt on iOS, only once UMP allows ad requests and, when
+ *      GDPR applies, only if the user consented to purpose 1 (storage).
+ *   3. Google Mobile Ads SDK initialisation, only once UMP allows ad requests.
+ * The persisted shape (`SaveObject_Consent`) is unchanged: `nonPersonalized` feeds the ad
+ * requests, the `version` fields are kept for bookkeeping only.
+ * @extends {IUserClass<SaveObject_Consent>}
+ */
 class Consent extends IUserClass {
     /** @type {UserManager} */
     #user;
@@ -30,7 +50,19 @@ class Consent extends IUserClass {
 
     loading = false;
 
-    /** @type {SaveObject_Consent['android_consent']} */
+    /**
+     * True once the UMP SDK allows ad requests (consent obtained or not required).
+     * Reflects the previous session when the consent request fails. Not persisted.
+     */
+    canRequestAds = false;
+
+    /**
+     * True when Google requires a persistent "privacy options" entry point (EEA users).
+     * Not persisted.
+     */
+    privacyOptionsRequired = false;
+
+    /** @type {SaveObject_Consent['android_consent']} GDPR choice, written on both OS */
     android_consent = {
         nonPersonalized: true,
         version: ''
@@ -64,18 +96,18 @@ class Consent extends IUserClass {
         if (Platform.OS === 'android') {
             return !this.android_consent.nonPersonalized;
         } else if (Platform.OS === 'ios') {
-            return this.ios_tracking.enabled;
+            return this.ios_tracking.enabled && !this.android_consent.nonPersonalized;
         }
         return false;
     }
 
     /**
-     * @description Show tracking popup (for iOS only),
-     * consent popup (for both iOS and Android) and save choices
-     * @param {boolean} [force=false] Show popup even if user has already accepted
-     * @returns {Promise<ConsentPopupResult>} Consent status
+     * Startup flow: UMP consent form (both OS), then ATT prompt (iOS), then Mobile Ads SDK
+     * initialisation. Never throws: ads must still load with the previous session's choices
+     * when consent gathering fails.
+     * @returns {Promise<ConsentPopupResult>}
      */
-    async ShowTrackingPopup(force = false) {
+    async Initialize() {
         if (this.loading === true) {
             return 'loading';
         }
@@ -83,95 +115,131 @@ class Consent extends IUserClass {
         this.loading = true;
 
         /** @type {ConsentPopupResult} */
-        let consentStatus = 'error';
+        let result = 'error';
 
-        /**
-         * @param {Error} err
-         * @returns {ConsentPopupResult}
-         */
-        const ConsoleError = (err) => {
-            this.#user.interface.console?.AddLog('error', 'Ad consent popup:', err);
+        try {
+            result = await this.GatherConsent();
+            await this.#RefreshCanRequestAds();
+
+            if (this.canRequestAds) {
+                if (Platform.OS === 'ios') {
+                    await this.RequestTracking().catch((err) => this.#Log('error', 'Tracking request:', err));
+                }
+                await mobileAds()
+                    .initialize()
+                    .catch((err) => this.#Log('error', 'Mobile Ads init:', err));
+            } else {
+                this.#Log('warn', 'Ad consent: ad requests not allowed yet');
+            }
+
+            await this.#user.SaveLocal();
+        } finally {
+            this.loading = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Request the consent information and show the GDPR form when the UMP SDK requires it.
+     * @returns {Promise<ConsentPopupResult>} 'ok' when GDPR applies, 'not-needed' otherwise
+     */
+    async GatherConsent() {
+        try {
+            const info = await AdsConsent.gatherConsent(this.#GetRequestOptions());
+            this.#Log('info', 'Ad consent info:', info);
+            this.#StoreInfo(info);
+
+            const gdprApplies = await this.#ApplyUmpChoices();
+            return gdprApplies ? 'ok' : 'not-needed';
+        } catch (err) {
+            this.#Log('error', 'Ad consent gathering:', err);
             return 'error';
-        };
-
-        if (Platform.OS === 'android') {
-            consentStatus = await this.__adConsentPopup(force).catch(ConsoleError);
-        } else if (Platform.OS === 'ios') {
-            consentStatus = await this.__trackingTransparencyPopup(force).catch(ConsoleError);
         }
-
-        await this.#user.SaveLocal();
-        this.loading = false;
-
-        return consentStatus;
     }
 
     /**
-     * Show non personalized ad consent popup (for Android)
-     * @param {boolean} force Show popup even if user has already accepted
-     * @returns {Promise<ConsentPopupOSResult>}
+     * App Tracking Transparency prompt (iOS 14+). Shown by the system at most once per
+     * install: a later call only reads the current status.
+     * @returns {Promise<ConsentPopupOSResult>} 'ok' when the system prompt was shown
      */
-    async __adConsentPopup(force = false) {
-        if (!force && this.android_consent.version === VERSION) {
+    async RequestTracking() {
+        if (Platform.OS !== 'ios') {
             return 'not-needed';
         }
 
-        // Request consent info
-        const consentInfo = await AdsConsent.requestInfoUpdate();
-        this.#user.interface.console?.AddLog('info', 'Ad consent info:', consentInfo);
+        // Google: only ask for tracking when GDPR does not apply, or purpose 1 was consented
+        const gdprApplies = await AdsConsent.getGdprApplies();
+        if (gdprApplies) {
+            const purposes = await AdsConsent.getPurposeConsents();
+            if (!purposes.startsWith('1')) {
+                this.#SetTracking(false);
+                return 'not-needed';
+            }
+        }
 
-        // Check if consent form is available
-        if (!consentInfo.isConsentFormAvailable || !consentInfo.canRequestAds) {
+        const before = await check(ATT);
+        if (before === RESULTS.UNAVAILABLE) {
+            this.#SetTracking(false);
             return 'not-available';
         }
 
-        // Show consent form
-        const formResult = await AdsConsent.showForm();
+        // DENIED means "not determined yet" for this permission: the prompt can be shown
+        const after = before === RESULTS.DENIED ? await request(ATT) : before;
+        this.#Log('info', 'Tracking permission:', before, '->', after);
 
-        // TODO: What is "formResult.privacyOptionsRequirementStatus" ?
-
-        const status = formResult.status;
-        const nonPersonalized = status !== AdsConsentStatus.OBTAINED;
-
-        this.android_consent.nonPersonalized = nonPersonalized;
-        this.android_consent.version = VERSION;
-
-        return 'ok';
+        this.#SetTracking(after === RESULTS.GRANTED);
+        return before === RESULTS.DENIED ? 'ok' : 'not-needed';
     }
 
     /**
-     * Show consent tracking popup for iOS 14+ (for new iOS)
-     * @param {boolean} force Show popup even if user has already accepted
-     * @returns {Promise<ConsentPopupOSResult>}
+     * Settings entry point: lets the user review the GDPR choices (privacy options form,
+     * mandatory for EEA users) and, on iOS, the tracking permission.
+     * @returns {Promise<ConsentPopupResult>} 'not-available' when nothing can be shown
      */
-    async __trackingTransparencyPopup(force = false) {
-        if (!force && this.ios_tracking.version === VERSION) {
-            return 'not-needed';
+    async OpenPrivacyOptions() {
+        if (this.loading === true) {
+            return 'loading';
         }
 
-        const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        this.loading = true;
 
-        const requestResult = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-        this.#user.interface.console?.AddLog('info', 'Tracking permission request:', requestResult);
+        try {
+            const info = await AdsConsent.requestInfoUpdate(this.#GetRequestOptions());
+            this.#Log('info', 'Ad consent info:', info);
+            this.#StoreInfo(info);
 
-        const isFirstTime = result !== RESULTS.GRANTED && result !== RESULTS.LIMITED;
+            let shown = false;
+            if (info.privacyOptionsRequirementStatus === AdsConsentPrivacyOptionsRequirementStatus.REQUIRED) {
+                this.#StoreInfo(await AdsConsent.showPrivacyOptionsForm());
+                await this.#ApplyUmpChoices();
+                shown = true;
+            } else if (info.status === AdsConsentStatus.REQUIRED && info.isConsentFormAvailable) {
+                // First launch form never completed (e.g. no network at startup)
+                this.#StoreInfo(await AdsConsent.loadAndShowConsentFormIfRequired());
+                await this.#ApplyUmpChoices();
+                shown = true;
+            }
 
-        if (result === RESULTS.UNAVAILABLE || result === RESULTS.BLOCKED) {
-            return 'not-available';
-        } else if (result === RESULTS.DENIED) {
-            const isTrackingEnabled = await this.isTrackingEnabled();
-            this.ios_tracking.enabled = isTrackingEnabled;
-            this.ios_tracking.version = VERSION;
-        } else if (force || isFirstTime) {
-            const lang = langManager.curr['settings'];
+            if (Platform.OS === 'ios') {
+                shown = (await this.#OpenTrackingOptions()) || shown;
+            }
 
-            Alert.alert(lang['consent-ios-title'], lang['consent-ios-message'], [
-                { text: lang['consent-ios-cancel'], style: 'cancel' },
-                { text: lang['consent-ios-open-settings'], onPress: this.openiOSSettings }
-            ]);
+            await this.#user.SaveLocal();
+            return shown ? 'ok' : 'not-available';
+        } catch (err) {
+            this.#Log('error', 'Ad consent popup:', err);
+            return 'error';
+        } finally {
+            this.loading = false;
         }
+    }
 
-        return 'ok';
+    /** Clear the UMP state to test the first launch again (development only) */
+    ResetForDebug() {
+        if (__DEV__) {
+            AdsConsent.reset();
+        }
     }
 
     openiOSSettings = () => {
@@ -179,8 +247,102 @@ class Consent extends IUserClass {
     };
 
     async isTrackingEnabled() {
-        const status = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        const status = await check(ATT);
         return status === RESULTS.GRANTED;
+    }
+
+    /**
+     * iOS tracking part of the settings entry point.
+     * @returns {Promise<boolean>} True when something was shown to the user
+     */
+    async #OpenTrackingOptions() {
+        const status = await check(ATT);
+
+        // Refused (or restricted): the system will not prompt again, send the user to Settings
+        if (status === RESULTS.BLOCKED) {
+            const lang = langManager.curr['settings'];
+            Alert.alert(lang['consent-ios-title'], lang['consent-ios-message'], [
+                { text: lang['consent-ios-cancel'], style: 'cancel' },
+                { text: lang['consent-ios-open-settings'], onPress: this.openiOSSettings }
+            ]);
+            return true;
+        }
+
+        if (status === RESULTS.DENIED) {
+            return (await this.RequestTracking()) === 'ok';
+        }
+
+        this.#SetTracking(status === RESULTS.GRANTED);
+        return false;
+    }
+
+    /**
+     * Derive the personalization flag from the TCF choices. Outside GDPR, personalized ads
+     * are allowed; under GDPR they need purpose 1 (storage) and purposes 3/4 (personalised ads).
+     * @returns {Promise<boolean>} Whether GDPR applies to this user
+     */
+    async #ApplyUmpChoices() {
+        const gdprApplies = await AdsConsent.getGdprApplies();
+
+        let nonPersonalized = false;
+        if (gdprApplies) {
+            nonPersonalized = true;
+            try {
+                const choices = await AdsConsent.getUserChoices();
+                nonPersonalized = !(choices.storeAndAccessInformationOnDevice && choices.selectPersonalisedAds);
+            } catch (err) {
+                this.#Log('warn', 'Ad consent choices unreadable:', err);
+            }
+        }
+
+        this.android_consent = { nonPersonalized, version: VERSION };
+        return gdprApplies;
+    }
+
+    /** Read `canRequestAds` from the UMP SDK (previous session's value when the request failed) */
+    async #RefreshCanRequestAds() {
+        try {
+            this.#StoreInfo(await AdsConsent.getConsentInfo());
+        } catch (err) {
+            this.#Log('error', 'Ad consent status:', err);
+        }
+    }
+
+    /** @param {AdsConsentInfo} info */
+    #StoreInfo(info) {
+        this.canRequestAds = info.canRequestAds;
+        this.privacyOptionsRequired =
+            info.privacyOptionsRequirementStatus === AdsConsentPrivacyOptionsRequirementStatus.REQUIRED;
+    }
+
+    /** @param {boolean} enabled */
+    #SetTracking(enabled) {
+        this.ios_tracking = { enabled, version: VERSION };
+    }
+
+    /**
+     * Development builds force the EEA geography so the GDPR form can be exercised anywhere.
+     * Emulators are whitelisted automatically; a physical device needs its hashed id (printed
+     * by the UMP SDK in the native logs) in `testDeviceIdentifiers` - keep it local, never commit it.
+     * @returns {AdsConsentInfoOptions}
+     */
+    #GetRequestOptions() {
+        if (!__DEV__) {
+            return {};
+        }
+        return {
+            debugGeography: AdsConsentDebugGeography.EEA,
+            testDeviceIdentifiers: []
+        };
+    }
+
+    /**
+     * @param {'info' | 'warn' | 'error'} type
+     * @param {string} text
+     * @param {...any} params
+     */
+    #Log(type, text, ...params) {
+        this.#user.interface.console?.AddLog(type, text, ...params);
     }
 }
 

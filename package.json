@@ -1,7 +1,7 @@
 {
   "name": "gamelife",
-  "version": "2.2.5",
-  "versionName": "2.2.5",
+  "version": "2.3.2",
+  "versionName": "2.3.2",
   "private": true,
   "scripts": {
     "start": "react-native start --reset-cache",
@@ -49,7 +49,7 @@
     "react-native-config": "1.5.5",
     "react-native-device-info": "^14.0.4",
     "react-native-gifted-charts": "1.4.61",
-    "react-native-google-mobile-ads": "^16.0.0",
+    "react-native-google-mobile-ads": "^16.5.0",
     "react-native-google-play-integrity": "^1.1.0",
     "react-native-iap": "^14.5.0",
     "react-native-ios-appattest": "^1.0.1",
@@ -59,7 +59,7 @@
     "react-native-nitro-modules": "^0.35.0",
     "react-native-permissions": "^5.4.0",
     "react-native-pinned-ws": "^1.0.7",
-    "react-native-reanimated": "^4.2.0",
+    "react-native-reanimated": "~4.3.0",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-shadow-2": "^7.1.1",
     "react-native-share": "^12.2.5",
@@ -72,10 +72,10 @@
     "@babel/plugin-transform-runtime": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
     "@babel/runtime": "^7.27.6",
-    "@oxyfoo/gamelife-types": "^2.2.14",
-    "@react-native-community/cli": "20.0.0",
-    "@react-native-community/cli-platform-android": "20.0.0",
-    "@react-native-community/cli-platform-ios": "20.0.0",
+    "@oxyfoo/gamelife-types": "^2.3.2",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-android": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
     "@react-native/babel-preset": "0.82.1",
     "@react-native/codegen": "0.82.1",
     "@react-native/eslint-config": "^0.82.1",
@@ -84,6 +84,7 @@
     "@react-native/typescript-config": "0.82.1",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",
+    "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.14",
     "@types/react": "^19.1.1",
     "@types/react-test-renderer": "^19.1.0",
@@ -100,6 +101,11 @@
     "prettier": "^3.5.3",
     "react-test-renderer": "19.1.1",
     "typescript": "^5.8.3"
+  },
+  "overrides": {
+    "react-native-shadow-2": {
+      "colord": "^2.9.4"
+    }
   },
   "engines": {
     "node": ">=20"

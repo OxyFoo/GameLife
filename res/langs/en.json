@@ -20,10 +20,10 @@
                 "Your life's game is ongoing. Ensure every move is tracked. Log now!",
                 "Remember, every small activity can earn you points. Did you add yours?",
                 "Chase those leaderboards! Make sure to input today's experiences.",
-                "Every quest and challenge today brings growth. Have you updated the app?",
+                "Every activity and challenge today brings growth. Have you updated the app?",
                 "Jot down your journey! What were today's highs and lows?",
                 "Life's a game, and every day is a new turn. Ensure you've played yours by logging in.",
-                "Another day, another quest! Make sure to capture all your adventures.",
+                "Another day, another adventure! Make sure to log all your activities.",
                 "Gathered any power-ups or achievements today? Don't let them slip away, note them!",
                 "Your legacy is built one day at a time. Have you logged today's story?",
                 "Epic moments await! What epic tales from today will you share in the app?",
@@ -46,15 +46,6 @@
                 "Your {skillName} session is starting now! Let’s go!",
                 "It’s time for {skillName}! Let’s get started!"
             ]
-        },
-        "quests": {
-            "name": "Quest notifications",
-            "title": "GameLife - Quests",
-            "message": {
-                "half-time": "You have half the time left to complete the quest[s]: {}",
-                "last-time": "The following quest[s] are due tomorrow: {}, so hurry up and finish them!",
-                "today-time": "The following quest[s] are finished today: {}, hurry up and finish them!"
-            }
         },
         "in-app": {
             "name": "In-app notifications",
@@ -107,17 +98,17 @@
                 }
             },
             "mission2": {
-                "title": "Create a quest",
+                "title": "Check a skill",
                 "texts": {
-                    "1": "Press here on the + right to add a new quest",
-                    "2": "Here is the quest page, they are used to give you goals to achieve regularly"
+                    "1": "Here are your skills, tap here to see them all",
+                    "2": "Every skill has its page: let's open your most practiced one to discover your day streak and consistency"
                 }
             },
             "mission3": {
                 "title": "Ask for a friend",
                 "texts": {
-                    "1": "Click on this button to go to the multiplayer page",
-                    "2": "At the bottom right of the multiplayer page you have a button to see the list of your friends",
+                    "1": "Tap this button to open the Raids page",
+                    "2": "Open the Friends tab to see your friends",
                     "3": "At the bottom right, press the button to add a friend",
                     "not-connected": "You must be connected to the internet to do this mission, please connect and try again."
                 }
@@ -223,7 +214,7 @@
     "navbar": {
         "home": "Home",
         "calendar": "Calendar",
-        "multiplayer": "Multiplayer",
+        "raids": "Raids",
         "shop": "Shop"
     },
 
@@ -243,7 +234,8 @@
         "common": "Common",
         "rare": "Rare",
         "epic": "Epic",
-        "legendary": "Legendary"
+        "legendary": "Legendary",
+        "random": "Random"
     },
 
     "server": {
@@ -272,8 +264,8 @@
         },
         "page2": {
             "first": "Turn every challenge into an adventure: earn experience points and improve your skills with every activity.",
-            "second": "Alone or with your friends, complete quests, unlock achievements and become the hero of your own story!",
-            "second-bis": "Alone or with your friends, complete quests, unlock achievements and become the best version of yourself!"
+            "second": "Alone or with your friends, level up your skills, unlock achievements and become the hero of your own story!",
+            "second-bis": "Alone or with your friends, level up your skills, unlock achievements and become the best version of yourself!"
         },
         "test-caution-message": "Test version:\n\nRisk of bugs and instability.\nAccounts are independent of the main version.\nData may be deleted.\n\nHelp us improve the app and earn rewards for every bug found!",
         "test-caution-redirect": "Come to the Discord to find out more!",
@@ -318,6 +310,7 @@
             "item": "New item: {}",
             "ox": "Earn: {} Ox",
             "chest": "New chest: {}",
+            "achievement": "Achievement unlocked: {}",
             "items-in-chest": "As well as the following objects ..."
         },
 
@@ -367,7 +360,11 @@
         "title-friends": "Activity partner",
         "title-no-experience": "This activity has no experience",
         "title-not-past": "This activity has not yet been completed",
-        "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience and does not count towards quests.",
+        "title-before-limit": "This activity was added more than 48 hours after its completion. It therefore does not earn experience.",
+        "title-limit-reached": "You already logged 12 hours of activities today: this one grants neither XP nor Ox.",
+        "hint-ox-penalty": "To prevent abuse, only one deletion or edit per week is at the normal price: the next ones cost 50% more. Come back in {} to get the normal price.",
+        "hint-ox-negative": "Your Ox balance is negative: you can't make an operation that costs Ox until it is back above zero.",
+        "hint-ox-addition-loss": "By starting before other activities, this one pushes one of them out of the 12h budget: the day loses Ox.",
         "title-commentary": "Commentary",
         "input-activity": "All activities",
         "empty-activity": "No activity",
@@ -384,6 +381,13 @@
         "alert-wrongtiming-message": "Only one activity can be done at a time. This allows you to be more present and more efficient.",
         "alert-needconfirmation-title": "Confirmation",
         "alert-needconfirmation-message": "Are you sure you want to modify this activity? Its experience will be deleted.",
+        "alert-remove-cost": "This deletion will cost you {} Ox.",
+        "alert-remove-gain": "This deletion will earn you {} Ox (a later activity gets back into the 12h budget).",
+        "alert-needconfirmation-cost": "It will also cost you {} Ox.",
+        "alert-ox-negative-title": "Negative balance",
+        "alert-ox-negative-message": "Your Ox balance is negative: you can't delete or shorten an activity until it is back above zero.",
+        "alert-ox-quote-title": "The price has changed",
+        "alert-ox-quote-message-cost": "A deletion or edit was already made this week (on another device), or the situation changed: these operations will cost you {} Ox in total. Continue?",
         "alert-alreadyexist-title": "Error",
         "alert-alreadyexist-message": "An error has occurred: it seems that this activity has already been added.",
         "alert-tooearly-title": "Error",
@@ -411,6 +415,8 @@
         "display-activity-text": "Your activity has been created!",
         "display-activity-button": "Continue",
         "display-activity-button2": "Add another activity",
+        "display-activity-bonus-ad": "Watch an ad to earn {} more Ox",
+        "display-activity-bonus-success": "+{} Ox! Your activity pays 1.5 times more.",
         "display-fail-text": "We're sorry but adding the activity failed (status: {})",
         "display-fail-button": "Back home",
 
@@ -454,7 +460,6 @@
             "sharing": "Sharing...",
             "empty-title": "No activities",
             "empty-message": "Add activities to create your daily recap!",
-            "no-quests": "No quests..",
 
             "permission-stockage": {
                 "title": "Permission required",
@@ -471,24 +476,25 @@
 
         "section-today-performance": "Recap of the day",
         "today-activity": "Activities",
-        "today-quest": "Quests",
-        "section-my-todos": "My to-do list",
 
         "btn-stats": "Statistics",
         "btn-other-skills": "All skills",
         "btn-achievements": "Achievements",
-        "btn-more-info": "More info",
 
         "chart-today-notmuch": "Add an activity to unlock today’s progress chart!",
-        "chart-quest-notmuch": "The best way to get motivated? Start a quest.",
         "chart-click-me": "click-me!",
 
-        "news-myquests-title": "Quests to do",
-
-        "container-stats-title": "My infos",
         "container-skills-title": "Skills",
         "container-skills-empty": "No skills yet, do one and it will appear here !",
         "container-achievements-empty": "No achievements yet, go for it!",
+        "container-raid-title": "Raid",
+        "container-raid-fighting": "Fighting",
+        "container-raid-healing": "Healing",
+        "container-raid-rest": "Resting",
+        "container-raid-locked": "Level {} required",
+        "container-raid-none": "No raid right now",
+        "container-raid-next": "Next raid in {}",
+        "container-raid-update": "Available after the update",
 
         "alert-maintenance-title": "Maintenance",
         "alert-maintenance-message": "The servers are in maintenance, you can access the application, but online features are temporarily disabled.\n\nThank you for your patience, everything will come back to normal in a few hours!",
@@ -504,19 +510,100 @@
         "alert-dateerror-text": "It seems that you have changed the date, perhaps in order to cheat?\n\nI count on you to put the right date, I hope it will not happen again!"
     },
 
-    "leaderboard": {
-        "title": "Leaderboard",
-        "input-label-search": "Search for a player",
+
+    "raids": {
+        "title": "Raids",
+        "season": "Season {}",
+        "points": "{} pts",
+        "points-signed": "+{} pts",
+        "rank": "Rank #{}",
+        "tab-rank": "Raid Rank",
+        "tab-friends": "Friends",
+        "tab-feed": "Feed",
+        "tab-this-raid": "This Raid",
+        "tab-history": "Past Raids",
+        "card-progress": "Global progress",
+        "card-contribution": "Contribution",
+        "card-participants": "Participants",
+        "card-duration": "Duration",
+        "card-duration-days": "{} / {} days",
+        "card-locked": "Unlocked from level {}: do activities in real life, log them in your calendar and come back once you reach it, a whole world awaits!",
+        "card-update-required": "Raids will be available after the update",
+        "card-rest-title": "Heroes' Rest",
+        "card-rest-next": "Next raid",
+        "card-rest-no-next": "The heroes are resting, the next raid will be announced soon",
+        "card-last-contribution": "Last contribution: {} pts · Rank #{}",
+        "status-fighting": "Fighting",
+        "status-fighting-detail": "{} activities · {} left",
+        "status-healing": "Healing",
+        "status-defeated": "Boss defeated!",
+        "status-ended": "Season over",
+        "heal-ad": "Heal ×2",
+        "heal-ox": "Full heal {} Ox",
+        "rewards-locked": "Beat the boss in time to unlock the rewards",
+        "rewards-unlocked": "Rewards unlocked, claim them",
+        "reward-claim": "Claim the reward[s]",
+        "reward-claimed": "Reward[s] claimed",
+        "reward-none": "No reward for this raid",
+        "claim-title": "Raid reward",
+        "claim-message": "Thanks for taking part, here is what you earned!",
+        "history-boss-defeated": "Boss defeated",
+        "history-boss-survived": "Boss not defeated",
+        "leaderboard-title": "World ranking",
+        "leaderboard-info-title": "Ranking",
+        "leaderboard-info-message": "Damage dealt to the boss during this raid. The arrow shows how your rank moved since yesterday.",
+        "leaderboard-empty": "No players yet",
         "error-connection": "Unable to connect to server",
-        "error-loading": "Error loading leaderboard",
-        "empty-list": "No players found",
+        "error-loading": "Loading error",
+        "retry": "Retry",
         "kpi-rank": "Rank",
-        "kpi-time": "Time",
-        "kpi-time-hour": "{}h",
+        "kpi-points": "Points",
         "kpi-activities": "Activities",
-        "period-weekly": "Week",
-        "period-monthly": "Month",
-        "period-yearly": "Year"
+        "friends-search": "Search for a friend",
+        "friends-sort": "Sort by:",
+        "friends-sort-list": ["alphabetical", "level", "activities", "time"],
+        "friends-title": "My friends",
+        "friends-waiting": "Waiting for validation",
+        "friends-blocked": "Blocked friends",
+        "feed-title": "Your friends' feed",
+        "feed-info-title": "Feed",
+        "feed-info-message": "Levels, achievements, critical hits and ranks of your friends.",
+        "feed-level-up": "Lvl {}",
+        "feed-achievement": "Achievement: {}",
+        "feed-critical": "Critical hit +{} pts",
+        "feed-rank": "Raid top {}",
+        "feed-empty": "Nothing here yet, add some friends!",
+        "activities-title": "Activities - this raid",
+        "activities-count": "{} activities",
+        "activities-empty": "No activity counted for this raid yet",
+        "history-title": "Previous raids",
+        "history-not-participated": "Did not take part",
+        "history-ended-on": "Ended on {}",
+        "history-time-contributed": "Time contributed: {}",
+        "history-empty": "No past raid",
+        "alert-error": {
+            "title": "Error",
+            "message": "An error occurred, try again later. ({})"
+        },
+        "alert-claim-error": {
+            "title": "Reward unavailable",
+            "message": "This reward is not available (anymore)."
+        },
+        "alert-heal-ox-title": "Full heal",
+        "alert-heal-ox-message": "Finish healing now for {} Ox?",
+        "alert-heal-ox-quote-message": "The price changed: {} Ox. Confirm?",
+        "alert-heal-ad-limit": {
+            "title": "Limit reached",
+            "message": "You already sped up your healing {} times today."
+        },
+        "alert-heal-ad-used": {
+            "title": "Already used",
+            "message": "One ad per healing phase."
+        },
+        "alert-heal-ad-success": {
+            "title": "Well done",
+            "message": "Your healing is twice as fast!"
+        }
     },
 
     "login": {
@@ -623,13 +710,9 @@
         "kpi-friends": "friends",
 
         "container-achievements-title": "Last achievements",
-        "container-stats-title": "Statistics",
         "container-skills-title": "Skills",
 
         "btn-edit-profile": "Change my appearance",
-        "btn-skills": "My skills",
-        "btn-statistics": "My statistics",
-        "btn-achievements": "My achievements",
 
         "title-profile": "My profile",
         "title-edit-avatar": "Change my appearance",
@@ -687,21 +770,6 @@
         "alert-sellsuccess-text": "Congrats! The item \"{}\" was sold for {} Ox"
     },
 
-    "friends": {
-        "title": "My friends",
-        "title-friends": "My friends",
-        "title-waiting-friends": "Waiting for validation",
-        "title-blocked-friends": "Blocked friends",
-
-        "button-search": "Search for a friend",
-        "button-sort": "Sort by:",
-        "sort-list": [
-            "alphabetical",
-            "level",
-            "activities",
-            "time"
-        ]
-    },
 
     "profile-friend": {
         "activity-now-title": "Activity now: {}",
@@ -842,10 +910,10 @@
 
         "randomChests": {
             "chest-random": {
-                "common": "Simple chest",
-                "rare": "Mysterious chest",
-                "epic": "Epic chest",
-                "legendary": "Legendary chest"
+                "common": "Chest",
+                "rare": "Chest",
+                "epic": "Chest",
+                "legendary": "Chest"
             },
 
             "popup-chest-text": "Do you want to open the \"{}\" for {} Ox?",
@@ -925,7 +993,13 @@
         "history-title": "History",
         "history-show": "See entire history",
         "history-activity": "Activity history",
-        "category-title": "Category:"
+        "category-title": "Category:",
+        "streak-title": "Current streak",
+        "streak-max": "Max: {}",
+        "rate-text": "Consistency: {}%",
+        "rate-window-30": "30 d",
+        "rate-window-all": "All time",
+        "histogram-empty": "No past activity yet"
     },
 
     "skills": {
@@ -962,129 +1036,21 @@
             "dex": "Dex"
         },
         "descriptions": {
-            "int": "Intelligence is a very broad statistic, as soon as you use your brain, you train it and therefore gain intelligence points. The main skills to gain intelligence are school work and thinking work.",
-            "soc": "Social competence is a skill that increases when you do activities with other people. For example, team sports or going out with friends.",
-            "for": "Strength is a fairly simple statistic, it increases by doing skills that require it, like bodybuilding, sports or physical jobs for example!",
-            "sta": "Stamina is probably the skill that you will improve the fastest! This is a key statistic that improves in almost all sports!",
-            "agi": "Agility is probably the longest statistic to build, it is not often required and improves slowly, the best ways to increase your agility are actis like stretching or yoga.",
-            "dex": "Dexterity is the agility of the fingers, so it improves a lot on precision quests, writing quests on a computer or even with musical instruments."
+            "int": "Intelligence is a very broad statistic: as soon as you use your brain, you train it and gain intelligence points.",
+            "soc": "Social grows when you do activities with other people, like team sports or going out with friends.",
+            "for": "Strength is a fairly simple statistic: it increases with the skills that require it, like bodybuilding, sports or physical jobs!",
+            "sta": "Stamina is probably the statistic you can improve the fastest! It is essential and grows with most sports.",
+            "agi": "Agility is probably the slowest statistic to build: it is rarely required and improves slowly. The best ways to raise it are activities like stretching or yoga.",
+            "dex": "Dexterity is the agility of the fingers: it grows on precision tasks, typing on a computer or playing a musical instrument."
+        },
+        "descriptions-raid": {
+            "int": "In raids it makes you a fine strategist: the higher it is, the better your rewards!",
+            "soc": "In raids it is your support: after a fight your hero has to heal, and the higher your social, the sooner they are back in front of the boss!",
+            "for": "In raids it is what hurts: the higher your strength, the more damage every minute of activity deals to the boss.",
+            "sta": "In raids it is your fight gauge: the higher it is, the more hours of activity you can chain against the boss before you need a breather.",
+            "agi": "In raids it is the critical hit: an activity can deal double damage, and the higher your agility, the more often it happens!",
+            "dex": "In raids it has no role yet… but don't worry, it is coming soon! Keep training it, your fingers will be ready when the day comes."
         }
-    },
-
-    "todo": {
-        "title": "My list",
-        "title-new": "Create my list",
-
-        "input-title": "Title",
-        "input-title-placeholder": "Title of the todo",
-        "input-deadline-title": "Due date",
-        "input-deadline-empty": "No deadline defined",
-        "input-commentary-title": "Commentary",
-        "input-commentary-placeholder": "Write a commentary here...",
-        "input-task-title": "Tasks",
-        "input-task-placeholder": "Task",
-
-        "button-commentary": "Add a commentary",
-        "button-add": "Add",
-        "button-save": "Save",
-        "button-remove": "Delete",
-
-        "error-title-empty": "Please enter a title",
-        "error-title-exists": "A todo with this title already exists",
-
-        "alert-remcomment-title": "Delete comment?",
-        "alert-remcomment-text": "Are you sure you want to delete this comment?",
-        "alert-remtodo-title": "Delete todo?",
-        "alert-remtodo-message": "Are you sure you want to delete this todo?",
-        "alert-todo-notexist-title": "Error",
-        "alert-todo-notexist-message": "The list todo could not be deleted ({})",
-        "alert-todo-savefail-title": "Error",
-        "alert-todo-savefail-message": "The todo could not be saved, please try again later.",
-        "alert-remtask-title": "Delete todo?",
-        "alert-remtask-message": "Are you sure you want to delete this task?",
-        "alert-taskslimit-title": "Limit reached",
-        "alert-taskslimit-text": "You can't add more than {} tasks to this todo",
-        "alert-back-title": "Back",
-        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost."
-    },
-
-    "todos": {
-        "container-title": "Todo list",
-
-        "todos-empty-text": "No todo list",
-
-        "alert-todoslimit-title": "Limit reached",
-        "alert-todoslimit-message": "You have reached the limit of todos, please delete some of them to add more."
-    },
-
-    "quest": {
-        "title": "My quest",
-        "title-new": "Create my quest",
-
-        "titles": {
-            "title": "Title quest",
-            "skills": "Select your activities",
-            "schedule": "Schedule quest",
-            "duration": "Minimum duration for each day",
-            "comment": "Commentary"
-        },
-
-        "input-activity-title": "No activity selected",
-        "input-activity-add": "Add",
-        "input-comment-placeholder": "Comments about the quest...",
-        "input-switch-frequency": "Frequency",
-
-        "popup-all-categories": "All categories",
-
-        "text-hint-select": "Press and hold to select the column",
-        "text-hint-frequency": "How often do you want to do your activities?",
-
-        "input-errors": {
-            "title-empty": "Please enter a title",
-            "title-exists": "A quest with this title already exists",
-            "skills-empty": "You must add at least one activity",
-            "schedule-empty": "You must select the days on which you want to do this quest"
-        },
-
-        "button-text": {
-            "add": "Add",
-            "save": "Save",
-            "remove": "Delete"
-        },
-
-        "alert-remquest-title": "Delete quest?",
-        "alert-remquest-message": "Are you sure you want to delete this quest?",
-        "alert-back-title": "Back",
-        "alert-back-message": "Would you like to return to the home page? Unsaved changes will be lost.",
-        "alert-error-title": "Error",
-        "alert-error-message": "An error occurred, again tried again ({}).",
-        "alert-save-error-title": "Error",
-        "alert-save-error-message": "An error occurred, again tried again."
-    },
-
-    "quest-stats": {
-        "title": "My quest",
-        "title-current-week": "Current week",
-        "title-skills": "Skills linked",
-        "title-data": "Quest data",
-        "kpi-efficient": "Attendance",
-        "kpi-streak": "Current streak",
-        "kpi-history": "History",
-        "button-add-activity": "Add an activity",
-        "warn-message": "Warning: the calculation of the streak is uncertain. You may find errors"
-    },
-
-    "quests": {
-        "container-title": "My quests",
-        "button-add-quest": "Add a quest",
-        "button-all-quests": "All quests",
-
-        "alert-questslimit-title": "Limit reached",
-        "alert-questslimit-message": "You have reached the limit of quests, please delete some of them to add more.",
-
-        "current-streak": "Current streak",
-        "heatmap-title-day": "Day",
-        "heatmap-title-week": "Week"
     },
 
     "daily-quest": {
@@ -1199,36 +1165,6 @@
             "request-timeout": "Request time limit exceeded",
             "no-activities": "No activities generated",
             "limit-reached": "You have reached the use limit for today"
-        }
-    },
-
-    "app-explain" : {
-        "quest": {
-            "popup-title": "Quests",
-
-            "content": [
-                {
-                    "title": "What are quests ?",
-                    "text": [
-                        "In GameLife, quests are a way to motivate you to do activities regularly. You can create your own quests, which will be validated when you complete them.",
-                        "Imagine, for example, that you want to do 15 minutes of sport every day. You can create a quest called \"Daily Sport\" and add activities like running, cycling, or going to the gym.",
-                        "When you complete these activities (and input it in the app), your quest will be validated!"
-                    ]
-                }, 
-                {
-                    "title": "What's the point of quests ?",
-                    "text": [
-                        "Quests are a great way to stay motivated and keep track of your progress. They help you set goals and achieve them, while also making it fun to do activities."
-                    ]
-                },
-                {
-                    "title": "No imposed quests like in Solo Leveling?",
-                    "text": [
-                        "In GameLife, we believe in freedom and flexibility. We don't impose quests on you like in Solo Leveling, where you have to complete specific tasks to progress. Especially because the one in Solo Leveling are often too difficult or unrealistic for most people.",
-                        "Instead, you can create your own quests based on your interests and goals. This way, you can enjoy the game while also improving your real-life skills and habits."
-                    ]
-                }
-            ]
         }
     }
 }

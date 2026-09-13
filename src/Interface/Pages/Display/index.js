@@ -7,13 +7,21 @@ import { Text, Icon, Button, Zap } from 'Interface/Components';
 
 class Display extends BackDisplay {
     render() {
-        const { icon, text, button, button2, additionalContent } = this.props.args;
+        const { icon, text, button, button2, additionalContent, additionalButton } = this.props.args;
 
         return (
             <View style={styles.page}>
                 <View style={styles.iconParent}>
                     <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
-                        <Icon icon={icon} size={this.iconWidth} />
+                        {icon === 'zap' ? (
+                            <Zap
+                                pose={this.zapPose}
+                                orientation={this.zapOrientation}
+                                style={{ width: this.iconWidth, height: this.iconWidth }}
+                            />
+                        ) : (
+                            <Icon icon={icon} size={this.iconWidth} />
+                        )}
                     </Animated.View>
                     <Animated.View style={{ transform: [{ scale: this.state.anim }] }}>
                         <Text style={styles.title}>{text}</Text>
@@ -24,9 +32,6 @@ class Display extends BackDisplay {
 
                 {this.quote !== null && (
                     <View style={styles.quoteContainer}>
-                        <Animated.View style={[styles.zapContainer, { transform: [{ scale: this.state.anim }] }]}>
-                            <Zap style={styles.zap} />
-                        </Animated.View>
                         <Text fontSize={16} color={'light'} style={styles.quote}>
                             {this.quote.text}
                         </Text>
@@ -37,14 +42,27 @@ class Display extends BackDisplay {
                 )}
 
                 <View style={styles.doubleButtons}>
-                    {button2 && this.callback2 && (
-                        <Button style={styles.button} appearance='outline' fontSize={14} onPress={this.callback2}>
-                            {button2}
+                    {additionalButton}
+
+                    <View style={styles.buttonsRow}>
+                        {button2 && this.callback2 && (
+                            <Button
+                                style={[styles.button, styles.buttonRowItemLarge]}
+                                appearance='outline'
+                                fontSize={13}
+                                onPress={this.callback2}
+                            >
+                                {button2}
+                            </Button>
+                        )}
+                        <Button
+                            style={[styles.button, styles.buttonRowItemSmall]}
+                            fontSize={13}
+                            onPress={this.callback}
+                        >
+                            {button}
                         </Button>
-                    )}
-                    <Button style={styles.button} fontSize={14} onPress={this.callback}>
-                        {button}
-                    </Button>
+                    </View>
                 </View>
             </View>
         );
@@ -77,21 +95,32 @@ const styles = StyleSheet.create({
     doubleButtons: {
         width: '100%'
     },
+    buttonsRow: {
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        gap: 8
+    },
+    // Tight paddings and fontSize 13: the longest label ("Ajouter une autre activité")
+    // must hold on one line on both platforms
     button: {
-        marginBottom: 12
+        marginBottom: 12,
+        paddingHorizontal: 4
+    },
+    // 60/40 split: the secondary action carries the long label, the primary one is a single word.
+    // Alone, the primary button still fills the row.
+    buttonRowItemLarge: {
+        flex: 3,
+        justifyContent: 'center'
+    },
+    buttonRowItemSmall: {
+        flex: 2,
+        justifyContent: 'center'
     },
 
     quoteContainer: {
         paddingVertical: 42,
         alignItems: 'center',
         justifyContent: 'flex-end'
-    },
-    zapContainer: {
-        marginBottom: 16
-    },
-    zap: {
-        width: 80,
-        height: 80
     },
     quote: {
         fontStyle: 'italic'

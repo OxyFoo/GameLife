@@ -12,7 +12,7 @@ import { SpringAnimation } from 'Utils/Animations';
  *
  * @typedef {import('Interface/Components').Button} Button
  * @typedef {import('Interface/Widgets').NotificationsInAppButton} NotificationsInAppButton
- * @typedef {import('Data/User/Inventory').AvatarRenderData} AvatarRenderData
+ * @typedef {import('Data/User/Avatar').AvatarRenderData} AvatarRenderData
  *
  * @typedef {object} UserHeaderPropsType
  * @property {StyleProp} style

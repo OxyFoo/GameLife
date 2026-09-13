@@ -12,8 +12,8 @@ import { TimingAnimation } from 'Utils/Animations';
  * @typedef {import('react-native').TextInputSubmitEditingEventData} TextInputSubmitEditingEventData
  * @typedef {import('react-native').NativeSyntheticEvent<TextInputSubmitEditingEventData>} NativeSyntheticEvent
  *
- * @typedef {import('react-native').TextInputFocusEventData} TextInputFocusEventData
- * @typedef {import('react-native').NativeSyntheticEvent<TextInputFocusEventData>} NativeSyntheticEventFocus
+ * @typedef {import('react-native').TargetedEvent} TargetedEvent
+ * @typedef {import('react-native').NativeSyntheticEvent<TargetedEvent>} NativeSyntheticEventFocus
  *
  * @typedef {import('Managers/ThemeManager').ThemeColor} ThemeColor
  * @typedef {import('Interface/Components/Icon/back').IconsName} IconsName

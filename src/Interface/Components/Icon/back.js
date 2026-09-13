@@ -3,7 +3,6 @@ import * as React from 'react';
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
  * @typedef {import('react-native').StyleProp<ViewStyle>} StyleProp
- * @typedef {import('react-native').DimensionValue} DimensionValue
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
  *
  * @typedef {import('Ressources/Icons').IconsName} IconsName
@@ -19,7 +18,7 @@ import * as React from 'react';
  * @property {number} throttleTime
  * @property {string | null} xml Display an icon from XML base64 encoded ('icon' skip if define)
  * @property {IconsName | null} icon
- * @property {DimensionValue} size Size of icon in pixels
+ * @property {number | `${number}%`} size Size in pixels, or a percentage of the parent
  * @property {number} angle Rotation angle in degrees
  * @property {ThemeColor | ThemeText | 'gradient'} color
  * @property {GestureEvent | null} onPress

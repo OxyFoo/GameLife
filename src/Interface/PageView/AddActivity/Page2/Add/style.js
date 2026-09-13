@@ -152,6 +152,18 @@ const styles = StyleSheet.create({
     addActivityButton: {
         marginTop: 24
     },
+    buttonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonOx: {
+        marginLeft: 12
+    },
+    oxHint: {
+        marginTop: 8,
+        textAlign: 'center'
+    },
 
     hintView: {
         position: 'absolute',

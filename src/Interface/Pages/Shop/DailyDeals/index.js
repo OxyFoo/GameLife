@@ -55,7 +55,9 @@ class ShopDailyDeals extends BackShopItems {
                     {/** Item name & rarity */}
                     <View style={styles.itemInfo}>
                         <Text style={[styles.itemRarity, rarityStyle]}>{rarityText}</Text>
-                        <Text style={styles.itemName}>{item.Name}</Text>
+                        <Text style={styles.itemName} numberOfLines={2}>
+                            {item.Name}
+                        </Text>
                     </View>
 
                     {/** Item frame */}
@@ -90,27 +92,13 @@ class ShopDailyDeals extends BackShopItems {
         return <Text style={styles.errorText}>{lang['error-no-items']}</Text>;
     };
 
-    /** @param {BuyableItem} item */
+    /** @param {BuyableItem} item Only the deal price is shown, the item value is not displayed */
     renderPrice = (item) => {
         const price = Math.round(item.Price * user.shop.priceFactor);
 
-        // Sold at its value, nothing to strike through
-        if (price === item.PriceOriginal) {
-            return (
-                <View style={styles.itemPrice}>
-                    <Text style={styles.itemPriceOx}>{price.toString()}</Text>
-                    <Icon size={20} icon='ox' />
-                </View>
-            );
-        }
-
-        // Deal price under the struck-through item value
         return (
             <View style={styles.itemPrice}>
-                <View>
-                    <Text style={styles.itemPriceOxEditedOld}>{item.PriceOriginal.toString()}</Text>
-                    <Text style={styles.itemPriceOxEditedNew}>{price.toString()}</Text>
-                </View>
+                <Text style={styles.itemPriceOx}>{price.toString()}</Text>
                 <Icon size={20} icon='ox' />
             </View>
         );

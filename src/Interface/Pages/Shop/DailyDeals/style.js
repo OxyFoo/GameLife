@@ -22,23 +22,30 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingHorizontal: 0
     },
+    // Cards of a row are stretched to the same height: the price is pinned at the bottom and the
+    // name block has a fixed two-line height, so frames and prices line up whatever the name length
     itemContent: {
         flex: 1,
+        height: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-between'
     },
 
     itemInfo: {
-        alignContent: 'center',
+        // itemRarity (4 + 14) + itemName (2 × 18 + 4)
+        minHeight: 58,
+        alignItems: 'center',
         justifyContent: 'center'
     },
     itemName: {
         marginBottom: 4,
-        fontSize: 14
+        fontSize: 14,
+        lineHeight: 18
     },
     itemRarity: {
         marginTop: 4,
         fontSize: 11,
+        lineHeight: 14,
         fontWeight: 'bold'
     },
 
@@ -50,15 +57,6 @@ const styles = StyleSheet.create({
     },
     itemPriceOx: {
         fontSize: 16,
-        marginRight: 4
-    },
-    itemPriceOxEditedOld: {
-        fontSize: 16,
-        marginRight: 4,
-        transform: [{ translateY: 6 }],
-        textDecorationLine: 'line-through'
-    },
-    itemPriceOxEditedNew: {
         marginRight: 4
     },
 

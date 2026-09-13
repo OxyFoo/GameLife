@@ -18,7 +18,6 @@ import { DailyDealPriceOf } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
  * @typedef BuyableItem
  * @property {ItemID} ID
  * @property {string} Name
- * @property {number} PriceOriginal Item value, struck through next to the deal price
  * @property {number} Price Deal price, before the shop price factor
  * @property {Rarities} Rarity
  * @property {string[]} Colors Colors from rarity
@@ -99,7 +98,6 @@ class BackShopItems extends React.Component {
             const buyableItem = {
                 ID: itemID,
                 Name: langManager.GetText(item.Name),
-                PriceOriginal: item.Value,
                 Price: price,
                 Rarity: item.Rarity,
                 Colors: themeManager.GetRariryColors(item.Rarity),

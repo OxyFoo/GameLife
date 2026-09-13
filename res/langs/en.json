@@ -493,6 +493,7 @@
         "container-raid-rest": "Resting",
         "container-raid-locked": "Level {} required",
         "container-raid-none": "No raid right now",
+        "container-raid-next": "Next raid in {}",
         "container-raid-update": "Available after the update",
 
         "alert-maintenance-title": "Maintenance",

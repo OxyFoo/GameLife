@@ -30,15 +30,21 @@ function RaidWidget({ style }) {
     let body;
     if (!loaded) {
         // Nothing is known yet: show the rings empty rather than a message that a later frame will
-        // replace. That swap, and the height change it brings, is what made the widget blink while
-        // the app was starting up — the cached payload and the server answer each triggered one.
+        // replace. That swap is what made the widget blink while the app was starting up — the
+        // cached payload and the server answer each triggered one.
         body = renderDonuts(0, 'main3', 0, null);
     } else if (status === 'locked') {
         body = renderText(lang['container-raid-locked'].replace('{}', RAID_MIN_LEVEL.toString()));
     } else if (status === 'update-required') {
         body = renderText(lang['container-raid-update']);
-    } else if (status === 'no-season' || season === null) {
-        body = renderText(lang['container-raid-none']);
+    } else if (status === 'no-season' || status === 'heroes-rest' || status === 'ended' || season === null) {
+        // No boss to fight: one plain sentence, like the activities widget beside it. The rest
+        // between two raids carries the countdown to the next one when the server knows it.
+        body = renderText(
+            nextSeasonAt !== null && nextSeasonAt > now
+                ? lang['container-raid-next'].replace('{}', FormatCountdown(nextSeasonAt - now, 2))
+                : lang['container-raid-none']
+        );
     } else {
         const fighting = status === 'fighting';
         const healing = status === 'healing';
@@ -54,8 +60,7 @@ function RaidWidget({ style }) {
             outerValue = Math.min(1, Math.max(0, 1 - healRemaining / total));
         }
 
-        const remaining =
-            status === 'heroes-rest' || status === 'ended' ? (nextSeasonAt ?? now) - now : season.endTime - now;
+        const remaining = season.endTime - now;
         const label = fighting
             ? lang['container-raid-fighting']
             : healing
@@ -125,11 +130,15 @@ function renderDonuts(outerValue, outerColor, innerValue, children) {
     );
 }
 
-/** @param {string} text */
+/**
+ * One sentence, alone and centred, at the very place of the rings and as tall as them: the widget
+ * keeps its height whatever the state
+ * @param {string} text
+ */
 function renderText(text) {
     return (
-        <View style={styles.body}>
-            <Text style={styles.message} fontSize={12} color='light'>
+        <View style={[styles.body, styles.messageBody]}>
+            <Text style={styles.message} fontSize={16}>
                 {text}
             </Text>
         </View>
@@ -168,6 +177,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 6,
         paddingVertical: 4
+    },
+    // Paddings of `body` included (border box), the block of the rings is DONUT_SIZE + 4 + 8 tall
+    messageBody: {
+        minHeight: DONUT_SIZE + 12,
+        paddingHorizontal: 8
     },
     message: {
         textAlign: 'center'

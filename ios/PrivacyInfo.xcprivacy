@@ -51,7 +51,7 @@
 				<string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
 			</array>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
@@ -63,7 +63,7 @@
 				<string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
 			</array>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
@@ -75,7 +75,7 @@
 				<string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
 			</array>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
@@ -123,11 +123,11 @@
 				<string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
 			</array>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<true/>
+			<false/>
 		</dict>
 	</array>
 	<key>NSPrivacyTracking</key>
-	<true/>
+	<false/>
 	<key>NSPrivacyTrackingDomains</key>
 	<array/>
 </dict>

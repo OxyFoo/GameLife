@@ -4,6 +4,9 @@ import { AdEventType, RewardedAd, RewardedAdEventType, InterstitialAd } from 're
 
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
+
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Ads').Ad} Ad
@@ -188,9 +191,17 @@ class Ads extends IUserClass {
             case RewardedAdEventType.LOADED:
                 callback(ad.meta, 'ready');
                 break;
-            case RewardedAdEventType.EARNED_REWARD:
-                callback(ad.meta, (await (ad.claim ?? this.#ClaimWatchAd)(ad.meta)) ? 'watched' : 'error');
+            case RewardedAdEventType.EARNED_REWARD: {
+                // The single place all three rewarded ads pass through, whatever claims the
+                // reward. Counted once the reward is granted, not when the ad opened: an ad closed
+                // early or refused by the server is not an ad watched.
+                const claimed = await (ad.claim ?? this.#ClaimWatchAd)(ad.meta);
+                if (claimed) {
+                    DevEye.Event(ANALYTICS_EVENTS.REWARDED_AD_WATCHED);
+                }
+                callback(ad.meta, claimed ? 'watched' : 'error');
                 break;
+            }
             case AdEventType.OPENED:
                 callback(ad.meta, 'wait');
                 break;

@@ -2,8 +2,10 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
 import { ParsePlural } from 'Utils/String';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -299,6 +301,8 @@ class Missions extends IUserData {
         if (!rewardsExecuted) {
             return 'error';
         }
+
+        DevEye.Event(ANALYTICS_EVENTS.MISSION_CLAIMED);
 
         // Update token
         this.#token = newToken;

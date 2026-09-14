@@ -8,7 +8,9 @@ import themeManager from 'Managers/ThemeManager';
 
 import { ClaimRewardButton } from 'Interface/Pages/Raids/RaidCard/ClaimRewardButton';
 import { KPI, Reward, Text } from 'Interface/Components';
+import DevEye from 'Utils/DevEye';
 import { FormatMinutes, FormatThousands } from 'Utils/Raids';
+import { ANALYTICS_PATHS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidHistoryEntry} RaidHistoryEntry
@@ -23,6 +25,9 @@ import { FormatMinutes, FormatThousands } from 'Utils/Raids';
 const RaidSeasonDetails = ({ entry }) => {
     const lang = langManager.curr['raids'];
     const images = user.raids.GetRaidImages(entry.imageID);
+
+    // A panel is a screen the navigation engine never reports; opening one is a page view.
+    React.useEffect(() => DevEye.View(ANALYTICS_PATHS.RAID_SEASON), []);
 
     const end = new Date(entry.endTime * 1000);
     const endText = `${end.getDate()} ${langManager.curr['dates']['months-min'][end.getMonth()]}`;

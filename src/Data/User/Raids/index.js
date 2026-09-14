@@ -2,7 +2,9 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 import { DAY_TIME, GetLocalTime, GetTimeZone } from 'Utils/Time';
 import { KeyOf, UsefulActivities } from '@oxyfoo/gamelife-types/Rules/OxEconomy';
 import { GetLocalDayIndex } from '@oxyfoo/gamelife-types/Rules/Time';
@@ -531,6 +533,8 @@ class Raids extends IUserData {
             return 'not-healing';
         }
 
+        DevEye.Event(ANALYTICS_EVENTS.RAID_HEAL_OX);
+
         if (typeof response.ox === 'number') {
             this.#user.informations.ox.Set(response.ox);
         }
@@ -582,6 +586,8 @@ class Raids extends IUserData {
             });
             return 'not-claimable';
         }
+
+        DevEye.Event(ANALYTICS_EVENTS.RAID_REWARD_CLAIMED);
 
         const { rewards, newOx } = response.result;
         await this.#user.rewards.ExecuteRewards(rewards, newOx);

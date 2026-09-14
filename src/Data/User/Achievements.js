@@ -2,12 +2,14 @@ import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
 import { MinMax, Round } from 'Utils/Functions';
 import { IsNotNull } from 'Utils/Types';
 import { GetBattery } from 'Utils/Device';
 import { ParsePlural } from 'Utils/String';
 import { GetGlobalTime } from 'Utils/Time';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -752,6 +754,10 @@ class Achievements extends IUserData {
             this.claimAchievementLoading = false;
             return null;
         }
+
+        // The claim rather than the unlock: unlocking happens on a background interval and says
+        // nothing about what the user did, claiming is a visit to the achievements screen.
+        DevEye.Event(ANALYTICS_EVENTS.ACHIEVEMENT_CLAIMED);
 
         this.#SAVED_achievements[index].State = 'OK';
         this.#updateAchievements();

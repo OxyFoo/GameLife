@@ -1,6 +1,9 @@
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
+
 /**
  * @typedef {import('./back').default} LoginPage
  */
@@ -20,6 +23,7 @@ async function Login(email) {
 
     // Logged in
     if (status === 'authenticated') {
+        DevEye.Event(ANALYTICS_EVENTS.LOGIN_SUCCESS);
         user.interface.ChangePage('loading', { storeInHistory: false });
     }
 
@@ -72,6 +76,7 @@ async function Signin(email, username) {
 
     // Signin success
     if (signinStatus === 'ok') {
+        DevEye.Event(ANALYTICS_EVENTS.ACCOUNT_CREATED);
         await user.server2.userAuth.SetEmail(email);
         user.interface.ChangePage('loading', { storeInHistory: false });
         return;

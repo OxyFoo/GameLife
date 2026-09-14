@@ -14,7 +14,9 @@ import langManager from 'Managers/LangManager';
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 
 import { DateFormat } from 'Utils/Date';
+import DevEye from 'Utils/DevEye';
 import { Sleep } from 'Utils/Functions';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -390,6 +392,10 @@ class Shop extends IUserClass {
                 return;
             }
 
+            // Validated by the server, which is the only moment a purchase is real: the store
+            // announces a great many that never get there (pending card, refusal, replay).
+            DevEye.Event(ANALYTICS_EVENTS.PURCHASE_CONFIRMED);
+
             // Wait if app is not loaded or already on reward page
             while (this.#user.appIsLoaded === false || this.#user.interface.GetCurrentPageName() === 'chestreward') {
                 await Sleep(200);
@@ -599,6 +605,8 @@ class Shop extends IUserClass {
             this.#user.informations.ox.Set(response.ox);
         }
 
+        DevEye.Event(ANALYTICS_EVENTS.CHEST_RANDOM_BOUGHT);
+
         // Update inventory
         this.#user.inventory.stuffs.push(response.newItem);
 
@@ -709,6 +717,8 @@ class Shop extends IUserClass {
         if (response.ox !== undefined) {
             this.#user.informations.ox.Set(response.ox);
         }
+
+        DevEye.Event(ANALYTICS_EVENTS.CHEST_TARGETED_BOUGHT);
 
         // Update inventory
         this.#user.inventory.stuffs.push(response.newItem);
@@ -825,6 +835,8 @@ class Shop extends IUserClass {
 
         // Update inventory
         this.#user.inventory.stuffs.push(response.newItem);
+
+        DevEye.Event(ANALYTICS_EVENTS.DAILY_DEAL_BOUGHT);
 
         // Mark as purchased today
         this.buyToday.items.push(itemID);

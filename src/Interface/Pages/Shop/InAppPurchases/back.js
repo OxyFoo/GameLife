@@ -5,6 +5,9 @@ import { requestPurchase, fetchProducts } from 'react-native-iap';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
+
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
  * @typedef {import('Data/App/Items').CharacterContainerSize} CharacterContainerSize
@@ -96,6 +99,11 @@ class BackShopIAP extends React.Component {
     /** @param {string} sku Product ID */
     purchase = (sku) => {
         if (Platform.OS === 'ios' || Platform.OS === 'android') {
+            // The store sheet is about to open. Paired with `PURCHASE_CONFIRMED`, which only fires
+            // once the server has validated the receipt: the gap between the two is what the
+            // payment costs in abandonment.
+            DevEye.Event(ANALYTICS_EVENTS.PURCHASE_STARTED);
+
             return requestPurchase({
                 type: 'in-app',
                 request: {

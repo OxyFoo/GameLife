@@ -2,6 +2,9 @@ import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import dataManager from 'Managers/DataManager';
 
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
+
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
@@ -170,6 +173,9 @@ class Avatar extends IUserData {
 
         this.avatar[slot] = stuffID;
         this.avatarEdited = true;
+
+        // Below the early return above: re-equipping what is already worn is not a change.
+        DevEye.Event(ANALYTICS_EVENTS.AVATAR_ITEM_EQUIPPED);
 
         // Refresh avatar in UserHeader
         this.user.interface.userHeader?.RefreshAvatar();

@@ -3,6 +3,7 @@ import { AppState } from 'react-native';
 
 import user from 'Managers/UserManager';
 import FlowEngine from 'Interface/FlowEngine';
+import DevEye from 'Utils/DevEye';
 import { env } from 'Utils/Env';
 import GoogleSignIn from 'Utils/GoogleSignIn';
 import AppleSignIn from 'Utils/AppleSignIn';
@@ -57,6 +58,11 @@ class App extends React.Component {
                 user.interface?.console?.AddLog('info', 'Reconnecting to the server:', reconnection);
             }
         } else if (state === 'background' || state === 'inactive') {
+            // The measurement leaves before the save: what is grouped in memory is lost if the
+            // system kills the app, and an app that goes to the background often never comes back.
+            // This is what `sendBeacon` does for the web tag.
+            await DevEye.Flush();
+
             (await user.SaveOnline()) || (await user.SaveLocal());
         }
     }

@@ -2,7 +2,9 @@ import dataManager from 'Managers/DataManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import { DateFormat } from 'Utils/Date';
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 import { Random } from 'Utils/Functions';
 import { GetTimeToTomorrow } from 'Utils/Time';
 
@@ -457,6 +459,8 @@ class DailyQuest extends IUserData {
         }
 
         this.#token = response.result.token;
+
+        DevEye.Event(ANALYTICS_EVENTS.DAILY_QUEST_CLAIMED);
 
         this.#user.rewards.ExecuteRewards(response.result.rewards, response.result.newOx);
         this.#user.rewards.ShowRewards(response.result.rewards, 'only-items');

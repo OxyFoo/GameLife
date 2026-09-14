@@ -2,6 +2,7 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import themeManager from 'Managers/ThemeManager';
 
+import DevEye from 'Utils/DevEye';
 import { Round, Sleep } from 'Utils/Functions';
 import {
     showDeletedAccountPopup,
@@ -37,6 +38,17 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     // Load important data & apply theme
     await user.settings.IndependentLoad();
     themeManager.SetVariant(user.settings.themeVariant);
+
+    // The user's choice is known from here on: DevEye held everything seen until now (the
+    // onboarding and the loading screen itself) without sending any of it, and now either sends it
+    // or drops it. This is the only place that arms the audience measurement.
+    //
+    // The key is the other half, and it comes from the server (`DataManager.LoadOnline`, below).
+    // `Initialize` only reads the one kept from the last launch, so a returning user is measured
+    // from the first screen instead of from the moment the connection is up.
+    DevEye.SetLogger(user.interface.console?.AddLog ?? null);
+    await DevEye.Initialize();
+    DevEye.SetConsentProvider(() => user.settings.statisticsEnabled);
 
     // Connect to the server and authenticate device & user
     const time_connect_start = performance.now();

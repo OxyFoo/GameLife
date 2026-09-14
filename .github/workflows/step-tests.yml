@@ -50,8 +50,10 @@ jobs:
 
       - name: 'Configure npm for GitHub Packages'
         run: |
-          echo "@oxyfoo:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.CICD_PAT }}" >> .npmrc
+          # The @oxyfoo scope is already mapped to npm.pkg.github.com by the
+          # repository .npmrc; only the token is added here, and it goes to the
+          # user-level file so it never lands in the working tree.
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.CICD_PAT }}" >> ~/.npmrc
 
       - name: 'Install Dependencies'
         run: npm install

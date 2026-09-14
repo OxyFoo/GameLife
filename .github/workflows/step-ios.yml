@@ -172,8 +172,10 @@ jobs:
 
       - name: 'Configure npm for GitHub Packages'
         run: |
-          echo "@oxyfoo:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.CICD_PAT }}" >> .npmrc
+          # The @oxyfoo scope is already mapped to npm.pkg.github.com by the
+          # repository .npmrc; only the token is added here, and it goes to the
+          # user-level file so it never lands in the working tree.
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.CICD_PAT }}" >> ~/.npmrc
 
       - name: 'Install dependencies'
         run: |
@@ -186,8 +188,26 @@ jobs:
           bundle install
 
       - name: 'Get config files'
+        env:
+          APP_JSON: ${{ secrets.APP_JSON }}
         run: |
-          echo ${{ secrets.APP_JSON }} | base64 -d > ./app.json
+          set -euo pipefail
+
+          printf '%s' "$APP_JSON" | base64 -d > ./app.json
+
+          # react-native-google-mobile-ads injects GADApplicationIdentifier and
+          # NSUserTrackingUsageDescription into the built Info.plist from this file,
+          # and gives up silently when a key is missing: the build stays green and
+          # App Store Connect answers "Invalid Binary". Fail here instead.
+          for key in ios_app_id user_tracking_usage_description; do
+            value=$(python3 -c "import json; print(json.load(open('app.json'))['react-native-google-mobile-ads'].get('$key', ''))")
+            if [ -z "$value" ]; then
+              echo "❌ app.json: 'react-native-google-mobile-ads.$key' is missing"
+              echo "   Update the APP_JSON secret, app.json.template lists the expected keys."
+              exit 1
+            fi
+            echo "✅ app.json: $key is set"
+          done
 
       - name: 'Set .env file'
         run: |

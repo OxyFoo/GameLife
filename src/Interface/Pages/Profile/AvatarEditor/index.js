@@ -20,6 +20,8 @@ import langManager from 'Managers/LangManager';
 
 import { PageHeader } from 'Interface/Widgets';
 import { SpringAnimation } from 'Utils/Animations';
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_PATHS } from 'Constants/Analytics';
 import { OxAmount } from 'Interface/Components';
 
 /**
@@ -263,6 +265,9 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
      * Hides UI and centers avatar with smooth animations
      */
     const enterEditMode = () => {
+        // Customising the avatar is a screen of its own, opened over the profile page.
+        DevEye.View(ANALYTICS_PATHS.AVATAR_EDITOR);
+
         refreshAvatarFromUser();
         // Move avatar to center with appropriate zoom for selected slot
         const { x, y, scale } = getAvatarPositionForCategory(selectedSlot);

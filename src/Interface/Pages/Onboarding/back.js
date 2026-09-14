@@ -6,6 +6,9 @@ import langManager from 'Managers/LangManager';
 
 import PageBase from 'Interface/FlowEngine/PageBase';
 
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
+
 /**
  * @typedef {import('Interface/Components').Swiper} Swiper
  * @typedef {import('Managers/LangManager').LangKey} LangKey
@@ -42,6 +45,7 @@ class BackOnboarding extends PageBase {
         }
 
         // If the user is on the last page, save the settings and go to the loading page
+        DevEye.Event(ANALYTICS_EVENTS.ONBOARDING_DONE);
         user.settings.onboardingWatched = true;
 
         const saved = await user.settings.IndependentSave();

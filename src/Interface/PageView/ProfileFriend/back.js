@@ -3,8 +3,10 @@ import React from 'react';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import DevEye from 'Utils/DevEye';
 import { GetGlobalTime } from 'Utils/Time';
 import { StartActivityNow } from 'Utils/Activities';
+import { ANALYTICS_PATHS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Multiplayer').Friend} Friend
@@ -83,6 +85,8 @@ class BackProfileFriend extends React.Component {
     }
 
     componentDidMount() {
+        DevEye.View(ANALYTICS_PATHS.PROFILE_FRIEND);
+
         this.listenerTCP = user.server2.tcp.state.AddListener((state) => state !== 'connected' && this.Back());
         this.listenerFriend = user.multiplayer.friends.AddListener(this.updateFriend);
     }

@@ -10,7 +10,9 @@ import langManager from 'Managers/LangManager';
 import Avatar from 'Data/User/Avatar';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import { Text, KPI } from 'Interface/Components';
+import DevEye from 'Utils/DevEye';
 import { FormatThousands } from 'Utils/Raids';
+import { ANALYTICS_PATHS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidLeaderboardPlayer} RaidLeaderboardPlayer
@@ -23,6 +25,9 @@ import { FormatThousands } from 'Utils/Raids';
  */
 const ProfileRaidPlayer = ({ player }) => {
     const lang = langManager.curr['raids'];
+
+    // A panel is a screen the navigation engine never reports; opening one is a page view.
+    React.useEffect(() => DevEye.View(ANALYTICS_PATHS.PROFILE_RAID_PLAYER), []);
 
     let titleText = null;
     if (player.title !== 0) {

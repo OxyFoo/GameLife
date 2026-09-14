@@ -4,7 +4,9 @@ import { Keyboard } from 'react-native';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import DevEye from 'Utils/DevEye';
 import { Sum } from 'Utils/Functions';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('react-native').GestureResponderEvent} GestureResponderEvent
@@ -214,6 +216,10 @@ class BackReport extends PageBase {
             user.interface.console?.AddLog('error', 'Report: Send report failed');
             return;
         }
+
+        // One name for the four kinds of report (activity, suggestion, bug, message): the screen
+        // is one feature, and splitting it would add three names for a page already counted.
+        DevEye.Event(ANALYTICS_EVENTS.REPORT_SENT);
 
         user.interface.popup?.OpenT({
             type: 'ok',

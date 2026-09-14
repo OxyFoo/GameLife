@@ -6,6 +6,8 @@ import langManager from 'Managers/LangManager';
 import { STOP_CARD_PRESS } from './cardPress';
 
 import { Button, Icon, Text } from 'Interface/Components';
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('Class/Ads').AdEvent} AdEvent
@@ -77,6 +79,10 @@ class HealAdButton extends React.Component {
             this.claimOutcome = 'failed';
             return false;
         }
+
+        // Also counted as a rewarded ad by `Ads.EventOx`: the generic name says how many ads are
+        // watched, this one says which of the three offers people accept.
+        DevEye.Event(ANALYTICS_EVENTS.RAID_HEAL_AD);
 
         user.raids.ApplyHeal(response.simulation, response.skips ?? null, response.remaining ?? null);
         user.informations.adTotalWatched++;

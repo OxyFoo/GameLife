@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
     USER_DATA: '@data/user-data',
     APP_DATA: '@data/app',
     APPDATA_HASHES: '@settings/appdata_hashes',
+    DEVEYE_KEY: '@settings/deveye_key',
     DATE: '@tools/date'
 };
 

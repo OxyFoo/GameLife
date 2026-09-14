@@ -1,3 +1,4 @@
+import DevEye from 'Utils/DevEye';
 import Storage from 'Utils/Storage';
 
 import Achievements from 'Data/App/Achievements';
@@ -258,6 +259,13 @@ class DataManager {
         // Load IAPs
         if (Array.isArray(response.iapSkus)) {
             user.shop.LoadIAPs(response.iapSkus);
+        }
+
+        // DevEye key, the switch of the audience measurement. A string, empty included, is an
+        // answer and is obeyed; `undefined` is a server that does not know the field yet, and
+        // means "keep what you have" rather than "stop".
+        if (typeof response.deveyeKey === 'string') {
+            DevEye.SetKey(response.deveyeKey);
         }
 
         user.interface.console?.EditLog(debugIndex, 'same', 'App data: online load success');

@@ -7,7 +7,9 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, CheckBox, Text } from 'Interface/Components';
+import DevEye from 'Utils/DevEye';
 import { env } from 'Utils/Env';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
@@ -253,6 +255,10 @@ async function AddSkill(encryptedSkill, shareUsername) {
         });
         return false;
     }
+
+    // The skill is created and accepted: the Zap generation only counts once it has been kept,
+    // not when it was asked for.
+    DevEye.Event(ANALYTICS_EVENTS.SKILL_CREATED_BY_ZAP);
 
     // Show success message
     user.interface.popup?.OpenT({

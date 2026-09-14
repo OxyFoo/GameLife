@@ -8,7 +8,9 @@ import dataManager from 'Managers/DataManager';
 // import Notifications from 'Utils/Notifications';
 import { Zap } from 'Interface/Components';
 import { AddActivity as AddActivityView, BonusOxAdButton, BonusOxMention, RaidPointsMention } from 'Interface/Widgets';
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
+import { ANALYTICS_ACTIVITY_ADDED_BY, ANALYTICS_EVENTS } from 'Constants/Analytics';
 import { AdBonusOx } from '@oxyfoo/gamelife-types/Rules/OxEconomy';
 import { GetDate, GetLocalTime, GetTimeZone } from 'Utils/Time';
 import {
@@ -50,6 +52,10 @@ function StartActivityNow(skillID) {
         timezone: GetTimeZone(),
         friendsIDs: []
     });
+
+    // Only the start: the stop goes through `AddActivity` like any other addition. The two
+    // together are what says how many timers are started and never finished.
+    DevEye.Event(ANALYTICS_EVENTS.TIMER_STARTED);
 
     user.SaveLocal();
     user.interface.ChangePage('activitytimer', { storeInHistory: false });
@@ -151,6 +157,11 @@ async function AddActivity(activity) {
         user.interface.console?.AddLog('error', `Utils/Activities.Add Status unknown: ${status}`);
         return false;
     }
+
+    // Recorded for good: everything above returns on failure. Two names on purpose, the plain one
+    // being the number to watch and the qualified one saying by which of the three doors it came.
+    DevEye.Event(ANALYTICS_EVENTS.ACTIVITY_ADDED);
+    DevEye.Event(ANALYTICS_ACTIVITY_ADDED_BY[activity.addedType]);
 
     // Update missions
     user.missions.SetMissionState('mission1', 'completed');
@@ -386,6 +397,8 @@ async function EditActivity(oldActivity, newActivity, confirm = false) {
         }
     }
 
+    DevEye.Event(ANALYTICS_EVENTS.ACTIVITY_EDITED);
+
     // Setup notifications
     if (oldActivity.notifyBefore !== null) {
         const notifContent = user.activities.GetNotificationContent(oldActivity);
@@ -463,6 +476,8 @@ async function RemoveActivity(activity) {
                     resolve('error');
                     return;
                 }
+
+                DevEye.Event(ANALYTICS_EVENTS.ACTIVITY_DELETED);
 
                 // Remove notifications
                 if (activity.notifyBefore !== null) {

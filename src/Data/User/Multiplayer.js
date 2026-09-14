@@ -1,8 +1,10 @@
 import langManager from 'Managers/LangManager';
 
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
 import { Sleep } from 'Utils/Functions';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 const FRIENDS_LIMIT = 50;
 
@@ -199,6 +201,12 @@ class Multiplayer extends IUserData {
         }
         if (sendSuccess.status !== 'add-friend' || sendSuccess.result === 'error') {
             return 'error';
+        }
+
+        // 'ok' only: 'self', 'already-friend', 'blocked' and 'not-found' are all a request that
+        // did not add anyone, and counting them would make the social feature look twice as used.
+        if (sendSuccess.result === 'ok') {
+            DevEye.Event(ANALYTICS_EVENTS.FRIEND_ADDED);
         }
 
         return sendSuccess.result;

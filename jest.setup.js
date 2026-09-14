@@ -136,12 +136,16 @@ jest.mock('react-native-device-info', () => ({
     getSystemName: jest.fn(() => 'iOS'),
     getSystemVersion: jest.fn(() => '14.4'),
     getBundleId: jest.fn(() => 'com.gamelife.app'),
+    getVersion: jest.fn(() => '2.3.2'),
+    isTablet: jest.fn(() => false),
     default: {
         getUniqueIdSync: jest.fn(() => 99),
         getDeviceNameSync: jest.fn(() => 'iPhone 12'),
         getSystemName: jest.fn(() => 'iOS'),
         getSystemVersion: jest.fn(() => '14.4'),
-        getBundleId: jest.fn(() => 'com.gamelife.app')
+        getBundleId: jest.fn(() => 'com.gamelife.app'),
+        getVersion: jest.fn(() => '2.3.2'),
+        isTablet: jest.fn(() => false)
     }
 }));
 

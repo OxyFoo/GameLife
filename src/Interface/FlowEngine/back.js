@@ -7,8 +7,10 @@ import PAGES from 'Interface/Pages';
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
 
+import DevEye from 'Utils/DevEye';
 import DynamicVar from 'Utils/DynamicVar';
 import { SpringAnimation } from 'Utils/Animations';
+import { GetPagePath } from 'Constants/Analytics';
 
 /**
  * @typedef {import('react-native').NativeEventSubscription} NativeEventSubscription
@@ -567,6 +569,15 @@ class BackFlowEngine extends React.Component {
         // Save the page visit for statistics
         if (user.statistics && user.appIsLoaded) {
             user.statistics.RecordPageVisit(pageName);
+        }
+
+        // Audience measurement, deliberately outside the guard above: the screens that precede
+        // `appIsLoaded` (loading, onboarding, login, waiting for the mail) are the ones that say
+        // where a newcomer gives up, and they are exactly the ones the internal statistics miss.
+        // DevEye holds them until the user's choice is known and drops them if it is no.
+        const path = GetPagePath(pageName);
+        if (path !== null) {
+            DevEye.View(path);
         }
 
         // Update user header visibility

@@ -4,7 +4,9 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 
 import Calendar from 'Interface/Pages/Calendar';
+import DevEye from 'Utils/DevEye';
 import { MinMax } from 'Utils/Functions';
+import { ANALYTICS_PATHS } from 'Constants/Analytics';
 import { GetLocalTime, GetTimeZone, RoundTimeTo } from 'Utils/Time';
 import { MAX_TIME_MINUTES, MIN_TIME_MINUTES, TIME_STEP_MINUTES } from 'Utils/ActivityTime';
 
@@ -111,6 +113,13 @@ class BackActivity extends React.Component {
 
         this.state.newActivity.startTime = newTime;
         this.state.newActivity.duration = newDuration;
+    }
+
+    componentDidMount() {
+        // The panel is a screen the navigation engine never sees, and it is the entrance of the
+        // app's main loop: without it nothing tells apart "opened the form" from "recorded an
+        // activity". Editing gets its own path so it does not inflate that funnel.
+        DevEye.View(this.props.editActivity !== null ? ANALYTICS_PATHS.EDIT_ACTIVITY : ANALYTICS_PATHS.ADD_ACTIVITY);
     }
 
     /**

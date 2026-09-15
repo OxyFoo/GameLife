@@ -201,7 +201,7 @@ async function Initialisation(fe, nextStep, nextPage, callbackError) {
     user.notificationsPush.SetupAllNotifications();
     user.notificationsInApp.Update();
 
-    // Consent (UMP form, then ATT on iOS) and Mobile Ads SDK init - must precede LoadAds
+    // Consent (ATT on iOS, then UMP form) and Mobile Ads SDK init - must precede LoadAds
     const consentResult = await user.consent.Initialize();
     user.interface.console?.AddLog('info', 'Consent:', consentResult);
 

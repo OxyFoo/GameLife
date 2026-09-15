@@ -88,7 +88,9 @@ function Activities() {
 
             {hits.length === 0 ? (
                 <View style={styles.centered}>
-                    <Text color='secondary'>{lang['activities-empty']}</Text>
+                    <Text color='secondary'>
+                        {snapshot.season === null ? lang['activities-no-raid'] : lang['activities-empty']}
+                    </Text>
                 </View>
             ) : (
                 hits.map((hit) => (

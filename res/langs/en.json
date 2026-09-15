@@ -576,6 +576,7 @@
         "activities-title": "Activities - this raid",
         "activities-count": "{} activities",
         "activities-empty": "No activity counted for this raid yet",
+        "activities-no-raid": "No raid in progress",
         "history-title": "Previous raids",
         "history-not-participated": "Did not take part",
         "history-ended-on": "Ended on {}",

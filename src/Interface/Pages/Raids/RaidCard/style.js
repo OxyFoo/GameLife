@@ -91,16 +91,21 @@ const styles = StyleSheet.create({
     statusBar: {
         marginTop: 6
     },
+    // The countdown keeps its natural width and the buttons take what is left; when that is not
+    // enough (French labels on a phone) they drop to a second line, right-aligned
     statusHealing: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'center',
         gap: 8
     },
     statusHealingText: {
-        flex: 1
+        flexGrow: 1
     },
     healButtons: {
+        flexGrow: 1,
         flexDirection: 'row',
+        justifyContent: 'flex-end',
         gap: 6
     },
     healButton: {

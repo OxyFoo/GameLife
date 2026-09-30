@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Image, View } from 'react-native';
 
-import styles from './style';
+import styles, { REWARD_SLOT, REWARD_LABEL } from './style';
 import themeManager from 'Managers/ThemeManager';
 
 import IMG_CHESTS from 'Ressources/items/chests/chests';
@@ -18,10 +18,22 @@ import { Icon } from '../Icon';
  * @returns {React.JSX.Element}
  */
 const Reward = ({ item, size }) => {
+    const slot = typeof size === 'number' ? size : REWARD_SLOT;
     const styleReward = {
         ...styles.rewardItem,
-        ...(typeof size === 'number' ? { width: size, height: size } : {}),
+        width: slot,
+        height: slot,
         backgroundColor: themeManager.GetColor('background')
+    };
+
+    // The label is drawn for the default slot: a smaller slot (raid card) gets a smaller label
+    const scale = slot / REWARD_SLOT;
+    const styleValue = {
+        ...styles.rewardValue,
+        left: REWARD_LABEL.left * scale,
+        right: REWARD_LABEL.right * scale,
+        bottom: REWARD_LABEL.bottom * scale,
+        fontSize: REWARD_LABEL.fontSize * scale
     };
 
     switch (item.Type) {
@@ -30,7 +42,7 @@ const Reward = ({ item, size }) => {
                 <View style={styleReward}>
                     <Icon size='100%' icon='ox' />
                     {/* The label may be wider than the slot: shrink it instead of wrapping */}
-                    <Text style={styles.rewardValue} numberOfLines={1} adjustsFontSizeToFit>
+                    <Text style={styleValue} numberOfLines={1} adjustsFontSizeToFit>
                         {'x' + item.Amount.toString()}
                     </Text>
                 </View>

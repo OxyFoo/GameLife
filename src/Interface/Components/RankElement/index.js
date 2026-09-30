@@ -9,7 +9,6 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import Avatar from 'Data/User/Avatar';
-import ProfileFriend from 'Interface/PageView/ProfileFriend';
 import ProfileRaidPlayer from 'Interface/PageView/ProfileRaidPlayer';
 import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstants';
 import { Gradient } from 'Interface/Primitives';
@@ -41,16 +40,12 @@ function RankElement({ item, isSelf = false, style }) {
         }
     }
 
+    // The ranking is about the raid: the same card for everyone, friend or not. The full profile
+    // of a friend is one tab away, on the friends list.
     const onPress = () => {
         const screen = Dimensions.get('window');
-        const friend = user.multiplayer.GetFriendByID(item.accountID);
         user.interface.bottomPanel?.Open({
-            content:
-                friend !== null && friend.friendshipState === 'accepted' ? (
-                    <ProfileFriend friendID={item.accountID} />
-                ) : (
-                    <ProfileRaidPlayer player={item} />
-                ),
+            content: <ProfileRaidPlayer player={item} />,
             maxPosY: screen.height * 0.8
         });
     };

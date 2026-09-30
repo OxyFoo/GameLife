@@ -19,7 +19,7 @@ import { ANALYTICS_PATHS } from 'Constants/Analytics';
  */
 
 /**
- * Profile of a player of the raid ranking who is not a friend: avatar, rank, points, activities
+ * Profile of a player of the raid ranking, friend or not: avatar, rank, points, activities
  * @param {object} props
  * @param {RaidLeaderboardPlayer} props.player
  */

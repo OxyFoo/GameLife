@@ -158,12 +158,12 @@ describe('Raids', () => {
         expect(raids.GetSnapshot(NOW).loaded).toBe(false);
     });
 
-    test('is locked below level 10, whatever the server says', () => {
-        const user = makeUser(9);
+    test('is locked below level 5, whatever the server says', () => {
+        const user = makeUser(4);
         const raids = new Raids(/** @type {UserManager} */ (/** @type {unknown} */ (user)));
         raids.Load({ cache: payload(), fetchedAt: NOW });
         expect(raids.GetStatus(NOW)).toBe('locked');
-        user.experience.experience.Set({ stats: ZERO, xpInfo: { xp: 0, lvl: 10, next: 0, totalXP: 900 } });
+        user.experience.experience.Set({ stats: ZERO, xpInfo: { xp: 0, lvl: 5, next: 0, totalXP: 200 } });
         expect(raids.GetStatus(NOW)).toBe('fighting');
     });
 

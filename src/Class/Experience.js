@@ -1,6 +1,7 @@
 import dataManager from 'Managers/DataManager';
 
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
+import { ApplyEquipmentBonus } from '@oxyfoo/gamelife-types/Rules/ItemStats';
 import DynamicVar from 'Utils/DynamicVar';
 import { MinMax, Sum } from 'Utils/Functions';
 
@@ -44,7 +45,10 @@ class Experience extends IUserClass {
     statsKey = ['int', 'soc', 'for', 'sta', 'agi', 'dex'];
 
     experience = new DynamicVar({
+        /** With the bonus of the equipped copies: what the app shows */
         stats: this.GetEmptyExperience(),
+        /** From the activities alone: what the server receives */
+        baseStats: this.GetEmptyExperience(),
         xpInfo: this.getXPDict(0)
     });
 
@@ -68,7 +72,11 @@ class Experience extends IUserClass {
     };
 
     Clear = () => {
-        this.experience.Set({ stats: this.GetEmptyExperience(), xpInfo: this.getXPDict(0) });
+        this.experience.Set({
+            stats: this.GetEmptyExperience(),
+            baseStats: this.GetEmptyExperience(),
+            xpInfo: this.getXPDict(0)
+        });
     };
 
     /** @returns {StatsXP} */
@@ -88,8 +96,10 @@ class Experience extends IUserClass {
 
     UpdateExperience = () => {
         const activities = this.#user.activities.GetUseful(true);
-        const { totalXP, stats } = this.CalculateTotalXP(activities);
-        this.experience.Set({ stats, xpInfo: this.getXPDict(totalXP, 'user') });
+        const { totalXP, stats: baseStats } = this.CalculateTotalXP(activities);
+        // The copies the avatar wears multiply the stats: shared rule, the server applies the same one
+        const stats = ApplyEquipmentBonus(baseStats, this.#user.avatar.GetEquippedStats());
+        this.experience.Set({ stats, baseStats, xpInfo: this.getXPDict(totalXP, 'user') });
     };
 
     /**
@@ -125,8 +135,14 @@ class Experience extends IUserClass {
         return { totalXP, stats: statValues };
     };
 
+    /** Stats with the bonus of the equipped copies: the ones to show */
     GetStatsNumber = () => {
         return this.experience.Get().stats;
+    };
+
+    /** Stats of the activities alone: the ones the server receives (it adds the equipment bonus itself) */
+    GetBaseStatsNumber = () => {
+        return this.experience.Get().baseStats;
     };
 
     /**

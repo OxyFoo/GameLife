@@ -362,7 +362,8 @@ class Activities extends IUserData {
             activitiesToEdit: unsaved.edit,
             activitiesToDelete: unsaved.delete,
             xp: Round(experience.xpInfo.totalXP, 2),
-            stats: this.#user.experience.GetStatsNumber(),
+            // The base stats: the server adds the bonus of the equipped copies itself
+            stats: this.#user.experience.GetBaseStatsNumber(),
             token: this.#token,
             leaderboardUpdates,
             oxRules: 2,

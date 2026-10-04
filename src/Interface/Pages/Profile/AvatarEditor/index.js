@@ -22,7 +22,7 @@ import { PageHeader } from 'Interface/Widgets';
 import { SpringAnimation } from 'Utils/Animations';
 import DevEye from 'Utils/DevEye';
 import { ANALYTICS_PATHS } from 'Constants/Analytics';
-import { OxAmount } from 'Interface/Components';
+import { Button, OxAmount } from 'Interface/Components';
 
 /**
  * @typedef {import('./back').InventorySlotType} InventorySlotType
@@ -342,6 +342,14 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                     secondaryIconColor='transparent'
                     onSecondaryIconPress={() => {}}
                 />
+                {/** The Techno-Forge, under the title and over the character (leaving the page ends the edit mode) */}
+                <Button
+                    style={styles.forgeButton}
+                    fontSize={14}
+                    onPress={() => user.interface.ChangePage('technoforge')}
+                >
+                    {lang['btn-technoforge']}
+                </Button>
             </Animated.View>
 
             {/** Avatar Character */}

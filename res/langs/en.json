@@ -713,6 +713,7 @@
         "container-skills-title": "Skills",
 
         "btn-edit-profile": "Change my appearance",
+        "btn-technoforge": "Techno-Forge",
 
         "title-profile": "My profile",
         "title-edit-avatar": "Change my appearance",
@@ -893,6 +894,7 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
         "button-header-ad-unavailable": "Unavailable",
+        "button-header-forge": "Techno-Forge",
 
         "banner-daily": "Daily deals",
         "banner-iap": "In-app purchases",

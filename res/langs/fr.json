@@ -713,6 +713,7 @@
         "container-skills-title": "Compétences",
 
         "btn-edit-profile": "Modifier mon apparence",
+        "btn-technoforge": "Techno-Forge",
 
         "title-profile": "Mon profil",
         "title-edit-avatar": "Modifier mon apparence",
@@ -893,6 +894,7 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
         "button-header-ad-unavailable": "Indisponible",
+        "button-header-forge": "Techno-Forge",
 
         "banner-daily": "Deals du jour",
         "banner-iap": "Achats intégrés",

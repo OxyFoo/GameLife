@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
     pageHeader: {
         marginBottom: 12
     },
+    forgeButton: {
+        width: 'auto',
+        alignSelf: 'center',
+        paddingVertical: 8,
+        paddingHorizontal: 24
+    },
 
     editorAvatarHeader: {
         position: 'absolute',

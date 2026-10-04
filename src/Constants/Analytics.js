@@ -86,6 +86,10 @@ const ANALYTICS_EVENTS = {
     PURCHASE_STARTED: 'Achat Ox lancé',
     PURCHASE_CONFIRMED: 'Achat Ox confirmé',
 
+    // Techno-Forge
+    FORGE_SUCCESS: 'Forge : succès',
+    FORGE_FAILED: 'Forge : échec',
+
     // Raids
     RAID_HEAL_OX: 'Raid : soin par Ox',
     RAID_HEAL_AD: 'Raid : soin par pub',

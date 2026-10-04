@@ -1,14 +1,19 @@
 import dataManager from 'Managers/DataManager';
 import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
+import DevEye from 'Utils/DevEye';
+import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
  * @typedef {import('Data/App/Items').Slot} Slot
  * @typedef {import('Data/App/Titles').Title} Title
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').Stuff} Stuff
+ * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_ServerToClient').ServerRequestForgeStuff} ServerRequestForgeStuff
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
+ *
+ * @typedef {{ result: 'ok', success: boolean, chance: number, cost: number, stuff: Stuff } | { result: Exclude<ServerRequestForgeStuff['result'], 'ok'> }} ForgeOutcome
  */
 
 /** @extends {IUserData<SaveObject_Inventory>} */
@@ -54,6 +59,11 @@ class Inventory extends IUserData {
         if (typeof data.titleIDs !== 'undefined') this.titleIDs.Set(data.titleIDs);
         if (typeof data.stuffs !== 'undefined') this.stuffs = data.stuffs;
         if (typeof data.token !== 'undefined') this.#token = data.token;
+
+        // A cache written before the copies carried their rarity and stats: the next online load fetches everything
+        if (this.stuffs.some((stuff) => typeof stuff.Rarity === 'undefined' || typeof stuff.Stats === 'undefined')) {
+            this.#token = 0;
+        }
     };
 
     /** @returns {SaveObject_Inventory} */
@@ -87,6 +97,9 @@ class Inventory extends IUserData {
         this.titleIDs.Set(response.result.titleIDs);
         this.stuffs = response.result.stuffs;
         this.#token = response.result.token;
+
+        // The equipped copies may have new stats
+        this.user.experience.UpdateExperience();
 
         this.user.interface.console?.AddLog('info', `[Titles] ${this.titleIDs.Get().length} titles loaded`);
         this.user.interface.console?.AddLog('info', `[Stuffs] ${this.stuffs.length} stuffs loaded`);
@@ -172,6 +185,67 @@ class Inventory extends IUserData {
 
         this.user.interface.console?.AddLog('info', `[Inventory] Stuff ${stuffID} sold successfully`);
         return 'ok';
+    };
+
+    /**
+     * One attempt of the Techno-Forge: the main copy against 1 or 2 catalysts (Rules/TechnoForge).
+     * On 'ok' the attempt happened whatever `success`: the catalysts are gone and the cost is paid.
+     * @param {number} stuffID The copy to upgrade; it keeps its ID (an equipped copy stays equipped)
+     * @param {number[]} catalystIDs 1 or 2 other copies, not equipped; consumed whatever the outcome
+     * @returns {Promise<ForgeOutcome>}
+     */
+    ForgeStuff = async (stuffID, catalystIDs) => {
+        const response = await this.user.server2.tcp.SendAndWait({ action: 'forge-stuff', stuffID, catalystIDs });
+
+        if (
+            response === 'interrupted' ||
+            response === 'not-sent' ||
+            response === 'timeout' ||
+            response.status !== 'forge-stuff'
+        ) {
+            this.user.interface.console?.AddLog('error', `[Inventory] Failed to forge stuff (${response})`);
+            return { result: 'error' };
+        }
+
+        if (response.result !== 'ok') {
+            this.user.interface.console?.AddLog('warn', `[Inventory] Forge stuff refused: ${response.result}`);
+            if (typeof response.ox === 'number') {
+                this.user.informations.ox.Set(response.ox);
+            }
+            return { result: response.result };
+        }
+
+        const success = response.success === true;
+        const upgraded = response.stuff ?? null;
+
+        // The catalysts are gone; the main copy is replaced in place (same ID, the avatar keeps wearing it)
+        this.stuffs = this.stuffs.filter((stuff) => !catalystIDs.includes(stuff.ID));
+        if (upgraded !== null) {
+            this.stuffs = this.stuffs.map((stuff) => (stuff.ID === upgraded.ID ? upgraded : stuff));
+        }
+        if (typeof response.ox === 'number') {
+            this.user.informations.ox.Set(response.ox);
+        }
+        if (typeof response.token === 'number') {
+            this.#token = response.token;
+        }
+
+        DevEye.Event(success ? ANALYTICS_EVENTS.FORGE_SUCCESS : ANALYTICS_EVENTS.FORGE_FAILED);
+
+        // An equipped main copy may carry new stats
+        this.user.experience.UpdateExperience();
+        this.user.SaveLocal();
+
+        const main = upgraded ?? this.GetStuffByID(stuffID);
+        if (main === null) {
+            return { result: 'error' };
+        }
+
+        this.user.interface.console?.AddLog(
+            'info',
+            `[Inventory] Forge ${success ? 'succeeded' : 'failed'} (${stuffID})`
+        );
+        return { result: 'ok', success, chance: response.chance ?? 0, cost: response.cost ?? 0, stuff: main };
     };
 }
 

@@ -87,6 +87,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
         {
@@ -100,6 +102,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
         {
@@ -113,6 +117,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
         {
@@ -126,6 +132,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
 
@@ -137,6 +145,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
         {
@@ -147,6 +157,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
         {
@@ -157,6 +169,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         },
         {
@@ -167,6 +181,8 @@ export function LoadTemplate_AppData(user) {
             Rarity: 'common',
             Buyable: true,
             Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
             Value: 35
         }
     ]);

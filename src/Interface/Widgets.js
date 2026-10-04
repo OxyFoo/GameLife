@@ -3,6 +3,7 @@ export { ActivitiesChart } from './Widgets/ActivitiesChart';
 export { AddActivity } from './PageView/AddActivity';
 export { DailyQuest } from './Widgets/DailyQuest';
 export { DayRecap } from './Widgets/DayRecap';
+export { ItemStats } from './Widgets/ItemStats';
 export { BonusOxAdButton, BonusOxMention } from './Widgets/BonusOxAdButton';
 export { Missions } from './Widgets/Missions';
 export { NotificationsInAppButton } from './Widgets/NotificationsInAppButton';

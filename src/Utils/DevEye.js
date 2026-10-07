@@ -42,7 +42,7 @@ import Storage from 'Utils/Storage';
  */
 
 /** The batch endpoint. `/api/t/e` takes one event at a time; grouping is the whole point here. */
-const ENDPOINT = 'https://devapi.geremy.dev/api/t/b';
+const ENDPOINT = 'https://api.deveye.fr/api/t/b';
 
 /** `AUDIENCE_BATCH_MAX` on the DevEye side: a longer array is rejected as a whole. */
 const BATCH_MAX = 20;

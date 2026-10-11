@@ -39,7 +39,6 @@ const ActivitiesSection = ({
     compactFont = true,
     title = ''
 }) => {
-    const strokeWidth = Math.max(Math.round(chartSize / 11), 5);
     const centerFontSize = Math.round(chartSize * 0.22);
     const fontSize = compactFont ? 13 : 16;
 
@@ -53,10 +52,10 @@ const ActivitiesSection = ({
             <DonutChart
                 data={donutData}
                 size={chartSize}
-                strokeWidth={strokeWidth}
+                strokeWidth={8}
                 strokeLinecap='round'
                 delay={0}
-                segmentGap={10}
+                segmentGap={12}
             >
                 <View style={[shared.chartCenter, styles.chartCenterAbsolute]}>
                     <Text style={[shared.chartCenterText, { fontSize: centerFontSize }]} color='primary'>

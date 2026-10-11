@@ -3,7 +3,7 @@ import dataManager from 'Managers/DataManager';
 import { IUserClass } from '@oxyfoo/gamelife-types/Interface/IUserClass';
 import { ApplyEquipmentBonus } from '@oxyfoo/gamelife-types/Rules/ItemStats';
 import DynamicVar from 'Utils/DynamicVar';
-import { MinMax, Sum } from 'Utils/Functions';
+import { MinMax, Round, Sum } from 'Utils/Functions';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -128,8 +128,12 @@ class Experience extends IUserClass {
 
             // Stats
             for (const stat of this.statsKey) {
-                statValues[stat] += skill.Stats[stat];
+                statValues[stat] += skill.Stats[stat] * durationHour;
             }
+        }
+
+        for (const stat of this.statsKey) {
+            statValues[stat] = Round(statValues[stat], 2);
         }
 
         return { totalXP, stats: statValues };

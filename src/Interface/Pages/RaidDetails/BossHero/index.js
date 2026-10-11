@@ -55,8 +55,9 @@ function BossCaption() {
     const { season, status } = useRaid();
     const lang = langManager.curr['raids'];
 
+    // No season: the caption stays as an empty spacer, so the portrait keeps its room above the tabs
     if (season === null) {
-        return null;
+        return <View style={styles.caption} />;
     }
 
     const defeated = status === 'defeated' || season.defeatedAt !== null;

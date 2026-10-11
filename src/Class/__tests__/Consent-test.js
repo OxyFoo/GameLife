@@ -1,4 +1,4 @@
-import { Alert, Platform } from 'react-native';
+import { Alert, AppState, Platform } from 'react-native';
 import { check, request, RESULTS } from 'react-native-permissions';
 import { AdsConsent } from 'react-native-google-mobile-ads';
 
@@ -84,6 +84,9 @@ describe('[Class] Consent', () => {
         jest.clearAllMocks();
         setPlatform('android');
         setDev(true);
+        // RN's jest mock models `currentState` as a jest.fn(), not a string: force it foregrounded
+        // so ATT's `#WaitForActive` takes its immediate path instead of the real timeout.
+        AppState.currentState = 'active';
 
         // Defaults: outside the EEA, consent already handled, tracking granted
         mocked.gatherConsent.mockResolvedValue(info({ privacyOptionsRequirementStatus: 'NOT_REQUIRED' }));
@@ -163,7 +166,7 @@ describe('[Class] Consent', () => {
             expect(consent.loading).toBe(false);
         });
 
-        it('should not init the SDK nor ask for tracking while ad requests are not allowed', async () => {
+        it('should not init the SDK while ad requests are not allowed', async () => {
             setPlatform('ios');
             mocked.gatherConsent.mockRejectedValue(new Error('network'));
             mocked.getConsentInfo.mockResolvedValue(info({ status: 'REQUIRED', canRequestAds: false }));
@@ -220,26 +223,25 @@ describe('[Class] Consent', () => {
             expect(alertSpy).not.toHaveBeenCalled();
         });
 
-        it('should not prompt when GDPR applies and purpose 1 was refused', async () => {
+        it('should prompt regardless of GDPR/purpose consent state - ATT is independent of UMP', async () => {
             mocked.getGdprApplies.mockResolvedValue(true);
             mocked.getPurposeConsents.mockResolvedValue('0111');
             mocked.check.mockResolvedValue(RESULTS.DENIED);
 
             await consent.Initialize();
 
-            expect(mocked.request).not.toHaveBeenCalled();
-            expect(consent.ios_tracking.enabled).toBe(false);
+            expect(mocked.request).toHaveBeenCalledTimes(1);
+            expect(consent.ios_tracking.enabled).toBe(true);
         });
 
-        it('should prompt when GDPR applies and purpose 1 was accepted', async () => {
-            mocked.getGdprApplies.mockResolvedValue(true);
-            mocked.getPurposeConsents.mockResolvedValue('1111');
+        it('should run before GatherConsent in the startup flow', async () => {
             mocked.check.mockResolvedValue(RESULTS.DENIED);
 
             await consent.Initialize();
 
-            expect(mocked.request).toHaveBeenCalledTimes(1);
-            expect(consent.ios_tracking.enabled).toBe(true);
+            expect(mocked.request.mock.invocationCallOrder[0]).toBeLessThan(
+                mocked.gatherConsent.mock.invocationCallOrder[0]
+            );
         });
 
         it('should refuse personalized ads on iOS when GDPR choices deny them, even with tracking granted', async () => {

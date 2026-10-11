@@ -1,4 +1,4 @@
-import { Alert, Platform, Linking } from 'react-native';
+import { Alert, AppState, Platform, Linking } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import mobileAds, {
     AdsConsent,
@@ -26,12 +26,11 @@ const VERSION = require('../../package.json').version;
 const ATT = PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY;
 
 /**
- * Ad consent, following Google's recommended flow (react-native-google-mobile-ads docs,
- * "European User Consent"):
- *   1. UMP (GDPR consent form) on both OS, at every launch - the UMP SDK decides itself
+ * Ad consent. Apple treats App Tracking Transparency as a standalone requirement that a GDPR/CMP
+ * choice cannot substitute for, so it always resolves first and independently of UMP:
+ *   1. App Tracking Transparency prompt, iOS only, unconditional - never gated on UMP/GDPR state.
+ *   2. UMP (GDPR consent form) on both OS, at every launch - the UMP SDK decides itself
  *      whether a form must be shown, so nothing is gated on the app version any more.
- *   2. App Tracking Transparency prompt on iOS, only once UMP allows ad requests and, when
- *      GDPR applies, only if the user consented to purpose 1 (storage).
  *   3. Google Mobile Ads SDK initialisation, only once UMP allows ad requests.
  * The persisted shape (`SaveObject_Consent`) is unchanged: `nonPersonalized` feeds the ad
  * requests, the `version` fields are kept for bookkeeping only.
@@ -102,7 +101,7 @@ class Consent extends IUserClass {
     }
 
     /**
-     * Startup flow: UMP consent form (both OS), then ATT prompt (iOS), then Mobile Ads SDK
+     * Startup flow: ATT prompt (iOS), then UMP consent form (both OS), then Mobile Ads SDK
      * initialisation. Never throws: ads must still load with the previous session's choices
      * when consent gathering fails.
      * @returns {Promise<ConsentPopupResult>}
@@ -118,13 +117,14 @@ class Consent extends IUserClass {
         let result = 'error';
 
         try {
+            if (Platform.OS === 'ios') {
+                await this.RequestTracking().catch((err) => this.#Log('error', 'Tracking request:', err));
+            }
+
             result = await this.GatherConsent();
             await this.#RefreshCanRequestAds();
 
             if (this.canRequestAds) {
-                if (Platform.OS === 'ios') {
-                    await this.RequestTracking().catch((err) => this.#Log('error', 'Tracking request:', err));
-                }
                 await mobileAds()
                     .initialize()
                     .catch((err) => this.#Log('error', 'Mobile Ads init:', err));
@@ -159,23 +159,14 @@ class Consent extends IUserClass {
     }
 
     /**
-     * App Tracking Transparency prompt (iOS 14+). Shown by the system at most once per
-     * install: a later call only reads the current status.
+     * App Tracking Transparency prompt (iOS 14+), independent of UMP/GDPR state - Apple's ATT
+     * requirement is standalone, a CMP choice cannot substitute for it. Shown by the system at
+     * most once per install: a later call only reads the current status.
      * @returns {Promise<ConsentPopupOSResult>} 'ok' when the system prompt was shown
      */
     async RequestTracking() {
         if (Platform.OS !== 'ios') {
             return 'not-needed';
-        }
-
-        // Google: only ask for tracking when GDPR does not apply, or purpose 1 was consented
-        const gdprApplies = await AdsConsent.getGdprApplies();
-        if (gdprApplies) {
-            const purposes = await AdsConsent.getPurposeConsents();
-            if (!purposes.startsWith('1')) {
-                this.#SetTracking(false);
-                return 'not-needed';
-            }
         }
 
         const before = await check(ATT);
@@ -184,7 +175,12 @@ class Consent extends IUserClass {
             return 'not-available';
         }
 
-        // DENIED means "not determined yet" for this permission: the prompt can be shown
+        // DENIED means "not determined yet" for this permission: the prompt can be shown.
+        // iOS only presents the ATT dialog while the app is foregrounded, so wait for that first -
+        // calling while backgrounded/inactive (e.g. cold start) can otherwise silently no-op.
+        if (before === RESULTS.DENIED) {
+            await this.#WaitForActive();
+        }
         const after = before === RESULTS.DENIED ? await request(ATT) : before;
         this.#Log('info', 'Tracking permission:', before, '->', after);
 
@@ -193,8 +189,8 @@ class Consent extends IUserClass {
     }
 
     /**
-     * Settings entry point: lets the user review the GDPR choices (privacy options form,
-     * mandatory for EEA users) and, on iOS, the tracking permission.
+     * Settings entry point: on iOS, lets the user review the tracking permission first, then
+     * (both OS) the GDPR choices (privacy options form, mandatory for EEA users).
      * @returns {Promise<ConsentPopupResult>} 'not-available' when nothing can be shown
      */
     async OpenPrivacyOptions() {
@@ -205,11 +201,15 @@ class Consent extends IUserClass {
         this.loading = true;
 
         try {
+            let shown = false;
+            if (Platform.OS === 'ios') {
+                shown = await this.#OpenTrackingOptions();
+            }
+
             const info = await AdsConsent.requestInfoUpdate(this.#GetRequestOptions());
             this.#Log('info', 'Ad consent info:', info);
             this.#StoreInfo(info);
 
-            let shown = false;
             if (info.privacyOptionsRequirementStatus === AdsConsentPrivacyOptionsRequirementStatus.REQUIRED) {
                 this.#StoreInfo(await AdsConsent.showPrivacyOptionsForm());
                 await this.#ApplyUmpChoices();
@@ -219,10 +219,6 @@ class Consent extends IUserClass {
                 this.#StoreInfo(await AdsConsent.loadAndShowConsentFormIfRequired());
                 await this.#ApplyUmpChoices();
                 shown = true;
-            }
-
-            if (Platform.OS === 'ios') {
-                shown = (await this.#OpenTrackingOptions()) || shown;
             }
 
             await this.#user.SaveLocal();
@@ -318,6 +314,31 @@ class Consent extends IUserClass {
     /** @param {boolean} enabled */
     #SetTracking(enabled) {
         this.ios_tracking = { enabled, version: VERSION };
+    }
+
+    /**
+     * Resolves once the app is foregrounded, or after `timeoutMs` - bounded so a backgrounded/stuck
+     * app never hangs consent forever.
+     * @param {number} [timeoutMs]
+     * @returns {Promise<void>}
+     */
+    #WaitForActive(timeoutMs = 2000) {
+        if (AppState.currentState === 'active') {
+            return Promise.resolve();
+        }
+
+        return new Promise((resolve) => {
+            const subscription = AppState.addEventListener('change', (state) => {
+                if (state === 'active') {
+                    subscription.remove();
+                    resolve();
+                }
+            });
+            setTimeout(() => {
+                subscription.remove();
+                resolve();
+            }, timeoutMs);
+        });
     }
 
     /**

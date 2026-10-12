@@ -535,6 +535,7 @@
         "card-last-contribution": "Last contribution: {} pts · Rank #{}",
         "status-fighting": "Fighting",
         "status-fighting-detail": "{} activities · {} left",
+        "status-phase": "Phase {}",
         "status-healing": "Healing",
         "status-defeated": "Boss defeated!",
         "status-ended": "Season over",

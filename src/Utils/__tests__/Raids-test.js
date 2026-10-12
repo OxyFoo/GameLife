@@ -1,4 +1,4 @@
-import { RaidPhaseIndex } from 'Utils/Raids';
+import { RaidPhaseIndex, RaidPhaseMarkers } from 'Utils/Raids';
 
 describe('RaidPhaseIndex', () => {
     test('a single phase covers the whole life', () => {
@@ -23,5 +23,17 @@ describe('RaidPhaseIndex', () => {
         expect(RaidPhaseIndex(-0.1, 3)).toBe(0);
         expect(RaidPhaseIndex(1.2, 3)).toBe(2);
         expect(RaidPhaseIndex(NaN, 3)).toBe(0);
+    });
+});
+
+describe('RaidPhaseMarkers', () => {
+    test('one delimiter between two phases, none for a single one', () => {
+        expect(RaidPhaseMarkers(1)).toEqual([]);
+        expect(RaidPhaseMarkers(2)).toEqual([0.5]);
+        expect(RaidPhaseMarkers(4)).toEqual([0.25, 0.5, 0.75]);
+    });
+
+    test('a delimiter sits where the phase changes', () => {
+        RaidPhaseMarkers(3).forEach((marker, i) => expect(RaidPhaseIndex(marker, 3)).toBe(i + 1));
     });
 });

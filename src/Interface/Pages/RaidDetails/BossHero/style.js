@@ -20,6 +20,12 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginTop: 2
     },
+    phase: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        marginTop: 10
+    },
     bar: {
         marginTop: 10
     },

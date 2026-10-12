@@ -21,7 +21,7 @@ import { FormatMinutes } from 'Utils/Raids';
  */
 function StatusRow({ snapshot }) {
     const lang = langManager.curr['raids'];
-    const { status, simulation, now, healRemaining, healPrice } = snapshot;
+    const { status, simulation, now, healRemaining, healPrice, phase, phaseCount } = snapshot;
 
     if (status === 'defeated') {
         return (
@@ -88,12 +88,16 @@ function StatusRow({ snapshot }) {
     const budgetUsed = simulation?.current.budgetUsed ?? 0;
     const hits = simulation?.totals.hits ?? 0;
 
+    // A boss drawn in a single image has no phase to tell
+    const fightingLabel =
+        phaseCount > 1 ? lang['status-phase'].replace('{}', phase.toString()) : lang['status-fighting'];
+
     return (
         <View style={styles.statusRow}>
             <View style={styles.statusHeader}>
                 <Icon icon='swords' size={18} color='main3' />
                 <Text fontSize={14} color='main3' bold>
-                    {lang['status-fighting']}
+                    {fightingLabel}
                 </Text>
                 <Text style={styles.statusDetail} fontSize={11} color='light'>
                     {lang['status-fighting-detail']

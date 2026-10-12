@@ -32,9 +32,24 @@ class ProgressBar extends ProgressBarBack {
             <View style={[styles.body, { height }, style]} onLayout={this.onLayout}>
                 <Animated.View style={[styles.supXP, animSupStyle]} />
                 <MaskedView maskElement={this.renderMask()}>{this.renderBackground()}</MaskedView>
+                {this.renderMarkers()}
             </View>
         );
     }
+
+    /** Over the fill and the empty part alike: a translucent white reads on both */
+    renderMarkers = () => {
+        const { markers } = this.props;
+        const backgroundColor = themeManager.GetColor('white', { opacity: 0.5 });
+
+        return markers.map((marker) => (
+            <View
+                key={`marker-${marker}`}
+                style={[styles.marker, { left: `${marker * 100}%`, backgroundColor }]}
+                pointerEvents='none'
+            />
+        ));
+    };
 
     renderMask = () => {
         const { width, animation } = this.state;

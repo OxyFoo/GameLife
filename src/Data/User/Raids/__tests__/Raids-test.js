@@ -240,6 +240,16 @@ describe('Raids', () => {
         expect(imagesOf({ progress: 0.2, defeatedAt: NOW })).toEqual({ boss: 2, background: 10 });
         expect(imagesOf({ imageID: 'unknown-image', progress: 0.9 })).toEqual({ boss: 100, background: 101 });
 
+        /** @param {Partial<RaidSeasonPublic>} partial */
+        const phaseOf = (partial) => {
+            imagesOf(partial);
+            const { phase, phaseCount } = raids.GetSnapshot(NOW);
+            return { phase, phaseCount };
+        };
+        expect(phaseOf({ progress: 0.2 })).toEqual({ phase: 1, phaseCount: 2 });
+        expect(phaseOf({ progress: 0.7 })).toEqual({ phase: 2, phaseCount: 2 });
+        expect(phaseOf({ imageID: 'unknown-image', progress: 0.7 })).toEqual({ phase: 1, phaseCount: 1 });
+
         expect(raids.GetRaidImages('two-phases', 0.1, false).boss).toBe(1);
         expect(raids.GetRaidImages('two-phases', 0.1, true).boss).toBe(2);
         expect(raids.GetRaidImages(null, 0, false).boss).toBe(100);

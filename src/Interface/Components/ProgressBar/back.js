@@ -19,6 +19,7 @@ import { SpringAnimation } from 'Utils/Animations';
  * @property {'gradient' | ThemeColor} color
  * @property {number} height
  * @property {number} delay To set the delay of the animation in seconds
+ * @property {number[]} markers Positions of thin vertical delimiters over the bar, fractions in ]0;1[
  */
 
 /** @type {ProgressBarPropsType} */
@@ -29,7 +30,8 @@ const ProgressBarProps = {
     supValue: 0,
     color: 'gradient',
     height: 8,
-    delay: 0.2
+    delay: 0.2,
+    markers: []
 };
 
 class ProgressBarBack extends React.Component {
@@ -47,6 +49,7 @@ class ProgressBarBack extends React.Component {
         return (
             nextProps.value !== this.props.value ||
             nextProps.maxValue !== this.props.maxValue ||
+            nextProps.markers.join() !== this.props.markers.join() ||
             nextState.width !== this.state.width
         );
     }

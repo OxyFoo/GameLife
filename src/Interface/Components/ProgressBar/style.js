@@ -33,6 +33,13 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         borderBottomRightRadius: 8,
         backgroundColor: '#FFFFFF'
+    },
+    marker: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        width: 2,
+        marginLeft: -1
     }
 });
 

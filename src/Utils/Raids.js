@@ -81,4 +81,13 @@ function RaidPhaseIndex(progress, count) {
     return Math.min(count - 1, Math.max(0, index));
 }
 
-export { FormatCompact, FormatThousands, FormatCountdown, FormatMinutes, RaidPhaseIndex };
+/**
+ * Where the boss changes phase on a bar of its life: 1/count … (count − 1)/count, none with a single phase
+ * @param {number} count Number of phases
+ * @returns {number[]} Fractions in ]0;1[, for the `markers` of a `ProgressBar`
+ */
+function RaidPhaseMarkers(count) {
+    return Array.from({ length: Math.max(0, count - 1) }, (_, i) => (i + 1) / count);
+}
+
+export { FormatCompact, FormatThousands, FormatCountdown, FormatMinutes, RaidPhaseIndex, RaidPhaseMarkers };

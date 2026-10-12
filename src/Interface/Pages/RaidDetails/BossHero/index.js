@@ -4,9 +4,9 @@ import { Animated, StyleSheet, View } from 'react-native';
 import styles from './style';
 import langManager from 'Managers/LangManager';
 
-import { ImageBackdrop, ProgressBar, Text } from 'Interface/Components';
+import { Icon, ImageBackdrop, ProgressBar, Text } from 'Interface/Components';
 import { useRaid } from 'Interface/Pages/Raids/RaidCard/useRaid';
-import { FormatCompact } from 'Utils/Raids';
+import { FormatCompact, RaidPhaseMarkers } from 'Utils/Raids';
 
 /** Fraction of the scroll the portrait follows, and how far it may travel before it stops */
 const PARALLAX_TRAVEL = 90;
@@ -49,10 +49,11 @@ function BossBackground({ scrollY }) {
 /**
  * Who is fought and how far the world is, over the portrait. The raid card says the rest one screen
  * back, so this only carries what the page needs to stand on its own — and the boss name, which is
- * shown nowhere else (the card carries the season name).
+ * shown nowhere else (the card carries the season name). A boss drawn in several images also tells
+ * its current phase, marked on the bar.
  */
 function BossCaption() {
-    const { season, status } = useRaid();
+    const { season, status, phase, phaseCount } = useRaid();
     const lang = langManager.curr['raids'];
 
     if (season === null) {
@@ -79,7 +80,22 @@ function BossCaption() {
                 </Text>
             ) : (
                 <>
-                    <ProgressBar style={styles.bar} height={6} color='raid' value={season.hp} maxValue={season.maxHP} />
+                    {phaseCount > 1 && (
+                        <View style={styles.phase}>
+                            <Icon icon='swords' size={16} color='main3' />
+                            <Text fontSize={13} color='main3' bold>
+                                {lang['status-phase'].replace('{}', phase.toString())}
+                            </Text>
+                        </View>
+                    )}
+                    <ProgressBar
+                        style={styles.bar}
+                        height={6}
+                        color='raid'
+                        value={season.hp}
+                        maxValue={season.maxHP}
+                        markers={RaidPhaseMarkers(phaseCount)}
+                    />
                     <Text style={styles.state} fontSize={12} color='secondary'>
                         {`${lang['card-progress']} · ${FormatCompact(season.hp)} / ${FormatCompact(season.maxHP)}`}
                     </Text>

@@ -21,7 +21,7 @@ import { FormatMinutes, FormatThousands } from 'Utils/Raids';
  */
 function HistoryRow({ entry }) {
     const lang = langManager.curr['raids'];
-    const images = user.raids.GetRaidImages(entry.imageID);
+    const images = user.raids.GetRaidImages(entry.imageID, entry.progress, entry.defeated);
 
     const end = new Date(entry.endTime * 1000);
     const endText = `${end.getDate()} ${langManager.curr['dates']['months-min'][end.getMonth()]}`;

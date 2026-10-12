@@ -2,6 +2,7 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 const fs = require('fs');
 const path = require('path');
+const { writeRegistry: writeRaidsRegistry } = require('./scripts/setup-raids');
 // TODO: Fix obfuscator-io-metro-plugin compatibility with Metro v0.83+
 // const Obfuscator = require('obfuscator-io-metro-plugin');
 
@@ -107,6 +108,9 @@ function createLocalModulesConfig() {
         }
     };
 }
+
+// The registry of the raid visuals lists the images of res/raids, Metro cannot do it at runtime
+writeRaidsRegistry();
 
 /**
  * Metro configuration

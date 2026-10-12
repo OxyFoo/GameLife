@@ -68,4 +68,17 @@ function FormatMinutes(minutes) {
     return `${hours}${names['hours-min']}${rest.toString().padStart(2, '0')}`;
 }
 
-export { FormatCompact, FormatThousands, FormatCountdown, FormatMinutes };
+/**
+ * Phase of a boss drawn in `count` images: its life is cut in `count` equal parts, the first image
+ * while it is untouched and the last one until its defeat. With 4: [0, 25 %[ → 0, [25 %, 50 %[ → 1,
+ * [50 %, 75 %[ → 2, [75 %, 100 %] → 3.
+ * @param {number} progress Damage ratio of the season [0;1]
+ * @param {number} count Number of phases, at least 1
+ * @returns {number} 0-based
+ */
+function RaidPhaseIndex(progress, count) {
+    const index = Number.isFinite(progress) ? Math.floor(progress * count) : 0;
+    return Math.min(count - 1, Math.max(0, index));
+}
+
+export { FormatCompact, FormatThousands, FormatCountdown, FormatMinutes, RaidPhaseIndex };

@@ -24,7 +24,7 @@ import { ANALYTICS_PATHS } from 'Constants/Analytics';
  */
 const RaidSeasonDetails = ({ entry }) => {
     const lang = langManager.curr['raids'];
-    const images = user.raids.GetRaidImages(entry.imageID);
+    const images = user.raids.GetRaidImages(entry.imageID, entry.progress, entry.defeated);
 
     // A panel is a screen the navigation engine never reports; opening one is a page view.
     React.useEffect(() => DevEye.View(ANALYTICS_PATHS.RAID_SEASON), []);

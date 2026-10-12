@@ -85,10 +85,11 @@ export function LoadTemplate_AppData(user) {
                 en: 'hair'
             },
             Rarity: 'common',
-            Buyable: true,
+            Buyable: false,
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: true,
             Value: 35
         },
         {
@@ -100,10 +101,11 @@ export function LoadTemplate_AppData(user) {
                 en: 'shirt'
             },
             Rarity: 'common',
-            Buyable: true,
+            Buyable: false,
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: true,
             Value: 35
         },
         {
@@ -115,10 +117,11 @@ export function LoadTemplate_AppData(user) {
                 en: 'pants'
             },
             Rarity: 'common',
-            Buyable: true,
+            Buyable: false,
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: true,
             Value: 35
         },
         {
@@ -130,10 +133,11 @@ export function LoadTemplate_AppData(user) {
                 en: 'shoes'
             },
             Rarity: 'common',
-            Buyable: true,
+            Buyable: false,
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: true,
             Value: 35
         },
 
@@ -147,6 +151,7 @@ export function LoadTemplate_AppData(user) {
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: false,
             Value: 35
         },
         {
@@ -159,6 +164,7 @@ export function LoadTemplate_AppData(user) {
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: false,
             Value: 35
         },
         {
@@ -171,6 +177,7 @@ export function LoadTemplate_AppData(user) {
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: false,
             Value: 35
         },
         {
@@ -183,6 +190,7 @@ export function LoadTemplate_AppData(user) {
             Buffs: [],
             StatsRange: null,
             StatsKeys: null,
+            Starter: false,
             Value: 35
         }
     ]);
@@ -391,14 +399,14 @@ export function LoadTemplate_UserData(user) {
     user.server2.userAuth.SetEmail('templateuser@localhost');
     user.inventory.Load({
         stuffs: [
-            { ID: 1, ItemID: 'hair_00', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 2, ItemID: 'top_00', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 3, ItemID: 'bottom_00', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 4, ItemID: 'shoes_00', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 5, ItemID: 'hair_01', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 6, ItemID: 'top_01', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 7, ItemID: 'bottom_01', CreatedBy: 1, CreatedAt: 0 },
-            { ID: 8, ItemID: 'shoes_01', CreatedBy: 1, CreatedAt: 0 }
+            { ID: 1, ItemID: 'hair_00', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: {} },
+            { ID: 2, ItemID: 'top_00', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: {} },
+            { ID: 3, ItemID: 'bottom_00', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: {} },
+            { ID: 4, ItemID: 'shoes_00', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: {} },
+            { ID: 5, ItemID: 'hair_01', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: { int: 3 } },
+            { ID: 6, ItemID: 'top_01', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: { sta: 2, for: 2 } },
+            { ID: 7, ItemID: 'bottom_01', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: { agi: 4 } },
+            { ID: 8, ItemID: 'shoes_01', CreatedBy: 1, CreatedAt: 0, Rarity: 'common', Stats: { dex: 5 } }
         ],
         titleIDs: [1, 2, 3]
     });

@@ -38,6 +38,10 @@ const styles = StyleSheet.create({
         marginTop: 12,
         alignSelf: 'center'
     },
+    starter: {
+        marginTop: 12,
+        textAlign: 'center'
+    },
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'center',

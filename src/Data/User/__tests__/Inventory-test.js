@@ -1,3 +1,4 @@
+import dataManager from 'Managers/DataManager';
 import DynamicVar from 'Utils/DynamicVar';
 import Inventory from '../Inventory';
 
@@ -70,6 +71,18 @@ describe('Inventory.ForgeStuff', () => {
         expect(user.experience.UpdateExperience).not.toHaveBeenCalled();
     });
 
+    test('relays the catalyst refusals without touching the inventory', async () => {
+        const { user, inventory } = makeInventory();
+        for (const result of ['catalyst-rarity', 'catalyst-starter']) {
+            jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(
+                /** @type {any} */ ({ status: 'forge-stuff', result })
+            );
+            expect(await inventory.ForgeStuff(1, [2])).toEqual({ result });
+        }
+        expect(inventory.stuffs).toHaveLength(3);
+        expect(user.informations.ox.Get()).toBe(100);
+    });
+
     test('on success removes the catalysts and replaces the main copy in place', async () => {
         const { user, inventory } = makeInventory();
         const upgraded = stuff(1, { Rarity: 'rare', Stats: { for: 12 } });
@@ -114,6 +127,85 @@ describe('Inventory.ForgeStuff', () => {
         expect(outcome.result === 'ok' && outcome.success).toBe(false);
         expect(inventory.stuffs).toEqual([stuff(1)]);
         expect(user.informations.ox.Get()).toBe(70);
+    });
+});
+
+describe('Inventory: starter outfit and catalysts', () => {
+    /**
+     * @param {string} ID
+     * @param {boolean} starter
+     */
+    const item = (ID, starter) =>
+        /** @type {any} */ ({
+            ID,
+            Slot: ID.split('_')[0],
+            Name: { fr: ID, en: ID },
+            Description: { fr: '', en: '' },
+            Rarity: 'common',
+            Buyable: true,
+            Value: 222,
+            Buffs: [],
+            StatsRange: null,
+            StatsKeys: null,
+            Starter: starter
+        });
+
+    beforeEach(() => {
+        dataManager.items.Load([item('hair_00', true), item('hair_01', false), item('top_01', false)]);
+    });
+
+    /** 1 starter, 2 and 3 common, 4 rare, 5 common equipped */
+    const makeCatalystInventory = () => {
+        const { inventory } = makeInventory();
+        inventory.Load({
+            stuffs: [
+                stuff(1, { ItemID: 'hair_00', Stats: {} }),
+                stuff(2, { ItemID: 'hair_01' }),
+                stuff(3, { ItemID: 'top_01' }),
+                stuff(4, { ItemID: 'top_01', Rarity: 'rare' }),
+                stuff(5, { ItemID: 'hair_01' })
+            ],
+            token: 5
+        });
+        return inventory;
+    };
+
+    test('recognises the starter outfit', () => {
+        const inventory = makeCatalystInventory();
+        expect(inventory.IsStarterStuff(stuff(1, { ItemID: 'hair_00' }))).toBe(true);
+        expect(inventory.IsStarterStuff(stuff(2, { ItemID: 'hair_01' }))).toBe(false);
+    });
+
+    test('locks the equipped copies and the starter outfit while no main copy is chosen', () => {
+        const inventory = makeCatalystInventory();
+        expect(inventory.GetLockedCatalystIDs(null, [5])).toEqual([1, 5]);
+    });
+
+    test('also locks the copies of another rarity than the main copy', () => {
+        const inventory = makeCatalystInventory();
+        const commonMain = inventory.GetStuffByID(2);
+        const rareMain = inventory.GetStuffByID(4);
+        expect(inventory.GetLockedCatalystIDs(commonMain, [5])).toEqual([1, 4, 5]);
+        expect(inventory.GetLockedCatalystIDs(rareMain, [5])).toEqual([1, 2, 3, 5]);
+    });
+
+    test('a starter main copy takes common catalysts, never another starter copy', () => {
+        const inventory = makeCatalystInventory();
+        expect(inventory.GetLockedCatalystIDs(inventory.GetStuffByID(1), [])).toEqual([1, 4]);
+    });
+
+    test('the shop never offers the starter outfit, even marked buyable', () => {
+        expect(dataManager.items.GetBuyable().map((i) => i.ID)).toEqual(['hair_01', 'top_01']);
+        expect(dataManager.items.GetBuyable('hair').map((i) => i.ID)).toEqual(['hair_01']);
+    });
+
+    test('relays the refusal to sell a starter copy', async () => {
+        const { user, inventory } = makeInventory();
+        jest.mocked(user.server2.tcp.SendAndWait).mockResolvedValueOnce(
+            /** @type {any} */ ({ status: 'sell-stuff', result: 'item-starter' })
+        );
+        expect(await inventory.SellStuff(1)).toBe('item-starter');
+        expect(inventory.stuffs).toHaveLength(3);
     });
 });
 

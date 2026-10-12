@@ -64,6 +64,7 @@ const ItemDetailPanel = ({
     const rarity = stuff?.Rarity ?? itemData?.Rarity ?? 'common';
     const sellPrice = itemData ? SellPriceOf(StuffValue(itemData, rarity)) : 0;
     const sellButtonText = lang['button-sell'].replace('{}', sellPrice.toString());
+    const isStarter = itemData?.Starter === true;
 
     /**
      * Get items to display in avatar preview
@@ -118,12 +119,17 @@ const ItemDetailPanel = ({
                 <Text style={styles.title}>{itemTitle}</Text>
                 <Text style={styles.description}>{itemDescription}</Text>
                 <ItemStats style={styles.stats} stats={stuff?.Stats ?? {}} />
+                {isStarter && (
+                    <Text style={styles.starter} fontSize={12} color='secondary'>
+                        {lang['label-starter']}
+                    </Text>
+                )}
             </View>
 
             {/* Action Buttons - hidden when equipped */}
             {!isEquipped && (
                 <View style={styles.buttonsContainer}>
-                    {showSell && (
+                    {showSell && !isStarter && (
                         <Button style={styles.button} appearance='uniform' color='ground2' onPress={handleSell}>
                             <Text style={styles.buttonText}>{sellButtonText}</Text>
                         </Button>

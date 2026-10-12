@@ -3,6 +3,7 @@ import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import DevEye from 'Utils/DevEye';
 import { ANALYTICS_EVENTS } from 'Constants/Analytics';
+import { IsCatalystCompatible } from '@oxyfoo/gamelife-types/Rules/TechnoForge';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -138,6 +139,31 @@ class Inventory extends IUserData {
     GetStuffByID = (ID) => this.stuffs.find((stuff) => stuff.ID === ID) || null;
 
     /**
+     * A copy of the starter outfit: never sold, never a forge catalyst
+     * @param {Stuff} stuff
+     * @returns {boolean}
+     */
+    IsStarterStuff = (stuff) => dataManager.items.IsStarter(stuff.ItemID);
+
+    /**
+     * Copies that can never be a catalyst of the forge for this main copy (Rules/TechnoForge): the
+     * equipped ones, the starter outfit, and those of another rarity than the main copy (any rarity
+     * while no main copy is chosen)
+     * @param {Stuff | null} main
+     * @param {number[]} equippedIDs
+     * @returns {number[]}
+     */
+    GetLockedCatalystIDs = (main, equippedIDs) =>
+        this.stuffs
+            .filter(
+                (stuff) =>
+                    equippedIDs.includes(stuff.ID) ||
+                    this.IsStarterStuff(stuff) ||
+                    (main !== null && !IsCatalystCompatible(main.Rarity, stuff.Rarity))
+            )
+            .map((stuff) => stuff.ID);
+
+    /**
      * @param {Slot} slot
      * @returns {Stuff[]}
      */
@@ -152,7 +178,7 @@ class Inventory extends IUserData {
     /**
      * Sell a stuff item from inventory
      * @param {number} stuffID - The stuff ID to sell (inventory item ID)
-     * @returns {Promise<'ok' | 'invalid-item' | 'item-not-found' | 'item-equipped' | 'error'>}
+     * @returns {Promise<'ok' | 'invalid-item' | 'item-not-found' | 'item-equipped' | 'item-starter' | 'error'>}
      */
     SellStuff = async (stuffID) => {
         const response = await this.user.server2.tcp.SendAndWait({

@@ -65,6 +65,15 @@ function SellPopup({ stuffID, item, onSold }) {
                     message: lang['alert-isequipped-text']
                 }
             });
+        } else if (result === 'item-starter') {
+            user.interface.popup?.Close('error');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-starter-title'],
+                    message: lang['alert-starter-text']
+                }
+            });
         } else {
             user.interface.popup?.Close('error');
             user.interface.popup?.OpenT({

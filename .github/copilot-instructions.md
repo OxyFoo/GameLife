@@ -288,11 +288,19 @@ sans dépendance ni état, et les deux projets importent ce module.
   séquentielle, au moins 1 point chacune), re-tirage à forme constante quand la forge monte la rareté
   (`RerollItemStatsPreservingShape`) et bonus des exemplaires équipés (`ApplyEquipmentBonus` :
   stat × (1 + Σ % / 100), arrondi). L'app envoie ses stats **de base** dans `save-activities` ; le serveur ajoute
-  le bonus lui-même (inscription aux raids, stats des amis, dextérité de la forge).
+  le bonus lui-même (inscription aux raids, stats des amis, dextérité de la forge). Un item de la **tenue de
+  départ** (`Item.Starter`, les quatre `*_00`) a toujours la plage `[0; 0]` (`RangeForRarity`), à toute rareté :
+  ses exemplaires n'ont jamais de stats, même montés à la forge.
 - `@oxyfoo/gamelife-types/Rules/TechnoForge` — une tentative : objet principal + 1 ou 2 catalyseurs (jamais
   équipés), chance 30 % / 60 % + dextérité jusqu'à 30 % à 25 000 points, plafond 100 % (`ForgeChance`), coût par
   rareté de départ 30 / 60 / 120 (`ForgeCost`), étape ouverte (`IsForgeOpen`, epic → legendary fermée pour
   l'instant). Les catalyseurs sont consommés à chaque tentative, l'objet principal garde son ID (il reste équipé).
+  Un catalyseur a la rareté de l'objet principal (`IsCatalystCompatible`) et n'est jamais de la tenue de départ ;
+  l'app grise ces exemplaires via `user.inventory.GetLockedCatalystIDs`, le serveur répond `catalyst-rarity` /
+  `catalyst-starter`.
+- Tenue de départ (`Rules/ItemEconomy.IsObtainable`) : un set par compte, donné à la création seulement
+  (`GameLifeInventories.AddDefaultItems`, seul appelant autorisé d'`AddStuff` pour un starter), jamais en boutique,
+  coffre ni récompense, jamais vendu (`sell-stuff` → `item-starter`).
 
 L'app ne fait que **prévisualiser** : `user.activities.SimulateOx`, `GetDeleteOxQuote`, `GetEditOxQuote`,
 `GetOxReward` rejouent ses seaux en attente sur l'instantané serveur, et `user.raids` simule sans les

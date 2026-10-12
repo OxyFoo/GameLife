@@ -201,7 +201,11 @@ class BackTechnoForge extends PageBase {
                     hint={target === 'main' ? lang['picker-hint-main'] : lang['picker-hint-catalyst']}
                     selectedID={target === 'main' ? mainID : catalystIDs[target]}
                     excludedIDs={excludedIDs}
-                    lockedIDs={target === 'main' ? [] : user.avatar.GetEquipments()}
+                    lockedIDs={
+                        target === 'main'
+                            ? []
+                            : user.inventory.GetLockedCatalystIDs(this.GetMain(), user.avatar.GetEquipments())
+                    }
                     onSelect={(stuffID) => this.SetSlot(target, stuffID)}
                     onClear={() => this.SetSlot(target, null)}
                 />
@@ -216,10 +220,15 @@ class BackTechnoForge extends PageBase {
     SetSlot = (target, stuffID) => {
         const { mainID, catalystIDs } = this.state;
         if (target === 'main') {
-            // A copy moved to the main slot leaves the catalyst slot it was in
+            // A copy moved to the main slot leaves the catalyst slot it was in, and the catalysts
+            // of another rarity than the new main copy leave theirs
+            const main = stuffID === null ? null : user.inventory.GetStuffByID(stuffID);
+            const locked = user.inventory.GetLockedCatalystIDs(main, user.avatar.GetEquipments());
             this.setState({
                 mainID: stuffID,
-                catalystIDs: catalystIDs.map((ID) => (ID !== null && ID === stuffID ? null : ID))
+                catalystIDs: catalystIDs.map((ID) =>
+                    ID !== null && (ID === stuffID || locked.includes(ID)) ? null : ID
+                )
             });
         } else {
             const next = [...catalystIDs];
@@ -267,14 +276,14 @@ class BackTechnoForge extends PageBase {
         const catalystIDs = this.GetCatalystIDs();
         const target = this.GetTargetRarity();
         const cost = this.GetCost();
-        const equipped = user.avatar.GetEquipments();
+        const locked = user.inventory.GetLockedCatalystIDs(main, user.avatar.GetEquipments());
         if (
             main === null ||
             target === null ||
             cost === null ||
             !IsForgeOpen(main.Rarity) ||
             catalystIDs.length === 0 ||
-            catalystIDs.some((ID) => ID === main.ID || equipped.includes(ID))
+            catalystIDs.some((ID) => ID === main.ID || locked.includes(ID))
         ) {
             user.interface.popup?.OpenT({
                 type: 'ok',
@@ -350,6 +359,16 @@ class BackTechnoForge extends PageBase {
             user.interface.popup?.OpenT({
                 type: 'ok',
                 data: { title: lang['alert-catalyst-equipped-title'], message: lang['alert-catalyst-equipped-text'] }
+            });
+        } else if (outcome.result === 'catalyst-rarity') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title: lang['alert-catalyst-rarity-title'], message: lang['alert-catalyst-rarity-text'] }
+            });
+        } else if (outcome.result === 'catalyst-starter') {
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: { title: lang['alert-catalyst-starter-title'], message: lang['alert-catalyst-starter-text'] }
             });
         } else if (outcome.result === 'max-rarity' || outcome.result === 'forge-unavailable') {
             user.interface.popup?.OpenT({

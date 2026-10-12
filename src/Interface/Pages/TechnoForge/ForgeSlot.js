@@ -10,7 +10,7 @@ import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
 import { Button, Icon, Text } from 'Interface/Components';
-import { ItemStats } from 'Interface/Widgets';
+import { ItemStatsTicker } from 'Interface/Widgets';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -32,11 +32,14 @@ import { ItemStats } from 'Interface/Widgets';
  * @param {boolean} [props.enabled]
  * @param {Animated.Value} [props.fill] Catalyst slots: 0 → 1 fills the card from the bottom, like a liquid
  * @param {string} [props.fillColor]
+ * @param {boolean} [props.labelBelow] Once filled, the label goes under the card (the main slot has its caption there)
  * @param {StyleProp} [props.style]
  */
-function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, fill, fillColor, style }) {
+function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, fill, fillColor, labelBelow, style }) {
     const item = stuff === null ? null : dataManager.items.GetByID(stuff.ItemID);
     const sizeStyle = { width: size, height: size };
+    // Inside the border and the padding of the card
+    const innerWidth = size - 2 * styles.slot.paddingHorizontal - 2 * styles.slot.borderWidth;
 
     // The liquid: a full card scaled from its bottom, and its surface line riding on top of it
     const liquid =
@@ -105,7 +108,7 @@ function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, 
         item.Slot === 'top'
             ? [{ id: stuff.ItemID }, { id: user.avatar.GetEquippedItemID('bottom') }]
             : [{ id: stuff.ItemID }];
-    const frameSize = Math.round(size * 0.45);
+    const frameSize = Math.round(size * 0.5);
 
     return (
         <View style={[styles.slotWrapper, style]}>
@@ -138,12 +141,14 @@ function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, 
                 <Text style={styles.slotName} fontSize={11} numberOfLines={1} bold>
                     {langManager.GetText(item.Name)}
                 </Text>
-                <ItemStats stats={stuff.Stats ?? {}} compact max={2} />
-                <Text style={styles.slotLabel} fontSize={9} color='light'>
-                    {label.toUpperCase()}
-                </Text>
+                <ItemStatsTicker stats={stuff.Stats ?? {}} width={innerWidth} />
             </Button>
             {liquid}
+            {labelBelow === true && (
+                <Text style={styles.slotLabelBelow} fontSize={9} color='light'>
+                    {label.toUpperCase()}
+                </Text>
+            )}
             {transitionTo !== undefined && (
                 <View style={[styles.transition, { backgroundColor: themeManager.GetColor('background') }]}>
                     <RarityLabel from={stuff.Rarity} to={transitionTo} fontSize={9} />

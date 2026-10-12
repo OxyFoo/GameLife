@@ -3,7 +3,7 @@ import { IUserData } from '@oxyfoo/gamelife-types/Interface/IUserData';
 import DynamicVar from 'Utils/DynamicVar';
 import DevEye from 'Utils/DevEye';
 import { ANALYTICS_EVENTS } from 'Constants/Analytics';
-import { IsCatalystCompatible } from '@oxyfoo/gamelife-types/Rules/TechnoForge';
+import { IsCatalystCompatible, IsForgeOpen } from '@oxyfoo/gamelife-types/Rules/TechnoForge';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
@@ -144,6 +144,26 @@ class Inventory extends IUserData {
      * @returns {boolean}
      */
     IsStarterStuff = (stuff) => dataManager.items.IsStarter(stuff.ItemID);
+
+    /**
+     * Copies the forge cannot raise today (Rules/TechnoForge): a closed step (epic for now)
+     * @returns {number[]}
+     */
+    GetClosedForgeIDs = () => this.stuffs.filter((stuff) => !IsForgeOpen(stuff.Rarity)).map((stuff) => stuff.ID);
+
+    /**
+     * Copies that are not even offered as a catalyst for this main copy: the starter outfit and
+     * those of another rarity than the main copy (none while no main copy is chosen)
+     * @param {Stuff | null} main
+     * @returns {number[]}
+     */
+    GetHiddenCatalystIDs = (main) =>
+        this.stuffs
+            .filter(
+                (stuff) =>
+                    this.IsStarterStuff(stuff) || (main !== null && !IsCatalystCompatible(main.Rarity, stuff.Rarity))
+            )
+            .map((stuff) => stuff.ID);
 
     /**
      * Copies that can never be a catalyst of the forge for this main copy (Rules/TechnoForge): the

@@ -28,7 +28,7 @@ import {
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  *
  * @typedef {'main' | 0 | 1} PickerTarget The main slot, or the index of a catalyst slot
- * @typedef {'caption-empty' | 'caption-max-rarity' | 'caption-need-catalyst'} ForgeBlocker
+ * @typedef {'caption-empty' | 'caption-need-catalyst'} ForgeBlocker
  * @typedef {'idle' | 'extracting' | 'charging' | 'success' | 'failure'} ForgePhase The choreography of an attempt
  */
 
@@ -87,11 +87,11 @@ class BackTechnoForge extends PageBase {
     animFills = [new Animated.Value(0), new Animated.Value(0)];
     /** 0 → 1: the path lights up from the catalysts to the main slot (branches, bar, stem) */
     animPath = new Animated.Value(0);
-    /** Oscillation of the charge, looped (0 → 1 per period) */
+    /** Oscillation of the charge: 0 → 1 per back-and-forth, looped natively */
     animShake = new Animated.Value(0);
     /** Intensity of the charge, 0 → 1 over the charging: scales the shake and the glow. Never snapped, always eased */
     animCharge = new Animated.Value(0);
-    /** Breathing of the glow while charging (0 → 1 → 0, looped) */
+    /** Breathing of the glow while charging: 0 → 1 per breath, looped natively (bright at the middle) */
     animGlow = new Animated.Value(0);
     /** The verdict: 0 → 1 is the crash of the upgrade on success, the drop of the copy on failure */
     animOutcome = new Animated.Value(0);
@@ -232,9 +232,6 @@ class BackTechnoForge extends PageBase {
         if (main === null) {
             return 'caption-empty';
         }
-        if (!IsForgeOpen(main.Rarity)) {
-            return 'caption-max-rarity';
-        }
         if (this.GetCatalystIDs().length === 0) {
             return 'caption-need-catalyst';
         }
@@ -285,11 +282,11 @@ class BackTechnoForge extends PageBase {
                         target === 'main' ? (this.GetMain()?.ID ?? null) : (this.GetCatalysts()[target]?.ID ?? null)
                     }
                     excludedIDs={excludedIDs}
-                    lockedIDs={
-                        target === 'main'
-                            ? []
-                            : user.inventory.GetLockedCatalystIDs(this.GetMain(), user.avatar.GetEquipments())
-                    }
+                    lockedIDs={target === 'main' ? [] : user.avatar.GetEquipments()}
+                    hiddenIDs={(target === 'main'
+                        ? user.inventory.GetClosedForgeIDs()
+                        : user.inventory.GetHiddenCatalystIDs(this.GetMain())
+                    ).filter((ID) => !excludedIDs.includes(ID))}
                     onSelect={(stuffID) => this.SetSlot(target, stuffID)}
                     onClear={() => this.SetSlot(target, null)}
                 />
@@ -559,18 +556,29 @@ class BackTechnoForge extends PageBase {
             Animated.parallel([...fills, path]).start(() => resolve(undefined));
         });
 
-    /** 2. The main copy charges: a looped shake and glow whose intensity rises over the charging */
+    /**
+     * 2. The main copy charges: a looped shake and glow whose intensity rises over the charging.
+     *    Each loop is ONE native timing of a single value (no sequence): it runs on the native driver
+     *    for as long as the charge lasts, whatever the JS thread does.
+     */
     PlayCharging = () => {
         TimingAnimation(this.animCharge, 1, CHARGING_MIN_MS, true).start();
         this.chargingLoop = Animated.parallel([
             Animated.loop(
-                Animated.sequence([
-                    Animated.timing(this.animShake, { toValue: 1, duration: SHAKE_PERIOD_MS, useNativeDriver: true }),
-                    Animated.timing(this.animShake, { toValue: 0, duration: SHAKE_PERIOD_MS, useNativeDriver: true })
-                ])
+                Animated.timing(this.animShake, {
+                    toValue: 1,
+                    duration: SHAKE_PERIOD_MS * 2,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                })
             ),
             Animated.loop(
-                Animated.sequence([TimingAnimation(this.animGlow, 1, 500), TimingAnimation(this.animGlow, 0, 500)])
+                Animated.timing(this.animGlow, {
+                    toValue: 1,
+                    duration: 1000,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                })
             )
         ]);
         this.chargingLoop.start();
@@ -590,7 +598,7 @@ class BackTechnoForge extends PageBase {
         new Promise((resolve) => {
             Animated.sequence([
                 Animated.parallel([
-                    TimingAnimation(this.animGlow, 1, 120),
+                    TimingAnimation(this.animGlow, 0.5, 120),
                     Animated.timing(this.animCharge, {
                         toValue: 0,
                         duration: 420,

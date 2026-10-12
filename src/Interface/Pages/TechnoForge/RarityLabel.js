@@ -5,7 +5,7 @@ import styles from './style';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
 
-import { Text } from 'Interface/Components';
+import { Icon, Text } from 'Interface/Components';
 
 /** @typedef {import('@oxyfoo/gamelife-types/Global/Rarities').Rarities} Rarities */
 
@@ -26,9 +26,7 @@ function RarityLabel({ from, to = null, fontSize = 11 }) {
             </Text>
             {to !== null && (
                 <>
-                    <Text fontSize={fontSize} color='light'>
-                        {' → '}
-                    </Text>
+                    <Icon style={styles.rarityArrow} icon='arrow-up' angle={90} size={fontSize + 3} color='light' />
                     <Text style={{ color: themeManager.GetRariryColors(to)[0] }} fontSize={fontSize} bold>
                         {lang[to].toUpperCase()}
                     </Text>

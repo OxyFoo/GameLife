@@ -27,11 +27,12 @@ import { Button, Icon, Text } from 'Interface/Components';
  * @param {string} props.hint
  * @param {number | null} props.selectedID The copy currently in the slot
  * @param {number[]} props.excludedIDs Copies in the other slots of the forge
- * @param {number[]} props.lockedIDs Copies that can never go there (the equipped ones, for a catalyst)
+ * @param {number[]} props.lockedIDs Copies shown but not selectable (the equipped ones, for a catalyst)
+ * @param {number[]} props.hiddenIDs Copies not shown at all (wrong rarity, closed step, starter outfit)
  * @param {(stuffID: number) => void} props.onSelect
  * @param {() => void} props.onClear
  */
-function PickerPanel({ title, hint, selectedID, excludedIDs, lockedIDs, onSelect, onClear }) {
+function PickerPanel({ title, hint, selectedID, excludedIDs, lockedIDs, hiddenIDs, onSelect, onClear }) {
     const lang = langManager.curr['technoforge'];
     const langSlots = langManager.curr['shop']['targetedChests']['targets'];
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -39,9 +40,10 @@ function PickerPanel({ title, hint, selectedID, excludedIDs, lockedIDs, onSelect
     const body = user.avatar.GetBodyType();
     const bodyColor = user.avatar.GetBodyColorHex();
 
-    const sections = EQUIPMENT_SLOTS.map((slot) => ({ slot, stuffs: user.inventory.GetStuffsBySlot(slot) })).filter(
-        (section) => section.stuffs.length > 0
-    );
+    const sections = EQUIPMENT_SLOTS.map((slot) => ({
+        slot,
+        stuffs: user.inventory.GetStuffsBySlot(slot).filter((stuff) => !hiddenIDs.includes(stuff.ID))
+    })).filter((section) => section.stuffs.length > 0);
 
     /**
      * @param {Stuff} stuff

@@ -1065,7 +1065,6 @@
         "caption-empty": "Select the equipment to upgrade",
         "caption-need-catalyst": "Add at least one catalyst",
         "caption-ready": "Main item ready",
-        "caption-max-rarity": "Epic items cannot be upgraded yet",
         "phase-extracting": "Extracting the catalysts…",
         "phase-charging": "The item is charging…",
         "phase-success": "Upgrade successful!",

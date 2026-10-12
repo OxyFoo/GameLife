@@ -42,7 +42,8 @@ class TechnoForge extends BackTechnoForge {
 
         // The choreography: the slots fill, the path lights up, the main copy shakes and glows, then takes the verdict.
         // The shake is the looped wave scaled by the charge, which only ever eases: nothing snaps.
-        const wave = this.animShake.interpolate({ inputRange: [0, 0.5, 1], outputRange: [-1, 0, 1] });
+        const wave = this.animShake.interpolate({ inputRange: [0, 0.25, 0.5, 0.75, 1], outputRange: [0, 1, 0, -1, 0] });
+        const breath = this.animGlow.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 1, 0] });
         const shake = Animated.multiply(wave, this.animCharge);
         const styleMain = {
             transform: [
@@ -55,7 +56,7 @@ class TechnoForge extends BackTechnoForge {
         };
         const styleGlow = {
             borderColor: verdictColor ?? themeManager.GetColor('main3'),
-            opacity: Animated.multiply(this.animGlow, this.animCharge).interpolate({
+            opacity: Animated.multiply(breath, this.animCharge).interpolate({
                 inputRange: [0, 1],
                 outputRange: [0, 0.9]
             })
@@ -168,6 +169,7 @@ class TechnoForge extends BackTechnoForge {
                                 enabled={!forging}
                                 fill={this.animFills[0]}
                                 fillColor={liquidColor}
+                                labelBelow
                             />
                             <ForgeSlot
                                 size={CATALYST_SIZE}
@@ -177,6 +179,7 @@ class TechnoForge extends BackTechnoForge {
                                 enabled={!forging}
                                 fill={this.animFills[1]}
                                 fillColor={liquidColor}
+                                labelBelow
                             />
                         </Animated.View>
                     </View>

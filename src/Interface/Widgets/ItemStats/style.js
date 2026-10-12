@@ -35,6 +35,30 @@ const styles = StyleSheet.create({
     },
     label: {
         textAlign: 'left'
+    },
+
+    // The one-line ticker of the forge slots
+    ticker: {
+        height: 18,
+        overflow: 'hidden',
+        justifyContent: 'center'
+    },
+    tickerMask: {
+        flex: 1
+    },
+    tickerContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center'
+    },
+    // Scrolling: the line starts at the left edge and runs to the left
+    tickerScrolling: {
+        alignSelf: 'flex-start'
+    },
+    tickerLine: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4
     }
 });
 

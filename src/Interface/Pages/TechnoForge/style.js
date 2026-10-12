@@ -103,10 +103,16 @@ const styles = StyleSheet.create({
         gap: 4
     },
     slotName: {
-        maxWidth: '100%',
-        textAlign: 'center'
+        width: '100%',
+        textAlign: 'center',
+        lineHeight: 14,
+        includeFontPadding: false
     },
     slotLabel: {
+        textAlign: 'center'
+    },
+    slotLabelBelow: {
+        marginTop: 6,
         textAlign: 'center'
     },
     // The rarity step of the main slot, a pill over the top border
@@ -121,6 +127,9 @@ const styles = StyleSheet.create({
     rarityRow: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    rarityArrow: {
+        marginHorizontal: 4
     },
 
     // The chance card: the dark translucent panel of the raid card

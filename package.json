@@ -14,7 +14,7 @@
     "typecheck": "npx -p typescript tsc --noEmit --project jsconfig.typecheck.json",
     "ci": "npm run lint && npm run format && npm run typecheck && npm run test",
     "podi": "if [ \"$(uname)\" != \"Darwin\" ]; then echo 'Not macOS, aborting pod install' ; else cd ios ; pod deintegrate && rm -rf Podfile.lock Pods/ && pod install ; fi",
-    "postinstall": "node scripts/setup-config.js",
+    "postinstall": "node scripts/setup-config.js && node scripts/setup-avatars.js",
     "android": "npx react-native run-android",
     "android:release": "cd android && ./gradlew installRelease",
     "android:signing-report": "cd android && ./gradlew signingReport",

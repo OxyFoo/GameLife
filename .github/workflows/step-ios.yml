@@ -172,12 +172,14 @@ jobs:
 
       - name: 'Configure npm for GitHub Packages'
         run: |
-          # The @oxyfoo scope is already mapped to npm.pkg.github.com by the
-          # repository .npmrc; only the token is added here, and it goes to the
-          # user-level file so it never lands in the working tree.
+          # Token for the full avatar build (@oxyfoo/avatar-factory on GitHub Packages),
+          # fetched by scripts/setup-avatars.js during the install below.
+          # It goes to the user-level file so it never lands in the working tree.
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.CICD_PAT }}" >> ~/.npmrc
 
       - name: 'Install dependencies'
+        env:
+          GAMELIFE_AVATARS: full
         run: |
           npm install
           cd ios

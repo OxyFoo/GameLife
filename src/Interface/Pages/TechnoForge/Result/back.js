@@ -26,6 +26,7 @@ import { BODY_COLORS } from 'Interface/Pages/Profile/AvatarEditor/avatarConstant
  * @property {Rarities} fromRarity
  * @property {Rarities} toRarity The rarity aimed at, reached on success
  * @property {number} cost Ox paid for the attempt
+ * @property {boolean} [continuous] The copy is already on screen (the forge grew it towards here): no pop
  */
 
 const BackTechnoForgeResultProps = {
@@ -44,6 +45,7 @@ class BackTechnoForgeResult extends PageBase {
     state = {
         animGlobal: new Animated.Value(0.7),
         animItem: new Animated.Value(0),
+        animText: new Animated.Value(0),
         animInteractions: new Animated.Value(0),
 
         layoutFrame: {
@@ -83,6 +85,12 @@ class BackTechnoForgeResult extends PageBase {
         }
         this.outcome = args;
 
+        // Coming from the forge, the copy is already big on screen: it only settles, nothing pops
+        if (args.continuous === true) {
+            this.state.animGlobal.setValue(0.92);
+            this.state.animItem.setValue(1);
+        }
+
         const item = dataManager.items.GetByID(args.stuff.ItemID);
         if (item === null) {
             user.interface.console?.AddLog('error', `TechnoForgeResult: item not found (${args.stuff.ItemID})`);
@@ -105,6 +113,7 @@ class BackTechnoForgeResult extends PageBase {
     componentDidMount() {
         SpringAnimation(this.state.animGlobal, 1).start();
         SpringAnimation(this.state.animItem, 1).start();
+        SpringAnimation(this.state.animText, 1).start();
         this.timeout1 = setTimeout(() => {
             SpringAnimation(this.state.animInteractions, 1).start();
             this.buttonEnabled = true;

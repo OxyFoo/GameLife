@@ -15,12 +15,12 @@ import { WithInterpolation } from 'Utils/Animations';
 class TechnoForgeResult extends BackTechnoForgeResult {
     render() {
         const lang = langManager.curr['technoforge'];
-        const { layoutFrame, animItem, animInteractions, animGlobal } = this.state;
+        const { layoutFrame, animItem, animText, animInteractions, animGlobal } = this.state;
         const { success, fromRarity, toRarity, cost } = this.outcome;
 
         const styleText = {
-            opacity: animItem,
-            transform: [{ translateY: WithInterpolation(animItem, 20, 0) }]
+            opacity: animText,
+            transform: [{ translateY: WithInterpolation(animText, 20, 0) }]
         };
         const styleButtons = {
             opacity: animInteractions,

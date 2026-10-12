@@ -4,6 +4,8 @@ import { StyleSheet } from 'react-native';
 const MAIN_SIZE = 128;
 const CATALYST_SIZE = 96;
 const CATALYSTS_GAP = 24;
+/** Height of the vertical lines of the path (the branches under the bar, the stem above it) */
+const CONNECTOR_HEIGHT = 14;
 
 const styles = StyleSheet.create({
     page: {
@@ -22,26 +24,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 8
     },
-    caption: {
-        marginTop: 8,
+    // The main slot keeps a margin under it: the crash scales it up and the failure drops it, over nothing
+    mainSlot: {
         marginBottom: 12
     },
+    caption: {
+        marginTop: 4,
+        marginBottom: 12,
+        textAlign: 'center'
+    },
     connectors: {
-        width: CATALYST_SIZE + CATALYSTS_GAP,
         alignItems: 'center'
-    },
-    connectorVertical: {
-        width: 1.5,
-        height: 14
-    },
-    connectorHorizontal: {
-        width: CATALYST_SIZE + CATALYSTS_GAP,
-        height: 1.5
-    },
-    connectorBranches: {
-        width: CATALYST_SIZE + CATALYSTS_GAP,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
     },
     catalystsRow: {
         flexDirection: 'row',
@@ -50,6 +43,44 @@ const styles = StyleSheet.create({
     },
     slotWrapper: {
         alignItems: 'center'
+    },
+    // The liquid of a catalyst slot: clipped by the card, it rises from the bottom
+    slotFill: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        borderRadius: 20,
+        overflow: 'hidden'
+    },
+    slotLiquid: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
+    },
+    slotSurface: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: 2
+    },
+    // The glow of the charge and the flash of the new rarity: a border laid over the main slot
+    slotGlow: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderWidth: 2.5,
+        borderRadius: 20
+    },
+    // The step of the choreography, in the caption's box
+    phaseText: {
+        marginTop: 4,
+        marginBottom: 12,
+        textAlign: 'center'
     },
     slot: {
         width: 'auto',
@@ -188,5 +219,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export { MAIN_SIZE, CATALYST_SIZE };
+export { MAIN_SIZE, CATALYST_SIZE, CATALYSTS_GAP, CONNECTOR_HEIGHT };
 export default styles;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Animated, View } from 'react-native';
 import { AvatarCharacter, AvatarFrame } from '@oxyfoo/avatar-factory';
 
 import styles from './style';
@@ -30,11 +30,48 @@ import { ItemStats } from 'Interface/Widgets';
  * @param {() => void} props.onPress
  * @param {Rarities | null} [props.transitionTo] Main slot only: the rarity reached on success (null = top reached)
  * @param {boolean} [props.enabled]
+ * @param {Animated.Value} [props.fill] Catalyst slots: 0 → 1 fills the card from the bottom, like a liquid
+ * @param {string} [props.fillColor]
  * @param {StyleProp} [props.style]
  */
-function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, style }) {
+function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, fill, fillColor, style }) {
     const item = stuff === null ? null : dataManager.items.GetByID(stuff.ItemID);
     const sizeStyle = { width: size, height: size };
+
+    // The liquid: a full card scaled from its bottom, and its surface line riding on top of it
+    const liquid =
+        fill === undefined || fillColor === undefined ? null : (
+            <View style={[styles.slotFill, sizeStyle]} pointerEvents='none'>
+                <Animated.View
+                    style={[
+                        styles.slotLiquid,
+                        {
+                            backgroundColor: fillColor,
+                            opacity: fill.interpolate({ inputRange: [0, 0.05, 1], outputRange: [0, 0.35, 0.35] }),
+                            transform: [
+                                { translateY: fill.interpolate({ inputRange: [0, 1], outputRange: [size / 2, 0] }) },
+                                { scaleY: fill.interpolate({ inputRange: [0, 1], outputRange: [0.001, 1] }) }
+                            ]
+                        }
+                    ]}
+                />
+                <Animated.View
+                    style={[
+                        styles.slotSurface,
+                        {
+                            backgroundColor: fillColor,
+                            opacity: fill.interpolate({
+                                inputRange: [0, 0.05, 0.98, 1],
+                                outputRange: [0, 0.9, 0.9, 0]
+                            }),
+                            transform: [
+                                { translateY: fill.interpolate({ inputRange: [0, 1], outputRange: [size, 0] }) }
+                            ]
+                        }
+                    ]}
+                />
+            </View>
+        );
 
     if (stuff === null || item === null) {
         return (
@@ -106,6 +143,7 @@ function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, 
                     {label.toUpperCase()}
                 </Text>
             </Button>
+            {liquid}
             {transitionTo !== undefined && (
                 <View style={[styles.transition, { backgroundColor: themeManager.GetColor('background') }]}>
                     <RarityLabel from={stuff.Rarity} to={transitionTo} fontSize={9} />

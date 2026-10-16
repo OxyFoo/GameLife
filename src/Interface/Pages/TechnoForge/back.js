@@ -53,8 +53,8 @@ const EMPTY_LAYOUT = /** @type {LayoutRectangle} */ ({ x: 0, y: 0, width: 0, hei
 
 /**
  * The Techno-Forge: a main copy against 1 or 2 catalysts, the roll happens on the server
- * (Rules/TechnoForge, previewed here with the same numbers). Not kept mounted on purpose: every
- * visit starts with empty slots.
+ * (Rules/TechnoForge, previewed here with the same numbers). Not kept mounted: the slots of the
+ * last visit come back from the session's draft (`Inventory.forgeDraft`), an attempt empties them.
  */
 class BackTechnoForge extends PageBase {
     state = {
@@ -124,6 +124,16 @@ class BackTechnoForge extends PageBase {
 
     /** @type {Symbol | null} */
     listenerExperience = null;
+
+    /** @param {object} props */
+    constructor(props) {
+        super(props);
+
+        // The slots as they were left earlier in the session (a trip to the shop...)
+        const { mainID, catalystIDs } = this.RestoreDraft();
+        this.state.mainID = mainID;
+        this.state.catalystIDs = catalystIDs;
+    }
 
     componentDidMount() {
         this.listenerTcpStateChange = user.server2.tcp.state.AddListener(this.refreshOnlineState);
@@ -319,21 +329,56 @@ class BackTechnoForge extends PageBase {
             // of another rarity than the new main copy leave theirs
             const main = stuffID === null ? null : user.inventory.GetStuffByID(stuffID);
             const locked = user.inventory.GetLockedCatalystIDs(main, user.avatar.GetEquipments());
-            this.setState({
-                mainID: stuffID,
-                catalystIDs: catalystIDs.map((ID) =>
-                    ID !== null && (ID === stuffID || locked.includes(ID)) ? null : ID
-                )
-            });
+            this.SetSlots(
+                stuffID,
+                catalystIDs.map((ID) => (ID !== null && (ID === stuffID || locked.includes(ID)) ? null : ID))
+            );
         } else {
             const next = [...catalystIDs];
             next[target] = stuffID;
-            this.setState({ catalystIDs: next, mainID: mainID !== null && mainID === stuffID ? null : mainID });
+            this.SetSlots(mainID !== null && mainID === stuffID ? null : mainID, next);
         }
         user.interface.bottomPanel?.Close();
     };
 
-    ResetSlots = () => this.setState({ mainID: null, catalystIDs: [null, null] });
+    /**
+     * Fills the slots and keeps them for the rest of the session (`Inventory.forgeDraft`).
+     * No catalyst without a main copy: removing it empties the catalyst slots too.
+     * @param {number | null} mainID
+     * @param {(number | null)[]} catalystIDs
+     */
+    SetSlots = (mainID, catalystIDs) => {
+        if (mainID === null) {
+            user.inventory.forgeDraft = null;
+            this.setState({ mainID: null, catalystIDs: catalystIDs.map(() => null) });
+            return;
+        }
+        user.inventory.forgeDraft = { mainID, catalystIDs };
+        this.setState({ mainID, catalystIDs });
+    };
+
+    ResetSlots = () => this.SetSlots(null, [null, null]);
+
+    /**
+     * The slots of the session's draft, without what changed since: a copy gone (sold, forged on
+     * another device), a main copy the forge cannot raise anymore, a catalyst equipped meanwhile
+     * @returns {{ mainID: number | null, catalystIDs: (number | null)[] }}
+     */
+    RestoreDraft = () => {
+        const draft = user.inventory.forgeDraft;
+        const main = draft === null ? null : user.inventory.GetStuffByID(draft.mainID);
+        if (draft === null || main === null || !IsForgeOpen(main.Rarity)) {
+            user.inventory.forgeDraft = null;
+            return { mainID: null, catalystIDs: [null, null] };
+        }
+
+        const locked = user.inventory.GetLockedCatalystIDs(main, user.avatar.GetEquipments());
+        const catalystIDs = draft.catalystIDs.map((ID) =>
+            ID === null || ID === main.ID || locked.includes(ID) || user.inventory.GetStuffByID(ID) === null ? null : ID
+        );
+        user.inventory.forgeDraft = { mainID: main.ID, catalystIDs };
+        return { mainID: main.ID, catalystIDs };
+    };
 
     OpenInfo = () => {
         const lang = langManager.curr['technoforge'];
@@ -427,6 +472,8 @@ class BackTechnoForge extends PageBase {
         if (this.state.forging) {
             return;
         }
+        // Whatever the outcome, the next visit starts with empty slots
+        user.inventory.forgeDraft = null;
         this.frozenSlots = { main, catalysts: this.GetCatalysts() };
         this.setState({ forging: true, phase: 'extracting' });
         user.interface.AddCustomBackHandler(this.blockBack);

@@ -15,6 +15,10 @@ import { IsCatalystCompatible, IsForgeOpen } from '@oxyfoo/gamelife-types/Rules/
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').SaveObject_Inventory} SaveObject_Inventory
  *
  * @typedef {{ result: 'ok', success: boolean, chance: number, cost: number, stuff: Stuff } | { result: Exclude<ServerRequestForgeStuff['result'], 'ok'> }} ForgeOutcome
+ *
+ * @typedef {object} ForgeDraft The slots of the Techno-Forge as the user left them
+ * @property {number} mainID
+ * @property {(number | null)[]} catalystIDs One entry per catalyst slot
  */
 
 /** @extends {IUserData<SaveObject_Inventory>} */
@@ -38,11 +42,19 @@ class Inventory extends IUserData {
      */
     stuffs = [];
 
+    /**
+     * @description The slots of the Techno-Forge as the user left them: a trip to the shop finds
+     * them filled. Session only (never saved), dropped by an attempt whatever its outcome
+     * @type {ForgeDraft | null}
+     */
+    forgeDraft = null;
+
     #token = 0;
 
     Clear = () => {
         this.stuffs = [];
         this.titleIDs.Set([]);
+        this.forgeDraft = null;
         this.#token = 0;
     };
 

@@ -299,9 +299,10 @@ class Inventory extends IUserData {
             return { result: 'error' };
         }
 
+        // The chance is the server's: a gap with the app's preview means the two run different rules
         this.user.interface.console?.AddLog(
             'info',
-            `[Inventory] Forge ${success ? 'succeeded' : 'failed'} (${stuffID})`
+            `[Inventory] Forge ${success ? 'succeeded' : 'failed'} (${stuffID}, chance ${Math.round((response.chance ?? 0) * 100)} %)`
         );
         return { result: 'ok', success, chance: response.chance ?? 0, cost: response.cost ?? 0, stuff: main };
     };

@@ -16,7 +16,7 @@ import { IsCatalystCompatible, IsForgeOpen } from '@oxyfoo/gamelife-types/Rules/
  *
  * @typedef {{ result: 'ok', success: boolean, chance: number, cost: number, stuff: Stuff } | { result: Exclude<ServerRequestForgeStuff['result'], 'ok'> }} ForgeOutcome
  *
- * @typedef {object} ForgeDraft The slots of the Techno-Forge as the user left them
+ * @typedef {object} ForgeDraft The slots of the Techno-Forge while the user is away in the shop
  * @property {number} mainID
  * @property {(number | null)[]} catalystIDs One entry per catalyst slot
  */
@@ -43,8 +43,9 @@ class Inventory extends IUserData {
     stuffs = [];
 
     /**
-     * @description The slots of the Techno-Forge as the user left them: a trip to the shop finds
-     * them filled. Session only (never saved), dropped by an attempt whatever its outcome
+     * @description The slots of the Techno-Forge during a trip to the shop, and only then: written
+     * when the forge opens the shop, consumed by the next mount of the forge, dropped by the shop
+     * when it leads anywhere else. In memory only, never saved: a relaunch starts empty
      * @type {ForgeDraft | null}
      */
     forgeDraft = null;

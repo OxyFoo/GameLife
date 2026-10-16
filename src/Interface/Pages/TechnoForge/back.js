@@ -53,8 +53,8 @@ const EMPTY_LAYOUT = /** @type {LayoutRectangle} */ ({ x: 0, y: 0, width: 0, hei
 
 /**
  * The Techno-Forge: a main copy, alone or with 1 or 2 catalysts, the roll happens on the server
- * (Rules/TechnoForge, previewed here with the same numbers). Not kept mounted: the slots of the
- * last visit come back from the session's draft (`Inventory.forgeDraft`), an attempt empties them.
+ * (Rules/TechnoForge, previewed here with the same numbers). Not kept mounted: every visit starts
+ * with empty slots, except the return from the shop (`Inventory.forgeDraft`, written on the way out).
  */
 class BackTechnoForge extends PageBase {
     state = {
@@ -129,7 +129,7 @@ class BackTechnoForge extends PageBase {
     constructor(props) {
         super(props);
 
-        // The slots as they were left earlier in the session (a trip to the shop...)
+        // The slots as they were left for the shop, if that is where we come from
         const { mainID, catalystIDs } = this.RestoreDraft();
         this.state.mainID = mainID;
         this.state.catalystIDs = catalystIDs;
@@ -170,8 +170,11 @@ class BackTechnoForge extends PageBase {
 
     onExperienceChange = () => this.forceUpdate();
 
+    /** The only way out that keeps the slots: they come back with the user (the shop drops them otherwise) */
     openShop = () => {
+        const { mainID, catalystIDs } = this.state;
         if (!this.state.forging) {
+            user.inventory.forgeDraft = mainID === null ? null : { mainID, catalystIDs };
             user.interface.ChangePage('shop');
         }
     };
@@ -333,33 +336,27 @@ class BackTechnoForge extends PageBase {
     };
 
     /**
-     * Fills the slots and keeps them for the rest of the session (`Inventory.forgeDraft`).
-     * No catalyst without a main copy: removing it empties the catalyst slots too.
+     * No catalyst without a main copy: removing it empties the catalyst slots too
      * @param {number | null} mainID
      * @param {(number | null)[]} catalystIDs
      */
     SetSlots = (mainID, catalystIDs) => {
-        if (mainID === null) {
-            user.inventory.forgeDraft = null;
-            this.setState({ mainID: null, catalystIDs: catalystIDs.map(() => null) });
-            return;
-        }
-        user.inventory.forgeDraft = { mainID, catalystIDs };
-        this.setState({ mainID, catalystIDs });
+        this.setState({ mainID, catalystIDs: mainID === null ? catalystIDs.map(() => null) : catalystIDs });
     };
 
     ResetSlots = () => this.SetSlots(null, [null, null]);
 
     /**
-     * The slots of the session's draft, without what changed since: a copy gone (sold, forged on
-     * another device), a main copy the forge cannot raise anymore, a catalyst equipped meanwhile
+     * The slots left for the shop, consumed here (one return, one restore), without what changed
+     * meanwhile: a copy gone (sold, forged on another device), a main copy the forge cannot raise
+     * anymore, a catalyst equipped since
      * @returns {{ mainID: number | null, catalystIDs: (number | null)[] }}
      */
     RestoreDraft = () => {
         const draft = user.inventory.forgeDraft;
+        user.inventory.forgeDraft = null;
         const main = draft === null ? null : user.inventory.GetStuffByID(draft.mainID);
         if (draft === null || main === null || !IsForgeOpen(main.Rarity)) {
-            user.inventory.forgeDraft = null;
             return { mainID: null, catalystIDs: [null, null] };
         }
 
@@ -367,7 +364,6 @@ class BackTechnoForge extends PageBase {
         const catalystIDs = draft.catalystIDs.map((ID) =>
             ID === null || ID === main.ID || locked.includes(ID) || user.inventory.GetStuffByID(ID) === null ? null : ID
         );
-        user.inventory.forgeDraft = { mainID: main.ID, catalystIDs };
         return { mainID: main.ID, catalystIDs };
     };
 
@@ -465,8 +461,6 @@ class BackTechnoForge extends PageBase {
         if (this.state.forging) {
             return;
         }
-        // Whatever the outcome, the next visit starts with empty slots
-        user.inventory.forgeDraft = null;
         this.frozenSlots = { main, catalysts: this.GetCatalysts() };
         this.setState({ forging: true, phase: catalystIDs.length > 0 ? 'extracting' : 'charging' });
         user.interface.AddCustomBackHandler(this.blockBack);

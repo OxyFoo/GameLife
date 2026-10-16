@@ -231,6 +231,7 @@ class ShopHeader extends React.Component {
                 <Button
                     style={styles.forgeButton}
                     fontSize={14}
+                    icon='anvil'
                     enabled={user.server2.IsAuthenticated()}
                     onPress={this.openForge}
                 >

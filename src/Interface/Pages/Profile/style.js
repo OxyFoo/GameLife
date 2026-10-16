@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 1
     },
-    // Fills the screen so the avatar has its room, and keeps the last stat clear of the pinned button
+    // Fills the screen so the avatar has its room, and keeps the last stat clear of the pinned buttons
     scrollContent: {
         flexGrow: 1,
-        paddingBottom: 96
+        paddingBottom: 160
     },
     header: {
         paddingHorizontal: 24
@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 24,
         right: 24,
-        bottom: 24
+        bottom: 24,
+        gap: 12
     }
 });
 

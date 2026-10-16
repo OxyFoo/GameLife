@@ -74,6 +74,10 @@ class BackProfile extends PageBase {
         user.interface.ChangePage('settings');
     };
 
+    openTechnoForge = () => {
+        user.interface.ChangePage('technoforge');
+    };
+
     onBack = () => {
         user.interface.BackHandle();
     };

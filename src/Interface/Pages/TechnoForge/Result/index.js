@@ -122,7 +122,7 @@ class TechnoForgeResult extends BackTechnoForgeResult {
                     <Button color='main1' onPress={this.onViewItem}>
                         {lang['result-button-view']}
                     </Button>
-                    <Button appearance='outline' onPress={this.onBackToForge}>
+                    <Button appearance='outline' icon='anvil' onPress={this.onBackToForge}>
                         {lang['result-button-back']}
                     </Button>
                 </Animated.View>

@@ -25,6 +25,8 @@ class TechnoForge extends BackTechnoForge {
 
         const main = this.GetMain();
         const catalysts = this.GetCatalysts();
+        // A catalyst only makes sense against a main copy: greyed out and empty until one is chosen
+        const catalystsLocked = main === null;
         const catalystCount = this.GetCatalystIDs().length;
         const cost = this.GetCost() ?? 0;
         const chance = Math.round(this.GetChance() * 100);
@@ -68,7 +70,7 @@ class TechnoForge extends BackTechnoForge {
 
         // Under the chance bar: how the number is made
         const base = FORGE_BASE_CHANCE[Math.max(1, catalystCount)];
-        let chanceCaption = lang['chance-caption-1'];
+        let chanceCaption = lang[main === null ? 'chance-caption-empty' : 'chance-caption-1'];
         if (catalystCount > 0) {
             const key = base + dexBonus > 100 ? 'chance-caption-capped' : 'chance-caption-detail';
             chanceCaption = lang[key].replace('{}', base.toString()).replace('{}', dexBonus.toString());
@@ -166,7 +168,8 @@ class TechnoForge extends BackTechnoForge {
                                 label={lang['slot-catalyst'].replace('{}', '1')}
                                 stuff={catalysts[0]}
                                 onPress={() => this.OpenPicker(0)}
-                                enabled={!forging}
+                                enabled={!forging && !catalystsLocked}
+                                locked={catalystsLocked}
                                 fill={this.animFills[0]}
                                 fillColor={liquidColor}
                                 labelBelow
@@ -176,7 +179,8 @@ class TechnoForge extends BackTechnoForge {
                                 label={lang['slot-catalyst'].replace('{}', '2')}
                                 stuff={catalysts[1]}
                                 onPress={() => this.OpenPicker(1)}
-                                enabled={!forging}
+                                enabled={!forging && !catalystsLocked}
+                                locked={catalystsLocked}
                                 fill={this.animFills[1]}
                                 fillColor={liquidColor}
                                 labelBelow

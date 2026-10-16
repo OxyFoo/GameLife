@@ -181,10 +181,13 @@ class BackTechnoForge extends PageBase {
         return this.state.mainID === null ? null : user.inventory.GetStuffByID(this.state.mainID);
     };
 
-    /** @returns {(Stuff | null)[]} One entry per catalyst slot */
+    /** @returns {(Stuff | null)[]} One entry per catalyst slot, all empty without a main copy */
     GetCatalysts = () => {
         if (this.frozenSlots !== null) {
             return this.frozenSlots.catalysts;
+        }
+        if (this.GetMain() === null) {
+            return this.state.catalystIDs.map(() => null);
         }
         return this.state.catalystIDs.map((ID) => (ID === null ? null : user.inventory.GetStuffByID(ID)));
     };
@@ -217,8 +220,14 @@ class BackTechnoForge extends PageBase {
         return IsForgeOpen(rarity) ? ForgeCost(rarity) : null;
     };
 
-    /** @returns {number} Chance as a fraction; without catalyst, the base rate of one catalyst alone */
+    /**
+     * @returns {number} Chance as a fraction: none without a main copy; without catalyst, the base
+     * rate of one catalyst alone
+     */
     GetChance = () => {
+        if (this.GetMain() === null) {
+            return 0;
+        }
         const catalysts = this.GetCatalystIDs().length;
         return catalysts === 0 ? FORGE_BASE_CHANCE[1] / 100 : ForgeChance(catalysts, this.GetDexterity());
     };
@@ -257,6 +266,11 @@ class BackTechnoForge extends PageBase {
     OpenPicker = (target) => {
         const lang = langManager.curr['technoforge'];
         const { mainID, catalystIDs } = this.state;
+
+        // A catalyst only makes sense against a main copy: its slots stay locked until then
+        if (target !== 'main' && this.GetMain() === null) {
+            return;
+        }
 
         // The other slots cannot hold the same copy; a catalyst can never be an equipped copy
         /** @type {(number | null)[]} */

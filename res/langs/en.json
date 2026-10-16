@@ -1072,6 +1072,7 @@
         "phase-failure": "The forge failed…",
         "chance-title": "Success chance",
         "chance-max": "MAX",
+        "chance-caption-empty": "Waiting for the main item",
         "chance-caption-1": "Base rate for 1 catalyst",
         "chance-caption-detail": "{}% catalysts + {}% Dexterity bonus",
         "chance-caption-capped": "Capped ({}% catalysts + {}% Dexterity bonus)",

@@ -1072,6 +1072,7 @@
         "phase-failure": "La forge a échoué…",
         "chance-title": "Probabilité de succès",
         "chance-max": "MAX",
+        "chance-caption-empty": "En attente de l'objet principal",
         "chance-caption-1": "Taux de base pour 1 catalyseur",
         "chance-caption-detail": "{} % catalyseurs + {} % bonus Dextérité",
         "chance-caption-capped": "Plafonné ({} % catalyseurs + {} % bonus Dextérité)",

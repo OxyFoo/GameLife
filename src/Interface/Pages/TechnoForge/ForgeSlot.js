@@ -30,12 +30,25 @@ import { ItemStatsTicker } from 'Interface/Widgets';
  * @param {() => void} props.onPress
  * @param {Rarities | null} [props.transitionTo] Main slot only: the rarity reached on success (null = top reached)
  * @param {boolean} [props.enabled]
+ * @param {boolean} [props.locked] Catalyst slots without a main copy: empty and greyed out, nothing to pick yet
  * @param {Animated.Value} [props.fill] Catalyst slots: 0 → 1 fills the card from the bottom, like a liquid
  * @param {string} [props.fillColor]
  * @param {boolean} [props.labelBelow] Once filled, the label goes under the card (the main slot has its caption there)
  * @param {StyleProp} [props.style]
  */
-function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, fill, fillColor, labelBelow, style }) {
+function ForgeSlot({
+    size,
+    label,
+    stuff,
+    onPress,
+    transitionTo,
+    enabled = true,
+    locked = false,
+    fill,
+    fillColor,
+    labelBelow,
+    style
+}) {
     const item = stuff === null ? null : dataManager.items.GetByID(stuff.ItemID);
     const sizeStyle = { width: size, height: size };
     // Inside the border and the padding of the card
@@ -76,7 +89,7 @@ function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, 
             </View>
         );
 
-    if (stuff === null || item === null) {
+    if (locked || stuff === null || item === null) {
         return (
             <View style={[styles.slotWrapper, style]}>
                 <Button
@@ -84,17 +97,17 @@ function ForgeSlot({ size, label, stuff, onPress, transitionTo, enabled = true, 
                         styles.slot,
                         styles.slotEmpty,
                         sizeStyle,
-                        { borderColor: themeManager.GetColor('main1', { opacity: 0.7 }) }
+                        { borderColor: themeManager.GetColor(locked ? 'disabled' : 'main1', { opacity: 0.7 }) }
                     ]}
                     styleContent={styles.slotContent}
                     appearance='uniform'
                     color='transparent'
                     rippleColor='main2'
-                    enabled={enabled}
+                    enabled={enabled && !locked}
                     onPress={onPress}
                 >
-                    <Icon icon='add' size={28} color='main1' />
-                    <Text style={styles.slotLabel} fontSize={10} color='light'>
+                    <Icon icon='add' size={28} color={locked ? 'disabled' : 'main1'} />
+                    <Text style={styles.slotLabel} fontSize={10} color={locked ? 'disabled' : 'light'}>
                         {label.toUpperCase()}
                     </Text>
                 </Button>

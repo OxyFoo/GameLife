@@ -291,8 +291,9 @@ sans dépendance ni état, et les deux projets importent ce module.
   le bonus lui-même (inscription aux raids, stats des amis, dextérité de la forge). Un item de la **tenue de
   départ** (`Item.Starter`, les quatre `*_00`) a toujours la plage `[0; 0]` (`RangeForRarity`), à toute rareté :
   ses exemplaires n'ont jamais de stats, même montés à la forge.
-- `@oxyfoo/gamelife-types/Rules/TechnoForge` — une tentative : objet principal + 1 ou 2 catalyseurs (jamais
-  équipés), chance 30 % / 60 % + dextérité jusqu'à 30 % à 10 000 points (même plafond que les raids), plafond 100 % (`ForgeChance`), coût par
+- `@oxyfoo/gamelife-types/Rules/TechnoForge` — une tentative : objet principal seul ou avec 1 ou 2 catalyseurs
+  (jamais équipés), chance 30 % seul / 60 % / 90 % + dextérité jusqu'à 30 % à 10 000 points (même plafond que les
+  raids), plafond 100 % (`ForgeChance`), coût par
   rareté de départ 30 / 60 / 120 (`ForgeCost`), étape ouverte (`IsForgeOpen`, epic → legendary fermée pour
   l'instant). Les catalyseurs sont consommés à chaque tentative, l'objet principal garde son ID (il reste équipé).
   Un catalyseur a la rareté de l'objet principal (`IsCatalystCompatible`) et n'est jamais de la tenue de départ ;

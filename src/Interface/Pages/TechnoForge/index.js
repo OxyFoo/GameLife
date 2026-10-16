@@ -68,10 +68,10 @@ class TechnoForge extends BackTechnoForge {
         const styleFade = { opacity: this.animFade.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) };
         const particlesAt = { left: layoutMain.x + layoutMain.width / 2, top: layoutMain.y + layoutMain.height / 2 };
 
-        // Under the chance bar: how the number is made
-        const base = FORGE_BASE_CHANCE[Math.max(1, catalystCount)];
-        let chanceCaption = lang[main === null ? 'chance-caption-empty' : 'chance-caption-1'];
-        if (catalystCount > 0) {
+        // Under the chance bar: how the number is made (the base counts the main copy and its catalysts)
+        let chanceCaption = lang['chance-caption-empty'];
+        if (main !== null) {
+            const base = FORGE_BASE_CHANCE[catalystCount];
             const key = base + dexBonus > 100 ? 'chance-caption-capped' : 'chance-caption-detail';
             chanceCaption = lang[key].replace('{}', base.toString()).replace('{}', dexBonus.toString());
         }

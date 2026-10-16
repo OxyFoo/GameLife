@@ -28,7 +28,7 @@ import {
  * @typedef {import('react-native').LayoutRectangle} LayoutRectangle
  *
  * @typedef {'main' | 0 | 1} PickerTarget The main slot, or the index of a catalyst slot
- * @typedef {'caption-empty' | 'caption-need-catalyst'} ForgeBlocker
+ * @typedef {'caption-empty'} ForgeBlocker
  * @typedef {'idle' | 'extracting' | 'charging' | 'success' | 'failure'} ForgePhase The choreography of an attempt
  */
 
@@ -52,7 +52,7 @@ const FAILURE_HOLD_MS = 1100;
 const EMPTY_LAYOUT = /** @type {LayoutRectangle} */ ({ x: 0, y: 0, width: 0, height: 0 });
 
 /**
- * The Techno-Forge: a main copy against 1 or 2 catalysts, the roll happens on the server
+ * The Techno-Forge: a main copy, alone or with 1 or 2 catalysts, the roll happens on the server
  * (Rules/TechnoForge, previewed here with the same numbers). Not kept mounted: the slots of the
  * last visit come back from the session's draft (`Inventory.forgeDraft`), an attempt empties them.
  */
@@ -230,32 +230,19 @@ class BackTechnoForge extends PageBase {
         return IsForgeOpen(rarity) ? ForgeCost(rarity) : null;
     };
 
-    /**
-     * @returns {number} Chance as a fraction: none without a main copy; without catalyst, the base
-     * rate of one catalyst alone
-     */
+    /** @returns {number} Chance as a fraction; none without a main copy */
     GetChance = () => {
         if (this.GetMain() === null) {
             return 0;
         }
-        const catalysts = this.GetCatalystIDs().length;
-        return catalysts === 0 ? FORGE_BASE_CHANCE[1] / 100 : ForgeChance(catalysts, this.GetDexterity());
+        return ForgeChance(this.GetCatalystIDs().length, this.GetDexterity());
     };
 
     /** @returns {number} Dexterity bonus as a fraction */
     GetDexBonus = () => ForgeDexBonus(this.GetDexterity());
 
-    /** @returns {ForgeBlocker | null} Why the forge cannot start yet, null when it can */
-    GetBlocker = () => {
-        const main = this.GetMain();
-        if (main === null) {
-            return 'caption-empty';
-        }
-        if (this.GetCatalystIDs().length === 0) {
-            return 'caption-need-catalyst';
-        }
-        return null;
-    };
+    /** @returns {ForgeBlocker | null} Why the forge cannot start yet, null when it can (a main copy is enough) */
+    GetBlocker = () => (this.GetMain() === null ? 'caption-empty' : null);
 
     CanForge = () => {
         const cost = this.GetCost();
@@ -394,6 +381,7 @@ class BackTechnoForge extends PageBase {
             data: {
                 title: lang['info-title'],
                 message: lang['info-message']
+                    .replace('{}', FORGE_BASE_CHANCE[0].toString())
                     .replace('{}', FORGE_BASE_CHANCE[1].toString())
                     .replace('{}', FORGE_BASE_CHANCE[2].toString())
                     .replace('{}', FORGE_DEX_BONUS_MAX.toString())
@@ -429,7 +417,6 @@ class BackTechnoForge extends PageBase {
             target === null ||
             cost === null ||
             !IsForgeOpen(main.Rarity) ||
-            catalystIDs.length === 0 ||
             catalystIDs.some((ID) => ID === main.ID || locked.includes(ID))
         ) {
             user.interface.popup?.OpenT({
@@ -447,11 +434,13 @@ class BackTechnoForge extends PageBase {
             return;
         }
 
+        // Nothing is consumed without a catalyst: the warning would be out of place
+        const confirmKey = catalystIDs.length === 0 ? 'alert-confirm-message-alone' : 'alert-confirm-message';
         user.interface.popup?.OpenT({
             type: 'yesno',
             data: {
                 title: lang['alert-confirm-title'],
-                message: lang['alert-confirm-message'].replace('{}', cost.toString())
+                message: lang[confirmKey].replace('{}', cost.toString())
             },
             callback: (button) => {
                 if (button === 'yes') {
@@ -462,9 +451,9 @@ class BackTechnoForge extends PageBase {
     };
 
     /**
-     * The attempt and its choreography run together: the catalysts fly into the main copy, which
-     * charges (shakes, glows) until the server has answered and the charge has lasted its minimum,
-     * then the verdict plays on the forge before the result screen takes over.
+     * The attempt and its choreography run together: the catalysts, if any, fly into the main copy,
+     * which charges (shakes, glows) until the server has answered and the charge has lasted its
+     * minimum, then the verdict plays on the forge before the result screen takes over.
      * @param {Stuff} main
      * @param {number[]} catalystIDs
      * @param {Rarities} target
@@ -479,15 +468,18 @@ class BackTechnoForge extends PageBase {
         // Whatever the outcome, the next visit starts with empty slots
         user.inventory.forgeDraft = null;
         this.frozenSlots = { main, catalysts: this.GetCatalysts() };
-        this.setState({ forging: true, phase: 'extracting' });
+        this.setState({ forging: true, phase: catalystIDs.length > 0 ? 'extracting' : 'charging' });
         user.interface.AddCustomBackHandler(this.blockBack);
 
         /** @type {import('Data/User/Inventory').ForgeOutcome} */
         let outcome;
         try {
             const request = user.inventory.ForgeStuff(main.ID, catalystIDs);
-            await this.PlayExtraction(catalystIDs.length);
-            this.setState({ phase: 'charging' });
+            // Alone, the main copy charges at once: nothing to extract, the path stays dark
+            if (catalystIDs.length > 0) {
+                await this.PlayExtraction(catalystIDs.length);
+                this.setState({ phase: 'charging' });
+            }
             this.PlayCharging();
             [outcome] = await Promise.all([request, Sleep(CHARGING_MIN_MS)]);
         } finally {

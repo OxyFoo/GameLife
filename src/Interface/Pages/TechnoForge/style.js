@@ -8,6 +8,7 @@ const CATALYSTS_GAP = 24;
 const CONNECTOR_HEIGHT = 14;
 
 const styles = StyleSheet.create({
+    // The content scrolls above the forge button, which keeps its own room under it
     page: {
         flex: 1
     },
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
     },
     content: {
         paddingHorizontal: 24,
-        paddingBottom: 120
+        paddingBottom: 16
     },
 
     // The slots
@@ -209,12 +210,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0
     },
 
-    // Pinned like the edit button of the profile
+    // Under the scroll, never over the content: at the bottom of a tall screen, fixed on a short one
     forgeButtonView: {
-        position: 'absolute',
-        left: 24,
-        right: 24,
-        bottom: 24
+        paddingHorizontal: 24,
+        paddingTop: 8,
+        paddingBottom: 24
     },
 
     noInternetContainer: {

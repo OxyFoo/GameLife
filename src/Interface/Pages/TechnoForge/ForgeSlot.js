@@ -28,6 +28,7 @@ import { ItemStatsTicker } from 'Interface/Widgets';
  * @param {string} props.label
  * @param {Stuff | null} props.stuff
  * @param {() => void} props.onPress
+ * @param {() => void} [props.onLongPress] Filled slot only: empties it (the long press of the app)
  * @param {Rarities | null} [props.transitionTo] Main slot only: the rarity reached on success (null = top reached)
  * @param {boolean} [props.enabled]
  * @param {boolean} [props.locked] Catalyst slots without a main copy: empty and greyed out, nothing to pick yet
@@ -41,6 +42,7 @@ function ForgeSlot({
     label,
     stuff,
     onPress,
+    onLongPress,
     transitionTo,
     enabled = true,
     locked = false,
@@ -140,6 +142,7 @@ function ForgeSlot({
                 rippleColor='main2'
                 enabled={enabled}
                 onPress={onPress}
+                onLongPress={onLongPress}
             >
                 <AvatarFrame width={frameSize} height={frameSize} backgroundColor='#00000000'>
                     <AvatarCharacter

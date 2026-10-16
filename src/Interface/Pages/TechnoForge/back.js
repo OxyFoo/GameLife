@@ -319,6 +319,7 @@ class BackTechnoForge extends PageBase {
     };
 
     /**
+     * From the picker (chosen or removed) or a long press on a filled slot (removed)
      * @param {PickerTarget} target
      * @param {number | null} stuffID
      */
@@ -338,7 +339,10 @@ class BackTechnoForge extends PageBase {
             next[target] = stuffID;
             this.SetSlots(mainID !== null && mainID === stuffID ? null : mainID, next);
         }
-        user.interface.bottomPanel?.Close();
+        // Nothing to close after a long press
+        if (user.interface.bottomPanel?.IsOpened()) {
+            user.interface.bottomPanel.Close();
+        }
     };
 
     /**

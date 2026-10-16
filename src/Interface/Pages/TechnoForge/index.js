@@ -123,6 +123,7 @@ class TechnoForge extends BackTechnoForge {
                                         : targetRarity
                                 }
                                 onPress={() => this.OpenPicker('main')}
+                                onLongPress={() => this.SetSlot('main', null)}
                                 enabled={!forging}
                             />
                             <Animated.View style={[styles.slotGlow, styleGlow]} pointerEvents='none' />
@@ -168,6 +169,7 @@ class TechnoForge extends BackTechnoForge {
                                 label={lang['slot-catalyst'].replace('{}', '1')}
                                 stuff={catalysts[0]}
                                 onPress={() => this.OpenPicker(0)}
+                                onLongPress={() => this.SetSlot(0, null)}
                                 enabled={!forging && !catalystsLocked}
                                 locked={catalystsLocked}
                                 fill={this.animFills[0]}
@@ -179,6 +181,7 @@ class TechnoForge extends BackTechnoForge {
                                 label={lang['slot-catalyst'].replace('{}', '2')}
                                 stuff={catalysts[1]}
                                 onPress={() => this.OpenPicker(1)}
+                                onLongPress={() => this.SetSlot(1, null)}
                                 enabled={!forging && !catalystsLocked}
                                 locked={catalystsLocked}
                                 fill={this.animFills[1]}

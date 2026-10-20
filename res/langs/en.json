@@ -1013,7 +1013,7 @@
         "input-search": "Search",
         "input-sort": "Sort by",
         "top-sort-list": [
-            "xp", "a-z", "date"
+            "xp", "a-z", "date", "streak"
         ],
         "text-empty": "Add an activity, the associated skills will appear here",
         "text-add": "Add an activiy"

@@ -4,6 +4,7 @@ import {
     GetTodayLocalDayIndex,
     GetSkillDayIndexes,
     ComputeStreaks,
+    ComputeAllSkillStreaks,
     ComputeRate,
     ComputeDailyMinutes,
     GetNiceMaxMinutes,
@@ -193,6 +194,41 @@ describe('[Data] skillFrequency', () => {
         });
     });
 
+    describe('ComputeAllSkillStreaks', () => {
+        it('should compute the streaks of every skill in one pass', () => {
+            const activities = [
+                at(DAY - 2, 8, 30, 1),
+                at(DAY - 1, 8, 30, 1),
+                at(DAY, 8, 30, 1),
+                at(DAY - 1, 9, 30, 2),
+                at(DAY + 1, 9, 30, 2)
+            ];
+            const streaks = ComputeAllSkillStreaks(activities, DAY);
+
+            expect(streaks.get(1)).toEqual({ current: 3, best: 3, doneToday: true });
+            expect(streaks.get(2)).toEqual({ current: 1, best: 1, doneToday: false });
+        });
+
+        it('should skip a skill whose activities are all in the future', () => {
+            expect(ComputeAllSkillStreaks([at(DAY + 1, 8, 30, 3)], DAY).has(3)).toBe(false);
+        });
+
+        it('should be empty without any activity', () => {
+            expect(ComputeAllSkillStreaks([], DAY).size).toBe(0);
+        });
+
+        it('should agree with ComputeSkillFrequency for each skill', () => {
+            const activities = [at(DAY - 5, 8, 30, 1), at(DAY - 4, 8, 30, 1), at(DAY - 1, 8, 30, 2), at(DAY, 8, 30, 2)];
+            const streaks = ComputeAllSkillStreaks(activities, DAY);
+
+            for (const skillID of [1, 2]) {
+                const ofSkill = activities.filter((activity) => activity.skillID === skillID);
+                const { currentStreak, bestStreak } = ComputeSkillFrequency(ofSkill, DAY, null);
+                expect(streaks.get(skillID)).toMatchObject({ current: currentStreak, best: bestStreak });
+            }
+        });
+    });
+
     describe('ComputeSkillFrequency', () => {
         it('should compose streaks, rate and daily minutes', () => {
             const activities = [at(DAY - 3, 8, 30), at(DAY - 1, 8, 30), at(DAY, 8, 30), at(DAY + 1, 8, 30)];
@@ -245,6 +281,15 @@ describe('[Data] skillFrequency', () => {
             expect([...frequency.dailyMinutes.values()]).toEqual([30, 30]);
 
             expect(activities.GetSkillFrequency(2, null)).toMatchObject({ currentStreak: 1, totalDays: 1 });
+        });
+
+        it('should give the streaks of every skill at once', () => {
+            activities.Load({ activities: [at(DAY - 1, 8, 30, 1), at(DAY, 8, 30, 1), at(DAY - 1, 9, 30, 2)] });
+
+            const streaks = activities.GetAllSkillStreaks();
+            expect(streaks.get(1)).toEqual({ current: 2, best: 2, doneToday: true });
+            expect(streaks.get(2)).toEqual({ current: 1, best: 1, doneToday: false });
+            expect(streaks.has(3)).toBe(false);
         });
     });
 });

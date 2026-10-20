@@ -1013,7 +1013,7 @@
         "input-search": "Rechercher",
         "input-sort": "Trier par",
         "top-sort-list": [
-            "exp", "a-z", "date"
+            "exp", "a-z", "date", "série"
         ],
         "text-empty": "Ajoute une activité, les compétences associées apparaîtront ici",
         "text-add": "Ajouter une activité"

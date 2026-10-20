@@ -10,6 +10,7 @@ import { Text, Icon, Button } from 'Interface/Components';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Data/User/Activities/skillFrequency').SkillStreakSummary} SkillStreakSummary
  */
 
 /**
@@ -19,11 +20,11 @@ import { Text, Icon, Button } from 'Interface/Components';
  * @param {React.RefObject<import('react-native').View | null>} [props.refParent] Ref of the root button (tutorial target)
  */
 function SkillsTags({ style, maxSkills = 4, refParent }) {
-    const [skills, setSkills] = React.useState(() => user.activities.GetLastSkills(maxSkills));
+    const [state, setState] = React.useState(() => getSkillsState(maxSkills));
 
     React.useEffect(() => {
         const listener = user.activities.allActivities.AddListener(() => {
-            setSkills(user.activities.GetLastSkills(maxSkills));
+            setState(getSkillsState(maxSkills));
         });
         return () => {
             user.activities.allActivities.RemoveListener(listener);
@@ -35,11 +36,13 @@ function SkillsTags({ style, maxSkills = 4, refParent }) {
     };
 
     const lang = langManager.curr['home'];
+    const { skills, streaks } = state;
 
     /** @param {EnrichedSkill} skill */
     const renderSkillCard = (skill) => {
         const category = dataManager.skills.GetCategoryByID(skill.CategoryID);
         const categoryLogoXML = category ? dataManager.skills.GetXmlByLogoID(category.LogoID) : skill.LogoXML;
+        const streak = streaks.get(skill.ID) ?? null;
 
         return (
             <View key={`skill-card-${skill.ID}`} style={styles.card}>
@@ -56,6 +59,7 @@ function SkillsTags({ style, maxSkills = 4, refParent }) {
                         // @ts-ignore
                         fontColor={category?.Color || 'main1'}
                     />
+                    {streak !== null && streak.current > 0 && renderStreakBadge(streak)}
                 </View>
 
                 <Text style={styles.cardText} fontSize={10} color='light' numberOfLines={2}>
@@ -92,6 +96,32 @@ function SkillsTags({ style, maxSkills = 4, refParent }) {
     );
 }
 
+/**
+ * Current streak of a skill, pinned to the corner of its card. Blue once today is done, pink while the
+ * day is still to do: the streak does not break yet, but it will at midnight.
+ * @param {SkillStreakSummary} streak
+ */
+function renderStreakBadge(streak) {
+    return (
+        <View style={[styles.badge, { backgroundColor: themeManager.GetColor(streak.doneToday ? 'main2' : 'main3') }]}>
+            <Text fontSize={11} color='ground1' bold>
+                {`${streak.current}`}
+            </Text>
+        </View>
+    );
+}
+
+/**
+ * @param {number} maxSkills Number of skills to keep
+ * @returns {{ skills: EnrichedSkill[], streaks: Map<number, SkillStreakSummary> }}
+ */
+function getSkillsState(maxSkills) {
+    return {
+        skills: user.activities.GetLastSkills(maxSkills),
+        streaks: user.activities.GetAllSkillStreaks()
+    };
+}
+
 const styles = StyleSheet.create({
     header: {
         width: '100%',
@@ -125,6 +155,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         borderRadius: 12,
         borderWidth: 0.6,
+        justifyContent: 'center'
+    },
+    // Overlaps the top right corner of the square, outside the Button so its overflow does not clip it
+    badge: {
+        position: 'absolute',
+        top: -6,
+        right: -6,
+        minWidth: 20,
+        height: 20,
+        paddingHorizontal: 6,
+        borderRadius: 10,
+        alignItems: 'center',
         justifyContent: 'center'
     },
     cardText: {

@@ -12,7 +12,7 @@ import { Text, IconCheckable, Icon } from 'Interface/Components';
 /**
  * @typedef {import('./index').default} SkillsPage
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/SkillCategories').SkillCategory} SkillCategory
- * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('./back').ListedSkill} ListedSkill
  */
 
 /**
@@ -47,11 +47,11 @@ function renderCategory(value, _index, _array) {
 
 /**
  * @this {SkillsPage}
- * @param {{item: EnrichedSkill}} item
+ * @param {{item: ListedSkill}} item
  * @returns {React.JSX.Element}
  */
 function renderSkill({ item }) {
-    const { ID, LogoXML, FullName, Experience } = item;
+    const { ID, LogoXML, FullName, Experience, Streak } = item;
 
     const xpLang = langManager.curr['level'];
     const { lvl } = Experience;
@@ -79,6 +79,16 @@ function renderSkill({ item }) {
                     </View>
 
                     <View style={styles.skillDetails}>
+                        {/* Current streak: blue once today is done, pink while the day is still to do */}
+                        {Streak.current > 0 && (
+                            <View style={styles.skillStreak}>
+                                <Icon icon='flame' size={16} color={Streak.doneToday ? 'main2' : 'main3'} />
+                                <Text style={styles.skillStreakText} color={Streak.doneToday ? 'main2' : 'main3'}>
+                                    {`${Streak.current}`}
+                                </Text>
+                            </View>
+                        )}
+
                         <Text style={styles.skillLvlText} color='main2'>
                             {text}
                         </Text>
@@ -130,6 +140,15 @@ const styles = StyleSheet.create({
     skillDetails: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    skillStreak: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 12,
+        gap: 2
+    },
+    skillStreakText: {
+        fontSize: 14
     },
     skillLvlText: {
         marginRight: 12,

@@ -29,7 +29,8 @@ const RaidSeasonDetails = ({ entry }) => {
     // A panel is a screen the navigation engine never reports; opening one is a page view.
     React.useEffect(() => DevEye.View(ANALYTICS_PATHS.RAID_SEASON), []);
 
-    const end = new Date(entry.endTime * 1000);
+    // The raid ended for the players when the boss fell, otherwise when the scoring closed
+    const end = new Date((entry.defeatedAt ?? entry.endTime) * 1000);
     const endText = `${end.getDate()} ${langManager.curr['dates']['months-min'][end.getMonth()]}`;
     const self = entry.self;
 

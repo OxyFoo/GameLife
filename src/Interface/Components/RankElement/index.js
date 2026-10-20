@@ -64,7 +64,7 @@ function RankElement({ item, isSelf = false, style }) {
                 angle={100}
             >
                 <View style={[styles.frameBorder, frameStyle]}>
-                    <AvatarFrame width={44} height={44} renderScale={2} backgroundColor='#00000000'>
+                    <AvatarFrame width={44} height={44} backgroundColor='#00000000'>
                         <AvatarCharacter
                             body={item.avatar.Skin || 'human_00'}
                             bodyColor={BODY_COLORS[item.avatar.SkinColor] || BODY_COLORS[0]}

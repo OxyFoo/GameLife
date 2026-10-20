@@ -224,6 +224,14 @@ class PageName extends PageBase {
 }
 ```
 
+### Aperçus d'avatar
+
+- **Qualité des previews** : aucun `<AvatarFrame>` ne reçoit de `renderScale` (la prop n'existe plus). La qualité
+  est `'auto'` par défaut dans `@oxyfoo/avatar-factory` : la lib déduit la résolution de rendu de la taille du cadre,
+  du zoom de l'`AvatarCharacter` et du nombre de cadres montés. Ne passer `quality` (`'low'`, `'medium'`, `'high'`
+  ou un nombre = render scale forcé) que pour forcer une qualité, ce qui doit rester exceptionnel. Jamais de formule
+  locale de qualité côté GameLife.
+
 ## Gestion des données
 
 ### Sauvegarde/Chargement

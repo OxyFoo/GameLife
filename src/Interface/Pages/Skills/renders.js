@@ -89,7 +89,7 @@ function renderSkill({ item }) {
                             </View>
                         )}
 
-                        <Text style={styles.skillLvlText} color='main2'>
+                        <Text style={styles.skillLvlText} color='main1'>
                             {text}
                         </Text>
 

@@ -26,14 +26,10 @@ const RAIDS = {
             background: require('./02_blaze/background_1.png')
         }
     ],
-    '03_pride': [
+    '03_les_quatres_bavures': [
         {
-            boss: require('./03_pride/phase_1.png'),
-            background: require('./03_pride/background_1.png')
-        },
-        {
-            boss: require('./03_pride/phase_2.png'),
-            background: require('./03_pride/background_1.png')
+            boss: require('./03_les_quatres_bavures/phase_1.png'),
+            background: require('./03_les_quatres_bavures/background_1.png')
         }
     ],
     '04_gluttony': [
@@ -44,6 +40,16 @@ const RAIDS = {
         {
             boss: require('./04_gluttony/phase_2.png'),
             background: require('./04_gluttony/background_1.png')
+        }
+    ],
+    '05_pride': [
+        {
+            boss: require('./05_pride/phase_1.png'),
+            background: require('./05_pride/background_1.png')
+        },
+        {
+            boss: require('./05_pride/phase_2.png'),
+            background: require('./05_pride/background_1.png')
         }
     ]
 };

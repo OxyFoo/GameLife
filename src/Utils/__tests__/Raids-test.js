@@ -1,4 +1,22 @@
-import { RaidPhaseIndex, RaidPhaseMarkers } from 'Utils/Raids';
+import { RaidDamageRatio, RaidPhaseIndex, RaidPhaseMarkers } from 'Utils/Raids';
+
+describe('RaidDamageRatio', () => {
+    test('follows the registry of the season while the boss stands', () => {
+        expect(RaidDamageRatio(0, false)).toBe(0);
+        expect(RaidDamageRatio(0.37, false)).toBe(0.37);
+    });
+
+    test('a defeated boss is fully damaged whatever the registry says', () => {
+        expect(RaidDamageRatio(1 - 1e-9, true)).toBe(1);
+        expect(RaidDamageRatio(0.9, true)).toBe(1);
+    });
+
+    test('out of range or unknown registry is clamped', () => {
+        expect(RaidDamageRatio(-0.1, false)).toBe(0);
+        expect(RaidDamageRatio(1.2, false)).toBe(1);
+        expect(RaidDamageRatio(NaN, false)).toBe(0);
+    });
+});
 
 describe('RaidPhaseIndex', () => {
     test('a single phase covers the whole life', () => {

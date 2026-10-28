@@ -15,7 +15,7 @@ import {
     RemainingHeal,
     SimulateParticipant
 } from '@oxyfoo/gamelife-types/Rules/RaidEngine';
-import { RaidPhaseIndex } from 'Utils/Raids';
+import { RaidDamageRatio, RaidPhaseIndex } from 'Utils/Raids';
 import RAIDS, { RAID_GENERIC } from 'Ressources/raids/raids';
 
 /**
@@ -317,7 +317,7 @@ class Raids extends IUserData {
      */
     GetRaidPhase = (imageID, progress, defeated) => {
         const phases = RAIDS[imageID ?? ''] ?? RAID_GENERIC;
-        const index = RaidPhaseIndex(defeated ? 1 : progress, phases.length);
+        const index = RaidPhaseIndex(RaidDamageRatio(progress, defeated), phases.length);
         return { images: phases[index], number: index + 1, count: phases.length };
     };
 

@@ -69,6 +69,21 @@ function FormatMinutes(minutes) {
 }
 
 /**
+ * Damage ratio of a season as the app draws it [0;1]: the registry the server keeps (`progress`),
+ * forced to 1 once the boss is defeated — the defeating hit can leave the registry a hair below 1.
+ * Single source for the phase of the boss and for its bar on the Home.
+ * @param {number} progress `progress` of the season, or of a history entry
+ * @param {boolean} defeated
+ * @returns {number}
+ */
+function RaidDamageRatio(progress, defeated) {
+    if (defeated) {
+        return 1;
+    }
+    return Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
+}
+
+/**
  * Phase of a boss drawn in `count` images: its life is cut in `count` equal parts, the first image
  * while it is untouched and the last one until its defeat. With 4: [0, 25 %[ → 0, [25 %, 50 %[ → 1,
  * [50 %, 75 %[ → 2, [75 %, 100 %] → 3.
@@ -90,4 +105,12 @@ function RaidPhaseMarkers(count) {
     return Array.from({ length: Math.max(0, count - 1) }, (_, i) => (i + 1) / count);
 }
 
-export { FormatCompact, FormatThousands, FormatCountdown, FormatMinutes, RaidPhaseIndex, RaidPhaseMarkers };
+export {
+    FormatCompact,
+    FormatThousands,
+    FormatCountdown,
+    FormatMinutes,
+    RaidDamageRatio,
+    RaidPhaseIndex,
+    RaidPhaseMarkers
+};

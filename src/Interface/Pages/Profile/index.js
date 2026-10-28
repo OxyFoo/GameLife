@@ -76,8 +76,11 @@ class Profile extends BackProfile {
                     />
                 </ScrollView>
 
-                {/** Edit button, pinned to the bottom of the screen: the avatar keeps the page to itself */}
+                {/** Edit and forge buttons, pinned to the bottom of the screen: the avatar keeps the page to itself */}
                 <Animated.View style={[styles.editButtonView, uiOpacity]} pointerEvents={editMode ? 'none' : 'auto'}>
+                    <Button appearance='outline-blur' icon='anvil' onPress={this.openTechnoForge}>
+                        {lang['btn-technoforge']}
+                    </Button>
                     <Button onPress={this.openInventory}>{lang['btn-edit-profile']}</Button>
                 </Animated.View>
             </View>

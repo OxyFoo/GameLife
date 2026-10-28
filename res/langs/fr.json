@@ -535,6 +535,7 @@
         "card-last-contribution": "Dernière contribution : {} pts · Rang #{}",
         "status-fighting": "En cours",
         "status-fighting-detail": "{} activités · {} restantes",
+        "status-phase": "Phase {}",
         "status-healing": "Guérison",
         "status-defeated": "Boss vaincu !",
         "status-ended": "Saison terminée",
@@ -713,6 +714,7 @@
         "container-skills-title": "Compétences",
 
         "btn-edit-profile": "Modifier mon apparence",
+        "btn-technoforge": "Techno-Forge",
 
         "title-profile": "Mon profil",
         "title-edit-avatar": "Modifier mon apparence",
@@ -757,6 +759,9 @@
     "profile-avatar": {
         "button-sell": "Vendre +{} Ox",
         "button-equip": "Équiper",
+        "label-starter": "Tenue de départ : elle ne se vend pas et ne sert jamais de catalyseur.",
+        "alert-starter-title": "Impossible",
+        "alert-starter-text": "Les objets de ta tenue de départ ne peuvent pas être vendus.",
 
         "alert-notconnected-title": "Non connecté",
         "alert-notconnected-text": "Tu dois être connecté au serveur pour pouvoir vendre un item.",
@@ -893,6 +898,7 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
         "button-header-ad-unavailable": "Indisponible",
+        "button-header-forge": "Techno-Forge",
 
         "banner-daily": "Deals du jour",
         "banner-iap": "Achats intégrés",
@@ -1007,7 +1013,7 @@
         "input-search": "Rechercher",
         "input-sort": "Trier par",
         "top-sort-list": [
-            "exp", "a-z", "date"
+            "exp", "a-z", "date", "série"
         ],
         "text-empty": "Ajoute une activité, les compétences associées apparaîtront ici",
         "text-add": "Ajouter une activité"
@@ -1049,8 +1055,62 @@
             "for": "Dans les raids, c'est elle qui fait mal : plus ta force est haute, plus chaque minute d'activité inflige de dégâts au boss.",
             "sta": "Dans les raids, c'est ta jauge de combat : plus elle est haute, plus tu enchaînes d'heures d'activité contre le boss avant de devoir souffler.",
             "agi": "Dans les raids, c'est le coup critique : une activité peut infliger le double de dégâts, et plus ton agilité monte, plus ça arrive souvent !",
-            "dex": "Dans les raids, elle n'a pas encore de rôle… mais t'inquiète, ça arrive bientôt ! Continue de l'entraîner, tes doigts seront prêts le jour venu."
+            "dex": "Dans la Techno-Forge, c'est ton coup de main : plus ta dextérité est haute, plus tes forges ont de chances de réussir, jusqu'à +30% !"
         }
+    },
+
+    "technoforge": {
+        "title": "Techno-Forge",
+        "slot-main": "Objet principal",
+        "slot-catalyst": "Catalyseur {}",
+        "caption-empty": "Sélectionne l'équipement à améliorer",
+        "caption-ready": "Objet principal prêt",
+        "phase-extracting": "Extraction des catalyseurs…",
+        "phase-charging": "Forgeage en cours…",
+        "phase-success": "Amélioration réussie !",
+        "phase-failure": "La forge a échoué…",
+        "chance-title": "Probabilité de succès",
+        "chance-max": "MAX",
+        "chance-caption-empty": "En attente de l'objet principal",
+        "chance-caption-detail": "{} % de base + {} % bonus Dextérité",
+        "chance-caption-capped": "Plafonné ({} % de base + {} % bonus Dextérité)",
+        "row-dex-bonus": "Bonus Dextérité",
+        "row-cost": "Coût requis",
+        "button-forge": "Lancer la forge",
+        "picker-title-main": "Choisir l'objet principal",
+        "picker-title-catalyst": "Choisir le catalyseur {}",
+        "picker-hint-main": "Un objet équipé peut être amélioré, il reste équipé.",
+        "picker-hint-catalyst": "Les catalyseurs sont consommés peu importe le résultat. Ils doivent avoir la même rareté que l'objet principal. Les objets équipés et ceux de la tenue de départ ne peuvent pas servir de catalyseur.",
+        "picker-clear": "Retirer",
+        "picker-empty": "Tu n'as aucun objet dans ton inventaire.",
+        "info-title": "Techno-Forge",
+        "info-message": "La techno-forge est un processus qui permet d'améliorer un objet en augmentant sa rareté et ses bonus de statistiques. Pour lancer la forge, tu dois choisir un objet principal, seul ou avec jusqu'à 2 catalyseurs de la même rareté parmi tes objets.\n\nPeu importe le résultat, l'item principal sera toujours intact et les catalyseurs consommés.\n\nLes probabilités de réussite sont de {}% avec l'objet seul, {}% avec 1 catalyseur, {}% avec 2 ET un possible bonus jusqu'à +{}% (à {} points) grâce à ta dextérité.",
+        "alert-confirm-title": "Lancer la forge",
+        "alert-confirm-message": "Lancer la forge pour {} Ox ?\n\nLes catalyseurs seront consommés, que la forge réussisse ou non.",
+        "alert-confirm-message-alone": "Lancer la forge pour {} Ox ?\n\nSans catalyseur, seule ta dextérité s'ajoute au taux de base.",
+        "alert-notconnected-title": "Non connecté",
+        "alert-notconnected-text": "Tu dois être connecté au serveur pour utiliser la Techno-Forge.",
+        "alert-invalid-title": "Objets indisponibles",
+        "alert-invalid-text": "Un des objets sélectionnés n'est plus disponible, ton inventaire a été actualisé.",
+        "alert-catalyst-equipped-title": "Impossible",
+        "alert-catalyst-equipped-text": "Un objet équipé ne peut pas servir de catalyseur.",
+        "alert-catalyst-rarity-title": "Impossible",
+        "alert-catalyst-rarity-text": "Les catalyseurs doivent avoir la même rareté que l'objet principal.",
+        "alert-catalyst-starter-title": "Impossible",
+        "alert-catalyst-starter-text": "Les objets de la tenue de départ ne peuvent pas servir de catalyseur.",
+        "alert-max-rarity-title": "Impossible",
+        "alert-max-rarity-text": "Cet objet ne peut pas encore être amélioré.",
+        "alert-error-title": "Erreur",
+        "alert-error-text": "Une erreur est survenue, réessaye plus tard. ({})",
+        "result-success-title": "Succès !",
+        "result-success-subtitle": "Forgeage accompli",
+        "result-failure-title": "Échec…",
+        "result-failure-subtitle": "La forge a échoué",
+        "result-failure-text": "L'objet est intact, les catalyseurs ont été consommés.",
+        "result-unchanged": "Rareté inchangée",
+        "result-cost": "Coût total dépensé :",
+        "result-button-view": "Voir l'objet",
+        "result-button-back": "Retour à la Forge"
     },
 
     "daily-quest": {

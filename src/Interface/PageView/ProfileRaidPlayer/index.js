@@ -19,7 +19,7 @@ import { ANALYTICS_PATHS } from 'Constants/Analytics';
  */
 
 /**
- * Profile of a player of the raid ranking who is not a friend: avatar, rank, points, activities
+ * Profile of a player of the raid ranking, friend or not: avatar, rank, points, activities
  * @param {object} props
  * @param {RaidLeaderboardPlayer} props.player
  */
@@ -49,7 +49,7 @@ const ProfileRaidPlayer = ({ player }) => {
         >
             <View style={styles.header}>
                 <View style={styles.avatarContainer}>
-                    <AvatarFrame width={84} height={84} renderScale={2} backgroundColor='#00000000'>
+                    <AvatarFrame width={84} height={84} backgroundColor='#00000000'>
                         <AvatarCharacter
                             body={player.avatar.Skin || 'human_00'}
                             bodyColor={BODY_COLORS[player.avatar.SkinColor] || BODY_COLORS[0]}

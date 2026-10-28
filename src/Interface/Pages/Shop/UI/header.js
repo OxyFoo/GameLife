@@ -111,6 +111,12 @@ class ShopHeader extends React.Component {
         this.props.onScrollToIAP?.();
     };
 
+    openForge = () => {
+        if (!user.server2.IsAuthenticated()) return;
+
+        user.interface.ChangePage('technoforge');
+    };
+
     /** @type {AdEventFunction} */
     onAdStateChange = (ad, state) => {
         const lang = langManager.curr['server'];
@@ -220,6 +226,17 @@ class ShopHeader extends React.Component {
                         <Icon style={styles.badgeIcon} icon='ox' />
                     </Button>
                 </View>
+
+                {/** The Techno-Forge, under the ox badges */}
+                <Button
+                    style={styles.forgeButton}
+                    fontSize={14}
+                    icon='anvil'
+                    enabled={user.server2.IsAuthenticated()}
+                    onPress={this.openForge}
+                >
+                    {lang['button-header-forge']}
+                </Button>
             </Animated.View>
         );
     }
@@ -264,6 +281,10 @@ const styles = StyleSheet.create({
     badgeGradient: {
         aspectRatio: 1,
         padding: 8
+    },
+    forgeButton: {
+        marginTop: 12,
+        paddingVertical: 12
     }
 });
 

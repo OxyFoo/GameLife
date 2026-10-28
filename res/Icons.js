@@ -4,6 +4,7 @@ const Icons = {
     'add':                      require('./icons/add').default,
     'apple':                    require('./icons/apple').default,
     'android':                  require('./icons/android').default,
+    'anvil':                    require('./icons/anvil').default,
     'arrow-left':               require('./icons/arrow-left').default,
     'arrow-square-outline':     require('./icons/arrow-square-outline').default,
     'arrow-square':             require('./icons/arrow-square').default,

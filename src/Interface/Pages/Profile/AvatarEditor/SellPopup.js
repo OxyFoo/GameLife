@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import user from 'Managers/UserManager';
 import langManager from 'Managers/LangManager';
-import { SellPriceOf } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
+import { SellPriceOf, StuffValue } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
 
 import { Text, Button } from 'Interface/Components';
 
@@ -22,7 +22,8 @@ function SellPopup({ stuffID, item, onSold }) {
     const langModal = langManager.curr['modal'];
     const [loading, setLoading] = React.useState(false);
 
-    const sellPrice = SellPriceOf(item.Value);
+    // A copy the forge raised is worth its rarity, not its item
+    const sellPrice = SellPriceOf(StuffValue(item, user.inventory.GetStuffByID(stuffID)?.Rarity ?? item.Rarity));
     const itemName = langManager.GetText(item.Name);
     const message = lang['alert-sellconfirm-text'].replace('{}', sellPrice.toString());
 
@@ -62,6 +63,15 @@ function SellPopup({ stuffID, item, onSold }) {
                 data: {
                     title: lang['alert-isequipped-title'],
                     message: lang['alert-isequipped-text']
+                }
+            });
+        } else if (result === 'item-starter') {
+            user.interface.popup?.Close('error');
+            user.interface.popup?.OpenT({
+                type: 'ok',
+                data: {
+                    title: lang['alert-starter-title'],
+                    message: lang['alert-starter-text']
                 }
             });
         } else {

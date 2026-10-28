@@ -10,7 +10,7 @@ import Storage from 'Utils/Storage';
  * to undo the previous one, and `load()` returns that launch's instance.
  */
 
-const ENDPOINT = 'https://devapi.geremy.dev/api/t/b';
+const ENDPOINT = 'https://api.deveye.fr/api/t/b';
 const KEY = 'pk_test000000000000000000000';
 
 /** @returns {any} A freshly loaded DevEye, as if the app had just started */

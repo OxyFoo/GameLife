@@ -7,6 +7,7 @@ import { ANALYTICS_EVENTS } from 'Constants/Analytics';
 
 /**
  * @typedef {import('Managers/UserManager').default} UserManager
+ * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemStatsMap} ItemStatsMap
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Inventory').AvatarObject} AvatarObject
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').CharactersID} CharactersID
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemSlot} ItemSlot
@@ -126,6 +127,9 @@ class Avatar extends IUserData {
         this.avatar = response.result.avatar;
         this.#token = response.result.token;
 
+        // The stats follow the outfit
+        this.user.experience.UpdateExperience();
+
         this.user.interface.console?.AddLog('info', '[Avatar] Avatar loaded');
         return true;
     };
@@ -174,6 +178,9 @@ class Avatar extends IUserData {
         this.avatar[slot] = stuffID;
         this.avatarEdited = true;
 
+        // The stats follow the outfit
+        this.user.experience.UpdateExperience();
+
         // Below the early return above: re-equipping what is already worn is not a change.
         DevEye.Event(ANALYTICS_EVENTS.AVATAR_ITEM_EQUIPPED);
 
@@ -188,6 +195,19 @@ class Avatar extends IUserData {
     /** @returns {number[]} Get list ID of equipped stuffs */
     GetEquipments = () => {
         return [this.avatar.hair, this.avatar.top, this.avatar.bottom, this.avatar.shoes];
+    };
+
+    /** @returns {ItemStatsMap[]} Stats of the copies the avatar wears, for the equipment bonus (Rules/ItemStats) */
+    GetEquippedStats = () => {
+        /** @type {ItemStatsMap[]} */
+        const stats = [];
+        for (const ID of this.GetEquipments()) {
+            const stuff = this.user.inventory.GetStuffByID(ID);
+            if (stuff !== null && typeof stuff.Stats === 'object' && stuff.Stats !== null) {
+                stats.push(stuff.Stats);
+            }
+        }
+        return stats;
     };
 
     /** @returns {string[]} */

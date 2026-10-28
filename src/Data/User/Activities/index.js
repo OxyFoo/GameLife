@@ -9,7 +9,12 @@ import {
     GetYearStartTimestamp,
     TimeIsFree
 } from './utils';
-import { ComputeSkillFrequency, GetTodayLocalDayIndex, RATE_WINDOW_DAYS } from './skillFrequency';
+import {
+    ComputeAllSkillStreaks,
+    ComputeSkillFrequency,
+    GetTodayLocalDayIndex,
+    RATE_WINDOW_DAYS
+} from './skillFrequency';
 import DynamicVar from 'Utils/DynamicVar';
 import {
     KeyOf,
@@ -33,6 +38,7 @@ import { DAY_TIME, GetDate, GetGlobalTime, GetLocalTime, GetMidnightTime, GetTim
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardPeriodType} LeaderboardPeriodType
  * @typedef {import('@oxyfoo/gamelife-types/TCP/GameLife/Request_Types').LeaderboardUpdateData} LeaderboardUpdateData
  * @typedef {import('./skillFrequency').SkillFrequency} SkillFrequency
+ * @typedef {import('./skillFrequency').SkillStreakSummary} SkillStreakSummary
  * @typedef {import('@oxyfoo/gamelife-types/Rules/OxEconomy').OxActivity} OxActivity
  * @typedef {import('@oxyfoo/gamelife-types/Rules/OxEconomy').OxOpResult} OxOpResult
  * @typedef {import('@oxyfoo/gamelife-types/Rules/OxEconomy').OxBatchResult} OxBatchResult
@@ -249,6 +255,14 @@ class Activities extends IUserData {
         return ComputeSkillFrequency(this.GetBySkillID(skillID), GetTodayLocalDayIndex(), windowDays);
     }
 
+    /**
+     * Streaks of every skill with at least one past activity, computed in one pass. Nothing is persisted.
+     * @returns {Map<number, SkillStreakSummary>} By skill ID
+     */
+    GetAllSkillStreaks() {
+        return ComputeAllSkillStreaks(this.Get(), GetTodayLocalDayIndex());
+    }
+
     /** @param {Partial<SaveObject_Activities>} data */
     Load = (data) => {
         if (typeof data.activities !== 'undefined') this.#SAVED_activities = data.activities;
@@ -362,7 +376,8 @@ class Activities extends IUserData {
             activitiesToEdit: unsaved.edit,
             activitiesToDelete: unsaved.delete,
             xp: Round(experience.xpInfo.totalXP, 2),
-            stats: this.#user.experience.GetStatsNumber(),
+            // The base stats: the server adds the bonus of the equipped copies itself
+            stats: this.#user.experience.GetBaseStatsNumber(),
             token: this.#token,
             leaderboardUpdates,
             oxRules: 2,

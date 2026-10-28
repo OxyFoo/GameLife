@@ -7,9 +7,10 @@ import user from 'Managers/UserManager';
 import dataManager from 'Managers/DataManager';
 import langManager from 'Managers/LangManager';
 import themeManager from 'Managers/ThemeManager';
-import { SellPriceOf } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
+import { SellPriceOf, StuffValue } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
 
 import { Text, Button } from 'Interface/Components';
+import { ItemStats } from 'Interface/Widgets';
 
 /**
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
@@ -26,6 +27,7 @@ import { Text, Button } from 'Interface/Components';
  * @property {AvatarName} bodyType - Current body type for preview
  * @property {string} bodyColor - Current body color for preview
  * @property {boolean} isEquipped - Whether the item is currently equipped
+ * @property {boolean} [showSell] - Whether the sell button is offered (default true)
  * @property {(itemName: ItemName) => void} onEquip - Callback when equip button is pressed
  * @property {(stuffID: number) => void} onSell - Callback when sell button is pressed
  * @property {() => void} onClose - Callback to close the panel
@@ -35,7 +37,18 @@ import { Text, Button } from 'Interface/Components';
  * Panel showing item details with equip/sell buttons
  * @param {ItemDetailPanelProps} props
  */
-const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquipped, onEquip, onSell, onClose }) => {
+const ItemDetailPanel = ({
+    stuffID,
+    itemName,
+    slot,
+    bodyType,
+    bodyColor,
+    isEquipped,
+    showSell = true,
+    onEquip,
+    onSell,
+    onClose
+}) => {
     const lang = langManager.curr['profile-avatar'];
     const frameSize = 120;
     const slotPreview = dataManager.items.GetContainerSize(slot);
@@ -45,8 +58,13 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
     const itemData = dataManager.items.GetByID(/** @type {ItemID} */ (itemName));
     const itemTitle = itemData ? langManager.GetText(itemData.Name) : itemName;
     const itemDescription = itemData ? langManager.GetText(itemData.Description) : `Item ${slot}`;
-    const sellPrice = itemData ? SellPriceOf(itemData.Value) : 0;
+
+    // The copy: its rarity (raised by the forge, maybe) and its stats
+    const stuff = user.inventory.GetStuffByID(stuffID);
+    const rarity = stuff?.Rarity ?? itemData?.Rarity ?? 'common';
+    const sellPrice = itemData ? SellPriceOf(StuffValue(itemData, rarity)) : 0;
     const sellButtonText = lang['button-sell'].replace('{}', sellPrice.toString());
+    const isStarter = itemData?.Starter === true;
 
     /**
      * Get items to display in avatar preview
@@ -95,16 +113,27 @@ const ItemDetailPanel = ({ stuffID, itemName, slot, bodyType, bodyColor, isEquip
 
             {/* Item Info */}
             <View style={styles.infoContainer}>
+                <Text style={[styles.rarity, { color: themeManager.GetRariryColors(rarity)[0] }]}>
+                    {langManager.curr['rarities'][rarity]}
+                </Text>
                 <Text style={styles.title}>{itemTitle}</Text>
                 <Text style={styles.description}>{itemDescription}</Text>
+                <ItemStats style={styles.stats} stats={stuff?.Stats ?? {}} />
+                {isStarter && (
+                    <Text style={styles.starter} fontSize={12} color='secondary'>
+                        {lang['label-starter']}
+                    </Text>
+                )}
             </View>
 
             {/* Action Buttons - hidden when equipped */}
             {!isEquipped && (
                 <View style={styles.buttonsContainer}>
-                    <Button style={styles.button} appearance='uniform' color='ground2' onPress={handleSell}>
-                        <Text style={styles.buttonText}>{sellButtonText}</Text>
-                    </Button>
+                    {showSell && !isStarter && (
+                        <Button style={styles.button} appearance='uniform' color='ground2' onPress={handleSell}>
+                            <Text style={styles.buttonText}>{sellButtonText}</Text>
+                        </Button>
+                    )}
 
                     <Button style={styles.button} appearance='uniform' color='main1' onPress={handleEquip}>
                         <Text style={styles.buttonText}>{lang['button-equip']}</Text>

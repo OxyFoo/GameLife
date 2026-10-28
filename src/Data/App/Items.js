@@ -1,4 +1,5 @@
 import { IAppData } from '@oxyfoo/gamelife-types/Interface/IAppData';
+import { IsObtainable } from '@oxyfoo/gamelife-types/Rules/ItemEconomy';
 
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').ItemID} ItemID
@@ -82,8 +83,15 @@ class Items extends IAppData {
      * @returns {Item[]}
      */
     GetBuyable(slot = false) {
-        return this.items.filter((i) => i.Buyable && (slot === false || i.Slot === slot));
+        return this.items.filter((i) => i.Buyable && IsObtainable(i) && (slot === false || i.Slot === slot));
     }
+
+    /**
+     * Part of the starter outfit: given at the account creation only, never sold, never a catalyst
+     * @param {ItemID} ID
+     * @returns {boolean}
+     */
+    IsStarter = (ID) => this.GetByID(ID)?.Starter === true;
 
     /**
      * @param {ItemID} itemID Item ID

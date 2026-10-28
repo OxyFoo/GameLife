@@ -45,7 +45,7 @@ class ProfileFriend extends BackProfileFriend {
                 {/** User Header */}
                 <View style={styles.header}>
                     <View style={styles.avatarContainer}>
-                        <AvatarFrame width={84} height={84} renderScale={2} backgroundColor='#00000000'>
+                        <AvatarFrame width={84} height={84} backgroundColor='#00000000'>
                             <AvatarCharacter
                                 body={avatarBody}
                                 bodyColor={avatarBodyColor}
@@ -101,14 +101,14 @@ class ProfileFriend extends BackProfileFriend {
                     </View>
                 )}
 
-                {/* Stats */}
+                {/* Stats: folded by default, the achievements below are what the profile opens on */}
                 {friend.friendshipState === 'accepted' && (
                     <Container
                         text={lang['container-stats-title']}
                         style={styles.topSpace}
                         styleContainer={styles.statsContainer}
                         type='rollable'
-                        opened={friend.accountID === 0}
+                        opened={false}
                         backgroundColor='dataBigKpi'
                     >
                         <FlatList

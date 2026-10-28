@@ -41,7 +41,6 @@ class ShopDailyDeals extends BackShopItems {
         const disabled = this.isItemPurchased(item.ID);
         const rarityText = langManager.curr['rarities'][item.Rarity];
         const rarityStyle = { color: item.Colors[0] };
-        const avatarRenderScale = item.Size.scale && item.Size.scale >= 3 ? 2 : 1;
 
         return (
             <Button
@@ -61,7 +60,7 @@ class ShopDailyDeals extends BackShopItems {
                     </View>
 
                     {/** Item frame */}
-                    <AvatarFrame width={72} height={72} renderScale={avatarRenderScale} backgroundColor='#00000000'>
+                    <AvatarFrame width={72} height={72} backgroundColor='#00000000'>
                         <AvatarCharacter
                             body={user.avatar.avatar.skin || 'human_00'}
                             bodyColor={BODY_COLORS[user.avatar.avatar.skinColor] || BODY_COLORS[0]}

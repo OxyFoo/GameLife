@@ -32,6 +32,7 @@ class TodayActivitiesPieChart extends TodayActivitiesPieChartBack {
                     style={styles.parentButton}
                     appearance='uniform'
                     color='transparent'
+                    rippleColor='black'
                     onPress={this.switchDonutLegends}
                 >
                     <LinearGradient

@@ -186,6 +186,18 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
                 return;
             }
 
+            // The starter outfit is never sold
+            if (user.inventory.IsStarterStuff(stuff)) {
+                user.interface.popup?.OpenT({
+                    type: 'ok',
+                    data: {
+                        title: lang['alert-starter-title'],
+                        message: lang['alert-starter-text']
+                    }
+                });
+                return;
+            }
+
             // Get item info for price calculation
             const item = dataManager.items.GetByID(stuff.ItemID);
             if (item === null) {

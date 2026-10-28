@@ -16,6 +16,13 @@ const styles = StyleSheet.create({
         marginBottom: 24,
         alignItems: 'center'
     },
+    rarity: {
+        fontSize: 11,
+        fontWeight: 'bold',
+        marginBottom: 2,
+        textAlign: 'center',
+        textTransform: 'uppercase'
+    },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -25,6 +32,14 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 14,
         opacity: 0.7,
+        textAlign: 'center'
+    },
+    stats: {
+        marginTop: 12,
+        alignSelf: 'center'
+    },
+    starter: {
+        marginTop: 12,
         textAlign: 'center'
     },
     buttonsContainer: {

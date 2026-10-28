@@ -81,7 +81,7 @@ function FeedRow({ event }) {
         <View style={styles.feedRow}>
             <View style={styles.feedFrame}>
                 {friend?.avatar ? (
-                    <AvatarFrame width={38} height={38} renderScale={2} backgroundColor='#00000000'>
+                    <AvatarFrame width={38} height={38} backgroundColor='#00000000'>
                         <AvatarCharacter
                             body={friend.avatar.Skin || 'human_00'}
                             bodyColor={BODY_COLORS[friend.avatar.SkinColor] || BODY_COLORS[0]}

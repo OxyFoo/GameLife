@@ -47,6 +47,7 @@ import * as React from 'react';
  * @property {(event: GestureResponderEvent) => void} onTouchCancel
  * @property {(event: LayoutChangeEvent) => void} onLayout
  * @property {number} [rippleDuration]
+ * @property {ThemeColor | ThemeText} [rippleColor] Default: black on 'normal', white otherwise
  */
 
 /** @type {Partial<ButtonProps> & ButtonPropsType} */
@@ -62,6 +63,7 @@ const ButtonProps = {
     color: 'main1',
     gradientColors: undefined,
     gradientColorsAngle: undefined,
+    rippleColor: undefined,
     fontSize: 16,
     fontColor: 'automatic',
     borderColor: 'automatic',

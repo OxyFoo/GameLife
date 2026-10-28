@@ -26,6 +26,8 @@ const PAGES = {
     skill:                  require('./Pages/Skill').default,
     skills:                 require('./Pages/Skills').default,
     statistics:             require('./Pages/Statistics').default,
+    technoforge:            require('./Pages/TechnoForge').default,
+    technoforge_result:     require('./Pages/TechnoForge/Result').default,
     waitinternet:           require('./Pages/WaitInternet').default,
     waitmail:               require('./Pages/WaitMail').default,
     test:                   require('./Pages/Test').default

@@ -1,0 +1,213 @@
+#!/usr/bin/env node
+
+/**
+ * Writes res/raids/raids.js, the registry of the raid visuals, from the folders of res/raids
+ * Executed by metro.config.js before every start and every bundle, or by hand: node scripts/setup-raids.js
+ *
+ * Metro only bundles static `require` calls, so the app cannot list a folder at runtime: the files
+ * are counted here and the registry spells out every image.
+ *
+ * One folder per season visual, named after `RaidSeasons.ImageID` ('generic' is the fallback):
+ * - phase_1.png, phase_2.png, …: the boss, one image per phase. The phases are the consecutive
+ *   files from 1: with 1, 2, 4 and 5 the boss has 2 phases, 4 and 5 are ignored.
+ * - background_1.png, background_2.png, …: counted the same way. Phase N takes background N, or the
+ *   last one when there are fewer; the backgrounds beyond the last phase are ignored.
+ * The app cuts the life of the boss in as many equal parts as there are phases.
+ */
+
+/**
+ * @typedef {{ boss: string, background: string }} PhaseFiles
+ * @typedef {{ folder: string, phases: PhaseFiles[], ignored: string[] }} RaidFolder
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const RAIDS_DIR = path.join(__dirname, '..', 'res', 'raids');
+const REGISTRY_NAME = 'raids.js';
+const GENERIC_FOLDER = 'generic';
+
+const PHASE_PREFIX = 'phase_';
+const BACKGROUND_PREFIX = 'background_';
+const EXTENSION = '.png';
+
+/** Written as an object key, and stored in `RaidSeasons.ImageID` (varchar 64) */
+const FOLDER_NAME = /^[\w-]{1,64}$/;
+
+/**
+ * Highest N such that prefix1 … prefixN are all in the list, 0 without prefix1
+ * @param {string[]} files
+ * @param {string} prefix
+ * @returns {number}
+ */
+function countConsecutive(files, prefix) {
+    let count = 0;
+    while (files.includes(`${prefix}${count + 1}${EXTENSION}`)) {
+        count++;
+    }
+    return count;
+}
+
+/**
+ * Images of each phase: phase N takes background N, or the last background when there are fewer
+ * @param {number} phaseCount
+ * @param {number} backgroundCount At least 1
+ * @returns {PhaseFiles[]}
+ */
+function pairPhases(phaseCount, backgroundCount) {
+    return Array.from({ length: phaseCount }, (_, i) => ({
+        boss: `${PHASE_PREFIX}${i + 1}${EXTENSION}`,
+        background: `${BACKGROUND_PREFIX}${Math.min(i + 1, backgroundCount)}${EXTENSION}`
+    }));
+}
+
+/**
+ * @param {string} folder
+ * @param {string[]} files Names of the files of the folder
+ * @returns {RaidFolder}
+ */
+function readRaidFolder(folder, files) {
+    if (!FOLDER_NAME.test(folder)) {
+        throw new Error(`res/raids/${folder}: a folder name only holds letters, digits, _ and - (64 at most)`);
+    }
+
+    const phaseCount = countConsecutive(files, PHASE_PREFIX);
+    const backgroundCount = countConsecutive(files, BACKGROUND_PREFIX);
+    if (phaseCount === 0 || backgroundCount === 0) {
+        throw new Error(
+            `res/raids/${folder}: ${PHASE_PREFIX}1${EXTENSION} and ${BACKGROUND_PREFIX}1${EXTENSION} are both required`
+        );
+    }
+
+    const phases = pairPhases(phaseCount, backgroundCount);
+    const used = new Set(phases.flatMap((phase) => [phase.boss, phase.background]));
+    const ignored = files.filter((file) => !used.has(file)).sort();
+    return { folder, phases, ignored };
+}
+
+/**
+ * Every visual folder, sorted by name; hidden entries are skipped
+ * @param {string} [dir]
+ * @returns {RaidFolder[]}
+ */
+function readRaidFolders(dir = RAIDS_DIR) {
+    return fs
+        .readdirSync(dir, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
+        .map((entry) => entry.name)
+        .sort()
+        .map((folder) => {
+            const files = fs
+                .readdirSync(path.join(dir, folder), { withFileTypes: true })
+                .filter((entry) => entry.isFile() && !entry.name.startsWith('.'))
+                .map((entry) => entry.name);
+            return readRaidFolder(folder, files);
+        });
+}
+
+/**
+ * @param {RaidFolder} raid
+ * @param {string} indent Indentation of the line that opens the list
+ * @returns {string}
+ */
+function renderPhases(raid, indent) {
+    const phases = raid.phases.map((phase) =>
+        [
+            `${indent}    {`,
+            `${indent}        boss: require('./${raid.folder}/${phase.boss}'),`,
+            `${indent}        background: require('./${raid.folder}/${phase.background}')`,
+            `${indent}    }`
+        ].join('\n')
+    );
+    return `[\n${phases.join(',\n')}\n${indent}]`;
+}
+
+/**
+ * Content of res/raids/raids.js
+ * @param {RaidFolder[]} raids
+ * @returns {string}
+ */
+function buildRegistry(raids) {
+    const generic = raids.find((raid) => raid.folder === GENERIC_FOLDER);
+    if (generic === undefined) {
+        throw new Error(`res/raids/${GENERIC_FOLDER} is missing: it is the visual of every unknown season`);
+    }
+    const seasons = raids
+        .filter((raid) => raid !== generic)
+        .map((raid) => `    '${raid.folder}': ${renderPhases(raid, '    ')}`);
+
+    return `// Generated by scripts/setup-raids.js before every Metro start and bundle, do not edit by hand:
+// drop the images in a folder of res/raids instead (the script explains the naming).
+
+/**
+ * Visuals of the raid seasons, embedded in the app. The database gives one key per season
+ * (\`RaidSeasons.ImageID\`): the name of its folder here, e.g. '03_pride'. An unknown key falls back
+ * to \`RAID_GENERIC\`: shipping a new boss is an app update that drops a folder here.
+ *
+ * Each visual lists its phases in order, each with its boss and its background. The app cuts the
+ * life of the boss in as many equal parts (\`RaidPhaseIndex\`).
+ *
+ * @typedef {{ boss: number, background: number }} RaidImages
+ */
+
+/** @type {Record<string, RaidImages[]>} */
+const RAIDS = {
+${seasons.join(',\n')}
+};
+
+/** @type {RaidImages[]} */
+const RAID_GENERIC = ${renderPhases(generic, '')};
+
+export { RAID_GENERIC };
+export default RAIDS;
+`;
+}
+
+/**
+ * Rewrites the registry when the folders changed, and warns about the files it leaves out
+ * @param {string} [dir]
+ * @returns {boolean} true if the registry was rewritten
+ */
+function writeRegistry(dir = RAIDS_DIR) {
+    const raids = readRaidFolders(dir);
+    for (const raid of raids) {
+        if (raid.ignored.length > 0) {
+            console.warn(`⚠️  res/raids/${raid.folder}: ignored ${raid.ignored.join(', ')}`);
+        }
+    }
+
+    const registryPath = path.join(dir, REGISTRY_NAME);
+    const content = buildRegistry(raids);
+    if (fs.existsSync(registryPath) && fs.readFileSync(registryPath, 'utf8') === content) {
+        return false;
+    }
+
+    fs.writeFileSync(registryPath, content);
+    const summary = raids.map((raid) => `${raid.folder} (${raid.phases.length})`).join(', ');
+    console.log(`✓ res/raids/${REGISTRY_NAME} updated, phases per visual: ${summary}`);
+    return true;
+}
+
+function main() {
+    try {
+        writeRegistry();
+    } catch (error) {
+        console.error(`❌ ${/** @type {Error} */ (error)?.message || 'Unknown error'}`);
+        process.exitCode = 1;
+    }
+}
+
+module.exports = {
+    RAIDS_DIR,
+    REGISTRY_NAME,
+    countConsecutive,
+    pairPhases,
+    readRaidFolder,
+    readRaidFolders,
+    buildRegistry,
+    writeRegistry
+};
+
+if (require.main === module) {
+    main();
+}

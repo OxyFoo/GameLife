@@ -1,9 +1,20 @@
 import { StyleSheet } from 'react-native';
 
+/** Side of the default slot */
+const REWARD_SLOT = 48;
+
+/** Geometry of the amount label, drawn for the default slot: `Reward` scales it with the slot */
+const REWARD_LABEL = {
+    left: -4,
+    right: -4,
+    bottom: -6,
+    fontSize: 16
+};
+
 const styles = StyleSheet.create({
     rewardItem: {
-        width: 48,
-        height: 48,
+        width: REWARD_SLOT,
+        height: REWARD_SLOT,
         padding: 6,
         marginHorizontal: 4,
         borderRadius: 6,
@@ -17,11 +28,9 @@ const styles = StyleSheet.create({
     },
     rewardValue: {
         position: 'absolute',
-        left: -4,
-        right: -4,
-        bottom: -6,
-        fontSize: 16
+        ...REWARD_LABEL
     }
 });
 
 export default styles;
+export { REWARD_SLOT, REWARD_LABEL };

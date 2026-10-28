@@ -2,6 +2,18 @@ import dataManager from 'Managers/DataManager';
 import Raids from '../index';
 import DynamicVar from 'Utils/DynamicVar';
 
+// Two boss phases over a single background, and the generic visual for any other key
+jest.mock('Ressources/raids/raids', () => ({
+    __esModule: true,
+    default: {
+        'two-phases': [
+            { boss: 1, background: 10 },
+            { boss: 2, background: 10 }
+        ]
+    },
+    RAID_GENERIC: [{ boss: 100, background: 101 }]
+}));
+
 /**
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidStatePayload} RaidStatePayload
  * @typedef {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidSeasonPublic} RaidSeasonPublic
@@ -158,12 +170,12 @@ describe('Raids', () => {
         expect(raids.GetSnapshot(NOW).loaded).toBe(false);
     });
 
-    test('is locked below level 10, whatever the server says', () => {
-        const user = makeUser(9);
+    test('is locked below level 5, whatever the server says', () => {
+        const user = makeUser(4);
         const raids = new Raids(/** @type {UserManager} */ (/** @type {unknown} */ (user)));
         raids.Load({ cache: payload(), fetchedAt: NOW });
         expect(raids.GetStatus(NOW)).toBe('locked');
-        user.experience.experience.Set({ stats: ZERO, xpInfo: { xp: 0, lvl: 10, next: 0, totalXP: 900 } });
+        user.experience.experience.Set({ stats: ZERO, xpInfo: { xp: 0, lvl: 5, next: 0, totalXP: 200 } });
         expect(raids.GetStatus(NOW)).toBe('fighting');
     });
 
@@ -213,6 +225,34 @@ describe('Raids', () => {
         expect(raids.GetStatus(NOW)).toBe('fighting');
         user.server2.serverState.status = 'update-optional';
         expect(raids.GetStatus(NOW)).toBe('update-required');
+    });
+
+    test('the images follow the life of the boss, the last phase once it is defeated', () => {
+        const raids = new Raids(/** @type {UserManager} */ (/** @type {unknown} */ (makeUser())));
+        /** @param {Partial<RaidSeasonPublic>} partial */
+        const imagesOf = (partial) => {
+            raids.Load({ cache: payload({ season: { ...season(), imageID: 'two-phases', ...partial } }) });
+            return raids.GetSnapshot(NOW).images;
+        };
+
+        expect(imagesOf({ progress: 0.49 })).toEqual({ boss: 1, background: 10 });
+        expect(imagesOf({ progress: 0.5 })).toEqual({ boss: 2, background: 10 });
+        expect(imagesOf({ progress: 0.2, defeatedAt: NOW })).toEqual({ boss: 2, background: 10 });
+        expect(imagesOf({ imageID: 'unknown-image', progress: 0.9 })).toEqual({ boss: 100, background: 101 });
+
+        /** @param {Partial<RaidSeasonPublic>} partial */
+        const phaseOf = (partial) => {
+            imagesOf(partial);
+            const { phase, phaseCount } = raids.GetSnapshot(NOW);
+            return { phase, phaseCount };
+        };
+        expect(phaseOf({ progress: 0.2 })).toEqual({ phase: 1, phaseCount: 2 });
+        expect(phaseOf({ progress: 0.7 })).toEqual({ phase: 2, phaseCount: 2 });
+        expect(phaseOf({ imageID: 'unknown-image', progress: 0.7 })).toEqual({ phase: 1, phaseCount: 1 });
+
+        expect(raids.GetRaidImages('two-phases', 0.1, false).boss).toBe(1);
+        expect(raids.GetRaidImages('two-phases', 0.1, true).boss).toBe(2);
+        expect(raids.GetRaidImages(null, 0, false).boss).toBe(100);
     });
 
     test('LoadOnline keeps the cache on a lost connection only, the server answer always wins', async () => {

@@ -535,6 +535,7 @@
         "card-last-contribution": "Last contribution: {} pts · Rank #{}",
         "status-fighting": "Fighting",
         "status-fighting-detail": "{} activities · {} left",
+        "status-phase": "Phase {}",
         "status-healing": "Healing",
         "status-defeated": "Boss defeated!",
         "status-ended": "Season over",
@@ -713,6 +714,7 @@
         "container-skills-title": "Skills",
 
         "btn-edit-profile": "Change my appearance",
+        "btn-technoforge": "Techno-Forge",
 
         "title-profile": "My profile",
         "title-edit-avatar": "Change my appearance",
@@ -757,6 +759,9 @@
     "profile-avatar": {
         "button-sell": "Sell +{} Ox",
         "button-equip": "Equip",
+        "label-starter": "Starter outfit: it cannot be sold and is never a catalyst.",
+        "alert-starter-title": "Impossible",
+        "alert-starter-text": "The items of your starter outfit cannot be sold.",
 
         "alert-notconnected-title": "Not connected",
         "alert-notconnected-text": "You must be connected to the server to sell an item.",
@@ -893,6 +898,7 @@
         "button-header-code": "CODE",
         "button-header-ad": "+ {}",
         "button-header-ad-unavailable": "Unavailable",
+        "button-header-forge": "Techno-Forge",
 
         "banner-daily": "Daily deals",
         "banner-iap": "In-app purchases",
@@ -1007,7 +1013,7 @@
         "input-search": "Search",
         "input-sort": "Sort by",
         "top-sort-list": [
-            "xp", "a-z", "date"
+            "xp", "a-z", "date", "streak"
         ],
         "text-empty": "Add an activity, the associated skills will appear here",
         "text-add": "Add an activiy"
@@ -1049,8 +1055,62 @@
             "for": "In raids it is what hurts: the higher your strength, the more damage every minute of activity deals to the boss.",
             "sta": "In raids it is your fight gauge: the higher it is, the more hours of activity you can chain against the boss before you need a breather.",
             "agi": "In raids it is the critical hit: an activity can deal double damage, and the higher your agility, the more often it happens!",
-            "dex": "In raids it has no role yet… but don't worry, it is coming soon! Keep training it, your fingers will be ready when the day comes."
+            "dex": "In the Techno-Forge it is your steady hand: the higher your dexterity, the better your forging odds, up to +30%!"
         }
+    },
+
+    "technoforge": {
+        "title": "Techno-Forge",
+        "slot-main": "Main item",
+        "slot-catalyst": "Catalyst {}",
+        "caption-empty": "Select the equipment to upgrade",
+        "caption-ready": "Main item ready",
+        "phase-extracting": "Extracting the catalysts…",
+        "phase-charging": "Charging the forge…",
+        "phase-success": "Upgrade successful!",
+        "phase-failure": "The forge failed…",
+        "chance-title": "Success chance",
+        "chance-max": "MAX",
+        "chance-caption-empty": "Waiting for the main item",
+        "chance-caption-detail": "{}% base + {}% Dexterity bonus",
+        "chance-caption-capped": "Capped ({}% base + {}% Dexterity bonus)",
+        "row-dex-bonus": "Dexterity bonus",
+        "row-cost": "Required cost",
+        "button-forge": "Start forging",
+        "picker-title-main": "Choose the main item",
+        "picker-title-catalyst": "Choose catalyst {}",
+        "picker-hint-main": "An equipped item can be upgraded, it stays equipped.",
+        "picker-hint-catalyst": "Catalysts are lost after forging and must have the same rarity as the main item. Equipped items and starter outfit items cannot be used as catalysts.",
+        "picker-clear": "Remove",
+        "picker-empty": "You have no item in your inventory.",
+        "info-title": "Techno-Forge",
+        "info-message": "The techno-forge is a process that allows you to upgrade an item by increasing its rarity and stat bonuses. To start forging, you must choose a main item, alone or with up to 2 catalysts of the same rarity from your inventory.\n\nRegardless of the outcome, the main item will remain intact and the catalysts will be consumed.\n\nThe success probabilities are {}% with the main item alone, {}% with 1 catalyst, {}% with 2, and an additional bonus of up to +{}% (at {} points) thanks to your dexterity.",
+        "alert-confirm-title": "Start forging",
+        "alert-confirm-message": "Start forging for {} Ox?\n\nCatalysts will be consumed whether the forge succeeds or not.",
+        "alert-confirm-message-alone": "Start forging for {} Ox?\n\nWithout a catalyst, only your dexterity adds to the base rate.",
+        "alert-notconnected-title": "Not connected",
+        "alert-notconnected-text": "You must be connected to the server to use the Techno-Forge.",
+        "alert-invalid-title": "Items unavailable",
+        "alert-invalid-text": "One of the selected items is no longer available, your inventory has been refreshed.",
+        "alert-catalyst-equipped-title": "Impossible",
+        "alert-catalyst-equipped-text": "An equipped item cannot be used as a catalyst.",
+        "alert-catalyst-rarity-title": "Impossible",
+        "alert-catalyst-rarity-text": "Catalysts must have the same rarity as the main item.",
+        "alert-catalyst-starter-title": "Impossible",
+        "alert-catalyst-starter-text": "Starter outfit items cannot be used as catalysts.",
+        "alert-max-rarity-title": "Impossible",
+        "alert-max-rarity-text": "This item cannot be upgraded yet.",
+        "alert-error-title": "Error",
+        "alert-error-text": "An error has occurred, please try again later. ({})",
+        "result-success-title": "Success!",
+        "result-success-subtitle": "Forging complete",
+        "result-failure-title": "Failure…",
+        "result-failure-subtitle": "The forge failed",
+        "result-failure-text": "The item is intact, the catalysts were consumed.",
+        "result-unchanged": "Rarity unchanged",
+        "result-cost": "Total cost spent:",
+        "result-button-view": "View item",
+        "result-button-back": "Back to the Forge"
     },
 
     "daily-quest": {

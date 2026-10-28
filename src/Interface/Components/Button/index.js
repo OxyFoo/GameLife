@@ -44,6 +44,7 @@ class Button extends ButtonBack {
             onPress,
             onLongPress,
             rippleDuration,
+            rippleColor,
             ...rest
         } = this.props;
 
@@ -74,7 +75,7 @@ class Button extends ButtonBack {
                 {enabled && (
                     <Ripple
                         ref={this.rippleRef}
-                        rippleColor={appearance === 'normal' ? 'black' : 'white'}
+                        rippleColor={rippleColor ?? (appearance === 'normal' ? 'black' : 'white')}
                         duration={rippleDuration}
                     />
                 )}

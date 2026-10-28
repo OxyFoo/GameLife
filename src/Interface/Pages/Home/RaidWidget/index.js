@@ -9,18 +9,18 @@ import { useRaid } from 'Interface/Pages/Raids/RaidCard/useRaid';
 import { RAID_MIN_LEVEL } from 'Data/User/Raids';
 import { Text, Icon, Button, ProgressDonut } from 'Interface/Components';
 import { DONUT_SIZE } from 'Interface/Widgets/PieChart/style';
-import { FormatCountdown } from 'Utils/Raids';
+import { FormatCountdown, RaidDamageRatio } from 'Utils/Raids';
 
 /**
  * Raid widget of the Home: outer ring = phase of the player (fight budget, or heal countdown),
- * inner ring = progress of the season (the month), centre = time left in the season
+ * inner ring = damage dealt to the boss (its bar on the raid card), centre = time left in the season
  * @param {object} props
  * @param {import('react-native').ViewStyle} [props.style]
  */
 function RaidWidget({ style }) {
     const snapshot = useRaid();
     const lang = langManager.curr['home'];
-    const { loaded, status, season, simulation, now, nextSeasonAt, seasonProgress, healRemaining } = snapshot;
+    const { loaded, status, season, simulation, now, nextSeasonAt, healRemaining } = snapshot;
 
     const open = () => {
         user.interface.ChangePage('raids');
@@ -60,6 +60,10 @@ function RaidWidget({ style }) {
             outerValue = Math.min(1, Math.max(0, 1 - healRemaining / total));
         }
 
+        // Same bar as the raid card, by the value that drives the phases of the boss (server one, the
+        // local preview is not added)
+        const bossDamage = RaidDamageRatio(season.progress, season.defeatedAt !== null);
+
         const remaining = season.endTime - now;
         const label = fighting
             ? lang['container-raid-fighting']
@@ -70,7 +74,7 @@ function RaidWidget({ style }) {
         body = renderDonuts(
             outerValue,
             outerColor,
-            seasonProgress.ratio,
+            bossDamage,
             <>
                 <Text fontSize={16} bold>
                     {FormatCountdown(Math.max(0, remaining), 2)}
@@ -109,7 +113,7 @@ function RaidWidget({ style }) {
  * the activities widget beside it, same diameter and same distance from the top.
  * @param {number} outerValue Phase of the player [0-1]
  * @param {'main3' | 'success'} outerColor
- * @param {number} innerValue Progress of the season [0-1]
+ * @param {number} innerValue Damage dealt to the boss [0-1]
  * @param {React.ReactNode} children
  */
 function renderDonuts(outerValue, outerColor, innerValue, children) {

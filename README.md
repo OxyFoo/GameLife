@@ -48,6 +48,8 @@ npm run podi                                      # Installer les Pods (uniqueme
 npm start                                         # Lancer le serveur Metro
 ```
 
+> ℹ️ Aucun compte ni token n'est nécessaire : les avatars utilisent la version publique de `@oxyfoo/avatar-factory`, qui affiche une image de remplacement. Le rendu complet est réservé aux builds officiels (voir [CONFIG.md](CONFIG.md)).
+
 Dans un autre terminal, lancez l'application :
 ```bash
 npm run ios       # Pour iOS

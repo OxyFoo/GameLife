@@ -20,7 +20,8 @@ import { AVATAR_BODIES, BODY_COLORS } from '../avatarConstants';
  * @typedef {import('@oxyfoo/avatar-factory').ItemName} ItemName
  * @typedef {import('@oxyfoo/avatar-factory').AvatarName} AvatarName
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Items').Item} Item
- * @typedef {{slot: ItemSlot, itemName: ItemName, stuffID: number, item: Item}} OwnedSlotItem
+ * @typedef {import('@oxyfoo/gamelife-types/Global/Rarities').Rarities} Rarities
+ * @typedef {{slot: ItemSlot, itemName: ItemName, stuffID: number, item: Item, rarity: Rarities}} OwnedSlotItem
  * @typedef {{slot: ItemSlot, itemName: ItemName, isEmpty?: boolean}} DisplayedItem
  * @typedef {{slot: 'bodyColor', color: string}} BodyColorItem
  * @typedef {{slot: 'avatar', bodyType: AvatarName}} AvatarBodyItem
@@ -77,7 +78,9 @@ const InventoryPanel = ({
                     slot,
                     stuffID: stuff.ID,
                     itemName: /** @type {ItemName} */ (stuff.ItemID),
-                    item: itemData
+                    item: itemData,
+                    // The copy may have been raised by the forge above its item
+                    rarity: stuff.Rarity ?? itemData.Rarity
                 });
             }
             grouped[slot] = slotItems;
@@ -222,8 +225,8 @@ const InventoryPanel = ({
             const slotPos = slotPreview.pos || { x: 0, y: 0 };
             const slotScale = slotPreview.scale || 1;
 
-            // Get rarity colors for the item
-            const rarityColors = themeManager.GetRariryColors(ownedItem.item.Rarity);
+            // Get rarity colors for the copy
+            const rarityColors = themeManager.GetRariryColors(ownedItem.rarity);
 
             return (
                 <Button

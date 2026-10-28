@@ -15,6 +15,7 @@ import {
     RemainingHeal,
     SimulateParticipant
 } from '@oxyfoo/gamelife-types/Rules/RaidEngine';
+import { RaidDamageRatio, RaidPhaseIndex } from 'Utils/Raids';
 import RAIDS, { RAID_GENERIC } from 'Ressources/raids/raids';
 
 /**
@@ -54,6 +55,13 @@ import RAIDS, { RAID_GENERIC } from 'Ressources/raids/raids';
  * @property {number} healPrice Ox to end the heal now, 0 when not healing
  * @property {import('@oxyfoo/gamelife-types/Data/User/Raids').RaidRewardState} rewardState
  * @property {RaidImages} images
+ * @property {number} phase Phase of the boss, 1-based (see `GetRaidPhase`)
+ * @property {number} phaseCount Phases of its visual, 1 when it has a single image
+ *
+ * @typedef {object} RaidPhase
+ * @property {RaidImages} images
+ * @property {number} number 1-based
+ * @property {number} count
  */
 
 const TICK_INTERVAL_MS = 60 * 1000;
@@ -298,12 +306,29 @@ class Raids extends IUserData {
     };
 
     /**
-     * Visual of a season: both images come from the same registry key, so a season is either fully
-     * illustrated or fully generic — never a boss from one raid over the background of another.
+     * Phase of the boss of a season at a point of the fight: it follows its life (`RaidPhaseIndex`),
+     * and a defeated boss is in its last one. Both images come from the same registry key, so a
+     * season is either fully illustrated or fully generic — never a boss from one raid over the
+     * background of another.
      * @param {string | null} imageID
+     * @param {number} progress Damage ratio of the season [0;1]
+     * @param {boolean} defeated
+     * @returns {RaidPhase}
+     */
+    GetRaidPhase = (imageID, progress, defeated) => {
+        const phases = RAIDS[imageID ?? ''] ?? RAID_GENERIC;
+        const index = RaidPhaseIndex(RaidDamageRatio(progress, defeated), phases.length);
+        return { images: phases[index], number: index + 1, count: phases.length };
+    };
+
+    /**
+     * Visual of a season at a point of the fight, see `GetRaidPhase`
+     * @param {string | null} imageID
+     * @param {number} progress Damage ratio of the season [0;1]
+     * @param {boolean} defeated
      * @returns {RaidImages}
      */
-    GetRaidImages = (imageID) => RAIDS[imageID ?? ''] ?? RAID_GENERIC;
+    GetRaidImages = (imageID, progress, defeated) => this.GetRaidPhase(imageID, progress, defeated).images;
 
     /**
      * Points an activity brings to the raid: the hit the server replayed once the activity is saved
@@ -329,6 +354,11 @@ class Raids extends IUserData {
         const payload = this.payload.Get();
         const season = payload?.season ?? null;
         const healRemaining = this.GetHealRemaining(now);
+        const phase = this.GetRaidPhase(
+            season?.imageID ?? null,
+            season?.progress ?? 0,
+            season !== null && season.defeatedAt !== null
+        );
         return {
             loaded: this.fetchedAt > 0,
             status: this.GetStatus(now),
@@ -342,7 +372,9 @@ class Raids extends IUserData {
             healRemaining,
             healPrice: healRemaining > 0 ? HealOxPrice(healRemaining) : 0,
             rewardState: payload?.self?.rewardState ?? 'none',
-            images: this.GetRaidImages(season?.imageID ?? null)
+            images: phase.images,
+            phase: phase.number,
+            phaseCount: phase.count
         };
     };
 

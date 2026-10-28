@@ -224,6 +224,14 @@ class PageName extends PageBase {
 }
 ```
 
+### Aperçus d'avatar
+
+- **Qualité des previews** : aucun `<AvatarFrame>` ne reçoit de `renderScale` (la prop n'existe plus). La qualité
+  est `'auto'` par défaut dans `@oxyfoo/avatar-factory` : la lib déduit la résolution de rendu de la taille du cadre,
+  du zoom de l'`AvatarCharacter` et du nombre de cadres montés. Ne passer `quality` (`'low'`, `'medium'`, `'high'`
+  ou un nombre = render scale forcé) que pour forcer une qualité, ce qui doit rester exceptionnel. Jamais de formule
+  locale de qualité côté GameLife.
+
 ## Gestion des données
 
 ### Sauvegarde/Chargement
@@ -270,7 +278,7 @@ sans dépendance ni état, et les deux projets importent ce module.
   (1 Ox / minute ; supprimer ou éditer règle la différence signée ; première opération coûteuse de la
   semaine, lundi 00:00 UTC, au prix de base, les suivantes +50 % ; solde possiblement négatif, puis plus
   d'opération coûteuse).
-- `@oxyfoo/gamelife-types/Rules/RaidEngine` — multiplicateurs de stats (250 points = ×1, plafond ×25),
+- `@oxyfoo/gamelife-types/Rules/RaidEngine` — multiplicateurs de stats (400 points = ×1, plafond ×25),
   budget de combat (48 h d'activité utile × endurance), guérison (24 h ÷ social), points
   (1/min × force, ×2 sur critique), fenêtre d'une saison (`SeasonWindow`, toujours du 1er du mois au 1er
   suivant moins le repos) et rejeu chronologique (`SimulateParticipant`). Les activités qui marquent des
@@ -280,7 +288,28 @@ sans dépendance ni état, et les deux projets importent ce module.
   2 % epic, jamais legendary : poids 0) puis un item achetable de cette rareté, sans doublon, depuis la date
   seule (`PickDailyDeals`, PRNG seedé) ; prix fixe d'une offre par rareté, 180 / 555 / 1 800
   (`DailyDealPriceOf`, `null` pour une rareté jamais proposée). La valeur des items (`Items.Value`, prix du
-  coffre non ciblé de leur rareté : 222 / 666 / 2 000 / 6 000) reste en base.
+  coffre non ciblé de leur rareté : 222 / 666 / 2 000 / 6 000) reste en base ; un exemplaire monté par la forge
+  vaut sa rareté (`StuffValue`).
+- `@oxyfoo/gamelife-types/Rules/ItemStats` — stats des exemplaires d'items : tirage à la création
+  (`RollItemStats` : total en % dans la plage de la rareté — table `ItemStatRanges`, ou plage propre à l'item à
+  sa rareté de définition, `RangeForRarity` — puis 1 à N stats parmi celles que l'item autorise, répartition
+  séquentielle, au moins 1 point chacune), re-tirage à forme constante quand la forge monte la rareté
+  (`RerollItemStatsPreservingShape`) et bonus des exemplaires équipés (`ApplyEquipmentBonus` :
+  stat × (1 + Σ % / 100), arrondi). L'app envoie ses stats **de base** dans `save-activities` ; le serveur ajoute
+  le bonus lui-même (inscription aux raids, stats des amis, dextérité de la forge). Un item de la **tenue de
+  départ** (`Item.Starter`, les quatre `*_00`) a toujours la plage `[0; 0]` (`RangeForRarity`), à toute rareté :
+  ses exemplaires n'ont jamais de stats, même montés à la forge.
+- `@oxyfoo/gamelife-types/Rules/TechnoForge` — une tentative : objet principal seul ou avec 1 ou 2 catalyseurs
+  (jamais équipés), chance 30 % seul / 60 % / 90 % + dextérité jusqu'à 30 % à 10 000 points (même plafond que les
+  raids), plafond 100 % (`ForgeChance`), coût par
+  rareté de départ 30 / 60 / 120 (`ForgeCost`), étape ouverte (`IsForgeOpen`, epic → legendary fermée pour
+  l'instant). Les catalyseurs sont consommés à chaque tentative, l'objet principal garde son ID (il reste équipé).
+  Un catalyseur a la rareté de l'objet principal (`IsCatalystCompatible`) et n'est jamais de la tenue de départ ;
+  l'app grise ces exemplaires via `user.inventory.GetLockedCatalystIDs`, le serveur répond `catalyst-rarity` /
+  `catalyst-starter`.
+- Tenue de départ (`Rules/ItemEconomy.IsObtainable`) : un set par compte, donné à la création seulement
+  (`GameLifeInventories.AddDefaultItems`, seul appelant autorisé d'`AddStuff` pour un starter), jamais en boutique,
+  coffre ni récompense, jamais vendu (`sell-stuff` → `item-starter`).
 
 L'app ne fait que **prévisualiser** : `user.activities.SimulateOx`, `GetDeleteOxQuote`, `GetEditOxQuote`,
 `GetOxReward` rejouent ses seaux en attente sur l'instantané serveur, et `user.raids` simule sans les
@@ -291,7 +320,8 @@ critiques (le seed reste sur le serveur). Le serveur règle dans une transaction
 `ox-quote-changed` / `ox-negative` plutôt que d'appliquer un montant non vu.
 
 Ces règles sont couvertes par `GameLife-Server/src/Services/GameLife/__tests__/OxEconomy.test.ts`,
-`RaidEngine.test.ts` (scénarios S1…S16 et R1…R19) et `ItemEconomy.test.ts`, qui sont la suite de référence du module partagé :
+`RaidEngine.test.ts` (scénarios S1…S16 et R1…R19), `ItemEconomy.test.ts`, `ItemStats.test.ts` (I1…I12) et
+`TechnoForge.test.ts` (F1…F4), qui sont la suite de référence du module partagé :
 le paquet de types n'a pas de lanceur de tests à lui. Après toute modification dans `GameLife-Types`,
 reconstruire le paquet et recopier son `dist/` dans les `node_modules/@oxyfoo/gamelife-types` des trois
 consommateurs, sinon les deux côtés n'exécutent plus le même code.

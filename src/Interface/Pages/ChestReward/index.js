@@ -83,7 +83,6 @@ class ChestReward extends BackChestReward {
         }
 
         const avatarFrameSize = frameSize - styles.frame.borderWidth * 2;
-        const avatarRenderScale = this.avatarPosition?.scale && this.avatarPosition.scale >= 3 ? 2 : 1;
 
         return (
             <View style={styles.page}>
@@ -103,7 +102,6 @@ class ChestReward extends BackChestReward {
                                 <AvatarFrame
                                     width={avatarFrameSize}
                                     height={avatarFrameSize}
-                                    renderScale={avatarRenderScale}
                                     backgroundColor={themeManager.GetColor('backgroundCard')}
                                 >
                                     <AvatarCharacter

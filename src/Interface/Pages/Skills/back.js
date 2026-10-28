@@ -15,7 +15,13 @@ import { FormatForSearch } from 'Utils/String';
  *
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').Skill} Skill
  * @typedef {import('@oxyfoo/gamelife-types/Data/App/Skills').EnrichedSkill} EnrichedSkill
+ * @typedef {import('Data/User/Activities/skillFrequency').SkillStreakSummary} SkillStreakSummary
+ *
+ * @typedef {EnrichedSkill & { Streak: SkillStreakSummary }} ListedSkill Skill of the list, with its streaks
  */
+
+/** @type {SkillStreakSummary} Skill without any past activity */
+const NO_STREAK = { current: 0, best: 0, doneToday: false };
 
 class BackSkills extends PageBase {
     state = {
@@ -26,7 +32,7 @@ class BackSkills extends PageBase {
         /** @type {number[]} */
         selectedCategories: [],
 
-        /** @type {EnrichedSkill[]} */
+        /** @type {ListedSkill[]} */
         skills: []
     };
 
@@ -35,8 +41,11 @@ class BackSkills extends PageBase {
 
     sortList = langManager.curr['skills']['top-sort-list'];
 
-    /** @type {EnrichedSkill[]} */
+    /** @type {ListedSkill[]} */
     allSkills = [];
+
+    /** @type {Map<number, SkillStreakSummary>} Streaks by skill ID, refreshed with the list */
+    streaks = new Map();
 
     /** @type {Symbol | null} */
     activitiesListener = null;
@@ -65,7 +74,7 @@ class BackSkills extends PageBase {
 
     /**
      * @param {Skill} skill
-     * @returns {EnrichedSkill} Skill with Name, Logo & experience
+     * @returns {ListedSkill} Skill with Name, Logo, experience & streaks
      */
     upgradeSkill = (skill) => {
         const category = dataManager.skills.categories.find((c) => c.ID === skill.CategoryID);
@@ -73,12 +82,15 @@ class BackSkills extends PageBase {
             ...skill,
             FullName: langManager.GetText(skill.Name),
             LogoXML: dataManager.skills.GetXmlByLogoID(skill.LogoID || (category?.LogoID ?? 0)),
-            Experience: user.experience.GetSkillExperience(skill)
+            Experience: user.experience.GetSkillExperience(skill),
+            Streak: this.streaks.get(skill.ID) ?? NO_STREAK
         };
     };
 
-    /** @returns {EnrichedSkill[]} All skills with their Name, Logo & experience */
+    /** @returns {ListedSkill[]} All skills with their Name, Logo, experience & streaks */
     getAllSkills = () => {
+        this.streaks = user.activities.GetAllSkillStreaks();
+
         const now = GetGlobalTime();
         const usersActivities = user.activities.Get().filter((activity) => activity.startTime <= now);
         const usersActivitiesID = usersActivities.map((activity) => activity.skillID);
@@ -123,7 +135,7 @@ class BackSkills extends PageBase {
 
     /** @param {boolean} [updateState] */
     refreshSkills = (updateState = true) => {
-        /** @type {EnrichedSkill[]} */
+        /** @type {ListedSkill[]} */
         let newSkills = this.allSkills;
         const { search, selectedCategories } = this.state;
 
@@ -134,7 +146,7 @@ class BackSkills extends PageBase {
 
         // Get recent skills
         if (selectedCategories.includes(0)) {
-            /** @type {EnrichedSkill[]} */
+            /** @type {ListedSkill[]} */
             let recentSkills = [];
             const now = GetLocalTime();
             const usersActivities = user.activities
@@ -182,8 +194,15 @@ class BackSkills extends PageBase {
 
         // Sort by date
         else if (sort === 2) {
-            /** @param {EnrichedSkill} a @param {EnrichedSkill} b */
+            /** @param {ListedSkill} a @param {ListedSkill} b */
             const compare = (a, b) => (a.Experience.lastTime < b.Experience.lastTime ? -1 : 1);
+            newSkills = newSkills.sort(compare);
+        }
+
+        // Sort by streak (current first, best one breaks the ties)
+        else if (sort === 3) {
+            /** @param {ListedSkill} a @param {ListedSkill} b */
+            const compare = (a, b) => a.Streak.current - b.Streak.current || a.Streak.best - b.Streak.best;
             newSkills = newSkills.sort(compare);
         }
 

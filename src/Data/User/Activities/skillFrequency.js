@@ -8,6 +8,11 @@ import { DAY_TIME, GetLocalTime, GetTimeZone } from 'Utils/Time';
  * @property {number} current Consecutive active days ending today (or yesterday when today is not done yet)
  * @property {number} best Longest run of consecutive active days ever
  *
+ * @typedef {object} SkillStreakSummary
+ * @property {number} current Consecutive active days ending today (or yesterday when today is not done yet)
+ * @property {number} best Longest run of consecutive active days ever
+ * @property {boolean} doneToday True when the skill has an activity today: the streak is secured for the day
+ *
  * @typedef {object} SkillRate
  * @property {number} activeDays Days with at least one activity inside the window
  * @property {number} totalDays Days inside the window (0 without any activity and without fixed window)
@@ -107,6 +112,37 @@ function ComputeStreaks(dayIndexes, todayIndex) {
     }
 
     return { current, best };
+}
+
+/**
+ * Streaks of every skill, in one pass over all the activities (future activities ignored)
+ * @param {Activity[]} activities Activities of every skill
+ * @param {number} todayIndex
+ * @returns {Map<number, SkillStreakSummary>} By skill ID; a skill without any past activity is absent
+ */
+function ComputeAllSkillStreaks(activities, todayIndex) {
+    /** @type {Map<number, Set<number>>} */
+    const dayIndexesBySkill = new Map();
+    for (const activity of activities) {
+        const day = GetLocalDayIndex(activity);
+        if (day > todayIndex) {
+            continue;
+        }
+        let dayIndexes = dayIndexesBySkill.get(activity.skillID);
+        if (typeof dayIndexes === 'undefined') {
+            dayIndexes = new Set();
+            dayIndexesBySkill.set(activity.skillID, dayIndexes);
+        }
+        dayIndexes.add(day);
+    }
+
+    /** @type {Map<number, SkillStreakSummary>} */
+    const streaks = new Map();
+    for (const [skillID, dayIndexes] of dayIndexesBySkill) {
+        const { current, best } = ComputeStreaks(dayIndexes, todayIndex);
+        streaks.set(skillID, { current, best, doneToday: dayIndexes.has(todayIndex) });
+    }
+    return streaks;
 }
 
 /**
@@ -229,6 +265,7 @@ export {
     GetSkillDayIndexes,
     GetFirstDayIndex,
     ComputeStreaks,
+    ComputeAllSkillStreaks,
     ComputeRate,
     ComputeDailyMinutes,
     GetNiceMaxMinutes,

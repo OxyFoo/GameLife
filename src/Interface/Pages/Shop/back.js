@@ -62,6 +62,13 @@ class BackShop extends PageBase {
         this.refPage.current?.scrollTo({ y: this.iapSectionY, animated: true });
     };
 
+    /** Left for anywhere but the forge: the slots kept for this trip are dropped (`Inventory.forgeDraft`) */
+    componentDidUnfocused() {
+        if (user.interface.GetCurrentPageName() !== 'technoforge') {
+            user.inventory.forgeDraft = null;
+        }
+    }
+
     componentDidMount() {
         user.shop
             .GetShopContent()

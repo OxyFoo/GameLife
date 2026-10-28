@@ -13,7 +13,7 @@ import themeManager from 'Managers/ThemeManager';
 import { RAID_MIN_LEVEL } from 'Data/User/Raids';
 import { Icon, ProgressBar, Reward, Text } from 'Interface/Components';
 import { ClaimRewardButton } from './ClaimRewardButton';
-import { FormatCompact, FormatCountdown, FormatThousands } from 'Utils/Raids';
+import { FormatCompact, FormatCountdown, FormatThousands, RaidPhaseMarkers } from 'Utils/Raids';
 
 /**
  * @typedef {import('react-native').ViewStyle} ViewStyle
@@ -229,7 +229,7 @@ function renderRest(snapshot, lastSeason, onRewardClaimed) {
  */
 function renderFull(snapshot, skeleton) {
     const lang = langManager.curr['raids'];
-    const { season, self, simulation, seasonProgress } = snapshot;
+    const { season, self, simulation, seasonProgress, phaseCount } = snapshot;
 
     const name = season !== null ? langManager.GetText(season.name) : '—';
     const number = season?.number ?? 0;
@@ -257,7 +257,14 @@ function renderFull(snapshot, skeleton) {
                     valueColor='raid'
                     inline
                 >
-                    <ProgressBar style={styles.statBar} height={6} color='raid' value={hp} maxValue={maxHP} />
+                    <ProgressBar
+                        style={styles.statBar}
+                        height={6}
+                        color='raid'
+                        value={hp}
+                        maxValue={maxHP}
+                        markers={RaidPhaseMarkers(phaseCount)}
+                    />
                 </Stat>
                 <Stat
                     style={styles.flex1}

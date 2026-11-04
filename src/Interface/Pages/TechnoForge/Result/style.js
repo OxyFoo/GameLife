@@ -38,9 +38,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         overflow: 'hidden'
     },
-    avatarFrame: {
-        transform: [{ scale: 2 }]
-    },
     frameFooter: {
         position: 'absolute',
         left: 0,

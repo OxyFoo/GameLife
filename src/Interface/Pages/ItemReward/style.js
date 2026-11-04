@@ -28,9 +28,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         overflow: 'hidden'
     },
-    avatarFrame: {
-        transform: [{ scale: 2 }]
-    },
 
     textContainer: {
         alignItems: 'center',

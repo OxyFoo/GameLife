@@ -27,8 +27,10 @@ class TechnoForgeResult extends BackTechnoForgeResult {
             transform: [{ translateY: WithInterpolation(animInteractions, 20, 0) }]
         };
 
-        const frameWidth = layoutFrame.width / 2;
-        const frameHeight = (layoutFrame.height - styles.frame.borderWidth * 2) / 2;
+        // The frame is rendered at its displayed size: a half-size frame enlarged by a view
+        // transform came out pixelated (the native surface is upscaled, whatever the render quality)
+        const frameWidth = layoutFrame.width - styles.frame.borderWidth * 2;
+        const frameHeight = layoutFrame.height - styles.frame.borderWidth * 2;
 
         const overlay = [
             themeManager.GetColor('background', { opacity: 0.88 }),
@@ -56,10 +58,10 @@ class TechnoForgeResult extends BackTechnoForgeResult {
                         {this.avatarPosition !== null && layoutFrame.width > 0 && layoutFrame.height > 0 && (
                             <View style={[styles.frame, { borderColor: this.rarityColor }]}>
                                 <AvatarFrame
-                                    style={styles.avatarFrame}
                                     width={frameWidth}
                                     height={frameHeight}
                                     backgroundColor={themeManager.GetColor('backgroundCard')}
+                                    quality='high'
                                 >
                                     <AvatarCharacter
                                         body={this.avatarBody}

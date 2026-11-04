@@ -36,7 +36,7 @@ const avatarPreviewConfig = {
         scale: 5
     },
     hair: {
-        pos: { x: 0, y: -3.5 },
+        pos: { x: 0, y: -3.4 },
         scale: 5
     },
     top: {

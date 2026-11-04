@@ -358,7 +358,12 @@ const AvatarEditorComponent = ({ editMode, animEditMode, scrollY, onExitEditMode
 
             {/** Avatar Character */}
             <Animated.View style={[styles.avatarContainer, styleAvatar]}>
-                <AvatarFrame width={screenDim.width * 2} height={screenDim.width * 2} backgroundColor='#00000000' quality='high'>
+                <AvatarFrame
+                    width={screenDim.width * 2}
+                    height={screenDim.width * 2}
+                    backgroundColor='#00000000'
+                    quality='high'
+                >
                     <AvatarCharacter
                         body={bodyType}
                         bodyColor={bodyColor}
